@@ -42,6 +42,13 @@ dependencies:
   path: ^1.8.0
   # drift 需要，在应用内可视化数据库数据
   drift_db_viewer: ^1.0.3
+  # 底部导航栏
+  salomon_bottom_bar: ^3.3.0
+  get: ^4.6.1
+  # 上拉、下拉刷新
+  pull_to_refresh: ^2.0.0
+  # toast
+  flutter_easyloading: ^3.0.3
 
 dev_dependencies:
   flutter_test:

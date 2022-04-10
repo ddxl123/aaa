@@ -31,6 +31,16 @@ class Fragments extends TableCloudBase {
   TextColumn get part4 => text().nullable()();
 
   TextColumn get part5 => text().nullable()();
+
+  TextColumn get part1Name => text().nullable()();
+
+  TextColumn get part2Name => text().nullable()();
+
+  TextColumn get part3Name => text().nullable()();
+
+  TextColumn get part4Name => text().nullable()();
+
+  TextColumn get part5Name => text().nullable()();
 }
 
 /// [Fragments] 与 [FragmentGroups]

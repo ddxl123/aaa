@@ -8,8 +8,7 @@ part of 'DriftDb.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class User extends DataClass implements Insertable<User> {
-  /// 可空。
-  final int? cloudId;
+  int? cloudId;
 
   /// 同步 curd 类型。为空则表示该行 不需要进行同步。
   ///
@@ -24,23 +23,23 @@ class User extends DataClass implements Insertable<User> {
   ///   - 若新旧相同，则服务端已同步过，响应客户端将其置空。
   ///   - 若新的晚于旧的，则需要服务端进行同步后，响应客户端将其置空。
   ///   - 若新的早于旧的，则 1. 可能客户端、服务端时间被篡改；2. 该条数据在其他客户端已经被同步过了 TODO: 可依据此处设计多客户端登陆方案。
-  final int? syncCurd;
+  int? syncCurd;
 
   /// 当 [syncCurd] 为 U-1 时，[syncUpdateColumns] 不能为空。
   ///
   /// 值为字段名，如："username,password"。
-  final String? syncUpdateColumns;
-  final int id;
+  String? syncUpdateColumns;
+  int id;
 
-  /// 必须是本地时间，不可空。
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String username;
-  final String? password;
-  final String? email;
-  final int age;
-  final String token;
-  final bool isDownloadedInitData;
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  DateTime createdAt;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  DateTime updatedAt;
+  String? username;
+  String? password;
+  String? email;
+  int? age;
   User(
       {this.cloudId,
       this.syncCurd,
@@ -48,12 +47,10 @@ class User extends DataClass implements Insertable<User> {
       required this.id,
       required this.createdAt,
       required this.updatedAt,
-      required this.username,
+      this.username,
       this.password,
       this.email,
-      required this.age,
-      required this.token,
-      required this.isDownloadedInitData});
+      this.age});
   factory User.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return User(
@@ -70,17 +67,13 @@ class User extends DataClass implements Insertable<User> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       username: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}username'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}username']),
       password: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}password']),
       email: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}email']),
       age: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}age'])!,
-      token: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}token'])!,
-      isDownloadedInitData: const BoolType().mapFromDatabaseResponse(
-          data['${effectivePrefix}is_downloaded_init_data'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}age']),
     );
   }
   @override
@@ -98,16 +91,18 @@ class User extends DataClass implements Insertable<User> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['username'] = Variable<String>(username);
+    if (!nullToAbsent || username != null) {
+      map['username'] = Variable<String?>(username);
+    }
     if (!nullToAbsent || password != null) {
       map['password'] = Variable<String?>(password);
     }
     if (!nullToAbsent || email != null) {
       map['email'] = Variable<String?>(email);
     }
-    map['age'] = Variable<int>(age);
-    map['token'] = Variable<String>(token);
-    map['is_downloaded_init_data'] = Variable<bool>(isDownloadedInitData);
+    if (!nullToAbsent || age != null) {
+      map['age'] = Variable<int?>(age);
+    }
     return map;
   }
 
@@ -125,15 +120,15 @@ class User extends DataClass implements Insertable<User> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      username: Value(username),
+      username: username == null && nullToAbsent
+          ? const Value.absent()
+          : Value(username),
       password: password == null && nullToAbsent
           ? const Value.absent()
           : Value(password),
       email:
           email == null && nullToAbsent ? const Value.absent() : Value(email),
-      age: Value(age),
-      token: Value(token),
-      isDownloadedInitData: Value(isDownloadedInitData),
+      age: age == null && nullToAbsent ? const Value.absent() : Value(age),
     );
   }
 
@@ -148,13 +143,10 @@ class User extends DataClass implements Insertable<User> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      username: serializer.fromJson<String>(json['username']),
+      username: serializer.fromJson<String?>(json['username']),
       password: serializer.fromJson<String?>(json['password']),
       email: serializer.fromJson<String?>(json['email']),
-      age: serializer.fromJson<int>(json['age']),
-      token: serializer.fromJson<String>(json['token']),
-      isDownloadedInitData:
-          serializer.fromJson<bool>(json['isDownloadedInitData']),
+      age: serializer.fromJson<int?>(json['age']),
     );
   }
   @override
@@ -167,12 +159,10 @@ class User extends DataClass implements Insertable<User> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'username': serializer.toJson<String>(username),
+      'username': serializer.toJson<String?>(username),
       'password': serializer.toJson<String?>(password),
       'email': serializer.toJson<String?>(email),
-      'age': serializer.toJson<int>(age),
-      'token': serializer.toJson<String>(token),
-      'isDownloadedInitData': serializer.toJson<bool>(isDownloadedInitData),
+      'age': serializer.toJson<int?>(age),
     };
   }
 
@@ -186,9 +176,7 @@ class User extends DataClass implements Insertable<User> {
           String? username,
           String? password,
           String? email,
-          int? age,
-          String? token,
-          bool? isDownloadedInitData}) =>
+          int? age}) =>
       User(
         cloudId: cloudId ?? this.cloudId,
         syncCurd: syncCurd ?? this.syncCurd,
@@ -200,8 +188,6 @@ class User extends DataClass implements Insertable<User> {
         password: password ?? this.password,
         email: email ?? this.email,
         age: age ?? this.age,
-        token: token ?? this.token,
-        isDownloadedInitData: isDownloadedInitData ?? this.isDownloadedInitData,
       );
   @override
   String toString() {
@@ -215,27 +201,14 @@ class User extends DataClass implements Insertable<User> {
           ..write('username: $username, ')
           ..write('password: $password, ')
           ..write('email: $email, ')
-          ..write('age: $age, ')
-          ..write('token: $token, ')
-          ..write('isDownloadedInitData: $isDownloadedInitData')
+          ..write('age: $age')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      cloudId,
-      syncCurd,
-      syncUpdateColumns,
-      id,
-      createdAt,
-      updatedAt,
-      username,
-      password,
-      email,
-      age,
-      token,
-      isDownloadedInitData);
+  int get hashCode => Object.hash(cloudId, syncCurd, syncUpdateColumns, id,
+      createdAt, updatedAt, username, password, email, age);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -249,25 +222,21 @@ class User extends DataClass implements Insertable<User> {
           other.username == this.username &&
           other.password == this.password &&
           other.email == this.email &&
-          other.age == this.age &&
-          other.token == this.token &&
-          other.isDownloadedInitData == this.isDownloadedInitData);
+          other.age == this.age);
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
-  final Value<int?> cloudId;
-  final Value<int?> syncCurd;
-  final Value<String?> syncUpdateColumns;
-  final Value<int> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> username;
-  final Value<String?> password;
-  final Value<String?> email;
-  final Value<int> age;
-  final Value<String> token;
-  final Value<bool> isDownloadedInitData;
-  const UsersCompanion({
+  Value<int?> cloudId;
+  Value<int?> syncCurd;
+  Value<String?> syncUpdateColumns;
+  Value<int> id;
+  Value<DateTime> createdAt;
+  Value<DateTime> updatedAt;
+  Value<String?> username;
+  Value<String?> password;
+  Value<String?> email;
+  Value<int?> age;
+  UsersCompanion({
     this.cloudId = const Value.absent(),
     this.syncCurd = const Value.absent(),
     this.syncUpdateColumns = const Value.absent(),
@@ -278,8 +247,6 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.password = const Value.absent(),
     this.email = const Value.absent(),
     this.age = const Value.absent(),
-    this.token = const Value.absent(),
-    this.isDownloadedInitData = const Value.absent(),
   });
   UsersCompanion.insert({
     this.cloudId = const Value.absent(),
@@ -292,9 +259,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.password = const Value.absent(),
     this.email = const Value.absent(),
     this.age = const Value.absent(),
-    required String token,
-    this.isDownloadedInitData = const Value.absent(),
-  }) : token = Value(token);
+  });
   static Insertable<User> custom({
     Expression<int?>? cloudId,
     Expression<int?>? syncCurd,
@@ -302,12 +267,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String>? username,
+    Expression<String?>? username,
     Expression<String?>? password,
     Expression<String?>? email,
-    Expression<int>? age,
-    Expression<String>? token,
-    Expression<bool>? isDownloadedInitData,
+    Expression<int?>? age,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
@@ -320,9 +283,6 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (password != null) 'password': password,
       if (email != null) 'email': email,
       if (age != null) 'age': age,
-      if (token != null) 'token': token,
-      if (isDownloadedInitData != null)
-        'is_downloaded_init_data': isDownloadedInitData,
     });
   }
 
@@ -333,12 +293,10 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String>? username,
+      Value<String?>? username,
       Value<String?>? password,
       Value<String?>? email,
-      Value<int>? age,
-      Value<String>? token,
-      Value<bool>? isDownloadedInitData}) {
+      Value<int?>? age}) {
     return UsersCompanion(
       cloudId: cloudId ?? this.cloudId,
       syncCurd: syncCurd ?? this.syncCurd,
@@ -350,8 +308,6 @@ class UsersCompanion extends UpdateCompanion<User> {
       password: password ?? this.password,
       email: email ?? this.email,
       age: age ?? this.age,
-      token: token ?? this.token,
-      isDownloadedInitData: isDownloadedInitData ?? this.isDownloadedInitData,
     );
   }
 
@@ -377,7 +333,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (username.present) {
-      map['username'] = Variable<String>(username.value);
+      map['username'] = Variable<String?>(username.value);
     }
     if (password.present) {
       map['password'] = Variable<String?>(password.value);
@@ -386,14 +342,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       map['email'] = Variable<String?>(email.value);
     }
     if (age.present) {
-      map['age'] = Variable<int>(age.value);
-    }
-    if (token.present) {
-      map['token'] = Variable<String>(token.value);
-    }
-    if (isDownloadedInitData.present) {
-      map['is_downloaded_init_data'] =
-          Variable<bool>(isDownloadedInitData.value);
+      map['age'] = Variable<int?>(age.value);
     }
     return map;
   }
@@ -410,9 +359,7 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('username: $username, ')
           ..write('password: $password, ')
           ..write('email: $email, ')
-          ..write('age: $age, ')
-          ..write('token: $token, ')
-          ..write('isDownloadedInitData: $isDownloadedInitData')
+          ..write('age: $age')
           ..write(')'))
         .toString();
   }
@@ -465,10 +412,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final VerificationMeta _usernameMeta = const VerificationMeta('username');
   @override
   late final GeneratedColumn<String?> username = GeneratedColumn<String?>(
-      'username', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('还没名字'));
+      'username', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _passwordMeta = const VerificationMeta('password');
   @override
   late final GeneratedColumn<String?> password = GeneratedColumn<String?>(
@@ -482,24 +427,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final VerificationMeta _ageMeta = const VerificationMeta('age');
   @override
   late final GeneratedColumn<int?> age = GeneratedColumn<int?>(
-      'age', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant(-1));
-  final VerificationMeta _tokenMeta = const VerificationMeta('token');
-  @override
-  late final GeneratedColumn<String?> token = GeneratedColumn<String?>(
-      'token', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _isDownloadedInitDataMeta =
-      const VerificationMeta('isDownloadedInitData');
-  @override
-  late final GeneratedColumn<bool?> isDownloadedInitData =
-      GeneratedColumn<bool?>('is_downloaded_init_data', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (is_downloaded_init_data IN (0, 1))',
-          defaultValue: const Constant(false));
+      'age', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         cloudId,
@@ -511,9 +440,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         username,
         password,
         email,
-        age,
-        token,
-        isDownloadedInitData
+        age
       ];
   @override
   String get aliasedName => _alias ?? 'users';
@@ -564,18 +491,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('age')) {
       context.handle(
           _ageMeta, age.isAcceptableOrUnknown(data['age']!, _ageMeta));
-    }
-    if (data.containsKey('token')) {
-      context.handle(
-          _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
-    } else if (isInserting) {
-      context.missing(_tokenMeta);
-    }
-    if (data.containsKey('is_downloaded_init_data')) {
-      context.handle(
-          _isDownloadedInitDataMeta,
-          isDownloadedInitData.isAcceptableOrUnknown(
-              data['is_downloaded_init_data']!, _isDownloadedInitDataMeta));
     }
     return context;
   }
