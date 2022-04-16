@@ -1,9 +1,8 @@
-import 'package:drift_db_viewer/drift_db_viewer.dart';
+import 'package:aaa/tool/Toaster.dart';
+import 'package:aaa/tool/freebox/FreeBox.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-import 'drift/DriftDb.dart';
 import 'fragmenthome/FragmentHome.dart';
 
 class Home extends StatefulWidget {
@@ -19,6 +18,12 @@ class _HomeState extends State<Home> {
 
   // 双击返回键才会退出应用。
   int? _lastBackTime;
+
+  @override
+  void initState() {
+    super.initState();
+    Toaster.init(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class _HomeState extends State<Home> {
       return true;
     }
     _lastBackTime = now;
-    EasyLoading.showToast('再按一次退出！');
+    Toaster.show(content: '再按一次退出！', milliseconds: 1500);
     await Future.delayed(
       const Duration(milliseconds: 1500),
       () {
@@ -49,9 +54,54 @@ class _HomeState extends State<Home> {
     return false;
   }
 
+  FreeBoxController _freeBoxController = FreeBoxController();
+
   Widget _floatingActionButton() => FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => DriftDbViewer(DriftDb.instance)));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (ctx) {
+                return FreeBox(
+                  freeBoxController: _freeBoxController,
+                  moveScaleLayerWidgets: FreeBoxStack(
+                    builder: (BuildContext context, void Function(void Function()) bSetState) {
+                      return [
+                        FreeBoxPositioned(
+                          expectPosition: Offset(-500, -500),
+                          child: TextButton(
+                            child: Text('aaaaa'),
+                            onPressed: () {},
+                          ),
+                        ),
+                        FreeBoxPositioned(
+                          expectPosition: Offset.zero,
+                          child: TextButton(
+                            child: Text('aaaaa'),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ];
+                    },
+                  ),
+                  fixedLayerWidgets: Stack(
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        left: 100,
+                        right: 100,
+                        child: TextButton(
+                          child: Text('to'),
+                          onPressed: () {
+                            _freeBoxController.targetSlide(targetCamera: FreeBoxCamera(expectPosition: Offset(200, 200), expectScale: 1), rightNow: false);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
         },
       );
 

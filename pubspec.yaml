@@ -29,6 +29,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # ios风格icon
   cupertino_icons: ^1.0.2
@@ -48,7 +50,17 @@ dependencies:
   # 上拉、下拉刷新
   pull_to_refresh: ^2.0.0
   # toast
-  flutter_easyloading: ^3.0.3
+  fluttertoast: ^8.0.9
+  # dialog
+  adaptive_dialog: ^1.5.0+1
+  # 异常处理
+  catcher: ^0.6.9
+  # 获取设备信息。
+  # catcher 需要。
+  device_info_plus: ^3.2.3
+  # 获取包信息。
+  # catcher 需要。
+  package_info_plus: ^1.4.2
 
 dev_dependencies:
   flutter_test:

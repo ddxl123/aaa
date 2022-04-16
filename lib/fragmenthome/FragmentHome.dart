@@ -1,5 +1,19 @@
+import 'dart:developer';
+
+import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/getcontroller/FragmentHomeGetController.dart';
+import 'package:aaa/tool/Toaster.dart';
+import 'package:aaa/tool/Extensioner.dart';
+import 'package:aaa/tool/show/ShowWrapper.dart';
+import 'package:aaa/tool/show/ShowXDialog.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:catcher/catcher.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../tool/CatchRollback.dart';
 
 class FragmentHome extends StatefulWidget {
   const FragmentHome({Key? key}) : super(key: key);
@@ -9,8 +23,7 @@ class FragmentHome extends StatefulWidget {
 }
 
 class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClientMixin {
-  final List<String> _list = ['aaa', 'bbb', 'ccc', 'ddd'];
-  final RefreshController _refreshController = RefreshController(initialRefresh: true);
+  final FragmentHomeGetController _fragmentHomeGetController = Get.put(FragmentHomeGetController());
 
   @override
   Widget build(BuildContext context) {
@@ -20,90 +33,22 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              showAboutDialog(context: context);
-
-              // List<Widget> columnChildren;
-              // if (scrollable) {
-              //   columnChildren = <Widget>[
-              //     if (title != null || content != null)
-              //       Flexible(
-              //         child: SingleChildScrollView(
-              //           child: Column(
-              //             mainAxisSize: MainAxisSize.min,
-              //             crossAxisAlignment: CrossAxisAlignment.stretch,
-              //             children: <Widget>[
-              //               if (title != null) titleWidget!,
-              //               if (content != null) contentWidget!,
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     if (actions != null)
-              //       actionsWidget!,
-              //   ];
-              // } else {
-              //   columnChildren = <Widget>[
-              //     if (title != null) titleWidget!,
-              //     if (content != null) Flexible(child: contentWidget!),
-              //     if (actions != null) actionsWidget!,
-              //   ];
-              // }
-              //
-              // Widget dialogChild = IntrinsicWidth(
-              //   child: Column(
-              //     mainAxisSize: MainAxisSize.min,
-              //     crossAxisAlignment: CrossAxisAlignment.stretch,
-              //     children: columnChildren,
-              //   ),
-              // );
-
-              showDialog(
+            onPressed: () async {
+              await showWrapperInput(
+                title: '创建碎片组',
                 context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    alignment: Alignment.center,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
-                          color: Colors.white,
-                        ),
-                        child: IntrinsicWidth(
-                          child: IntrinsicHeight(
-                            //①
-                            child: Column(
-                              children: [
-                                // 可防止 SingleChildScrollView 高度过大而使 Column① 溢出.
-                                Flexible(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: const [
-                                        Text('标题', style: TextStyle(fontSize: 24)),
-                                        SizedBox(height: 10),
-                                        Text('消息大苏打实打实大苏打实打实大苏打'),
-                                      ],
-                                      // stretch 要求子元素充满横轴(即 Text 充满横轴),可在 Text 内部设置 TextAlign
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Flexible(child: TextButton(onPressed: () {}, child: Text('daddddddddddddddta'))),
-                                    Flexible(
-                                        child: TextButton(onPressed: () {}, child: Text('datdddddddddddddddddddda'))),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                textFields: [const DialogTextField(hintText: '碎片组名称')],
+                okLabel: '创建',
+                cancelLabel: '取消',
+                firstHandle: (String firstContent) async {
+                  await CatchRollback.call(
+                    body: () async {
+                      await DriftDb.instance.singleDAO.insertFragmentGroup(FragmentGroupsCompanion(name: firstContent.toDriftValue()));
+                      Toaster.show(content: '创建成功！', milliseconds: 2000);
+                    },
+                    rollback: () {
+                      return '点击了创建';
+                    },
                   );
                 },
               );
@@ -112,19 +57,23 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
         ],
       ),
       body: SmartRefresher(
-        controller: _refreshController,
+        controller: _fragmentHomeGetController.refreshController,
         child: ListView.builder(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          itemCount: _list.length,
+          itemCount: _fragmentHomeGetController.fragmentOrGroupVOs.length,
           itemBuilder: (BuildContext context, int index) {
             return Card(
-              child: Text(_list[index]),
+              child: Text('_fragmentHomeGetController.fragmentOrGroupVOs[index]'),
             );
           },
         ),
         onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 1));
-          _refreshController.refreshCompleted();
+          await CatchRollback.call(
+            body: () async {
+              _fragmentHomeGetController.refreshController.refreshCompleted();
+            },
+            rollback: () {},
+          );
         },
       ),
     );

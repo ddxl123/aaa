@@ -1,16 +1,19 @@
-import 'package:drift/drift.dart';
+part of drift_db;
 
-class TableLocalBase extends Table {
-  IntColumn get id => integer().autoIncrement()();
+enum SyncCurd {
+  /// 增
+  c,
 
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
+  /// 改
+  u,
 
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
+  /// 删
+  d,
 }
 
-class TableCloudBase extends TableLocalBase {
+class TableBase extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
   IntColumn get cloudId => integer().nullable().customConstraint('UNIQUE')();
 
   /// 同步 curd 类型。为空则表示该行 不需要进行同步。
@@ -26,10 +29,16 @@ class TableCloudBase extends TableLocalBase {
   ///   - 若新旧相同，则服务端已同步过，响应客户端将其置空。
   ///   - 若新的晚于旧的，则需要服务端进行同步后，响应客户端将其置空。
   ///   - 若新的早于旧的，则 1. 可能客户端、服务端时间被篡改；2. 该条数据在其他客户端已经被同步过了 TODO: 可依据此处设计多客户端登陆方案。
-  IntColumn get syncCurd => integer().nullable()();
+  IntColumn get syncCurd => intEnum<SyncCurd>().nullable()();
 
   /// 当 [syncCurd] 为 U-1 时，[syncUpdateColumns] 不能为空。
   ///
   /// 值为字段名，如："username,password"。
   TextColumn get syncUpdateColumns => text().nullable()();
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
 }

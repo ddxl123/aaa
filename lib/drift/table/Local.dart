@@ -1,7 +1,6 @@
-import 'package:aaa/drift/table/Base.dart';
-import 'package:drift/drift.dart';
+part of drift_db;
 
-class AppInfo extends TableLocalBase {
+class AppInfos extends TableBase {
   TextColumn get token => text()();
 
   BoolColumn get hasDownloadedInitData => boolean().withDefault(const Constant(false))();
