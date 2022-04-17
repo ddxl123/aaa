@@ -3,7 +3,7 @@ part of freebox;
 class FreeBoxCamera {
   FreeBoxCamera({required this.expectPosition, required this.expectScale});
 
-  /// 缩放值。
+  /// 期望缩放值。
   double expectScale;
 
   /// 期望位置。
@@ -13,23 +13,18 @@ class FreeBoxCamera {
   Offset getActualPosition() => expectPosition - freeBoxTopLeftOffset;
 }
 
-class FreeBoxStack extends StatefulWidget {
-  const FreeBoxStack({required this.builder, Key? key}) : super(key: key);
-
-  final List<Widget> Function(BuildContext context, void Function(void Function()) bSetState) builder;
+/// 移动缩放层所使用的 [Stack]。
+class FreeBoxMoveScaleLayerStack extends StatelessWidget {
+  const FreeBoxMoveScaleLayerStack({required this.children, Key? key}) : super(key: key);
+  final List<FreeBoxMoveScaleLayerPositioned> children;
 
   @override
-  _FreeBoxStackState createState() => _FreeBoxStackState();
-}
-
-class _FreeBoxStackState extends State<FreeBoxStack> {
-  @override
-  Widget build(BuildContext context) => Stack(children: widget.builder(context, setState));
+  Widget build(BuildContext context) => Stack(children: children);
 }
 
 /// 元素在盒子中的定位
-class FreeBoxPositioned extends StatelessWidget {
-  const FreeBoxPositioned({required this.expectPosition, required this.child, Key? key}) : super(key: key);
+class FreeBoxMoveScaleLayerPositioned extends StatelessWidget {
+  const FreeBoxMoveScaleLayerPositioned({required this.expectPosition, required this.child, Key? key}) : super(key: key);
 
   final Offset expectPosition;
   final Widget child;
@@ -39,6 +34,41 @@ class FreeBoxPositioned extends StatelessWidget {
     return Positioned(
       top: expectPosition.dy + freeBoxTopLeftOffset.dy,
       left: expectPosition.dx + freeBoxTopLeftOffset.dy,
+      child: child,
+    );
+  }
+}
+
+/// [left]、[top]、[right]、[bottom] 必须至少有一个不为空，否则会把 [FreeBoxMoveScaleLayerStack] 给遮掩住。
+class FreeBoxFixedLayerPositioned extends StatelessWidget {
+  const FreeBoxFixedLayerPositioned({
+    required this.child,
+    this.left,
+    this.top,
+    this.right,
+    this.bottom,
+    this.width,
+    this.height,
+    Key? key,
+  }) : super(key: key);
+
+  final Widget child;
+  final double? left;
+  final double? top;
+  final double? right;
+  final double? bottom;
+  final double? width;
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: (left == null && top == null && right == null && bottom == null) ? 0 : left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      width: width,
+      height: height,
       child: child,
     );
   }

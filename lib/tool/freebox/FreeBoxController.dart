@@ -1,12 +1,14 @@
 part of freebox;
 
 class FreeBoxController {
+  FreeBoxController({this.isKeepCameraState = false});
+
   /// 当前相机
   FreeBoxCamera freeBoxCamera = FreeBoxCamera(expectPosition: Offset.zero, expectScale: 1);
 
   void Function()? freeBoxSetState;
 
-  late final AnimationController animationController;
+  AnimationController? animationController;
 
   /// 有关位置的动画片段。
   Animation<Offset>? _positionAnimation;
@@ -18,14 +20,28 @@ class FreeBoxController {
   double _lastTempScale = 1;
 
   /// 有关位置的缩放标记。
-  Offset _lastTempTouchPosition = const Offset(0, 0);
+  Offset _lastTempTouchPosition = Offset.zero;
+
+  /// 当 [FreeBox] 被 [dispose] 时，是否仍然保持 [FreeBoxCamera] 的状态。
+  bool isKeepCameraState;
 
   void dispose() {
-    animationController.dispose();
+    if (!isKeepCameraState) {
+      freeBoxCamera
+        ..expectPosition = Offset.zero
+        ..expectScale = 1;
+    }
+    freeBoxSetState = null;
+    animationController?.dispose();
+    animationController = null;
+    _positionAnimation = null;
+    _scaleAnimation = null;
+    _lastTempScale = 1;
+    _lastTempTouchPosition = Offset.zero;
   }
 
   void onScaleStart(ScaleStartDetails details) {
-    animationController.stop();
+    animationController!.stop();
 
     /// 重置上一次 [临时缩放] 和 [临时触摸位置]
     _lastTempScale = 1;
@@ -60,9 +76,9 @@ class FreeBoxController {
 
   /// 惯性滑动
   void _inertialSlide(ScaleEndDetails details) {
-    animationController.duration = const Duration(milliseconds: 500);
+    animationController!.duration = const Duration(milliseconds: 500);
 
-    _positionAnimation = animationController
+    _positionAnimation = animationController!
         .drive(
           CurveTween(curve: Curves.easeOutCubic),
         )
@@ -73,8 +89,8 @@ class FreeBoxController {
           ),
         );
 
-    animationController.forward(from: 0.0);
-    animationController.addListener(_inertialSlideListener);
+    animationController!.forward(from: 0.0);
+    animationController!.addListener(_inertialSlideListener);
   }
 
   /// 惯性滑动监听
@@ -82,8 +98,8 @@ class FreeBoxController {
     freeBoxCamera.expectPosition = _positionAnimation!.value;
 
     /// 被 stop() 或 动画播放完成 时, removeListener()
-    if (animationController.isDismissed || animationController.isCompleted) {
-      animationController.removeListener(_inertialSlideListener);
+    if (animationController!.isDismissed || animationController!.isCompleted) {
+      animationController!.removeListener(_inertialSlideListener);
     }
 
     freeBoxSetState?.call();
@@ -91,7 +107,7 @@ class FreeBoxController {
 
   /// 滑动至目标位置。
   void targetSlide({required FreeBoxCamera targetCamera, required bool rightNow}) {
-    animationController.stop();
+    animationController!.stop();
 
     if (rightNow) {
       freeBoxCamera.expectPosition = targetCamera.expectPosition;
@@ -100,15 +116,16 @@ class FreeBoxController {
       return;
     }
 
-    animationController.duration = const Duration(seconds: 1);
-    _positionAnimation = animationController
+    animationController!.duration = const Duration(seconds: 1);
+    _positionAnimation = animationController!
         .drive(CurveTween(curve: Curves.easeInOutBack))
         .drive(Tween<Offset>(begin: freeBoxCamera.expectPosition, end: targetCamera.expectPosition));
-    _scaleAnimation =
-        animationController.drive(CurveTween(curve: Curves.easeInOutBack)).drive(Tween<double>(begin: freeBoxCamera.expectScale, end: targetCamera.expectScale));
+    _scaleAnimation = animationController!
+        .drive(CurveTween(curve: Curves.easeInOutBack))
+        .drive(Tween<double>(begin: freeBoxCamera.expectScale, end: targetCamera.expectScale));
 
-    animationController.forward(from: 0.4);
-    animationController.addListener(_targetSlideListener);
+    animationController!.forward(from: 0.4);
+    animationController!.addListener(_targetSlideListener);
   }
 
   /// 滑动至目标位置监听
@@ -117,8 +134,8 @@ class FreeBoxController {
     freeBoxCamera.expectScale = _scaleAnimation!.value;
 
     /// 被 stop() 或 动画播放完成 时, removeListener()
-    if (animationController.isDismissed || animationController.isCompleted) {
-      animationController.removeListener(_targetSlideListener);
+    if (animationController!.isDismissed || animationController!.isCompleted) {
+      animationController!.removeListener(_targetSlideListener);
     }
 
     freeBoxSetState?.call();

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-ThemeData themeLight() {
+ThemeData themeLight(BuildContext context) {
   return ThemeData.light().copyWith(
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.white,
-      actionsIconTheme: IconThemeData(color: Colors.blue),
+      actionsIconTheme: const IconThemeData(color: Colors.blue),
       elevation: 0,
-      iconTheme: IconThemeData(color: Colors.blue),
+      iconTheme: const IconThemeData(color: Colors.blue),
+      titleTextStyle: Theme.of(context).textTheme.titleLarge,
     ),
     scaffoldBackgroundColor: const Color.fromRGBO(240, 240, 240, 1),
   );

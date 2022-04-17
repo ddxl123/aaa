@@ -8,7 +8,7 @@ part of drift_db;
     AppInfos,
 
     /// FatherChild
-    FatherChild,
+    FatherChilds,
 
     /// Cloud
     Users,

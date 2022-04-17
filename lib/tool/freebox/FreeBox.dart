@@ -1,5 +1,6 @@
 library freebox;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 part 'FreeBoxController.dart';
@@ -22,11 +23,11 @@ class FreeBox extends StatefulWidget {
 
   final FreeBoxController freeBoxController;
 
-  /// 自由缩放层。必须使用 [FreeBoxStack]。
-  final Widget moveScaleLayerWidgets;
+  /// 移动缩放层。
+  final FreeBoxMoveScaleLayerStack moveScaleLayerWidgets;
 
-  /// 固定层。必须使用 Stack + Position。
-  final Stack fixedLayerWidgets;
+  /// 移动缩放层上方的固定层。
+  final List<FreeBoxFixedLayerPositioned> fixedLayerWidgets;
 
   @override
   State<StatefulWidget> createState() {
@@ -52,7 +53,7 @@ class _FreeBox extends State<FreeBox> with TickerProviderStateMixin {
     return Stack(
       children: <Widget>[
         Positioned(top: 0, left: 0, child: _freeMoveScaleLayer()),
-        _fixedLayer(),
+        Stack(children: _fixedLayer()),
       ],
     );
   }
@@ -88,5 +89,5 @@ class _FreeBox extends State<FreeBox> with TickerProviderStateMixin {
       );
 
   /// 移动缩放层上方的固定层
-  Widget _fixedLayer() => widget.fixedLayerWidgets;
+  List<FreeBoxFixedLayerPositioned> _fixedLayer() => widget.fixedLayerWidgets;
 }

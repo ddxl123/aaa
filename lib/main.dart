@@ -35,12 +35,12 @@ main() {
       CatchRollback.NULL_TAGS: <String>[],
     },
   );
-  Catcher(
-    debugConfig: catcherOptions,
-    profileConfig: catcherOptions,
-    releaseConfig: catcherOptions,
-    runAppFunction: () => runApp(const MyApp()),
-  );
+  // Catcher(
+  //   debugConfig: catcherOptions,
+  //   profileConfig: catcherOptions,
+  //   releaseConfig: catcherOptions,
+  //   runAppFunction: () => runApp(const MyApp()),
+  // );
   runApp(const MyApp());
 }
 
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
       locale: const Locale('zh'),
       // catcher 相关
       navigatorKey: Catcher.navigatorKey,
-      theme: themeLight(),
+      theme: themeLight(context),
       // pull_to_refresh 相关
       home: RefreshConfiguration(
         footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),

@@ -42,7 +42,7 @@ LazyDatabase _openConnection() {
     AppInfos,
 
     /// FatherChild
-    FatherChild,
+    FatherChilds,
 
     /// Cloud
     Users,
@@ -54,7 +54,6 @@ LazyDatabase _openConnection() {
     SingleDAO,
     MultiDAO,
   ],
-  views: [],
 )
 class DriftDb extends _$DriftDb {
   DriftDb._() : super(_openConnection());

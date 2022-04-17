@@ -36,7 +36,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   DateTime updatedAt;
-  String token;
+  String? token;
   bool hasDownloadedInitData;
   AppInfo(
       {required this.id,
@@ -45,7 +45,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       this.syncUpdateColumns,
       required this.createdAt,
       required this.updatedAt,
-      required this.token,
+      this.token,
       required this.hasDownloadedInitData});
   factory AppInfo.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -63,7 +63,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       token: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}token'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}token']),
       hasDownloadedInitData: const BoolType().mapFromDatabaseResponse(
           data['${effectivePrefix}has_downloaded_init_data'])!,
     );
@@ -84,7 +84,9 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['token'] = Variable<String>(token);
+    if (!nullToAbsent || token != null) {
+      map['token'] = Variable<String?>(token);
+    }
     map['has_downloaded_init_data'] = Variable<bool>(hasDownloadedInitData);
     return map;
   }
@@ -103,7 +105,8 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
           : Value(syncUpdateColumns),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      token: Value(token),
+      token:
+          token == null && nullToAbsent ? const Value.absent() : Value(token),
       hasDownloadedInitData: Value(hasDownloadedInitData),
     );
   }
@@ -119,7 +122,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
           serializer.fromJson<String?>(json['syncUpdateColumns']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      token: serializer.fromJson<String>(json['token']),
+      token: serializer.fromJson<String?>(json['token']),
       hasDownloadedInitData:
           serializer.fromJson<bool>(json['hasDownloadedInitData']),
     );
@@ -134,7 +137,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       'syncUpdateColumns': serializer.toJson<String?>(syncUpdateColumns),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'token': serializer.toJson<String>(token),
+      'token': serializer.toJson<String?>(token),
       'hasDownloadedInitData': serializer.toJson<bool>(hasDownloadedInitData),
     };
   }
@@ -198,7 +201,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
   Value<String?> syncUpdateColumns;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String> token;
+  Value<String?> token;
   Value<bool> hasDownloadedInitData;
   AppInfosCompanion({
     this.id = const Value.absent(),
@@ -217,9 +220,9 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
     this.syncUpdateColumns = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    required String token,
+    this.token = const Value.absent(),
     this.hasDownloadedInitData = const Value.absent(),
-  }) : token = Value(token);
+  });
   static Insertable<AppInfo> custom({
     Expression<int>? id,
     Expression<int?>? cloudId,
@@ -227,7 +230,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
     Expression<String?>? syncUpdateColumns,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String>? token,
+    Expression<String?>? token,
     Expression<bool>? hasDownloadedInitData,
   }) {
     return RawValuesInsertable({
@@ -250,7 +253,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
       Value<String?>? syncUpdateColumns,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String>? token,
+      Value<String?>? token,
       Value<bool>? hasDownloadedInitData}) {
     return AppInfosCompanion(
       id: id ?? this.id,
@@ -288,7 +291,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (token.present) {
-      map['token'] = Variable<String>(token.value);
+      map['token'] = Variable<String?>(token.value);
     }
     if (hasDownloadedInitData.present) {
       map['has_downloaded_init_data'] =
@@ -361,8 +364,8 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
   final VerificationMeta _tokenMeta = const VerificationMeta('token');
   @override
   late final GeneratedColumn<String?> token = GeneratedColumn<String?>(
-      'token', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      'token', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _hasDownloadedInitDataMeta =
       const VerificationMeta('hasDownloadedInitData');
   @override
@@ -417,8 +420,6 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
     if (data.containsKey('token')) {
       context.handle(
           _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
-    } else if (isInserting) {
-      context.missing(_tokenMeta);
     }
     if (data.containsKey('has_downloaded_init_data')) {
       context.handle(
@@ -446,7 +447,7 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
       const EnumIndexConverter<SyncCurd>(SyncCurd.values);
 }
 
-class FatherChildData extends DataClass implements Insertable<FatherChildData> {
+class FatherChild extends DataClass implements Insertable<FatherChild> {
   int id;
   int? cloudId;
 
@@ -480,7 +481,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
   int? fatherCloudId;
   int? childId;
   int? childCloudId;
-  FatherChildData(
+  FatherChild(
       {required this.id,
       this.cloudId,
       this.syncCurd,
@@ -492,15 +493,14 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
       this.fatherCloudId,
       this.childId,
       this.childCloudId});
-  factory FatherChildData.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
+  factory FatherChild.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return FatherChildData(
+    return FatherChild(
       id: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       cloudId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
-      syncCurd: $FatherChildTable.$converter0.mapToDart(const IntType()
+      syncCurd: $FatherChildsTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_curd'])),
       syncUpdateColumns: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}sync_update_columns']),
@@ -508,7 +508,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
-      type: $FatherChildTable.$converter1.mapToDart(const IntType()
+      type: $FatherChildsTable.$converter1.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}type']))!,
       fatherId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
@@ -528,7 +528,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
       map['cloud_id'] = Variable<int?>(cloudId);
     }
     if (!nullToAbsent || syncCurd != null) {
-      final converter = $FatherChildTable.$converter0;
+      final converter = $FatherChildsTable.$converter0;
       map['sync_curd'] = Variable<int?>(converter.mapToSql(syncCurd));
     }
     if (!nullToAbsent || syncUpdateColumns != null) {
@@ -537,7 +537,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     {
-      final converter = $FatherChildTable.$converter1;
+      final converter = $FatherChildsTable.$converter1;
       map['type'] = Variable<int>(converter.mapToSql(type)!);
     }
     if (!nullToAbsent || fatherId != null) {
@@ -555,8 +555,8 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
     return map;
   }
 
-  FatherChildCompanion toCompanion(bool nullToAbsent) {
-    return FatherChildCompanion(
+  FatherChildsCompanion toCompanion(bool nullToAbsent) {
+    return FatherChildsCompanion(
       id: Value(id),
       cloudId: cloudId == null && nullToAbsent
           ? const Value.absent()
@@ -585,10 +585,10 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
     );
   }
 
-  factory FatherChildData.fromJson(Map<String, dynamic> json,
+  factory FatherChild.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FatherChildData(
+    return FatherChild(
       id: serializer.fromJson<int>(json['id']),
       cloudId: serializer.fromJson<int?>(json['cloudId']),
       syncCurd: serializer.fromJson<SyncCurd?>(json['syncCurd']),
@@ -621,7 +621,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
     };
   }
 
-  FatherChildData copyWith(
+  FatherChild copyWith(
           {int? id,
           int? cloudId,
           SyncCurd? syncCurd,
@@ -633,7 +633,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
           int? fatherCloudId,
           int? childId,
           int? childCloudId}) =>
-      FatherChildData(
+      FatherChild(
         id: id ?? this.id,
         cloudId: cloudId ?? this.cloudId,
         syncCurd: syncCurd ?? this.syncCurd,
@@ -648,7 +648,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
       );
   @override
   String toString() {
-    return (StringBuffer('FatherChildData(')
+    return (StringBuffer('FatherChild(')
           ..write('id: $id, ')
           ..write('cloudId: $cloudId, ')
           ..write('syncCurd: $syncCurd, ')
@@ -680,7 +680,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is FatherChildData &&
+      (other is FatherChild &&
           other.id == this.id &&
           other.cloudId == this.cloudId &&
           other.syncCurd == this.syncCurd &&
@@ -694,7 +694,7 @@ class FatherChildData extends DataClass implements Insertable<FatherChildData> {
           other.childCloudId == this.childCloudId);
 }
 
-class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
+class FatherChildsCompanion extends UpdateCompanion<FatherChild> {
   Value<int> id;
   Value<int?> cloudId;
   Value<SyncCurd?> syncCurd;
@@ -706,7 +706,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
   Value<int?> fatherCloudId;
   Value<int?> childId;
   Value<int?> childCloudId;
-  FatherChildCompanion({
+  FatherChildsCompanion({
     this.id = const Value.absent(),
     this.cloudId = const Value.absent(),
     this.syncCurd = const Value.absent(),
@@ -719,7 +719,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
     this.childId = const Value.absent(),
     this.childCloudId = const Value.absent(),
   });
-  FatherChildCompanion.insert({
+  FatherChildsCompanion.insert({
     this.id = const Value.absent(),
     this.cloudId = const Value.absent(),
     this.syncCurd = const Value.absent(),
@@ -732,7 +732,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
     this.childId = const Value.absent(),
     this.childCloudId = const Value.absent(),
   }) : type = Value(type);
-  static Insertable<FatherChildData> custom({
+  static Insertable<FatherChild> custom({
     Expression<int>? id,
     Expression<int?>? cloudId,
     Expression<SyncCurd?>? syncCurd,
@@ -760,7 +760,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
     });
   }
 
-  FatherChildCompanion copyWith(
+  FatherChildsCompanion copyWith(
       {Value<int>? id,
       Value<int?>? cloudId,
       Value<SyncCurd?>? syncCurd,
@@ -772,7 +772,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
       Value<int?>? fatherCloudId,
       Value<int?>? childId,
       Value<int?>? childCloudId}) {
-    return FatherChildCompanion(
+    return FatherChildsCompanion(
       id: id ?? this.id,
       cloudId: cloudId ?? this.cloudId,
       syncCurd: syncCurd ?? this.syncCurd,
@@ -797,7 +797,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
       map['cloud_id'] = Variable<int?>(cloudId.value);
     }
     if (syncCurd.present) {
-      final converter = $FatherChildTable.$converter0;
+      final converter = $FatherChildsTable.$converter0;
       map['sync_curd'] = Variable<int?>(converter.mapToSql(syncCurd.value));
     }
     if (syncUpdateColumns.present) {
@@ -810,7 +810,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (type.present) {
-      final converter = $FatherChildTable.$converter1;
+      final converter = $FatherChildsTable.$converter1;
       map['type'] = Variable<int>(converter.mapToSql(type.value)!);
     }
     if (fatherId.present) {
@@ -830,7 +830,7 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
 
   @override
   String toString() {
-    return (StringBuffer('FatherChildCompanion(')
+    return (StringBuffer('FatherChildsCompanion(')
           ..write('id: $id, ')
           ..write('cloudId: $cloudId, ')
           ..write('syncCurd: $syncCurd, ')
@@ -847,12 +847,12 @@ class FatherChildCompanion extends UpdateCompanion<FatherChildData> {
   }
 }
 
-class $FatherChildTable extends FatherChild
-    with TableInfo<$FatherChildTable, FatherChildData> {
+class $FatherChildsTable extends FatherChilds
+    with TableInfo<$FatherChildsTable, FatherChild> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $FatherChildTable(this.attachedDatabase, [this._alias]);
+  $FatherChildsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
@@ -872,7 +872,7 @@ class $FatherChildTable extends FatherChild
   late final GeneratedColumnWithTypeConverter<SyncCurd?, int?> syncCurd =
       GeneratedColumn<int?>('sync_curd', aliasedName, true,
               type: const IntType(), requiredDuringInsert: false)
-          .withConverter<SyncCurd?>($FatherChildTable.$converter0);
+          .withConverter<SyncCurd?>($FatherChildsTable.$converter0);
   final VerificationMeta _syncUpdateColumnsMeta =
       const VerificationMeta('syncUpdateColumns');
   @override
@@ -898,7 +898,7 @@ class $FatherChildTable extends FatherChild
   late final GeneratedColumnWithTypeConverter<FatherChildType, int?> type =
       GeneratedColumn<int?>('type', aliasedName, false,
               type: const IntType(), requiredDuringInsert: true)
-          .withConverter<FatherChildType>($FatherChildTable.$converter1);
+          .withConverter<FatherChildType>($FatherChildsTable.$converter1);
   final VerificationMeta _fatherIdMeta = const VerificationMeta('fatherId');
   @override
   late final GeneratedColumn<int?> fatherId = GeneratedColumn<int?>(
@@ -936,11 +936,11 @@ class $FatherChildTable extends FatherChild
         childCloudId
       ];
   @override
-  String get aliasedName => _alias ?? 'father_child';
+  String get aliasedName => _alias ?? 'father_childs';
   @override
-  String get actualTableName => 'father_child';
+  String get actualTableName => 'father_childs';
   @override
-  VerificationContext validateIntegrity(Insertable<FatherChildData> instance,
+  VerificationContext validateIntegrity(Insertable<FatherChild> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -993,14 +993,14 @@ class $FatherChildTable extends FatherChild
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  FatherChildData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return FatherChildData.fromData(data,
+  FatherChild map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return FatherChild.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $FatherChildTable createAlias(String alias) {
-    return $FatherChildTable(attachedDatabase, alias);
+  $FatherChildsTable createAlias(String alias) {
+    return $FatherChildsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<SyncCurd?, int> $converter0 =
@@ -2686,7 +2686,7 @@ class $MemoryGroupsTable extends MemoryGroups
 abstract class _$DriftDb extends GeneratedDatabase {
   _$DriftDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
-  late final $FatherChildTable fatherChild = $FatherChildTable(this);
+  late final $FatherChildsTable fatherChilds = $FatherChildsTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $FragmentsTable fragments = $FragmentsTable(this);
@@ -2697,7 +2697,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [appInfos, fatherChild, users, fragmentGroups, fragments, memoryGroups];
+      [appInfos, fatherChilds, users, fragmentGroups, fragments, memoryGroups];
 }
 
 // **************************************************************************
@@ -2706,7 +2706,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
 
 mixin _$MultiDAOMixin on DatabaseAccessor<DriftDb> {
   $AppInfosTable get appInfos => attachedDatabase.appInfos;
-  $FatherChildTable get fatherChild => attachedDatabase.fatherChild;
+  $FatherChildsTable get fatherChilds => attachedDatabase.fatherChilds;
   $UsersTable get users => attachedDatabase.users;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -2714,7 +2714,7 @@ mixin _$MultiDAOMixin on DatabaseAccessor<DriftDb> {
 }
 mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $AppInfosTable get appInfos => attachedDatabase.appInfos;
-  $FatherChildTable get fatherChild => attachedDatabase.fatherChild;
+  $FatherChildsTable get fatherChilds => attachedDatabase.fatherChilds;
   $UsersTable get users => attachedDatabase.users;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $FragmentsTable get fragments => attachedDatabase.fragments;

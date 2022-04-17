@@ -19,7 +19,7 @@ enum FatherChildType {
 }
 
 /// 只有 Cloud 类型才能存在父子关系， Local 类型不能存在父子关系。
-class FatherChild extends TableBase {
+class FatherChilds extends TableBase {
   IntColumn get type => intEnum<FatherChildType>()();
 
   IntColumn get fatherId => integer().nullable()();

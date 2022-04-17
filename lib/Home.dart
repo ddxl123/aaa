@@ -1,3 +1,5 @@
+import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/drift/DriftViewer.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
 import 'package:flutter/material.dart';
@@ -54,51 +56,14 @@ class _HomeState extends State<Home> {
     return false;
   }
 
-  FreeBoxController _freeBoxController = FreeBoxController();
+  final FreeBoxController _freeBoxController = FreeBoxController(isKeepCameraState: true);
 
   Widget _floatingActionButton() => FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) {
-                return FreeBox(
-                  freeBoxController: _freeBoxController,
-                  moveScaleLayerWidgets: FreeBoxStack(
-                    builder: (BuildContext context, void Function(void Function()) bSetState) {
-                      return [
-                        FreeBoxPositioned(
-                          expectPosition: Offset(-500, -500),
-                          child: TextButton(
-                            child: Text('aaaaa'),
-                            onPressed: () {},
-                          ),
-                        ),
-                        FreeBoxPositioned(
-                          expectPosition: Offset.zero,
-                          child: TextButton(
-                            child: Text('aaaaa'),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ];
-                    },
-                  ),
-                  fixedLayerWidgets: Stack(
-                    children: [
-                      Positioned(
-                        bottom: 0,
-                        left: 100,
-                        right: 100,
-                        child: TextButton(
-                          child: Text('to'),
-                          onPressed: () {
-                            _freeBoxController.targetSlide(targetCamera: FreeBoxCamera(expectPosition: Offset(200, 200), expectScale: 1), rightNow: false);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return DriftViewer(database: DriftDb.instance);
               },
             ),
           );
