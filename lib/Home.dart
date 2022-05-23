@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/drift/DriftViewer.dart';
+import 'package:aaa/drift/tool/DriftViewer.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +61,9 @@ class _HomeState extends State<Home> {
   final FreeBoxController _freeBoxController = FreeBoxController(isKeepCameraState: true);
 
   Widget _floatingActionButton() => FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          await DriftDb.instance.singleDAO.a();
+          await DriftDb.instance.singleDAO.b();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) {

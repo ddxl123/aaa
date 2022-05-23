@@ -14,6 +14,8 @@ import 'Home.dart';
 import 'drift/DriftDb.dart';
 import 'fragmenthome/FragmentHome.dart';
 
+import 'package:animations/animations.dart';
+
 main() {
   final catcherOptions = CatcherOptions(
     PageReportMode(),
@@ -35,12 +37,13 @@ main() {
       CatchRollback.NULL_TAGS: <String>[],
     },
   );
-  // Catcher(
-  //   debugConfig: catcherOptions,
-  //   profileConfig: catcherOptions,
-  //   releaseConfig: catcherOptions,
-  //   runAppFunction: () => runApp(const MyApp()),
-  // );
+  Catcher(
+    debugConfig: catcherOptions,
+    profileConfig: catcherOptions,
+    releaseConfig: catcherOptions,
+    runAppFunction: () => runApp(const MyApp()),
+  );
+  log(WidgetsBinding.instance.toString());
   runApp(const MyApp());
 }
 

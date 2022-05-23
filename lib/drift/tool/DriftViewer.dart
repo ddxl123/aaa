@@ -1,9 +1,8 @@
-import 'dart:developer';
-
-import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/tool/freebox/FreeBox.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
+
+import '../../tool/freebox/FreeBox.dart';
+import '../DriftDb.dart';
 
 class DriftViewer extends StatefulWidget {
   const DriftViewer({Key? key, required this.database}) : super(key: key);
@@ -167,7 +166,7 @@ class _ColumnRowState extends State<ColumnRow> {
         moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
           children: [
             FreeBoxMoveScaleLayerPositioned(
-              expectPosition: const Offset(200, 200),
+              expectPosition: Offset.zero,
               child: Table(
                 border: TableBorder.all(),
                 defaultColumnWidth: const IntrinsicColumnWidth(),

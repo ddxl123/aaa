@@ -1,21 +1,10 @@
 part of drift_db;
 
-
 // part 'MultiDAO.g.dart';
 
 @DriftAccessor(
   tables: [
-    /// Local
-    AppInfos,
-
-    /// FatherChild
-    FatherChilds,
-
-    /// Cloud
-    Users,
-    FragmentGroups,
-    Fragments,
-    MemoryGroups,
+    ...cloudTableClass,
   ],
 )
 class MultiDAO extends DatabaseAccessor<DriftDb> with _$MultiDAOMixin {

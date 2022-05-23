@@ -43,7 +43,8 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
                 firstHandle: (String firstContent) async {
                   await CatchRollback.call(
                     body: () async {
-                      await DriftDb.instance.singleDAO.insertFragmentGroup(FragmentGroupsCompanion(name: firstContent.toDriftValue()));
+                      // await DriftDb.instance.singleDAO.insertFragmentGroup(FragmentGroupsCompanion(name: firstContent.toDriftValue()));
+                      // await DriftDb.instance.singleDAO.updateFragmentGroup();
                       Toaster.show(content: '创建成功！', milliseconds: 2000);
                     },
                     rollback: () {
