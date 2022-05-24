@@ -62,8 +62,7 @@ class _HomeState extends State<Home> {
 
   Widget _floatingActionButton() => FloatingActionButton(
         onPressed: () async {
-          await DriftDb.instance.singleDAO.a();
-          await DriftDb.instance.singleDAO.b();
+          // await DriftDb.instance.singleDAO.a();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) {

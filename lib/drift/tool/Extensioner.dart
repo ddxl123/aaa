@@ -1,209 +1,173 @@
 part of drift_db;
 
-extension DriftExt on DatabaseAccessor {
+/// drift_helper.Value('value') 的快捷方法。
+///
+/// 使用方法 '123'.toDriftValue()。
+extension DriftValueExt on Object? {
+  Value<T> toDriftValue<T>() {
+    return Value<T>(this as T);
+  }
+}
+
+extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
-  /// [T] - 表类型，如 [Users]
+  /// [T] - 表类型 [Table]，如 [Users]
   ///
-  /// [D] - 实体，如 [User]/[UsersCompanion]
+  /// [DC] - 数据类类型 [DataClass]，如 [User]（不包括 [UsersCompanion]）
+  ///
+  /// [E] - [Insertable] 类类型，如 [User]/[UsersCompanion]
   ///
   /// [table] - 要对哪个表进行操作
   ///
   /// [entity] - 要插入的 [User]/[UsersCompanion] 的实体
   ///
-  /// [tag] - 见 [Syncs.tag] 的注释
-  ///
-  /// [autoTransaction] - 是否在该函数内部创建事务块（若外部存在事务块，则为 false），因为 drift 不支持嵌套事务，所以添加了该参数。
+  /// [syncTag] - 见 [SyncTag] 的注释
   ///
   /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
-  Future<D> insertReturningWith<T extends Table, D>({
-    required TableInfo<T, D> table,
-    required Insertable<D> entity,
-    required String tag,
-    required bool autoTransaction,
+  Future<DC> syncInsertReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>({
+    required TableInfo<T, DC> table,
+    required E entity,
+    required SyncTag syncTag,
     InsertMode? mode,
-    UpsertClause<T, D>? onConflict,
+    UpsertClause<T, DC>? onConflict,
   }) async {
-    Future<D> handle() async {
-      // 设置时间 - 每个插入语句都要设置（local/cloud）
-      final dynamic entityDynamic = entity;
-      entityDynamic.createdAt = DateTime.now().toDriftValue<DateTime>();
-      entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
+    return await transaction(
+      () async {
+        // 设置时间 - 每个插入语句都要设置（local/cloud）
+        final dynamic entityDynamic = entity;
+        entityDynamic.createdAt = DateTime.now().toDriftValue<DateTime>();
+        entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
 
-      // 插入
-      final newInto = into(table);
-      final dynamic returningEntityDynamic = await newInto.insertReturning(entityDynamic, mode: mode, onConflict: onConflict);
+        // 插入
+        final newInto = into(table);
+        final dynamic returningEntityDynamic = await newInto.insertReturning(entityDynamic, mode: mode, onConflict: onConflict);
 
-      // 增加一条 sync 记录 - 仅对 cloud
-      if (T is CloudTableBase) {
-        await insertReturningWith(
-          table: DriftDb.instance.syncs,
-          entity: SyncsCompanion.insert(
-            syncTableName: table.actualTableName,
-            rowId: returningEntityDynamic.id,
-            rowCloudId: returningEntityDynamic.cloudId,
-            syncCurdType: SyncCurdType.c.toDriftValue(),
-            syncUpdateColumns: null.toDriftValue(),
-            tag: tag,
-          ),
-          tag: tag,
-          autoTransaction: false,
-        );
-      }
+        // 增加一条 sync 记录 - 仅对 cloud
+        if (table is CloudTableBase) {
+          await syncTag.check(tableName: table.actualTableName, id: returningEntityDynamic.id);
+          await syncInsertReturningWith(
+            table: DriftDb.instance.syncs,
+            entity: SyncsCompanion(
+              syncTableName: table.actualTableName.toDriftValue(),
+              rowId: (returningEntityDynamic.id as int).toDriftValue(),
+              rowCloudId: (returningEntityDynamic.cloudId as int?).toDriftValue(),
+              syncCurdType: SyncCurdType.c.toDriftValue(),
+              syncUpdateColumns: null.toDriftValue(),
+              tag: syncTag.toString().toDriftValue(),
+            ),
+            syncTag: syncTag,
+          );
+        }
 
-      return returningEntityDynamic;
-    }
-
-    if (autoTransaction) {
-      return await transaction(() async => await handle());
-    }
-    return await handle();
+        return returningEntityDynamic;
+      },
+    );
   }
 
-  /// [T] - 表类型，如 [Users]
-  ///
-  /// [D] - 实体，如 [User]/[UsersCompanion]
-  ///
-  /// [table] - 要对哪个表进行操作
-  ///
   /// [filter] - 更新 row 时的 where 语句
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  ///
-  /// [tag] - 见 [Syncs.tag] 的注释
-  ///
-  /// [autoTransaction] - 是否在该函数内部创建事务块（若外部存在事务块，则为 false），因为 drift 不支持嵌套事务，所以添加了该参数。
-  Future<D?> replaceReturningWith<T extends Table, D>({
-    required TableInfo<T, D> table,
+  Future<DC?> syncUpdateReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>({
+    required TableInfo<T, DC> table,
     required Expression<bool?> Function(T tbl) filter,
-    required Insertable<D> entity,
-    required String tag,
-    required bool autoTransaction,
+    required E entity,
+    required SyncTag syncTag,
   }) async {
-    Future<D?> handle() async {
-      // 设置时间 - 每个更新语句都要设置（local/cloud）
-      final dynamic entityDynamic = entity;
-      entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
+    return await transaction(
+      () async {
+        // 设置时间 - 每个更新语句都要设置（local/cloud）
+        final dynamic entityDynamic = entity;
+        entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
 
-      // 修改某行
-      final newUpdate = update(table)..where(filter);
-      final int returningEntityCounts = await newUpdate.write(entityDynamic);
-      if (returningEntityCounts == 0) {
-        return null;
-      } else if (returningEntityCounts == 1) {
-      } else {
-        throw '单次操作只能修改零行或一行!';
-      }
+        // 修改某行
+        final newUpdate = update(table)..where(filter);
+        final int returningEntityCounts = await newUpdate.write(entityDynamic);
+        if (returningEntityCounts == 0) {
+          return null;
+        } else if (returningEntityCounts == 1) {
+        } else {
+          throw '单次操作只能修改零行或一行!';
+        }
 
-      // 获取已被修改的行
-      final List<D> returningEntities = await (select(table)..where(filter)).get();
-      if (returningEntities.length != 1) {
-        throw '获取到的已被修改的行数不为1!';
-      }
-      final dynamic returningEntity = returningEntities.first;
+        // 获取已被修改的行
+        final List<DC> returningEntities = await (select(table)..where(filter)).get();
+        if (returningEntities.length != 1) {
+          throw '获取到的已被修改的行数不为1!';
+        }
+        final dynamic returningEntity = returningEntities.first;
 
-      // 获取被修改的 columns
-      // 当 entity 为数据类(非 Companion 类型)时,其中的某个参数值可能为 null,意味着操作者有意的让它值为 null,因而 toColumns(false) 必须为 false,以便遵循操作者的主观意识.
-      // 值可能为 ''/'key_1'/'key_1,key_2'...
-      final String syncUpdateColumns = (entityDynamic as Insertable<D>).toColumns(false).keys.join(',');
+        // 获取被修改的 columns
+        // 当 entity 为数据类(非 Companion 类型)时,其中的某个参数值可能为 null,意味着操作者有意的让它值为 null,因而 toColumns(false) 必须为 false,以便遵循操作者的主观意识.
+        // 值可能为 ''/'key_1'/'key_1,key_2'...
+        final String syncUpdateColumns = (entityDynamic as E).toColumns(false).keys.join(',');
 
-      // 增加一条 sync 记录 - 仅对 cloud
-      if (T is CloudTableBase) {
-        await insertReturningWith(
-          table: DriftDb.instance.syncs,
-          entity: SyncsCompanion.insert(
-            syncTableName: table.actualTableName,
-            rowId: returningEntity.id,
-            rowCloudId: returningEntity.cloudId,
-            syncCurdType: SyncCurdType.u.toDriftValue(),
-            syncUpdateColumns: syncUpdateColumns.toDriftValue(),
-            tag: tag,
-          ),
-          tag: tag,
-          autoTransaction: false,
-        );
-      }
+        // 增加一条 sync 记录 - 仅对 cloud
+        if (table is CloudTableBase) {
+          await syncTag.check(tableName: table.actualTableName, id: returningEntity.id);
+          await syncInsertReturningWith(
+            table: DriftDb.instance.syncs,
+            entity: SyncsCompanion(
+              syncTableName: table.actualTableName.toDriftValue(),
+              rowId: (returningEntity.id as int).toDriftValue(),
+              rowCloudId: (returningEntity.cloudId as int?).toDriftValue(),
+              syncCurdType: SyncCurdType.u.toDriftValue(),
+              syncUpdateColumns: syncUpdateColumns.toDriftValue(),
+              tag: syncTag.toString().toDriftValue(),
+            ),
+            syncTag: syncTag,
+          );
+        }
 
-      return returningEntity;
-    }
-
-    if (autoTransaction) {
-      return await transaction(() async => await handle());
-    }
-    return await handle();
+        return returningEntity;
+      },
+    );
   }
 
-  /// [T] - 表类型，如 [Users]
-  ///
-  /// [D] - 实体，如 [User]/[UsersCompanion]
-  ///
-  /// [table] - 要对哪个表进行操作
-  ///
-  /// [filter] - 更新 row 时的 where 语句
+  /// [filter] - 删除 row 时的 where 语句
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  ///
-  /// [tag] - 见 [Syncs.tag] 的注释
-  ///
-  /// [autoTransaction] - 是否在该函数内部创建事务块（若外部存在事务块，则为 false），因为 drift 不支持嵌套事务，所以添加了该参数。
-  Future<D?> deleteWith<T extends Table, D>({
-    required TableInfo<T, D> table,
+  Future<DC?> syncDeleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>({
+    required TableInfo<T, DC> table,
     required Expression<bool?> Function(T tbl) filter,
-    required Insertable<D> entity,
-    required String tag,
-    required bool autoTransaction,
+    required SyncTag syncTag,
   }) async {
-    Future<D?> handle() async {
-      // delete(table).delete(entity)
-      // 设置时间 - 每个更新语句都要设置（local/cloud）
-      final dynamic entityDynamic = entity;
-      entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
+    return await transaction(
+      () async {
+        // 查询要删除的行
+        final selectEntities = await (select(table)..where(filter)).get();
+        if (selectEntities.isEmpty) {
+          return null;
+        } else if (selectEntities.length == 1) {
+        } else {
+          throw '单次操作只能删除零行或一行!';
+        }
+        final dynamic selectEntity = selectEntities.first;
 
-      // 修改某行
-      final newUpdate = update(table)..where(filter);
-      final int returningEntityCounts = await newUpdate.write(entityDynamic);
-      if (returningEntityCounts == 0) {
-        return null;
-      } else if (returningEntityCounts == 1) {
-      } else {
-        throw '单次操作只能修改零行或一行!';
-      }
+        // 执行删除操作
+        final int deleteCount = await (delete(table).delete(selectEntity));
+        if (deleteCount != 1) {
+          throw '获取到的将删除的行数不为1!';
+        }
 
-      // 获取已被修改的行
-      final List<D> returningEntities = await (select(table)..where(filter)).get();
-      if (returningEntities.length != 1) {
-        throw '获取到的已被修改的行数不为1!';
-      }
-      final dynamic returningEntity = returningEntities.first;
-
-      // 获取被修改的 columns
-      // 当 entity 为数据类(非 Companion 类型)时,其中的某个参数值可能为 null,意味着操作者有意的让它值为 null,因而 toColumns(false) 必须为 false,以便遵循操作者的主观意识.
-      // 值可能为 ''/'key_1'/'key_1,key_2'...
-      final String syncUpdateColumns = (entityDynamic as Insertable<D>).toColumns(false).keys.join(',');
-
-      // 增加一条 sync 记录 - 仅对 cloud
-      if (T is CloudTableBase) {
-        await insertReturningWith(
-          table: DriftDb.instance.syncs,
-          entity: SyncsCompanion.insert(
-            syncTableName: table.actualTableName,
-            rowId: returningEntity.id,
-            rowCloudId: returningEntity.cloudId,
-            syncCurdType: SyncCurdType.u.toDriftValue(),
-            syncUpdateColumns: syncUpdateColumns.toDriftValue(),
-            tag: tag,
-          ),
-          tag: tag,
-          autoTransaction: false,
-        );
-      }
-
-      return returningEntity;
-    }
-
-    if (autoTransaction) {
-      return await transaction(() async => await handle());
-    }
-    return await handle();
+        // 增加一条 sync 记录 - 仅对 cloud
+        if (table is CloudTableBase) {
+          await syncTag.check(tableName: table.actualTableName, id: selectEntity.id);
+          await syncInsertReturningWith(
+            table: DriftDb.instance.syncs,
+            entity: SyncsCompanion(
+              syncTableName: table.actualTableName.toDriftValue(),
+              rowId: (selectEntity.id as int).toDriftValue(),
+              rowCloudId: (selectEntity.cloudId as int?).toDriftValue(),
+              syncCurdType: SyncCurdType.d.toDriftValue(),
+              syncUpdateColumns: null.toDriftValue(),
+              tag: syncTag.toString().toDriftValue(),
+            ),
+            syncTag: syncTag,
+          );
+        }
+        return selectEntity;
+      },
+    );
   }
 }

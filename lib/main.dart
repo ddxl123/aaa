@@ -3,18 +3,12 @@ import 'dart:developer';
 import 'package:aaa/theme.dart';
 import 'package:aaa/tool/CatchRollback.dart';
 import 'package:catcher/catcher.dart';
-import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home.dart';
-import 'drift/DriftDb.dart';
-import 'fragmenthome/FragmentHome.dart';
-
-import 'package:animations/animations.dart';
 
 main() {
   final catcherOptions = CatcherOptions(

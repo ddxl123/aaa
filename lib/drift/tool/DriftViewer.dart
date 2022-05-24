@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 
@@ -16,12 +18,15 @@ class _DriftViewerState extends State<DriftViewer> {
   final List<drift.TableInfo> tableInfos = [];
   final List<String> _triggers = [];
   final List<String> _sqls = [];
+  bool hasDeleteDb = false;
 
   @override
   void initState() {
     super.initState();
     tableInfos.addAll(DriftDb.instance.allTables);
     tableInfos.sort((a, b) => a.actualTableName.compareTo(b.actualTableName));
+    // 对 Drift 进行初始化
+    DriftDb.instance.select(DriftDb.instance.users).get();
   }
 
   @override
@@ -75,15 +80,91 @@ class _DriftViewerState extends State<DriftViewer> {
                       }
                     },
                   ),
+                  PopupMenuItem(
+                    child: const Text('删除数据库'),
+                    onTap: () async {
+                      await File(DriftDb.instance.path).delete();
+                      setState(() => hasDeleteDb = true);
+                    },
+                    textStyle: const TextStyle(color: Colors.red),
+                  ),
                 ],
               );
             },
           )
         ],
       ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        children: _tableInfoWidget(),
+      body: hasDeleteDb
+          ? const Text('数据库已被删除，请执行热重启或重启应用，重新生成数据库！')
+          : ListView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              children: _tableInfoWidget(),
+            ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              List<Widget> add({required String title, required Function() onPressed}) => [
+                    const Text('添加测试数据'),
+                    TextButton(
+                      child: Text(title),
+                      onPressed: onPressed,
+                    )
+                  ];
+              return Column(
+                children: [
+                  ...add(
+                    title: 'test1',
+                    onPressed: () async {
+                      await DriftDb.instance.syncInsertReturningWith(
+                        table: DriftDb.instance.users,
+                        entity: UsersCompanion(username: '啊啊啊'.toDriftValue()),
+                        syncTag: SyncTag(),
+                      );
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ...add(
+                    title: 'test2',
+                    onPressed: () async {
+                      final st = SyncTag();
+                      await DriftDb.instance.syncUpdateReturningWith<Users, User, UsersCompanion>(
+                        table: DriftDb.instance.users,
+                        filter: (tbl) => tbl.id.equals(3),
+                        entity: UsersCompanion(
+                          username: '顶顶顶'.toDriftValue(),
+                        ),
+                        syncTag: st,
+                      );
+                      await DriftDb.instance.syncUpdateReturningWith<Users, User, UsersCompanion>(
+                        table: DriftDb.instance.users,
+                        filter: (tbl) => tbl.id.equals(3),
+                        entity: UsersCompanion(
+                          username: '顶顶顶'.toDriftValue(),
+                        ),
+                        syncTag: st,
+                      );
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ...add(
+                    title: 'test3',
+                    onPressed: () async {
+                      await DriftDb.instance.syncDeleteWith<Users, User, UsersCompanion>(
+                        table: DriftDb.instance.users,
+                        filter: (tbl) => tbl.id.equals(2),
+                        syncTag: SyncTag(),
+                      );
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
 void main() {
-  final a = {"z":1,'zzz':2}.keys.join(',');
-  print(a);
+  String a = '111';
+  print(a.substring(a.length - 10, 2));
 }
