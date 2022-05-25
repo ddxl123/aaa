@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/getcontroller/FragmentHomeGetController.dart';
+import 'package:aaa/home/fragmenthome/FragmentHomeGetController.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/Extensioner.dart';
 import 'package:aaa/tool/show/ShowWrapper.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../tool/CatchRollback.dart';
+import '../../tool/CatchRollback.dart';
 
 class FragmentHome extends StatefulWidget {
   const FragmentHome({Key? key}) : super(key: key);
@@ -61,7 +61,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
         controller: _fragmentHomeGetController.refreshController,
         child: ListView.builder(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          itemCount: _fragmentHomeGetController.fragmentOrGroupVOs.length,
+          itemCount: _fragmentHomeGetController.fragments.length,
           itemBuilder: (BuildContext context, int index) {
             return Card(
               child: Text('_fragmentHomeGetController.fragmentOrGroupVOs[index]'),

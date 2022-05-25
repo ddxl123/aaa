@@ -46,7 +46,7 @@ dependencies:
   drift_db_viewer: ^1.0.3
   # 底部导航栏
   salomon_bottom_bar: ^3.3.0
-  get: ^4.6.1
+  get: ^4.6.5
   # 上拉、下拉刷新
   pull_to_refresh: ^2.0.0
   # toast

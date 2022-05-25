@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:aaa/test/FlutterTest.dart';
 import 'package:aaa/theme.dart';
 import 'package:aaa/tool/CatchRollback.dart';
 import 'package:catcher/catcher.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'Home.dart';
+import 'home/Home.dart';
 
 main() {
   final catcherOptions = CatcherOptions(
@@ -59,7 +60,8 @@ class MyApp extends StatelessWidget {
       // pull_to_refresh 相关
       home: RefreshConfiguration(
         footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
-        child: const Home(),
+        // child: const Home(),
+        child: const FlutterTest(),
       ),
     );
   }
