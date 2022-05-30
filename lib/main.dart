@@ -1,10 +1,9 @@
 import 'dart:developer';
 
 import 'package:aaa/home/Home.dart';
-import 'package:aaa/test/FlutterTest.dart';
 import 'package:aaa/theme.dart';
 import 'package:aaa/tool/CatchRollback.dart';
-import 'package:aaa/tool/aber/AberDemo.dart';
+import 'package:aber/Aber.dart';
 import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -59,7 +58,7 @@ class MyApp extends StatelessWidget {
       // pull_to_refresh 相关
       home: RefreshConfiguration(
         footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
-        child: const AberDemo(),
+        child: const Home(),
         // child: const FlutterTest(),
       ),
     );

@@ -63,6 +63,7 @@ dependencies:
   package_info_plus: ^1.4.2
 
   uuid: ^3.0.6
+  aber: ^0.0.1
 
 dev_dependencies:
   flutter_test:
