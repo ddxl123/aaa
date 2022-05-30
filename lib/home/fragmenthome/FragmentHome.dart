@@ -101,7 +101,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
                 .value
                 .first(con)
                 .modify(con, (obj) => obj.value.id, (obj) => obj.value.id + 1, (obj, newValue) => obj.value.id = newValue)
-                .refresh();
+                .refreshComplex();
           },
         ),
       ),

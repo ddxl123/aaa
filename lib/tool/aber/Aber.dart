@@ -56,11 +56,11 @@ class Ab<V> {
 
   /// 当 [value] 为 基本数据类型 时的快捷方案。
   ///
-  /// 复杂的修改推荐使用 [refreshComplex] 或 [modify] 方案。
+  /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
   ///
   /// 只会尝试重建引用当前对象 [AbBuilder]。
   ///
-  /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
+  /// 也可以看 [refreshEasyMulti], 复杂的修改推荐使用 [modify] 或 [modifyMulti] 方案。
   void refreshEasy(V Function(V oldValue) newValue, [bool isForce = false]) {
     if (V is num || V is String || V is bool) {
       if (kDebugMode) {
@@ -77,12 +77,12 @@ class Ab<V> {
 
   /// 当 [diff] 返回值为 true 时，才会尝试重建。
   ///
-  /// 更复杂的修改可以使用 [modify] 方案。
+  /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
   ///
   /// 只会尝试重建引用当前对象 [AbBuilder]。
   ///
-  /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  void refreshComplex(bool Function(V obj) diff, [bool isForce = false]) {
+  /// 也可以看 [refreshEasy], 复杂的修改推荐使用 [modify] 或 [modifyMulti] 方案。
+  void refreshEasyMulti(bool Function(V obj) diff, [bool isForce = false]) {
     if (diff(value)) {
       _refresh();
     }
@@ -116,10 +116,11 @@ extension ModifyExt<O> on O {
   /// 当 [oldValue] != [newValue] 时，会执行 [modify]。
   ///
   /// 只调用该函数并不能将 [AbBuilder] 进行重建，
-  /// 只有在最后调用 [AbController.refresh] 时，才会尝试进行重建。
+  /// 只有在最后调用 [AbController.refreshComplex] 时，才会尝试进行重建。
   ///
   /// 只会重建调用 [Ab.call] 过的 [Ab] 所对应的 [AbBuilder]。
   ///
+  /// 也可以看 [modifyMulti], 简单的修改推荐使用 [Ab.refreshEasy] 或 [Ab.refreshEasyMulti]。
   C modify<C extends AbController, V>(
     C controller,
     V Function(O obj) oldValue,
@@ -130,6 +131,16 @@ extension ModifyExt<O> on O {
     final newValueGet = newValue(this);
     if (oldValueGet != newValueGet) {
       modify(this, newValueGet);
+      controller._isRefresh = true;
+    }
+    return controller;
+  }
+
+  /// 当 [diff] 返回值为 true 时，才会尝试重建。
+  ///
+  /// 也可以看 [modify], 简单的修改推荐使用 [Ab.refreshEasy] 或 [Ab.refreshEasyMulti]。
+  C modifyMulti<C extends AbController>(C controller, bool Function(O obj) diff) {
+    if (diff(this)) {
       controller._isRefresh = true;
     }
     return controller;
@@ -156,8 +167,12 @@ abstract class AbController {
   /// [AbBuilder] 内部的 dispose，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   void dispose() {}
 
+  /// 使用 [modify] 或 [modifyMulti] 后调用该函数进行尝试重建。
+  ///
+  /// 可以多次连续多次使用 [modify] 或 [modifyMulti], 在最后使用该函数进行尝试重建。
+  ///
   /// 当 [isForce] 为 true 时，无论修改的值是否相等，都会强制重建。
-  void refresh({bool isForce = false}) {
+  void refreshComplex({bool isForce = false}) {
     if (_isRefresh || isForce) {
       for (var element in _marksRebuildFunction) {
         element();
