@@ -65,7 +65,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
                 return Card(
                   child: AbBuilder<FragmentHomeGetController>(
                     builder: (c, cardAbw) {
-                      print(index.toString());
+                      print(index);
                       return Text(
                         controller.sections.get(abw).match<String, Ab<FragmentGroup>, Ab<Fragment>>(
                               index,
@@ -96,22 +96,12 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
           child: const Text('data'),
           onPressed: () {
             final con = Aber.find<FragmentHomeGetController>();
-            // con.fragmentsCompanion.modify(con, (obj) => obj.value.id, 500, (obj, newValue) => obj.value.id = newValue.toDriftValue());
-            // FragmentsCompanion().modify(con, (obj) => obj.id, 600, (obj, newValue) => obj.id = newValue.toDriftValue());
-            con.refresh();
-
-            // con.sections.value.modify(con, (obj) => obj.length, (obj) => obj.length - 1, (obj, newValue) {
-            //   obj.first.broken(con);
-            //   obj.removeAt(0);
-            // });
-            con.fList(con).value.first(con).value.modify(
-                  controller: con,
-                  oldValue: (obj) => obj.id.value,
-                  newValue: (obj) => obj.id.value + 1,
-                  modify: (obj, newValue) => obj.id = newValue.toDriftValue(),
-                );
-            con.refresh();
-            con.count.refreshEasy((oldValue) => oldValue + 1);
+            con
+                .sections(con)
+                .value
+                .first(con)
+                .modify(con, (obj) => obj.value.id, (obj) => obj.value.id + 1, (obj, newValue) => obj.value.id = newValue)
+                .refresh();
           },
         ),
       ),

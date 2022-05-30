@@ -11,9 +11,4 @@ class FragmentHomeGetController extends AbController {
     FragmentGroup(id: 222, createdAt: DateTime.now(), updatedAt: DateTime.now()).ab,
     Fragment(id: 333, createdAt: DateTime.now(), updatedAt: DateTime.now()).ab,
   ].ab;
-
-  final fragmentsCompanion = FragmentsCompanion().ab;
-  final fList = <Ab<FragmentsCompanion>>[].ab;
-
-  final count = 0.ab;
 }

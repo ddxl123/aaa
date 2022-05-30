@@ -68,7 +68,9 @@ class Ab<V> {
             'please use the refreshComplex or modify method.');
       }
     }
-    if (value != newValue(value) || isForce) {
+    final nv = newValue(value);
+    if (value != nv || isForce) {
+      value = nv;
       _refresh();
     }
   }
@@ -118,12 +120,12 @@ extension ModifyExt<O> on O {
   ///
   /// 只会重建调用 [Ab.call] 过的 [Ab] 所对应的 [AbBuilder]。
   ///
-  C modify<C extends AbController, V>({
-    required C controller,
-    required V Function(O obj) oldValue,
-    required V Function(O obj) newValue,
-    required void Function(O obj, V newValue) modify,
-  }) {
+  C modify<C extends AbController, V>(
+    C controller,
+    V Function(O obj) oldValue,
+    V Function(O obj) newValue,
+    void Function(O obj, V newValue) modify,
+  ) {
     final oldValueGet = oldValue(this);
     final newValueGet = newValue(this);
     if (oldValueGet != newValueGet) {
@@ -283,6 +285,8 @@ class AbBuilder<C extends AbController> extends StatefulWidget {
 class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   C? _controller;
 
+  late final Abw<C> _abw;
+
   /// 当前 Widget 所接收的 controller 是否为 put 产生的。
   bool _isPutter = false;
 
@@ -297,6 +301,9 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
       // 如果被 find 成功，会导致再次调用 onInit，因此只能放在这里，让它只会调用一次。
       _controller!.onInit();
     }
+    if (_controller != null) {
+      _abw = Abw<C>(refresh, _controller!._removeRefreshFunctions);
+    }
   }
 
   void refresh() {
@@ -304,7 +311,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(_controller!, Abw<C>(refresh, _controller!._removeRefreshFunctions));
+  Widget build(BuildContext context) => widget.builder(_controller!, _abw);
 
   @override
   void dispose() {
