@@ -18,13 +18,13 @@ class Users extends CloudTableBase {
 }
 
 class Fragments extends CloudTableBase {
-  TextColumn get content => text().nullable()();
+  TextColumn get title => text().nullable()();
 }
 
 class FragmentGroups extends CloudTableBase {
-  TextColumn get name => text().nullable()();
+  TextColumn get title => text().nullable()();
 }
 
 class MemoryGroups extends CloudTableBase {
-  TextColumn get name => text().nullable()();
+  TextColumn get title => text().nullable()();
 }

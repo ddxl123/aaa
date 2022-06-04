@@ -118,8 +118,8 @@ class _DriftViewerState extends State<DriftViewer> {
                   ...add(
                     title: 'test1',
                     onPressed: () async {
-                      await DriftDb.instance.syncInsertReturningWith(
-                        table: DriftDb.instance.users,
+                      await DriftDb.instance.insertReturningWith(
+                        DriftDb.instance.users,
                         entity: UsersCompanion(username: '啊啊啊'.toDriftValue()),
                         syncTag: SyncTag(),
                       );
@@ -130,16 +130,16 @@ class _DriftViewerState extends State<DriftViewer> {
                     title: 'test2',
                     onPressed: () async {
                       final st = SyncTag();
-                      await DriftDb.instance.syncUpdateReturningWith<Users, User, UsersCompanion>(
-                        table: DriftDb.instance.users,
+                      await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
+                        DriftDb.instance.users,
                         filter: (tbl) => tbl.id.equals(3),
                         entity: UsersCompanion(
                           username: '顶顶顶'.toDriftValue(),
                         ),
                         syncTag: st,
                       );
-                      await DriftDb.instance.syncUpdateReturningWith<Users, User, UsersCompanion>(
-                        table: DriftDb.instance.users,
+                      await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
+                        DriftDb.instance.users,
                         filter: (tbl) => tbl.id.equals(3),
                         entity: UsersCompanion(
                           username: '顶顶顶'.toDriftValue(),
@@ -152,8 +152,8 @@ class _DriftViewerState extends State<DriftViewer> {
                   ...add(
                     title: 'test3',
                     onPressed: () async {
-                      await DriftDb.instance.syncDeleteWith<Users, User, UsersCompanion>(
-                        table: DriftDb.instance.users,
+                      await DriftDb.instance.deleteWith<Users, User, UsersCompanion>(
+                        DriftDb.instance.users,
                         filter: (tbl) => tbl.id.equals(2),
                         syncTag: SyncTag(),
                       );

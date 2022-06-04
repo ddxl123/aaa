@@ -31,13 +31,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        floatingActionButton: _floatingActionButton(),
-        body: _body(),
-        bottomNavigationBar: _bottomNavigationBar(),
-      ),
+    return Scaffold(
+      floatingActionButton: _floatingActionButton(),
+      body: _body(),
+      bottomNavigationBar: _bottomNavigationBar(),
     );
   }
 

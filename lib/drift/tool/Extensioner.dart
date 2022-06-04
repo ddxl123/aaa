@@ -3,15 +3,22 @@ part of drift_db;
 /// drift_helper.Value('value') 的快捷方法。
 ///
 /// 使用方法 '123'.toDriftValue()。
-extension DriftValueExt on Object? {
-  Value<T> toDriftValue<T>() {
-    return Value<T>(this as T);
+extension DriftValueExt<T> on T {
+  Value<T> toDriftValue() {
+    return Value<T>(this);
   }
 }
 
 extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
+  /// 插入一条数据，并自动插入 createdAt/updatedAt。
+  /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
+  ///
+  /// 返回插入的行(带有插入的id)，与传入的 [entity] 不是一个对象。
+  ///
+  /// 如果外部没有事务，内部会自动创建事务。
+  ///
   /// [T] - 表类型 [Table]，如 [Users]
   ///
   /// [DC] - 数据类类型 [DataClass]，如 [User]（不包括 [UsersCompanion]）
@@ -25,8 +32,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [syncTag] - 见 [SyncTag] 的注释
   ///
   /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
-  Future<DC> syncInsertReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>({
-    required TableInfo<T, DC> table,
+  Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+    TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
     InsertMode? mode,
@@ -36,8 +43,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
       () async {
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
-        entityDynamic.createdAt = DateTime.now().toDriftValue<DateTime>();
-        entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
+        entityDynamic.createdAt = DateTime.now().toDriftValue();
+        entityDynamic.updatedAt = DateTime.now().toDriftValue();
 
         // 插入
         final newInto = into(table);
@@ -46,8 +53,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
           await syncTag.check(tableName: table.actualTableName, id: returningEntityDynamic.id);
-          await syncInsertReturningWith(
-            table: DriftDb.instance.syncs,
+          await insertReturningWith(
+            DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toDriftValue(),
               rowId: (returningEntityDynamic.id as int).toDriftValue(),
@@ -65,11 +72,18 @@ extension DriftSyncExt on DatabaseConnectionUser {
     );
   }
 
+  /// 修改一条数据，并自动修改 updatedAt。
+  /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
+  ///
+  /// 返回已被更新的行，返回 null 表示将更新的行不存在。
+  ///
+  /// 如果外部没有事务，内部会自动创建事务。
+  ///
   /// [filter] - 更新 row 时的 where 语句
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  Future<DC?> syncUpdateReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>({
-    required TableInfo<T, DC> table,
+  Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+    TableInfo<T, DC> table, {
     required Expression<bool?> Function(T tbl) filter,
     required E entity,
     required SyncTag syncTag,
@@ -78,7 +92,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
       () async {
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
-        entityDynamic.updatedAt = DateTime.now().toDriftValue<DateTime>();
+        entityDynamic.updatedAt = DateTime.now().toDriftValue();
 
         // 修改某行
         final newUpdate = update(table)..where(filter);
@@ -105,8 +119,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
           await syncTag.check(tableName: table.actualTableName, id: returningEntity.id);
-          await syncInsertReturningWith(
-            table: DriftDb.instance.syncs,
+          await insertReturningWith(
+            DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toDriftValue(),
               rowId: (returningEntity.id as int).toDriftValue(),
@@ -124,11 +138,18 @@ extension DriftSyncExt on DatabaseConnectionUser {
     );
   }
 
+  /// 删除一条数据。
+  /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
+  ///
+  /// 返回已被删除的行，返回 null 表示将删除的行不存在。
+  ///
+  /// 如果外部没有事务，内部会自动创建事务。
+  ///
   /// [filter] - 删除 row 时的 where 语句
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  Future<DC?> syncDeleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>({
-    required TableInfo<T, DC> table,
+  Future<DC?> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+    TableInfo<T, DC> table, {
     required Expression<bool?> Function(T tbl) filter,
     required SyncTag syncTag,
   }) async {
@@ -153,8 +174,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
           await syncTag.check(tableName: table.actualTableName, id: selectEntity.id);
-          await syncInsertReturningWith(
-            table: DriftDb.instance.syncs,
+          await insertReturningWith(
+            DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toDriftValue(),
               rowId: (selectEntity.id as int).toDriftValue(),

@@ -22,7 +22,7 @@ Future<T?> showWrapperInput<T>({
     cancelLabel: cancelLabel,
     isDestructiveAction: true,
   );
-  if (result != null && result.isNotEmpty && result.first.trim().isNotEmpty) {
+  if (result != null && result.isNotEmpty && result.first.trim() != '') {
     return firstHandle(result.first);
   }
   await cancelHandle?.call();

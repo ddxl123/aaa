@@ -1,7 +1,5 @@
 part of drift_db;
 
-// part 'MultiDAO.g.dart';
-
 @DriftAccessor(
   tables: [
     ...cloudTableClass,

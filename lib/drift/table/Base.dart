@@ -23,12 +23,12 @@ class CloudTableBase extends TableBase {
 /// 子类类名规范：RSon2Fathers
 ///   Son - 儿
 ///   Father - 父
-class CloudRTableBase extends CloudTableBase {
+class RCloudTableBase extends CloudTableBase {
   IntColumn get sonId => integer()();
 
-  IntColumn get sonCloudId => integer()();
+  IntColumn get sonCloudId => integer().nullable()();
 
-  IntColumn get fatherId => integer()();
+  IntColumn get fatherId => integer().nullable()();
 
-  IntColumn get fatherCloudId => integer()();
+  IntColumn get fatherCloudId => integer().nullable()();
 }

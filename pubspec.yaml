@@ -44,12 +44,12 @@ dependencies:
   path: ^1.8.0
   # drift 需要，在应用内可视化数据库数据
   drift_db_viewer: ^1.0.3
-  # 底部导航栏
+  # 底部导航栏 - 关注 persistent_bottom_nav_bar
   salomon_bottom_bar: ^3.3.0
   get: ^4.6.5
-  # 上拉、下拉刷新
+  # 上拉、下拉刷新 - 已选最佳
   pull_to_refresh: ^2.0.0
-  # toast
+  # toast - 已选最佳
   fluttertoast: ^8.0.9
   # dialog
   adaptive_dialog: ^1.5.0+1
@@ -61,9 +61,12 @@ dependencies:
   # 获取包信息。
   # catcher 需要。
   package_info_plus: ^1.4.2
+  # 下拉列表 - 关注 flutter_speed_dial
+  dropdown_button2: ^1.5.2
 
   uuid: ^3.0.6
-  aber: ^0.0.1
+
+  logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:

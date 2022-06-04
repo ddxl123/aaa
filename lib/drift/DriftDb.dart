@@ -1,11 +1,14 @@
 library drift_db;
 
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:aaa/drift/table/cloud/R.dart';
+import 'package:aaa/tool/Extensioner.dart';
 import 'package:aaa/tool/Helper.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/rendering.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -16,6 +19,8 @@ part './dao/SingleDAO.dart';
 part './table/Base.dart';
 
 part 'table/cloud/Cloud.dart';
+
+part 'table/cloud/R.dart';
 
 part 'table/local/Local.dart';
 

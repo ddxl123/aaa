@@ -1,4 +1,4 @@
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:flutter/foundation.dart';
 
 /// 调用该类以快捷导入当前文件，以便快速使用当前文件的扩展函数。
 ///
@@ -34,5 +34,13 @@ extension AnyExt on Object? {
       return bCall(obj);
     }
     throw 'Type mismatch: Need-${obj.runtimeType}, A-${A.toString()}, B-${B.toString()}';
+  }
+}
+
+extension AnyExt2<T> on T {
+  void withPrint(String Function(T t) current) {
+    if (kDebugMode) {
+      print(current(this));
+    }
   }
 }

@@ -7,11 +7,7 @@ class A {
 }
 
 void main() {
-  A? a = A();
-  Set s = {a.a};
-  a = null;
-  print(a.toString());
-  print(s.first.call());
+  final f = [111, 222];
 }
 
 void a() {}
