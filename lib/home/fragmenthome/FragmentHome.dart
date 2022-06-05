@@ -1,4 +1,4 @@
-import 'package:aaa/home/fragmenthome/FragmentHomeGetController.dart';
+import 'package:aaa/home/fragmenthome/FragmentHomeAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/show/ShowWrapper.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
@@ -20,8 +20,8 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return AbBuilder<FragmentHomeGetController>(
-      controller: FragmentHomeGetController(),
+    return AbBuilder<FragmentHomeAbController>(
+      controller: FragmentHomeAbController(),
       builder: (controller, abw) {
         return Scaffold(
           appBar: AppBar(
@@ -48,7 +48,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
           reverse: true,
           scrollDirection: Axis.horizontal,
           physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          child: AbBuilder<FragmentHomeGetController>(
+          child: AbBuilder<FragmentHomeAbController>(
             builder: (controller, abw) {
               return Row(
                 children: [
@@ -74,7 +74,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
   }
 
   Widget _body() {
-    return AbBuilder<FragmentHomeGetController>(
+    return AbBuilder<FragmentHomeAbController>(
       builder: (controller, abw) {
         return IndexedStack(
           index: controller.parts(abw).length - 1,
@@ -111,7 +111,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
   }
 
   Widget _fragmentGroupsBuilder() {
-    return AbBuilder<FragmentHomeGetController>(
+    return AbBuilder<FragmentHomeAbController>(
       builder: (controller, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -119,7 +119,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
               return TextButton(
                 child: Text(controller.currentFragmentGroup(index, abw).title.toString()),
                 onPressed: () {
-                  Aber.find<FragmentHomeGetController>().enterPart(controller.currentFragmentGroups()[index]);
+                  Aber.find<FragmentHomeAbController>().enterPart(controller.currentFragmentGroups()[index]);
                 },
               );
             },
@@ -131,7 +131,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
   }
 
   Widget _fragmentsBuilder() {
-    return AbBuilder<FragmentHomeGetController>(
+    return AbBuilder<FragmentHomeAbController>(
       builder: (controller, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -168,7 +168,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
               okLabel: '添加',
               cancelLabel: '取消',
               firstHandle: (String firstContent) {
-                Aber.find<FragmentHomeGetController>().addFragment(firstContent);
+                Aber.find<FragmentHomeAbController>().addFragment(firstContent);
               },
             );
           } else if (v == 1) {
@@ -179,7 +179,7 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
               okLabel: '添加',
               cancelLabel: '取消',
               firstHandle: (String firstContent) {
-                Aber.find<FragmentHomeGetController>().addFragmentGroup(firstContent);
+                Aber.find<FragmentHomeAbController>().addFragmentGroup(firstContent);
               },
             );
           }

@@ -1,9 +1,10 @@
 import 'dart:developer';
 
+import 'package:aaa/GlobalAbController.dart';
 import 'package:aaa/home/Home.dart';
-import 'package:aaa/test/FlutterTest.dart';
 import 'package:aaa/theme.dart';
 import 'package:aaa/tool/CatchRollback.dart';
+import 'package:aaa/tool/aber/Aber.dart';
 import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -45,22 +46,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // 那种材料包需要本地化的支持
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      // 支持哪种语言的切换
-      supportedLocales: const [Locale('zh'), Locale('en')],
-      // 默认使用哪种语言
-      locale: const Locale('zh'),
-      // catcher 相关
-      navigatorKey: Catcher.navigatorKey,
-      theme: themeLight(context),
-      // pull_to_refresh 相关
-      home: RefreshConfiguration(
-        footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
-        child: const Home(),
-        // child: const FlutterTest(),
-      ),
+    return AbBuilder<GlobalAbController>(
+      controller: GlobalAbController(),
+      builder: (controller, abw) {
+        return MaterialApp(
+          // 那种材料包需要本地化的支持
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
+          // 支持哪种语言的切换
+          supportedLocales: const [Locale('zh'), Locale('en')],
+          // 默认使用哪种语言
+          locale: const Locale('zh'),
+          // catcher 相关
+          navigatorKey: Catcher.navigatorKey,
+          theme: themeLight(context),
+          // pull_to_refresh 相关
+          home: RefreshConfiguration(
+            footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
+            child: const Home(),
+            // child: const FlutterTest(),
+          ),
+        );
+      },
     );
   }
 }

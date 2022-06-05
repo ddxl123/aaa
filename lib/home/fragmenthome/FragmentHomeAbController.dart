@@ -28,7 +28,7 @@ class PartListForFragmentHome {
   }
 }
 
-class FragmentHomeGetController extends AbController {
+class FragmentHomeAbController extends AbController {
   /// 必须预留一个顶级的。
   final parts = <Ab<PartListForFragmentHome>>[PartListForFragmentHome(null).ab].ab;
 
