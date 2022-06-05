@@ -1,30 +1,34 @@
 import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PartListForFragmentHome {
   PartListForFragmentHome(this.fatherFragmentGroup);
+
+  /// TODO: back 会上一个页面时，上一个页面的 position 会被重置。
+  /// TODO: 调用 dispose 时，会抛出异常。
+  final RefreshController refreshController = RefreshController(initialRefresh: true);
+
+  double currentPosition = 0;
 
   final Ab<FragmentGroup>? fatherFragmentGroup;
 
   final fragmentGroups = <Ab<FragmentGroup>>[].ab;
   final fragments = <Ab<Fragment>>[].ab;
 
+  void clean<C extends AbController>(C controller) {
+    fragmentGroups.clear_(controller);
+    fragments.clear_(controller);
+  }
+
   void dispose<C extends AbController>(C controller) {
-    for (var value in fragmentGroups()) {
-      value.broken(controller);
-    }
-    for (var value1 in fragments()) {
-      value1.broken(controller);
-    }
-    fragmentGroups.broken(controller);
-    fragments.broken(controller);
+    fragmentGroups.clearAndSelf_(controller);
+    fragments.clearAndSelf_(controller);
   }
 }
 
 class FragmentHomeGetController extends AbController {
-  final RefreshController refreshController = RefreshController(initialRefresh: true);
-
   /// 必须预留一个顶级的。
   final parts = <Ab<PartListForFragmentHome>>[PartListForFragmentHome(null).ab].ab;
 
@@ -40,20 +44,29 @@ class FragmentHomeGetController extends AbController {
 
   FragmentGroup? currentFatherFragmentGroup([Abw? abw]) => currentPart().fatherFragmentGroup?.call(abw);
 
-  Future<void> refreshPart() async {
-    await DriftDb.instance.singleDAO.queryFragmentGroupBy(null);
+  Future<void> refreshCurrentPart<C extends AbController>() async {
+    final newFragmentGroups = (await DriftDb.instance.singleDAO.queryFragmentGroupsBy(currentPart().fatherFragmentGroup?.call())).map((e) => e.ab);
+    final newFragments = (await DriftDb.instance.singleDAO.queryFragmentsBy(currentPart().fatherFragmentGroup?.call())).map((e) => e.ab);
+    currentPart().clean(this);
+    currentPart().fragmentGroups.refreshInevitable((obj) => obj..addAll(newFragmentGroups));
+    currentPart().fragments.refreshInevitable((obj) => obj..addAll(newFragments));
   }
 
   Future<void> enterPart(Ab<FragmentGroup> fg) async {
+    currentPart().currentPosition = currentPart().refreshController.position!.pixels;
     final part = PartListForFragmentHome(fg).ab;
     parts.refreshInevitable((obj) => obj..add(part));
+    // 在 onRefresh 中会调用 refreshCurrentPart();
   }
 
   void backPart() {
     if (parts().length == 1) return;
-    parts.refreshInevitable((obj) => obj
-      ..last().dispose(this)
-      ..removeLastForAb(this));
+    parts.refreshInevitable(
+      (obj) => obj
+        ..last().dispose(this)
+        ..removeLast_(this),
+    );
+    currentPart().refreshController.position!.jumpTo(currentPart().currentPosition);
   }
 
   void backPartTo(Ab<PartListForFragmentHome> p) {

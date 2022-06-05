@@ -55,14 +55,14 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
                   ...controller.parts(abw).map(
                         (e) => TextButton(
                           child: Text(
-                            e().fatherFragmentGroup?.call(abw) == null ? '头~ >' : e().fatherFragmentGroup!(abw).title.toString() + ' >',
+                            e().fatherFragmentGroup?.call(abw) == null ? '~ >' : e().fatherFragmentGroup!(abw).title.toString() + ' >',
                           ),
                           onPressed: () {
                             controller.backPartTo(e);
                           },
                         ),
                       ),
-                  SizedBox(width: MediaQuery.of(context).size.width / 2)
+                  SizedBox(width: MediaQuery.of(context).size.width / 3)
                 ],
               );
             },
@@ -76,15 +76,14 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
   Widget _body() {
     return AbBuilder<FragmentHomeGetController>(
       builder: (controller, abw) {
-        return SmartRefresher(
-          controller: controller.refreshController,
-          child: IndexedStack(
-            index: controller.parts(abw).length - 1,
-            children: [
-              ...controller.parts(abw).map(
-                    (e) => CustomScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      // physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        return IndexedStack(
+          index: controller.parts(abw).length - 1,
+          children: [
+            ...controller.parts(abw).map(
+                  (e) => SmartRefresher(
+                    controller: controller.currentPart().refreshController,
+                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                    child: CustomScrollView(
                       slivers: [
                         _fragmentGroupsBuilder(),
                         _fragmentsBuilder(),
@@ -98,15 +97,14 @@ class _FragmentHomeState extends State<FragmentHome> with AutomaticKeepAliveClie
                         ),
                       ],
                     ),
+                    onRefresh: () async {
+                      await Future.delayed(Duration(milliseconds: 200));
+                      await controller.refreshCurrentPart();
+                      controller.currentPart().refreshController.refreshCompleted();
+                    },
                   ),
-            ],
-          ),
-          onRefresh: () async {
-            await Future.delayed(const Duration(milliseconds: 200));
-            controller.refreshPart();
-            controller.refreshController.refreshCompleted();
-            setState(() {});
-          },
+                ),
+          ],
         );
       },
     );

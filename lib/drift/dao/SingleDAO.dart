@@ -9,29 +9,24 @@ part of drift_db;
 class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   SingleDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
-  Future<void> queryFragmentGroupBy(FragmentGroup? fatherFragmentGroup) async {
-    late final List<TypedResult> result;
-
-    result = await (select(fragmentGroups).join(
-      [
-        innerJoin(rFragmentGroup2FragmentGroups, rFragmentGroup2FragmentGroups.sonId.equalsExp(fragmentGroups.id)),
-      ],
-    )..where(rFragmentGroup2FragmentGroups.fatherId.isNull()))
-        .get();
-
-    // await (select(fragmentGroups).join(
-    //   [
-    //     innerJoin(rFragmentGroup2FragmentGroups, rFragmentGroup2FragmentGroups.fatherId.equalsExp(fragmentGroups.id)),
-    //   ],
-    // )).get();
-    final f = result.map((e) {
-      // Helper.logger.i(e.rawData.data);
-      return e.rawData.data;
-    });
-    Helper.logger.i(f);
+  /// 只查询了未同步的。
+  Future<List<FragmentGroup>> queryFragmentGroupsBy(FragmentGroup? fatherFragmentGroup) async {
+    final j = innerJoin(rFragmentGroup2FragmentGroups, rFragmentGroup2FragmentGroups.sonId.equalsExp(fragmentGroups.id));
+    final w = fatherFragmentGroup == null
+        ? rFragmentGroup2FragmentGroups.fatherId.isNull()
+        : rFragmentGroup2FragmentGroups.fatherId.equals(fatherFragmentGroup.id);
+    final List<TypedResult> result = await (select(fragmentGroups).join([j])..where(w)).get();
+    return result.map((e) => e.readTable(fragmentGroups)).toList();
   }
 
-  Future<void> queryFragmentBy(FragmentGroup? fragmentGroup) async {}
+  /// 只查询了未同步的。
+  Future<List<Fragment>> queryFragmentsBy(FragmentGroup? fatherFragmentGroup) async {
+    final j = innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.sonId.equalsExp(fragments.id));
+    final w =
+        fatherFragmentGroup == null ? rFragment2FragmentGroups.fatherId.isNull() : rFragment2FragmentGroups.fatherId.equals(fatherFragmentGroup.id);
+    final List<TypedResult> result = await (select(fragments).join([j])..where(w)).get();
+    return result.map((e) => e.readTable(fragments)).toList();
+  }
 
   /// 向当前 [FragmentGroups] 表中插入一条数据, 返回新插入的 [FragmentGroup]。
   Future<FragmentGroup> insertFragmentGroup(FragmentGroup? fatherEntry, FragmentGroupsCompanion willEntry) async {
