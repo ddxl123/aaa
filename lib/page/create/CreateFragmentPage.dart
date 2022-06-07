@@ -1,8 +1,10 @@
+import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
+import 'package:aaa/widget_model/Models.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreatePage extends StatelessWidget {
-  const CreatePage({Key? key}) : super(key: key);
+class CreateFragmentPage extends StatelessWidget {
+  const CreateFragmentPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +23,14 @@ class CreatePage extends StatelessWidget {
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(50)),
               child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.tealAccent),
-                ),
-                onPressed: () {},
-                child: const Text(
-                  '创建',
-                  style: TextStyle(),
-                  textAlign: TextAlign.center,
-                ),
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.tealAccent)),
+                child: const Text('创建'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => const FragmentGroupModelForAdd()),
+                  );
+                },
               ),
             ),
           ),

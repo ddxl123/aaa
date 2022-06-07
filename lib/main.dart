@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<GlobalAbController>(
-      controller: GlobalAbController(),
+      putController: GlobalAbController(),
       builder: (controller, abw) {
         return MaterialApp(
           // 那种材料包需要本地化的支持

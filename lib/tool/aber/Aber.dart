@@ -461,22 +461,22 @@ class Abw<C extends AbController> {
 /// }
 /// ```
 ///
-/// [controller] 禁止使用 [Aber.find], 只能用构造函数进行创建，例如： controller: Aber.find<Controller>(tag: 'tag')
+/// [putController] 禁止使用 [Aber.find], 只能用构造函数进行创建，例如： controller: Aber.find<Controller>(tag: 'tag')
 ///
 /// 主要目的是为了保证当前 widget 与当前 controller 的生命周期相对应（比如 initState/dispose）：
-///   - 如果在父 [AbBuilder] 中创建了 [controller]，子 [AbBuilder] find 了这个父 [controller],
-///   - 那么子 [AbBuilder] 被销毁时，不会将这个父 [controller] 销毁，
-///   - 只有在父 [AbBuilder] 被销毁时，才会将这个父 [controller] 销毁。
+///   - 如果在父 [AbBuilder] 中创建了 [putController]，子 [AbBuilder] find 了这个父 [putController],
+///   - 那么子 [AbBuilder] 被销毁时，不会将这个父 [putController] 销毁，
+///   - 只有在父 [AbBuilder] 被销毁时，才会将这个父 [putController] 销毁。
 ///   - 也就是说，controller 在 AWidget 中被创建，只有当该 AWidget 被销毁时，它才会被自动销毁。
 ///
 class AbBuilder<C extends AbController> extends StatefulWidget {
   const AbBuilder({
     Key? key,
-    this.controller,
+    this.putController,
     this.tag,
     required this.builder,
   }) : super(key: key);
-  final C? controller;
+  final C? putController;
   final String? tag;
   final Widget Function(C controller, Abw<C> abw) builder;
 
@@ -495,14 +495,28 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   @override
   void initState() {
     super.initState();
-    _controller = Aber.findOrNull<C>(tag: widget.tag);
+    if (widget.tag == Aber.hashCodeTag) {
+      if (widget.putController == null) {
+        _controller = Aber.findLast<C>();
+      } else {
+        _controller = null;
+      }
+    } else {
+      _controller = Aber.findOrNull<C>(tag: widget.tag);
+    }
+
     if (_controller == null) {
-      if (widget.controller == null) throw 'The ${C.toString() + '.' + (widget.tag ?? '')} object not found.';
-      _controller = Aber._put<C>(widget.controller!, tag: widget.tag);
+      if (widget.putController == null) throw 'The ${C.toString() + '.' + (widget.tag ?? '')} object not found.';
+
+      _controller = Aber._put<C>(
+        widget.putController!,
+        tag: widget.tag == Aber.hashCodeTag ? widget.putController!.hashCode.toString() : widget.tag,
+      );
       _isPutter = true;
       _controller!.context = context; // 必须放在 onInit 前面
       _controller!.onInit(); // 如果被 find 成功，会导致再次调用 onInit，因此只能放在这里，让它只会调用一次。
     }
+
     if (_controller != null) {
       _abw = Abw<C>(refresh, _controller!._removeRefreshFunctions);
     }
@@ -521,7 +535,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 
     if (_isPutter) {
       _controller!.dispose();
-      Aber._removeController<C>(widget.tag);
+      Aber._removeController<C>(widget.putController!);
       _controller = null;
     }
 
@@ -539,20 +553,29 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 class Aber {
   const Aber._();
 
-  /// [_setKey] - [AbController]
+  /// [_createKey] - [AbController]
   static final Map<String, AbController> _controllers = {};
 
+  /// 当将 tag 设为 [hashCodeTag] 时，[key] 将会被设置为 controller 的 hashCode。
+  ///
+  /// 当使用 [find] 来查找对应控制器时，可以将其 tag 值设置为对应 [AbController.hashCode]。
+  ///
+  /// 也可以将 [find] 的 tag 值设置为 [hashCodeTag] 来查找最近一个相同类型的控制器。
+  ///
+  /// 这并不会使 [key] 设置为 [hashCodeTag] 这个字符串，它只是用来作为触发字段。
+  static const String hashCodeTag = 'HASH_CODE_TAG';
+
   /// 当被 put 的 [AbBuilder] 被销毁时，会将其对应的 [AbController] 移除。（在 [AbBuilder] 的 dispose 中调用）
-  static void _removeController<C extends AbController>(String? tag) => _controllers.remove(_setKey(tag: tag));
+  static void _removeController<C extends AbController>(C controller) => _controllers.removeWhere((key, value) => value == controller);
 
   /// 设置 key。
   ///
   /// 格式：'HomeControllerName.tagName', 中间加个 '.' 是为了防止下面情况，
   ///   - 2个控制器及其 tag 名称分别为 `HomeCont.roller` `Home.Controller`, 如果没有 '.' 的存在，它们将是同一个 key。
-  static String _setKey<C extends AbController>({String? tag}) => C.toString() + '.' + (tag ?? '');
+  static String _createKey<C extends AbController>({String? tag}) => C.toString() + '.' + (tag ?? '');
 
   static C _put<C extends AbController>(C controller, {String? tag}) {
-    final String key = _setKey<C>(tag: tag);
+    final String key = _createKey<C>(tag: tag);
     if (_controllers.containsKey(key)) throw 'Repeat to add: $key.';
     _controllers.addAll({key: controller});
     return controller;
@@ -560,7 +583,7 @@ class Aber {
 
   /// 查找需要的 [AbController]。
   static C? findOrNull<C extends AbController>({String? tag}) {
-    final String key = _setKey<C>(tag: tag);
+    final String key = _createKey<C>(tag: tag);
     final c = _controllers[key];
     return (c is C?) ? c : (throw 'Serious error! The type of controller found does not match! Need-${C.toString()},Found-${c.toString()}');
   }
@@ -569,26 +592,49 @@ class Aber {
   ///
   /// 没找到会抛出异常。
   static C find<C extends AbController>({String? tag}) =>
-      findOrNull(tag: tag) ?? (throw 'Not found: ${_setKey(tag: tag)}. You need to create a controller with the constructor first.');
+      findOrNull(tag: tag) ?? (throw 'Not found: ${_createKey(tag: tag)}. You need to create a controller with the constructor first.');
+
+  /// 查找所有 [C] 类型的控制器。
+  static List<C> findAll<C extends AbController>() => _controllers.values.whereType<C>().toList();
+
+  /// 查找最近的一个 [C] 类型的控制器。
+  ///
+  /// 没有找到会抛出异常。
+  static C findLast<C extends AbController>() => findAll<C>().last;
+
+  /// 查找最近的一个 [C] 类型的控制器。
+  ///
+  /// 没有找到会返回 null。
+  static C? findOrNullLast<C extends AbController>() {
+    final all = findAll<C>();
+    return all.isEmpty ? null : all.last;
+  }
 }
 
 class AbStatefulBuilder extends StatefulWidget {
   const AbStatefulBuilder({
     Key? key,
-    this.initState,
+    this.initExtra,
+    this.onInit,
+    this.onReady,
     required this.builder,
-    this.dispose,
+    this.onDispose,
   }) : super(key: key);
 
-  final void Function(void Function() refresh)? initState;
-  final Widget Function(BuildContext context, void Function() refresh) builder;
-  final void Function()? dispose;
+  final Map<String, Object?>? initExtra;
+
+  final void Function(Map<String, Object?> extra, BuildContext context, void Function() refresh)? onInit;
+  final void Function(Map<String, Object?> extra, BuildContext context, void Function() refresh)? onReady;
+  final Widget Function(Map<String, Object?> extra, BuildContext context, void Function() refresh) builder;
+  final void Function(Map<String, Object?> extra, BuildContext context, void Function() refresh)? onDispose;
 
   @override
   State<AbStatefulBuilder> createState() => _AbStatefulBuilderState();
 }
 
 class _AbStatefulBuilderState extends State<AbStatefulBuilder> {
+  final Map<String, Object?> extra = {};
+
   void refresh() {
     if (mounted) setState(() {});
   }
@@ -596,17 +642,21 @@ class _AbStatefulBuilderState extends State<AbStatefulBuilder> {
   @override
   void initState() {
     super.initState();
-    widget.initState?.call(refresh);
+    extra.addAll(widget.initExtra ?? {});
+    widget.onInit?.call(extra, context, refresh);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      widget.onReady?.call(extra, context, refresh);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, refresh);
+    return widget.builder(extra, context, refresh);
   }
 
   @override
   void dispose() {
-    widget.dispose?.call();
+    widget.onDispose?.call(extra, context, refresh);
     super.dispose();
   }
 }

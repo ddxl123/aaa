@@ -2,7 +2,7 @@ import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/drift/tool/DriftViewer.dart';
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
-import 'package:aaa/page/create/CreatePage.dart';
+import 'package:aaa/page/create/CreateFragmentPage.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
@@ -17,7 +17,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<HomeAbController>(
-      controller: HomeAbController(),
+      putController: HomeAbController(),
       builder: (controller, abw) {
         return WillPopScope(
           onWillPop: controller.onWillPop,
@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
     return FloatingActionButton(
       child: const Icon(Icons.add),
       onPressed: () async {
-        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CreatePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CreateFragmentPage()));
       },
     );
   }
