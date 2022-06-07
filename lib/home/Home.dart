@@ -1,6 +1,8 @@
 import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/drift/tool/DriftViewer.dart';
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/home/minehome/MineHome.dart';
+import 'package:aaa/page/create/CreatePage.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
@@ -17,36 +19,23 @@ class Home extends StatelessWidget {
     return AbBuilder<HomeAbController>(
       controller: HomeAbController(),
       builder: (controller, abw) {
-        return Scaffold(
-          floatingActionButton: _floatingActionButton(controller.context),
-          body: _body(),
-          bottomNavigationBar: _bottomNavigationBar(),
+        return WillPopScope(
+          onWillPop: controller.onWillPop,
+          child: Scaffold(
+            floatingActionButton: _floatingActionButton(context),
+            body: _body(),
+            bottomNavigationBar: _bottomNavigationBar(),
+          ),
         );
       },
     );
   }
 
-  // Future<bool> _onWillPop() async {
-  //   // 双击返回键才会退出应用。
-  //   int now = DateTime.now().millisecondsSinceEpoch;
-  //   if (lastBackTime != null && now - lastBackTime! < 1500) {
-  //     return true;
-  //   }
-  //   lastBackTime = now;
-  //   Toaster.show(content: '再按一次退出！', milliseconds: 1500);
-  //   await Future.delayed(
-  //     const Duration(milliseconds: 1500),
-  //     () {
-  //       lastBackTime = null;
-  //     },
-  //   );
-  //   return false;
-  // }
-
   Widget _floatingActionButton(BuildContext context) {
     return FloatingActionButton(
+      child: const Icon(Icons.add),
       onPressed: () async {
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => DriftViewer(database: DriftDb.instance)));
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CreatePage()));
       },
     );
   }
@@ -60,7 +49,7 @@ class Home extends StatelessWidget {
             Text('data1'),
             FragmentHome(),
             Text('data3'),
-            Text('data4'),
+            MineHome(),
           ],
           onPageChanged: (int toIndex) {
             controller.currentPageIndex.refreshEasy((oldValue) => toIndex);
