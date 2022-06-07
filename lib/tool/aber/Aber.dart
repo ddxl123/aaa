@@ -1,5 +1,6 @@
 library aber;
 
+import 'package:aaa/tool/Helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -566,7 +567,17 @@ class Aber {
   static const String hashCodeTag = 'HASH_CODE_TAG';
 
   /// 当被 put 的 [AbBuilder] 被销毁时，会将其对应的 [AbController] 移除。（在 [AbBuilder] 的 dispose 中调用）
-  static void _removeController<C extends AbController>(C controller) => _controllers.removeWhere((key, value) => value == controller);
+  static void _removeController<C extends AbController>(C controller) {
+    _controllers.removeWhere(
+      (key, value) {
+        final bool yes = value == controller;
+        if (yes) {
+          Helper.logger.i('===== 》 AberInfo:  remove $key  |  $value (${value.hashCode})');
+        }
+        return yes;
+      },
+    );
+  }
 
   /// 设置 key。
   ///
@@ -578,6 +589,9 @@ class Aber {
     final String key = _createKey<C>(tag: tag);
     if (_controllers.containsKey(key)) throw 'Repeat to add: $key.';
     _controllers.addAll({key: controller});
+
+    Helper.logger.i('===== 》 AberInfo:  put $key  |  $controller (${controller.hashCode})');
+
     return controller;
   }
 

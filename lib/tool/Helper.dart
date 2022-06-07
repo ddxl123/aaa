@@ -6,5 +6,5 @@ class Helper {
 
   static String get uuidV4 => _uuid.v4();
 
-  static Logger logger = Logger(printer: PrettyPrinter());
+  static Logger logger = Logger(printer: SimplePrinter());
 }

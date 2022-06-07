@@ -26,4 +26,10 @@ class CreateFragmentGroupPageAbController extends AbController {
     Toaster.show(content: '创建成功', milliseconds: 1000);
     Navigator.pop(context);
   }
+
+  void cancel() {
+    if (title.trim() != '') {
+      // 编辑内容未保存。是否要 丢弃、存草稿、继续编辑？
+    }
+  }
 }
