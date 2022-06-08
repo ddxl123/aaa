@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
     return FloatingActionButton(
       child: const Icon(Icons.add),
       onPressed: () async {
-        Navigator.push(context, MaterialPageRoute(builder: (ctx) => CreateFragmentPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
       },
     );
   }
@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
             controller.pageController.jumpToPage(tapIndex);
           },
           items: [
-            SalomonBottomBarItem(icon: const Icon(Icons.home), title: const Text('主页')),
+            SalomonBottomBarItem(icon: const Icon(Icons.home), title: const Text('首页')),
             SalomonBottomBarItem(icon: const Icon(Icons.person), title: const Text('碎片')),
             SalomonBottomBarItem(icon: const Icon(Icons.person), title: const Text('记忆')),
             SalomonBottomBarItem(icon: const Icon(Icons.person), title: const Text('我的')),

@@ -536,7 +536,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 
     if (_isPutter) {
       _controller!.dispose();
-      Aber._removeController<C>(widget.putController!);
+      Aber._removeController<C>(_controller!);
       _controller = null;
     }
 
@@ -606,17 +606,21 @@ class Aber {
   ///
   /// 没找到会抛出异常。
   static C find<C extends AbController>({String? tag}) =>
-      findOrNull(tag: tag) ?? (throw 'Not found: ${_createKey(tag: tag)}. You need to create a controller with the constructor first.');
+      findOrNull<C>(tag: tag) ?? (throw 'Not found: ${_createKey<C>(tag: tag)}. You need to create a controller with the constructor first.');
 
   /// 查找所有 [C] 类型的控制器。
   static List<C> findAll<C extends AbController>() => _controllers.values.whereType<C>().toList();
 
   /// 查找最近的一个 [C] 类型的控制器。
   ///
+  /// 通常配合 [hashCodeTag] 使用。
+  ///
   /// 没有找到会抛出异常。
   static C findLast<C extends AbController>() => findAll<C>().last;
 
   /// 查找最近的一个 [C] 类型的控制器。
+  ///
+  /// 通常配合 [hashCodeTag] 使用。
   ///
   /// 没有找到会返回 null。
   static C? findOrNullLast<C extends AbController>() {

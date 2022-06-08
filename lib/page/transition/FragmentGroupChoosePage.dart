@@ -1,12 +1,14 @@
+import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/page/create/CreateFragmentGroupPage.dart';
+import 'package:aaa/page/create/CreateFragmentPageAbController.dart';
+import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/widget_model/FragmentGroupModel.dart';
+import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:flutter/material.dart';
 
-import 'FragmentGroupModel.dart';
-import 'FragmentGroupModelAbController.dart';
-
-class FragmentGroupModelForAdd extends StatelessWidget {
-  const FragmentGroupModelForAdd({Key? key}) : super(key: key);
+class FragmentGroupChoosePage extends StatelessWidget {
+  const FragmentGroupChoosePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +27,13 @@ class FragmentGroupModelForAdd extends StatelessWidget {
       body: Stack(
         children: [
           const FragmentGroupModel(modelType: FragmentGroupModelType.add),
-          _confirm(),
+          _confirm(context),
         ],
       ),
     );
   }
 
-  Positioned _confirm() {
+  Positioned _confirm(BuildContext context) {
     return Positioned(
       bottom: 40,
       left: 0,
@@ -47,7 +49,11 @@ class FragmentGroupModelForAdd extends StatelessWidget {
             ),
             child: const Text('确认选择'),
             onPressed: () {
-              // controller.addFragment('title');
+              final c = Aber.find<CreateFragmentPageAbController>();
+              Aber.findLast<FragmentGroupModelAbController>().addFragment(FragmentsCompanion()..title = c.title.toDriftValue());
+              Toaster.show(content: '创建成功', milliseconds: 1000);
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
           ),
         ),

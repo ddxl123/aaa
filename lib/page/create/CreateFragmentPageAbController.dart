@@ -1,31 +1,28 @@
-import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/page/transition/FragmentGroupChoosePage.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:flutter/material.dart';
 
 class CreateFragmentPageAbController extends AbController {
-  /// 最近的一个 [FragmentGroupModelAbController]。
-  late FragmentGroupModelAbController fragmentGroupModelAbController;
-
   String title = '';
 
   String content = '';
 
-  @override
-  void onInit() {
-    fragmentGroupModelAbController = Aber.findLast<FragmentGroupModelAbController>();
+  void commit() {
+    if (title.trim() == '' && content.trim() == '') {
+      Toaster.show(content: '没有内容', milliseconds: 1000);
+      Navigator.pop(context);
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupChoosePage()));
+    }
   }
 
-  Future<void> commit() async {
-    // 检查是否可提交
-    if (title.trim() == '' && content == '') {
-      Toaster.show(content: '已取消', milliseconds: 1000);
+  void cancel() {
+    if (title.trim() == '' && content.trim() == '') {
       Navigator.pop(context);
-      return;
+    } else {
+      // 编辑内容未保存。是否要 丢弃、存草稿、继续编辑？
+      Toaster.show(content: '有编辑内容', milliseconds: 1000);
     }
-    await fragmentGroupModelAbController.addFragment(FragmentsCompanion()..title = title.toDriftValue());
-    Toaster.show(content: '创建成功', milliseconds: 1000);
-    Navigator.pop(context);
   }
 }

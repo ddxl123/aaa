@@ -25,6 +25,10 @@ class PartListForFragmentHome {
   final fragmentGroups = <Ab<FragmentGroup>>[].ab;
   final fragments = <Ab<Fragment>>[].ab;
 
+  bool isAllEmpty(Abw abw) {
+    return fragmentGroups(abw).isEmpty && fragments(abw).isEmpty;
+  }
+
   void clean<C extends AbController>(C controller) {
     fragmentGroups.clear_(controller);
     fragments.clear_(controller);
@@ -69,11 +73,9 @@ class FragmentGroupModelAbController extends AbController {
 
   void backPart() {
     if (parts().length == 1) return;
-    parts.refreshInevitable(
-      (obj) => obj
-        ..last().dispose(this)
-        ..removeLast_(this),
-    );
+    parts().last().dispose(this);
+    parts().removeLast_(this);
+    parts.refreshForce();
     currentPart().refreshController.position!.jumpTo(currentPart().currentPosition);
   }
 
