@@ -15,7 +15,10 @@ class Ab<V> {
 
   /// 只获取值，不进行任何操作。
   ///
+  /// 建议使用 [call] 方法，即 count()。
+  ///
   /// 若想要当前对象被观察，则请调用 [call] 进行引用。
+  @protected
   late V value;
 
   /// 存储每个引用该对象的 [AbBuilder] 的 [_AbBuilderState.refresh]。

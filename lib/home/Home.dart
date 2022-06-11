@@ -1,9 +1,11 @@
 import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/drift/tool/DriftViewer.dart';
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/create/CreateFragmentPage.dart';
 import 'package:aaa/tool/Toaster.dart';
+import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class Home extends StatelessWidget {
           onWillPop: controller.onWillPop,
           child: Scaffold(
             floatingActionButton: _floatingActionButton(context),
-            body: _body(),
+            body: SafeArea(child: _body()),
             bottomNavigationBar: _bottomNavigationBar(),
           ),
         );
@@ -45,11 +47,11 @@ class Home extends StatelessWidget {
       builder: (controller, abw) {
         return PageView(
           controller: controller.pageController,
-          children: const [
-            Text('data1'),
-            FragmentHome(),
-            Text('data3'),
-            MineHome(),
+          children: [
+            const Text('data1'),
+            KeepStateWidget(builder: (ctx) => const FragmentHome()),
+            KeepStateWidget(builder: (ctx) => const MemoryHome()),
+            const MineHome(),
           ],
           onPageChanged: (int toIndex) {
             controller.currentPageIndex.refreshEasy((oldValue) => toIndex);

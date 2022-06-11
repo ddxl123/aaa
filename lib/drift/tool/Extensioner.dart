@@ -23,7 +23,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [DC] - 数据类类型 [DataClass]，如 [User]（不包括 [UsersCompanion]）
   ///
-  /// [E] - [Insertable] 类类型，如 [User]/[UsersCompanion]
+  /// [E] - Companion 类类型，如 [UsersCompanion]（不包括 [User]）
   ///
   /// [table] - 要对哪个表进行操作
   ///
@@ -32,7 +32,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [syncTag] - 见 [SyncTag] 的注释
   ///
   /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
-  Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+  Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
@@ -190,5 +190,41 @@ extension DriftSyncExt on DatabaseConnectionUser {
         return selectEntity;
       },
     );
+  }
+
+  /// [sonTable] - 要插入的数据的表。
+  ///
+  /// [sonEntity] - 要插入的数据的实体。
+  ///
+  /// [fatherEntity] - 要插入的数据的父实体，使用到了里面的 id 和 cloudId。
+  ///
+  /// [rTable] - 要同时插入的关系表。
+  ///
+  /// [rEntity] - 要同时插入的关系表数据的实体。
+  Future<SDC> insertReturningWithR<ST extends Table, SDC extends DataClass, SE extends UpdateCompanion<SDC>, FDC extends DataClass,
+      FE extends Insertable<FDC>, RT extends Table, RDC extends DataClass, RE extends UpdateCompanion<RDC>>({
+    required TableInfo<ST, SDC> sonTable,
+    required SE sonEntity,
+    required FE? fatherEntity,
+    required TableInfo<RT, RDC> rTable,
+    required RE rEntity,
+    required SyncTag syncTag,
+    InsertMode? mode,
+    UpsertClause<ST, SDC>? onConflict,
+  }) async {
+    return await transaction(() async {
+      final dynamic newSonEntry = await insertReturningWith(sonTable, entity: sonEntity, syncTag: syncTag, mode: mode, onConflict: onConflict);
+      final dynamic fatherDy = fatherEntity;
+      final dynamic rDy = rEntity;
+
+      rDy
+        ..sonId = Value(newSonEntry.id as int)
+        ..sonCloudId = Value(newSonEntry.cloudId as int?)
+        ..fatherId = Value(fatherDy?.id as int?)
+        ..fatherCloudId = Value(fatherDy?.cloudId as int?);
+
+      await insertReturningWith(rTable, entity: rEntity, syncTag: syncTag);
+      return newSonEntry;
+    });
   }
 }

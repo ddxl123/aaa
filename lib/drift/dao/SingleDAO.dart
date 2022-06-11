@@ -29,38 +29,48 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   /// 向当前 [FragmentGroups] 表中插入一条数据, 返回新插入的 [FragmentGroup]。
-  Future<FragmentGroup> insertFragmentGroup(FragmentGroup? fatherEntry, FragmentGroupsCompanion willEntry) async {
+  Future<FragmentGroup> insertFragmentGroup(FragmentGroup? fatherEntity, FragmentGroupsCompanion willEntity) async {
     return await transaction(
       () async {
-        final st = SyncTag();
-        final newEntry = await insertReturningWith(fragmentGroups, entity: willEntry, syncTag: st);
-        final r = RFragmentGroup2FragmentGroupsCompanion(
-          sonId: newEntry.id.toDriftValue(),
-          sonCloudId: newEntry.cloudId.toDriftValue(),
-          fatherId: (fatherEntry?.id).toDriftValue(),
-          fatherCloudId: (fatherEntry?.cloudId).toDriftValue(),
+        return await insertReturningWithR(
+          sonTable: fragmentGroups,
+          sonEntity: willEntity,
+          fatherEntity: fatherEntity,
+          rTable: rFragmentGroup2FragmentGroups,
+          rEntity: RFragmentGroup2FragmentGroupsCompanion(),
+          syncTag: SyncTag(),
         );
-        await insertReturningWith(rFragmentGroup2FragmentGroups, entity: r, syncTag: st);
-        return newEntry;
+        // return newEntity;
       },
     );
   }
 
   /// 向当前 [Fragments] 表中插入一条数据, 返回新插入的 [Fragment]。
-  Future<Fragment> insertFragment(FragmentGroup? fatherEntry, FragmentsCompanion willEntry) async {
+  Future<Fragment> insertFragment(FragmentGroup? fatherEntity, FragmentsCompanion willEntity) async {
     return await transaction(
       () async {
-        final st = SyncTag();
-        final newEntry = await insertReturningWith(fragments, entity: willEntry, syncTag: st);
-        final r = RFragment2FragmentGroupsCompanion(
-          sonId: newEntry.id.toDriftValue(),
-          sonCloudId: newEntry.cloudId.toDriftValue(),
-          fatherId: (fatherEntry?.id).toDriftValue(),
-          fatherCloudId: (fatherEntry?.cloudId).toDriftValue(),
+        return await insertReturningWithR(
+          sonTable: fragments,
+          sonEntity: willEntity,
+          fatherEntity: fatherEntity,
+          rTable: rFragment2FragmentGroups,
+          rEntity: RFragment2FragmentGroupsCompanion(),
+          syncTag: SyncTag(),
         );
-        await insertReturningWith(rFragment2FragmentGroups, entity: r, syncTag: st);
-        return newEntry;
+        // return newEntity;
       },
     );
+  }
+
+  Future<MemoryGroup> insertMemoryGroup(MemoryGroupsCompanion willEntry) async {
+    return await transaction(
+      () async {
+        return await insertReturningWith(memoryGroups, entity: willEntry, syncTag: SyncTag());
+      },
+    );
+  }
+
+  Future<List<MemoryGroup>> queryMemoryGroups() async {
+    return await select(memoryGroups).get();
   }
 }

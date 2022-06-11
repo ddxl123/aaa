@@ -89,7 +89,7 @@ class DriftDb extends _$DriftDb {
   /// Convert to [TableInfo] using [entity] or type [E].
   ///
   /// If [entity] is empty, you can use [E] to convert.
-  TableInfo toTableInfo<E extends Insertable>([E? entity]) {
+  TableInfo toTableInfo<E extends Insertable, TableDsl extends Table, D>([E? entity]) {
     if (_tableInfoMap.isEmpty) {
       for (var element in DriftDb.instance.allTables) {
         // '$UsersTable'
