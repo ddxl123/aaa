@@ -45,7 +45,8 @@ dependencies:
   # drift 需要，在应用内可视化数据库数据
   drift_db_viewer: ^1.0.3
   # 底部导航栏 - 关注 persistent_bottom_nav_bar
-  salomon_bottom_bar: ^3.3.0
+#  salomon_bottom_bar: ^3.3.0
+  animated_bottom_navigation_bar: ^0.3.3
   get: ^4.6.5
   # 上拉、下拉刷新 - 已选最佳
   pull_to_refresh: ^2.0.0

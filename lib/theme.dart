@@ -10,5 +10,10 @@ ThemeData themeLight(BuildContext context) {
       titleTextStyle: Theme.of(context).textTheme.titleLarge,
     ),
     scaffoldBackgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.black,
+    ),
   );
 }

@@ -1,3 +1,4 @@
+import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:flutter/material.dart';
@@ -77,11 +78,31 @@ class FragmentGroupModel extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return TextButton(
-                child: Text(c.currentFragmentGroup(index, abw).title.toString()),
-                onPressed: () {
-                  c.enterPart(c.currentFragmentGroups()[index]);
-                },
+              return Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      child: Text(c.currentFragmentGroup(index, abw).title.toString()),
+                      onPressed: () {
+                        c.enterPart(c.currentFragmentGroups()[index]);
+                      },
+                      onLongPress: () {
+                        Aber.find<HomeAbController>().isFragmentSelecting.refreshEasy((oldValue) => !oldValue);
+                      },
+                    ),
+                  ),
+                  AbBuilder<HomeAbController>(
+                    builder: (hController, hAwb) {
+                      if (hController.isFragmentSelecting(hAwb)) {
+                        return IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.circle, color: Colors.grey, size: 15),
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                ],
               );
             },
             childCount: c.currentFragmentGroups(abw).length,
@@ -98,11 +119,31 @@ class FragmentGroupModel extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return MaterialButton(
-                child: Text(c.currentFragment(index, abw).title.toString()),
-                onPressed: () {
-                  if (modelType == FragmentGroupModelType.add) return;
-                },
+              return Row(
+                children: [
+                  Expanded(
+                    child: MaterialButton(
+                      child: Text(c.currentFragment(index, abw).title.toString()),
+                      onPressed: () {
+                        if (modelType == FragmentGroupModelType.add) return;
+                      },
+                      onLongPress: () {
+                        Aber.find<HomeAbController>().isFragmentSelecting.refreshEasy((oldValue) => !oldValue);
+                      },
+                    ),
+                  ),
+                  AbBuilder<HomeAbController>(
+                    builder: (hController, hAwb) {
+                      if (hController.isFragmentSelecting(hAwb)) {
+                        return IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.circle, color: Colors.grey, size: 15),
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                ],
               );
             },
             childCount: c.currentFragments(abw).length,

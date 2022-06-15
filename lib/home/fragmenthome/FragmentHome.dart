@@ -4,6 +4,7 @@ import 'package:aaa/page/create/CreateFragmentPage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/FragmentGroupModel.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
+import 'package:aaa/widget_model/MemoryRuleModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -86,7 +87,7 @@ class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderSt
             controller: putController.tabController,
             children: const [
               FragmentGroupModel(modelType: FragmentGroupModelType.home),
-              Text('data'),
+              MemoryRuleModel(),
             ],
           ),
         );

@@ -5,6 +5,7 @@ const List<Type> cloudTableClass = [
   Fragments,
   FragmentGroups,
   MemoryGroups,
+  MemoryRules,
 ];
 
 class Users extends CloudTableBase {
@@ -26,5 +27,9 @@ class FragmentGroups extends CloudTableBase {
 }
 
 class MemoryGroups extends CloudTableBase {
+  TextColumn get title => text().nullable()();
+}
+
+class MemoryRules extends CloudTableBase {
   TextColumn get title => text().nullable()();
 }

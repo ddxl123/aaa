@@ -73,4 +73,16 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   Future<List<MemoryGroup>> queryMemoryGroups() async {
     return await select(memoryGroups).get();
   }
+
+  Future<MemoryRule> insertMemoryRule(MemoryRulesCompanion willEntry) async {
+    return await transaction(
+      () async {
+        return await insertReturningWith(memoryRules, entity: willEntry, syncTag: SyncTag());
+      },
+    );
+  }
+
+  Future<List<MemoryRule>> queryMemoryRules() async {
+    return await select(memoryRules).get();
+  }
 }

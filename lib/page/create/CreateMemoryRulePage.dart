@@ -1,15 +1,16 @@
 import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
+import 'package:aaa/page/create/CreateMemoryRulePageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreateMemoryGroupPage extends StatelessWidget {
-  const CreateMemoryGroupPage({Key? key}) : super(key: key);
+class CreateMemoryRulePage extends StatelessWidget {
+  const CreateMemoryRulePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<CreateMemoryGroupPageAbController>(
-      putController: CreateMemoryGroupPageAbController(),
+    return AbBuilder<CreateMemoryRulePageAbController>(
+      putController: CreateMemoryRulePageAbController(),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: AppBar(
@@ -19,7 +20,7 @@ class CreateMemoryGroupPage extends StatelessWidget {
                 putController.cancel();
               },
             ),
-            title: const Text('创建记忆组'),
+            title: const Text('创建记忆规则'),
             actions: [
               IconButton(
                 icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
@@ -38,7 +39,7 @@ class CreateMemoryGroupPage extends StatelessWidget {
                   minLines: null,
                   maxLines: null,
                   autofocus: true,
-                  decoration: const InputDecoration(border: InputBorder.none, hintText: '记忆组名称'),
+                  decoration: const InputDecoration(border: InputBorder.none, hintText: '记忆规则名称'),
                   onChanged: (text) {
                     putController.title = text;
                   },

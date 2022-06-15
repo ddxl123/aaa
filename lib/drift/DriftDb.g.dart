@@ -1289,6 +1289,300 @@ class $MemoryGroupsTable extends MemoryGroups
   }
 }
 
+class MemoryRule extends DataClass implements Insertable<MemoryRule> {
+  int? cloudId;
+  int id;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime createdAt;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime updatedAt;
+  String? title;
+  MemoryRule(
+      {this.cloudId,
+      required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      this.title});
+  factory MemoryRule.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return MemoryRule(
+      cloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      createdAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
+      updatedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      title: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}title']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<int?>(cloudId);
+    }
+    map['id'] = Variable<int>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String?>(title);
+    }
+    return map;
+  }
+
+  MemoryRulesCompanion toCompanion(bool nullToAbsent) {
+    return MemoryRulesCompanion(
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      title:
+          title == null && nullToAbsent ? const Value.absent() : Value(title),
+    );
+  }
+
+  factory MemoryRule.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MemoryRule(
+      cloudId: serializer.fromJson<int?>(json['cloudId']),
+      id: serializer.fromJson<int>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      title: serializer.fromJson<String?>(json['title']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cloudId': serializer.toJson<int?>(cloudId),
+      'id': serializer.toJson<int>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'title': serializer.toJson<String?>(title),
+    };
+  }
+
+  MemoryRule copyWith(
+          {int? cloudId,
+          int? id,
+          DateTime? createdAt,
+          DateTime? updatedAt,
+          String? title}) =>
+      MemoryRule(
+        cloudId: cloudId ?? this.cloudId,
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        title: title ?? this.title,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MemoryRule(')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('title: $title')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MemoryRule &&
+          other.cloudId == this.cloudId &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.title == this.title);
+}
+
+class MemoryRulesCompanion extends UpdateCompanion<MemoryRule> {
+  Value<int?> cloudId;
+  Value<int> id;
+  Value<DateTime> createdAt;
+  Value<DateTime> updatedAt;
+  Value<String?> title;
+  MemoryRulesCompanion({
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.title = const Value.absent(),
+  });
+  MemoryRulesCompanion.insert({
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.title = const Value.absent(),
+  });
+  static Insertable<MemoryRule> custom({
+    Expression<int?>? cloudId,
+    Expression<int>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String?>? title,
+  }) {
+    return RawValuesInsertable({
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (title != null) 'title': title,
+    });
+  }
+
+  MemoryRulesCompanion copyWith(
+      {Value<int?>? cloudId,
+      Value<int>? id,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<String?>? title}) {
+    return MemoryRulesCompanion(
+      cloudId: cloudId ?? this.cloudId,
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      title: title ?? this.title,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<int?>(cloudId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String?>(title.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MemoryRulesCompanion(')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('title: $title')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MemoryRulesTable extends MemoryRules
+    with TableInfo<$MemoryRulesTable, MemoryRule> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MemoryRulesTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
+  @override
+  late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
+      'cloud_id', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      $customConstraints: 'UNIQUE');
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+      'created_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+      'updated_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+      'title', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [cloudId, id, createdAt, updatedAt, title];
+  @override
+  String get aliasedName => _alias ?? 'memory_rules';
+  @override
+  String get actualTableName => 'memory_rules';
+  @override
+  VerificationContext validateIntegrity(Insertable<MemoryRule> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('cloud_id')) {
+      context.handle(_cloudIdMeta,
+          cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MemoryRule map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return MemoryRule.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $MemoryRulesTable createAlias(String alias) {
+    return $MemoryRulesTable(attachedDatabase, alias);
+  }
+}
+
 class RFragment2FragmentGroup extends DataClass
     implements Insertable<RFragment2FragmentGroup> {
   int sonId;
@@ -3331,6 +3625,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $FragmentsTable fragments = $FragmentsTable(this);
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
+  late final $MemoryRulesTable memoryRules = $MemoryRulesTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
   late final $RFragmentGroup2FragmentGroupsTable rFragmentGroup2FragmentGroups =
@@ -3349,6 +3644,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragments,
         fragmentGroups,
         memoryGroups,
+        memoryRules,
         rFragment2FragmentGroups,
         rFragmentGroup2FragmentGroups,
         rFragment2MemoryGroups,
@@ -3366,12 +3662,14 @@ mixin _$MultiDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
+  $MemoryRulesTable get memoryRules => attachedDatabase.memoryRules;
 }
 mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
+  $MemoryRulesTable get memoryRules => attachedDatabase.memoryRules;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
   $RFragmentGroup2FragmentGroupsTable get rFragmentGroup2FragmentGroups =>

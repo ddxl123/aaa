@@ -8,8 +8,9 @@ import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'fragmenthome/FragmentHome.dart';
 
@@ -27,6 +28,8 @@ class Home extends StatelessWidget {
             floatingActionButton: _floatingActionButton(context),
             body: SafeArea(child: _body()),
             bottomNavigationBar: _bottomNavigationBar(),
+            floatingActionButtonLocation:
+                controller.isFragmentSelecting(abw) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerDocked,
           ),
         );
       },
@@ -34,10 +37,23 @@ class Home extends StatelessWidget {
   }
 
   Widget _floatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () async {
-        Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
+    return AbBuilder<HomeAbController>(
+      builder: (putController, putAbw) {
+        if (putController.isFragmentSelecting(putAbw)) {
+          return FloatingActionButton(
+            backgroundColor: Colors.amber,
+            child: const FaIcon(FontAwesomeIcons.cube),
+            onPressed: () async {
+              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
+            },
+          );
+        }
+        return FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
+          },
+        );
       },
     );
   }
@@ -62,23 +78,71 @@ class Home extends StatelessWidget {
   }
 
   Widget _bottomNavigationBar() {
-    return AbBuilder<HomeAbController>(builder: (controller, abw) {
-      return Container(
-        color: Colors.white,
-        child: SalomonBottomBar(
-          currentIndex: controller.currentPageIndex(abw),
-          onTap: (int tapIndex) {
-            controller.currentPageIndex.refreshEasy((oldValue) => tapIndex);
-            controller.pageController.jumpToPage(tapIndex);
+    return AbBuilder<HomeAbController>(
+      builder: (hController, hAbw) {
+        if (hController.isFragmentSelecting(hAbw)) {
+          Widget button({required IconData iconData, required String label, required Function() onPressed, Color? color}) {
+            return MaterialButton(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FaIcon(iconData, size: 22, color: color),
+                  const SizedBox(height: 5),
+                  Text(label, style: TextStyle(fontSize: 12, color: color)),
+                ],
+              ),
+              onPressed: onPressed,
+            );
+          }
+
+          return Material(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  button(iconData: FontAwesomeIcons.penToSquare, label: '编辑', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.copy, label: '复制', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.paste, label: '粘贴', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.arrowRightFromBracket, label: '移动', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.trashCan, label: '删除', color: Colors.red, onPressed: () {}),
+                ],
+              ),
+            ),
+          );
+        }
+        return AnimatedBottomNavigationBar.builder(
+          itemCount: 4,
+          activeIndex: hController.currentPageIndex(hAbw),
+          gapLocation: GapLocation.center,
+          splashColor: Colors.blue,
+          tabBuilder: (index, isActive) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  hController.iconDatas[index],
+                  size: isActive ? 20 : 24,
+                  color: isActive ? Colors.blue : Colors.black,
+                ),
+                isActive
+                    ? Text(
+                        hController.labels[index],
+                        style: TextStyle(fontSize: 12, color: isActive ? Colors.blue : Colors.black),
+                      )
+                    : Container(),
+              ],
+            );
           },
-          items: [
-            SalomonBottomBarItem(icon: const Icon(Icons.home), title: const Text('首页')),
-            SalomonBottomBarItem(icon: const Icon(Icons.person), title: const Text('碎片')),
-            SalomonBottomBarItem(icon: const Icon(Icons.person), title: const Text('记忆')),
-            SalomonBottomBarItem(icon: const Icon(Icons.person), title: const Text('我的')),
-          ],
-        ),
-      );
-    });
+          onTap: (value) {
+            hController.currentPageIndex.refreshEasy((oldValue) => value);
+            hController.pageController.jumpToPage(value);
+          },
+        );
+      },
+    );
   }
 }
