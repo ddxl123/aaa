@@ -2,6 +2,7 @@ import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class FragmentGroupModel extends StatelessWidget {
@@ -60,7 +61,7 @@ class FragmentGroupModel extends StatelessWidget {
                     ),
                     onRefresh: () async {
                       await Future.delayed(const Duration(milliseconds: 200));
-                      await c.refreshCurrentPart();
+                      await c.enterPart(null);
                       c.currentPart().refreshController.refreshCompleted();
                     },
                   ),
@@ -82,11 +83,11 @@ class FragmentGroupModel extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextButton(
-                      child: Text(c.currentFragmentGroup(index, abw).title.toString()),
+                      child: Text(c.currentPart().indexFragmentGroup(index, abw).title.toString()),
                       onPressed: () {
-                        c.enterPart(c.currentFragmentGroups()[index]);
+                        c.enterPart(c.currentPart().indexAbFragmentGroup(index));
                       },
-                      onLongPress: () {
+                      onLongPress: () async {
                         Aber.find<HomeAbController>().isFragmentSelecting.refreshEasy((oldValue) => !oldValue);
                       },
                     ),
@@ -94,9 +95,44 @@ class FragmentGroupModel extends StatelessWidget {
                   AbBuilder<HomeAbController>(
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
-                        return IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.circle, color: Colors.grey, size: 15),
+                        return AbBuilder<FragmentGroupModelAbController>(
+                          tag: Aber.hashCodeTag,
+                          builder: (countC, countAbw) {
+                            return Text(
+                              countC.currentPart().indexSelectedFragmentCountForAllSubgroup(index, countAbw).toString() +
+                                  '/' +
+                                  countC.currentPart().indexFragmentCountForAllSubgroup(index, countAbw).toString(),
+                            );
+                          },
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                  AbBuilder<HomeAbController>(
+                    builder: (hController, hAwb) {
+                      if (hController.isFragmentSelecting(hAwb)) {
+                        return AbBuilder<FragmentGroupModelAbController>(
+                          tag: Aber.hashCodeTag,
+                          builder: (selectController, selectAbw) {
+                            return IconButton(
+                              icon: () {
+                                final isSelected = selectController.currentPart().indexIsSelectedForFragmentGroup(index, selectAbw);
+                                if (isSelected == null) {
+                                  return const FaIcon(FontAwesomeIcons.circleHalfStroke, color: Colors.amber, size: 14);
+                                }
+                                if (isSelected) {
+                                  return const FaIcon(FontAwesomeIcons.solidCircle, color: Colors.amber, size: 14);
+                                }
+                                return const FaIcon(FontAwesomeIcons.solidCircle, color: Colors.grey, size: 14);
+                              }(),
+                              onPressed: () async {
+                                await selectController
+                                    .currentPart()
+                                    .selectFragmentGroup(index, selectController.currentPart().indexFragmentGroup(index).id);
+                              },
+                            );
+                          },
                         );
                       }
                       return Container();
@@ -105,7 +141,7 @@ class FragmentGroupModel extends StatelessWidget {
                 ],
               );
             },
-            childCount: c.currentFragmentGroups(abw).length,
+            childCount: c.currentPart().fragmentGroups(abw).length,
           ),
         );
       },
@@ -123,7 +159,7 @@ class FragmentGroupModel extends StatelessWidget {
                 children: [
                   Expanded(
                     child: MaterialButton(
-                      child: Text(c.currentFragment(index, abw).title.toString()),
+                      child: Text(c.currentPart().indexFragment(index, abw).title.toString()),
                       onPressed: () {
                         if (modelType == FragmentGroupModelType.add) return;
                       },
@@ -135,9 +171,20 @@ class FragmentGroupModel extends StatelessWidget {
                   AbBuilder<HomeAbController>(
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
-                        return IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.circle, color: Colors.grey, size: 15),
+                        return AbBuilder<FragmentGroupModelAbController>(
+                          tag: Aber.hashCodeTag,
+                          builder: (selectController, selectAbw) {
+                            return IconButton(
+                              icon: FaIcon(
+                                FontAwesomeIcons.solidCircle,
+                                color: selectController.currentPart().indexIsSelectedForFragment(index, selectAbw) ? Colors.amber : Colors.grey,
+                                size: 14,
+                              ),
+                              onPressed: () async {
+                                selectController.currentPart().selectFragment(selectController.currentPart().indexFragment(index).id);
+                              },
+                            );
+                          },
                         );
                       }
                       return Container();
@@ -146,7 +193,7 @@ class FragmentGroupModel extends StatelessWidget {
                 ],
               );
             },
-            childCount: c.currentFragments(abw).length,
+            childCount: c.currentPart().fragments(abw).length,
           ),
         );
       },
@@ -183,7 +230,7 @@ class FragmentGroupModel extends StatelessWidget {
                                   e().fatherFragmentGroup?.call(abw) == null ? '~ >' : e().fatherFragmentGroup!(abw).title.toString() + ' >',
                                 ),
                                 onPressed: () {
-                                  c.backPartTo(e);
+                                  c.backPartJump(e);
                                 },
                               ),
                             ),

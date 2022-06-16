@@ -8,6 +8,7 @@ import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/freebox/FreeBox.dart';
+import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,9 +26,10 @@ class Home extends StatelessWidget {
         return WillPopScope(
           onWillPop: controller.onWillPop,
           child: Scaffold(
-            floatingActionButton: _floatingActionButton(context),
+            extendBody: true,
             body: SafeArea(child: _body()),
             bottomNavigationBar: _bottomNavigationBar(),
+            floatingActionButton: _floatingActionButton(context),
             floatingActionButtonLocation:
                 controller.isFragmentSelecting(abw) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerDocked,
           ),
@@ -40,12 +42,28 @@ class Home extends StatelessWidget {
     return AbBuilder<HomeAbController>(
       builder: (putController, putAbw) {
         if (putController.isFragmentSelecting(putAbw)) {
-          return FloatingActionButton(
-            backgroundColor: Colors.amber,
-            child: const FaIcon(FontAwesomeIcons.cube),
-            onPressed: () async {
-              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
-            },
+          return Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              FloatingActionButton(
+                backgroundColor: Colors.amber,
+                child: const Text('记'),
+                onPressed: () async {},
+              ),
+              AbBuilder<FragmentGroupModelAbController>(
+                tag: Aber.hashCodeTag,
+                builder: (countController, countAbw) {
+                  return Transform.translate(
+                    offset: Offset(putController.selectedCountDistance(countController, countAbw), 0),
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.amber),
+                      child: Text(countController.selectedFragmentIds(countAbw).length.toString()),
+                    ),
+                  );
+                },
+              ),
+            ],
           );
         }
         return FloatingActionButton(
@@ -96,7 +114,9 @@ class Home extends StatelessWidget {
             );
           }
 
-          return Material(
+          return Container(
+            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            decoration: const BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.all(Radius.circular(10))),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),

@@ -17,7 +17,7 @@ class CreateFragmentGroupPageAbController extends AbController {
       return;
     }
 
-    await fragmentGroupModelAbController.addFragmentGroup(FragmentGroupsCompanion()..title = title.toDriftValue());
+    await fragmentGroupModelAbController.currentPart().addFragmentGroup(FragmentGroupsCompanion()..title = title.toDriftValue());
     Toaster.show(content: '创建成功', milliseconds: 1000);
     Navigator.pop(context);
   }

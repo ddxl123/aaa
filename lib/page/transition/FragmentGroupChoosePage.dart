@@ -50,7 +50,7 @@ class FragmentGroupChoosePage extends StatelessWidget {
             child: const Text('确认选择'),
             onPressed: () {
               final c = Aber.find<CreateFragmentPageAbController>();
-              Aber.findLast<FragmentGroupModelAbController>().addFragment(FragmentsCompanion()..title = c.title.toDriftValue());
+              Aber.findLast<FragmentGroupModelAbController>().currentPart().addFragment(FragmentsCompanion()..title = c.title.toDriftValue());
               Toaster.show(content: '创建成功', milliseconds: 1000);
               Navigator.pop(context);
               Navigator.pop(context);

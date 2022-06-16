@@ -352,6 +352,8 @@ abstract class AbController {
 
   late final BuildContext context;
 
+  late final void Function() thisRefresh;
+
   /// [AbBuilder] 内部的 initState，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   void onInit() {}
 
@@ -518,6 +520,9 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
       );
       _isPutter = true;
       _controller!.context = context; // 必须放在 onInit 前面
+      _controller!.thisRefresh = () {
+        if (mounted) setState(() {});
+      };
       _controller!.onInit(); // 如果被 find 成功，会导致再次调用 onInit，因此只能放在这里，让它只会调用一次。
     }
 
