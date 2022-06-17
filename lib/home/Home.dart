@@ -4,6 +4,7 @@ import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/create/CreateFragmentPage.dart';
+import 'package:aaa/page/create/CreateMemoryGroupPage.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
@@ -48,7 +49,9 @@ class Home extends StatelessWidget {
               FloatingActionButton(
                 backgroundColor: Colors.amber,
                 child: const Text('记'),
-                onPressed: () async {},
+                onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateMemoryGroupPage()));
+                },
               ),
               AbBuilder<FragmentGroupModelAbController>(
                 tag: Aber.hashCodeTag,

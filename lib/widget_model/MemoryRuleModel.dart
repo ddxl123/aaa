@@ -3,10 +3,13 @@ import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/MemoryRuleModelAbController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MemoryRuleModel extends StatelessWidget {
-  const MemoryRuleModel({Key? key}) : super(key: key);
+  const MemoryRuleModel({Key? key, required this.modelType}) : super(key: key);
+
+  final MemoryRuleModelType modelType;
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +50,22 @@ class MemoryRuleModel extends StatelessWidget {
           body: AbBuilder<MemoryRuleModelAbController>(
             tag: Aber.hashCodeTag,
             builder: (c, abw) {
-              return SmartRefresher(
-                controller: c.refreshController,
-                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                child: CustomScrollView(
-                  slivers: [
-                    _memoryRule(),
-                  ],
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: SmartRefresher(
+                  controller: c.refreshController,
+                  physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                  child: CustomScrollView(
+                    slivers: [
+                      _memoryRule(),
+                    ],
+                  ),
+                  onRefresh: () async {
+                    await Future.delayed(const Duration(milliseconds: 200));
+                    await c.refreshMemoryRules();
+                    c.refreshController.refreshCompleted();
+                  },
                 ),
-                onRefresh: () async {
-                  await Future.delayed(const Duration(milliseconds: 200));
-                  await c.refreshMemoryRules();
-                  c.refreshController.refreshCompleted();
-                },
               );
             },
           ),
@@ -75,7 +81,22 @@ class MemoryRuleModel extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return TextButton(onPressed: () {}, child: Text(controller.memoryRules()[index](abw).title.toString()));
+              return TextButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(controller.memoryRules()[index](abw).title.toString()),
+                    FaIcon(
+                      FontAwesomeIcons.solidCircle,
+                      color: controller.selected(abw) == controller.memoryRules()[index]() ? Colors.amber : Colors.grey,
+                      size: 14,
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  controller.selectMemoryRule(controller.memoryRules()[index]());
+                },
+              );
             },
             childCount: controller.memoryRules(abw).length,
           ),

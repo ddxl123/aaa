@@ -1,8 +1,8 @@
 import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/MemoryRuleModelAbController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class CreateMemoryRulePageAbController extends AbController {
   String title = '';
@@ -12,13 +12,13 @@ class CreateMemoryRulePageAbController extends AbController {
 
     // 检查是否可提交
     if (title.trim() == '') {
-      Toaster.show(content: '已取消', milliseconds: 1000);
+      SmartDialog.showToast('已取消');
       Navigator.pop(context);
       return;
     }
 
     await memoryRuleModelAbController.addMemoryRule(MemoryRulesCompanion()..title = title.toDriftValue());
-    Toaster.show(content: '创建成功', milliseconds: 1000);
+    SmartDialog.showToast('创建成功');
     Navigator.pop(context);
   }
 
@@ -27,7 +27,7 @@ class CreateMemoryRulePageAbController extends AbController {
       Navigator.pop(context);
     } else {
       // 编辑内容未保存。是否要 丢弃、存草稿、继续编辑？
-      Toaster.show(content: '有编辑内容', milliseconds: 1000);
+      SmartDialog.showToast('有编辑内容');
     }
   }
 }

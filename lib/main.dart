@@ -8,6 +8,7 @@ import 'package:aaa/tool/aber/Aber.dart';
 import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 main() {
@@ -37,7 +38,8 @@ main() {
     releaseConfig: catcherOptions,
     runAppFunction: () => runApp(const MyApp()),
   );
-  log(WidgetsBinding.instance.toString());
+  // flutter_smart_dialog 相关
+  SmartDialog.config..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last);
   runApp(const MyApp());
 }
 
@@ -59,6 +61,10 @@ class MyApp extends StatelessWidget {
           // catcher 相关
           navigatorKey: Catcher.navigatorKey,
           theme: themeLight(context),
+          // flutter_smart_dialog 相关
+          navigatorObservers: [FlutterSmartDialog.observer],
+          // flutter_smart_dialog 相关
+          builder: FlutterSmartDialog.init(),
           // pull_to_refresh 相关
           home: RefreshConfiguration(
             footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),

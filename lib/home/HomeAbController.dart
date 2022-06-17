@@ -3,6 +3,7 @@ import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeAbController extends AbController {
@@ -34,7 +35,7 @@ class HomeAbController extends AbController {
       return true;
     }
     lastBackTime = now;
-    Toaster.show(content: '再按一次退出！', milliseconds: 1500);
+    SmartDialog.showToast('再按一次退出！');
     await Future.delayed(
       const Duration(milliseconds: 1500),
       () {
@@ -42,10 +43,5 @@ class HomeAbController extends AbController {
       },
     );
     return false;
-  }
-
-  @override
-  void onInit() {
-    Toaster.init(context);
   }
 }

@@ -28,6 +28,11 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
+  /// 只查询了未同步的。
+  Future<List<Fragment>> queryFragmentsByIds(List<int> ids) async {
+    return await (select(fragments)..where((tbl) => tbl.id.isIn(ids))).get();
+  }
+
   /// 输入的 [ids] 与返回的对象是同一个对象。
   Future<List<int>> queryFragmentsForAllSubgroup(int fragmentGroupId, List<int> ids) async {
     final fIds = (await queryFragments(fragmentGroupId)).map((e) => e.id);
