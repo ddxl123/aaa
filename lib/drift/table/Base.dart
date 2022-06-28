@@ -21,8 +21,8 @@ class CloudTableBase extends TableBase {
 /// 关联表基类。
 ///
 /// 子类类名规范：RSon2Fathers
-///   Son - 儿
-///   Father - 父
+///   Son - 儿 - 多对一的多
+///   Father - 父 - 多对一的一
 class RCloudTableBase extends CloudTableBase {
   IntColumn get sonId => integer()();
 

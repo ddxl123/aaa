@@ -1496,7 +1496,7 @@ class MemoryRulesCompanion extends UpdateCompanion<MemoryRule> {
   }
 }
 
-class $MemoryRulesTable extends MemoryRules
+class $MemoryRulesTable extends MemoryModels
     with TableInfo<$MemoryRulesTable, MemoryRule> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2844,6 +2844,426 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   }
 }
 
+class RMemoryRule2MemoryGroup extends DataClass
+    implements Insertable<RMemoryRule2MemoryGroup> {
+  int sonId;
+  int? sonCloudId;
+  int? fatherId;
+  int? fatherCloudId;
+  int? cloudId;
+  int id;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime createdAt;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime updatedAt;
+  RMemoryRule2MemoryGroup(
+      {required this.sonId,
+      this.sonCloudId,
+      this.fatherId,
+      this.fatherCloudId,
+      this.cloudId,
+      required this.id,
+      required this.createdAt,
+      required this.updatedAt});
+  factory RMemoryRule2MemoryGroup.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return RMemoryRule2MemoryGroup(
+      sonId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+      sonCloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}son_cloud_id']),
+      fatherId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
+      fatherCloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}father_cloud_id']),
+      cloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      createdAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
+      updatedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['son_id'] = Variable<int>(sonId);
+    if (!nullToAbsent || sonCloudId != null) {
+      map['son_cloud_id'] = Variable<int?>(sonCloudId);
+    }
+    if (!nullToAbsent || fatherId != null) {
+      map['father_id'] = Variable<int?>(fatherId);
+    }
+    if (!nullToAbsent || fatherCloudId != null) {
+      map['father_cloud_id'] = Variable<int?>(fatherCloudId);
+    }
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<int?>(cloudId);
+    }
+    map['id'] = Variable<int>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  RMemoryRule2MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
+    return RMemoryRule2MemoryGroupsCompanion(
+      sonId: Value(sonId),
+      sonCloudId: sonCloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sonCloudId),
+      fatherId: fatherId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatherId),
+      fatherCloudId: fatherCloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatherCloudId),
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory RMemoryRule2MemoryGroup.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RMemoryRule2MemoryGroup(
+      sonId: serializer.fromJson<int>(json['sonId']),
+      sonCloudId: serializer.fromJson<int?>(json['sonCloudId']),
+      fatherId: serializer.fromJson<int?>(json['fatherId']),
+      fatherCloudId: serializer.fromJson<int?>(json['fatherCloudId']),
+      cloudId: serializer.fromJson<int?>(json['cloudId']),
+      id: serializer.fromJson<int>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'sonId': serializer.toJson<int>(sonId),
+      'sonCloudId': serializer.toJson<int?>(sonCloudId),
+      'fatherId': serializer.toJson<int?>(fatherId),
+      'fatherCloudId': serializer.toJson<int?>(fatherCloudId),
+      'cloudId': serializer.toJson<int?>(cloudId),
+      'id': serializer.toJson<int>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  RMemoryRule2MemoryGroup copyWith(
+          {int? sonId,
+          int? sonCloudId,
+          int? fatherId,
+          int? fatherCloudId,
+          int? cloudId,
+          int? id,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      RMemoryRule2MemoryGroup(
+        sonId: sonId ?? this.sonId,
+        sonCloudId: sonCloudId ?? this.sonCloudId,
+        fatherId: fatherId ?? this.fatherId,
+        fatherCloudId: fatherCloudId ?? this.fatherCloudId,
+        cloudId: cloudId ?? this.cloudId,
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RMemoryRule2MemoryGroup(')
+          ..write('sonId: $sonId, ')
+          ..write('sonCloudId: $sonCloudId, ')
+          ..write('fatherId: $fatherId, ')
+          ..write('fatherCloudId: $fatherCloudId, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(sonId, sonCloudId, fatherId, fatherCloudId,
+      cloudId, id, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RMemoryRule2MemoryGroup &&
+          other.sonId == this.sonId &&
+          other.sonCloudId == this.sonCloudId &&
+          other.fatherId == this.fatherId &&
+          other.fatherCloudId == this.fatherCloudId &&
+          other.cloudId == this.cloudId &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class RMemoryRule2MemoryGroupsCompanion
+    extends UpdateCompanion<RMemoryRule2MemoryGroup> {
+  Value<int> sonId;
+  Value<int?> sonCloudId;
+  Value<int?> fatherId;
+  Value<int?> fatherCloudId;
+  Value<int?> cloudId;
+  Value<int> id;
+  Value<DateTime> createdAt;
+  Value<DateTime> updatedAt;
+  RMemoryRule2MemoryGroupsCompanion({
+    this.sonId = const Value.absent(),
+    this.sonCloudId = const Value.absent(),
+    this.fatherId = const Value.absent(),
+    this.fatherCloudId = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  RMemoryRule2MemoryGroupsCompanion.insert({
+    required int sonId,
+    this.sonCloudId = const Value.absent(),
+    this.fatherId = const Value.absent(),
+    this.fatherCloudId = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : sonId = Value(sonId);
+  static Insertable<RMemoryRule2MemoryGroup> custom({
+    Expression<int>? sonId,
+    Expression<int?>? sonCloudId,
+    Expression<int?>? fatherId,
+    Expression<int?>? fatherCloudId,
+    Expression<int?>? cloudId,
+    Expression<int>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (sonId != null) 'son_id': sonId,
+      if (sonCloudId != null) 'son_cloud_id': sonCloudId,
+      if (fatherId != null) 'father_id': fatherId,
+      if (fatherCloudId != null) 'father_cloud_id': fatherCloudId,
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  RMemoryRule2MemoryGroupsCompanion copyWith(
+      {Value<int>? sonId,
+      Value<int?>? sonCloudId,
+      Value<int?>? fatherId,
+      Value<int?>? fatherCloudId,
+      Value<int?>? cloudId,
+      Value<int>? id,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
+    return RMemoryRule2MemoryGroupsCompanion(
+      sonId: sonId ?? this.sonId,
+      sonCloudId: sonCloudId ?? this.sonCloudId,
+      fatherId: fatherId ?? this.fatherId,
+      fatherCloudId: fatherCloudId ?? this.fatherCloudId,
+      cloudId: cloudId ?? this.cloudId,
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (sonId.present) {
+      map['son_id'] = Variable<int>(sonId.value);
+    }
+    if (sonCloudId.present) {
+      map['son_cloud_id'] = Variable<int?>(sonCloudId.value);
+    }
+    if (fatherId.present) {
+      map['father_id'] = Variable<int?>(fatherId.value);
+    }
+    if (fatherCloudId.present) {
+      map['father_cloud_id'] = Variable<int?>(fatherCloudId.value);
+    }
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<int?>(cloudId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RMemoryRule2MemoryGroupsCompanion(')
+          ..write('sonId: $sonId, ')
+          ..write('sonCloudId: $sonCloudId, ')
+          ..write('fatherId: $fatherId, ')
+          ..write('fatherCloudId: $fatherCloudId, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RMemoryRule2MemoryGroupsTable extends RMemoryModel2MemoryGroups
+    with TableInfo<$RMemoryRule2MemoryGroupsTable, RMemoryRule2MemoryGroup> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RMemoryRule2MemoryGroupsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
+  @override
+  late final GeneratedColumn<int?> sonId = GeneratedColumn<int?>(
+      'son_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _sonCloudIdMeta = const VerificationMeta('sonCloudId');
+  @override
+  late final GeneratedColumn<int?> sonCloudId = GeneratedColumn<int?>(
+      'son_cloud_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fatherIdMeta = const VerificationMeta('fatherId');
+  @override
+  late final GeneratedColumn<int?> fatherId = GeneratedColumn<int?>(
+      'father_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fatherCloudIdMeta =
+      const VerificationMeta('fatherCloudId');
+  @override
+  late final GeneratedColumn<int?> fatherCloudId = GeneratedColumn<int?>(
+      'father_cloud_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
+  @override
+  late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
+      'cloud_id', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      $customConstraints: 'UNIQUE');
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+      'created_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+      'updated_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  @override
+  List<GeneratedColumn> get $columns => [
+        sonId,
+        sonCloudId,
+        fatherId,
+        fatherCloudId,
+        cloudId,
+        id,
+        createdAt,
+        updatedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? 'r_memory_rule2_memory_groups';
+  @override
+  String get actualTableName => 'r_memory_rule2_memory_groups';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<RMemoryRule2MemoryGroup> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('son_id')) {
+      context.handle(
+          _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
+    } else if (isInserting) {
+      context.missing(_sonIdMeta);
+    }
+    if (data.containsKey('son_cloud_id')) {
+      context.handle(
+          _sonCloudIdMeta,
+          sonCloudId.isAcceptableOrUnknown(
+              data['son_cloud_id']!, _sonCloudIdMeta));
+    }
+    if (data.containsKey('father_id')) {
+      context.handle(_fatherIdMeta,
+          fatherId.isAcceptableOrUnknown(data['father_id']!, _fatherIdMeta));
+    }
+    if (data.containsKey('father_cloud_id')) {
+      context.handle(
+          _fatherCloudIdMeta,
+          fatherCloudId.isAcceptableOrUnknown(
+              data['father_cloud_id']!, _fatherCloudIdMeta));
+    }
+    if (data.containsKey('cloud_id')) {
+      context.handle(_cloudIdMeta,
+          cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RMemoryRule2MemoryGroup map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    return RMemoryRule2MemoryGroup.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $RMemoryRule2MemoryGroupsTable createAlias(String alias) {
+    return $RMemoryRule2MemoryGroupsTable(attachedDatabase, alias);
+  }
+}
+
 class AppInfo extends DataClass implements Insertable<AppInfo> {
   int id;
 
@@ -3632,6 +4052,8 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RFragmentGroup2FragmentGroupsTable(this);
   late final $RFragment2MemoryGroupsTable rFragment2MemoryGroups =
       $RFragment2MemoryGroupsTable(this);
+  late final $RMemoryRule2MemoryGroupsTable rMemoryRule2MemoryGroups =
+      $RMemoryRule2MemoryGroupsTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
   late final SingleDAO singleDAO = SingleDAO(this as DriftDb);
@@ -3648,6 +4070,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
         rFragment2FragmentGroups,
         rFragmentGroup2FragmentGroups,
         rFragment2MemoryGroups,
+        rMemoryRule2MemoryGroups,
         appInfos,
         syncs
       ];
@@ -3676,4 +4099,6 @@ mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragmentGroup2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
+  $RMemoryRule2MemoryGroupsTable get rMemoryRule2MemoryGroups =>
+      attachedDatabase.rMemoryRule2MemoryGroups;
 }

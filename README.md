@@ -1,16 +1,42 @@
-# aaa
+悬浮：记忆组内的碎片全部都是悬浮类型。
 
-A new Flutter project.
+悬浮（仅易忘）：记忆组内的碎片仅对不熟练的碎片进行悬浮。
 
-## Getting Started
+### 主碎片：
 
-This project is a starting point for a Flutter application.
+想要记忆的知识点。
+例如，
 
-A few resources to get you started if this is your first Flutter project:
+- 问：'好' 的英文？
+- 答：good
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### 辅助碎片：
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+为了记忆主碎片中的某个知识点，在记忆流中，每次对该主碎片采用不同的辅助碎片来记忆主碎片。
+例如，
+
+主碎片：
+
+- 问：'好' 的英文？
+- 答：good
+
+辅助碎片：
+
+- 问：bad 的反义词是？
+- 答：good
+- 问：nice 的近义词是？
+- 答：good
+- 问：四个字母都带有圈圈的单词是？
+- 答：good
+
+注意：辅助碎片本身也是主碎片，当采用了辅助碎片并对该辅助碎片进行记忆后，其记忆信息也会同时存储在该辅助碎片中。
+
+### 辅助碎片（仅熟练）：
+
+仅对熟练的主碎片采取辅助碎片记忆，加强对碎片的熟悉度。
+
+### 会员：
+
+新用户给予0元购买一个月会员的福利。
+新用户购买了0元福利，且选择了自动续费，则给予第二个月以1元的价格自动续费，第三个月及以上的每月以半价优惠自动续费。
+非新用户给予每月8折的价格优惠。

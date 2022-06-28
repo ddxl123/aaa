@@ -1,11 +1,8 @@
 import 'package:aaa/home/memoryhome/MemoryHomeAbController.dart';
-import 'package:aaa/page/create/CreateMemoryGroupPage.dart';
 import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/MemoryGroupModel.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MemoryHome extends StatefulWidget {
   const MemoryHome({Key? key}) : super(key: key);
@@ -36,7 +33,9 @@ class _MemoryHomeState extends State<MemoryHome> with SingleTickerProviderStateM
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (ctx) => const MemoryGroupModel(),
+                builder: (ctx) => Stack(
+                  children: [const MemoryGroupModel(), FloatingConfirmPosition(text: '多组记忆', onPressed: () {})],
+                ),
               ),
               const Tab(text: '111'),
             ],

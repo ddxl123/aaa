@@ -1,4 +1,5 @@
 import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -13,6 +14,11 @@ class MemoryRuleModelAbController extends AbController {
   final memoryRules = <Ab<MemoryRule>>[].ab;
 
   final selected = Ab<MemoryRule?>(null);
+
+  @override
+  void onInit() {
+    selected.refreshEasy((oldValue) => Aber.findOrNullLast<CreateMemoryGroupPageAbController>()?.selected() ?? oldValue);
+  }
 
   Future<void> addMemoryRule(MemoryRulesCompanion willEntity) async {
     final newEntity = await DriftDb.instance.singleDAO.insertMemoryRule(willEntity);

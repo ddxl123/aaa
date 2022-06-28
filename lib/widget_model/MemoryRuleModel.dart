@@ -81,21 +81,25 @@ class MemoryRuleModel extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(controller.memoryRules()[index](abw).title.toString()),
-                    FaIcon(
+              return Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      child: Text(controller.memoryRules()[index](abw).title.toString()),
+                      onPressed: () {},
+                    ),
+                  ),
+                  IconButton(
+                    icon: FaIcon(
                       FontAwesomeIcons.solidCircle,
                       color: controller.selected(abw) == controller.memoryRules()[index]() ? Colors.amber : Colors.grey,
                       size: 14,
                     ),
-                  ],
-                ),
-                onPressed: () {
-                  controller.selectMemoryRule(controller.memoryRules()[index]());
-                },
+                    onPressed: () {
+                      controller.selectMemoryRule(controller.memoryRules()[index]());
+                    },
+                  ),
+                ],
               );
             },
             childCount: controller.memoryRules(abw).length,

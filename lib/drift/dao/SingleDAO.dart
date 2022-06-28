@@ -81,10 +81,39 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     );
   }
 
-  Future<MemoryGroup> insertMemoryGroup(MemoryGroupsCompanion willEntry) async {
+  /// 插入一条 [MemoryGroup]、多条 [RFragment2MemoryGroup]、一条 [RMemoryRule2MemoryGroup]
+  Future<void> insertMemoryGroupWith(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryRule? willMemoryRule) async {
     return await transaction(
       () async {
-        return await insertReturningWith(memoryGroups, entity: willEntry, syncTag: SyncTag());
+        final syncTag = SyncTag();
+        final newMemoryGroup = await insertReturningWith(memoryGroups, entity: willMemoryGroup, syncTag: syncTag);
+        await Future.forEach<Fragment>(
+          willFragments,
+          (element) async {
+            await insertReturningWith(
+              rFragment2MemoryGroups,
+              entity: RFragment2MemoryGroupsCompanion(
+                sonId: element.id.toDriftValue(),
+                sonCloudId: element.cloudId.toDriftValue(),
+                fatherId: newMemoryGroup.id.toDriftValue(),
+                fatherCloudId: newMemoryGroup.cloudId.toDriftValue(),
+              ),
+              syncTag: syncTag,
+            );
+          },
+        );
+        if (willMemoryRule != null) {
+          await insertReturningWith(
+            rMemoryRule2MemoryGroups,
+            entity: RMemoryRule2MemoryGroupsCompanion(
+              sonId: willMemoryRule.id.toDriftValue(),
+              sonCloudId: willMemoryRule.cloudId.toDriftValue(),
+              fatherId: newMemoryGroup.id.toDriftValue(),
+              fatherCloudId: newMemoryGroup.cloudId.toDriftValue(),
+            ),
+            syncTag: syncTag,
+          );
+        }
       },
     );
   }
@@ -103,5 +132,18 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
 
   Future<List<MemoryRule>> queryMemoryRules() async {
     return await select(memoryRules).get();
+  }
+
+  Future<List<Fragment>> queryFragmentInMemoryGroup(int memoryGroupId) async {
+    final j = select(fragments).join([innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id))]);
+    j.where(rFragment2MemoryGroups.fatherId.equals(memoryGroupId));
+    final gets = await j.get();
+    return gets.map((e) => e.readTable(fragments)).toList();
+  }
+
+  Future<MemoryRule?> queryMemoryRuleInMemoryGroup(int memoryGroupId) async {
+    final j = select(memoryRules).join([innerJoin(rMemoryRule2MemoryGroups, rMemoryRule2MemoryGroups.sonId.equalsExp(memoryRules.id))]);
+    j.where(rMemoryRule2MemoryGroups.fatherId.equals(memoryGroupId));
+    return (await j.getSingleOrNull())?.readTable(memoryRules);
   }
 }

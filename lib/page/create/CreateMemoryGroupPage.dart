@@ -1,6 +1,9 @@
 import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
 import 'package:aaa/page/transition/MemoryRuleChoosePage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/tool/sheetroute/DefaultSheetRoute.dart';
+import 'package:aaa/tool/sheetroute/SheetRoute.dart';
+import 'package:aaa/tool/sheetroute/SheetRouteController.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -56,11 +59,15 @@ class CreateMemoryGroupPage extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Text('记忆规则：', style: TextStyle(fontSize: 16)),
+                    const Text('记忆模型：', style: TextStyle(fontSize: 16)),
                     StatefulBuilder(
                       builder: (ctx, s) {
                         return TextButton(
-                          child: const Text('点击选择'),
+                          child: AbBuilder<CreateMemoryGroupPageAbController>(
+                            builder: (gzC, gzAbw) {
+                              return Text(gzC.selected(gzAbw)?.title ?? '点击选择');
+                            },
+                          ),
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (_) => const MemoryRuleChoosePage()));
                           },
@@ -70,43 +77,72 @@ class CreateMemoryGroupPage extends StatelessWidget {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                      child: Text('已选碎片：', style: TextStyle(fontSize: 16)),
-                    ),
-                    AbBuilder<CreateMemoryGroupPageAbController>(
-                      builder: (cController, sAbw) {
-                        return Text('共 ${cController.selectedFragments(sAbw).length} 个', style: const TextStyle(fontSize: 16));
+                    const Text('展示类型：', style: TextStyle(fontSize: 16)),
+                    StatefulBuilder(
+                      builder: (ctx, s) {
+                        return TextButton(
+                          child: AbBuilder<CreateMemoryGroupPageAbController>(
+                            builder: (gzC, gzAbw) {
+                              return Text(gzC.selected(gzAbw)?.title ?? '点击选择');
+                            },
+                          ),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const MemoryRuleChoosePage()));
+                          },
+                        );
                       },
                     ),
                   ],
                 ),
-                Expanded(
-                  child: AbBuilder<CreateMemoryGroupPageAbController>(
-                    builder: (sController, sAbw) {
-                      return Container(
-                        decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.all(10),
-                        child: SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              ...(sController.selectedFragments(sAbw).isEmpty
-                                  ? [Container()]
-                                  : sController.selectedFragments(sAbw).map(
-                                        (e) => Row(
-                                          children: [Text(e.title.toString())],
+                Row(
+                  children: [
+                    const Text('已选碎片：', style: TextStyle(fontSize: 16)),
+                    AbBuilder<CreateMemoryGroupPageAbController>(
+                      builder: (cController, sAbw) {
+                        return TextButton(
+                          child: Text('点击查看（共 ${cController.selectedFragments(sAbw).length} 个）', style: const TextStyle(fontSize: 16)),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              DefaultSheetRoute(bodySliver0: () {
+                                return SliverToBoxAdapter(
+                                  child: AbBuilder<CreateMemoryGroupPageAbController>(
+                                    builder: (sController, sAbw) {
+                                      return Material(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          child: SingleChildScrollView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                ...(sController.selectedFragments(sAbw).isEmpty
+                                                    ? [Container()]
+                                                    : sController.selectedFragments(sAbw).map(
+                                                          (e) => Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 200,
+                                                                child: Text(e.title.toString()),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        )),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      )),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

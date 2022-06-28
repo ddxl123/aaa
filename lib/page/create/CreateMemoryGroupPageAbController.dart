@@ -9,30 +9,38 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 class CreateMemoryGroupPageAbController extends AbController {
   String title = '';
 
+  final selected = Ab<MemoryRule?>(null);
+
   final selectedFragments = <Fragment>[].ab;
 
   @override
   void onInit() {
-    obtainSelectedFragments();
+    querySelectedFragments();
   }
 
-  Future<void> obtainSelectedFragments() async {
+  Future<void> querySelectedFragments() async {
     final fs = await DriftDb.instance.singleDAO.queryFragmentsByIds(Aber.findLast<FragmentGroupModelAbController>().selectedFragmentIds().toList());
     selectedFragments.refreshInevitable((obj) => obj..addAll(fs));
   }
 
   Future<void> commit() async {
-    final memoryGroupModelAbController = Aber.findLast<MemoryGroupModelAbController>();
-
     // 检查是否可提交
-    if (title.trim() == '') {
-      SmartDialog.showToast('已取消');
+    final titleOk = title.trim() != '';
+
+    if (titleOk) {
+      await DriftDb.instance.singleDAO.insertMemoryGroupWith(
+        MemoryGroupsCompanion()..title = title.toDriftValue(),
+        selectedFragments(),
+        selected(),
+      );
+      Aber.findOrNullLast<MemoryGroupModelAbController>()?.refreshPage();
+
+      SmartDialog.showToast('创建成功');
       Navigator.pop(context);
       return;
     }
 
-    await memoryGroupModelAbController.addMemoryGroup(MemoryGroupsCompanion()..title = title.toDriftValue());
-    SmartDialog.showToast('创建成功');
+    SmartDialog.showToast('已取消');
     Navigator.pop(context);
   }
 
