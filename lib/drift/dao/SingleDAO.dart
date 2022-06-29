@@ -82,7 +82,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   /// 插入一条 [MemoryGroup]、多条 [RFragment2MemoryGroup]、一条 [RMemoryRule2MemoryGroup]
-  Future<void> insertMemoryGroupWith(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryRule? willMemoryRule) async {
+  Future<void> insertMemoryGroupWith(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryModel? willMemoryModel) async {
     return await transaction(
       () async {
         final syncTag = SyncTag();
@@ -102,12 +102,12 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
             );
           },
         );
-        if (willMemoryRule != null) {
+        if (willMemoryModel != null) {
           await insertReturningWith(
-            rMemoryRule2MemoryGroups,
-            entity: RMemoryRule2MemoryGroupsCompanion(
-              sonId: willMemoryRule.id.toDriftValue(),
-              sonCloudId: willMemoryRule.cloudId.toDriftValue(),
+            rMemoryModel2MemoryGroups,
+            entity: RMemoryModel2MemoryGroupsCompanion(
+              sonId: willMemoryModel.id.toDriftValue(),
+              sonCloudId: willMemoryModel.cloudId.toDriftValue(),
               fatherId: newMemoryGroup.id.toDriftValue(),
               fatherCloudId: newMemoryGroup.cloudId.toDriftValue(),
             ),
@@ -122,16 +122,16 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return await select(memoryGroups).get();
   }
 
-  Future<MemoryRule> insertMemoryRule(MemoryRulesCompanion willEntry) async {
+  Future<MemoryModel> insertMemoryRule(MemoryModelsCompanion willEntry) async {
     return await transaction(
       () async {
-        return await insertReturningWith(memoryRules, entity: willEntry, syncTag: SyncTag());
+        return await insertReturningWith(memoryModels, entity: willEntry, syncTag: SyncTag());
       },
     );
   }
 
-  Future<List<MemoryRule>> queryMemoryRules() async {
-    return await select(memoryRules).get();
+  Future<List<MemoryModel>> queryMemoryRules() async {
+    return await select(memoryModels).get();
   }
 
   Future<List<Fragment>> queryFragmentInMemoryGroup(int memoryGroupId) async {
@@ -141,9 +141,9 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return gets.map((e) => e.readTable(fragments)).toList();
   }
 
-  Future<MemoryRule?> queryMemoryRuleInMemoryGroup(int memoryGroupId) async {
-    final j = select(memoryRules).join([innerJoin(rMemoryRule2MemoryGroups, rMemoryRule2MemoryGroups.sonId.equalsExp(memoryRules.id))]);
-    j.where(rMemoryRule2MemoryGroups.fatherId.equals(memoryGroupId));
-    return (await j.getSingleOrNull())?.readTable(memoryRules);
+  Future<MemoryModel?> queryMemoryRuleInMemoryGroup(int memoryGroupId) async {
+    final j = select(memoryModels).join([innerJoin(rMemoryModel2MemoryGroups, rMemoryModel2MemoryGroups.sonId.equalsExp(memoryModels.id))]);
+    j.where(rMemoryModel2MemoryGroups.fatherId.equals(memoryGroupId));
+    return (await j.getSingleOrNull())?.readTable(memoryModels);
   }
 }

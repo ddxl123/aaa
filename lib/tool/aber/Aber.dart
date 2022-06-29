@@ -79,7 +79,7 @@ class Ab<V> {
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
   ///
-  /// 只会尝试重建引用当前对象 [AbBuilder]。
+  /// 只会尝试重建引用当前对象的 [AbBuilder]。
   ///
   /// 也可以看 [refreshComplex], 复杂的修改推荐使用 [modify] 或 [modifyComplex] 方案。
   void refreshEasy(V Function(V oldValue) diff, [bool isForce = false]) {

@@ -9,7 +9,7 @@ class FragmentInMemoryGroupPageAbController extends AbController {
 
   final RefreshController refreshController = RefreshController(initialRefresh: true);
 
-  final Ab<MemoryRule?> memoryRule = Ab(null);
+  final Ab<MemoryModel?> memoryRule = Ab(null);
 
   final fragments = <Ab<Fragment>>[].ab;
 

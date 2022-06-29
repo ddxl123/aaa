@@ -1,17 +1,27 @@
 import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/tool/Helper.dart';
 import 'package:aaa/tool/Toaster.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/tool/dialog.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:aaa/widget_model/MemoryGroupModelAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class CreateMemoryGroupPageAbController extends AbController {
-  String title = '';
+  final title = ''.ab;
 
-  final selected = Ab<MemoryRule?>(null);
+  final selectedMemoryModel = Ab<MemoryModel?>(null);
+
+  final type = MemoryGroupType.none.ab;
 
   final selectedFragments = <Fragment>[].ab;
+
+  bool isTitleOk([Abw? abw]) => title(abw).trim() != '';
+
+  bool get isAllOk => isTitleOk();
+
+  bool get isAllNotOk => !isTitleOk();
 
   @override
   void onInit() {
@@ -24,32 +34,36 @@ class CreateMemoryGroupPageAbController extends AbController {
   }
 
   Future<void> commit() async {
-    // 检查是否可提交
-    final titleOk = title.trim() != '';
-
-    if (titleOk) {
-      await DriftDb.instance.singleDAO.insertMemoryGroupWith(
-        MemoryGroupsCompanion()..title = title.toDriftValue(),
-        selectedFragments(),
-        selected(),
-      );
-      Aber.findOrNullLast<MemoryGroupModelAbController>()?.refreshPage();
-
-      SmartDialog.showToast('创建成功');
-      Navigator.pop(context);
+    if (!isAllOk) {
+      SmartDialog.showToast('存在未填项！');
       return;
     }
 
-    SmartDialog.showToast('已取消');
-    Navigator.pop(context);
+    await DriftDb.instance.transaction(
+      () async {
+        await DriftDb.instance.singleDAO.insertMemoryGroupWith(
+          MemoryGroupsCompanion()..title = title().toDriftValue(),
+          selectedFragments(),
+          selectedMemoryModel(),
+        );
+        Aber.findOrNullLast<MemoryGroupModelAbController>()?.refreshPage();
+
+        SmartDialog.showToast('创建成功');
+        Navigator.pop(context);
+      },
+    );
   }
 
   void cancel() {
-    if (title.trim() == '') {
+    if (isAllNotOk) {
       Navigator.pop(context);
-    } else {
-      // 编辑内容未保存。是否要 丢弃、存草稿、继续编辑？
-      SmartDialog.showToast('有编辑内容');
+      return;
     }
+    showDialogOkCancel(
+      context: context,
+      title: '存在修改内容，是否要丢弃？',
+      okText: '丢弃',
+      cancelText: '继续编辑',
+    );
   }
 }

@@ -39,7 +39,9 @@ main() {
     runAppFunction: () => runApp(const MyApp()),
   );
   // flutter_smart_dialog 相关
-  SmartDialog.config..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last);
+  SmartDialog.config
+    ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last)
+    ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide,animationTime: const Duration(milliseconds: 100));
   runApp(const MyApp());
 }
 

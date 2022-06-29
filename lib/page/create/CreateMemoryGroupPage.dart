@@ -1,10 +1,12 @@
+import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
-import 'package:aaa/page/transition/MemoryRuleChoosePage.dart';
+import 'package:aaa/page/transition/MemoryModelChoosePage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/sheetroute/DefaultSheetRoute.dart';
 import 'package:aaa/tool/sheetroute/SheetRoute.dart';
 import 'package:aaa/tool/sheetroute/SheetRouteController.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +53,7 @@ class CreateMemoryGroupPage extends StatelessWidget {
                         autofocus: true,
                         decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
                         onChanged: (text) {
-                          putController.title = text;
+                          putController.title.refreshEasy((oldValue) => text);
                         },
                       ),
                     ),
@@ -65,11 +67,11 @@ class CreateMemoryGroupPage extends StatelessWidget {
                         return TextButton(
                           child: AbBuilder<CreateMemoryGroupPageAbController>(
                             builder: (gzC, gzAbw) {
-                              return Text(gzC.selected(gzAbw)?.title ?? '点击选择');
+                              return Text(gzC.selectedMemoryModel(gzAbw)?.title ?? '点击选择');
                             },
                           ),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const MemoryRuleChoosePage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const MemoryModelChoosePage()));
                           },
                         );
                       },
@@ -81,14 +83,64 @@ class CreateMemoryGroupPage extends StatelessWidget {
                     const Text('展示类型：', style: TextStyle(fontSize: 16)),
                     StatefulBuilder(
                       builder: (ctx, s) {
-                        return TextButton(
-                          child: AbBuilder<CreateMemoryGroupPageAbController>(
-                            builder: (gzC, gzAbw) {
-                              return Text(gzC.selected(gzAbw)?.title ?? '点击选择');
-                            },
-                          ),
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const MemoryRuleChoosePage()));
+                        return AbBuilder<CreateMemoryGroupPageAbController>(
+                          builder: (gzC, gzAbw) {
+                            return DropdownButton2<MemoryGroupType>(
+                              value: gzC.type(gzAbw),
+                              customItemsIndexes: const [1, 3, 5],
+                              customItemsHeight: 10,
+                              dropdownDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text('  暂不设置                 '),
+                                  value: MemoryGroupType.none,
+                                ),
+                                DropdownMenuItem(
+                                  enabled: false,
+                                  child: Divider(),
+                                ),
+                                DropdownMenuItem(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('  常规类型'),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.info_outline,
+                                          color: Colors.grey,
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    ],
+                                  ),
+                                  value: MemoryGroupType.normal,
+                                ),
+                                DropdownMenuItem(
+                                  enabled: false,
+                                  child: Divider(),
+                                ),
+                                DropdownMenuItem(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('  全悬浮类型'),
+                                      IconButton(
+                                          icon: Icon(
+                                            Icons.info_outline,
+                                            color: Colors.grey,
+                                          ),
+                                          onPressed: () {}),
+                                    ],
+                                  ),
+                                  value: MemoryGroupType.fullFloating,
+                                ),
+                              ],
+                              onChanged: (value) {
+                                gzC.type.refreshEasy((oldValue) => value!);
+                              },
+                            );
                           },
                         );
                       },

@@ -18,19 +18,19 @@ class User extends DataClass implements Insertable<User> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? username;
+  String username;
   String? password;
-  String? email;
-  int? age;
+  String email;
+  int age;
   User(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.username,
+      required this.username,
       this.password,
-      this.email,
-      this.age});
+      required this.email,
+      required this.age});
   factory User.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return User(
@@ -43,13 +43,13 @@ class User extends DataClass implements Insertable<User> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       username: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}username']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}username'])!,
       password: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}password']),
       email: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}email'])!,
       age: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}age']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}age'])!,
     );
   }
   @override
@@ -61,18 +61,12 @@ class User extends DataClass implements Insertable<User> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || username != null) {
-      map['username'] = Variable<String?>(username);
-    }
+    map['username'] = Variable<String>(username);
     if (!nullToAbsent || password != null) {
       map['password'] = Variable<String?>(password);
     }
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String?>(email);
-    }
-    if (!nullToAbsent || age != null) {
-      map['age'] = Variable<int?>(age);
-    }
+    map['email'] = Variable<String>(email);
+    map['age'] = Variable<int>(age);
     return map;
   }
 
@@ -84,15 +78,12 @@ class User extends DataClass implements Insertable<User> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      username: username == null && nullToAbsent
-          ? const Value.absent()
-          : Value(username),
+      username: Value(username),
       password: password == null && nullToAbsent
           ? const Value.absent()
           : Value(password),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
-      age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      email: Value(email),
+      age: Value(age),
     );
   }
 
@@ -104,10 +95,10 @@ class User extends DataClass implements Insertable<User> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      username: serializer.fromJson<String?>(json['username']),
+      username: serializer.fromJson<String>(json['username']),
       password: serializer.fromJson<String?>(json['password']),
-      email: serializer.fromJson<String?>(json['email']),
-      age: serializer.fromJson<int?>(json['age']),
+      email: serializer.fromJson<String>(json['email']),
+      age: serializer.fromJson<int>(json['age']),
     );
   }
   @override
@@ -118,10 +109,10 @@ class User extends DataClass implements Insertable<User> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'username': serializer.toJson<String?>(username),
+      'username': serializer.toJson<String>(username),
       'password': serializer.toJson<String?>(password),
-      'email': serializer.toJson<String?>(email),
-      'age': serializer.toJson<int?>(age),
+      'email': serializer.toJson<String>(email),
+      'age': serializer.toJson<int>(age),
     };
   }
 
@@ -181,10 +172,10 @@ class UsersCompanion extends UpdateCompanion<User> {
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> username;
+  Value<String> username;
   Value<String?> password;
-  Value<String?> email;
-  Value<int?> age;
+  Value<String> email;
+  Value<int> age;
   UsersCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
@@ -210,10 +201,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? username,
+    Expression<String>? username,
     Expression<String?>? password,
-    Expression<String?>? email,
-    Expression<int?>? age,
+    Expression<String>? email,
+    Expression<int>? age,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
@@ -232,10 +223,10 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? username,
+      Value<String>? username,
       Value<String?>? password,
-      Value<String?>? email,
-      Value<int?>? age}) {
+      Value<String>? email,
+      Value<int>? age}) {
     return UsersCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
@@ -264,16 +255,16 @@ class UsersCompanion extends UpdateCompanion<User> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (username.present) {
-      map['username'] = Variable<String?>(username.value);
+      map['username'] = Variable<String>(username.value);
     }
     if (password.present) {
       map['password'] = Variable<String?>(password.value);
     }
     if (email.present) {
-      map['email'] = Variable<String?>(email.value);
+      map['email'] = Variable<String>(email.value);
     }
     if (age.present) {
-      map['age'] = Variable<int?>(age.value);
+      map['age'] = Variable<int>(age.value);
     }
     return map;
   }
@@ -330,8 +321,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final VerificationMeta _usernameMeta = const VerificationMeta('username');
   @override
   late final GeneratedColumn<String?> username = GeneratedColumn<String?>(
-      'username', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'username', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('还没有名字'));
   final VerificationMeta _passwordMeta = const VerificationMeta('password');
   @override
   late final GeneratedColumn<String?> password = GeneratedColumn<String?>(
@@ -340,13 +333,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String?> email = GeneratedColumn<String?>(
-      'email', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'email', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('-'));
   final VerificationMeta _ageMeta = const VerificationMeta('age');
   @override
   late final GeneratedColumn<int?> age = GeneratedColumn<int?>(
-      'age', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
+      'age', aliasedName, false,
+      check: () => age.isBiggerOrEqual(const Constant(0)),
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   @override
   List<GeneratedColumn> get $columns =>
       [cloudId, id, createdAt, updatedAt, username, password, email, age];
@@ -418,13 +416,25 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? title;
+
+  /// 父节点。
+  ///
+  /// 若为 null，则自身为父节点。
+  int? fatherFragmentId;
+  String title;
+
+  /// 优先级/高频程度。
+  ///
+  /// 数字越大，优先级越高，不能为负数。
+  int priority;
   Fragment(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.title});
+      this.fatherFragmentId,
+      required this.title,
+      required this.priority});
   factory Fragment.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Fragment(
@@ -436,8 +446,12 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      fatherFragmentId: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}father_fragment_id']),
       title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
+      priority: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}priority'])!,
     );
   }
   @override
@@ -449,9 +463,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String?>(title);
+    if (!nullToAbsent || fatherFragmentId != null) {
+      map['father_fragment_id'] = Variable<int?>(fatherFragmentId);
     }
+    map['title'] = Variable<String>(title);
+    map['priority'] = Variable<int>(priority);
     return map;
   }
 
@@ -463,8 +479,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      title:
-          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      fatherFragmentId: fatherFragmentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatherFragmentId),
+      title: Value(title),
+      priority: Value(priority),
     );
   }
 
@@ -476,7 +495,9 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      title: serializer.fromJson<String?>(json['title']),
+      fatherFragmentId: serializer.fromJson<int?>(json['fatherFragmentId']),
+      title: serializer.fromJson<String>(json['title']),
+      priority: serializer.fromJson<int>(json['priority']),
     );
   }
   @override
@@ -487,7 +508,9 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'title': serializer.toJson<String?>(title),
+      'fatherFragmentId': serializer.toJson<int?>(fatherFragmentId),
+      'title': serializer.toJson<String>(title),
+      'priority': serializer.toJson<int>(priority),
     };
   }
 
@@ -496,13 +519,17 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           int? id,
           DateTime? createdAt,
           DateTime? updatedAt,
-          String? title}) =>
+          int? fatherFragmentId,
+          String? title,
+          int? priority}) =>
       Fragment(
         cloudId: cloudId ?? this.cloudId,
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        fatherFragmentId: fatherFragmentId ?? this.fatherFragmentId,
         title: title ?? this.title,
+        priority: priority ?? this.priority,
       );
   @override
   String toString() {
@@ -511,13 +538,16 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('title: $title')
+          ..write('fatherFragmentId: $fatherFragmentId, ')
+          ..write('title: $title, ')
+          ..write('priority: $priority')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title);
+  int get hashCode => Object.hash(
+      cloudId, id, createdAt, updatedAt, fatherFragmentId, title, priority);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -526,7 +556,9 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.title == this.title);
+          other.fatherFragmentId == this.fatherFragmentId &&
+          other.title == this.title &&
+          other.priority == this.priority);
 }
 
 class FragmentsCompanion extends UpdateCompanion<Fragment> {
@@ -534,34 +566,44 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> title;
+  Value<int?> fatherFragmentId;
+  Value<String> title;
+  Value<int> priority;
   FragmentsCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fatherFragmentId = const Value.absent(),
     this.title = const Value.absent(),
+    this.priority = const Value.absent(),
   });
   FragmentsCompanion.insert({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fatherFragmentId = const Value.absent(),
     this.title = const Value.absent(),
+    this.priority = const Value.absent(),
   });
   static Insertable<Fragment> custom({
     Expression<int?>? cloudId,
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? title,
+    Expression<int?>? fatherFragmentId,
+    Expression<String>? title,
+    Expression<int>? priority,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (fatherFragmentId != null) 'father_fragment_id': fatherFragmentId,
       if (title != null) 'title': title,
+      if (priority != null) 'priority': priority,
     });
   }
 
@@ -570,13 +612,17 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? title}) {
+      Value<int?>? fatherFragmentId,
+      Value<String>? title,
+      Value<int>? priority}) {
     return FragmentsCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      fatherFragmentId: fatherFragmentId ?? this.fatherFragmentId,
       title: title ?? this.title,
+      priority: priority ?? this.priority,
     );
   }
 
@@ -595,8 +641,14 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (fatherFragmentId.present) {
+      map['father_fragment_id'] = Variable<int?>(fatherFragmentId.value);
+    }
     if (title.present) {
-      map['title'] = Variable<String?>(title.value);
+      map['title'] = Variable<String>(title.value);
+    }
+    if (priority.present) {
+      map['priority'] = Variable<int>(priority.value);
     }
     return map;
   }
@@ -608,7 +660,9 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('title: $title')
+          ..write('fatherFragmentId: $fatherFragmentId, ')
+          ..write('title: $title, ')
+          ..write('priority: $priority')
           ..write(')'))
         .toString();
   }
@@ -648,14 +702,30 @@ class $FragmentsTable extends Fragments
       type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
+  final VerificationMeta _fatherFragmentIdMeta =
+      const VerificationMeta('fatherFragmentId');
+  @override
+  late final GeneratedColumn<int?> fatherFragmentId = GeneratedColumn<int?>(
+      'father_fragment_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
-      'title', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'title', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('还没有标题'));
+  final VerificationMeta _priorityMeta = const VerificationMeta('priority');
+  @override
+  late final GeneratedColumn<int?> priority = GeneratedColumn<int?>(
+      'priority', aliasedName, false,
+      check: () => priority.isBiggerOrEqual(const Constant(0)),
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   @override
   List<GeneratedColumn> get $columns =>
-      [cloudId, id, createdAt, updatedAt, title];
+      [cloudId, id, createdAt, updatedAt, fatherFragmentId, title, priority];
   @override
   String get aliasedName => _alias ?? 'fragments';
   @override
@@ -680,9 +750,19 @@ class $FragmentsTable extends Fragments
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
+    if (data.containsKey('father_fragment_id')) {
+      context.handle(
+          _fatherFragmentIdMeta,
+          fatherFragmentId.isAcceptableOrUnknown(
+              data['father_fragment_id']!, _fatherFragmentIdMeta));
+    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    }
+    if (data.containsKey('priority')) {
+      context.handle(_priorityMeta,
+          priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta));
     }
     return context;
   }
@@ -712,13 +792,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? title;
+  String title;
   FragmentGroup(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.title});
+      required this.title});
   factory FragmentGroup.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return FragmentGroup(
@@ -731,7 +811,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
     );
   }
   @override
@@ -743,9 +823,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String?>(title);
-    }
+    map['title'] = Variable<String>(title);
     return map;
   }
 
@@ -757,8 +835,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      title:
-          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      title: Value(title),
     );
   }
 
@@ -770,7 +847,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      title: serializer.fromJson<String?>(json['title']),
+      title: serializer.fromJson<String>(json['title']),
     );
   }
   @override
@@ -781,7 +858,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'title': serializer.toJson<String?>(title),
+      'title': serializer.toJson<String>(title),
     };
   }
 
@@ -828,7 +905,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> title;
+  Value<String> title;
   FragmentGroupsCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
@@ -848,7 +925,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? title,
+    Expression<String>? title,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
@@ -864,7 +941,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? title}) {
+      Value<String>? title}) {
     return FragmentGroupsCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
@@ -890,7 +967,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (title.present) {
-      map['title'] = Variable<String?>(title.value);
+      map['title'] = Variable<String>(title.value);
     }
     return map;
   }
@@ -945,8 +1022,10 @@ class $FragmentGroupsTable extends FragmentGroups
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
-      'title', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'title', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('还没有名称'));
   @override
   List<GeneratedColumn> get $columns =>
       [cloudId, id, createdAt, updatedAt, title];
@@ -1006,13 +1085,27 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? title;
+  String title;
+  MemoryGroupType type;
+
+  /// [MemoryGroupStatusForNormal]
+  MemoryGroupStatusForNormal normalStatus;
+
+  /// [MemoryGroupStatusForNormalPart]
+  MemoryGroupStatusForNormalPart normalPartStatus;
+
+  /// [MemoryGroupStatusForFullFloating]
+  MemoryGroupStatusForFullFloating fullFloatingStatus;
   MemoryGroup(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.title});
+      required this.title,
+      required this.type,
+      required this.normalStatus,
+      required this.normalPartStatus,
+      required this.fullFloatingStatus});
   factory MemoryGroup.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return MemoryGroup(
@@ -1025,7 +1118,17 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
+      type: $MemoryGroupsTable.$converter0.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}type']))!,
+      normalStatus: $MemoryGroupsTable.$converter1.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}normal_status']))!,
+      normalPartStatus: $MemoryGroupsTable.$converter2.mapToDart(const IntType()
+          .mapFromDatabaseResponse(
+              data['${effectivePrefix}normal_part_status']))!,
+      fullFloatingStatus: $MemoryGroupsTable.$converter3.mapToDart(
+          const IntType().mapFromDatabaseResponse(
+              data['${effectivePrefix}full_floating_status']))!,
     );
   }
   @override
@@ -1037,8 +1140,24 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String?>(title);
+    map['title'] = Variable<String>(title);
+    {
+      final converter = $MemoryGroupsTable.$converter0;
+      map['type'] = Variable<int>(converter.mapToSql(type)!);
+    }
+    {
+      final converter = $MemoryGroupsTable.$converter1;
+      map['normal_status'] = Variable<int>(converter.mapToSql(normalStatus)!);
+    }
+    {
+      final converter = $MemoryGroupsTable.$converter2;
+      map['normal_part_status'] =
+          Variable<int>(converter.mapToSql(normalPartStatus)!);
+    }
+    {
+      final converter = $MemoryGroupsTable.$converter3;
+      map['full_floating_status'] =
+          Variable<int>(converter.mapToSql(fullFloatingStatus)!);
     }
     return map;
   }
@@ -1051,8 +1170,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      title:
-          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      title: Value(title),
+      type: Value(type),
+      normalStatus: Value(normalStatus),
+      normalPartStatus: Value(normalPartStatus),
+      fullFloatingStatus: Value(fullFloatingStatus),
     );
   }
 
@@ -1064,7 +1186,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      title: serializer.fromJson<String?>(json['title']),
+      title: serializer.fromJson<String>(json['title']),
+      type: serializer.fromJson<MemoryGroupType>(json['type']),
+      normalStatus:
+          serializer.fromJson<MemoryGroupStatusForNormal>(json['normalStatus']),
+      normalPartStatus: serializer
+          .fromJson<MemoryGroupStatusForNormalPart>(json['normalPartStatus']),
+      fullFloatingStatus: serializer.fromJson<MemoryGroupStatusForFullFloating>(
+          json['fullFloatingStatus']),
     );
   }
   @override
@@ -1075,7 +1204,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'title': serializer.toJson<String?>(title),
+      'title': serializer.toJson<String>(title),
+      'type': serializer.toJson<MemoryGroupType>(type),
+      'normalStatus':
+          serializer.toJson<MemoryGroupStatusForNormal>(normalStatus),
+      'normalPartStatus':
+          serializer.toJson<MemoryGroupStatusForNormalPart>(normalPartStatus),
+      'fullFloatingStatus': serializer
+          .toJson<MemoryGroupStatusForFullFloating>(fullFloatingStatus),
     };
   }
 
@@ -1084,13 +1220,21 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           int? id,
           DateTime? createdAt,
           DateTime? updatedAt,
-          String? title}) =>
+          String? title,
+          MemoryGroupType? type,
+          MemoryGroupStatusForNormal? normalStatus,
+          MemoryGroupStatusForNormalPart? normalPartStatus,
+          MemoryGroupStatusForFullFloating? fullFloatingStatus}) =>
       MemoryGroup(
         cloudId: cloudId ?? this.cloudId,
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         title: title ?? this.title,
+        type: type ?? this.type,
+        normalStatus: normalStatus ?? this.normalStatus,
+        normalPartStatus: normalPartStatus ?? this.normalPartStatus,
+        fullFloatingStatus: fullFloatingStatus ?? this.fullFloatingStatus,
       );
   @override
   String toString() {
@@ -1099,13 +1243,18 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('type: $type, ')
+          ..write('normalStatus: $normalStatus, ')
+          ..write('normalPartStatus: $normalPartStatus, ')
+          ..write('fullFloatingStatus: $fullFloatingStatus')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title);
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title,
+      type, normalStatus, normalPartStatus, fullFloatingStatus);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1114,7 +1263,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.title == this.title);
+          other.title == this.title &&
+          other.type == this.type &&
+          other.normalStatus == this.normalStatus &&
+          other.normalPartStatus == this.normalPartStatus &&
+          other.fullFloatingStatus == this.fullFloatingStatus);
 }
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
@@ -1122,13 +1275,21 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> title;
+  Value<String> title;
+  Value<MemoryGroupType> type;
+  Value<MemoryGroupStatusForNormal> normalStatus;
+  Value<MemoryGroupStatusForNormalPart> normalPartStatus;
+  Value<MemoryGroupStatusForFullFloating> fullFloatingStatus;
   MemoryGroupsCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.title = const Value.absent(),
+    this.type = const Value.absent(),
+    this.normalStatus = const Value.absent(),
+    this.normalPartStatus = const Value.absent(),
+    this.fullFloatingStatus = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
     this.cloudId = const Value.absent(),
@@ -1136,13 +1297,21 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.title = const Value.absent(),
+    this.type = const Value.absent(),
+    this.normalStatus = const Value.absent(),
+    this.normalPartStatus = const Value.absent(),
+    this.fullFloatingStatus = const Value.absent(),
   });
   static Insertable<MemoryGroup> custom({
     Expression<int?>? cloudId,
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? title,
+    Expression<String>? title,
+    Expression<MemoryGroupType>? type,
+    Expression<MemoryGroupStatusForNormal>? normalStatus,
+    Expression<MemoryGroupStatusForNormalPart>? normalPartStatus,
+    Expression<MemoryGroupStatusForFullFloating>? fullFloatingStatus,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
@@ -1150,6 +1319,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (title != null) 'title': title,
+      if (type != null) 'type': type,
+      if (normalStatus != null) 'normal_status': normalStatus,
+      if (normalPartStatus != null) 'normal_part_status': normalPartStatus,
+      if (fullFloatingStatus != null)
+        'full_floating_status': fullFloatingStatus,
     });
   }
 
@@ -1158,13 +1332,21 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? title}) {
+      Value<String>? title,
+      Value<MemoryGroupType>? type,
+      Value<MemoryGroupStatusForNormal>? normalStatus,
+      Value<MemoryGroupStatusForNormalPart>? normalPartStatus,
+      Value<MemoryGroupStatusForFullFloating>? fullFloatingStatus}) {
     return MemoryGroupsCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       title: title ?? this.title,
+      type: type ?? this.type,
+      normalStatus: normalStatus ?? this.normalStatus,
+      normalPartStatus: normalPartStatus ?? this.normalPartStatus,
+      fullFloatingStatus: fullFloatingStatus ?? this.fullFloatingStatus,
     );
   }
 
@@ -1184,7 +1366,26 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (title.present) {
-      map['title'] = Variable<String?>(title.value);
+      map['title'] = Variable<String>(title.value);
+    }
+    if (type.present) {
+      final converter = $MemoryGroupsTable.$converter0;
+      map['type'] = Variable<int>(converter.mapToSql(type.value)!);
+    }
+    if (normalStatus.present) {
+      final converter = $MemoryGroupsTable.$converter1;
+      map['normal_status'] =
+          Variable<int>(converter.mapToSql(normalStatus.value)!);
+    }
+    if (normalPartStatus.present) {
+      final converter = $MemoryGroupsTable.$converter2;
+      map['normal_part_status'] =
+          Variable<int>(converter.mapToSql(normalPartStatus.value)!);
+    }
+    if (fullFloatingStatus.present) {
+      final converter = $MemoryGroupsTable.$converter3;
+      map['full_floating_status'] =
+          Variable<int>(converter.mapToSql(fullFloatingStatus.value)!);
     }
     return map;
   }
@@ -1196,7 +1397,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('type: $type, ')
+          ..write('normalStatus: $normalStatus, ')
+          ..write('normalPartStatus: $normalPartStatus, ')
+          ..write('fullFloatingStatus: $fullFloatingStatus')
           ..write(')'))
         .toString();
   }
@@ -1239,11 +1444,63 @@ class $MemoryGroupsTable extends MemoryGroups
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
-      'title', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'title', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('还没有名称'));
+  final VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
-  List<GeneratedColumn> get $columns =>
-      [cloudId, id, createdAt, updatedAt, title];
+  late final GeneratedColumnWithTypeConverter<MemoryGroupType, int?> type =
+      GeneratedColumn<int?>('type', aliasedName, false,
+              type: const IntType(),
+              requiredDuringInsert: false,
+              defaultValue: Constant(MemoryGroupType.none.index))
+          .withConverter<MemoryGroupType>($MemoryGroupsTable.$converter0);
+  final VerificationMeta _normalStatusMeta =
+      const VerificationMeta('normalStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForNormal, int?>
+      normalStatus = GeneratedColumn<int?>('normal_status', aliasedName, false,
+              type: const IntType(),
+              requiredDuringInsert: false,
+              defaultValue: Constant(MemoryGroupStatusForNormal.notStart.index))
+          .withConverter<MemoryGroupStatusForNormal>(
+              $MemoryGroupsTable.$converter1);
+  final VerificationMeta _normalPartStatusMeta =
+      const VerificationMeta('normalPartStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForNormalPart,
+      int?> normalPartStatus = GeneratedColumn<int?>(
+          'normal_part_status', aliasedName, false,
+          type: const IntType(),
+          requiredDuringInsert: false,
+          defaultValue: Constant(MemoryGroupStatusForNormalPart.disabled.index))
+      .withConverter<MemoryGroupStatusForNormalPart>(
+          $MemoryGroupsTable.$converter2);
+  final VerificationMeta _fullFloatingStatusMeta =
+      const VerificationMeta('fullFloatingStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForFullFloating,
+      int?> fullFloatingStatus = GeneratedColumn<int?>(
+          'full_floating_status', aliasedName, false,
+          type: const IntType(),
+          requiredDuringInsert: false,
+          defaultValue:
+              Constant(MemoryGroupStatusForFullFloating.notStarted.index))
+      .withConverter<MemoryGroupStatusForFullFloating>(
+          $MemoryGroupsTable.$converter3);
+  @override
+  List<GeneratedColumn> get $columns => [
+        cloudId,
+        id,
+        createdAt,
+        updatedAt,
+        title,
+        type,
+        normalStatus,
+        normalPartStatus,
+        fullFloatingStatus
+      ];
   @override
   String get aliasedName => _alias ?? 'memory_groups';
   @override
@@ -1272,6 +1529,10 @@ class $MemoryGroupsTable extends MemoryGroups
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
+    context.handle(_typeMeta, const VerificationResult.success());
+    context.handle(_normalStatusMeta, const VerificationResult.success());
+    context.handle(_normalPartStatusMeta, const VerificationResult.success());
+    context.handle(_fullFloatingStatusMeta, const VerificationResult.success());
     return context;
   }
 
@@ -1287,9 +1548,21 @@ class $MemoryGroupsTable extends MemoryGroups
   $MemoryGroupsTable createAlias(String alias) {
     return $MemoryGroupsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<MemoryGroupType, int> $converter0 =
+      const EnumIndexConverter<MemoryGroupType>(MemoryGroupType.values);
+  static TypeConverter<MemoryGroupStatusForNormal, int> $converter1 =
+      const EnumIndexConverter<MemoryGroupStatusForNormal>(
+          MemoryGroupStatusForNormal.values);
+  static TypeConverter<MemoryGroupStatusForNormalPart, int> $converter2 =
+      const EnumIndexConverter<MemoryGroupStatusForNormalPart>(
+          MemoryGroupStatusForNormalPart.values);
+  static TypeConverter<MemoryGroupStatusForFullFloating, int> $converter3 =
+      const EnumIndexConverter<MemoryGroupStatusForFullFloating>(
+          MemoryGroupStatusForFullFloating.values);
 }
 
-class MemoryRule extends DataClass implements Insertable<MemoryRule> {
+class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   int? cloudId;
   int id;
 
@@ -1300,16 +1573,22 @@ class MemoryRule extends DataClass implements Insertable<MemoryRule> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? title;
-  MemoryRule(
+  String title;
+
+  /// 初始数学函数，用逗号隔开。
+  ///
+  /// 例如： 'y=1-0.56t^0.06,y=1-0.56t^0.06'
+  String? mathFunction1;
+  MemoryModel(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.title});
-  factory MemoryRule.fromData(Map<String, dynamic> data, {String? prefix}) {
+      required this.title,
+      this.mathFunction1});
+  factory MemoryModel.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return MemoryRule(
+    return MemoryModel(
       cloudId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
       id: const IntType()
@@ -1319,7 +1598,9 @@ class MemoryRule extends DataClass implements Insertable<MemoryRule> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
+      mathFunction1: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}math_function1']),
     );
   }
   @override
@@ -1331,34 +1612,38 @@ class MemoryRule extends DataClass implements Insertable<MemoryRule> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String?>(title);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || mathFunction1 != null) {
+      map['math_function1'] = Variable<String?>(mathFunction1);
     }
     return map;
   }
 
-  MemoryRulesCompanion toCompanion(bool nullToAbsent) {
-    return MemoryRulesCompanion(
+  MemoryModelsCompanion toCompanion(bool nullToAbsent) {
+    return MemoryModelsCompanion(
       cloudId: cloudId == null && nullToAbsent
           ? const Value.absent()
           : Value(cloudId),
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      title:
-          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      title: Value(title),
+      mathFunction1: mathFunction1 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mathFunction1),
     );
   }
 
-  factory MemoryRule.fromJson(Map<String, dynamic> json,
+  factory MemoryModel.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MemoryRule(
+    return MemoryModel(
       cloudId: serializer.fromJson<int?>(json['cloudId']),
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      title: serializer.fromJson<String?>(json['title']),
+      title: serializer.fromJson<String>(json['title']),
+      mathFunction1: serializer.fromJson<String?>(json['mathFunction1']),
     );
   }
   @override
@@ -1369,74 +1654,84 @@ class MemoryRule extends DataClass implements Insertable<MemoryRule> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'title': serializer.toJson<String?>(title),
+      'title': serializer.toJson<String>(title),
+      'mathFunction1': serializer.toJson<String?>(mathFunction1),
     };
   }
 
-  MemoryRule copyWith(
+  MemoryModel copyWith(
           {int? cloudId,
           int? id,
           DateTime? createdAt,
           DateTime? updatedAt,
-          String? title}) =>
-      MemoryRule(
+          String? title,
+          String? mathFunction1}) =>
+      MemoryModel(
         cloudId: cloudId ?? this.cloudId,
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         title: title ?? this.title,
+        mathFunction1: mathFunction1 ?? this.mathFunction1,
       );
   @override
   String toString() {
-    return (StringBuffer('MemoryRule(')
+    return (StringBuffer('MemoryModel(')
           ..write('cloudId: $cloudId, ')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('mathFunction1: $mathFunction1')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title);
+  int get hashCode =>
+      Object.hash(cloudId, id, createdAt, updatedAt, title, mathFunction1);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is MemoryRule &&
+      (other is MemoryModel &&
           other.cloudId == this.cloudId &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.title == this.title);
+          other.title == this.title &&
+          other.mathFunction1 == this.mathFunction1);
 }
 
-class MemoryRulesCompanion extends UpdateCompanion<MemoryRule> {
+class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   Value<int?> cloudId;
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> title;
-  MemoryRulesCompanion({
+  Value<String> title;
+  Value<String?> mathFunction1;
+  MemoryModelsCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.title = const Value.absent(),
+    this.mathFunction1 = const Value.absent(),
   });
-  MemoryRulesCompanion.insert({
+  MemoryModelsCompanion.insert({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.title = const Value.absent(),
+    this.mathFunction1 = const Value.absent(),
   });
-  static Insertable<MemoryRule> custom({
+  static Insertable<MemoryModel> custom({
     Expression<int?>? cloudId,
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? title,
+    Expression<String>? title,
+    Expression<String?>? mathFunction1,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
@@ -1444,21 +1739,24 @@ class MemoryRulesCompanion extends UpdateCompanion<MemoryRule> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (title != null) 'title': title,
+      if (mathFunction1 != null) 'math_function1': mathFunction1,
     });
   }
 
-  MemoryRulesCompanion copyWith(
+  MemoryModelsCompanion copyWith(
       {Value<int?>? cloudId,
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? title}) {
-    return MemoryRulesCompanion(
+      Value<String>? title,
+      Value<String?>? mathFunction1}) {
+    return MemoryModelsCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       title: title ?? this.title,
+      mathFunction1: mathFunction1 ?? this.mathFunction1,
     );
   }
 
@@ -1478,30 +1776,34 @@ class MemoryRulesCompanion extends UpdateCompanion<MemoryRule> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (title.present) {
-      map['title'] = Variable<String?>(title.value);
+      map['title'] = Variable<String>(title.value);
+    }
+    if (mathFunction1.present) {
+      map['math_function1'] = Variable<String?>(mathFunction1.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('MemoryRulesCompanion(')
+    return (StringBuffer('MemoryModelsCompanion(')
           ..write('cloudId: $cloudId, ')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('mathFunction1: $mathFunction1')
           ..write(')'))
         .toString();
   }
 }
 
-class $MemoryRulesTable extends MemoryModels
-    with TableInfo<$MemoryRulesTable, MemoryRule> {
+class $MemoryModelsTable extends MemoryModels
+    with TableInfo<$MemoryModelsTable, MemoryModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MemoryRulesTable(this.attachedDatabase, [this._alias]);
+  $MemoryModelsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
   @override
   late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
@@ -1533,17 +1835,25 @@ class $MemoryRulesTable extends MemoryModels
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
-      'title', aliasedName, true,
+      'title', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('还没有名称'));
+  final VerificationMeta _mathFunction1Meta =
+      const VerificationMeta('mathFunction1');
+  @override
+  late final GeneratedColumn<String?> mathFunction1 = GeneratedColumn<String?>(
+      'math_function1', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [cloudId, id, createdAt, updatedAt, title];
+      [cloudId, id, createdAt, updatedAt, title, mathFunction1];
   @override
-  String get aliasedName => _alias ?? 'memory_rules';
+  String get aliasedName => _alias ?? 'memory_models';
   @override
-  String get actualTableName => 'memory_rules';
+  String get actualTableName => 'memory_models';
   @override
-  VerificationContext validateIntegrity(Insertable<MemoryRule> instance,
+  VerificationContext validateIntegrity(Insertable<MemoryModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -1566,20 +1876,420 @@ class $MemoryRulesTable extends MemoryModels
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
+    if (data.containsKey('math_function1')) {
+      context.handle(
+          _mathFunction1Meta,
+          mathFunction1.isAcceptableOrUnknown(
+              data['math_function1']!, _mathFunction1Meta));
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  MemoryRule map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return MemoryRule.fromData(data,
+  MemoryModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return MemoryModel.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $MemoryRulesTable createAlias(String alias) {
-    return $MemoryRulesTable(attachedDatabase, alias);
+  $MemoryModelsTable createAlias(String alias) {
+    return $MemoryModelsTable(attachedDatabase, alias);
+  }
+}
+
+class FragmentMemoryInfo extends DataClass
+    implements Insertable<FragmentMemoryInfo> {
+  int? cloudId;
+  int id;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime createdAt;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime updatedAt;
+
+  /// 自然熟悉度 —— 当前时间点的熟悉度
+  /// 范围：0~100。
+  int naturalFamiliarity;
+
+  /// 明确熟悉度 —— 当前时间点所操作的熟悉度。
+  ///
+  /// 范围：0~100。
+  ///
+  /// 在用户选择某点明确熟悉度时，会根据 [MemoryModels] 来计算下一次展示的时间。
+  int explicitFamiliarity;
+
+  /// 碎片展示时间。
+  int showTime;
+  FragmentMemoryInfo(
+      {this.cloudId,
+      required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.naturalFamiliarity,
+      required this.explicitFamiliarity,
+      required this.showTime});
+  factory FragmentMemoryInfo.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return FragmentMemoryInfo(
+      cloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      createdAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
+      updatedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      naturalFamiliarity: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}natural_familiarity'])!,
+      explicitFamiliarity: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}explicit_familiarity'])!,
+      showTime: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}show_time'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<int?>(cloudId);
+    }
+    map['id'] = Variable<int>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['natural_familiarity'] = Variable<int>(naturalFamiliarity);
+    map['explicit_familiarity'] = Variable<int>(explicitFamiliarity);
+    map['show_time'] = Variable<int>(showTime);
+    return map;
+  }
+
+  FragmentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
+    return FragmentMemoryInfosCompanion(
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      naturalFamiliarity: Value(naturalFamiliarity),
+      explicitFamiliarity: Value(explicitFamiliarity),
+      showTime: Value(showTime),
+    );
+  }
+
+  factory FragmentMemoryInfo.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FragmentMemoryInfo(
+      cloudId: serializer.fromJson<int?>(json['cloudId']),
+      id: serializer.fromJson<int>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      naturalFamiliarity: serializer.fromJson<int>(json['naturalFamiliarity']),
+      explicitFamiliarity:
+          serializer.fromJson<int>(json['explicitFamiliarity']),
+      showTime: serializer.fromJson<int>(json['showTime']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cloudId': serializer.toJson<int?>(cloudId),
+      'id': serializer.toJson<int>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'naturalFamiliarity': serializer.toJson<int>(naturalFamiliarity),
+      'explicitFamiliarity': serializer.toJson<int>(explicitFamiliarity),
+      'showTime': serializer.toJson<int>(showTime),
+    };
+  }
+
+  FragmentMemoryInfo copyWith(
+          {int? cloudId,
+          int? id,
+          DateTime? createdAt,
+          DateTime? updatedAt,
+          int? naturalFamiliarity,
+          int? explicitFamiliarity,
+          int? showTime}) =>
+      FragmentMemoryInfo(
+        cloudId: cloudId ?? this.cloudId,
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        naturalFamiliarity: naturalFamiliarity ?? this.naturalFamiliarity,
+        explicitFamiliarity: explicitFamiliarity ?? this.explicitFamiliarity,
+        showTime: showTime ?? this.showTime,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('FragmentMemoryInfo(')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('naturalFamiliarity: $naturalFamiliarity, ')
+          ..write('explicitFamiliarity: $explicitFamiliarity, ')
+          ..write('showTime: $showTime')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt,
+      naturalFamiliarity, explicitFamiliarity, showTime);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FragmentMemoryInfo &&
+          other.cloudId == this.cloudId &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.naturalFamiliarity == this.naturalFamiliarity &&
+          other.explicitFamiliarity == this.explicitFamiliarity &&
+          other.showTime == this.showTime);
+}
+
+class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
+  Value<int?> cloudId;
+  Value<int> id;
+  Value<DateTime> createdAt;
+  Value<DateTime> updatedAt;
+  Value<int> naturalFamiliarity;
+  Value<int> explicitFamiliarity;
+  Value<int> showTime;
+  FragmentMemoryInfosCompanion({
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.naturalFamiliarity = const Value.absent(),
+    this.explicitFamiliarity = const Value.absent(),
+    this.showTime = const Value.absent(),
+  });
+  FragmentMemoryInfosCompanion.insert({
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.naturalFamiliarity = const Value.absent(),
+    this.explicitFamiliarity = const Value.absent(),
+    this.showTime = const Value.absent(),
+  });
+  static Insertable<FragmentMemoryInfo> custom({
+    Expression<int?>? cloudId,
+    Expression<int>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? naturalFamiliarity,
+    Expression<int>? explicitFamiliarity,
+    Expression<int>? showTime,
+  }) {
+    return RawValuesInsertable({
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (naturalFamiliarity != null) 'natural_familiarity': naturalFamiliarity,
+      if (explicitFamiliarity != null)
+        'explicit_familiarity': explicitFamiliarity,
+      if (showTime != null) 'show_time': showTime,
+    });
+  }
+
+  FragmentMemoryInfosCompanion copyWith(
+      {Value<int?>? cloudId,
+      Value<int>? id,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<int>? naturalFamiliarity,
+      Value<int>? explicitFamiliarity,
+      Value<int>? showTime}) {
+    return FragmentMemoryInfosCompanion(
+      cloudId: cloudId ?? this.cloudId,
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      naturalFamiliarity: naturalFamiliarity ?? this.naturalFamiliarity,
+      explicitFamiliarity: explicitFamiliarity ?? this.explicitFamiliarity,
+      showTime: showTime ?? this.showTime,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<int?>(cloudId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (naturalFamiliarity.present) {
+      map['natural_familiarity'] = Variable<int>(naturalFamiliarity.value);
+    }
+    if (explicitFamiliarity.present) {
+      map['explicit_familiarity'] = Variable<int>(explicitFamiliarity.value);
+    }
+    if (showTime.present) {
+      map['show_time'] = Variable<int>(showTime.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FragmentMemoryInfosCompanion(')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('naturalFamiliarity: $naturalFamiliarity, ')
+          ..write('explicitFamiliarity: $explicitFamiliarity, ')
+          ..write('showTime: $showTime')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FragmentMemoryInfosTable extends FragmentMemoryInfos
+    with TableInfo<$FragmentMemoryInfosTable, FragmentMemoryInfo> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FragmentMemoryInfosTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
+  @override
+  late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
+      'cloud_id', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      $customConstraints: 'UNIQUE');
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+      'created_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+      'updated_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _naturalFamiliarityMeta =
+      const VerificationMeta('naturalFamiliarity');
+  @override
+  late final GeneratedColumn<int?> naturalFamiliarity = GeneratedColumn<int?>(
+      'natural_familiarity', aliasedName, false,
+      check: () =>
+          naturalFamiliarity.isBetween(const Constant(0), const Constant(100)),
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  final VerificationMeta _explicitFamiliarityMeta =
+      const VerificationMeta('explicitFamiliarity');
+  @override
+  late final GeneratedColumn<int?> explicitFamiliarity = GeneratedColumn<int?>(
+      'explicit_familiarity', aliasedName, false,
+      check: () =>
+          explicitFamiliarity.isBetween(const Constant(0), const Constant(100)),
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  final VerificationMeta _showTimeMeta = const VerificationMeta('showTime');
+  @override
+  late final GeneratedColumn<int?> showTime = GeneratedColumn<int?>(
+      'show_time', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns => [
+        cloudId,
+        id,
+        createdAt,
+        updatedAt,
+        naturalFamiliarity,
+        explicitFamiliarity,
+        showTime
+      ];
+  @override
+  String get aliasedName => _alias ?? 'fragment_memory_infos';
+  @override
+  String get actualTableName => 'fragment_memory_infos';
+  @override
+  VerificationContext validateIntegrity(Insertable<FragmentMemoryInfo> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('cloud_id')) {
+      context.handle(_cloudIdMeta,
+          cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    if (data.containsKey('natural_familiarity')) {
+      context.handle(
+          _naturalFamiliarityMeta,
+          naturalFamiliarity.isAcceptableOrUnknown(
+              data['natural_familiarity']!, _naturalFamiliarityMeta));
+    }
+    if (data.containsKey('explicit_familiarity')) {
+      context.handle(
+          _explicitFamiliarityMeta,
+          explicitFamiliarity.isAcceptableOrUnknown(
+              data['explicit_familiarity']!, _explicitFamiliarityMeta));
+    }
+    if (data.containsKey('show_time')) {
+      context.handle(_showTimeMeta,
+          showTime.isAcceptableOrUnknown(data['show_time']!, _showTimeMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FragmentMemoryInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return FragmentMemoryInfo.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $FragmentMemoryInfosTable createAlias(String alias) {
+    return $FragmentMemoryInfosTable(attachedDatabase, alias);
   }
 }
 
@@ -2844,8 +3554,8 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   }
 }
 
-class RMemoryRule2MemoryGroup extends DataClass
-    implements Insertable<RMemoryRule2MemoryGroup> {
+class RMemoryModel2MemoryGroup extends DataClass
+    implements Insertable<RMemoryModel2MemoryGroup> {
   int sonId;
   int? sonCloudId;
   int? fatherId;
@@ -2860,7 +3570,7 @@ class RMemoryRule2MemoryGroup extends DataClass
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  RMemoryRule2MemoryGroup(
+  RMemoryModel2MemoryGroup(
       {required this.sonId,
       this.sonCloudId,
       this.fatherId,
@@ -2869,10 +3579,10 @@ class RMemoryRule2MemoryGroup extends DataClass
       required this.id,
       required this.createdAt,
       required this.updatedAt});
-  factory RMemoryRule2MemoryGroup.fromData(Map<String, dynamic> data,
+  factory RMemoryModel2MemoryGroup.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return RMemoryRule2MemoryGroup(
+    return RMemoryModel2MemoryGroup(
       sonId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
       sonCloudId: const IntType()
@@ -2913,8 +3623,8 @@ class RMemoryRule2MemoryGroup extends DataClass
     return map;
   }
 
-  RMemoryRule2MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
-    return RMemoryRule2MemoryGroupsCompanion(
+  RMemoryModel2MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
+    return RMemoryModel2MemoryGroupsCompanion(
       sonId: Value(sonId),
       sonCloudId: sonCloudId == null && nullToAbsent
           ? const Value.absent()
@@ -2934,10 +3644,10 @@ class RMemoryRule2MemoryGroup extends DataClass
     );
   }
 
-  factory RMemoryRule2MemoryGroup.fromJson(Map<String, dynamic> json,
+  factory RMemoryModel2MemoryGroup.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RMemoryRule2MemoryGroup(
+    return RMemoryModel2MemoryGroup(
       sonId: serializer.fromJson<int>(json['sonId']),
       sonCloudId: serializer.fromJson<int?>(json['sonCloudId']),
       fatherId: serializer.fromJson<int?>(json['fatherId']),
@@ -2963,7 +3673,7 @@ class RMemoryRule2MemoryGroup extends DataClass
     };
   }
 
-  RMemoryRule2MemoryGroup copyWith(
+  RMemoryModel2MemoryGroup copyWith(
           {int? sonId,
           int? sonCloudId,
           int? fatherId,
@@ -2972,7 +3682,7 @@ class RMemoryRule2MemoryGroup extends DataClass
           int? id,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
-      RMemoryRule2MemoryGroup(
+      RMemoryModel2MemoryGroup(
         sonId: sonId ?? this.sonId,
         sonCloudId: sonCloudId ?? this.sonCloudId,
         fatherId: fatherId ?? this.fatherId,
@@ -2984,7 +3694,7 @@ class RMemoryRule2MemoryGroup extends DataClass
       );
   @override
   String toString() {
-    return (StringBuffer('RMemoryRule2MemoryGroup(')
+    return (StringBuffer('RMemoryModel2MemoryGroup(')
           ..write('sonId: $sonId, ')
           ..write('sonCloudId: $sonCloudId, ')
           ..write('fatherId: $fatherId, ')
@@ -3003,7 +3713,7 @@ class RMemoryRule2MemoryGroup extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is RMemoryRule2MemoryGroup &&
+      (other is RMemoryModel2MemoryGroup &&
           other.sonId == this.sonId &&
           other.sonCloudId == this.sonCloudId &&
           other.fatherId == this.fatherId &&
@@ -3014,8 +3724,8 @@ class RMemoryRule2MemoryGroup extends DataClass
           other.updatedAt == this.updatedAt);
 }
 
-class RMemoryRule2MemoryGroupsCompanion
-    extends UpdateCompanion<RMemoryRule2MemoryGroup> {
+class RMemoryModel2MemoryGroupsCompanion
+    extends UpdateCompanion<RMemoryModel2MemoryGroup> {
   Value<int> sonId;
   Value<int?> sonCloudId;
   Value<int?> fatherId;
@@ -3024,7 +3734,7 @@ class RMemoryRule2MemoryGroupsCompanion
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  RMemoryRule2MemoryGroupsCompanion({
+  RMemoryModel2MemoryGroupsCompanion({
     this.sonId = const Value.absent(),
     this.sonCloudId = const Value.absent(),
     this.fatherId = const Value.absent(),
@@ -3034,7 +3744,7 @@ class RMemoryRule2MemoryGroupsCompanion
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
-  RMemoryRule2MemoryGroupsCompanion.insert({
+  RMemoryModel2MemoryGroupsCompanion.insert({
     required int sonId,
     this.sonCloudId = const Value.absent(),
     this.fatherId = const Value.absent(),
@@ -3044,7 +3754,7 @@ class RMemoryRule2MemoryGroupsCompanion
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : sonId = Value(sonId);
-  static Insertable<RMemoryRule2MemoryGroup> custom({
+  static Insertable<RMemoryModel2MemoryGroup> custom({
     Expression<int>? sonId,
     Expression<int?>? sonCloudId,
     Expression<int?>? fatherId,
@@ -3066,7 +3776,7 @@ class RMemoryRule2MemoryGroupsCompanion
     });
   }
 
-  RMemoryRule2MemoryGroupsCompanion copyWith(
+  RMemoryModel2MemoryGroupsCompanion copyWith(
       {Value<int>? sonId,
       Value<int?>? sonCloudId,
       Value<int?>? fatherId,
@@ -3075,7 +3785,7 @@ class RMemoryRule2MemoryGroupsCompanion
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
-    return RMemoryRule2MemoryGroupsCompanion(
+    return RMemoryModel2MemoryGroupsCompanion(
       sonId: sonId ?? this.sonId,
       sonCloudId: sonCloudId ?? this.sonCloudId,
       fatherId: fatherId ?? this.fatherId,
@@ -3119,7 +3829,7 @@ class RMemoryRule2MemoryGroupsCompanion
 
   @override
   String toString() {
-    return (StringBuffer('RMemoryRule2MemoryGroupsCompanion(')
+    return (StringBuffer('RMemoryModel2MemoryGroupsCompanion(')
           ..write('sonId: $sonId, ')
           ..write('sonCloudId: $sonCloudId, ')
           ..write('fatherId: $fatherId, ')
@@ -3133,12 +3843,12 @@ class RMemoryRule2MemoryGroupsCompanion
   }
 }
 
-class $RMemoryRule2MemoryGroupsTable extends RMemoryModel2MemoryGroups
-    with TableInfo<$RMemoryRule2MemoryGroupsTable, RMemoryRule2MemoryGroup> {
+class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
+    with TableInfo<$RMemoryModel2MemoryGroupsTable, RMemoryModel2MemoryGroup> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $RMemoryRule2MemoryGroupsTable(this.attachedDatabase, [this._alias]);
+  $RMemoryModel2MemoryGroupsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
   @override
   late final GeneratedColumn<int?> sonId = GeneratedColumn<int?>(
@@ -3200,12 +3910,12 @@ class $RMemoryRule2MemoryGroupsTable extends RMemoryModel2MemoryGroups
         updatedAt
       ];
   @override
-  String get aliasedName => _alias ?? 'r_memory_rule2_memory_groups';
+  String get aliasedName => _alias ?? 'r_memory_model2_memory_groups';
   @override
-  String get actualTableName => 'r_memory_rule2_memory_groups';
+  String get actualTableName => 'r_memory_model2_memory_groups';
   @override
   VerificationContext validateIntegrity(
-      Insertable<RMemoryRule2MemoryGroup> instance,
+      Insertable<RMemoryModel2MemoryGroup> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3252,15 +3962,15 @@ class $RMemoryRule2MemoryGroupsTable extends RMemoryModel2MemoryGroups
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  RMemoryRule2MemoryGroup map(Map<String, dynamic> data,
+  RMemoryModel2MemoryGroup map(Map<String, dynamic> data,
       {String? tablePrefix}) {
-    return RMemoryRule2MemoryGroup.fromData(data,
+    return RMemoryModel2MemoryGroup.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $RMemoryRule2MemoryGroupsTable createAlias(String alias) {
-    return $RMemoryRule2MemoryGroupsTable(attachedDatabase, alias);
+  $RMemoryModel2MemoryGroupsTable createAlias(String alias) {
+    return $RMemoryModel2MemoryGroupsTable(attachedDatabase, alias);
   }
 }
 
@@ -3274,13 +3984,13 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? token;
+  String token;
   bool hasDownloadedInitData;
   AppInfo(
       {required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.token,
+      required this.token,
       required this.hasDownloadedInitData});
   factory AppInfo.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -3292,7 +4002,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       token: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}token']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}token'])!,
       hasDownloadedInitData: const BoolType().mapFromDatabaseResponse(
           data['${effectivePrefix}has_downloaded_init_data'])!,
     );
@@ -3303,9 +4013,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || token != null) {
-      map['token'] = Variable<String?>(token);
-    }
+    map['token'] = Variable<String>(token);
     map['has_downloaded_init_data'] = Variable<bool>(hasDownloadedInitData);
     return map;
   }
@@ -3315,8 +4023,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      token:
-          token == null && nullToAbsent ? const Value.absent() : Value(token),
+      token: Value(token),
       hasDownloadedInitData: Value(hasDownloadedInitData),
     );
   }
@@ -3328,7 +4035,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      token: serializer.fromJson<String?>(json['token']),
+      token: serializer.fromJson<String>(json['token']),
       hasDownloadedInitData:
           serializer.fromJson<bool>(json['hasDownloadedInitData']),
     );
@@ -3340,7 +4047,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'token': serializer.toJson<String?>(token),
+      'token': serializer.toJson<String>(token),
       'hasDownloadedInitData': serializer.toJson<bool>(hasDownloadedInitData),
     };
   }
@@ -3389,7 +4096,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> token;
+  Value<String> token;
   Value<bool> hasDownloadedInitData;
   AppInfosCompanion({
     this.id = const Value.absent(),
@@ -3409,7 +4116,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? token,
+    Expression<String>? token,
     Expression<bool>? hasDownloadedInitData,
   }) {
     return RawValuesInsertable({
@@ -3426,7 +4133,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
       {Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? token,
+      Value<String>? token,
       Value<bool>? hasDownloadedInitData}) {
     return AppInfosCompanion(
       id: id ?? this.id,
@@ -3451,7 +4158,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (token.present) {
-      map['token'] = Variable<String?>(token.value);
+      map['token'] = Variable<String>(token.value);
     }
     if (hasDownloadedInitData.present) {
       map['has_downloaded_init_data'] =
@@ -3502,8 +4209,10 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
   final VerificationMeta _tokenMeta = const VerificationMeta('token');
   @override
   late final GeneratedColumn<String?> token = GeneratedColumn<String?>(
-      'token', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'token', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant('unknown'));
   final VerificationMeta _hasDownloadedInitDataMeta =
       const VerificationMeta('hasDownloadedInitData');
   @override
@@ -4045,15 +4754,17 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $FragmentsTable fragments = $FragmentsTable(this);
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
-  late final $MemoryRulesTable memoryRules = $MemoryRulesTable(this);
+  late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
+  late final $FragmentMemoryInfosTable fragmentMemoryInfos =
+      $FragmentMemoryInfosTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
   late final $RFragmentGroup2FragmentGroupsTable rFragmentGroup2FragmentGroups =
       $RFragmentGroup2FragmentGroupsTable(this);
   late final $RFragment2MemoryGroupsTable rFragment2MemoryGroups =
       $RFragment2MemoryGroupsTable(this);
-  late final $RMemoryRule2MemoryGroupsTable rMemoryRule2MemoryGroups =
-      $RMemoryRule2MemoryGroupsTable(this);
+  late final $RMemoryModel2MemoryGroupsTable rMemoryModel2MemoryGroups =
+      $RMemoryModel2MemoryGroupsTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
   late final SingleDAO singleDAO = SingleDAO(this as DriftDb);
@@ -4066,11 +4777,12 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragments,
         fragmentGroups,
         memoryGroups,
-        memoryRules,
+        memoryModels,
+        fragmentMemoryInfos,
         rFragment2FragmentGroups,
         rFragmentGroup2FragmentGroups,
         rFragment2MemoryGroups,
-        rMemoryRule2MemoryGroups,
+        rMemoryModel2MemoryGroups,
         appInfos,
         syncs
       ];
@@ -4085,20 +4797,24 @@ mixin _$MultiDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
-  $MemoryRulesTable get memoryRules => attachedDatabase.memoryRules;
+  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
 }
 mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
-  $MemoryRulesTable get memoryRules => attachedDatabase.memoryRules;
+  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
   $RFragmentGroup2FragmentGroupsTable get rFragmentGroup2FragmentGroups =>
       attachedDatabase.rFragmentGroup2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
-  $RMemoryRule2MemoryGroupsTable get rMemoryRule2MemoryGroups =>
-      attachedDatabase.rMemoryRule2MemoryGroups;
+  $RMemoryModel2MemoryGroupsTable get rMemoryModel2MemoryGroups =>
+      attachedDatabase.rMemoryModel2MemoryGroups;
 }

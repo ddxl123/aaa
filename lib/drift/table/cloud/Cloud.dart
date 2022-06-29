@@ -6,6 +6,7 @@ const List<Type> cloudTableClass = [
   FragmentGroups,
   MemoryGroups,
   MemoryModels,
+  FragmentMemoryInfos,
 ];
 
 class Users extends CloudTableBase {

@@ -6,7 +6,7 @@ class MemoryGroupVO {
   MemoryGroupVO({required this.memoryGroup, required this.memoryRule});
 
   final Ab<MemoryGroup> memoryGroup;
-  final Ab<MemoryRule?> memoryRule;
+  final Ab<MemoryModel?> memoryRule;
 }
 
 class MemoryGroupModelAbController extends AbController {

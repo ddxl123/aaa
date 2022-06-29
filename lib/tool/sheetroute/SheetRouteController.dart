@@ -273,6 +273,7 @@ class SheetPageController<D> extends ChangeNotifier {
 
       animationController.animateTo(0).whenCompleteOrCancel(() {
         popMethod();
+        Navigator.removeRoute(sheetWidgetContext, sbSheetRoute);
       });
     }
   }

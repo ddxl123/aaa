@@ -1,13 +1,13 @@
 import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
 import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/MemoryRuleModel.dart';
-import 'package:aaa/widget_model/MemoryRuleModelAbController.dart';
+import 'package:aaa/widget_model/MemoryModelModel.dart';
+import 'package:aaa/widget_model/MemoryModelModelAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-class MemoryRuleChoosePage extends StatelessWidget {
-  const MemoryRuleChoosePage({Key? key}) : super(key: key);
+class MemoryModelChoosePage extends StatelessWidget {
+  const MemoryModelChoosePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MemoryRuleChoosePage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            const MemoryRuleModel(modelType: MemoryRuleModelType.select),
+            const MemoryRuleModel(modelType: MemoryModelModelType.select),
             Positioned(
               top: 0,
               left: 0,
@@ -36,8 +36,8 @@ class MemoryRuleChoosePage extends StatelessWidget {
               text: '确认选择',
               onPressed: () {
                 Aber.findLast<CreateMemoryGroupPageAbController>()
-                    .selected
-                    .refreshEasy((oldValue) => Aber.findLast<MemoryRuleModelAbController>().selected());
+                    .selectedMemoryModel
+                    .refreshEasy((oldValue) => Aber.findLast<MemoryModelModelAbController>().selected());
                 Navigator.pop(context);
               },
             ),

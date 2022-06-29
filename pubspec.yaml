@@ -44,17 +44,14 @@ dependencies:
   path: ^1.8.0
   # drift 需要，在应用内可视化数据库数据
   drift_db_viewer: ^1.0.3
-  # 底部导航栏 - 关注 persistent_bottom_nav_bar
-  #  salomon_bottom_bar: ^3.3.0
+  # 底部导航栏 - 关注 persistent_bottom_nav_bar/salomon_bottom_bar
   animated_bottom_navigation_bar: ^1.0.0
   get: ^4.6.5
   # 上拉、下拉刷新 - 已选最佳
   pull_to_refresh: ^2.0.0
   extended_nested_scroll_view: ^5.1.0
-  # toast/dialog - 已选最佳，其他 fluttertoast
+  # toast/dialog - 已选最佳，其他 fluttertoast/adaptive_dialog
   flutter_smart_dialog: ^4.5.3+2
-  # dialog
-  #  adaptive_dialog: ^1.5.0+1
   # 异常处理
   catcher: ^0.6.9
   # 获取设备信息。
