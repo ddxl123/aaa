@@ -1,6 +1,7 @@
 import 'package:aaa/home/memoryhome/MemoryHomeAbController.dart';
-import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
+import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
 import 'package:aaa/widget_model/MemoryGroupModel.dart';
 import 'package:flutter/material.dart';
 
@@ -33,13 +34,16 @@ class _MemoryHomeState extends State<MemoryHome> with SingleTickerProviderStateM
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (ctx) => Stack(
-                  children: [const MemoryGroupModel(), FloatingConfirmPosition(text: '多组记忆', onPressed: () {})],
-                ),
+                builder: (ctx) => const MemoryGroupModel(),
               ),
               const Tab(text: '111'),
             ],
           ),
+          floatingActionButton: FloatingRoundCornerButton(
+            text: '多组记忆',
+            onPressed: () {},
+          ),
+          floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -35)),
         );
       },
     );

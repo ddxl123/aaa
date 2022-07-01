@@ -1,5 +1,5 @@
 import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
+import 'package:aaa/page/create/CreateModifyMemoryGroupPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -17,7 +17,7 @@ class MemoryModelModelAbController extends AbController {
 
   @override
   void onInit() {
-    selected.refreshEasy((oldValue) => Aber.findOrNullLast<CreateMemoryGroupPageAbController>()?.selectedMemoryModel() ?? oldValue);
+    selected.refreshEasy((oldValue) => Aber.findOrNullLast<CreateModifyMemoryGroupPageAbController>()?.selectedMemoryModel() ?? oldValue);
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {

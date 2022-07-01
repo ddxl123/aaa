@@ -70,9 +70,6 @@ class SyncTag {
 
 /// 记忆组类型
 enum MemoryGroupType {
-  /// 未分配
-  none,
-
   /// 常规(非全悬浮)类型
   normal,
 
@@ -118,3 +115,4 @@ enum MemoryGroupStatusForFullFloating {
   /// 已完成
   completed,
 }
+

@@ -40,7 +40,7 @@ class FragmentGroups extends CloudTableBase {
 class MemoryGroups extends CloudTableBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
-  IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.none.index))();
+  IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.normal.index))();
 
   /// [MemoryGroupStatusForNormal]
   IntColumn get normalStatus => intEnum<MemoryGroupStatusForNormal>().withDefault(Constant(MemoryGroupStatusForNormal.notStart.index))();

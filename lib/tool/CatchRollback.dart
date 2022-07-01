@@ -1,8 +1,7 @@
 // ignore_for_file: constant_identifier_names
-import 'package:catcher/core/catcher.dart';
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:catcher/core/catcher.dart';
 
 class CatchRollback {
   /// 在 [_setCatcherParam] 函数中记录 tag 的 key。
@@ -44,56 +43,5 @@ class CatchRollback {
       currentConfig.customParameters[TEMPORARY_NULL_TAGS] = <String>[];
     }
     (currentConfig.customParameters[TEMPORARY_NULL_TAGS] as List<String>).add(tag.toString());
-  }
-}
-
-class KeepStateWidget extends StatefulWidget {
-  const KeepStateWidget({Key? key, required this.builder}) : super(key: key);
-  final Widget Function(BuildContext context) builder;
-
-  @override
-  State<KeepStateWidget> createState() => _KeepStateWidgetState();
-}
-
-class _KeepStateWidgetState extends State<KeepStateWidget> with AutomaticKeepAliveClientMixin {
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.builder(context);
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-}
-
-class FloatingConfirmPosition extends StatelessWidget {
-  const FloatingConfirmPosition({Key? key, required this.text, required this.onPressed}) : super(key: key);
-
-  final String text;
-  final void Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 40,
-      left: 0,
-      right: 0,
-      child: Container(
-        alignment: Alignment.center,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(50)),
-          child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.tealAccent),
-              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 20, horizontal: 40)),
-            ),
-            child: Text(text),
-            onPressed: () {
-              onPressed();
-            },
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -1,14 +1,11 @@
-import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/drift/tool/DriftViewer.dart';
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/create/CreateFragmentPage.dart';
-import 'package:aaa/page/create/CreateMemoryGroupPage.dart';
-import 'package:aaa/tool/Toaster.dart';
-import 'package:aaa/tool/WidgetWrapper.dart';
+import 'package:aaa/page/create/CreateModifyMemoryGroupPage.dart';
+import 'package:aaa/page/create/CreateOrModifyType.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/tool/freebox/FreeBox.dart';
+import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
 import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +47,10 @@ class Home extends StatelessWidget {
                 backgroundColor: Colors.amber,
                 child: const Text('记'),
                 onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateMemoryGroupPage()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => const CreateModifyMemoryGroupPage(createOrModifyType: CreateModifyCheckType.create)),
+                  );
                 },
               ),
               AbBuilder<FragmentGroupModelAbController>(

@@ -16,63 +16,66 @@ Future<void> showDialogOkCancel({
       return Builder(
         builder: (ctx) {
           return AnimatedPadding(
-            padding: MediaQuery.of(ctx).viewInsets,
+            padding: MediaQuery.of(ctx).viewInsets + MediaQuery.of(context).padding,
             duration: const Duration(milliseconds: 100),
-            child: Stack(
-              children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
-                  constraints: const BoxConstraints(maxHeight: 200, maxWidth: 300),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  child: IntrinsicWidth(
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          title == null
-                              ? Container()
-                              : Text(
-                                  title,
-                                  style: TextStyle(fontSize: context.textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
-                                ),
-                          const SizedBox(height: 10),
-                          text == null
-                              ? Container()
-                              : Text(
-                                  text,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 10,
-                  child: Row(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              constraints: const BoxConstraints(maxHeight: 800, maxWidth: 300),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              child: IntrinsicHeight(
+                child: IntrinsicWidth(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextButton(
-                        child: Text(cancelText),
-                        onPressed: () {
-                          SmartDialog.dismiss();
-                        },
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              title == null
+                                  ? Container()
+                                  : Text(
+                                      title,
+                                      style: TextStyle(fontSize: context.textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
+                                    ),
+                              const SizedBox(height: 10),
+                              text == null
+                                  ? Container()
+                                  : Text(
+                                      text,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                            ],
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 10),
-                      TextButton(
-                        child: Text(okText, style: const TextStyle(color: Colors.red)),
-                        onPressed: okCallback ??
-                            () {
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const SizedBox(width: 50),
+                          TextButton(
+                            child: Text(cancelText),
+                            onPressed: () {
                               SmartDialog.dismiss();
-                              Navigator.pop(context);
                             },
+                          ),
+                          const SizedBox(width: 10),
+                          TextButton(
+                            child: Text(okText, style: const TextStyle(color: Colors.red)),
+                            onPressed: okCallback ??
+                                () {
+                                  SmartDialog.dismiss();
+                                  Navigator.pop(context);
+                                },
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           );
         },

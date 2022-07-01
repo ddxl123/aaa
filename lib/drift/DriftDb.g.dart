@@ -1454,7 +1454,7 @@ class $MemoryGroupsTable extends MemoryGroups
       GeneratedColumn<int?>('type', aliasedName, false,
               type: const IntType(),
               requiredDuringInsert: false,
-              defaultValue: Constant(MemoryGroupType.none.index))
+              defaultValue: Constant(MemoryGroupType.normal.index))
           .withConverter<MemoryGroupType>($MemoryGroupsTable.$converter0);
   final VerificationMeta _normalStatusMeta =
       const VerificationMeta('normalStatus');

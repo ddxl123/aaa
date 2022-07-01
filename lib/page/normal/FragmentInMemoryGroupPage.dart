@@ -1,20 +1,19 @@
-import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/page/normal/FragmentInMemoryGroupPageAbController.dart';
-import 'package:aaa/tool/WidgetWrapper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/widget_model/MemoryGroupModelAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class FragmentInMemoryGroupPage extends StatelessWidget {
-  const FragmentInMemoryGroupPage({Key? key, required this.memoryGroupAb}) : super(key: key);
-  final Ab<MemoryGroup> memoryGroupAb;
+  const FragmentInMemoryGroupPage({Key? key, required this.outerMemoryGroup}) : super(key: key);
+  final Ab<BasicSingleOuterMemoryGroup> outerMemoryGroup;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: AbBuilder<FragmentInMemoryGroupPageAbController>(
-        putController: FragmentInMemoryGroupPageAbController(memoryGroupAb),
+        putController: FragmentInMemoryGroupPageAbController(outerMemoryGroup),
         builder: (putC, putAbw) {
           return SmartRefresher(
             controller: putC.refreshController,

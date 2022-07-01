@@ -1,6 +1,3 @@
-import 'package:aaa/page/create/CreateMemoryGroupPageAbController.dart';
-import 'package:aaa/tool/WidgetWrapper.dart';
-import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/MemoryModelModel.dart';
 import 'package:aaa/widget_model/MemoryModelModelAbController.dart';
 import 'package:flutter/material.dart';
@@ -32,15 +29,15 @@ class MemoryModelChoosePage extends StatelessWidget {
                 ],
               ),
             ),
-            FloatingConfirmPosition(
-              text: '确认选择',
-              onPressed: () {
-                Aber.findLast<CreateMemoryGroupPageAbController>()
-                    .selectedMemoryModel
-                    .refreshEasy((oldValue) => Aber.findLast<MemoryModelModelAbController>().selected());
-                Navigator.pop(context);
-              },
-            ),
+            // FloatingRoundCornerButton(
+            //   text: '确认选择',
+            //   onPressed: () {
+            //     Aber.findLast<CreateModifyMemoryGroupPageAbController>()
+            //         .selectedMemoryModel
+            //         .refreshEasy((oldValue) => Aber.findLast<MemoryModelModelAbController>().selected());
+            //     Navigator.pop(context);
+            //   },
+            // ),
           ],
         ),
       ),

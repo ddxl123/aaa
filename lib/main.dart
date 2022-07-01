@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:aaa/GlobalAbController.dart';
 import 'package:aaa/home/Home.dart';
 import 'package:aaa/theme.dart';
-import 'package:aaa/tool/WidgetWrapper.dart';
+import 'package:aaa/tool/CatchRollback.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +39,7 @@ main() {
   // flutter_smart_dialog 相关
   SmartDialog.config
     ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last)
-    ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide,animationTime: const Duration(milliseconds: 100));
+    ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
   runApp(const MyApp());
 }
 
