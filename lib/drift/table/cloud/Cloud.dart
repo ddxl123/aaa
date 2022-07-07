@@ -6,7 +6,8 @@ const List<Type> cloudTableClass = [
   FragmentGroups,
   MemoryGroups,
   MemoryModels,
-  FragmentMemoryInfos,
+  FragmentPermanentMemoryInfos,
+  FragmentTemporaryMemoryInfo2,
 ];
 
 class Users extends CloudTableBase {
@@ -34,6 +35,10 @@ class Fragments extends CloudTableBase {
 }
 
 class FragmentGroups extends CloudTableBase {
+  IntColumn get fatherFragmentGroupId => integer().nullable()();
+
+  IntColumn get fatherFragmentGroupCloudId => integer().nullable()();
+
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 }
 
@@ -58,10 +63,22 @@ class MemoryGroups extends CloudTableBase {
 class MemoryModels extends CloudTableBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
-  /// 初始数学函数，用逗号隔开。
+  /// 记忆曲线的数学函数。
   ///
-  /// 例如： 'y=1-0.56t^0.06,y=1-0.56t^0.06'
-  TextColumn get mathFunction1 => text().nullable()();
+  /// 例如： 'type:y=1-0.56t^0.06'
+  ///   - y - 熟练度，单位百分比。
+  ///   - t - 时间，初始值为 0。
+  ///   - type - 表示函数类型，比如普通函数曲线类型、分段函数类型等。
+  TextColumn get mathFunction => text().nullable()();
+
+  /// 下一次展示时间点的数学函数。
+  ///
+  /// 例如：'type:n=tc+y'
+  ///   - n - 下一次展示时间点。
+  ///   - tc - 当前时间点。
+  ///   - y - 熟练度。
+  ///   - type - 表示函数类型，比如函数曲线类型、固定值类型（fix:5,30,60,300(单位分钟)）等。
+  TextColumn get nextShowTimeMathFunction => text().nullable()();
 
   /// 5 2 1
   /// 4 3 1
@@ -105,10 +122,14 @@ class MemoryModels extends CloudTableBase {
   /// 是否"将过就过"：碎片的展示错过了计划时间，是否跳过/优先于冲突碎片/滞后于冲突碎片
 }
 
-/// 碎片的历史记忆信息。
+/// 碎片的永久存储的记忆信息（包含了历史记忆信息）。
 ///
 /// [TableBase.createdAt] 充当每次的记忆时间
-class FragmentMemoryInfos extends CloudTableBase {
+class FragmentPermanentMemoryInfos extends CloudTableBase {
+  IntColumn get fragmentId => integer().nullable()();
+
+  IntColumn get fragmentCloudId => integer().nullable()();
+
   /// 自然熟悉度 —— 当前时间点的熟悉度
   /// 范围：0~100。
   IntColumn get naturalFamiliarity =>
@@ -122,6 +143,24 @@ class FragmentMemoryInfos extends CloudTableBase {
   IntColumn get explicitFamiliarity =>
       integer().check(explicitFamiliarity.isBetween(const Constant(0), const Constant(100))).withDefault(const Constant(0))();
 
-  /// 碎片展示时间。
-  IntColumn get showTime => integer().withDefault(const Constant(0))();
+  /// 碎片展示时长。
+  IntColumn get showDuration => integer().withDefault(const Constant(0))();
+}
+
+/// 碎片的临时存储的记忆信息（只包含了当前碎片在对应的记忆组中的记忆信息）
+class FragmentTemporaryMemoryInfo2 extends CloudTableBase {
+  IntColumn get fragmentId => integer().nullable()();
+
+  IntColumn get fragmentCloudId => integer().nullable()();
+
+  IntColumn get memoryGroupId => integer().nullable()();
+
+  IntColumn get memoryGroupCloudId => integer().nullable()();
+
+  /// 下一次展示的时间点。
+  ///
+  /// 为 null 表示在当前记忆组时的当前碎片为新碎片。
+  ///
+  /// 为 1970 年 1 月 1 日 00:00 分（时间戳为0）表示在当前记忆组时的当前碎片已经完成任务。
+  DateTimeColumn get nextShowTime => dateTime().nullable()();
 }

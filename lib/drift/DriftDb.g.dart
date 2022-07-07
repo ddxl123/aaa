@@ -792,12 +792,16 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
+  int? fatherFragmentGroupId;
+  int? fatherFragmentGroupCloudId;
   String title;
   FragmentGroup(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
+      this.fatherFragmentGroupId,
+      this.fatherFragmentGroupCloudId,
       required this.title});
   factory FragmentGroup.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -810,6 +814,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      fatherFragmentGroupId: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}father_fragment_group_id']),
+      fatherFragmentGroupCloudId: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}father_fragment_group_cloud_id']),
       title: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
     );
@@ -823,6 +831,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || fatherFragmentGroupId != null) {
+      map['father_fragment_group_id'] = Variable<int?>(fatherFragmentGroupId);
+    }
+    if (!nullToAbsent || fatherFragmentGroupCloudId != null) {
+      map['father_fragment_group_cloud_id'] =
+          Variable<int?>(fatherFragmentGroupCloudId);
+    }
     map['title'] = Variable<String>(title);
     return map;
   }
@@ -835,6 +850,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      fatherFragmentGroupId: fatherFragmentGroupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatherFragmentGroupId),
+      fatherFragmentGroupCloudId:
+          fatherFragmentGroupCloudId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(fatherFragmentGroupCloudId),
       title: Value(title),
     );
   }
@@ -847,6 +869,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      fatherFragmentGroupId:
+          serializer.fromJson<int?>(json['fatherFragmentGroupId']),
+      fatherFragmentGroupCloudId:
+          serializer.fromJson<int?>(json['fatherFragmentGroupCloudId']),
       title: serializer.fromJson<String>(json['title']),
     );
   }
@@ -858,6 +884,9 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'fatherFragmentGroupId': serializer.toJson<int?>(fatherFragmentGroupId),
+      'fatherFragmentGroupCloudId':
+          serializer.toJson<int?>(fatherFragmentGroupCloudId),
       'title': serializer.toJson<String>(title),
     };
   }
@@ -867,12 +896,18 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           int? id,
           DateTime? createdAt,
           DateTime? updatedAt,
+          int? fatherFragmentGroupId,
+          int? fatherFragmentGroupCloudId,
           String? title}) =>
       FragmentGroup(
         cloudId: cloudId ?? this.cloudId,
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        fatherFragmentGroupId:
+            fatherFragmentGroupId ?? this.fatherFragmentGroupId,
+        fatherFragmentGroupCloudId:
+            fatherFragmentGroupCloudId ?? this.fatherFragmentGroupCloudId,
         title: title ?? this.title,
       );
   @override
@@ -882,13 +917,16 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('fatherFragmentGroupId: $fatherFragmentGroupId, ')
+          ..write('fatherFragmentGroupCloudId: $fatherFragmentGroupCloudId, ')
           ..write('title: $title')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title);
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt,
+      fatherFragmentGroupId, fatherFragmentGroupCloudId, title);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -897,6 +935,8 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.fatherFragmentGroupId == this.fatherFragmentGroupId &&
+          other.fatherFragmentGroupCloudId == this.fatherFragmentGroupCloudId &&
           other.title == this.title);
 }
 
@@ -905,12 +945,16 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
+  Value<int?> fatherFragmentGroupId;
+  Value<int?> fatherFragmentGroupCloudId;
   Value<String> title;
   FragmentGroupsCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fatherFragmentGroupId = const Value.absent(),
+    this.fatherFragmentGroupCloudId = const Value.absent(),
     this.title = const Value.absent(),
   });
   FragmentGroupsCompanion.insert({
@@ -918,6 +962,8 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fatherFragmentGroupId = const Value.absent(),
+    this.fatherFragmentGroupCloudId = const Value.absent(),
     this.title = const Value.absent(),
   });
   static Insertable<FragmentGroup> custom({
@@ -925,6 +971,8 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int?>? fatherFragmentGroupId,
+    Expression<int?>? fatherFragmentGroupCloudId,
     Expression<String>? title,
   }) {
     return RawValuesInsertable({
@@ -932,6 +980,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (fatherFragmentGroupId != null)
+        'father_fragment_group_id': fatherFragmentGroupId,
+      if (fatherFragmentGroupCloudId != null)
+        'father_fragment_group_cloud_id': fatherFragmentGroupCloudId,
       if (title != null) 'title': title,
     });
   }
@@ -941,12 +993,18 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<int?>? fatherFragmentGroupId,
+      Value<int?>? fatherFragmentGroupCloudId,
       Value<String>? title}) {
     return FragmentGroupsCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      fatherFragmentGroupId:
+          fatherFragmentGroupId ?? this.fatherFragmentGroupId,
+      fatherFragmentGroupCloudId:
+          fatherFragmentGroupCloudId ?? this.fatherFragmentGroupCloudId,
       title: title ?? this.title,
     );
   }
@@ -966,6 +1024,14 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (fatherFragmentGroupId.present) {
+      map['father_fragment_group_id'] =
+          Variable<int?>(fatherFragmentGroupId.value);
+    }
+    if (fatherFragmentGroupCloudId.present) {
+      map['father_fragment_group_cloud_id'] =
+          Variable<int?>(fatherFragmentGroupCloudId.value);
+    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
@@ -979,6 +1045,8 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('fatherFragmentGroupId: $fatherFragmentGroupId, ')
+          ..write('fatherFragmentGroupCloudId: $fatherFragmentGroupCloudId, ')
           ..write('title: $title')
           ..write(')'))
         .toString();
@@ -1019,6 +1087,18 @@ class $FragmentGroupsTable extends FragmentGroups
       type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
+  final VerificationMeta _fatherFragmentGroupIdMeta =
+      const VerificationMeta('fatherFragmentGroupId');
+  @override
+  late final GeneratedColumn<int?> fatherFragmentGroupId =
+      GeneratedColumn<int?>('father_fragment_group_id', aliasedName, true,
+          type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fatherFragmentGroupCloudIdMeta =
+      const VerificationMeta('fatherFragmentGroupCloudId');
+  @override
+  late final GeneratedColumn<int?> fatherFragmentGroupCloudId =
+      GeneratedColumn<int?>('father_fragment_group_cloud_id', aliasedName, true,
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
@@ -1027,8 +1107,15 @@ class $FragmentGroupsTable extends FragmentGroups
       requiredDuringInsert: false,
       defaultValue: const Constant('还没有名称'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [cloudId, id, createdAt, updatedAt, title];
+  List<GeneratedColumn> get $columns => [
+        cloudId,
+        id,
+        createdAt,
+        updatedAt,
+        fatherFragmentGroupId,
+        fatherFragmentGroupCloudId,
+        title
+      ];
   @override
   String get aliasedName => _alias ?? 'fragment_groups';
   @override
@@ -1052,6 +1139,19 @@ class $FragmentGroupsTable extends FragmentGroups
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    if (data.containsKey('father_fragment_group_id')) {
+      context.handle(
+          _fatherFragmentGroupIdMeta,
+          fatherFragmentGroupId.isAcceptableOrUnknown(
+              data['father_fragment_group_id']!, _fatherFragmentGroupIdMeta));
+    }
+    if (data.containsKey('father_fragment_group_cloud_id')) {
+      context.handle(
+          _fatherFragmentGroupCloudIdMeta,
+          fatherFragmentGroupCloudId.isAcceptableOrUnknown(
+              data['father_fragment_group_cloud_id']!,
+              _fatherFragmentGroupCloudIdMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -1842,12 +1942,12 @@ class $MemoryModelsTable extends MemoryModels
   final VerificationMeta _mathFunction1Meta =
       const VerificationMeta('mathFunction1');
   @override
-  late final GeneratedColumn<String?> mathFunction1 = GeneratedColumn<String?>(
+  late final GeneratedColumn<String?> mathFunction = GeneratedColumn<String?>(
       'math_function1', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [cloudId, id, createdAt, updatedAt, title, mathFunction1];
+      [cloudId, id, createdAt, updatedAt, title, mathFunction];
   @override
   String get aliasedName => _alias ?? 'memory_models';
   @override
@@ -1879,7 +1979,7 @@ class $MemoryModelsTable extends MemoryModels
     if (data.containsKey('math_function1')) {
       context.handle(
           _mathFunction1Meta,
-          mathFunction1.isAcceptableOrUnknown(
+          mathFunction.isAcceptableOrUnknown(
               data['math_function1']!, _mathFunction1Meta));
     }
     return context;
@@ -1899,8 +1999,8 @@ class $MemoryModelsTable extends MemoryModels
   }
 }
 
-class FragmentMemoryInfo extends DataClass
-    implements Insertable<FragmentMemoryInfo> {
+class FragmentPermanentMemoryInfo extends DataClass
+    implements Insertable<FragmentPermanentMemoryInfo> {
   int? cloudId;
   int id;
 
@@ -1911,6 +2011,8 @@ class FragmentMemoryInfo extends DataClass
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
+  int? fragmentId;
+  int? fragmentCloudId;
 
   /// 自然熟悉度 —— 当前时间点的熟悉度
   /// 范围：0~100。
@@ -1923,20 +2025,22 @@ class FragmentMemoryInfo extends DataClass
   /// 在用户选择某点明确熟悉度时，会根据 [MemoryModels] 来计算下一次展示的时间。
   int explicitFamiliarity;
 
-  /// 碎片展示时间。
-  int showTime;
-  FragmentMemoryInfo(
+  /// 碎片展示时长。
+  int showDuration;
+  FragmentPermanentMemoryInfo(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
+      this.fragmentId,
+      this.fragmentCloudId,
       required this.naturalFamiliarity,
       required this.explicitFamiliarity,
-      required this.showTime});
-  factory FragmentMemoryInfo.fromData(Map<String, dynamic> data,
+      required this.showDuration});
+  factory FragmentPermanentMemoryInfo.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return FragmentMemoryInfo(
+    return FragmentPermanentMemoryInfo(
       cloudId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
       id: const IntType()
@@ -1945,12 +2049,16 @@ class FragmentMemoryInfo extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      fragmentId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}fragment_id']),
+      fragmentCloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}fragment_cloud_id']),
       naturalFamiliarity: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}natural_familiarity'])!,
       explicitFamiliarity: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}explicit_familiarity'])!,
-      showTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}show_time'])!,
+      showDuration: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}show_duration'])!,
     );
   }
   @override
@@ -1962,38 +2070,52 @@ class FragmentMemoryInfo extends DataClass
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || fragmentId != null) {
+      map['fragment_id'] = Variable<int?>(fragmentId);
+    }
+    if (!nullToAbsent || fragmentCloudId != null) {
+      map['fragment_cloud_id'] = Variable<int?>(fragmentCloudId);
+    }
     map['natural_familiarity'] = Variable<int>(naturalFamiliarity);
     map['explicit_familiarity'] = Variable<int>(explicitFamiliarity);
-    map['show_time'] = Variable<int>(showTime);
+    map['show_duration'] = Variable<int>(showDuration);
     return map;
   }
 
-  FragmentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
-    return FragmentMemoryInfosCompanion(
+  FragmentPermanentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
+    return FragmentPermanentMemoryInfosCompanion(
       cloudId: cloudId == null && nullToAbsent
           ? const Value.absent()
           : Value(cloudId),
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      fragmentId: fragmentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fragmentId),
+      fragmentCloudId: fragmentCloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fragmentCloudId),
       naturalFamiliarity: Value(naturalFamiliarity),
       explicitFamiliarity: Value(explicitFamiliarity),
-      showTime: Value(showTime),
+      showDuration: Value(showDuration),
     );
   }
 
-  factory FragmentMemoryInfo.fromJson(Map<String, dynamic> json,
+  factory FragmentPermanentMemoryInfo.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FragmentMemoryInfo(
+    return FragmentPermanentMemoryInfo(
       cloudId: serializer.fromJson<int?>(json['cloudId']),
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      fragmentId: serializer.fromJson<int?>(json['fragmentId']),
+      fragmentCloudId: serializer.fromJson<int?>(json['fragmentCloudId']),
       naturalFamiliarity: serializer.fromJson<int>(json['naturalFamiliarity']),
       explicitFamiliarity:
           serializer.fromJson<int>(json['explicitFamiliarity']),
-      showTime: serializer.fromJson<int>(json['showTime']),
+      showDuration: serializer.fromJson<int>(json['showDuration']),
     );
   }
   @override
@@ -2004,122 +2126,147 @@ class FragmentMemoryInfo extends DataClass
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'fragmentId': serializer.toJson<int?>(fragmentId),
+      'fragmentCloudId': serializer.toJson<int?>(fragmentCloudId),
       'naturalFamiliarity': serializer.toJson<int>(naturalFamiliarity),
       'explicitFamiliarity': serializer.toJson<int>(explicitFamiliarity),
-      'showTime': serializer.toJson<int>(showTime),
+      'showDuration': serializer.toJson<int>(showDuration),
     };
   }
 
-  FragmentMemoryInfo copyWith(
+  FragmentPermanentMemoryInfo copyWith(
           {int? cloudId,
           int? id,
           DateTime? createdAt,
           DateTime? updatedAt,
+          int? fragmentId,
+          int? fragmentCloudId,
           int? naturalFamiliarity,
           int? explicitFamiliarity,
-          int? showTime}) =>
-      FragmentMemoryInfo(
+          int? showDuration}) =>
+      FragmentPermanentMemoryInfo(
         cloudId: cloudId ?? this.cloudId,
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        fragmentId: fragmentId ?? this.fragmentId,
+        fragmentCloudId: fragmentCloudId ?? this.fragmentCloudId,
         naturalFamiliarity: naturalFamiliarity ?? this.naturalFamiliarity,
         explicitFamiliarity: explicitFamiliarity ?? this.explicitFamiliarity,
-        showTime: showTime ?? this.showTime,
+        showDuration: showDuration ?? this.showDuration,
       );
   @override
   String toString() {
-    return (StringBuffer('FragmentMemoryInfo(')
+    return (StringBuffer('FragmentPermanentMemoryInfo(')
           ..write('cloudId: $cloudId, ')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('fragmentId: $fragmentId, ')
+          ..write('fragmentCloudId: $fragmentCloudId, ')
           ..write('naturalFamiliarity: $naturalFamiliarity, ')
           ..write('explicitFamiliarity: $explicitFamiliarity, ')
-          ..write('showTime: $showTime')
+          ..write('showDuration: $showDuration')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt,
-      naturalFamiliarity, explicitFamiliarity, showTime);
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, fragmentId,
+      fragmentCloudId, naturalFamiliarity, explicitFamiliarity, showDuration);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is FragmentMemoryInfo &&
+      (other is FragmentPermanentMemoryInfo &&
           other.cloudId == this.cloudId &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.fragmentId == this.fragmentId &&
+          other.fragmentCloudId == this.fragmentCloudId &&
           other.naturalFamiliarity == this.naturalFamiliarity &&
           other.explicitFamiliarity == this.explicitFamiliarity &&
-          other.showTime == this.showTime);
+          other.showDuration == this.showDuration);
 }
 
-class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
+class FragmentPermanentMemoryInfosCompanion
+    extends UpdateCompanion<FragmentPermanentMemoryInfo> {
   Value<int?> cloudId;
   Value<int> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
+  Value<int?> fragmentId;
+  Value<int?> fragmentCloudId;
   Value<int> naturalFamiliarity;
   Value<int> explicitFamiliarity;
-  Value<int> showTime;
-  FragmentMemoryInfosCompanion({
+  Value<int> showDuration;
+  FragmentPermanentMemoryInfosCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fragmentId = const Value.absent(),
+    this.fragmentCloudId = const Value.absent(),
     this.naturalFamiliarity = const Value.absent(),
     this.explicitFamiliarity = const Value.absent(),
-    this.showTime = const Value.absent(),
+    this.showDuration = const Value.absent(),
   });
-  FragmentMemoryInfosCompanion.insert({
+  FragmentPermanentMemoryInfosCompanion.insert({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.fragmentId = const Value.absent(),
+    this.fragmentCloudId = const Value.absent(),
     this.naturalFamiliarity = const Value.absent(),
     this.explicitFamiliarity = const Value.absent(),
-    this.showTime = const Value.absent(),
+    this.showDuration = const Value.absent(),
   });
-  static Insertable<FragmentMemoryInfo> custom({
+  static Insertable<FragmentPermanentMemoryInfo> custom({
     Expression<int?>? cloudId,
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int?>? fragmentId,
+    Expression<int?>? fragmentCloudId,
     Expression<int>? naturalFamiliarity,
     Expression<int>? explicitFamiliarity,
-    Expression<int>? showTime,
+    Expression<int>? showDuration,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (fragmentId != null) 'fragment_id': fragmentId,
+      if (fragmentCloudId != null) 'fragment_cloud_id': fragmentCloudId,
       if (naturalFamiliarity != null) 'natural_familiarity': naturalFamiliarity,
       if (explicitFamiliarity != null)
         'explicit_familiarity': explicitFamiliarity,
-      if (showTime != null) 'show_time': showTime,
+      if (showDuration != null) 'show_duration': showDuration,
     });
   }
 
-  FragmentMemoryInfosCompanion copyWith(
+  FragmentPermanentMemoryInfosCompanion copyWith(
       {Value<int?>? cloudId,
       Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<int?>? fragmentId,
+      Value<int?>? fragmentCloudId,
       Value<int>? naturalFamiliarity,
       Value<int>? explicitFamiliarity,
-      Value<int>? showTime}) {
-    return FragmentMemoryInfosCompanion(
+      Value<int>? showDuration}) {
+    return FragmentPermanentMemoryInfosCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      fragmentId: fragmentId ?? this.fragmentId,
+      fragmentCloudId: fragmentCloudId ?? this.fragmentCloudId,
       naturalFamiliarity: naturalFamiliarity ?? this.naturalFamiliarity,
       explicitFamiliarity: explicitFamiliarity ?? this.explicitFamiliarity,
-      showTime: showTime ?? this.showTime,
+      showDuration: showDuration ?? this.showDuration,
     );
   }
 
@@ -2138,39 +2285,49 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (fragmentId.present) {
+      map['fragment_id'] = Variable<int?>(fragmentId.value);
+    }
+    if (fragmentCloudId.present) {
+      map['fragment_cloud_id'] = Variable<int?>(fragmentCloudId.value);
+    }
     if (naturalFamiliarity.present) {
       map['natural_familiarity'] = Variable<int>(naturalFamiliarity.value);
     }
     if (explicitFamiliarity.present) {
       map['explicit_familiarity'] = Variable<int>(explicitFamiliarity.value);
     }
-    if (showTime.present) {
-      map['show_time'] = Variable<int>(showTime.value);
+    if (showDuration.present) {
+      map['show_duration'] = Variable<int>(showDuration.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('FragmentMemoryInfosCompanion(')
+    return (StringBuffer('FragmentPermanentMemoryInfosCompanion(')
           ..write('cloudId: $cloudId, ')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('fragmentId: $fragmentId, ')
+          ..write('fragmentCloudId: $fragmentCloudId, ')
           ..write('naturalFamiliarity: $naturalFamiliarity, ')
           ..write('explicitFamiliarity: $explicitFamiliarity, ')
-          ..write('showTime: $showTime')
+          ..write('showDuration: $showDuration')
           ..write(')'))
         .toString();
   }
 }
 
-class $FragmentMemoryInfosTable extends FragmentMemoryInfos
-    with TableInfo<$FragmentMemoryInfosTable, FragmentMemoryInfo> {
+class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
+    with
+        TableInfo<$FragmentPermanentMemoryInfosTable,
+            FragmentPermanentMemoryInfo> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $FragmentMemoryInfosTable(this.attachedDatabase, [this._alias]);
+  $FragmentPermanentMemoryInfosTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
   @override
   late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
@@ -2199,6 +2356,17 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
+  final VerificationMeta _fragmentIdMeta = const VerificationMeta('fragmentId');
+  @override
+  late final GeneratedColumn<int?> fragmentId = GeneratedColumn<int?>(
+      'fragment_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fragmentCloudIdMeta =
+      const VerificationMeta('fragmentCloudId');
+  @override
+  late final GeneratedColumn<int?> fragmentCloudId = GeneratedColumn<int?>(
+      'fragment_cloud_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _naturalFamiliarityMeta =
       const VerificationMeta('naturalFamiliarity');
   @override
@@ -2219,10 +2387,11 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: const IntType(),
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
-  final VerificationMeta _showTimeMeta = const VerificationMeta('showTime');
+  final VerificationMeta _showDurationMeta =
+      const VerificationMeta('showDuration');
   @override
-  late final GeneratedColumn<int?> showTime = GeneratedColumn<int?>(
-      'show_time', aliasedName, false,
+  late final GeneratedColumn<int?> showDuration = GeneratedColumn<int?>(
+      'show_duration', aliasedName, false,
       type: const IntType(),
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
@@ -2232,16 +2401,19 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
         id,
         createdAt,
         updatedAt,
+        fragmentId,
+        fragmentCloudId,
         naturalFamiliarity,
         explicitFamiliarity,
-        showTime
+        showDuration
       ];
   @override
-  String get aliasedName => _alias ?? 'fragment_memory_infos';
+  String get aliasedName => _alias ?? 'fragment_permanent_memory_infos';
   @override
-  String get actualTableName => 'fragment_memory_infos';
+  String get actualTableName => 'fragment_permanent_memory_infos';
   @override
-  VerificationContext validateIntegrity(Insertable<FragmentMemoryInfo> instance,
+  VerificationContext validateIntegrity(
+      Insertable<FragmentPermanentMemoryInfo> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -2260,6 +2432,18 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
+    if (data.containsKey('fragment_id')) {
+      context.handle(
+          _fragmentIdMeta,
+          fragmentId.isAcceptableOrUnknown(
+              data['fragment_id']!, _fragmentIdMeta));
+    }
+    if (data.containsKey('fragment_cloud_id')) {
+      context.handle(
+          _fragmentCloudIdMeta,
+          fragmentCloudId.isAcceptableOrUnknown(
+              data['fragment_cloud_id']!, _fragmentCloudIdMeta));
+    }
     if (data.containsKey('natural_familiarity')) {
       context.handle(
           _naturalFamiliarityMeta,
@@ -2272,9 +2456,11 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
           explicitFamiliarity.isAcceptableOrUnknown(
               data['explicit_familiarity']!, _explicitFamiliarityMeta));
     }
-    if (data.containsKey('show_time')) {
-      context.handle(_showTimeMeta,
-          showTime.isAcceptableOrUnknown(data['show_time']!, _showTimeMeta));
+    if (data.containsKey('show_duration')) {
+      context.handle(
+          _showDurationMeta,
+          showDuration.isAcceptableOrUnknown(
+              data['show_duration']!, _showDurationMeta));
     }
     return context;
   }
@@ -2282,20 +2468,496 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  FragmentMemoryInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return FragmentMemoryInfo.fromData(data,
+  FragmentPermanentMemoryInfo map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    return FragmentPermanentMemoryInfo.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $FragmentMemoryInfosTable createAlias(String alias) {
-    return $FragmentMemoryInfosTable(attachedDatabase, alias);
+  $FragmentPermanentMemoryInfosTable createAlias(String alias) {
+    return $FragmentPermanentMemoryInfosTable(attachedDatabase, alias);
+  }
+}
+
+class FragmentTemporaryMemoryInfo2Data extends DataClass
+    implements Insertable<FragmentTemporaryMemoryInfo2Data> {
+  int? cloudId;
+  int id;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime createdAt;
+
+  /// 必须是本地时间，因为用户是在本地被创建、修改。
+  /// *** 需要预防客户端时间篡改
+  DateTime updatedAt;
+  int? fragmentId;
+  int? fragmentCloudId;
+  int? memoryGroupId;
+  int? memoryGroupCloudId;
+
+  /// 下一次展示时间点。
+  ///
+  /// 为 null 表示在当前记忆组时的当前碎片为新碎片。
+  DateTime? nextShowTime;
+  FragmentTemporaryMemoryInfo2Data(
+      {this.cloudId,
+      required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      this.fragmentId,
+      this.fragmentCloudId,
+      this.memoryGroupId,
+      this.memoryGroupCloudId,
+      this.nextShowTime});
+  factory FragmentTemporaryMemoryInfo2Data.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return FragmentTemporaryMemoryInfo2Data(
+      cloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      createdAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
+      updatedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      fragmentId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}fragment_id']),
+      fragmentCloudId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}fragment_cloud_id']),
+      memoryGroupId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}memory_group_id']),
+      memoryGroupCloudId: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}memory_group_cloud_id']),
+      nextShowTime: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}next_show_time']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<int?>(cloudId);
+    }
+    map['id'] = Variable<int>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || fragmentId != null) {
+      map['fragment_id'] = Variable<int?>(fragmentId);
+    }
+    if (!nullToAbsent || fragmentCloudId != null) {
+      map['fragment_cloud_id'] = Variable<int?>(fragmentCloudId);
+    }
+    if (!nullToAbsent || memoryGroupId != null) {
+      map['memory_group_id'] = Variable<int?>(memoryGroupId);
+    }
+    if (!nullToAbsent || memoryGroupCloudId != null) {
+      map['memory_group_cloud_id'] = Variable<int?>(memoryGroupCloudId);
+    }
+    if (!nullToAbsent || nextShowTime != null) {
+      map['next_show_time'] = Variable<DateTime?>(nextShowTime);
+    }
+    return map;
+  }
+
+  FragmentTemporaryMemoryInfo2Companion toCompanion(bool nullToAbsent) {
+    return FragmentTemporaryMemoryInfo2Companion(
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      fragmentId: fragmentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fragmentId),
+      fragmentCloudId: fragmentCloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fragmentCloudId),
+      memoryGroupId: memoryGroupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(memoryGroupId),
+      memoryGroupCloudId: memoryGroupCloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(memoryGroupCloudId),
+      nextShowTime: nextShowTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nextShowTime),
+    );
+  }
+
+  factory FragmentTemporaryMemoryInfo2Data.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FragmentTemporaryMemoryInfo2Data(
+      cloudId: serializer.fromJson<int?>(json['cloudId']),
+      id: serializer.fromJson<int>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      fragmentId: serializer.fromJson<int?>(json['fragmentId']),
+      fragmentCloudId: serializer.fromJson<int?>(json['fragmentCloudId']),
+      memoryGroupId: serializer.fromJson<int?>(json['memoryGroupId']),
+      memoryGroupCloudId: serializer.fromJson<int?>(json['memoryGroupCloudId']),
+      nextShowTime: serializer.fromJson<DateTime?>(json['nextShowTime']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cloudId': serializer.toJson<int?>(cloudId),
+      'id': serializer.toJson<int>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'fragmentId': serializer.toJson<int?>(fragmentId),
+      'fragmentCloudId': serializer.toJson<int?>(fragmentCloudId),
+      'memoryGroupId': serializer.toJson<int?>(memoryGroupId),
+      'memoryGroupCloudId': serializer.toJson<int?>(memoryGroupCloudId),
+      'nextShowTime': serializer.toJson<DateTime?>(nextShowTime),
+    };
+  }
+
+  FragmentTemporaryMemoryInfo2Data copyWith(
+          {int? cloudId,
+          int? id,
+          DateTime? createdAt,
+          DateTime? updatedAt,
+          int? fragmentId,
+          int? fragmentCloudId,
+          int? memoryGroupId,
+          int? memoryGroupCloudId,
+          DateTime? nextShowTime}) =>
+      FragmentTemporaryMemoryInfo2Data(
+        cloudId: cloudId ?? this.cloudId,
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        fragmentId: fragmentId ?? this.fragmentId,
+        fragmentCloudId: fragmentCloudId ?? this.fragmentCloudId,
+        memoryGroupId: memoryGroupId ?? this.memoryGroupId,
+        memoryGroupCloudId: memoryGroupCloudId ?? this.memoryGroupCloudId,
+        nextShowTime: nextShowTime ?? this.nextShowTime,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('FragmentTemporaryMemoryInfo2Data(')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('fragmentId: $fragmentId, ')
+          ..write('fragmentCloudId: $fragmentCloudId, ')
+          ..write('memoryGroupId: $memoryGroupId, ')
+          ..write('memoryGroupCloudId: $memoryGroupCloudId, ')
+          ..write('nextShowTime: $nextShowTime')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, fragmentId,
+      fragmentCloudId, memoryGroupId, memoryGroupCloudId, nextShowTime);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FragmentTemporaryMemoryInfo2Data &&
+          other.cloudId == this.cloudId &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.fragmentId == this.fragmentId &&
+          other.fragmentCloudId == this.fragmentCloudId &&
+          other.memoryGroupId == this.memoryGroupId &&
+          other.memoryGroupCloudId == this.memoryGroupCloudId &&
+          other.nextShowTime == this.nextShowTime);
+}
+
+class FragmentTemporaryMemoryInfo2Companion
+    extends UpdateCompanion<FragmentTemporaryMemoryInfo2Data> {
+  Value<int?> cloudId;
+  Value<int> id;
+  Value<DateTime> createdAt;
+  Value<DateTime> updatedAt;
+  Value<int?> fragmentId;
+  Value<int?> fragmentCloudId;
+  Value<int?> memoryGroupId;
+  Value<int?> memoryGroupCloudId;
+  Value<DateTime?> nextShowTime;
+  FragmentTemporaryMemoryInfo2Companion({
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.fragmentId = const Value.absent(),
+    this.fragmentCloudId = const Value.absent(),
+    this.memoryGroupId = const Value.absent(),
+    this.memoryGroupCloudId = const Value.absent(),
+    this.nextShowTime = const Value.absent(),
+  });
+  FragmentTemporaryMemoryInfo2Companion.insert({
+    this.cloudId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.fragmentId = const Value.absent(),
+    this.fragmentCloudId = const Value.absent(),
+    this.memoryGroupId = const Value.absent(),
+    this.memoryGroupCloudId = const Value.absent(),
+    this.nextShowTime = const Value.absent(),
+  });
+  static Insertable<FragmentTemporaryMemoryInfo2Data> custom({
+    Expression<int?>? cloudId,
+    Expression<int>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int?>? fragmentId,
+    Expression<int?>? fragmentCloudId,
+    Expression<int?>? memoryGroupId,
+    Expression<int?>? memoryGroupCloudId,
+    Expression<DateTime?>? nextShowTime,
+  }) {
+    return RawValuesInsertable({
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (fragmentId != null) 'fragment_id': fragmentId,
+      if (fragmentCloudId != null) 'fragment_cloud_id': fragmentCloudId,
+      if (memoryGroupId != null) 'memory_group_id': memoryGroupId,
+      if (memoryGroupCloudId != null)
+        'memory_group_cloud_id': memoryGroupCloudId,
+      if (nextShowTime != null) 'next_show_time': nextShowTime,
+    });
+  }
+
+  FragmentTemporaryMemoryInfo2Companion copyWith(
+      {Value<int?>? cloudId,
+      Value<int>? id,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<int?>? fragmentId,
+      Value<int?>? fragmentCloudId,
+      Value<int?>? memoryGroupId,
+      Value<int?>? memoryGroupCloudId,
+      Value<DateTime?>? nextShowTime}) {
+    return FragmentTemporaryMemoryInfo2Companion(
+      cloudId: cloudId ?? this.cloudId,
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      fragmentId: fragmentId ?? this.fragmentId,
+      fragmentCloudId: fragmentCloudId ?? this.fragmentCloudId,
+      memoryGroupId: memoryGroupId ?? this.memoryGroupId,
+      memoryGroupCloudId: memoryGroupCloudId ?? this.memoryGroupCloudId,
+      nextShowTime: nextShowTime ?? this.nextShowTime,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<int?>(cloudId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (fragmentId.present) {
+      map['fragment_id'] = Variable<int?>(fragmentId.value);
+    }
+    if (fragmentCloudId.present) {
+      map['fragment_cloud_id'] = Variable<int?>(fragmentCloudId.value);
+    }
+    if (memoryGroupId.present) {
+      map['memory_group_id'] = Variable<int?>(memoryGroupId.value);
+    }
+    if (memoryGroupCloudId.present) {
+      map['memory_group_cloud_id'] = Variable<int?>(memoryGroupCloudId.value);
+    }
+    if (nextShowTime.present) {
+      map['next_show_time'] = Variable<DateTime?>(nextShowTime.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FragmentTemporaryMemoryInfo2Companion(')
+          ..write('cloudId: $cloudId, ')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('fragmentId: $fragmentId, ')
+          ..write('fragmentCloudId: $fragmentCloudId, ')
+          ..write('memoryGroupId: $memoryGroupId, ')
+          ..write('memoryGroupCloudId: $memoryGroupCloudId, ')
+          ..write('nextShowTime: $nextShowTime')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FragmentTemporaryMemoryInfo2Table extends FragmentTemporaryMemoryInfo2
+    with
+        TableInfo<$FragmentTemporaryMemoryInfo2Table,
+            FragmentTemporaryMemoryInfo2Data> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FragmentTemporaryMemoryInfo2Table(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
+  @override
+  late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
+      'cloud_id', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      $customConstraints: 'UNIQUE');
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+      'created_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+      'updated_at', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _fragmentIdMeta = const VerificationMeta('fragmentId');
+  @override
+  late final GeneratedColumn<int?> fragmentId = GeneratedColumn<int?>(
+      'fragment_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fragmentCloudIdMeta =
+      const VerificationMeta('fragmentCloudId');
+  @override
+  late final GeneratedColumn<int?> fragmentCloudId = GeneratedColumn<int?>(
+      'fragment_cloud_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _memoryGroupIdMeta =
+      const VerificationMeta('memoryGroupId');
+  @override
+  late final GeneratedColumn<int?> memoryGroupId = GeneratedColumn<int?>(
+      'memory_group_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _memoryGroupCloudIdMeta =
+      const VerificationMeta('memoryGroupCloudId');
+  @override
+  late final GeneratedColumn<int?> memoryGroupCloudId = GeneratedColumn<int?>(
+      'memory_group_cloud_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _nextShowTimeMeta =
+      const VerificationMeta('nextShowTime');
+  @override
+  late final GeneratedColumn<DateTime?> nextShowTime =
+      GeneratedColumn<DateTime?>('next_show_time', aliasedName, true,
+          type: const IntType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        cloudId,
+        id,
+        createdAt,
+        updatedAt,
+        fragmentId,
+        fragmentCloudId,
+        memoryGroupId,
+        memoryGroupCloudId,
+        nextShowTime
+      ];
+  @override
+  String get aliasedName => _alias ?? 'fragment_temporary_memory_info2';
+  @override
+  String get actualTableName => 'fragment_temporary_memory_info2';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<FragmentTemporaryMemoryInfo2Data> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('cloud_id')) {
+      context.handle(_cloudIdMeta,
+          cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    if (data.containsKey('fragment_id')) {
+      context.handle(
+          _fragmentIdMeta,
+          fragmentId.isAcceptableOrUnknown(
+              data['fragment_id']!, _fragmentIdMeta));
+    }
+    if (data.containsKey('fragment_cloud_id')) {
+      context.handle(
+          _fragmentCloudIdMeta,
+          fragmentCloudId.isAcceptableOrUnknown(
+              data['fragment_cloud_id']!, _fragmentCloudIdMeta));
+    }
+    if (data.containsKey('memory_group_id')) {
+      context.handle(
+          _memoryGroupIdMeta,
+          memoryGroupId.isAcceptableOrUnknown(
+              data['memory_group_id']!, _memoryGroupIdMeta));
+    }
+    if (data.containsKey('memory_group_cloud_id')) {
+      context.handle(
+          _memoryGroupCloudIdMeta,
+          memoryGroupCloudId.isAcceptableOrUnknown(
+              data['memory_group_cloud_id']!, _memoryGroupCloudIdMeta));
+    }
+    if (data.containsKey('next_show_time')) {
+      context.handle(
+          _nextShowTimeMeta,
+          nextShowTime.isAcceptableOrUnknown(
+              data['next_show_time']!, _nextShowTimeMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FragmentTemporaryMemoryInfo2Data map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    return FragmentTemporaryMemoryInfo2Data.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $FragmentTemporaryMemoryInfo2Table createAlias(String alias) {
+    return $FragmentTemporaryMemoryInfo2Table(attachedDatabase, alias);
   }
 }
 
 class RFragment2FragmentGroup extends DataClass
     implements Insertable<RFragment2FragmentGroup> {
-  int sonId;
+  int? sonId;
   int? sonCloudId;
   int? fatherId;
   int? fatherCloudId;
@@ -2310,7 +2972,7 @@ class RFragment2FragmentGroup extends DataClass
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
   RFragment2FragmentGroup(
-      {required this.sonId,
+      {this.sonId,
       this.sonCloudId,
       this.fatherId,
       this.fatherCloudId,
@@ -2323,7 +2985,7 @@ class RFragment2FragmentGroup extends DataClass
     final effectivePrefix = prefix ?? '';
     return RFragment2FragmentGroup(
       sonId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}son_id']),
       sonCloudId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_cloud_id']),
       fatherId: const IntType()
@@ -2343,7 +3005,9 @@ class RFragment2FragmentGroup extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['son_id'] = Variable<int>(sonId);
+    if (!nullToAbsent || sonId != null) {
+      map['son_id'] = Variable<int?>(sonId);
+    }
     if (!nullToAbsent || sonCloudId != null) {
       map['son_cloud_id'] = Variable<int?>(sonCloudId);
     }
@@ -2364,7 +3028,8 @@ class RFragment2FragmentGroup extends DataClass
 
   RFragment2FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return RFragment2FragmentGroupsCompanion(
-      sonId: Value(sonId),
+      sonId:
+          sonId == null && nullToAbsent ? const Value.absent() : Value(sonId),
       sonCloudId: sonCloudId == null && nullToAbsent
           ? const Value.absent()
           : Value(sonCloudId),
@@ -2387,7 +3052,7 @@ class RFragment2FragmentGroup extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RFragment2FragmentGroup(
-      sonId: serializer.fromJson<int>(json['sonId']),
+      sonId: serializer.fromJson<int?>(json['sonId']),
       sonCloudId: serializer.fromJson<int?>(json['sonCloudId']),
       fatherId: serializer.fromJson<int?>(json['fatherId']),
       fatherCloudId: serializer.fromJson<int?>(json['fatherCloudId']),
@@ -2401,7 +3066,7 @@ class RFragment2FragmentGroup extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'sonId': serializer.toJson<int>(sonId),
+      'sonId': serializer.toJson<int?>(sonId),
       'sonCloudId': serializer.toJson<int?>(sonCloudId),
       'fatherId': serializer.toJson<int?>(fatherId),
       'fatherCloudId': serializer.toJson<int?>(fatherCloudId),
@@ -2465,7 +3130,7 @@ class RFragment2FragmentGroup extends DataClass
 
 class RFragment2FragmentGroupsCompanion
     extends UpdateCompanion<RFragment2FragmentGroup> {
-  Value<int> sonId;
+  Value<int?> sonId;
   Value<int?> sonCloudId;
   Value<int?> fatherId;
   Value<int?> fatherCloudId;
@@ -2484,7 +3149,7 @@ class RFragment2FragmentGroupsCompanion
     this.updatedAt = const Value.absent(),
   });
   RFragment2FragmentGroupsCompanion.insert({
-    required int sonId,
+    this.sonId = const Value.absent(),
     this.sonCloudId = const Value.absent(),
     this.fatherId = const Value.absent(),
     this.fatherCloudId = const Value.absent(),
@@ -2492,9 +3157,9 @@ class RFragment2FragmentGroupsCompanion
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
+  });
   static Insertable<RFragment2FragmentGroup> custom({
-    Expression<int>? sonId,
+    Expression<int?>? sonId,
     Expression<int?>? sonCloudId,
     Expression<int?>? fatherId,
     Expression<int?>? fatherCloudId,
@@ -2516,7 +3181,7 @@ class RFragment2FragmentGroupsCompanion
   }
 
   RFragment2FragmentGroupsCompanion copyWith(
-      {Value<int>? sonId,
+      {Value<int?>? sonId,
       Value<int?>? sonCloudId,
       Value<int?>? fatherId,
       Value<int?>? fatherCloudId,
@@ -2540,7 +3205,7 @@ class RFragment2FragmentGroupsCompanion
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (sonId.present) {
-      map['son_id'] = Variable<int>(sonId.value);
+      map['son_id'] = Variable<int?>(sonId.value);
     }
     if (sonCloudId.present) {
       map['son_cloud_id'] = Variable<int?>(sonCloudId.value);
@@ -2591,8 +3256,8 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
   @override
   late final GeneratedColumn<int?> sonId = GeneratedColumn<int?>(
-      'son_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'son_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _sonCloudIdMeta = const VerificationMeta('sonCloudId');
   @override
   late final GeneratedColumn<int?> sonCloudId = GeneratedColumn<int?>(
@@ -2661,8 +3326,6 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
     if (data.containsKey('son_id')) {
       context.handle(
           _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
-    } else if (isInserting) {
-      context.missing(_sonIdMeta);
     }
     if (data.containsKey('son_cloud_id')) {
       context.handle(
@@ -2713,431 +3376,9 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   }
 }
 
-class RFragmentGroup2FragmentGroup extends DataClass
-    implements Insertable<RFragmentGroup2FragmentGroup> {
-  int sonId;
-  int? sonCloudId;
-  int? fatherId;
-  int? fatherCloudId;
-  int? cloudId;
-  int id;
-
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  /// *** 需要预防客户端时间篡改
-  DateTime createdAt;
-
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  /// *** 需要预防客户端时间篡改
-  DateTime updatedAt;
-  RFragmentGroup2FragmentGroup(
-      {required this.sonId,
-      this.sonCloudId,
-      this.fatherId,
-      this.fatherCloudId,
-      this.cloudId,
-      required this.id,
-      required this.createdAt,
-      required this.updatedAt});
-  factory RFragmentGroup2FragmentGroup.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return RFragmentGroup2FragmentGroup(
-      sonId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
-      sonCloudId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}son_cloud_id']),
-      fatherId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
-      fatherCloudId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}father_cloud_id']),
-      cloudId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}cloud_id']),
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      createdAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
-      updatedAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
-    );
-  }
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['son_id'] = Variable<int>(sonId);
-    if (!nullToAbsent || sonCloudId != null) {
-      map['son_cloud_id'] = Variable<int?>(sonCloudId);
-    }
-    if (!nullToAbsent || fatherId != null) {
-      map['father_id'] = Variable<int?>(fatherId);
-    }
-    if (!nullToAbsent || fatherCloudId != null) {
-      map['father_cloud_id'] = Variable<int?>(fatherCloudId);
-    }
-    if (!nullToAbsent || cloudId != null) {
-      map['cloud_id'] = Variable<int?>(cloudId);
-    }
-    map['id'] = Variable<int>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  RFragmentGroup2FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
-    return RFragmentGroup2FragmentGroupsCompanion(
-      sonId: Value(sonId),
-      sonCloudId: sonCloudId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(sonCloudId),
-      fatherId: fatherId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fatherId),
-      fatherCloudId: fatherCloudId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fatherCloudId),
-      cloudId: cloudId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(cloudId),
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory RFragmentGroup2FragmentGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RFragmentGroup2FragmentGroup(
-      sonId: serializer.fromJson<int>(json['sonId']),
-      sonCloudId: serializer.fromJson<int?>(json['sonCloudId']),
-      fatherId: serializer.fromJson<int?>(json['fatherId']),
-      fatherCloudId: serializer.fromJson<int?>(json['fatherCloudId']),
-      cloudId: serializer.fromJson<int?>(json['cloudId']),
-      id: serializer.fromJson<int>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'sonId': serializer.toJson<int>(sonId),
-      'sonCloudId': serializer.toJson<int?>(sonCloudId),
-      'fatherId': serializer.toJson<int?>(fatherId),
-      'fatherCloudId': serializer.toJson<int?>(fatherCloudId),
-      'cloudId': serializer.toJson<int?>(cloudId),
-      'id': serializer.toJson<int>(id),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  RFragmentGroup2FragmentGroup copyWith(
-          {int? sonId,
-          int? sonCloudId,
-          int? fatherId,
-          int? fatherCloudId,
-          int? cloudId,
-          int? id,
-          DateTime? createdAt,
-          DateTime? updatedAt}) =>
-      RFragmentGroup2FragmentGroup(
-        sonId: sonId ?? this.sonId,
-        sonCloudId: sonCloudId ?? this.sonCloudId,
-        fatherId: fatherId ?? this.fatherId,
-        fatherCloudId: fatherCloudId ?? this.fatherCloudId,
-        cloudId: cloudId ?? this.cloudId,
-        id: id ?? this.id,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RFragmentGroup2FragmentGroup(')
-          ..write('sonId: $sonId, ')
-          ..write('sonCloudId: $sonCloudId, ')
-          ..write('fatherId: $fatherId, ')
-          ..write('fatherCloudId: $fatherCloudId, ')
-          ..write('cloudId: $cloudId, ')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(sonId, sonCloudId, fatherId, fatherCloudId,
-      cloudId, id, createdAt, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RFragmentGroup2FragmentGroup &&
-          other.sonId == this.sonId &&
-          other.sonCloudId == this.sonCloudId &&
-          other.fatherId == this.fatherId &&
-          other.fatherCloudId == this.fatherCloudId &&
-          other.cloudId == this.cloudId &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
-}
-
-class RFragmentGroup2FragmentGroupsCompanion
-    extends UpdateCompanion<RFragmentGroup2FragmentGroup> {
-  Value<int> sonId;
-  Value<int?> sonCloudId;
-  Value<int?> fatherId;
-  Value<int?> fatherCloudId;
-  Value<int?> cloudId;
-  Value<int> id;
-  Value<DateTime> createdAt;
-  Value<DateTime> updatedAt;
-  RFragmentGroup2FragmentGroupsCompanion({
-    this.sonId = const Value.absent(),
-    this.sonCloudId = const Value.absent(),
-    this.fatherId = const Value.absent(),
-    this.fatherCloudId = const Value.absent(),
-    this.cloudId = const Value.absent(),
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  RFragmentGroup2FragmentGroupsCompanion.insert({
-    required int sonId,
-    this.sonCloudId = const Value.absent(),
-    this.fatherId = const Value.absent(),
-    this.fatherCloudId = const Value.absent(),
-    this.cloudId = const Value.absent(),
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
-  static Insertable<RFragmentGroup2FragmentGroup> custom({
-    Expression<int>? sonId,
-    Expression<int?>? sonCloudId,
-    Expression<int?>? fatherId,
-    Expression<int?>? fatherCloudId,
-    Expression<int?>? cloudId,
-    Expression<int>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (sonId != null) 'son_id': sonId,
-      if (sonCloudId != null) 'son_cloud_id': sonCloudId,
-      if (fatherId != null) 'father_id': fatherId,
-      if (fatherCloudId != null) 'father_cloud_id': fatherCloudId,
-      if (cloudId != null) 'cloud_id': cloudId,
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  RFragmentGroup2FragmentGroupsCompanion copyWith(
-      {Value<int>? sonId,
-      Value<int?>? sonCloudId,
-      Value<int?>? fatherId,
-      Value<int?>? fatherCloudId,
-      Value<int?>? cloudId,
-      Value<int>? id,
-      Value<DateTime>? createdAt,
-      Value<DateTime>? updatedAt}) {
-    return RFragmentGroup2FragmentGroupsCompanion(
-      sonId: sonId ?? this.sonId,
-      sonCloudId: sonCloudId ?? this.sonCloudId,
-      fatherId: fatherId ?? this.fatherId,
-      fatherCloudId: fatherCloudId ?? this.fatherCloudId,
-      cloudId: cloudId ?? this.cloudId,
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (sonId.present) {
-      map['son_id'] = Variable<int>(sonId.value);
-    }
-    if (sonCloudId.present) {
-      map['son_cloud_id'] = Variable<int?>(sonCloudId.value);
-    }
-    if (fatherId.present) {
-      map['father_id'] = Variable<int?>(fatherId.value);
-    }
-    if (fatherCloudId.present) {
-      map['father_cloud_id'] = Variable<int?>(fatherCloudId.value);
-    }
-    if (cloudId.present) {
-      map['cloud_id'] = Variable<int?>(cloudId.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RFragmentGroup2FragmentGroupsCompanion(')
-          ..write('sonId: $sonId, ')
-          ..write('sonCloudId: $sonCloudId, ')
-          ..write('fatherId: $fatherId, ')
-          ..write('fatherCloudId: $fatherCloudId, ')
-          ..write('cloudId: $cloudId, ')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $RFragmentGroup2FragmentGroupsTable extends RFragmentGroup2FragmentGroups
-    with
-        TableInfo<$RFragmentGroup2FragmentGroupsTable,
-            RFragmentGroup2FragmentGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RFragmentGroup2FragmentGroupsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
-  @override
-  late final GeneratedColumn<int?> sonId = GeneratedColumn<int?>(
-      'son_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _sonCloudIdMeta = const VerificationMeta('sonCloudId');
-  @override
-  late final GeneratedColumn<int?> sonCloudId = GeneratedColumn<int?>(
-      'son_cloud_id', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _fatherIdMeta = const VerificationMeta('fatherId');
-  @override
-  late final GeneratedColumn<int?> fatherId = GeneratedColumn<int?>(
-      'father_id', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _fatherCloudIdMeta =
-      const VerificationMeta('fatherCloudId');
-  @override
-  late final GeneratedColumn<int?> fatherCloudId = GeneratedColumn<int?>(
-      'father_cloud_id', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _cloudIdMeta = const VerificationMeta('cloudId');
-  @override
-  late final GeneratedColumn<int?> cloudId = GeneratedColumn<int?>(
-      'cloud_id', aliasedName, true,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      $customConstraints: 'UNIQUE');
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
-      'id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
-      'created_at', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
-  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
-      'updated_at', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
-  @override
-  List<GeneratedColumn> get $columns => [
-        sonId,
-        sonCloudId,
-        fatherId,
-        fatherCloudId,
-        cloudId,
-        id,
-        createdAt,
-        updatedAt
-      ];
-  @override
-  String get aliasedName => _alias ?? 'r_fragment_group2_fragment_groups';
-  @override
-  String get actualTableName => 'r_fragment_group2_fragment_groups';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<RFragmentGroup2FragmentGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('son_id')) {
-      context.handle(
-          _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
-    } else if (isInserting) {
-      context.missing(_sonIdMeta);
-    }
-    if (data.containsKey('son_cloud_id')) {
-      context.handle(
-          _sonCloudIdMeta,
-          sonCloudId.isAcceptableOrUnknown(
-              data['son_cloud_id']!, _sonCloudIdMeta));
-    }
-    if (data.containsKey('father_id')) {
-      context.handle(_fatherIdMeta,
-          fatherId.isAcceptableOrUnknown(data['father_id']!, _fatherIdMeta));
-    }
-    if (data.containsKey('father_cloud_id')) {
-      context.handle(
-          _fatherCloudIdMeta,
-          fatherCloudId.isAcceptableOrUnknown(
-              data['father_cloud_id']!, _fatherCloudIdMeta));
-    }
-    if (data.containsKey('cloud_id')) {
-      context.handle(_cloudIdMeta,
-          cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta));
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RFragmentGroup2FragmentGroup map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    return RFragmentGroup2FragmentGroup.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $RFragmentGroup2FragmentGroupsTable createAlias(String alias) {
-    return $RFragmentGroup2FragmentGroupsTable(attachedDatabase, alias);
-  }
-}
-
 class RFragment2MemoryGroup extends DataClass
     implements Insertable<RFragment2MemoryGroup> {
-  int sonId;
+  int? sonId;
   int? sonCloudId;
   int? fatherId;
   int? fatherCloudId;
@@ -3152,7 +3393,7 @@ class RFragment2MemoryGroup extends DataClass
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
   RFragment2MemoryGroup(
-      {required this.sonId,
+      {this.sonId,
       this.sonCloudId,
       this.fatherId,
       this.fatherCloudId,
@@ -3165,7 +3406,7 @@ class RFragment2MemoryGroup extends DataClass
     final effectivePrefix = prefix ?? '';
     return RFragment2MemoryGroup(
       sonId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}son_id']),
       sonCloudId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_cloud_id']),
       fatherId: const IntType()
@@ -3185,7 +3426,9 @@ class RFragment2MemoryGroup extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['son_id'] = Variable<int>(sonId);
+    if (!nullToAbsent || sonId != null) {
+      map['son_id'] = Variable<int?>(sonId);
+    }
     if (!nullToAbsent || sonCloudId != null) {
       map['son_cloud_id'] = Variable<int?>(sonCloudId);
     }
@@ -3206,7 +3449,8 @@ class RFragment2MemoryGroup extends DataClass
 
   RFragment2MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
     return RFragment2MemoryGroupsCompanion(
-      sonId: Value(sonId),
+      sonId:
+          sonId == null && nullToAbsent ? const Value.absent() : Value(sonId),
       sonCloudId: sonCloudId == null && nullToAbsent
           ? const Value.absent()
           : Value(sonCloudId),
@@ -3229,7 +3473,7 @@ class RFragment2MemoryGroup extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RFragment2MemoryGroup(
-      sonId: serializer.fromJson<int>(json['sonId']),
+      sonId: serializer.fromJson<int?>(json['sonId']),
       sonCloudId: serializer.fromJson<int?>(json['sonCloudId']),
       fatherId: serializer.fromJson<int?>(json['fatherId']),
       fatherCloudId: serializer.fromJson<int?>(json['fatherCloudId']),
@@ -3243,7 +3487,7 @@ class RFragment2MemoryGroup extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'sonId': serializer.toJson<int>(sonId),
+      'sonId': serializer.toJson<int?>(sonId),
       'sonCloudId': serializer.toJson<int?>(sonCloudId),
       'fatherId': serializer.toJson<int?>(fatherId),
       'fatherCloudId': serializer.toJson<int?>(fatherCloudId),
@@ -3307,7 +3551,7 @@ class RFragment2MemoryGroup extends DataClass
 
 class RFragment2MemoryGroupsCompanion
     extends UpdateCompanion<RFragment2MemoryGroup> {
-  Value<int> sonId;
+  Value<int?> sonId;
   Value<int?> sonCloudId;
   Value<int?> fatherId;
   Value<int?> fatherCloudId;
@@ -3326,7 +3570,7 @@ class RFragment2MemoryGroupsCompanion
     this.updatedAt = const Value.absent(),
   });
   RFragment2MemoryGroupsCompanion.insert({
-    required int sonId,
+    this.sonId = const Value.absent(),
     this.sonCloudId = const Value.absent(),
     this.fatherId = const Value.absent(),
     this.fatherCloudId = const Value.absent(),
@@ -3334,9 +3578,9 @@ class RFragment2MemoryGroupsCompanion
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
+  });
   static Insertable<RFragment2MemoryGroup> custom({
-    Expression<int>? sonId,
+    Expression<int?>? sonId,
     Expression<int?>? sonCloudId,
     Expression<int?>? fatherId,
     Expression<int?>? fatherCloudId,
@@ -3358,7 +3602,7 @@ class RFragment2MemoryGroupsCompanion
   }
 
   RFragment2MemoryGroupsCompanion copyWith(
-      {Value<int>? sonId,
+      {Value<int?>? sonId,
       Value<int?>? sonCloudId,
       Value<int?>? fatherId,
       Value<int?>? fatherCloudId,
@@ -3382,7 +3626,7 @@ class RFragment2MemoryGroupsCompanion
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (sonId.present) {
-      map['son_id'] = Variable<int>(sonId.value);
+      map['son_id'] = Variable<int?>(sonId.value);
     }
     if (sonCloudId.present) {
       map['son_cloud_id'] = Variable<int?>(sonCloudId.value);
@@ -3433,8 +3677,8 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
   @override
   late final GeneratedColumn<int?> sonId = GeneratedColumn<int?>(
-      'son_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'son_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _sonCloudIdMeta = const VerificationMeta('sonCloudId');
   @override
   late final GeneratedColumn<int?> sonCloudId = GeneratedColumn<int?>(
@@ -3503,8 +3747,6 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
     if (data.containsKey('son_id')) {
       context.handle(
           _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
-    } else if (isInserting) {
-      context.missing(_sonIdMeta);
     }
     if (data.containsKey('son_cloud_id')) {
       context.handle(
@@ -3556,7 +3798,7 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
 
 class RMemoryModel2MemoryGroup extends DataClass
     implements Insertable<RMemoryModel2MemoryGroup> {
-  int sonId;
+  int? sonId;
   int? sonCloudId;
   int? fatherId;
   int? fatherCloudId;
@@ -3571,7 +3813,7 @@ class RMemoryModel2MemoryGroup extends DataClass
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
   RMemoryModel2MemoryGroup(
-      {required this.sonId,
+      {this.sonId,
       this.sonCloudId,
       this.fatherId,
       this.fatherCloudId,
@@ -3584,7 +3826,7 @@ class RMemoryModel2MemoryGroup extends DataClass
     final effectivePrefix = prefix ?? '';
     return RMemoryModel2MemoryGroup(
       sonId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}son_id']),
       sonCloudId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_cloud_id']),
       fatherId: const IntType()
@@ -3604,7 +3846,9 @@ class RMemoryModel2MemoryGroup extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['son_id'] = Variable<int>(sonId);
+    if (!nullToAbsent || sonId != null) {
+      map['son_id'] = Variable<int?>(sonId);
+    }
     if (!nullToAbsent || sonCloudId != null) {
       map['son_cloud_id'] = Variable<int?>(sonCloudId);
     }
@@ -3625,7 +3869,8 @@ class RMemoryModel2MemoryGroup extends DataClass
 
   RMemoryModel2MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
     return RMemoryModel2MemoryGroupsCompanion(
-      sonId: Value(sonId),
+      sonId:
+          sonId == null && nullToAbsent ? const Value.absent() : Value(sonId),
       sonCloudId: sonCloudId == null && nullToAbsent
           ? const Value.absent()
           : Value(sonCloudId),
@@ -3648,7 +3893,7 @@ class RMemoryModel2MemoryGroup extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RMemoryModel2MemoryGroup(
-      sonId: serializer.fromJson<int>(json['sonId']),
+      sonId: serializer.fromJson<int?>(json['sonId']),
       sonCloudId: serializer.fromJson<int?>(json['sonCloudId']),
       fatherId: serializer.fromJson<int?>(json['fatherId']),
       fatherCloudId: serializer.fromJson<int?>(json['fatherCloudId']),
@@ -3662,7 +3907,7 @@ class RMemoryModel2MemoryGroup extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'sonId': serializer.toJson<int>(sonId),
+      'sonId': serializer.toJson<int?>(sonId),
       'sonCloudId': serializer.toJson<int?>(sonCloudId),
       'fatherId': serializer.toJson<int?>(fatherId),
       'fatherCloudId': serializer.toJson<int?>(fatherCloudId),
@@ -3726,7 +3971,7 @@ class RMemoryModel2MemoryGroup extends DataClass
 
 class RMemoryModel2MemoryGroupsCompanion
     extends UpdateCompanion<RMemoryModel2MemoryGroup> {
-  Value<int> sonId;
+  Value<int?> sonId;
   Value<int?> sonCloudId;
   Value<int?> fatherId;
   Value<int?> fatherCloudId;
@@ -3745,7 +3990,7 @@ class RMemoryModel2MemoryGroupsCompanion
     this.updatedAt = const Value.absent(),
   });
   RMemoryModel2MemoryGroupsCompanion.insert({
-    required int sonId,
+    this.sonId = const Value.absent(),
     this.sonCloudId = const Value.absent(),
     this.fatherId = const Value.absent(),
     this.fatherCloudId = const Value.absent(),
@@ -3753,9 +3998,9 @@ class RMemoryModel2MemoryGroupsCompanion
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
+  });
   static Insertable<RMemoryModel2MemoryGroup> custom({
-    Expression<int>? sonId,
+    Expression<int?>? sonId,
     Expression<int?>? sonCloudId,
     Expression<int?>? fatherId,
     Expression<int?>? fatherCloudId,
@@ -3777,7 +4022,7 @@ class RMemoryModel2MemoryGroupsCompanion
   }
 
   RMemoryModel2MemoryGroupsCompanion copyWith(
-      {Value<int>? sonId,
+      {Value<int?>? sonId,
       Value<int?>? sonCloudId,
       Value<int?>? fatherId,
       Value<int?>? fatherCloudId,
@@ -3801,7 +4046,7 @@ class RMemoryModel2MemoryGroupsCompanion
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (sonId.present) {
-      map['son_id'] = Variable<int>(sonId.value);
+      map['son_id'] = Variable<int?>(sonId.value);
     }
     if (sonCloudId.present) {
       map['son_cloud_id'] = Variable<int?>(sonCloudId.value);
@@ -3852,8 +4097,8 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
   final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
   @override
   late final GeneratedColumn<int?> sonId = GeneratedColumn<int?>(
-      'son_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'son_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _sonCloudIdMeta = const VerificationMeta('sonCloudId');
   @override
   late final GeneratedColumn<int?> sonCloudId = GeneratedColumn<int?>(
@@ -3922,8 +4167,6 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
     if (data.containsKey('son_id')) {
       context.handle(
           _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
-    } else if (isInserting) {
-      context.missing(_sonIdMeta);
     }
     if (data.containsKey('son_cloud_id')) {
       context.handle(
@@ -4755,12 +4998,12 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
-  late final $FragmentMemoryInfosTable fragmentMemoryInfos =
-      $FragmentMemoryInfosTable(this);
+  late final $FragmentPermanentMemoryInfosTable fragmentPermanentMemoryInfos =
+      $FragmentPermanentMemoryInfosTable(this);
+  late final $FragmentTemporaryMemoryInfo2Table fragmentTemporaryMemoryInfo2 =
+      $FragmentTemporaryMemoryInfo2Table(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
-  late final $RFragmentGroup2FragmentGroupsTable rFragmentGroup2FragmentGroups =
-      $RFragmentGroup2FragmentGroupsTable(this);
   late final $RFragment2MemoryGroupsTable rFragment2MemoryGroups =
       $RFragment2MemoryGroupsTable(this);
   late final $RMemoryModel2MemoryGroupsTable rMemoryModel2MemoryGroups =
@@ -4778,9 +5021,9 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragmentGroups,
         memoryGroups,
         memoryModels,
-        fragmentMemoryInfos,
+        fragmentPermanentMemoryInfos,
+        fragmentTemporaryMemoryInfo2,
         rFragment2FragmentGroups,
-        rFragmentGroup2FragmentGroups,
         rFragment2MemoryGroups,
         rMemoryModel2MemoryGroups,
         appInfos,
@@ -4798,8 +5041,10 @@ mixin _$MultiDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
-      attachedDatabase.fragmentMemoryInfos;
+  $FragmentPermanentMemoryInfosTable get fragmentPermanentMemoryInfos =>
+      attachedDatabase.fragmentPermanentMemoryInfos;
+  $FragmentTemporaryMemoryInfo2Table get fragmentTemporaryMemoryInfo2 =>
+      attachedDatabase.fragmentTemporaryMemoryInfo2;
 }
 mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
@@ -4807,12 +5052,12 @@ mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
-      attachedDatabase.fragmentMemoryInfos;
+  $FragmentPermanentMemoryInfosTable get fragmentPermanentMemoryInfos =>
+      attachedDatabase.fragmentPermanentMemoryInfos;
+  $FragmentTemporaryMemoryInfo2Table get fragmentTemporaryMemoryInfo2 =>
+      attachedDatabase.fragmentTemporaryMemoryInfo2;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupsTable get rFragmentGroup2FragmentGroups =>
-      attachedDatabase.rFragmentGroup2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
   $RMemoryModel2MemoryGroupsTable get rMemoryModel2MemoryGroups =>

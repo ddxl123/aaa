@@ -1,3 +1,4 @@
+import 'package:aaa/tool/Helper.dart';
 import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ extension AnyExt on Object? {
 extension AnyExt2<T> on T {
   void withPrint(String Function(T t) current) {
     if (kDebugMode) {
-      print(current(this));
+      Helper.logger.i(current(this));
     }
   }
 }

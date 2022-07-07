@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class FragmentInMemoryGroupPage extends StatelessWidget {
-  const FragmentInMemoryGroupPage({Key? key, required this.outerMemoryGroup}) : super(key: key);
+  const FragmentInMemoryGroupPage({Key? key, required this.outerMemoryGroup, required this.innerMemoryGroupWidget}) : super(key: key);
   final Ab<BasicSingleOuterMemoryGroup> outerMemoryGroup;
+  final Widget innerMemoryGroupWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +40,7 @@ class FragmentInMemoryGroupPage extends StatelessWidget {
     return AbBuilder<FragmentInMemoryGroupPageAbController>(
       builder: (c, abw) {
         return SliverToBoxAdapter(
-          child: Card(
-            child: Column(
-              children: [
-                const Text('当前使用的记忆规则：'),
-                Text((c.memoryRule(abw)?.title).toString()),
-              ],
-            ),
-          ),
+          child: innerMemoryGroupWidget,
         );
       },
     );

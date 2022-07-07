@@ -4,7 +4,6 @@ part of drift_db;
 
 const List<Type> rTableClass = [
   RFragment2FragmentGroups,
-  RFragmentGroup2FragmentGroups,
   RFragment2MemoryGroups,
   RMemoryModel2MemoryGroups,
 ];
@@ -12,17 +11,8 @@ const List<Type> rTableClass = [
 /// [Fragments]2[FragmentGroups]
 class RFragment2FragmentGroups extends RCloudTableBase {}
 
-/// [FragmentGroups]2[FragmentGroups]
-class RFragmentGroup2FragmentGroups extends RCloudTableBase {}
-
 /// [Fragments]2[MemoryGroups]
 class RFragment2MemoryGroups extends RCloudTableBase {}
 
 /// [MemoryModels]2[MemoryGroups]
 class RMemoryModel2MemoryGroups extends RCloudTableBase {}
-
-/// [FragmentMemoryInfos]2[Fragments]
-class RFragmentMemoryInfo2Fragments extends RCloudTableBase {}
-
-/// [FragmentMemoryInfos]2[MemoryGroups]
-class RFragmentMemoryInfo2MemoryGroups extends RCloudTableBase {}

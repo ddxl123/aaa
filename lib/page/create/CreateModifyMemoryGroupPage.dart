@@ -52,10 +52,10 @@ class CreateModifyMemoryGroupPage extends StatelessWidget {
         return Helper.filter(
           from: c.createOrModifyType,
           targets: {
-            [CreateModifyCheckType.modifyCheck]: FloatingRoundCornerButton(
-              text: '保存并开始',
-              onPressed: () {},
-            ),
+            [CreateModifyCheckType.modifyCheck]: () => FloatingRoundCornerButton(
+                  text: '保存并开始',
+                  onPressed: () {},
+                ),
           },
           orElse: () => Container(),
         );
@@ -70,8 +70,8 @@ class CreateModifyMemoryGroupPage extends StatelessWidget {
           Helper.filter(
             from: c.createOrModifyType,
             targets: {
-              [CreateModifyCheckType.create]: '创建记忆组',
-              [CreateModifyCheckType.modifyCheck]: '检查记忆组配置',
+              [CreateModifyCheckType.create]: () => '创建记忆组',
+              [CreateModifyCheckType.modifyCheck]: () => '检查记忆组配置',
             },
             orElse: () => 'unknown',
           ),
@@ -99,21 +99,21 @@ class CreateModifyMemoryGroupPage extends StatelessWidget {
         return Helper.filter(
           from: createOrModifyType,
           targets: {
-            [CreateModifyCheckType.create]: IconButton(
-              icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
-              onPressed: () {
-                c.commitForCreate();
-              },
-            ),
-            [CreateModifyCheckType.modifyCheck]: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: TextButton(
-                child: const Text('仅保存'),
-                onPressed: () {
-                  c.commitForModify();
-                },
-              ),
-            ),
+            [CreateModifyCheckType.create]: () => IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
+                  onPressed: () {
+                    c.commitForCreate();
+                  },
+                ),
+            [CreateModifyCheckType.modifyCheck]: () => Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: TextButton(
+                    child: const Text('仅保存'),
+                    onPressed: () {
+                      c.commitForModify();
+                    },
+                  ),
+                ),
           },
           orElse: () => Container(),
         );

@@ -40,20 +40,34 @@ class MemoryGroupModelAbController extends AbController {
     }
   }
 
-  Future<void> onStatusTapForNormal(Ab<SingleOuterNormalMemoryGroup> nmg) async {
+  Future<void> onStatusTap(Ab<BasicSingleOuterMemoryGroup> nmg) async {
+    final mg = nmg().memoryGroup();
+    void notStart() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CreateModifyMemoryGroupPage(createOrModifyType: CreateModifyCheckType.modifyCheck)),
+      );
+    }
+
     Helper.filter(
-      from: nmg().memoryGroup().normalStatus,
+      from: mg.type,
       targets: {
-        [MemoryGroupStatusForNormal.notStart]: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const CreateModifyMemoryGroupPage(createOrModifyType: CreateModifyCheckType.modifyCheck)),
-          );
-        },
+        [MemoryGroupType.normal]: () => Helper.filter(
+              from: mg.normalStatus,
+              targets: {
+                [MemoryGroupStatusForNormal.notStart]: () => notStart(),
+              },
+              orElse: null,
+            ),
+        [MemoryGroupType.fullFloating]: () => Helper.filter(
+              from: mg.fullFloatingStatus,
+              targets: {
+                [MemoryGroupStatusForFullFloating.notStarted]: () => notStart(),
+              },
+              orElse: null,
+            ),
       },
-      orElse: () {
-        SmartDialog.showToast('未知触发事件！');
-      },
-    )();
+      orElse: null,
+    );
   }
 }

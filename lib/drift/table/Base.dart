@@ -1,6 +1,6 @@
 part of drift_db;
 
-/// 每个表都需要的基类。
+/// 不需要云同步的基类。
 class TableBase extends Table {
   IntColumn get id => integer().autoIncrement()();
 
@@ -13,7 +13,7 @@ class TableBase extends Table {
   DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
 }
 
-/// 需要云同步基类。
+/// 需要云同步的基类。
 class CloudTableBase extends TableBase {
   IntColumn get cloudId => integer().nullable().customConstraint('UNIQUE')();
 }
@@ -23,8 +23,10 @@ class CloudTableBase extends TableBase {
 /// 子类类名规范：RSon2Fathers
 ///   Son - 儿 - 多对一的多
 ///   Father - 父 - 多对一的一
+///
+/// 一个 son 可以存在于多个 father 时才能继承并使用这个表，否则应该直接在自身表内增加其 father 进行关联。
 class RCloudTableBase extends CloudTableBase {
-  IntColumn get sonId => integer()();
+  IntColumn get sonId => integer().nullable()();
 
   IntColumn get sonCloudId => integer().nullable()();
 
