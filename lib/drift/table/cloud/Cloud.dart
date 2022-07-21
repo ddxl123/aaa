@@ -10,6 +10,7 @@ const List<Type> cloudTableClass = [
   FragmentTemporaryMemoryInfo2,
 ];
 
+/// 插入时需要同时插入：
 class Users extends CloudTableBase {
   TextColumn get username => text().withDefault(const Constant('还没有名字'))();
 
@@ -20,6 +21,7 @@ class Users extends CloudTableBase {
   IntColumn get age => integer().check(age.isBiggerOrEqual(const Constant(0))).withDefault(const Constant(0))();
 }
 
+/// 插入时需要同时插入：[RFragment2FragmentGroups]
 class Fragments extends CloudTableBase {
   /// 父节点。
   ///
@@ -34,6 +36,7 @@ class Fragments extends CloudTableBase {
   IntColumn get priority => integer().check(priority.isBiggerOrEqual(const Constant(0))).withDefault(const Constant(0))();
 }
 
+/// 插入时需要同时插入：
 class FragmentGroups extends CloudTableBase {
   IntColumn get fatherFragmentGroupId => integer().nullable()();
 

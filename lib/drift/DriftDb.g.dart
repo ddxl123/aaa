@@ -1675,17 +1675,30 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   DateTime updatedAt;
   String title;
 
-  /// 初始数学函数，用逗号隔开。
+  /// 记忆曲线的数学函数。
   ///
-  /// 例如： 'y=1-0.56t^0.06,y=1-0.56t^0.06'
-  String? mathFunction1;
+  /// 例如： 'type:y=1-0.56t^0.06'
+  ///   - y - 熟练度，单位百分比。
+  ///   - t - 时间，初始值为 0。
+  ///   - type - 表示函数类型，比如普通函数曲线类型、分段函数类型等。
+  String? mathFunction;
+
+  /// 下一次展示时间点的数学函数。
+  ///
+  /// 例如：'type:n=tc+y'
+  ///   - n - 下一次展示时间点。
+  ///   - tc - 当前时间点。
+  ///   - y - 熟练度。
+  ///   - type - 表示函数类型，比如函数曲线类型、固定值类型（fix:5,30,60,300(单位分钟)）等。
+  String? nextShowTimeMathFunction;
   MemoryModel(
       {this.cloudId,
       required this.id,
       required this.createdAt,
       required this.updatedAt,
       required this.title,
-      this.mathFunction1});
+      this.mathFunction,
+      this.nextShowTimeMathFunction});
   factory MemoryModel.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return MemoryModel(
@@ -1699,8 +1712,10 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       title: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      mathFunction1: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}math_function1']),
+      mathFunction: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}math_function']),
+      nextShowTimeMathFunction: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}next_show_time_math_function']),
     );
   }
   @override
@@ -1713,8 +1728,12 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['title'] = Variable<String>(title);
-    if (!nullToAbsent || mathFunction1 != null) {
-      map['math_function1'] = Variable<String?>(mathFunction1);
+    if (!nullToAbsent || mathFunction != null) {
+      map['math_function'] = Variable<String?>(mathFunction);
+    }
+    if (!nullToAbsent || nextShowTimeMathFunction != null) {
+      map['next_show_time_math_function'] =
+          Variable<String?>(nextShowTimeMathFunction);
     }
     return map;
   }
@@ -1728,9 +1747,12 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       title: Value(title),
-      mathFunction1: mathFunction1 == null && nullToAbsent
+      mathFunction: mathFunction == null && nullToAbsent
           ? const Value.absent()
-          : Value(mathFunction1),
+          : Value(mathFunction),
+      nextShowTimeMathFunction: nextShowTimeMathFunction == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nextShowTimeMathFunction),
     );
   }
 
@@ -1743,7 +1765,9 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       title: serializer.fromJson<String>(json['title']),
-      mathFunction1: serializer.fromJson<String?>(json['mathFunction1']),
+      mathFunction: serializer.fromJson<String?>(json['mathFunction']),
+      nextShowTimeMathFunction:
+          serializer.fromJson<String?>(json['nextShowTimeMathFunction']),
     );
   }
   @override
@@ -1755,7 +1779,9 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'title': serializer.toJson<String>(title),
-      'mathFunction1': serializer.toJson<String?>(mathFunction1),
+      'mathFunction': serializer.toJson<String?>(mathFunction),
+      'nextShowTimeMathFunction':
+          serializer.toJson<String?>(nextShowTimeMathFunction),
     };
   }
 
@@ -1765,14 +1791,17 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           DateTime? createdAt,
           DateTime? updatedAt,
           String? title,
-          String? mathFunction1}) =>
+          String? mathFunction,
+          String? nextShowTimeMathFunction}) =>
       MemoryModel(
         cloudId: cloudId ?? this.cloudId,
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         title: title ?? this.title,
-        mathFunction1: mathFunction1 ?? this.mathFunction1,
+        mathFunction: mathFunction ?? this.mathFunction,
+        nextShowTimeMathFunction:
+            nextShowTimeMathFunction ?? this.nextShowTimeMathFunction,
       );
   @override
   String toString() {
@@ -1782,14 +1811,15 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('title: $title, ')
-          ..write('mathFunction1: $mathFunction1')
+          ..write('mathFunction: $mathFunction, ')
+          ..write('nextShowTimeMathFunction: $nextShowTimeMathFunction')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(cloudId, id, createdAt, updatedAt, title, mathFunction1);
+  int get hashCode => Object.hash(cloudId, id, createdAt, updatedAt, title,
+      mathFunction, nextShowTimeMathFunction);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1799,7 +1829,8 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.title == this.title &&
-          other.mathFunction1 == this.mathFunction1);
+          other.mathFunction == this.mathFunction &&
+          other.nextShowTimeMathFunction == this.nextShowTimeMathFunction);
 }
 
 class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
@@ -1808,14 +1839,16 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
   Value<String> title;
-  Value<String?> mathFunction1;
+  Value<String?> mathFunction;
+  Value<String?> nextShowTimeMathFunction;
   MemoryModelsCompanion({
     this.cloudId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.title = const Value.absent(),
-    this.mathFunction1 = const Value.absent(),
+    this.mathFunction = const Value.absent(),
+    this.nextShowTimeMathFunction = const Value.absent(),
   });
   MemoryModelsCompanion.insert({
     this.cloudId = const Value.absent(),
@@ -1823,7 +1856,8 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.title = const Value.absent(),
-    this.mathFunction1 = const Value.absent(),
+    this.mathFunction = const Value.absent(),
+    this.nextShowTimeMathFunction = const Value.absent(),
   });
   static Insertable<MemoryModel> custom({
     Expression<int?>? cloudId,
@@ -1831,7 +1865,8 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? title,
-    Expression<String?>? mathFunction1,
+    Expression<String?>? mathFunction,
+    Expression<String?>? nextShowTimeMathFunction,
   }) {
     return RawValuesInsertable({
       if (cloudId != null) 'cloud_id': cloudId,
@@ -1839,7 +1874,9 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (title != null) 'title': title,
-      if (mathFunction1 != null) 'math_function1': mathFunction1,
+      if (mathFunction != null) 'math_function': mathFunction,
+      if (nextShowTimeMathFunction != null)
+        'next_show_time_math_function': nextShowTimeMathFunction,
     });
   }
 
@@ -1849,14 +1886,17 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
       Value<String>? title,
-      Value<String?>? mathFunction1}) {
+      Value<String?>? mathFunction,
+      Value<String?>? nextShowTimeMathFunction}) {
     return MemoryModelsCompanion(
       cloudId: cloudId ?? this.cloudId,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       title: title ?? this.title,
-      mathFunction1: mathFunction1 ?? this.mathFunction1,
+      mathFunction: mathFunction ?? this.mathFunction,
+      nextShowTimeMathFunction:
+          nextShowTimeMathFunction ?? this.nextShowTimeMathFunction,
     );
   }
 
@@ -1878,8 +1918,12 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (mathFunction1.present) {
-      map['math_function1'] = Variable<String?>(mathFunction1.value);
+    if (mathFunction.present) {
+      map['math_function'] = Variable<String?>(mathFunction.value);
+    }
+    if (nextShowTimeMathFunction.present) {
+      map['next_show_time_math_function'] =
+          Variable<String?>(nextShowTimeMathFunction.value);
     }
     return map;
   }
@@ -1892,7 +1936,8 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('title: $title, ')
-          ..write('mathFunction1: $mathFunction1')
+          ..write('mathFunction: $mathFunction, ')
+          ..write('nextShowTimeMathFunction: $nextShowTimeMathFunction')
           ..write(')'))
         .toString();
   }
@@ -1939,15 +1984,29 @@ class $MemoryModelsTable extends MemoryModels
       type: const StringType(),
       requiredDuringInsert: false,
       defaultValue: const Constant('还没有名称'));
-  final VerificationMeta _mathFunction1Meta =
-      const VerificationMeta('mathFunction1');
+  final VerificationMeta _mathFunctionMeta =
+      const VerificationMeta('mathFunction');
   @override
   late final GeneratedColumn<String?> mathFunction = GeneratedColumn<String?>(
-      'math_function1', aliasedName, true,
+      'math_function', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _nextShowTimeMathFunctionMeta =
+      const VerificationMeta('nextShowTimeMathFunction');
   @override
-  List<GeneratedColumn> get $columns =>
-      [cloudId, id, createdAt, updatedAt, title, mathFunction];
+  late final GeneratedColumn<String?> nextShowTimeMathFunction =
+      GeneratedColumn<String?>(
+          'next_show_time_math_function', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        cloudId,
+        id,
+        createdAt,
+        updatedAt,
+        title,
+        mathFunction,
+        nextShowTimeMathFunction
+      ];
   @override
   String get aliasedName => _alias ?? 'memory_models';
   @override
@@ -1976,11 +2035,18 @@ class $MemoryModelsTable extends MemoryModels
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
-    if (data.containsKey('math_function1')) {
+    if (data.containsKey('math_function')) {
       context.handle(
-          _mathFunction1Meta,
+          _mathFunctionMeta,
           mathFunction.isAcceptableOrUnknown(
-              data['math_function1']!, _mathFunction1Meta));
+              data['math_function']!, _mathFunctionMeta));
+    }
+    if (data.containsKey('next_show_time_math_function')) {
+      context.handle(
+          _nextShowTimeMathFunctionMeta,
+          nextShowTimeMathFunction.isAcceptableOrUnknown(
+              data['next_show_time_math_function']!,
+              _nextShowTimeMathFunctionMeta));
     }
     return context;
   }
@@ -2497,9 +2563,11 @@ class FragmentTemporaryMemoryInfo2Data extends DataClass
   int? memoryGroupId;
   int? memoryGroupCloudId;
 
-  /// 下一次展示时间点。
+  /// 下一次展示的时间点。
   ///
   /// 为 null 表示在当前记忆组时的当前碎片为新碎片。
+  ///
+  /// 为 1970 年 1 月 1 日 00:00 分（时间戳为0）表示在当前记忆组时的当前碎片已经完成任务。
   DateTime? nextShowTime;
   FragmentTemporaryMemoryInfo2Data(
       {this.cloudId,

@@ -11,12 +11,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
 
   /// 查询已同步的、查询未同步的、查询未下载的
   Future<List<FragmentGroup>> queryFragmentGroups(int? fatherFragmentGroupId) async {
-    final j = innerJoin(rFragmentGroup2FragmentGroups, rFragmentGroup2FragmentGroups.sonId.equalsExp(fragmentGroups.id));
-    final w = fatherFragmentGroupId == null
-        ? rFragmentGroup2FragmentGroups.fatherId.isNull()
-        : rFragmentGroup2FragmentGroups.fatherId.equals(fatherFragmentGroupId);
-    final List<TypedResult> result = await (select(fragmentGroups).join([j])..where(w)).get();
-    return result.map((e) => e.readTable(fragmentGroups)).toList();
+    return await (select(fragmentGroups)..where((tbl) => tbl.fatherFragmentGroupId.equals(fatherFragmentGroupId))).get();
   }
 
   /// 只查询了未同步的。
@@ -51,6 +46,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   Future<FragmentGroup> insertFragmentGroup(FragmentGroup? fatherEntity, FragmentGroupsCompanion willEntity) async {
     return await transaction(
       () async {
+        into(fragmentGroups).insert(willEntity);
         return await insertReturningWithR(
           sonTable: fragmentGroups,
           sonEntity: willEntity,
