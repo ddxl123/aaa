@@ -1,21 +1,8 @@
-late final List f;
+
+import 'package:uuid/uuid.dart';
 
 void main() {
-  final obj1 = test();
-  final ff = f;
-  print(obj1.toString() + ff.toString());
+ final  f = Uuid().v4();
+ print(f);
+ print(f.codeUnits);
 }
-
-OOO test() {
-  f = [Obj(OOO()), Obj(OOO()), Obj(OOO())];
-  final l = f;
-  return l.first.i;
-}
-
-class Obj {
-  Obj(this.i);
-
-  final OOO i;
-}
-
-class OOO {}

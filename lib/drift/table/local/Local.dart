@@ -4,7 +4,7 @@ const List<Type> localTableClass = [
   AppInfos,
 ];
 
-class AppInfos extends TableBase {
+class AppInfos extends LocalTableBase {
   TextColumn get token => text().withDefault(const Constant('unknown'))();
 
   BoolColumn get hasDownloadedInitData => boolean().withDefault(const Constant(false))();

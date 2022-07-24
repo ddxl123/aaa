@@ -11,7 +11,7 @@ const List<Type> cloudTableClass = [
 ];
 
 /// 插入时需要同时插入：
-class Users extends CloudTableBase {
+class Users extends CloudTableForUsersBase {
   TextColumn get username => text().withDefault(const Constant('还没有名字'))();
 
   TextColumn get password => text().nullable()();
@@ -22,11 +22,11 @@ class Users extends CloudTableBase {
 }
 
 /// 插入时需要同时插入：[RFragment2FragmentGroups]
-class Fragments extends CloudTableBase {
+class Fragments extends CloudTableIdIsStringBase {
   /// 父节点。
   ///
   /// 若为 null，则自身为父节点。
-  IntColumn get fatherFragmentId => integer().nullable()();
+  TextColumn get fatherFragmentId => text().nullable()();
 
   TextColumn get title => text().withDefault(const Constant('还没有标题'))();
 
@@ -37,15 +37,13 @@ class Fragments extends CloudTableBase {
 }
 
 /// 插入时需要同时插入：
-class FragmentGroups extends CloudTableBase {
-  IntColumn get fatherFragmentGroupId => integer().nullable()();
-
-  IntColumn get fatherFragmentGroupCloudId => integer().nullable()();
+class FragmentGroups extends CloudTableIdIsStringBase {
+  TextColumn get fatherFragmentGroupId => text().nullable()();
 
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 }
 
-class MemoryGroups extends CloudTableBase {
+class MemoryGroups extends CloudTableIdIsStringBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
   IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.normal.index))();
@@ -63,7 +61,7 @@ class MemoryGroups extends CloudTableBase {
   /// 悬浮碎片是否立即触发音频/特效等。
 }
 
-class MemoryModels extends CloudTableBase {
+class MemoryModels extends CloudTableIdIsStringBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
   /// 记忆曲线的数学函数。
@@ -128,10 +126,8 @@ class MemoryModels extends CloudTableBase {
 /// 碎片的永久存储的记忆信息（包含了历史记忆信息）。
 ///
 /// [TableBase.createdAt] 充当每次的记忆时间
-class FragmentPermanentMemoryInfos extends CloudTableBase {
-  IntColumn get fragmentId => integer().nullable()();
-
-  IntColumn get fragmentCloudId => integer().nullable()();
+class FragmentPermanentMemoryInfos extends CloudTableIdIsStringBase {
+  TextColumn get fragmentId => text().nullable()();
 
   /// 自然熟悉度 —— 当前时间点的熟悉度
   /// 范围：0~100。
@@ -151,14 +147,10 @@ class FragmentPermanentMemoryInfos extends CloudTableBase {
 }
 
 /// 碎片的临时存储的记忆信息（只包含了当前碎片在对应的记忆组中的记忆信息）
-class FragmentTemporaryMemoryInfo2 extends CloudTableBase {
-  IntColumn get fragmentId => integer().nullable()();
+class FragmentTemporaryMemoryInfo2 extends CloudTableIdIsStringBase {
+  TextColumn get fragmentId => text().nullable()();
 
-  IntColumn get fragmentCloudId => integer().nullable()();
-
-  IntColumn get memoryGroupId => integer().nullable()();
-
-  IntColumn get memoryGroupCloudId => integer().nullable()();
+  TextColumn get memoryGroupId => text().nullable()();
 
   /// 下一次展示的时间点。
   ///

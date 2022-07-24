@@ -1,14 +1,10 @@
 library drift_db;
 
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:aaa/tool/Extensioner.dart';
 import 'package:aaa/tool/Helper.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:flutter/rendering.dart';
-import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,11 +20,15 @@ part 'table/cloud/R.dart';
 
 part 'table/local/Local.dart';
 
-part 'table/Custom.dart';
+part 'custom/sync_tag.dart';
+
+part 'custom/memory_group_status.dart';
+
+part 'custom/sync_curd.dart';
+
+part 'custom/drift_value.dart';
 
 part 'table/local/Sync.dart';
-
-part './tool/Extensioner.dart';
 
 /// 这个 part 让程序生成 DriftDb.g.dart 文件，并包含到当前文件中。
 part 'DriftDb.g.dart';
