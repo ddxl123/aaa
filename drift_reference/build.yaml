@@ -1,0 +1,7 @@
+builders:
+  drift_reference:
+    import: "package:drift_reference/ReferenceBuilders.dart"
+    build_extensions: { ".dart": [ ".ref.dart" ] }
+    builder_factories: [ "referenceBuilder" ]
+    auto_apply: dependents
+    build_to: source

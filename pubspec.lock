@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.1"
+  analyzer_plugin:
+    dependency: transitive
+    description:
+      name: analyzer_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   animated_bottom_navigation_bar:
     dependency: "direct main"
     description:
@@ -127,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  cli_util:
+    dependency: transitive
+    description:
+      name: cli_util
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.5"
   clock:
     dependency: transitive
     description:
@@ -140,7 +154,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.0"
   collection:
     dependency: transitive
     description:
@@ -246,10 +260,17 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  drift_with:
+  drift_dev:
+    dependency: "direct dev"
+    description:
+      name: drift_dev
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.0"
+  drift_reference:
     dependency: "direct main"
     description:
-      path: drift_with
+      path: drift_reference
       relative: true
     source: path
     version: "0.0.1"
@@ -658,13 +679,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   sentry:
     dependency: transitive
     description:
       name: sentry
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.8.0"
+    version: "6.8.1"
   shelf:
     dependency: transitive
     description:
@@ -712,6 +740,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.8"
+  sqlparser:
+    dependency: transitive
+    description:
+      name: sqlparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.22.0"
   stack_trace:
     dependency: transitive
     description:

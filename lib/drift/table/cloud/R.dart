@@ -8,11 +8,11 @@ const List<Type> rTableClass = [
   RMemoryModel2MemoryGroups,
 ];
 
-/// [Fragments]2[FragmentGroups]
+@ReferenceTo([Fragments, FragmentGroups])
 class RFragment2FragmentGroups extends RCloudTableBase {}
 
-/// [Fragments]2[MemoryGroups]
+@ReferenceTo([Fragments, MemoryGroups])
 class RFragment2MemoryGroups extends RCloudTableBase {}
 
-/// [MemoryModels]2[MemoryGroups]
+@ReferenceTo([MemoryModels, MemoryGroups])
 class RMemoryModel2MemoryGroups extends RCloudTableBase {}

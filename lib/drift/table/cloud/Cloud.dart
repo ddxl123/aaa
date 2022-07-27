@@ -10,7 +10,7 @@ const List<Type> cloudTableClass = [
   FragmentTemporaryMemoryInfo2,
 ];
 
-/// 插入时需要同时插入：
+@ReferenceTo([])
 class Users extends CloudTableForUsersBase {
   TextColumn get username => text().withDefault(const Constant('还没有名字'))();
 
@@ -21,11 +21,12 @@ class Users extends CloudTableForUsersBase {
   IntColumn get age => integer().check(age.isBiggerOrEqual(const Constant(0))).withDefault(const Constant(0))();
 }
 
-/// 插入时需要同时插入：[RFragment2FragmentGroups]
+@ReferenceTo([])
 class Fragments extends CloudTableIdIsStringBase {
   /// 父节点。
   ///
   /// 若为 null，则自身为父节点。
+  @ReferenceTo([Fragments])
   TextColumn get fatherFragmentId => text().nullable()();
 
   TextColumn get title => text().withDefault(const Constant('还没有标题'))();
@@ -36,13 +37,15 @@ class Fragments extends CloudTableIdIsStringBase {
   IntColumn get priority => integer().check(priority.isBiggerOrEqual(const Constant(0))).withDefault(const Constant(0))();
 }
 
-/// 插入时需要同时插入：
+@ReferenceTo([])
 class FragmentGroups extends CloudTableIdIsStringBase {
+  @ReferenceTo([FragmentGroups])
   TextColumn get fatherFragmentGroupId => text().nullable()();
 
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 }
 
+@ReferenceTo([])
 class MemoryGroups extends CloudTableIdIsStringBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
@@ -61,6 +64,7 @@ class MemoryGroups extends CloudTableIdIsStringBase {
   /// 悬浮碎片是否立即触发音频/特效等。
 }
 
+@ReferenceTo([])
 class MemoryModels extends CloudTableIdIsStringBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
@@ -126,7 +130,9 @@ class MemoryModels extends CloudTableIdIsStringBase {
 /// 碎片的永久存储的记忆信息（包含了历史记忆信息）。
 ///
 /// [TableBase.createdAt] 充当每次的记忆时间
+@ReferenceTo([])
 class FragmentPermanentMemoryInfos extends CloudTableIdIsStringBase {
+  @ReferenceTo([])
   TextColumn get fragmentId => text().nullable()();
 
   /// 自然熟悉度 —— 当前时间点的熟悉度
@@ -147,9 +153,12 @@ class FragmentPermanentMemoryInfos extends CloudTableIdIsStringBase {
 }
 
 /// 碎片的临时存储的记忆信息（只包含了当前碎片在对应的记忆组中的记忆信息）
+@ReferenceTo([])
 class FragmentTemporaryMemoryInfo2 extends CloudTableIdIsStringBase {
+  @ReferenceTo([Fragments])
   TextColumn get fragmentId => text().nullable()();
 
+  @ReferenceTo([MemoryGroups])
   TextColumn get memoryGroupId => text().nullable()();
 
   /// 下一次展示的时间点。
