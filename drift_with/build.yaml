@@ -1,0 +1,7 @@
+builders:
+  driftWith:
+    import: "package:drift_with/DriftWithBuilders.dart"
+    build_extensions: { ".dart": [ ".driftWith.dart" ] }
+    builder_factories: [ "driftWithBuilder" ]
+    auto_apply: dependents
+    build_to: source
