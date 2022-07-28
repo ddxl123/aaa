@@ -8,9 +8,15 @@ part of drift_db;
 
 // ignore_for_file: type=lint
 class User extends DataClass implements Insertable<User> {
-  /// 云端创建、云端获取。
-  /// 无需自增，无需作为主键。
-  int id;
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
+  String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
@@ -34,7 +40,7 @@ class User extends DataClass implements Insertable<User> {
   factory User.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return User(
-      id: const IntType()
+      id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
@@ -53,7 +59,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['username'] = Variable<String>(username);
@@ -83,7 +89,7 @@ class User extends DataClass implements Insertable<User> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       username: serializer.fromJson<String>(json['username']),
@@ -96,7 +102,7 @@ class User extends DataClass implements Insertable<User> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'username': serializer.toJson<String>(username),
@@ -107,7 +113,7 @@ class User extends DataClass implements Insertable<User> {
   }
 
   User copyWith(
-          {int? id,
+          {String? id,
           DateTime? createdAt,
           DateTime? updatedAt,
           String? username,
@@ -154,7 +160,7 @@ class User extends DataClass implements Insertable<User> {
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
-  Value<int> id;
+  Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
   Value<String> username;
@@ -171,7 +177,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.age = const Value.absent(),
   });
   UsersCompanion.insert({
-    required int id,
+    required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.username = const Value.absent(),
@@ -180,7 +186,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.age = const Value.absent(),
   }) : id = Value(id);
   static Insertable<User> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? username,
@@ -200,7 +206,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 
   UsersCompanion copyWith(
-      {Value<int>? id,
+      {Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
       Value<String>? username,
@@ -222,7 +228,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -267,9 +273,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   $UsersTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -356,7 +362,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   User map(Map<String, dynamic> data, {String? tablePrefix}) {
     return User.fromData(data,
@@ -370,7 +376,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
-  /// 生成方案：user_id + uuid.v4
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
   String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
@@ -709,7 +722,14 @@ class $FragmentsTable extends Fragments
 }
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
-  /// 生成方案：user_id + uuid.v4
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
   String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
@@ -1012,7 +1032,14 @@ class $FragmentGroupsTable extends FragmentGroups
 }
 
 class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
-  /// 生成方案：user_id + uuid.v4
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
   String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
@@ -1462,7 +1489,14 @@ class $MemoryGroupsTable extends MemoryGroups
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
-  /// 生成方案：user_id + uuid.v4
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
   String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
@@ -1822,7 +1856,14 @@ class $MemoryModelsTable extends MemoryModels
 
 class FragmentPermanentMemoryInfo extends DataClass
     implements Insertable<FragmentPermanentMemoryInfo> {
-  /// 生成方案：user_id + uuid.v4
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
   String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
@@ -2225,7 +2266,14 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
 
 class FragmentTemporaryMemoryInfo2Data extends DataClass
     implements Insertable<FragmentTemporaryMemoryInfo2Data> {
-  /// 生成方案：user_id + uuid.v4
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
   String id;
 
   /// 必须是本地时间，因为用户是在本地被创建、修改。
@@ -2580,6 +2628,16 @@ class RFragment2FragmentGroup extends DataClass
   String? fatherId;
   String sonId;
 
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
+  String id;
+
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime createdAt;
@@ -2590,6 +2648,7 @@ class RFragment2FragmentGroup extends DataClass
   RFragment2FragmentGroup(
       {this.fatherId,
       required this.sonId,
+      required this.id,
       required this.createdAt,
       required this.updatedAt});
   factory RFragment2FragmentGroup.fromData(Map<String, dynamic> data,
@@ -2600,6 +2659,8 @@ class RFragment2FragmentGroup extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
       sonId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
@@ -2613,6 +2674,7 @@ class RFragment2FragmentGroup extends DataClass
       map['father_id'] = Variable<String?>(fatherId);
     }
     map['son_id'] = Variable<String>(sonId);
+    map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -2624,6 +2686,7 @@ class RFragment2FragmentGroup extends DataClass
           ? const Value.absent()
           : Value(fatherId),
       sonId: Value(sonId),
+      id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -2635,6 +2698,7 @@ class RFragment2FragmentGroup extends DataClass
     return RFragment2FragmentGroup(
       fatherId: serializer.fromJson<String?>(json['fatherId']),
       sonId: serializer.fromJson<String>(json['sonId']),
+      id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -2645,6 +2709,7 @@ class RFragment2FragmentGroup extends DataClass
     return <String, dynamic>{
       'fatherId': serializer.toJson<String?>(fatherId),
       'sonId': serializer.toJson<String>(sonId),
+      'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -2653,11 +2718,13 @@ class RFragment2FragmentGroup extends DataClass
   RFragment2FragmentGroup copyWith(
           {String? fatherId,
           String? sonId,
+          String? id,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       RFragment2FragmentGroup(
         fatherId: fatherId ?? this.fatherId,
         sonId: sonId ?? this.sonId,
+        id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -2666,6 +2733,7 @@ class RFragment2FragmentGroup extends DataClass
     return (StringBuffer('RFragment2FragmentGroup(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
+          ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2673,13 +2741,14 @@ class RFragment2FragmentGroup extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(fatherId, sonId, createdAt, updatedAt);
+  int get hashCode => Object.hash(fatherId, sonId, id, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RFragment2FragmentGroup &&
           other.fatherId == this.fatherId &&
           other.sonId == this.sonId &&
+          other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -2688,29 +2757,35 @@ class RFragment2FragmentGroupsCompanion
     extends UpdateCompanion<RFragment2FragmentGroup> {
   Value<String?> fatherId;
   Value<String> sonId;
+  Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
   RFragment2FragmentGroupsCompanion({
     this.fatherId = const Value.absent(),
     this.sonId = const Value.absent(),
+    this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   RFragment2FragmentGroupsCompanion.insert({
     this.fatherId = const Value.absent(),
     required String sonId,
+    required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
+  })  : sonId = Value(sonId),
+        id = Value(id);
   static Insertable<RFragment2FragmentGroup> custom({
     Expression<String?>? fatherId,
     Expression<String>? sonId,
+    Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (fatherId != null) 'father_id': fatherId,
       if (sonId != null) 'son_id': sonId,
+      if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -2719,11 +2794,13 @@ class RFragment2FragmentGroupsCompanion
   RFragment2FragmentGroupsCompanion copyWith(
       {Value<String?>? fatherId,
       Value<String>? sonId,
+      Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return RFragment2FragmentGroupsCompanion(
       fatherId: fatherId ?? this.fatherId,
       sonId: sonId ?? this.sonId,
+      id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -2737,6 +2814,9 @@ class RFragment2FragmentGroupsCompanion
     }
     if (sonId.present) {
       map['son_id'] = Variable<String>(sonId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -2752,6 +2832,7 @@ class RFragment2FragmentGroupsCompanion
     return (StringBuffer('RFragment2FragmentGroupsCompanion(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
+          ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2775,6 +2856,11 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   late final GeneratedColumn<String?> sonId = GeneratedColumn<String?>(
       'son_id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -2790,7 +2876,8 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
-  List<GeneratedColumn> get $columns => [fatherId, sonId, createdAt, updatedAt];
+  List<GeneratedColumn> get $columns =>
+      [fatherId, sonId, id, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? 'r_fragment2_fragment_groups';
   @override
@@ -2811,6 +2898,11 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
     } else if (isInserting) {
       context.missing(_sonIdMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -2823,7 +2915,7 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   RFragment2FragmentGroup map(Map<String, dynamic> data,
       {String? tablePrefix}) {
@@ -2842,6 +2934,16 @@ class RFragment2MemoryGroup extends DataClass
   String? fatherId;
   String sonId;
 
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
+  String id;
+
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime createdAt;
@@ -2852,6 +2954,7 @@ class RFragment2MemoryGroup extends DataClass
   RFragment2MemoryGroup(
       {this.fatherId,
       required this.sonId,
+      required this.id,
       required this.createdAt,
       required this.updatedAt});
   factory RFragment2MemoryGroup.fromData(Map<String, dynamic> data,
@@ -2862,6 +2965,8 @@ class RFragment2MemoryGroup extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
       sonId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
@@ -2875,6 +2980,7 @@ class RFragment2MemoryGroup extends DataClass
       map['father_id'] = Variable<String?>(fatherId);
     }
     map['son_id'] = Variable<String>(sonId);
+    map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -2886,6 +2992,7 @@ class RFragment2MemoryGroup extends DataClass
           ? const Value.absent()
           : Value(fatherId),
       sonId: Value(sonId),
+      id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -2897,6 +3004,7 @@ class RFragment2MemoryGroup extends DataClass
     return RFragment2MemoryGroup(
       fatherId: serializer.fromJson<String?>(json['fatherId']),
       sonId: serializer.fromJson<String>(json['sonId']),
+      id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -2907,6 +3015,7 @@ class RFragment2MemoryGroup extends DataClass
     return <String, dynamic>{
       'fatherId': serializer.toJson<String?>(fatherId),
       'sonId': serializer.toJson<String>(sonId),
+      'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -2915,11 +3024,13 @@ class RFragment2MemoryGroup extends DataClass
   RFragment2MemoryGroup copyWith(
           {String? fatherId,
           String? sonId,
+          String? id,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       RFragment2MemoryGroup(
         fatherId: fatherId ?? this.fatherId,
         sonId: sonId ?? this.sonId,
+        id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -2928,6 +3039,7 @@ class RFragment2MemoryGroup extends DataClass
     return (StringBuffer('RFragment2MemoryGroup(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
+          ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2935,13 +3047,14 @@ class RFragment2MemoryGroup extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(fatherId, sonId, createdAt, updatedAt);
+  int get hashCode => Object.hash(fatherId, sonId, id, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RFragment2MemoryGroup &&
           other.fatherId == this.fatherId &&
           other.sonId == this.sonId &&
+          other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -2950,29 +3063,35 @@ class RFragment2MemoryGroupsCompanion
     extends UpdateCompanion<RFragment2MemoryGroup> {
   Value<String?> fatherId;
   Value<String> sonId;
+  Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
   RFragment2MemoryGroupsCompanion({
     this.fatherId = const Value.absent(),
     this.sonId = const Value.absent(),
+    this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   RFragment2MemoryGroupsCompanion.insert({
     this.fatherId = const Value.absent(),
     required String sonId,
+    required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
+  })  : sonId = Value(sonId),
+        id = Value(id);
   static Insertable<RFragment2MemoryGroup> custom({
     Expression<String?>? fatherId,
     Expression<String>? sonId,
+    Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (fatherId != null) 'father_id': fatherId,
       if (sonId != null) 'son_id': sonId,
+      if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -2981,11 +3100,13 @@ class RFragment2MemoryGroupsCompanion
   RFragment2MemoryGroupsCompanion copyWith(
       {Value<String?>? fatherId,
       Value<String>? sonId,
+      Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return RFragment2MemoryGroupsCompanion(
       fatherId: fatherId ?? this.fatherId,
       sonId: sonId ?? this.sonId,
+      id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -2999,6 +3120,9 @@ class RFragment2MemoryGroupsCompanion
     }
     if (sonId.present) {
       map['son_id'] = Variable<String>(sonId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -3014,6 +3138,7 @@ class RFragment2MemoryGroupsCompanion
     return (StringBuffer('RFragment2MemoryGroupsCompanion(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
+          ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3037,6 +3162,11 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   late final GeneratedColumn<String?> sonId = GeneratedColumn<String?>(
       'son_id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -3052,7 +3182,8 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
-  List<GeneratedColumn> get $columns => [fatherId, sonId, createdAt, updatedAt];
+  List<GeneratedColumn> get $columns =>
+      [fatherId, sonId, id, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? 'r_fragment2_memory_groups';
   @override
@@ -3073,6 +3204,11 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
     } else if (isInserting) {
       context.missing(_sonIdMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -3085,7 +3221,7 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   RFragment2MemoryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     return RFragment2MemoryGroup.fromData(data,
@@ -3103,6 +3239,16 @@ class RMemoryModel2MemoryGroup extends DataClass
   String? fatherId;
   String sonId;
 
+  /// 当子表类为 [Users] 时，
+  ///   - 云端创建、云端获取。
+  ///   - 无需自增，无需作为主键。
+  ///
+  /// 当子表类为非 [Users] 时，
+  ///   - 生成方案：user_id + uuid.v4
+  ///
+  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
+  String id;
+
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime createdAt;
@@ -3113,6 +3259,7 @@ class RMemoryModel2MemoryGroup extends DataClass
   RMemoryModel2MemoryGroup(
       {this.fatherId,
       required this.sonId,
+      required this.id,
       required this.createdAt,
       required this.updatedAt});
   factory RMemoryModel2MemoryGroup.fromData(Map<String, dynamic> data,
@@ -3123,6 +3270,8 @@ class RMemoryModel2MemoryGroup extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
       sonId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
@@ -3136,6 +3285,7 @@ class RMemoryModel2MemoryGroup extends DataClass
       map['father_id'] = Variable<String?>(fatherId);
     }
     map['son_id'] = Variable<String>(sonId);
+    map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -3147,6 +3297,7 @@ class RMemoryModel2MemoryGroup extends DataClass
           ? const Value.absent()
           : Value(fatherId),
       sonId: Value(sonId),
+      id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -3158,6 +3309,7 @@ class RMemoryModel2MemoryGroup extends DataClass
     return RMemoryModel2MemoryGroup(
       fatherId: serializer.fromJson<String?>(json['fatherId']),
       sonId: serializer.fromJson<String>(json['sonId']),
+      id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -3168,6 +3320,7 @@ class RMemoryModel2MemoryGroup extends DataClass
     return <String, dynamic>{
       'fatherId': serializer.toJson<String?>(fatherId),
       'sonId': serializer.toJson<String>(sonId),
+      'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -3176,11 +3329,13 @@ class RMemoryModel2MemoryGroup extends DataClass
   RMemoryModel2MemoryGroup copyWith(
           {String? fatherId,
           String? sonId,
+          String? id,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       RMemoryModel2MemoryGroup(
         fatherId: fatherId ?? this.fatherId,
         sonId: sonId ?? this.sonId,
+        id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -3189,6 +3344,7 @@ class RMemoryModel2MemoryGroup extends DataClass
     return (StringBuffer('RMemoryModel2MemoryGroup(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
+          ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3196,13 +3352,14 @@ class RMemoryModel2MemoryGroup extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(fatherId, sonId, createdAt, updatedAt);
+  int get hashCode => Object.hash(fatherId, sonId, id, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RMemoryModel2MemoryGroup &&
           other.fatherId == this.fatherId &&
           other.sonId == this.sonId &&
+          other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -3211,29 +3368,35 @@ class RMemoryModel2MemoryGroupsCompanion
     extends UpdateCompanion<RMemoryModel2MemoryGroup> {
   Value<String?> fatherId;
   Value<String> sonId;
+  Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
   RMemoryModel2MemoryGroupsCompanion({
     this.fatherId = const Value.absent(),
     this.sonId = const Value.absent(),
+    this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   RMemoryModel2MemoryGroupsCompanion.insert({
     this.fatherId = const Value.absent(),
     required String sonId,
+    required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : sonId = Value(sonId);
+  })  : sonId = Value(sonId),
+        id = Value(id);
   static Insertable<RMemoryModel2MemoryGroup> custom({
     Expression<String?>? fatherId,
     Expression<String>? sonId,
+    Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (fatherId != null) 'father_id': fatherId,
       if (sonId != null) 'son_id': sonId,
+      if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -3242,11 +3405,13 @@ class RMemoryModel2MemoryGroupsCompanion
   RMemoryModel2MemoryGroupsCompanion copyWith(
       {Value<String?>? fatherId,
       Value<String>? sonId,
+      Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return RMemoryModel2MemoryGroupsCompanion(
       fatherId: fatherId ?? this.fatherId,
       sonId: sonId ?? this.sonId,
+      id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -3260,6 +3425,9 @@ class RMemoryModel2MemoryGroupsCompanion
     }
     if (sonId.present) {
       map['son_id'] = Variable<String>(sonId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -3275,6 +3443,7 @@ class RMemoryModel2MemoryGroupsCompanion
     return (StringBuffer('RMemoryModel2MemoryGroupsCompanion(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
+          ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3298,6 +3467,11 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
   late final GeneratedColumn<String?> sonId = GeneratedColumn<String?>(
       'son_id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -3313,7 +3487,8 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
-  List<GeneratedColumn> get $columns => [fatherId, sonId, createdAt, updatedAt];
+  List<GeneratedColumn> get $columns =>
+      [fatherId, sonId, id, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? 'r_memory_model2_memory_groups';
   @override
@@ -3334,6 +3509,11 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
     } else if (isInserting) {
       context.missing(_sonIdMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -3346,7 +3526,7 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   RMemoryModel2MemoryGroup map(Map<String, dynamic> data,
       {String? tablePrefix}) {
@@ -3669,7 +3849,7 @@ class Sync extends DataClass implements Insertable<Sync> {
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
   String syncTableName;
-  int rowId;
+  String rowId;
   SyncCurdType? syncCurdType;
 
   /// 当为 [SyncCurdType.u] 时，[syncUpdateColumns] 不能为空。
@@ -3679,16 +3859,15 @@ class Sync extends DataClass implements Insertable<Sync> {
   /// TODO: 可以去掉让整行都更新。
   String? syncUpdateColumns;
 
-  /// 成组标识符。
+  /// 同组标识符，可以看 [SyncTag]。
   ///
-  /// 可以看 [SyncTag]。
+  /// 当多行 sync 是由同一事务或同一组合的操作时, 需要对这些行设置相同的 tag。
   ///
-  /// 仅对 [CloudTableBase] 的子类表生效,
-  /// 当多行 sync 是由同一事务或类似事务性的操作时, 需要对这些行设置相同的 tag。
-  /// 当进行上传时, 会将具有相同 tag 的行, 组成一组进行上传。
+  /// 当进行上传时, 会将具有相同 tag 的行, 组成一组进行上传，再由云端对该组进行事务操作。
   ///
+  /// 仅对 [CloudTableBase] 的子类表生效。
   /// 每组 tag 具有唯一性.
-  String tag;
+  int tag;
   Sync(
       {required this.id,
       required this.createdAt,
@@ -3709,13 +3888,13 @@ class Sync extends DataClass implements Insertable<Sync> {
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       syncTableName: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_table_name'])!,
-      rowId: const IntType()
+      rowId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
       syncCurdType: $SyncsTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_curd_type'])),
       syncUpdateColumns: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}sync_update_columns']),
-      tag: const StringType()
+      tag: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}tag'])!,
     );
   }
@@ -3726,7 +3905,7 @@ class Sync extends DataClass implements Insertable<Sync> {
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_table_name'] = Variable<String>(syncTableName);
-    map['row_id'] = Variable<int>(rowId);
+    map['row_id'] = Variable<String>(rowId);
     if (!nullToAbsent || syncCurdType != null) {
       final converter = $SyncsTable.$converter0;
       map['sync_curd_type'] = Variable<int?>(converter.mapToSql(syncCurdType));
@@ -3734,7 +3913,7 @@ class Sync extends DataClass implements Insertable<Sync> {
     if (!nullToAbsent || syncUpdateColumns != null) {
       map['sync_update_columns'] = Variable<String?>(syncUpdateColumns);
     }
-    map['tag'] = Variable<String>(tag);
+    map['tag'] = Variable<int>(tag);
     return map;
   }
 
@@ -3763,11 +3942,11 @@ class Sync extends DataClass implements Insertable<Sync> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncTableName: serializer.fromJson<String>(json['syncTableName']),
-      rowId: serializer.fromJson<int>(json['rowId']),
+      rowId: serializer.fromJson<String>(json['rowId']),
       syncCurdType: serializer.fromJson<SyncCurdType?>(json['syncCurdType']),
       syncUpdateColumns:
           serializer.fromJson<String?>(json['syncUpdateColumns']),
-      tag: serializer.fromJson<String>(json['tag']),
+      tag: serializer.fromJson<int>(json['tag']),
     );
   }
   @override
@@ -3778,10 +3957,10 @@ class Sync extends DataClass implements Insertable<Sync> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncTableName': serializer.toJson<String>(syncTableName),
-      'rowId': serializer.toJson<int>(rowId),
+      'rowId': serializer.toJson<String>(rowId),
       'syncCurdType': serializer.toJson<SyncCurdType?>(syncCurdType),
       'syncUpdateColumns': serializer.toJson<String?>(syncUpdateColumns),
-      'tag': serializer.toJson<String>(tag),
+      'tag': serializer.toJson<int>(tag),
     };
   }
 
@@ -3790,10 +3969,10 @@ class Sync extends DataClass implements Insertable<Sync> {
           DateTime? createdAt,
           DateTime? updatedAt,
           String? syncTableName,
-          int? rowId,
+          String? rowId,
           SyncCurdType? syncCurdType,
           String? syncUpdateColumns,
-          String? tag}) =>
+          int? tag}) =>
       Sync(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
@@ -3841,10 +4020,10 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
   Value<String> syncTableName;
-  Value<int> rowId;
+  Value<String> rowId;
   Value<SyncCurdType?> syncCurdType;
   Value<String?> syncUpdateColumns;
-  Value<String> tag;
+  Value<int> tag;
   SyncsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -3860,10 +4039,10 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     required String syncTableName,
-    required int rowId,
+    required String rowId,
     this.syncCurdType = const Value.absent(),
     this.syncUpdateColumns = const Value.absent(),
-    required String tag,
+    required int tag,
   })  : syncTableName = Value(syncTableName),
         rowId = Value(rowId),
         tag = Value(tag);
@@ -3872,10 +4051,10 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? syncTableName,
-    Expression<int>? rowId,
+    Expression<String>? rowId,
     Expression<SyncCurdType?>? syncCurdType,
     Expression<String?>? syncUpdateColumns,
-    Expression<String>? tag,
+    Expression<int>? tag,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3894,10 +4073,10 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
       Value<String>? syncTableName,
-      Value<int>? rowId,
+      Value<String>? rowId,
       Value<SyncCurdType?>? syncCurdType,
       Value<String?>? syncUpdateColumns,
-      Value<String>? tag}) {
+      Value<int>? tag}) {
     return SyncsCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
@@ -3926,7 +4105,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       map['sync_table_name'] = Variable<String>(syncTableName.value);
     }
     if (rowId.present) {
-      map['row_id'] = Variable<int>(rowId.value);
+      map['row_id'] = Variable<String>(rowId.value);
     }
     if (syncCurdType.present) {
       final converter = $SyncsTable.$converter0;
@@ -3937,7 +4116,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       map['sync_update_columns'] = Variable<String?>(syncUpdateColumns.value);
     }
     if (tag.present) {
-      map['tag'] = Variable<String>(tag.value);
+      map['tag'] = Variable<int>(tag.value);
     }
     return map;
   }
@@ -3992,9 +4171,9 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<String?> rowId = GeneratedColumn<String?>(
       'row_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _syncCurdTypeMeta =
       const VerificationMeta('syncCurdType');
   @override
@@ -4010,9 +4189,9 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _tagMeta = const VerificationMeta('tag');
   @override
-  late final GeneratedColumn<String?> tag = GeneratedColumn<String?>(
+  late final GeneratedColumn<int?> tag = GeneratedColumn<int?>(
       'tag', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      type: const IntType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -4111,7 +4290,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
   late final SingleDAO singleDAO = SingleDAO(this as DriftDb);
-  late final MultiDAO multiDAO = MultiDAO(this as DriftDb);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -4135,17 +4313,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
 // DaoGenerator
 // **************************************************************************
 
-mixin _$MultiDAOMixin on DatabaseAccessor<DriftDb> {
-  $UsersTable get users => attachedDatabase.users;
-  $FragmentsTable get fragments => attachedDatabase.fragments;
-  $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
-  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $FragmentPermanentMemoryInfosTable get fragmentPermanentMemoryInfos =>
-      attachedDatabase.fragmentPermanentMemoryInfos;
-  $FragmentTemporaryMemoryInfo2Table get fragmentTemporaryMemoryInfo2 =>
-      attachedDatabase.fragmentTemporaryMemoryInfo2;
-}
 mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentsTable get fragments => attachedDatabase.fragments;

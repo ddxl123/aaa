@@ -56,7 +56,7 @@ class CreateModifyMemoryGroupPageAbController extends AbController {
 
     await DriftDb.instance.transaction(
       () async {
-        await DriftDb.instance.singleDAO.insertMemoryGroupWith(
+        await DriftDb.instance.singleDAO.insertMemoryGroupWithOther(
           MemoryGroupsCompanion()
             ..title = title().toDriftValue()
             ..type = type().toDriftValue()

@@ -58,7 +58,6 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
   FutureOr<String> generate(LibraryReader library, BuildStep buildStep) async {
     try {
       await super.generate(library, buildStep);
-      print(father2Children);
     } catch (e, st) {
       print('start ----------------------------------');
       print(e);
@@ -87,15 +86,15 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
           if (child == father) {
             childCC = 'child_$childCC';
           }
-          childrenRequiredContent.writeln('required Future<void> Function(TableInfo table) $childCC,');
-          childrenAwaitContent.writeln('await $childCC(DriftDb.instance.$constChildCC);');
+          childrenRequiredContent.writeln('required Future<void> Function(\$${child}Table table)? $childCC,');
+          childrenAwaitContent.writeln('await $childCC?.call(DriftDb.instance.$constChildCC);');
         }
 
         funcContent.writeln('''
-  static Future<void> $fatherCC({
-    required Future<void> Function(TableInfo table) $fatherCC,
-    $childrenRequiredContent
-  }) async {
+  static Future<void> $fatherCC(
+    Future<void> Function(\$${father}Table table) $fatherCC,
+  ${childrenRequiredContent.isEmpty ? '' : '{$childrenRequiredContent}'}
+  ) async {
     await $fatherCC(DriftDb.instance.$fatherCC);
     $childrenAwaitContent
   }

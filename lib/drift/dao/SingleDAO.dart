@@ -10,12 +10,12 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   SingleDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
   /// 查询已同步的、查询未同步的、查询未下载的
-  Future<List<FragmentGroup>> queryFragmentGroups(int? fatherFragmentGroupId) async {
+  Future<List<FragmentGroup>> queryFragmentGroups(String? fatherFragmentGroupId) async {
     return await (select(fragmentGroups)..where((tbl) => tbl.fatherFragmentGroupId.equals(fatherFragmentGroupId))).get();
   }
 
   /// 只查询了未同步的。
-  Future<List<Fragment>> queryFragments(int? fatherFragmentGroupId) async {
+  Future<List<Fragment>> queryFragments(String? fatherFragmentGroupId) async {
     final j = innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.sonId.equalsExp(fragments.id));
     final w =
         fatherFragmentGroupId == null ? rFragment2FragmentGroups.fatherId.isNull() : rFragment2FragmentGroups.fatherId.equals(fatherFragmentGroupId);
@@ -24,16 +24,16 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   /// 只查询了未同步的。
-  Future<List<Fragment>> queryFragmentsByIds(List<int> ids) async {
+  Future<List<Fragment>> queryFragmentsByIds(List<String> ids) async {
     return await (select(fragments)..where((tbl) => tbl.id.isIn(ids))).get();
   }
 
   /// 输入的 [ids] 与返回的对象是同一个对象。
-  Future<List<int>> queryFragmentsForAllSubgroup(int fragmentGroupId, List<int> ids) async {
+  Future<List<String>> queryFragmentsForAllSubgroup(String fragmentGroupId, List<String> ids) async {
     final fIds = (await queryFragments(fragmentGroupId)).map((e) => e.id);
     ids.addAll(fIds);
     final fgIds = (await queryFragmentGroups(fragmentGroupId)).map((e) => e.id);
-    await Future.forEach<int>(
+    await Future.forEach<String>(
       fgIds,
       (fgId) async {
         await queryFragmentsForAllSubgroup(fgId, ids);
@@ -46,16 +46,15 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   Future<FragmentGroup> insertFragmentGroup(FragmentGroup? fatherEntity, FragmentGroupsCompanion willEntity) async {
     return await transaction(
       () async {
-        into(fragmentGroups).insert(willEntity);
-        return await insertReturningWithR(
-          sonTable: fragmentGroups,
-          sonEntity: willEntity,
-          fatherEntity: fatherEntity,
-          rTable: rFragmentGroup2FragmentGroups,
-          rEntity: RFragmentGroup2FragmentGroupsCompanion(),
-          syncTag: SyncTag(),
+        late FragmentGroup returnFragmentGroup;
+        await WithRefs.fragmentGroups(
+          (table) async {
+            returnFragmentGroup = await insertReturningWith(table, entity: willEntity, syncTag: await SyncTag.create());
+          },
+          child_fragmentGroups: null,
+          rFragment2FragmentGroups: null,
         );
-        // return newEntity;
+        return returnFragmentGroup;
       },
     );
   }
@@ -64,52 +63,76 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   Future<Fragment> insertFragment(FragmentGroup? fatherEntity, FragmentsCompanion willEntity) async {
     return await transaction(
       () async {
-        return await insertReturningWithR(
-          sonTable: fragments,
-          sonEntity: willEntity,
-          fatherEntity: fatherEntity,
-          rTable: rFragment2FragmentGroups,
-          rEntity: RFragment2FragmentGroupsCompanion(),
-          syncTag: SyncTag(),
+        final st = await SyncTag.create();
+        late Fragment newFragment;
+        await WithRefs.fragments(
+          (table) async {
+            newFragment = await insertReturningWith(table, entity: willEntity, syncTag: st);
+          },
+          rFragment2FragmentGroups: (_) async => await WithRefs.rFragment2FragmentGroups(
+            (table) async {
+              await insertReturningWith(
+                table,
+                entity: RFragment2FragmentGroupsCompanion(
+                  sonId: newFragment.id.toDriftValue(),
+                  fatherId: (fatherEntity?.id).toDriftValue(),
+                ),
+                syncTag: st,
+              );
+            },
+          ),
+          child_fragments: null,
+          fragmentTemporaryMemoryInfo2: null,
+          rFragment2MemoryGroups: null,
         );
-        // return newEntity;
+        return newFragment;
       },
     );
   }
 
-  /// 插入一条 [MemoryGroup]、多条 [RFragment2MemoryGroup]、一条 [RMemoryRule2MemoryGroup]
-  Future<void> insertMemoryGroupWith(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryModel? willMemoryModel) async {
+  /// 插入一个带有 [willFragments] 和 [willMemoryModel] 的新的 [willMemoryGroup]。
+  Future<void> insertMemoryGroupWithOther(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryModel? willMemoryModel) async {
     return await transaction(
       () async {
-        final syncTag = SyncTag();
-        final newMemoryGroup = await insertReturningWith(memoryGroups, entity: willMemoryGroup, syncTag: syncTag);
-        await Future.forEach<Fragment>(
-          willFragments,
-          (element) async {
-            await insertReturningWith(
-              rFragment2MemoryGroups,
-              entity: RFragment2MemoryGroupsCompanion(
-                sonId: element.id.toDriftValue(),
-                sonCloudId: element.cloudId.toDriftValue(),
-                fatherId: newMemoryGroup.id.toDriftValue(),
-                fatherCloudId: newMemoryGroup.cloudId.toDriftValue(),
-              ),
-              syncTag: syncTag,
-            );
+        final syncTag = await SyncTag.create();
+        late MemoryGroup newMemoryGroup;
+        await WithRefs.memoryGroups(
+          (table) async {
+            newMemoryGroup = await insertReturningWith(memoryGroups, entity: willMemoryGroup, syncTag: syncTag);
           },
+          rFragment2MemoryGroups: (_) async => await WithRefs.rFragment2MemoryGroups(
+            (table) async {
+              await Future.forEach<Fragment>(
+                willFragments,
+                (element) async {
+                  await insertReturningWith(
+                    table,
+                    entity: RFragment2MemoryGroupsCompanion(
+                      sonId: element.id.toDriftValue(),
+                      fatherId: newMemoryGroup.id.toDriftValue(),
+                    ),
+                    syncTag: syncTag,
+                  );
+                },
+              );
+            },
+          ),
+          rMemoryModel2MemoryGroups: (_) async => await WithRefs.rMemoryModel2MemoryGroups(
+            (table) async {
+              if (willMemoryModel != null) {
+                await insertReturningWith(
+                  table,
+                  entity: RMemoryModel2MemoryGroupsCompanion(
+                    sonId: willMemoryModel.id.toDriftValue(),
+                    fatherId: newMemoryGroup.id.toDriftValue(),
+                  ),
+                  syncTag: syncTag,
+                );
+              }
+            },
+          ),
+          fragmentTemporaryMemoryInfo2: null,
         );
-        if (willMemoryModel != null) {
-          await insertReturningWith(
-            rMemoryModel2MemoryGroups,
-            entity: RMemoryModel2MemoryGroupsCompanion(
-              sonId: willMemoryModel.id.toDriftValue(),
-              sonCloudId: willMemoryModel.cloudId.toDriftValue(),
-              fatherId: newMemoryGroup.id.toDriftValue(),
-              fatherCloudId: newMemoryGroup.cloudId.toDriftValue(),
-            ),
-            syncTag: syncTag,
-          );
-        }
       },
     );
   }
@@ -118,10 +141,18 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return await select(memoryGroups).get();
   }
 
-  Future<MemoryModel> insertMemoryRule(MemoryModelsCompanion willEntry) async {
+  Future<MemoryModel> insertMemoryModel(MemoryModelsCompanion willEntry) async {
     return await transaction(
       () async {
-        return await insertReturningWith(memoryModels, entity: willEntry, syncTag: SyncTag());
+        final syncTag = await SyncTag.create();
+        late MemoryModel newMemoryModel;
+        await WithRefs.memoryModels(
+          (table) async {
+            newMemoryModel = await insertReturningWith(table, entity: willEntry, syncTag: syncTag);
+          },
+          rMemoryModel2MemoryGroups: null,
+        );
+        return newMemoryModel;
       },
     );
   }
@@ -130,14 +161,14 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return await select(memoryModels).get();
   }
 
-  Future<List<Fragment>> queryFragmentInMemoryGroup(int memoryGroupId) async {
+  Future<List<Fragment>> queryFragmentInMemoryGroup(String memoryGroupId) async {
     final j = select(fragments).join([innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id))]);
     j.where(rFragment2MemoryGroups.fatherId.equals(memoryGroupId));
     final gets = await j.get();
     return gets.map((e) => e.readTable(fragments)).toList();
   }
 
-  Future<MemoryModel?> queryMemoryRuleInMemoryGroup(int memoryGroupId) async {
+  Future<MemoryModel?> queryMemoryRuleInMemoryGroup(String memoryGroupId) async {
     final j = select(memoryModels).join([innerJoin(rMemoryModel2MemoryGroups, rMemoryModel2MemoryGroups.sonId.equalsExp(memoryModels.id))]);
     j.where(rMemoryModel2MemoryGroups.fatherId.equals(memoryGroupId));
     return (await j.getSingleOrNull())?.readTable(memoryModels);

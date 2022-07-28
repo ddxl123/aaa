@@ -21,7 +21,7 @@ class MemoryModelModelAbController extends AbController {
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
-    final newEntity = await DriftDb.instance.singleDAO.insertMemoryRule(willEntity);
+    final newEntity = await DriftDb.instance.singleDAO.insertMemoryModel(willEntity);
     memoryModels.refreshInevitable((obj) => obj..add(newEntity.ab));
   }
 

@@ -121,7 +121,7 @@ class _DriftViewerState extends State<DriftViewer> {
                       await DriftDb.instance.insertReturningWith(
                         DriftDb.instance.users,
                         entity: UsersCompanion(username: '啊啊啊'.toDriftValue()),
-                        syncTag: SyncTag(),
+                        syncTag: await SyncTag.create(),
                       );
                       Navigator.pop(context);
                     },
@@ -129,10 +129,10 @@ class _DriftViewerState extends State<DriftViewer> {
                   ...add(
                     title: 'test2',
                     onPressed: () async {
-                      final st = SyncTag();
+                      final st = await SyncTag.create();
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
-                        filter: (tbl) => tbl.id.equals(3),
+                        filter: (tbl) => tbl.id.equals('3'),
                         entity: UsersCompanion(
                           username: '顶顶顶'.toDriftValue(),
                         ),
@@ -140,7 +140,7 @@ class _DriftViewerState extends State<DriftViewer> {
                       );
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
-                        filter: (tbl) => tbl.id.equals(3),
+                        filter: (tbl) => tbl.id.equals('3'),
                         entity: UsersCompanion(
                           username: '顶顶顶'.toDriftValue(),
                         ),
@@ -154,8 +154,8 @@ class _DriftViewerState extends State<DriftViewer> {
                     onPressed: () async {
                       await DriftDb.instance.deleteWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
-                        filter: (tbl) => tbl.id.equals(2),
-                        syncTag: SyncTag(),
+                        filter: (tbl) => tbl.id.equals('2'),
+                        syncTag: await SyncTag.create(),
                       );
                       Navigator.pop(context);
                     },

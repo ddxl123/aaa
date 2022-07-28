@@ -23,11 +23,14 @@ enum SyncCurdType {
   d,
   ding,
 }
+
 extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
-  /// 插入一条数据，并自动插入 createdAt/updatedAt。
+  /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
+  ///
+  /// 对 [Users] 的插入不能使用该函数，但可以使用 [updateReturningWith] 函数对 user 进行更新。
   ///
   /// 返回插入的行(带有插入的id)，与传入的 [entity] 不是一个对象。
   ///
@@ -47,18 +50,32 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
-      TableInfo<T, DC> table, {
-        required E entity,
-        required SyncTag syncTag,
-        InsertMode? mode,
-        UpsertClause<T, DC>? onConflict,
-      }) async {
+    TableInfo<T, DC> table, {
+    required E entity,
+    required SyncTag syncTag,
+    InsertMode? mode,
+    UpsertClause<T, DC>? onConflict,
+  }) async {
     return await transaction(
-          () async {
+      () async {
+        if (table is Users) {
+          throw '对 [Users] 的插入不能使用该函数';
+        }
+
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         entityDynamic.createdAt = DateTime.now().toDriftValue();
         entityDynamic.updatedAt = DateTime.now().toDriftValue();
+
+        // 仅对 CloudTableBase 类型表生成 id，
+        // LocalTableBase 类型表全部都是自增主键。
+        if (table is CloudTableBase) {
+          final mulUsers = await select(DriftDb.instance.users).get();
+          if (mulUsers.length != 1) {
+            throw 'users 行数不为1';
+          }
+          entityDynamic.id = (mulUsers.first.id + Helper.uuidV4).toDriftValue();
+        }
 
         // 插入
         final newInto = into(table);
@@ -66,15 +83,14 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
-          await syncTag.check(tableName: table.actualTableName, id: returningEntityDynamic.id);
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toDriftValue(),
-              rowId: (returningEntityDynamic.id as int).toDriftValue(),
+              rowId: (returningEntityDynamic.id as String).toDriftValue(),
               syncCurdType: SyncCurdType.c.toDriftValue(),
               syncUpdateColumns: null.toDriftValue(),
-              tag: syncTag.toString().toDriftValue(),
+              tag: syncTag.tag.toDriftValue(),
             ),
             syncTag: syncTag,
           );
@@ -96,13 +112,13 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
   Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
-      TableInfo<T, DC> table, {
-        required Expression<bool?> Function(T tbl) filter,
-        required E entity,
-        required SyncTag syncTag,
-      }) async {
+    TableInfo<T, DC> table, {
+    required Expression<bool?> Function(T tbl) filter,
+    required E entity,
+    required SyncTag syncTag,
+  }) async {
     return await transaction(
-          () async {
+      () async {
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         entityDynamic.updatedAt = DateTime.now().toDriftValue();
@@ -131,15 +147,14 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
-          await syncTag.check(tableName: table.actualTableName, id: returningEntity.id);
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toDriftValue(),
-              rowId: (returningEntity.id as int).toDriftValue(),
+              rowId: (returningEntity.id as String).toDriftValue(),
               syncCurdType: SyncCurdType.u.toDriftValue(),
               syncUpdateColumns: syncUpdateColumns.toDriftValue(),
-              tag: syncTag.toString().toDriftValue(),
+              tag: syncTag.tag.toDriftValue(),
             ),
             syncTag: syncTag,
           );
@@ -161,12 +176,12 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
   Future<DC?> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
-      TableInfo<T, DC> table, {
-        required Expression<bool?> Function(T tbl) filter,
-        required SyncTag syncTag,
-      }) async {
+    TableInfo<T, DC> table, {
+    required Expression<bool?> Function(T tbl) filter,
+    required SyncTag syncTag,
+  }) async {
     return await transaction(
-          () async {
+      () async {
         // 查询要删除的行
         final selectEntities = await (select(table)..where(filter)).get();
         if (selectEntities.isEmpty) {
@@ -185,15 +200,14 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
-          await syncTag.check(tableName: table.actualTableName, id: selectEntity.id);
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toDriftValue(),
-              rowId: (selectEntity.id as int).toDriftValue(),
+              rowId: (selectEntity.id as String).toDriftValue(),
               syncCurdType: SyncCurdType.d.toDriftValue(),
               syncUpdateColumns: null.toDriftValue(),
-              tag: syncTag.toString().toDriftValue(),
+              tag: syncTag.tag.toDriftValue(),
             ),
             syncTag: syncTag,
           );
@@ -201,41 +215,5 @@ extension DriftSyncExt on DatabaseConnectionUser {
         return selectEntity;
       },
     );
-  }
-
-  /// [sonTable] - 要插入的数据的表。
-  ///
-  /// [sonEntity] - 要插入的数据的实体。
-  ///
-  /// [fatherEntity] - 要插入的数据的父实体，使用到了里面的 id。
-  ///
-  /// [rTable] - 要同时插入的关系表。
-  ///
-  /// [rEntity] - 要同时插入的关系表数据的实体。
-  Future<SDC> insertReturningWithR<ST extends Table, SDC extends DataClass, SE extends UpdateCompanion<SDC>, FDC extends DataClass,
-  FE extends Insertable<FDC>, RT extends Table, RDC extends DataClass, RE extends UpdateCompanion<RDC>>({
-    required TableInfo<ST, SDC> sonTable,
-    required SE sonEntity,
-    required FE? fatherEntity,
-    required TableInfo<RT, RDC> rTable,
-    required RE rEntity,
-    required SyncTag syncTag,
-    InsertMode? mode,
-    UpsertClause<ST, SDC>? onConflict,
-  }) async {
-    return await transaction(() async {
-      final dynamic newSonEntry = await insertReturningWith(sonTable, entity: sonEntity, syncTag: syncTag, mode: mode, onConflict: onConflict);
-      final dynamic fatherDy = fatherEntity;
-      final dynamic rDy = rEntity;
-
-      rDy
-        ..sonId = Value(newSonEntry.id as int)
-        ..sonCloudId = Value(newSonEntry.cloudId as int?)
-        ..fatherId = Value(fatherDy?.id as int?)
-        ..fatherCloudId = Value(fatherDy?.cloudId as int?);
-
-      await insertReturningWith(rTable, entity: rEntity, syncTag: syncTag);
-      return newSonEntry;
-    });
   }
 }

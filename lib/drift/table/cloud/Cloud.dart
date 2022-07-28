@@ -11,7 +11,7 @@ const List<Type> cloudTableClass = [
 ];
 
 @ReferenceTo([])
-class Users extends CloudTableForUsersBase {
+class Users extends CloudTableBase {
   TextColumn get username => text().withDefault(const Constant('还没有名字'))();
 
   TextColumn get password => text().nullable()();
@@ -22,7 +22,7 @@ class Users extends CloudTableForUsersBase {
 }
 
 @ReferenceTo([])
-class Fragments extends CloudTableIdIsStringBase {
+class Fragments extends CloudTableBase {
   /// 父节点。
   ///
   /// 若为 null，则自身为父节点。
@@ -38,7 +38,7 @@ class Fragments extends CloudTableIdIsStringBase {
 }
 
 @ReferenceTo([])
-class FragmentGroups extends CloudTableIdIsStringBase {
+class FragmentGroups extends CloudTableBase {
   @ReferenceTo([FragmentGroups])
   TextColumn get fatherFragmentGroupId => text().nullable()();
 
@@ -46,7 +46,7 @@ class FragmentGroups extends CloudTableIdIsStringBase {
 }
 
 @ReferenceTo([])
-class MemoryGroups extends CloudTableIdIsStringBase {
+class MemoryGroups extends CloudTableBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
   IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.normal.index))();
@@ -65,7 +65,7 @@ class MemoryGroups extends CloudTableIdIsStringBase {
 }
 
 @ReferenceTo([])
-class MemoryModels extends CloudTableIdIsStringBase {
+class MemoryModels extends CloudTableBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
   /// 记忆曲线的数学函数。
@@ -131,7 +131,7 @@ class MemoryModels extends CloudTableIdIsStringBase {
 ///
 /// [TableBase.createdAt] 充当每次的记忆时间
 @ReferenceTo([])
-class FragmentPermanentMemoryInfos extends CloudTableIdIsStringBase {
+class FragmentPermanentMemoryInfos extends CloudTableBase {
   @ReferenceTo([])
   TextColumn get fragmentId => text().nullable()();
 
@@ -154,7 +154,7 @@ class FragmentPermanentMemoryInfos extends CloudTableIdIsStringBase {
 
 /// 碎片的临时存储的记忆信息（只包含了当前碎片在对应的记忆组中的记忆信息）
 @ReferenceTo([])
-class FragmentTemporaryMemoryInfo2 extends CloudTableIdIsStringBase {
+class FragmentTemporaryMemoryInfo2 extends CloudTableBase {
   @ReferenceTo([Fragments])
   TextColumn get fragmentId => text().nullable()();
 

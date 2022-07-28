@@ -9,8 +9,6 @@ import 'package:drift_reference/ReferenceTo.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-part './dao/MultiDAO.dart';
-
 part './dao/SingleDAO.dart';
 
 part './table/Base.dart';
@@ -58,7 +56,6 @@ LazyDatabase _openConnection() {
   ],
   daos: [
     SingleDAO,
-    MultiDAO,
   ],
 )
 class DriftDb extends _$DriftDb {
@@ -86,7 +83,27 @@ class DriftDb extends _$DriftDb {
           // 这里只有在用户第一次下载并打开本应用时才会执行。
         },
         onUpgrade: (Migrator m, int from, int to) async {},
+        beforeOpen: (OpeningDetails details) async {
+          await _insertInitTestData();
+        },
       );
+
+  /// 插入初始化测试数据。
+  Future<void> _insertInitTestData() async {
+    if ((await select(users).getSingleOrNull()) == null) {
+      await into(users).insert(
+        UsersCompanion(
+          id: '1'.toDriftValue(),
+          createdAt: DateTime.now().toDriftValue(),
+          updatedAt: DateTime.now().toDriftValue(),
+          username: '测试username'.toDriftValue(),
+          password: '测试password'.toDriftValue(),
+          email: '测试email'.toDriftValue(),
+          age: 999.toDriftValue(),
+        ),
+      );
+    }
+  }
 
   /// Convert to [TableInfo] using [entity] or type [E].
   ///

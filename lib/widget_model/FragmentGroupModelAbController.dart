@@ -88,7 +88,7 @@ class PartListForFragmentHome {
     await Future.forEach<Ab<FragmentGroup>>(
       fragmentGroups(),
       (element) async {
-        final List<int> fs = await DriftDb.instance.singleDAO.queryFragmentsForAllSubgroup(element().id, []);
+        final List<String> fs = await DriftDb.instance.singleDAO.queryFragmentsForAllSubgroup(element().id, []);
 
         // 查询当前组内所有组的全部碎片数量。
         final int allCount = fs.length;
@@ -111,7 +111,7 @@ class PartListForFragmentHome {
     selectedFragmentCountForAllSubgroup.refreshForce();
   }
 
-  void selectFragment(int fId) {
+  void selectFragment(String fId) {
     if (controller.selectedFragmentIds().contains(fId)) {
       controller.selectedFragmentIds.refreshInevitable((obj) => obj..remove(fId));
       return;
@@ -120,8 +120,8 @@ class PartListForFragmentHome {
   }
 
   /// 只有当当前组内所有组的碎片被全选时，才会执行全不选
-  Future<void> selectFragmentGroup(int index, int fgId) async {
-    final List<int> fs = await DriftDb.instance.singleDAO.queryFragmentsForAllSubgroup(fgId, []);
+  Future<void> selectFragmentGroup(int index, String fgId) async {
+    final List<String> fs = await DriftDb.instance.singleDAO.queryFragmentsForAllSubgroup(fgId, []);
     final bool? isSelected = indexIsSelectedForFragmentGroup(index);
 
     if (isSelected == true) {
@@ -151,7 +151,7 @@ class FragmentGroupModelAbController extends AbController {
   /// 必须预留一个顶级的。
   final parts = <Ab<PartListForFragmentHome>>[].ab;
 
-  final Ab<Set<int>> selectedFragmentIds = <int>{}.ab;
+  final Ab<Set<String>> selectedFragmentIds = <String>{}.ab;
 
   PartListForFragmentHome currentPart([Abw? abw]) => parts().last(abw);
 
