@@ -1,21 +1,21 @@
 import 'package:aaa/page/create/CreateMemoryRulePage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
-import 'package:aaa/widget_model/MemoryModelModelAbController.dart';
+import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class MemoryRuleModel extends StatelessWidget {
-  const MemoryRuleModel({Key? key, required this.modelType}) : super(key: key);
+class MemoryModelPage extends StatelessWidget {
+  const MemoryModelPage({Key? key, required this.pageType}) : super(key: key);
 
-  final MemoryModelModelType modelType;
+  final MemoryModelPageType pageType;
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<MemoryModelModelAbController>(
-      putController: MemoryModelModelAbController(),
+    return AbBuilder<MemoryModelPageAbController>(
+      putController: MemoryModelPageAbController(),
       tag: Aber.hashCodeTag,
       builder: (putController, putAbw) {
         return Scaffold(
@@ -48,7 +48,7 @@ class MemoryRuleModel extends StatelessWidget {
             ),
             preferredSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
-          body: AbBuilder<MemoryModelModelAbController>(
+          body: AbBuilder<MemoryModelPageAbController>(
             tag: Aber.hashCodeTag,
             builder: (c, abw) {
               return Padding(
@@ -83,7 +83,7 @@ class MemoryRuleModel extends StatelessWidget {
   }
 
   Widget _memoryRule() {
-    return AbBuilder<MemoryModelModelAbController>(
+    return AbBuilder<MemoryModelPageAbController>(
       tag: Aber.hashCodeTag,
       builder: (controller, abw) {
         return SliverList(

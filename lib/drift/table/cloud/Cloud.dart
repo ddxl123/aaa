@@ -7,7 +7,6 @@ const List<Type> cloudTableClass = [
   MemoryGroups,
   MemoryModels,
   FragmentPermanentMemoryInfos,
-  FragmentTemporaryMemoryInfo2,
 ];
 
 @ReferenceTo([])
@@ -23,9 +22,9 @@ class Users extends CloudTableBase {
 
 @ReferenceTo([])
 class Fragments extends CloudTableBase {
-  /// 父节点。
+  /// 父碎片（该碎片是由哪个碎片修改而来）
   ///
-  /// 若为 null，则自身为父节点。
+  /// 若为 null，则自身为根节点。
   @ReferenceTo([Fragments])
   TextColumn get fatherFragmentId => text().nullable()();
 
@@ -49,7 +48,7 @@ class FragmentGroups extends CloudTableBase {
 class MemoryGroups extends CloudTableBase {
   TextColumn get title => text().withDefault(const Constant('还没有名称'))();
 
-  IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.normal.index))();
+  IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.inApp.index))();
 
   /// [MemoryGroupStatusForNormal]
   IntColumn get normalStatus => intEnum<MemoryGroupStatusForNormal>().withDefault(Constant(MemoryGroupStatusForNormal.notStart.index))();
@@ -160,42 +159,37 @@ class MemoryModels extends CloudTableBase {
 
 /// 碎片的永久存储的记忆信息（包含了历史记忆信息）。
 ///
-/// [TableBase.createdAt] 充当每次的记忆时间
+/// 每次用户在碎片展示中点击按钮后，就会创建一条记录。
+///
+/// [TableBase.createdAt] 充当每次的碎片展示前一瞬间的时间点。
 @ReferenceTo([])
 class FragmentPermanentMemoryInfos extends CloudTableBase {
-  @ReferenceTo([])
-  TextColumn get fragmentId => text().nullable()();
-
-  /// 自然熟悉度 —— 当前时间点的熟悉度
-  /// 范围：0~100。
-  IntColumn get naturalFamiliarity =>
-      integer().check(naturalFamiliarity.isBetween(const Constant(0), const Constant(100))).withDefault(const Constant(0))();
-
-  /// 明确熟悉度 —— 当前时间点所操作的熟悉度。
-  ///
-  /// 范围：0~100。
-  ///
-  /// 在用户选择某点明确熟悉度时，会根据 [MemoryModels] 来计算下一次展示的时间。
-  IntColumn get explicitFamiliarity =>
-      integer().check(explicitFamiliarity.isBetween(const Constant(0), const Constant(100))).withDefault(const Constant(0))();
-
-  /// 碎片展示时长。
-  IntColumn get showDuration => integer().withDefault(const Constant(0))();
-}
-
-/// 碎片的临时存储的记忆信息（只包含了当前碎片在对应的记忆组中的记忆信息）
-@ReferenceTo([])
-class FragmentTemporaryMemoryInfo2 extends CloudTableBase {
   @ReferenceTo([Fragments])
   TextColumn get fragmentId => text().nullable()();
 
+  /// 允许对应的 [MemoryModel] 不存在。
+  @ReferenceTo([MemoryModels])
+  TextColumn get memoryModelId => text().nullable()();
+
+  /// 允许对应的 [MemoryGroup] 不存在。
   @ReferenceTo([MemoryGroups])
   TextColumn get memoryGroupId => text().nullable()();
 
+  /// 阶段按钮数值 —— 点击的按钮的数值。
+  RealColumn get stageButtonValue => real().nullable()();
+
+  /// 阶段熟练度 —— 点击按钮前时的熟练度。
+  ///
+  /// 范围：0~1。
+  ///
+  /// 在用户触发按钮 **后** ，会根据 [MemoryModels.familiarityAlgorithm] 来计算 **触发按钮前** 的熟练度（触发按钮后的瞬间熟练度必然是1）
+  RealColumn get stageFamiliarity => real().check(stageFamiliarity.isBetween(const Constant(0), const Constant(1))).withDefault(const Constant(0))();
+
   /// 下一次展示的时间点。
   ///
-  /// 为 null 表示在当前记忆组时的当前碎片为新碎片。
-  ///
-  /// 为 1970 年 1 月 1 日 00:00 分（时间戳为0）表示在当前记忆组时的当前碎片已经完成任务。
+  /// 在用户触发按钮后，会根据 [MemoryModels.nextTimeAlgorithm] 来计算下一次展示的时间。
   DateTimeColumn get nextShowTime => dateTime().nullable()();
+
+  /// 碎片展示时长。
+  RealColumn get showDuration => real().withDefault(const Constant(0))();
 }

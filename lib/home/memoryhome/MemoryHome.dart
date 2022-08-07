@@ -2,7 +2,7 @@ import 'package:aaa/home/memoryhome/MemoryHomeAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
 import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
-import 'package:aaa/widget_model/MemoryGroupModel.dart';
+import 'package:aaa/widget_model/MemoryGroupPage.dart';
 import 'package:flutter/material.dart';
 
 class MemoryHome extends StatefulWidget {
@@ -34,7 +34,7 @@ class _MemoryHomeState extends State<MemoryHome> with SingleTickerProviderStateM
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (ctx) => const MemoryGroupModel(),
+                builder: (ctx) => const MemoryGroupPage(),
               ),
               const Tab(text: '111'),
             ],

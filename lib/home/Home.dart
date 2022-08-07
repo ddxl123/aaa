@@ -2,11 +2,11 @@ import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/create/CreateFragmentPage.dart';
-import 'package:aaa/page/create/CreateModifyMemoryGroupPage.dart';
+import 'package:aaa/page/create/MemoryGroupGizmoConfigPage.dart';
 import 'package:aaa/page/create/CreateOrModifyType.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
-import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
+import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,11 +49,16 @@ class Home extends StatelessWidget {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (ctx) => const CreateModifyMemoryGroupPage(createOrModifyType: CreateModifyCheckType.create)),
+                    MaterialPageRoute(
+                      builder: (ctx) => const MemoryGroupGizmoConfigPage(
+                        configPageType: ConfigPageType.create,
+                        memoryGroupGizmo: null,
+                      ),
+                    ),
                   );
                 },
               ),
-              AbBuilder<FragmentGroupModelAbController>(
+              AbBuilder<FragmentGroupPageAbController>(
                 tag: Aber.hashCodeTag,
                 builder: (countController, countAbw) {
                   return Transform.translate(

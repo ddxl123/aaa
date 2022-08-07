@@ -2,14 +2,17 @@ part of drift_db;
 
 /// 记忆组类型
 enum MemoryGroupType {
-  /// 常规(非全悬浮)类型
-  normal,
+  /// 应用内
+  inApp,
 
-  /// 全悬浮类型
-  fullFloating,
+  /// 全部悬浮悬浮
+  allFloating,
+
+  /// 跟随模型
+  followModel,
 }
 
-/// 记忆组状态 for [MemoryGroupType.normal]
+/// 记忆组状态 for [MemoryGroupType.inApp]
 enum MemoryGroupStatusForNormal {
   /// 未开始
   notStart,
@@ -21,7 +24,7 @@ enum MemoryGroupStatusForNormal {
   completed,
 }
 
-/// 记忆组状态 for [MemoryGroupType.normal] 的部分悬浮
+/// 记忆组状态 for [MemoryGroupType.inApp] 的部分悬浮
 enum MemoryGroupStatusForNormalPart {
   /// 已启用
   enabled,
@@ -33,7 +36,7 @@ enum MemoryGroupStatusForNormalPart {
   paused,
 }
 
-/// 记忆组状态 for [MemoryGroupType.fullFloating] 的部分悬浮
+/// 记忆组状态 for [MemoryGroupType.allFloating] 的部分悬浮
 enum MemoryGroupStatusForFullFloating {
   /// 未开始
   notStarted,

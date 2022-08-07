@@ -1,17 +1,18 @@
 import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/tool/Helper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/dialog.dart';
-import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
-import 'package:aaa/widget_model/MemoryGroupModelAbController.dart';
+import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
+import 'package:aaa/widget_model/MemoryGroupPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'CreateOrModifyType.dart';
 
-class CreateModifyMemoryGroupPageAbController extends AbController {
-  CreateModifyMemoryGroupPageAbController(this.createOrModifyType);
+class MemoryGroupGizmoConfigPageAbController extends AbController {
+  MemoryGroupGizmoConfigPageAbController(this.configPageType);
 
-  final CreateModifyCheckType createOrModifyType;
+  final ConfigPageType configPageType;
 
   /// 标题
   final title = ''.ab;
@@ -20,7 +21,7 @@ class CreateModifyMemoryGroupPageAbController extends AbController {
   final selectedMemoryModel = Ab<MemoryModel?>(null);
 
   /// 记忆类型
-  final type = MemoryGroupType.normal.ab;
+  final type = MemoryGroupType.inApp.ab;
 
   /// 记忆组状态
   final statusForNormal = MemoryGroupStatusForNormal.notStart.ab;
@@ -39,11 +40,20 @@ class CreateModifyMemoryGroupPageAbController extends AbController {
 
   @override
   void onInit() {
+    Helper.filter(
+      from: configPageType,
+      targets: {
+        [ConfigPageType.create, ConfigPageType.createCheck]: () {
+          querySelectedFragments();
+        },
+      },
+      orElse: null,
+    );
     querySelectedFragments();
   }
 
   Future<void> querySelectedFragments() async {
-    final fs = await DriftDb.instance.singleDAO.queryFragmentsByIds(Aber.findLast<FragmentGroupModelAbController>().selectedFragmentIds().toList());
+    final fs = await DriftDb.instance.singleDAO.queryFragmentsByIds(Aber.findLast<FragmentGroupPageAbController>().selectedFragmentIds().toList());
     selectedFragments.refreshInevitable((obj) => obj..addAll(fs));
   }
 
@@ -66,7 +76,7 @@ class CreateModifyMemoryGroupPageAbController extends AbController {
           selectedFragments(),
           selectedMemoryModel(),
         );
-        await Aber.findOrNullLast<MemoryGroupModelAbController>()?.refreshPage();
+        await Aber.findOrNullLast<MemoryGroupPageAbController>()?.refreshPage();
 
         SmartDialog.showToast('创建成功');
         Navigator.pop(context);

@@ -85,8 +85,10 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
             },
           ),
           child_fragments: null,
-          fragmentTemporaryMemoryInfo2: null,
           rFragment2MemoryGroups: null,
+          fragmentPermanentMemoryInfos: null,
+          rAssistedMemoryFragment2Fragment_1: null,
+          rAssistedMemoryFragment2Fragment_2: null,
         );
         return newFragment;
       },
@@ -101,7 +103,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
         late MemoryGroup newMemoryGroup;
         await WithRefs.memoryGroups(
           (table) async {
-            newMemoryGroup = await insertReturningWith(memoryGroups, entity: willMemoryGroup, syncTag: syncTag);
+            newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
           },
           rFragment2MemoryGroups: (_) async => await WithRefs.rFragment2MemoryGroups(
             (table) async {
@@ -134,7 +136,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
               }
             },
           ),
-          fragmentTemporaryMemoryInfo2: null,
+          fragmentPermanentMemoryInfos: null,
         );
       },
     );
@@ -154,6 +156,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
             newMemoryModel = await insertReturningWith(table, entity: willEntry, syncTag: syncTag);
           },
           rMemoryModel2MemoryGroups: null,
+          fragmentPermanentMemoryInfos: null,
         );
         return newMemoryModel;
       },

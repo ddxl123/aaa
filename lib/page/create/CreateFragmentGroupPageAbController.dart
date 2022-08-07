@@ -1,6 +1,6 @@
 import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/FragmentGroupModelAbController.dart';
+import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -9,7 +9,7 @@ class CreateFragmentGroupPageAbController extends AbController {
   String title = '';
 
   Future<void> commit() async {
-    final fragmentGroupModelAbController = Aber.findLast<FragmentGroupModelAbController>();
+    final fragmentGroupModelAbController = Aber.findLast<FragmentGroupPageAbController>();
 
     // 检查是否可提交
     if (title.trim() == '') {

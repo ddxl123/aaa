@@ -1,0 +1,55 @@
+import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/page/create/MemoryGroupGizmoConfigPage.dart';
+import 'package:aaa/page/create/CreateOrModifyType.dart';
+import 'package:aaa/tool/Helper.dart';
+import 'package:aaa/tool/aber/Aber.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+class MemoryGroupPageAbController extends AbController {
+  final RefreshController refreshController = RefreshController(initialRefresh: true);
+
+  final memoryGroupGizmos = <Ab<MemoryGroup>>[].ab;
+
+  Future<void> refreshPage() async {
+    final mgs = await DriftDb.instance.singleDAO.queryMemoryGroups();
+    memoryGroupGizmos.clear_(this);
+    memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
+  }
+
+  Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {
+    void notStart() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MemoryGroupGizmoConfigPage(
+            configPageType: ConfigPageType.modifyCheck,
+            memoryGroupGizmo: memoryGroupGizmo,
+          ),
+        ),
+      );
+    }
+
+    Helper.filter(
+      from: memoryGroupGizmo().type,
+      targets: {
+        [MemoryGroupType.inApp]: () => Helper.filter(
+              from: memoryGroupGizmo().normalStatus,
+              targets: {
+                [MemoryGroupStatusForNormal.notStart]: () => notStart(),
+              },
+              orElse: null,
+            ),
+        [MemoryGroupType.allFloating]: () => Helper.filter(
+              from: memoryGroupGizmo().fullFloatingStatus,
+              targets: {
+                [MemoryGroupStatusForFullFloating.notStarted]: () => notStart(),
+              },
+              orElse: null,
+            ),
+      },
+      orElse: null,
+    );
+  }
+}

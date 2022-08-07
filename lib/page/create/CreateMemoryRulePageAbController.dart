@@ -1,6 +1,6 @@
 import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/MemoryModelModelAbController.dart';
+import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -8,7 +8,7 @@ class CreateMemoryRulePageAbController extends AbController {
   String title = '';
 
   Future<void> commit() async {
-    final memoryRuleModelAbController = Aber.findLast<MemoryModelModelAbController>();
+    final memoryRuleModelAbController = Aber.findLast<MemoryModelPageAbController>();
 
     // 检查是否可提交
     if (title.trim() == '') {

@@ -1,4 +1,4 @@
-enum CreateModifyCheckType {
+enum ConfigPageType {
   /// 仅创建，不检查
   create,
 

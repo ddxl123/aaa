@@ -1,5 +1,5 @@
-import 'package:aaa/widget_model/MemoryModelModel.dart';
-import 'package:aaa/widget_model/MemoryModelModelAbController.dart';
+import 'package:aaa/widget_model/MemoryModelPage.dart';
+import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -12,7 +12,7 @@ class MemoryModelChoosePage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            const MemoryRuleModel(modelType: MemoryModelModelType.select),
+            const MemoryModelPage(pageType: MemoryModelPageType.select),
             Positioned(
               top: 0,
               left: 0,

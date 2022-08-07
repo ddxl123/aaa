@@ -12,7 +12,7 @@ class Helper {
   ///
   /// [targets] - {[value1,value2]:returnValue}，如果 [from] 的值为 value1 或 value2，则返回 returnValue。
   ///
-  /// [orElse] - 当 [targets] 未通过时，会返回 [orElse]。如果 [orElse] 为null，则抛出异常。
+  /// [orElse] - 当 [targets] 未通过时，会返回 [orElse]。如果 [orElse] 为 null，则抛出异常。
   static R filter<E, R>({
     required E from,
     required Map<List<E>, R Function()> targets,

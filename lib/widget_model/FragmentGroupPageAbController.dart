@@ -2,7 +2,7 @@ import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-enum FragmentGroupModelType {
+enum FragmentGroupPageType {
   home,
 
   /// 添加模式
@@ -16,7 +16,7 @@ class PartListForFragmentHome {
     required this.controller,
   });
 
-  final FragmentGroupModelAbController controller;
+  final FragmentGroupPageAbController controller;
 
   /// TODO: 调用 dispose 时，会抛出异常。
   final RefreshController refreshController = RefreshController(initialRefresh: true);
@@ -147,7 +147,7 @@ class PartListForFragmentHome {
   }
 }
 
-class FragmentGroupModelAbController extends AbController {
+class FragmentGroupPageAbController extends AbController {
   /// 必须预留一个顶级的。
   final parts = <Ab<PartListForFragmentHome>>[].ab;
 

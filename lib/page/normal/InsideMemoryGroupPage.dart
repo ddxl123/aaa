@@ -1,20 +1,21 @@
-import 'package:aaa/page/normal/FragmentInMemoryGroupPageAbController.dart';
+import 'package:aaa/drift/DriftDb.dart';
+import 'package:aaa/page/normal/InsideMemoryGroupPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/MemoryGroupModelAbController.dart';
+import 'package:aaa/widget_model/MemoryGroupPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class FragmentInMemoryGroupPage extends StatelessWidget {
-  const FragmentInMemoryGroupPage({Key? key, required this.outerMemoryGroup, required this.innerMemoryGroupWidget}) : super(key: key);
-  final Ab<BasicSingleOuterMemoryGroup> outerMemoryGroup;
-  final Widget innerMemoryGroupWidget;
+class InsideMemoryGroupPage extends StatelessWidget {
+  const InsideMemoryGroupPage({Key? key, required this.memoryGroupGizmo, required this.innerMemoryGroupGizmoWidget}) : super(key: key);
+  final Ab<MemoryGroup> memoryGroupGizmo;
+  final Widget innerMemoryGroupGizmoWidget;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: AbBuilder<FragmentInMemoryGroupPageAbController>(
-        putController: FragmentInMemoryGroupPageAbController(outerMemoryGroup),
+      body: AbBuilder<InsideMemoryGroupPageAbController>(
+        putController: InsideMemoryGroupPageAbController(memoryGroupGizmo: memoryGroupGizmo),
         builder: (putC, putAbw) {
           return SmartRefresher(
             controller: putC.refreshController,
@@ -37,17 +38,17 @@ class FragmentInMemoryGroupPage extends StatelessWidget {
   }
 
   Widget _memoryRule() {
-    return AbBuilder<FragmentInMemoryGroupPageAbController>(
+    return AbBuilder<InsideMemoryGroupPageAbController>(
       builder: (c, abw) {
         return SliverToBoxAdapter(
-          child: innerMemoryGroupWidget,
+          child: innerMemoryGroupGizmoWidget,
         );
       },
     );
   }
 
   Widget _fragments() {
-    return AbBuilder<FragmentInMemoryGroupPageAbController>(
+    return AbBuilder<InsideMemoryGroupPageAbController>(
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(

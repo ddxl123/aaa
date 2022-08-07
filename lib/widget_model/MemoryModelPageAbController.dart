@@ -1,15 +1,15 @@
 import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/page/create/CreateModifyMemoryGroupPageAbController.dart';
+import 'package:aaa/page/create/MemoryGroupGizmoConfigPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-enum MemoryModelModelType {
+enum MemoryModelPageType {
   home,
   select,
 }
 
-class MemoryModelModelAbController extends AbController {
+class MemoryModelPageAbController extends AbController {
   final RefreshController refreshController = RefreshController(initialRefresh: true);
 
   final memoryModels = <Ab<MemoryModel>>[].ab;
@@ -18,7 +18,7 @@ class MemoryModelModelAbController extends AbController {
 
   @override
   void onInit() {
-    selected.refreshEasy((oldValue) => Aber.findOrNullLast<CreateModifyMemoryGroupPageAbController>()?.selectedMemoryModel() ?? oldValue);
+    selected.refreshEasy((oldValue) => Aber.findOrNullLast<MemoryGroupGizmoConfigPageAbController>()?.selectedMemoryModel() ?? oldValue);
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
@@ -41,7 +41,7 @@ class MemoryModelModelAbController extends AbController {
   }
 
   void confirmSelect() {
-    Aber.findOrNullLast<CreateModifyMemoryGroupPageAbController>()?.selectedMemoryModel.refreshInevitable((obj) => selected());
+    Aber.findOrNullLast<MemoryGroupGizmoConfigPageAbController>()?.selectedMemoryModel.refreshInevitable((obj) => selected());
     Navigator.pop(context);
   }
 }
