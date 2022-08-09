@@ -1,8 +1,8 @@
-import 'package:aaa/drift/DriftDb.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/create/MemoryGroupGizmoConfigPageAbController.dart';
 import 'package:aaa/page/create/CreateOrModifyType.dart';
 import 'package:aaa/page/transition/MemoryModelChoosePage.dart';
-import 'package:aaa/tool/Helper.dart';
+import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/sheetroute/DefaultSheetRoute.dart';
 import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
@@ -20,7 +20,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
-      putController: MemoryGroupGizmoConfigPageAbController(configPageType),
+      putController: MemoryGroupGizmoConfigPageAbController(configPageType: configPageType, memoryGroupGizmo: memoryGroupGizmo),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: AppBar(
@@ -104,7 +104,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
             [ConfigPageType.create]: () => IconButton(
                   icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
                   onPressed: () {
-                    c.commitForCreate();
+                    c.create();
                   },
                 ),
             [ConfigPageType.modifyCheck]: () => Padding(
@@ -220,7 +220,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
           children: [
             const Text('已选碎片：', style: TextStyle(fontSize: 16)),
             TextButton(
-              child: Text('点击查看（共 ${c.selectedFragments(abw).length} 个）', style: const TextStyle(fontSize: 16)),
+              child: Text('点击查看（共 ${c.fragments(abw).length} 个）', style: const TextStyle(fontSize: 16)),
               onPressed: () {
                 Navigator.of(c.context).push(
                   DefaultSheetRoute(
@@ -236,9 +236,9 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      ...(sController.selectedFragments(sAbw).isEmpty
+                                      ...(sController.fragments(sAbw).isEmpty
                                           ? [Container()]
-                                          : sController.selectedFragments(sAbw).map(
+                                          : sController.fragments(sAbw).map(
                                                 (e) => Row(
                                                   children: [
                                                     SizedBox(

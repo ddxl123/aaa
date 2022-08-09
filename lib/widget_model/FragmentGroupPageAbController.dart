@@ -1,5 +1,5 @@
-import 'package:aaa/drift/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 enum FragmentGroupPageType {
@@ -78,7 +78,7 @@ class PartListForFragmentHome {
 
   Future<void> _refreshPart() async {
     final newFragmentGroups = (await DriftDb.instance.singleDAO.queryFragmentGroups(fatherFragmentGroup?.call().id)).map((e) => e.ab);
-    final newFragments = (await DriftDb.instance.singleDAO.queryFragments(fatherFragmentGroup?.call().id)).map((e) => e.ab);
+    final newFragments = (await DriftDb.instance.singleDAO.queryFragmentsByFragmentGroupId(fatherFragmentGroup?.call().id)).map((e) => e.ab);
     clean();
     fragmentGroups.refreshInevitable((obj) => obj..addAll(newFragmentGroups));
     fragments.refreshInevitable((obj) => obj..addAll(newFragments));

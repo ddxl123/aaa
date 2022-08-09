@@ -1,4 +1,4 @@
-import 'package:aaa/drift/DriftDb.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
 import 'package:flutter/material.dart';

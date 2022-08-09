@@ -1,11 +1,10 @@
-import 'package:aaa/drift/DriftDb.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/create/MemoryGroupGizmoConfigPage.dart';
 import 'package:aaa/page/create/CreateOrModifyType.dart';
-import 'package:aaa/tool/Helper.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:tools/tools.dart';
 
 class MemoryGroupPageAbController extends AbController {
   final RefreshController refreshController = RefreshController(initialRefresh: true);

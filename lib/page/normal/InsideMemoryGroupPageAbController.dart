@@ -1,6 +1,5 @@
-import 'package:aaa/drift/DriftDb.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/MemoryGroupPageAbController.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class InsideMemoryGroupPageAbController extends AbController {
@@ -20,7 +19,7 @@ class InsideMemoryGroupPageAbController extends AbController {
   }
 
   Future<void> refreshMemoryRule() async {
-    final mg = (await DriftDb.instance.singleDAO.queryMemoryRuleInMemoryGroup(memoryGroupGizmo().id));
+    final mg = (await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(memoryGroupGizmo().id));
     memoryRule.refreshEasy((oldValue) => mg);
   }
 

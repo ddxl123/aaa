@@ -69,9 +69,14 @@ dependencies:
 
   logger: ^1.1.0
 
-  # drift 外键/关联表的注解和生成器。
-  drift_reference:
-    path: ../aaa/drift_reference
+  drift_main:
+    path: ../aaa/subpackages/drift_main
+
+  drift_custom:
+    path: ../aaa/subpackages/drift_custom
+
+  tools:
+    path: ../aaa/subpackages/tools
 
 dev_dependencies:
   flutter_test:
@@ -79,12 +84,6 @@ dev_dependencies:
 
   # 代码规范约束
   flutter_lints: ^1.0.4
-  # drift 需要
-  drift_dev: ^1.5.2
-  # drift 需要
-  build: ^2.3.0
-  build_runner: ^2.1.8
-  source_gen: ^1.2.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

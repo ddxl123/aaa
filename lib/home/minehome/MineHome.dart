@@ -1,5 +1,5 @@
-import 'package:aaa/drift/DriftDb.dart';
-import 'package:aaa/drift/tool/DriftViewer.dart';
+import 'package:aaa/tool/DriftViewer.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
 
 class MineHome extends StatelessWidget {
