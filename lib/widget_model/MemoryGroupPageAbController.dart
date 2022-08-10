@@ -1,6 +1,6 @@
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/page/create/MemoryGroupGizmoConfigPage.dart';
-import 'package:aaa/page/create/CreateOrModifyType.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
+import 'package:aaa/page/edit/EditPageType.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -22,8 +22,8 @@ class MemoryGroupPageAbController extends AbController {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => MemoryGroupGizmoConfigPage(
-            configPageType: ConfigPageType.modifyCheck,
+          builder: (_) => MemoryGroupGizmoEditPage(
+            configPageType: EditPageType.modifyCheck,
             memoryGroupGizmo: memoryGroupGizmo,
           ),
         ),

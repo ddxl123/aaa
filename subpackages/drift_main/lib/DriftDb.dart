@@ -31,11 +31,13 @@ part 'table/local/Sync.dart';
 
 part 'DriftDb.g.dart';
 
+// part 'DriftDb._.dart';
+
 part 'DriftDb.ref.dart';
 
 part 'DriftDb.ctr.dart';
 
-// part 'DriftDb._.dart';
+part 'DriftDb.reset.dart';
 
 /// 执行：flutter packages pub run build_runner build --delete-conflicting-outputs
 ///
@@ -101,13 +103,13 @@ class DriftDb extends _$DriftDb {
     if ((await select(users).getSingleOrNull()) == null) {
       await into(users).insert(
         UsersCompanion(
-          id: '1'.toDriftValue(),
-          createdAt: DateTime.now().toDriftValue(),
-          updatedAt: DateTime.now().toDriftValue(),
-          username: '测试username'.toDriftValue(),
-          password: '测试password'.toDriftValue(),
-          email: '测试email'.toDriftValue(),
-          age: 999.toDriftValue(),
+          id: '1'.value(),
+          createdAt: DateTime.now().value(),
+          updatedAt: DateTime.now().value(),
+          username: '测试username'.value(),
+          password: '测试password'.value(),
+          email: '测试email'.value(),
+          age: 999.value(),
         ),
       );
     }

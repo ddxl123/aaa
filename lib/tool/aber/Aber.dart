@@ -103,7 +103,7 @@ class Ab<V> {
   /// 只会尝试重建引用当前对象 [AbBuilder]。
   ///
   /// 也可以看 [refreshEasy], 复杂的修改推荐使用 [modify] 或 [modifyComplex] 方案。
-  void refreshComplex(bool Function(V obj) diff, [bool isForce = false]) {
+  void refreshComplex(bool Function(V obj) diff) {
     if (diff(value)) {
       _refresh();
     }
@@ -129,43 +129,6 @@ class Ab<V> {
   /// 否则可能会造成内存泄露，因为 [_removeRefreshFunction] 还残留在 [controller] 中。
   void broken<C extends AbController>(C controller) {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
-  }
-}
-
-extension ModifyExt<O> on O {
-  /// 对特别复杂的值进行修改的方案。
-  ///
-  /// 当 [oldValue] != [newValue] 时，会执行 [modify]。
-  ///
-  /// 只调用该函数并不能将 [AbBuilder] 进行重建，
-  /// 只有在最后调用 [AbController.refreshModify] 时，才会尝试进行重建。
-  ///
-  /// 只会重建调用 [Ab.mark] 过的 [Ab] 所对应的 [AbBuilder]。
-  ///
-  /// 也可以看 [modifyComplex], 简单的修改推荐使用 [Ab.refreshEasy] 或 [Ab.refreshComplex]。
-  C modify<C extends AbController, V>(
-    C controller,
-    V Function(O obj) oldValue,
-    V Function(O obj) newValue,
-    void Function(O obj, V newValue) modify,
-  ) {
-    final oldValueGet = oldValue(this);
-    final newValueGet = newValue(this);
-    if (oldValueGet != newValueGet) {
-      modify(this, newValueGet);
-      controller._isRefresh = true;
-    }
-    return controller;
-  }
-
-  /// 当 [diff] 返回值为 true 时，才会尝试重建。
-  ///
-  /// 也可以看 [modify], 简单的修改推荐使用 [Ab.refreshEasy] 或 [Ab.refreshComplex]。
-  C modifyComplex<C extends AbController>(C controller, bool Function(O obj) diff) {
-    if (diff(this)) {
-      controller._isRefresh = true;
-    }
-    return controller;
   }
 }
 
@@ -348,8 +311,6 @@ abstract class AbController {
 
   final Set<MarkRebuildFunction> _marksRebuildFunction = {};
 
-  bool _isRefresh = false;
-
   late final BuildContext context;
 
   late final void Function() thisRefresh;
@@ -359,21 +320,6 @@ abstract class AbController {
 
   /// [AbBuilder] 内部的 dispose，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   void dispose() {}
-
-  /// 使用 [modify] 或 [modifyComplex] 后调用该函数进行尝试重建。
-  ///
-  /// 可以多次连续多次使用 [modify] 或 [modifyComplex], 在最后使用该函数进行尝试重建。
-  ///
-  /// 当 [isForce] 为 true 时，无论修改的值是否相等，都会强制重建。
-  void refreshModify({bool isForce = false}) {
-    if (_isRefresh || isForce) {
-      for (var element in _marksRebuildFunction) {
-        element();
-      }
-    }
-    _isRefresh = false;
-    _marksRebuildFunction.clear();
-  }
 }
 
 /// 将 [AbController]/[AbBuilder]/[Ab] 连接起来的重要类。

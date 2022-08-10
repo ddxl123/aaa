@@ -1,5 +1,5 @@
-import 'package:aaa/page/create/MemoryGroupGizmoConfigPage.dart';
-import 'package:aaa/page/create/CreateOrModifyType.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
+import 'package:aaa/page/edit/EditPageType.dart';
 import 'package:aaa/page/normal/InsideMemoryGroupPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
@@ -42,8 +42,8 @@ class MemoryGroupPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (ctx) => const MemoryGroupGizmoConfigPage(
-                              configPageType: ConfigPageType.create,
+                            builder: (ctx) => const MemoryGroupGizmoEditPage(
+                              configPageType: EditPageType.create,
                               memoryGroupGizmo: null,
                             ),
                           ),

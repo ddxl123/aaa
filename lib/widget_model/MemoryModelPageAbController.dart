@@ -1,5 +1,5 @@
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/page/create/MemoryGroupGizmoConfigPageAbController.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -18,7 +18,7 @@ class MemoryModelPageAbController extends AbController {
 
   @override
   void onInit() {
-    selected.refreshEasy((oldValue) => Aber.findOrNullLast<MemoryGroupGizmoConfigPageAbController>()?.selectedMemoryModel() ?? oldValue);
+    selected.refreshEasy((oldValue) => Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.selectedMemoryModel() ?? oldValue);
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
@@ -41,7 +41,7 @@ class MemoryModelPageAbController extends AbController {
   }
 
   void confirmSelect() {
-    Aber.findOrNullLast<MemoryGroupGizmoConfigPageAbController>()?.selectedMemoryModel.refreshInevitable((obj) => selected());
+    Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.selectedMemoryModel.refreshInevitable((obj) => selected());
     Navigator.pop(context);
   }
 }

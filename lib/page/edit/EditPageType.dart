@@ -1,4 +1,4 @@
-enum ConfigPageType {
+enum EditPageType {
   /// 仅创建，不检查
   create,
 

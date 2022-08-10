@@ -64,8 +64,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
-        entityDynamic.createdAt = DateTime.now().toDriftValue();
-        entityDynamic.updatedAt = DateTime.now().toDriftValue();
+        entityDynamic.createdAt = DateTime.now().value();
+        entityDynamic.updatedAt = DateTime.now().value();
 
         // 仅对 CloudTableBase 类型表生成 id，
         // LocalTableBase 类型表全部都是自增主键。
@@ -74,7 +74,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
           if (mulUsers.length != 1) {
             throw 'users 行数不为1';
           }
-          entityDynamic.id = (mulUsers.first.id + Helper.uuidV4).toDriftValue();
+          entityDynamic.id = (mulUsers.first.id + Helper.uuidV4).value();
         }
 
         // 插入
@@ -86,11 +86,11 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.toDriftValue(),
-              rowId: (returningEntityDynamic.id as String).toDriftValue(),
-              syncCurdType: SyncCurdType.c.toDriftValue(),
-              syncUpdateColumns: null.toDriftValue(),
-              tag: syncTag.tag.toDriftValue(),
+              syncTableName: table.actualTableName.value(),
+              rowId: (returningEntityDynamic.id as String).value(),
+              syncCurdType: SyncCurdType.c.value(),
+              syncUpdateColumns: null.value(),
+              tag: syncTag.tag.value(),
             ),
             syncTag: syncTag,
           );
@@ -121,7 +121,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         // TODO: 如果之后执行失败的话，下面所修改的时间需要恢复。
-        entityDynamic.updatedAt = DateTime.now().toDriftValue();
+        entityDynamic.updatedAt = DateTime.now().value();
 
         // 修改某行
         final newUpdate = update(table);
@@ -143,11 +143,11 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.toDriftValue(),
-              rowId: ((returningEntity as dynamic).id as String).toDriftValue(),
-              syncCurdType: SyncCurdType.u.toDriftValue(),
-              syncUpdateColumns: syncUpdateColumns.toDriftValue(),
-              tag: syncTag.tag.toDriftValue(),
+              syncTableName: table.actualTableName.value(),
+              rowId: ((returningEntity as dynamic).id as String).value(),
+              syncCurdType: SyncCurdType.u.value(),
+              syncUpdateColumns: syncUpdateColumns.value(),
+              tag: syncTag.tag.value(),
             ),
             syncTag: syncTag,
           );
@@ -196,11 +196,11 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.toDriftValue(),
-              rowId: (selectEntity.id as String).toDriftValue(),
-              syncCurdType: SyncCurdType.d.toDriftValue(),
-              syncUpdateColumns: null.toDriftValue(),
-              tag: syncTag.tag.toDriftValue(),
+              syncTableName: table.actualTableName.value(),
+              rowId: (selectEntity.id as String).value(),
+              syncCurdType: SyncCurdType.d.value(),
+              syncUpdateColumns: null.value(),
+              tag: syncTag.tag.value(),
             ),
             syncTag: syncTag,
           );

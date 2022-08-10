@@ -85,6 +85,7 @@ dev_dependencies:
   # 代码规范约束
   flutter_lints: ^1.0.4
 
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

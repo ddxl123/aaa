@@ -1,16 +1,15 @@
-import 'package:aaa/page/create/MemoryGroupGizmoConfigPageAbController.dart';
-import 'package:aaa/page/create/CreateMemoryRulePageAbController.dart';
+import 'package:aaa/page/edit/CreateMemoryModelPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreateMemoryRulePage extends StatelessWidget {
-  const CreateMemoryRulePage({Key? key}) : super(key: key);
+class CreateMemoryModelPage extends StatelessWidget {
+  const CreateMemoryModelPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<CreateMemoryRulePageAbController>(
-      putController: CreateMemoryRulePageAbController(),
+    return AbBuilder<CreateMemoryModelPageAbController>(
+      putController: CreateMemoryModelPageAbController(),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: AppBar(

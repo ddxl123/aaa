@@ -75,9 +75,12 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
             (table) async {
               await insertReturningWith(
                 table,
-                entity: RFragment2FragmentGroupsCompanion(
-                  sonId: newFragment.id.toDriftValue(),
-                  fatherId: (fatherEntity?.id).toDriftValue(),
+                entity: WithCrts.rFragment2FragmentGroupsCompanion(
+                  fatherId: (fatherEntity?.id).value(),
+                  sonId: newFragment.id.value(),
+                  id: absent(),
+                  createdAt: absent(),
+                  updatedAt: absent(),
                 ),
                 syncTag: st,
               );
@@ -94,26 +97,30 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     );
   }
 
-  /// 创建一个记忆组
+  /// 创建一个记忆
   Future<void> insertMemoryGroupWithOther(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryModel? willMemoryModel) async {
     return await transaction(
       () async {
         final syncTag = await SyncTag.create();
         late MemoryGroup newMemoryGroup;
+
         await WithRefs.memoryGroups(
           (table) async {
             newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
           },
-          rFragment2MemoryGroups: (_) async => await WithRefs.rFragment2MemoryGroups(
+          rFragment2MemoryGroups: (table) async => await WithRefs.rFragment2MemoryGroups(
             (table) async {
               await Future.forEach<Fragment>(
                 willFragments,
                 (element) async {
                   await insertReturningWith(
                     table,
-                    entity: RFragment2MemoryGroupsCompanion(
-                      sonId: element.id.toDriftValue(),
-                      fatherId: newMemoryGroup.id.toDriftValue(),
+                    entity: WithCrts.rFragment2MemoryGroupsCompanion(
+                      fatherId: newMemoryGroup.id.value(),
+                      sonId: element.id.value(),
+                      id: absent(),
+                      createdAt: absent(),
+                      updatedAt: absent(),
                     ),
                     syncTag: syncTag,
                   );
@@ -126,9 +133,12 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
               if (willMemoryModel != null) {
                 await insertReturningWith(
                   table,
-                  entity: RMemoryModel2MemoryGroupsCompanion(
-                    sonId: willMemoryModel.id.toDriftValue(),
-                    fatherId: newMemoryGroup.id.toDriftValue(),
+                  entity: WithCrts.rMemoryModel2MemoryGroupsCompanion(
+                    fatherId: newMemoryGroup.id.value(),
+                    sonId: willMemoryModel.id.value(),
+                    id: absent(),
+                    createdAt: absent(),
+                    updatedAt: absent(),
                   ),
                   syncTag: syncTag,
                 );

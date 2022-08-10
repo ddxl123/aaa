@@ -1,4 +1,4 @@
-import 'package:aaa/page/create/CreateMemoryRulePage.dart';
+import 'package:aaa/page/edit/CreateMemoryModelPage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
 import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
@@ -39,7 +39,7 @@ class MemoryModelPage extends StatelessWidget {
                     ],
                     onChanged: (value) {
                       if (value == 0) {
-                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateMemoryRulePage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateMemoryModelPage()));
                       }
                     },
                   ),

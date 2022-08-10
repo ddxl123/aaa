@@ -9,7 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-main() {
+void main() {
   final catcherOptions = CatcherOptions(
     PageReportMode(),
     [ConsoleHandler(enableDeviceParameters: false, enableApplicationParameters: false, enableCustomParameters: true)],

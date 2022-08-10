@@ -1,6 +1,6 @@
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/page/create/MemoryGroupGizmoConfigPageAbController.dart';
-import 'package:aaa/page/create/CreateOrModifyType.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
+import 'package:aaa/page/edit/EditPageType.dart';
 import 'package:aaa/page/transition/MemoryModelChoosePage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
@@ -10,17 +10,17 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class MemoryGroupGizmoConfigPage extends StatelessWidget {
-  const MemoryGroupGizmoConfigPage({Key? key, required this.configPageType, required this.memoryGroupGizmo}) : super(key: key);
+class MemoryGroupGizmoEditPage extends StatelessWidget {
+  const MemoryGroupGizmoEditPage({Key? key, required this.configPageType, required this.memoryGroupGizmo}) : super(key: key);
 
-  /// 当 [configPageType] 为 [ConfigPageType.create] 或 [ConfigPageType.createCheck] 时，[memoryGroupGizmo] 为 null。
+  /// 当 [configPageType] 为 [EditPageType.create] 或 [EditPageType.createCheck] 时，[memoryGroupGizmo] 为 null。
   final Ab<MemoryGroup>? memoryGroupGizmo;
-  final ConfigPageType configPageType;
+  final EditPageType configPageType;
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
-      putController: MemoryGroupGizmoConfigPageAbController(configPageType: configPageType, memoryGroupGizmo: memoryGroupGizmo),
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      putController: MemoryGroupGizmoEditPageAbController(configPageType: configPageType, memoryGroupGizmo: memoryGroupGizmo),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: AppBar(
@@ -49,12 +49,12 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _floatingActionButton() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Helper.filter(
           from: c.configPageType,
           targets: {
-            [ConfigPageType.modifyCheck]: () => FloatingRoundCornerButton(
+            [EditPageType.modifyCheck]: () => FloatingRoundCornerButton(
                   text: '保存并开始',
                   onPressed: () {},
                 ),
@@ -66,14 +66,14 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _appBarTitleWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Text(
           Helper.filter(
             from: c.configPageType,
             targets: {
-              [ConfigPageType.create]: () => '创建记忆组',
-              [ConfigPageType.modifyCheck]: () => '检查记忆组配置',
+              [EditPageType.create]: () => '创建记忆组',
+              [EditPageType.modifyCheck]: () => '检查记忆组配置',
             },
             orElse: () => 'unknown',
           ),
@@ -83,7 +83,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _crossWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return IconButton(
           icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
@@ -96,23 +96,24 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _tickWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Helper.filter(
           from: configPageType,
           targets: {
-            [ConfigPageType.create]: () => IconButton(
+            [EditPageType.create]: () => IconButton(
                   icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
                   onPressed: () {
-                    c.create();
+                    c.commitCreate();
                   },
                 ),
-            [ConfigPageType.modifyCheck]: () => Padding(
+            [EditPageType.modifyCheck]: () => Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: TextButton(
                     child: const Text('仅保存'),
                     onPressed: () {
-                      c.commitForModify();
+                      // TODO: 修改前与修改后的兼容性。
+                      // c.commitModify();
                     },
                   ),
                 ),
@@ -124,7 +125,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _titleWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Row(
           children: [
@@ -147,13 +148,13 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _memoryModelWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Row(
           children: [
             const Text('记忆模型：', style: TextStyle(fontSize: 16)),
             TextButton(
-              child: AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+              child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
                 builder: (gzC, gzAbw) {
                   return Text(gzC.selectedMemoryModel(gzAbw)?.title ?? '点击选择');
                 },
@@ -169,7 +170,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _showTypeWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Row(
           children: [
@@ -214,7 +215,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
   }
 
   Widget _selectFragmentWidget() {
-    return AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Row(
           children: [
@@ -226,7 +227,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
                   DefaultSheetRoute(
                     bodySliver0: () {
                       return SliverToBoxAdapter(
-                        child: AbBuilder<MemoryGroupGizmoConfigPageAbController>(
+                        child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
                           builder: (sController, sAbw) {
                             return Material(
                               child: Container(
@@ -243,7 +244,7 @@ class MemoryGroupGizmoConfigPage extends StatelessWidget {
                                                   children: [
                                                     SizedBox(
                                                       height: 200,
-                                                      child: Text(e.title.toString()),
+                                                      child: Text(e(abw).title.toString()),
                                                     )
                                                   ],
                                                 ),

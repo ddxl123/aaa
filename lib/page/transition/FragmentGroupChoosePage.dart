@@ -1,6 +1,6 @@
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/page/create/CreateFragmentGroupPage.dart';
-import 'package:aaa/page/create/CreateFragmentPageAbController.dart';
+import 'package:aaa/page/edit/CreateFragmentGroupPage.dart';
+import 'package:aaa/page/edit/CreateFragmentPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
 import 'package:aaa/widget_model/FragmentGroupPage.dart';
@@ -30,7 +30,7 @@ class FragmentGroupChoosePage extends StatelessWidget {
         text: '确认选择',
         onPressed: () async {
           final c = Aber.find<CreateFragmentPageAbController>();
-          await Aber.findLast<FragmentGroupPageAbController>().currentPart().addFragment(FragmentsCompanion()..title = c.title.toDriftValue());
+          await Aber.findLast<FragmentGroupPageAbController>().currentPart().addFragment(FragmentsCompanion()..title = c.title.value());
           SmartDialog.showToast('创建成功', displayTime: const Duration(milliseconds: 1000));
           Navigator.pop(context);
           Navigator.pop(context);

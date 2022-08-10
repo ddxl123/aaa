@@ -1,9 +1,9 @@
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
-import 'package:aaa/page/create/CreateFragmentPage.dart';
-import 'package:aaa/page/create/MemoryGroupGizmoConfigPage.dart';
-import 'package:aaa/page/create/CreateOrModifyType.dart';
+import 'package:aaa/page/edit/CreateFragmentPage.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
+import 'package:aaa/page/edit/EditPageType.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
 import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
@@ -50,8 +50,8 @@ class Home extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (ctx) => const MemoryGroupGizmoConfigPage(
-                        configPageType: ConfigPageType.create,
+                      builder: (ctx) => const MemoryGroupGizmoEditPage(
+                        configPageType: EditPageType.create,
                         memoryGroupGizmo: null,
                       ),
                     ),

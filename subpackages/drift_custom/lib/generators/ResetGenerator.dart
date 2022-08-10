@@ -4,19 +4,22 @@ import 'package:source_gen/source_gen.dart';
 import 'package:build/build.dart';
 import 'package:tools/tools.dart';
 
-class ConstructorGenerator extends Generator {
+class ResetGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) {
     final allContent = StringBuffer();
     try {
       for (var cls in library.classes) {
-        if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('UpdateCompanion')) {
+        if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('DataClass')) {
           final className = cls.displayName;
           final camelClassName = Helper.toCamelCase(className);
           final params = cls.unnamedConstructor!.parameters;
           final singleContent = '''
-        static $className $camelClassName({${params.map((e) => 'required ${e.type} ${e.name}').join(',')},}){
-           return $className(${params.map((e) => '${e.name}: ${e.name}').join(',')},);
+        extension ${className}Ext on $className {
+          $className reset({${params.map((e) => 'required Value<${e.type}> ${e.name}').join(',')},}) {
+            ${params.map((e) => 'this.${e.name} = ${e.name}.present ? ${e.name}.value : this.${e.name}').join(';\n')};
+            return this;
+          }
         }
         ''';
 
@@ -38,14 +41,11 @@ class ConstructorGenerator extends Generator {
       );
     }
 
-    print('生成 constructor 完成。');
+    print('生成 reset 完成。');
     return '''
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
-
-class WithCrts {
-  $allContent
-}
+$allContent
     ''';
   }
 }

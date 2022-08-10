@@ -8,7 +8,7 @@
 part of drift_db;
 
 class WithCrts {
-  UsersCompanion usersCompanion({
+  static UsersCompanion usersCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -28,7 +28,7 @@ class WithCrts {
     );
   }
 
-  FragmentsCompanion fragmentsCompanion({
+  static FragmentsCompanion fragmentsCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -46,7 +46,7 @@ class WithCrts {
     );
   }
 
-  FragmentGroupsCompanion fragmentGroupsCompanion({
+  static FragmentGroupsCompanion fragmentGroupsCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -62,7 +62,7 @@ class WithCrts {
     );
   }
 
-  MemoryGroupsCompanion memoryGroupsCompanion({
+  static MemoryGroupsCompanion memoryGroupsCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -84,7 +84,7 @@ class WithCrts {
     );
   }
 
-  MemoryModelsCompanion memoryModelsCompanion({
+  static MemoryModelsCompanion memoryModelsCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -102,7 +102,8 @@ class WithCrts {
     );
   }
 
-  FragmentPermanentMemoryInfosCompanion fragmentPermanentMemoryInfosCompanion({
+  static FragmentPermanentMemoryInfosCompanion
+      fragmentPermanentMemoryInfosCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -128,7 +129,7 @@ class WithCrts {
     );
   }
 
-  RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
+  static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
@@ -144,7 +145,7 @@ class WithCrts {
     );
   }
 
-  RFragment2MemoryGroupsCompanion rFragment2MemoryGroupsCompanion({
+  static RFragment2MemoryGroupsCompanion rFragment2MemoryGroupsCompanion({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
@@ -160,7 +161,7 @@ class WithCrts {
     );
   }
 
-  RMemoryModel2MemoryGroupsCompanion rMemoryModel2MemoryGroupsCompanion({
+  static RMemoryModel2MemoryGroupsCompanion rMemoryModel2MemoryGroupsCompanion({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
@@ -176,7 +177,7 @@ class WithCrts {
     );
   }
 
-  RAssistedMemoryFragment2FragmentCompanion
+  static RAssistedMemoryFragment2FragmentCompanion
       rAssistedMemoryFragment2FragmentCompanion({
     required Value<String?> fatherId,
     required Value<String> sonId,
@@ -193,7 +194,7 @@ class WithCrts {
     );
   }
 
-  AppInfosCompanion appInfosCompanion({
+  static AppInfosCompanion appInfosCompanion({
     required Value<int> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -209,7 +210,7 @@ class WithCrts {
     );
   }
 
-  SyncsCompanion syncsCompanion({
+  static SyncsCompanion syncsCompanion({
     required Value<int> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,

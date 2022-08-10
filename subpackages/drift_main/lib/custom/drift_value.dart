@@ -1,10 +1,17 @@
 part of drift_db;
 
-/// drift_helper.Value('value') 的快捷方法。
-///
-/// 使用方法 '123'.toDriftValue()。
 extension DriftValueExt<T> on T {
-  Value<T> toDriftValue() {
+  /// drift.Value('value') 的快捷方法。
+  ///
+  /// 使用方法： '123'.value()。
+  Value<T> value() {
     return Value<T>(this);
+  }
+
+  /// drift.Value.absent() 的快捷方法。
+  ///
+  /// 使用方法：直接在任意对象中调用 absent()。
+  Value<A> absent<A>() {
+    return Value<A>.absent();
   }
 }
