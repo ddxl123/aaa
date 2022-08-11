@@ -50,15 +50,15 @@ class MemoryGroups extends CloudTableBase {
 
   IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.inApp.index))();
 
-  /// [MemoryGroupStatusForNormal]
-  IntColumn get normalStatus => intEnum<MemoryGroupStatusForNormal>().withDefault(Constant(MemoryGroupStatusForNormal.notStart.index))();
+  /// [MemoryGroupStatusForInApp]
+  IntColumn get normalStatus => intEnum<MemoryGroupStatusForInApp>().withDefault(Constant(MemoryGroupStatusForInApp.notStart.index))();
 
-  /// [MemoryGroupStatusForNormalPart]
-  IntColumn get normalPartStatus => intEnum<MemoryGroupStatusForNormalPart>().withDefault(Constant(MemoryGroupStatusForNormalPart.disabled.index))();
+  /// [MemoryGroupStatusForInAppPart]
+  IntColumn get normalPartStatus => intEnum<MemoryGroupStatusForInAppPart>().withDefault(Constant(MemoryGroupStatusForInAppPart.disabled.index))();
 
-  /// [MemoryGroupStatusForFullFloating]
+  /// [MemoryGroupStatusForAllFloating]
   IntColumn get fullFloatingStatus =>
-      intEnum<MemoryGroupStatusForFullFloating>().withDefault(Constant(MemoryGroupStatusForFullFloating.notStarted.index))();
+      intEnum<MemoryGroupStatusForAllFloating>().withDefault(Constant(MemoryGroupStatusForAllFloating.notStarted.index))();
 
   /// 悬浮碎片是否立即触发音频/特效等。
 }

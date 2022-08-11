@@ -1052,14 +1052,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   String title;
   MemoryGroupType type;
 
-  /// [MemoryGroupStatusForNormal]
-  MemoryGroupStatusForNormal normalStatus;
+  /// [MemoryGroupStatusForInApp]
+  MemoryGroupStatusForInApp normalStatus;
 
-  /// [MemoryGroupStatusForNormalPart]
-  MemoryGroupStatusForNormalPart normalPartStatus;
+  /// [MemoryGroupStatusForInAppPart]
+  MemoryGroupStatusForInAppPart normalPartStatus;
 
-  /// [MemoryGroupStatusForFullFloating]
-  MemoryGroupStatusForFullFloating fullFloatingStatus;
+  /// [MemoryGroupStatusForAllFloating]
+  MemoryGroupStatusForAllFloating fullFloatingStatus;
   MemoryGroup(
       {required this.id,
       required this.createdAt,
@@ -1143,10 +1143,10 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<MemoryGroupType>(json['type']),
       normalStatus:
-          serializer.fromJson<MemoryGroupStatusForNormal>(json['normalStatus']),
+          serializer.fromJson<MemoryGroupStatusForInApp>(json['normalStatus']),
       normalPartStatus: serializer
-          .fromJson<MemoryGroupStatusForNormalPart>(json['normalPartStatus']),
-      fullFloatingStatus: serializer.fromJson<MemoryGroupStatusForFullFloating>(
+          .fromJson<MemoryGroupStatusForInAppPart>(json['normalPartStatus']),
+      fullFloatingStatus: serializer.fromJson<MemoryGroupStatusForAllFloating>(
           json['fullFloatingStatus']),
     );
   }
@@ -1160,11 +1160,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<MemoryGroupType>(type),
       'normalStatus':
-          serializer.toJson<MemoryGroupStatusForNormal>(normalStatus),
+          serializer.toJson<MemoryGroupStatusForInApp>(normalStatus),
       'normalPartStatus':
-          serializer.toJson<MemoryGroupStatusForNormalPart>(normalPartStatus),
+          serializer.toJson<MemoryGroupStatusForInAppPart>(normalPartStatus),
       'fullFloatingStatus': serializer
-          .toJson<MemoryGroupStatusForFullFloating>(fullFloatingStatus),
+          .toJson<MemoryGroupStatusForAllFloating>(fullFloatingStatus),
     };
   }
 
@@ -1174,9 +1174,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           DateTime? updatedAt,
           String? title,
           MemoryGroupType? type,
-          MemoryGroupStatusForNormal? normalStatus,
-          MemoryGroupStatusForNormalPart? normalPartStatus,
-          MemoryGroupStatusForFullFloating? fullFloatingStatus}) =>
+          MemoryGroupStatusForInApp? normalStatus,
+          MemoryGroupStatusForInAppPart? normalPartStatus,
+          MemoryGroupStatusForAllFloating? fullFloatingStatus}) =>
       MemoryGroup(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
@@ -1225,9 +1225,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<DateTime> updatedAt;
   Value<String> title;
   Value<MemoryGroupType> type;
-  Value<MemoryGroupStatusForNormal> normalStatus;
-  Value<MemoryGroupStatusForNormalPart> normalPartStatus;
-  Value<MemoryGroupStatusForFullFloating> fullFloatingStatus;
+  Value<MemoryGroupStatusForInApp> normalStatus;
+  Value<MemoryGroupStatusForInAppPart> normalPartStatus;
+  Value<MemoryGroupStatusForAllFloating> fullFloatingStatus;
   MemoryGroupsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1254,9 +1254,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<DateTime>? updatedAt,
     Expression<String>? title,
     Expression<MemoryGroupType>? type,
-    Expression<MemoryGroupStatusForNormal>? normalStatus,
-    Expression<MemoryGroupStatusForNormalPart>? normalPartStatus,
-    Expression<MemoryGroupStatusForFullFloating>? fullFloatingStatus,
+    Expression<MemoryGroupStatusForInApp>? normalStatus,
+    Expression<MemoryGroupStatusForInAppPart>? normalPartStatus,
+    Expression<MemoryGroupStatusForAllFloating>? fullFloatingStatus,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1277,9 +1277,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<DateTime>? updatedAt,
       Value<String>? title,
       Value<MemoryGroupType>? type,
-      Value<MemoryGroupStatusForNormal>? normalStatus,
-      Value<MemoryGroupStatusForNormalPart>? normalPartStatus,
-      Value<MemoryGroupStatusForFullFloating>? fullFloatingStatus}) {
+      Value<MemoryGroupStatusForInApp>? normalStatus,
+      Value<MemoryGroupStatusForInAppPart>? normalPartStatus,
+      Value<MemoryGroupStatusForAllFloating>? fullFloatingStatus}) {
     return MemoryGroupsCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
@@ -1388,35 +1388,35 @@ class $MemoryGroupsTable extends MemoryGroups
   final VerificationMeta _normalStatusMeta =
       const VerificationMeta('normalStatus');
   @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForNormal, int?>
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForInApp, int?>
       normalStatus = GeneratedColumn<int?>('normal_status', aliasedName, false,
               type: const IntType(),
               requiredDuringInsert: false,
-              defaultValue: Constant(MemoryGroupStatusForNormal.notStart.index))
-          .withConverter<MemoryGroupStatusForNormal>(
+              defaultValue: Constant(MemoryGroupStatusForInApp.notStart.index))
+          .withConverter<MemoryGroupStatusForInApp>(
               $MemoryGroupsTable.$converter1);
   final VerificationMeta _normalPartStatusMeta =
       const VerificationMeta('normalPartStatus');
   @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForNormalPart,
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForInAppPart,
       int?> normalPartStatus = GeneratedColumn<int?>(
           'normal_part_status', aliasedName, false,
           type: const IntType(),
           requiredDuringInsert: false,
-          defaultValue: Constant(MemoryGroupStatusForNormalPart.disabled.index))
-      .withConverter<MemoryGroupStatusForNormalPart>(
+          defaultValue: Constant(MemoryGroupStatusForInAppPart.disabled.index))
+      .withConverter<MemoryGroupStatusForInAppPart>(
           $MemoryGroupsTable.$converter2);
   final VerificationMeta _fullFloatingStatusMeta =
       const VerificationMeta('fullFloatingStatus');
   @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForFullFloating,
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForAllFloating,
       int?> fullFloatingStatus = GeneratedColumn<int?>(
           'full_floating_status', aliasedName, false,
           type: const IntType(),
           requiredDuringInsert: false,
           defaultValue:
-              Constant(MemoryGroupStatusForFullFloating.notStarted.index))
-      .withConverter<MemoryGroupStatusForFullFloating>(
+              Constant(MemoryGroupStatusForAllFloating.notStarted.index))
+      .withConverter<MemoryGroupStatusForAllFloating>(
           $MemoryGroupsTable.$converter3);
   @override
   List<GeneratedColumn> get $columns => [
@@ -1477,15 +1477,15 @@ class $MemoryGroupsTable extends MemoryGroups
 
   static TypeConverter<MemoryGroupType, int> $converter0 =
       const EnumIndexConverter<MemoryGroupType>(MemoryGroupType.values);
-  static TypeConverter<MemoryGroupStatusForNormal, int> $converter1 =
-      const EnumIndexConverter<MemoryGroupStatusForNormal>(
-          MemoryGroupStatusForNormal.values);
-  static TypeConverter<MemoryGroupStatusForNormalPart, int> $converter2 =
-      const EnumIndexConverter<MemoryGroupStatusForNormalPart>(
-          MemoryGroupStatusForNormalPart.values);
-  static TypeConverter<MemoryGroupStatusForFullFloating, int> $converter3 =
-      const EnumIndexConverter<MemoryGroupStatusForFullFloating>(
-          MemoryGroupStatusForFullFloating.values);
+  static TypeConverter<MemoryGroupStatusForInApp, int> $converter1 =
+      const EnumIndexConverter<MemoryGroupStatusForInApp>(
+          MemoryGroupStatusForInApp.values);
+  static TypeConverter<MemoryGroupStatusForInAppPart, int> $converter2 =
+      const EnumIndexConverter<MemoryGroupStatusForInAppPart>(
+          MemoryGroupStatusForInAppPart.values);
+  static TypeConverter<MemoryGroupStatusForAllFloating, int> $converter3 =
+      const EnumIndexConverter<MemoryGroupStatusForAllFloating>(
+          MemoryGroupStatusForAllFloating.values);
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
@@ -3346,8 +3346,8 @@ class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
   }
 }
 
-class RAssistedMemoryFragment2FragmentData extends DataClass
-    implements Insertable<RAssistedMemoryFragment2FragmentData> {
+class RAssistedMemory2Fragment extends DataClass
+    implements Insertable<RAssistedMemory2Fragment> {
   String? fatherId;
   String sonId;
 
@@ -3368,17 +3368,16 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  RAssistedMemoryFragment2FragmentData(
+  RAssistedMemory2Fragment(
       {this.fatherId,
       required this.sonId,
       required this.id,
       required this.createdAt,
       required this.updatedAt});
-  factory RAssistedMemoryFragment2FragmentData.fromData(
-      Map<String, dynamic> data,
+  factory RAssistedMemory2Fragment.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return RAssistedMemoryFragment2FragmentData(
+    return RAssistedMemory2Fragment(
       fatherId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
       sonId: const StringType()
@@ -3404,8 +3403,8 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
     return map;
   }
 
-  RAssistedMemoryFragment2FragmentCompanion toCompanion(bool nullToAbsent) {
-    return RAssistedMemoryFragment2FragmentCompanion(
+  RAssistedMemory2FragmentsCompanion toCompanion(bool nullToAbsent) {
+    return RAssistedMemory2FragmentsCompanion(
       fatherId: fatherId == null && nullToAbsent
           ? const Value.absent()
           : Value(fatherId),
@@ -3416,11 +3415,10 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
     );
   }
 
-  factory RAssistedMemoryFragment2FragmentData.fromJson(
-      Map<String, dynamic> json,
+  factory RAssistedMemory2Fragment.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RAssistedMemoryFragment2FragmentData(
+    return RAssistedMemory2Fragment(
       fatherId: serializer.fromJson<String?>(json['fatherId']),
       sonId: serializer.fromJson<String>(json['sonId']),
       id: serializer.fromJson<String>(json['id']),
@@ -3440,13 +3438,13 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
     };
   }
 
-  RAssistedMemoryFragment2FragmentData copyWith(
+  RAssistedMemory2Fragment copyWith(
           {String? fatherId,
           String? sonId,
           String? id,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
-      RAssistedMemoryFragment2FragmentData(
+      RAssistedMemory2Fragment(
         fatherId: fatherId ?? this.fatherId,
         sonId: sonId ?? this.sonId,
         id: id ?? this.id,
@@ -3455,7 +3453,7 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
       );
   @override
   String toString() {
-    return (StringBuffer('RAssistedMemoryFragment2FragmentData(')
+    return (StringBuffer('RAssistedMemory2Fragment(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
           ..write('id: $id, ')
@@ -3470,7 +3468,7 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is RAssistedMemoryFragment2FragmentData &&
+      (other is RAssistedMemory2Fragment &&
           other.fatherId == this.fatherId &&
           other.sonId == this.sonId &&
           other.id == this.id &&
@@ -3478,21 +3476,21 @@ class RAssistedMemoryFragment2FragmentData extends DataClass
           other.updatedAt == this.updatedAt);
 }
 
-class RAssistedMemoryFragment2FragmentCompanion
-    extends UpdateCompanion<RAssistedMemoryFragment2FragmentData> {
+class RAssistedMemory2FragmentsCompanion
+    extends UpdateCompanion<RAssistedMemory2Fragment> {
   Value<String?> fatherId;
   Value<String> sonId;
   Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  RAssistedMemoryFragment2FragmentCompanion({
+  RAssistedMemory2FragmentsCompanion({
     this.fatherId = const Value.absent(),
     this.sonId = const Value.absent(),
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
-  RAssistedMemoryFragment2FragmentCompanion.insert({
+  RAssistedMemory2FragmentsCompanion.insert({
     this.fatherId = const Value.absent(),
     required String sonId,
     required String id,
@@ -3500,7 +3498,7 @@ class RAssistedMemoryFragment2FragmentCompanion
     this.updatedAt = const Value.absent(),
   })  : sonId = Value(sonId),
         id = Value(id);
-  static Insertable<RAssistedMemoryFragment2FragmentData> custom({
+  static Insertable<RAssistedMemory2Fragment> custom({
     Expression<String?>? fatherId,
     Expression<String>? sonId,
     Expression<String>? id,
@@ -3516,13 +3514,13 @@ class RAssistedMemoryFragment2FragmentCompanion
     });
   }
 
-  RAssistedMemoryFragment2FragmentCompanion copyWith(
+  RAssistedMemory2FragmentsCompanion copyWith(
       {Value<String?>? fatherId,
       Value<String>? sonId,
       Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
-    return RAssistedMemoryFragment2FragmentCompanion(
+    return RAssistedMemory2FragmentsCompanion(
       fatherId: fatherId ?? this.fatherId,
       sonId: sonId ?? this.sonId,
       id: id ?? this.id,
@@ -3554,7 +3552,7 @@ class RAssistedMemoryFragment2FragmentCompanion
 
   @override
   String toString() {
-    return (StringBuffer('RAssistedMemoryFragment2FragmentCompanion(')
+    return (StringBuffer('RAssistedMemory2FragmentsCompanion(')
           ..write('fatherId: $fatherId, ')
           ..write('sonId: $sonId, ')
           ..write('id: $id, ')
@@ -3565,15 +3563,12 @@ class RAssistedMemoryFragment2FragmentCompanion
   }
 }
 
-class $RAssistedMemoryFragment2FragmentTable
-    extends RAssistedMemoryFragment2Fragment
-    with
-        TableInfo<$RAssistedMemoryFragment2FragmentTable,
-            RAssistedMemoryFragment2FragmentData> {
+class $RAssistedMemory2FragmentsTable extends RAssistedMemory2Fragments
+    with TableInfo<$RAssistedMemory2FragmentsTable, RAssistedMemory2Fragment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $RAssistedMemoryFragment2FragmentTable(this.attachedDatabase, [this._alias]);
+  $RAssistedMemory2FragmentsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _fatherIdMeta = const VerificationMeta('fatherId');
   @override
   late final GeneratedColumn<String?> fatherId = GeneratedColumn<String?>(
@@ -3607,12 +3602,12 @@ class $RAssistedMemoryFragment2FragmentTable
   List<GeneratedColumn> get $columns =>
       [fatherId, sonId, id, createdAt, updatedAt];
   @override
-  String get aliasedName => _alias ?? 'r_assisted_memory_fragment2_fragment';
+  String get aliasedName => _alias ?? 'r_assisted_memory2_fragments';
   @override
-  String get actualTableName => 'r_assisted_memory_fragment2_fragment';
+  String get actualTableName => 'r_assisted_memory2_fragments';
   @override
   VerificationContext validateIntegrity(
-      Insertable<RAssistedMemoryFragment2FragmentData> instance,
+      Insertable<RAssistedMemory2Fragment> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3645,15 +3640,15 @@ class $RAssistedMemoryFragment2FragmentTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  RAssistedMemoryFragment2FragmentData map(Map<String, dynamic> data,
+  RAssistedMemory2Fragment map(Map<String, dynamic> data,
       {String? tablePrefix}) {
-    return RAssistedMemoryFragment2FragmentData.fromData(data,
+    return RAssistedMemory2Fragment.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $RAssistedMemoryFragment2FragmentTable createAlias(String alias) {
-    return $RAssistedMemoryFragment2FragmentTable(attachedDatabase, alias);
+  $RAssistedMemory2FragmentsTable createAlias(String alias) {
+    return $RAssistedMemory2FragmentsTable(attachedDatabase, alias);
   }
 }
 
@@ -3969,13 +3964,6 @@ class Sync extends DataClass implements Insertable<Sync> {
   String rowId;
   SyncCurdType? syncCurdType;
 
-  /// 当为 [SyncCurdType.u] 时，[syncUpdateColumns] 不能为空。
-  ///
-  /// 值为字段名，如：'username,password'(字段名不能带有空格或英文逗号)
-  ///
-  /// TODO: 可以去掉让整行都更新。
-  String? syncUpdateColumns;
-
   /// 同组标识符，可以看 [SyncTag]。
   ///
   /// 当多行 sync 是由同一事务或同一组合的操作时, 需要对这些行设置相同的 tag。
@@ -3992,7 +3980,6 @@ class Sync extends DataClass implements Insertable<Sync> {
       required this.syncTableName,
       required this.rowId,
       this.syncCurdType,
-      this.syncUpdateColumns,
       required this.tag});
   factory Sync.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -4009,8 +3996,6 @@ class Sync extends DataClass implements Insertable<Sync> {
           .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
       syncCurdType: $SyncsTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_curd_type'])),
-      syncUpdateColumns: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}sync_update_columns']),
       tag: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}tag'])!,
     );
@@ -4027,9 +4012,6 @@ class Sync extends DataClass implements Insertable<Sync> {
       final converter = $SyncsTable.$converter0;
       map['sync_curd_type'] = Variable<int?>(converter.mapToSql(syncCurdType));
     }
-    if (!nullToAbsent || syncUpdateColumns != null) {
-      map['sync_update_columns'] = Variable<String?>(syncUpdateColumns);
-    }
     map['tag'] = Variable<int>(tag);
     return map;
   }
@@ -4044,9 +4026,6 @@ class Sync extends DataClass implements Insertable<Sync> {
       syncCurdType: syncCurdType == null && nullToAbsent
           ? const Value.absent()
           : Value(syncCurdType),
-      syncUpdateColumns: syncUpdateColumns == null && nullToAbsent
-          ? const Value.absent()
-          : Value(syncUpdateColumns),
       tag: Value(tag),
     );
   }
@@ -4061,8 +4040,6 @@ class Sync extends DataClass implements Insertable<Sync> {
       syncTableName: serializer.fromJson<String>(json['syncTableName']),
       rowId: serializer.fromJson<String>(json['rowId']),
       syncCurdType: serializer.fromJson<SyncCurdType?>(json['syncCurdType']),
-      syncUpdateColumns:
-          serializer.fromJson<String?>(json['syncUpdateColumns']),
       tag: serializer.fromJson<int>(json['tag']),
     );
   }
@@ -4076,7 +4053,6 @@ class Sync extends DataClass implements Insertable<Sync> {
       'syncTableName': serializer.toJson<String>(syncTableName),
       'rowId': serializer.toJson<String>(rowId),
       'syncCurdType': serializer.toJson<SyncCurdType?>(syncCurdType),
-      'syncUpdateColumns': serializer.toJson<String?>(syncUpdateColumns),
       'tag': serializer.toJson<int>(tag),
     };
   }
@@ -4088,7 +4064,6 @@ class Sync extends DataClass implements Insertable<Sync> {
           String? syncTableName,
           String? rowId,
           SyncCurdType? syncCurdType,
-          String? syncUpdateColumns,
           int? tag}) =>
       Sync(
         id: id ?? this.id,
@@ -4097,7 +4072,6 @@ class Sync extends DataClass implements Insertable<Sync> {
         syncTableName: syncTableName ?? this.syncTableName,
         rowId: rowId ?? this.rowId,
         syncCurdType: syncCurdType ?? this.syncCurdType,
-        syncUpdateColumns: syncUpdateColumns ?? this.syncUpdateColumns,
         tag: tag ?? this.tag,
       );
   @override
@@ -4109,15 +4083,14 @@ class Sync extends DataClass implements Insertable<Sync> {
           ..write('syncTableName: $syncTableName, ')
           ..write('rowId: $rowId, ')
           ..write('syncCurdType: $syncCurdType, ')
-          ..write('syncUpdateColumns: $syncUpdateColumns, ')
           ..write('tag: $tag')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, updatedAt, syncTableName,
-      rowId, syncCurdType, syncUpdateColumns, tag);
+  int get hashCode => Object.hash(
+      id, createdAt, updatedAt, syncTableName, rowId, syncCurdType, tag);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4128,7 +4101,6 @@ class Sync extends DataClass implements Insertable<Sync> {
           other.syncTableName == this.syncTableName &&
           other.rowId == this.rowId &&
           other.syncCurdType == this.syncCurdType &&
-          other.syncUpdateColumns == this.syncUpdateColumns &&
           other.tag == this.tag);
 }
 
@@ -4139,7 +4111,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   Value<String> syncTableName;
   Value<String> rowId;
   Value<SyncCurdType?> syncCurdType;
-  Value<String?> syncUpdateColumns;
   Value<int> tag;
   SyncsCompanion({
     this.id = const Value.absent(),
@@ -4148,7 +4119,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     this.syncTableName = const Value.absent(),
     this.rowId = const Value.absent(),
     this.syncCurdType = const Value.absent(),
-    this.syncUpdateColumns = const Value.absent(),
     this.tag = const Value.absent(),
   });
   SyncsCompanion.insert({
@@ -4158,7 +4128,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     required String syncTableName,
     required String rowId,
     this.syncCurdType = const Value.absent(),
-    this.syncUpdateColumns = const Value.absent(),
     required int tag,
   })  : syncTableName = Value(syncTableName),
         rowId = Value(rowId),
@@ -4170,7 +4139,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     Expression<String>? syncTableName,
     Expression<String>? rowId,
     Expression<SyncCurdType?>? syncCurdType,
-    Expression<String?>? syncUpdateColumns,
     Expression<int>? tag,
   }) {
     return RawValuesInsertable({
@@ -4180,7 +4148,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       if (syncTableName != null) 'sync_table_name': syncTableName,
       if (rowId != null) 'row_id': rowId,
       if (syncCurdType != null) 'sync_curd_type': syncCurdType,
-      if (syncUpdateColumns != null) 'sync_update_columns': syncUpdateColumns,
       if (tag != null) 'tag': tag,
     });
   }
@@ -4192,7 +4159,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       Value<String>? syncTableName,
       Value<String>? rowId,
       Value<SyncCurdType?>? syncCurdType,
-      Value<String?>? syncUpdateColumns,
       Value<int>? tag}) {
     return SyncsCompanion(
       id: id ?? this.id,
@@ -4201,7 +4167,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       syncTableName: syncTableName ?? this.syncTableName,
       rowId: rowId ?? this.rowId,
       syncCurdType: syncCurdType ?? this.syncCurdType,
-      syncUpdateColumns: syncUpdateColumns ?? this.syncUpdateColumns,
       tag: tag ?? this.tag,
     );
   }
@@ -4229,9 +4194,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       map['sync_curd_type'] =
           Variable<int?>(converter.mapToSql(syncCurdType.value));
     }
-    if (syncUpdateColumns.present) {
-      map['sync_update_columns'] = Variable<String?>(syncUpdateColumns.value);
-    }
     if (tag.present) {
       map['tag'] = Variable<int>(tag.value);
     }
@@ -4247,7 +4209,6 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
           ..write('syncTableName: $syncTableName, ')
           ..write('rowId: $rowId, ')
           ..write('syncCurdType: $syncCurdType, ')
-          ..write('syncUpdateColumns: $syncUpdateColumns, ')
           ..write('tag: $tag')
           ..write(')'))
         .toString();
@@ -4298,28 +4259,14 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       syncCurdType = GeneratedColumn<int?>('sync_curd_type', aliasedName, true,
               type: const IntType(), requiredDuringInsert: false)
           .withConverter<SyncCurdType?>($SyncsTable.$converter0);
-  final VerificationMeta _syncUpdateColumnsMeta =
-      const VerificationMeta('syncUpdateColumns');
-  @override
-  late final GeneratedColumn<String?> syncUpdateColumns =
-      GeneratedColumn<String?>('sync_update_columns', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _tagMeta = const VerificationMeta('tag');
   @override
   late final GeneratedColumn<int?> tag = GeneratedColumn<int?>(
       'tag', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        createdAt,
-        updatedAt,
-        syncTableName,
-        rowId,
-        syncCurdType,
-        syncUpdateColumns,
-        tag
-      ];
+  List<GeneratedColumn> get $columns =>
+      [id, createdAt, updatedAt, syncTableName, rowId, syncCurdType, tag];
   @override
   String get aliasedName => _alias ?? 'syncs';
   @override
@@ -4355,12 +4302,6 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       context.missing(_rowIdMeta);
     }
     context.handle(_syncCurdTypeMeta, const VerificationResult.success());
-    if (data.containsKey('sync_update_columns')) {
-      context.handle(
-          _syncUpdateColumnsMeta,
-          syncUpdateColumns.isAcceptableOrUnknown(
-              data['sync_update_columns']!, _syncUpdateColumnsMeta));
-    }
     if (data.containsKey('tag')) {
       context.handle(
           _tagMeta, tag.isAcceptableOrUnknown(data['tag']!, _tagMeta));
@@ -4402,9 +4343,8 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RFragment2MemoryGroupsTable(this);
   late final $RMemoryModel2MemoryGroupsTable rMemoryModel2MemoryGroups =
       $RMemoryModel2MemoryGroupsTable(this);
-  late final $RAssistedMemoryFragment2FragmentTable
-      rAssistedMemoryFragment2Fragment =
-      $RAssistedMemoryFragment2FragmentTable(this);
+  late final $RAssistedMemory2FragmentsTable rAssistedMemory2Fragments =
+      $RAssistedMemory2FragmentsTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
   late final SingleDAO singleDAO = SingleDAO(this as DriftDb);
@@ -4421,7 +4361,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
         rFragment2FragmentGroups,
         rFragment2MemoryGroups,
         rMemoryModel2MemoryGroups,
-        rAssistedMemoryFragment2Fragment,
+        rAssistedMemory2Fragments,
         appInfos,
         syncs
       ];
@@ -4445,6 +4385,6 @@ mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2MemoryGroups;
   $RMemoryModel2MemoryGroupsTable get rMemoryModel2MemoryGroups =>
       attachedDatabase.rMemoryModel2MemoryGroups;
-  $RAssistedMemoryFragment2FragmentTable get rAssistedMemoryFragment2Fragment =>
-      attachedDatabase.rAssistedMemoryFragment2Fragment;
+  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
+      attachedDatabase.rAssistedMemory2Fragments;
 }

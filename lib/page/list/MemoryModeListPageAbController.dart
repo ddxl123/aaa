@@ -4,12 +4,7 @@ import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-enum MemoryModelPageType {
-  home,
-  select,
-}
-
-class MemoryModelPageAbController extends AbController {
+class MemoryModeListPageAbController extends AbController {
   final RefreshController refreshController = RefreshController(initialRefresh: true);
 
   final memoryModels = <Ab<MemoryModel>>[].ab;

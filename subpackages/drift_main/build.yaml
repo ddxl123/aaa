@@ -4,9 +4,32 @@ targets:
       exclude: [ 'test/*' ]
 
     builders:
+      # disables the SharedPartBuilder in favor of a PartBuilder from moor_generator
       drift_dev:
+        enabled: false
+      drift_dev|not_shared:
+        enabled: true
         options:
           mutable_classes: true
           named_parameters: true
           named_parameters_always_required: true
+
+      # Run xxx|xx when moor is done!
+      drift_custom|drift_reference:
+        enabled: false
+      drift_custom|drift_constructor:
+        enabled: false
+      drift_custom|drift_reset:
+        enabled: false
+
+  run_drift_main:
+    dependencies: [ 'drift_main' ]
+    builders:
+      # Disable all auto-applied builders from moor
+      drift_dev:
+        enabled: false
+      drift_dev|preparing_builder:
+        enabled: false
+
+
 

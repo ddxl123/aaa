@@ -10,4 +10,7 @@ enum EditPageType {
 
   /// 修改，并检查
   modifyCheck,
+
+  /// 选择
+  select,
 }

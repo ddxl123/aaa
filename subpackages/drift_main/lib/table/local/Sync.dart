@@ -11,13 +11,6 @@ class Syncs extends LocalTableBase {
 
   IntColumn get syncCurdType => intEnum<SyncCurdType>().nullable()();
 
-  /// 当为 [SyncCurdType.u] 时，[syncUpdateColumns] 不能为空。
-  ///
-  /// 值为字段名，如：'username,password'(字段名不能带有空格或英文逗号)
-  ///
-  /// TODO: 可以去掉让整行都更新。
-  TextColumn get syncUpdateColumns => text().nullable()();
-
   /// 同组标识符，可以看 [SyncTag]。
   ///
   /// 当多行 sync 是由同一事务或同一组合的操作时, 需要对这些行设置相同的 tag。

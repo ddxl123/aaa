@@ -1,19 +1,20 @@
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
+import 'package:aaa/page/list/ListPageType.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class FragmentGroupPage extends StatelessWidget {
-  const FragmentGroupPage({Key? key, required this.pageType}) : super(key: key);
+class FragmentGroupListPage extends StatelessWidget {
+  const FragmentGroupListPage({Key? key, required this.listPageType}) : super(key: key);
 
-  final FragmentGroupPageType pageType;
+  final ListPageType listPageType;
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<FragmentGroupPageAbController>(
-      putController: FragmentGroupPageAbController(),
+    return AbBuilder<FragmentGroupListPageAbController>(
+      putController: FragmentGroupListPageAbController(),
       tag: Aber.hashCodeTag,
       builder: (controller, abw) {
         return Scaffold(
@@ -26,7 +27,7 @@ class FragmentGroupPage extends StatelessWidget {
   }
 
   Widget _body() {
-    return AbBuilder<FragmentGroupPageAbController>(
+    return AbBuilder<FragmentGroupListPageAbController>(
       tag: Aber.hashCodeTag,
       builder: (c, abw) {
         return IndexedStack(
@@ -73,7 +74,7 @@ class FragmentGroupPage extends StatelessWidget {
   }
 
   Widget _fragmentGroupsBuilder() {
-    return AbBuilder<FragmentGroupPageAbController>(
+    return AbBuilder<FragmentGroupListPageAbController>(
       tag: Aber.hashCodeTag,
       builder: (c, abw) {
         return SliverList(
@@ -95,7 +96,7 @@ class FragmentGroupPage extends StatelessWidget {
                   AbBuilder<HomeAbController>(
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
-                        return AbBuilder<FragmentGroupPageAbController>(
+                        return AbBuilder<FragmentGroupListPageAbController>(
                           tag: Aber.hashCodeTag,
                           builder: (countC, countAbw) {
                             return Text(
@@ -112,7 +113,7 @@ class FragmentGroupPage extends StatelessWidget {
                   AbBuilder<HomeAbController>(
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
-                        return AbBuilder<FragmentGroupPageAbController>(
+                        return AbBuilder<FragmentGroupListPageAbController>(
                           tag: Aber.hashCodeTag,
                           builder: (selectController, selectAbw) {
                             return IconButton(
@@ -149,7 +150,7 @@ class FragmentGroupPage extends StatelessWidget {
   }
 
   Widget _fragmentsBuilder() {
-    return AbBuilder<FragmentGroupPageAbController>(
+    return AbBuilder<FragmentGroupListPageAbController>(
       tag: Aber.hashCodeTag,
       builder: (c, abw) {
         return SliverList(
@@ -160,9 +161,7 @@ class FragmentGroupPage extends StatelessWidget {
                   Expanded(
                     child: MaterialButton(
                       child: Text(c.currentPart().indexFragment(index, abw).title.toString()),
-                      onPressed: () {
-                        if (pageType == FragmentGroupPageType.add) return;
-                      },
+                      onPressed: () {},
                       onLongPress: () {
                         Aber.find<HomeAbController>().isFragmentSelecting.refreshEasy((oldValue) => !oldValue);
                       },
@@ -171,7 +170,7 @@ class FragmentGroupPage extends StatelessWidget {
                   AbBuilder<HomeAbController>(
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
-                        return AbBuilder<FragmentGroupPageAbController>(
+                        return AbBuilder<FragmentGroupListPageAbController>(
                           tag: Aber.hashCodeTag,
                           builder: (selectController, selectAbw) {
                             return IconButton(
@@ -219,7 +218,7 @@ class FragmentGroupPage extends StatelessWidget {
                 reverse: true,
                 scrollDirection: Axis.horizontal,
                 physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                child: AbBuilder<FragmentGroupPageAbController>(
+                child: AbBuilder<FragmentGroupListPageAbController>(
                   tag: Aber.hashCodeTag,
                   builder: (c, abw) {
                     return Row(
@@ -240,7 +239,7 @@ class FragmentGroupPage extends StatelessWidget {
                   },
                 ),
               ),
-              AbBuilder<FragmentGroupPageAbController>(
+              AbBuilder<FragmentGroupListPageAbController>(
                 tag: Aber.hashCodeTag,
                 builder: (controller, abw) {
                   return controller.parts(abw).length == 1

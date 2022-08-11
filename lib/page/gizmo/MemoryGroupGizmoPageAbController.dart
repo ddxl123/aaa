@@ -2,8 +2,8 @@ import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class InsideMemoryGroupPageAbController extends AbController {
-  InsideMemoryGroupPageAbController({required this.memoryGroupGizmo});
+class MemoryGroupGizmoPageAbController extends AbController {
+  MemoryGroupGizmoPageAbController({required this.memoryGroupGizmo});
 
   final Ab<MemoryGroup> memoryGroupGizmo;
 

@@ -6,7 +6,7 @@ const List<Type> rTableClass = [
   RFragment2FragmentGroups,
   RFragment2MemoryGroups,
   RMemoryModel2MemoryGroups,
-  RAssistedMemoryFragment2Fragment,
+  RAssistedMemory2Fragments,
 ];
 
 /// 碎片存放于碎片组内
@@ -23,4 +23,4 @@ class RMemoryModel2MemoryGroups extends RCloudTableBase {}
 
 /// 辅记碎片所服务的主碎片
 @ReferenceTo([Fragments, Fragments])
-class RAssistedMemoryFragment2Fragment extends RCloudTableBase {}
+class RAssistedMemory2Fragments extends RCloudTableBase {}

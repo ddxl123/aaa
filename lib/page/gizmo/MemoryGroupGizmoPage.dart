@@ -1,11 +1,11 @@
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/page/normal/InsideMemoryGroupPageAbController.dart';
+import 'package:aaa/page/gizmo/MemoryGroupGizmoPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class InsideMemoryGroupPage extends StatelessWidget {
-  const InsideMemoryGroupPage({Key? key, required this.memoryGroupGizmo, required this.innerMemoryGroupGizmoWidget}) : super(key: key);
+class MemoryGroupGizmoPage extends StatelessWidget {
+  const MemoryGroupGizmoPage({Key? key, required this.memoryGroupGizmo, required this.innerMemoryGroupGizmoWidget}) : super(key: key);
   final Ab<MemoryGroup> memoryGroupGizmo;
   final Widget innerMemoryGroupGizmoWidget;
 
@@ -13,8 +13,8 @@ class InsideMemoryGroupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: AbBuilder<InsideMemoryGroupPageAbController>(
-        putController: InsideMemoryGroupPageAbController(memoryGroupGizmo: memoryGroupGizmo),
+      body: AbBuilder<MemoryGroupGizmoPageAbController>(
+        putController: MemoryGroupGizmoPageAbController(memoryGroupGizmo: memoryGroupGizmo),
         builder: (putC, putAbw) {
           return SmartRefresher(
             controller: putC.refreshController,
@@ -37,7 +37,7 @@ class InsideMemoryGroupPage extends StatelessWidget {
   }
 
   Widget _memoryRule() {
-    return AbBuilder<InsideMemoryGroupPageAbController>(
+    return AbBuilder<MemoryGroupGizmoPageAbController>(
       builder: (c, abw) {
         return SliverToBoxAdapter(
           child: innerMemoryGroupGizmoWidget,
@@ -47,7 +47,7 @@ class InsideMemoryGroupPage extends StatelessWidget {
   }
 
   Widget _fragments() {
-    return AbBuilder<InsideMemoryGroupPageAbController>(
+    return AbBuilder<MemoryGroupGizmoPageAbController>(
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(

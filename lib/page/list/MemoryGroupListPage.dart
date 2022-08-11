@@ -1,21 +1,21 @@
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
-import 'package:aaa/page/normal/InsideMemoryGroupPage.dart';
+import 'package:aaa/page/gizmo/MemoryGroupGizmoPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/MemoryGroupPageAbController.dart';
+import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class MemoryGroupPage extends StatelessWidget {
-  const MemoryGroupPage({Key? key}) : super(key: key);
+class MemoryGroupListPage extends StatelessWidget {
+  const MemoryGroupListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<MemoryGroupPageAbController>(
-      putController: MemoryGroupPageAbController(),
+    return AbBuilder<MemoryGroupListPageAbController>(
+      putController: MemoryGroupListPageAbController(),
       tag: Aber.hashCodeTag,
       builder: (putController, putAbw) {
         return Scaffold(
@@ -56,7 +56,7 @@ class MemoryGroupPage extends StatelessWidget {
             ),
             preferredSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
-          body: AbBuilder<MemoryGroupPageAbController>(
+          body: AbBuilder<MemoryGroupListPageAbController>(
             tag: Aber.hashCodeTag,
             builder: (c, abw) {
               return SmartRefresher(
@@ -81,7 +81,7 @@ class MemoryGroupPage extends StatelessWidget {
   }
 
   Widget _memoryGroupGizmoList(BuildContext context) {
-    return AbBuilder<MemoryGroupPageAbController>(
+    return AbBuilder<MemoryGroupListPageAbController>(
       tag: Aber.hashCodeTag,
       builder: (c, abw) {
         return SliverList(
@@ -97,25 +97,25 @@ class MemoryGroupPage extends StatelessWidget {
   }
 
   Color _statusButtonBackgroundColorFilter(MemoryGroup memoryGroup) {
-    return Helper.filter(
+    return filter(
       from: memoryGroup.type,
       targets: {
-        [MemoryGroupType.inApp]: () => Helper.filter(
+        [MemoryGroupType.inApp]: () => filter(
               from: memoryGroup.normalStatus,
               targets: {
-                [MemoryGroupStatusForNormal.notStart]: () => Colors.amber,
-                [MemoryGroupStatusForNormal.goon]: () => Colors.green,
-                [MemoryGroupStatusForNormal.completed]: () => Colors.grey,
+                [MemoryGroupStatusForInApp.notStart]: () => Colors.amber,
+                [MemoryGroupStatusForInApp.goon]: () => Colors.green,
+                [MemoryGroupStatusForInApp.completed]: () => Colors.grey,
               },
               orElse: () => Colors.red,
             ),
-        [MemoryGroupType.allFloating]: () => Helper.filter(
+        [MemoryGroupType.allFloating]: () => filter(
               from: memoryGroup.fullFloatingStatus,
               targets: {
-                [MemoryGroupStatusForFullFloating.notStarted]: () => Colors.amber,
-                [MemoryGroupStatusForFullFloating.remembering]: () => Colors.green,
-                [MemoryGroupStatusForFullFloating.pause]: () => Colors.blue,
-                [MemoryGroupStatusForFullFloating.completed]: () => Colors.grey,
+                [MemoryGroupStatusForAllFloating.notStarted]: () => Colors.amber,
+                [MemoryGroupStatusForAllFloating.remembering]: () => Colors.green,
+                [MemoryGroupStatusForAllFloating.pause]: () => Colors.blue,
+                [MemoryGroupStatusForAllFloating.completed]: () => Colors.grey,
               },
               orElse: () => Colors.red,
             ),
@@ -125,15 +125,15 @@ class MemoryGroupPage extends StatelessWidget {
   }
 
   Widget _partFloatingWidgetFilter(MemoryGroup memoryGroup) {
-    return Helper.filter(
+    return filter(
       from: memoryGroup.type,
       targets: {
-        [MemoryGroupType.inApp]: () => Helper.filter(
+        [MemoryGroupType.inApp]: () => filter(
               from: memoryGroup.normalPartStatus,
               targets: {
                 [
-                  MemoryGroupStatusForNormalPart.enabled,
-                  MemoryGroupStatusForNormalPart.paused,
+                  MemoryGroupStatusForInAppPart.enabled,
+                  MemoryGroupStatusForInAppPart.paused,
                 ]: () => const Text('部分悬浮', style: TextStyle(color: Colors.grey))
               },
               orElse: () => Container(),
@@ -144,25 +144,25 @@ class MemoryGroupPage extends StatelessWidget {
   }
 
   String _statusButtonTextFilter(MemoryGroup memoryGroup) {
-    return Helper.filter(
+    return filter(
       from: memoryGroup.type,
       targets: {
-        [MemoryGroupType.inApp]: () => Helper.filter(
+        [MemoryGroupType.inApp]: () => filter(
               from: memoryGroup.normalStatus,
               targets: {
-                [MemoryGroupStatusForNormal.notStart]: () => '未开始',
-                [MemoryGroupStatusForNormal.goon]: () => '继续',
-                [MemoryGroupStatusForNormal.completed]: () => '已完成',
+                [MemoryGroupStatusForInApp.notStart]: () => '未开始',
+                [MemoryGroupStatusForInApp.goon]: () => '继续',
+                [MemoryGroupStatusForInApp.completed]: () => '已完成',
               },
               orElse: () => 'unknown',
             ),
-        [MemoryGroupType.allFloating]: () => Helper.filter(
+        [MemoryGroupType.allFloating]: () => filter(
               from: memoryGroup.fullFloatingStatus,
               targets: {
-                [MemoryGroupStatusForFullFloating.notStarted]: () => '未开始',
-                [MemoryGroupStatusForFullFloating.remembering]: () => '记忆中',
-                [MemoryGroupStatusForFullFloating.pause]: () => '已暂停',
-                [MemoryGroupStatusForFullFloating.completed]: () => '已完成',
+                [MemoryGroupStatusForAllFloating.notStarted]: () => '未开始',
+                [MemoryGroupStatusForAllFloating.remembering]: () => '记忆中',
+                [MemoryGroupStatusForAllFloating.pause]: () => '已暂停',
+                [MemoryGroupStatusForAllFloating.completed]: () => '已完成',
               },
               orElse: () => 'unknown',
             ),
@@ -172,7 +172,7 @@ class MemoryGroupPage extends StatelessWidget {
   }
 
   Widget _memoryGroupGizmoWidget(int index) {
-    return AbBuilder<MemoryGroupPageAbController>(
+    return AbBuilder<MemoryGroupListPageAbController>(
       tag: Aber.hashCodeTag,
       builder: (c, abw) {
         final memoryGroupGizmo = c.memoryGroupGizmos(abw)[index];
@@ -299,7 +299,7 @@ class MemoryGroupPage extends StatelessWidget {
               Navigator.push(
                 c.context,
                 MaterialPageRoute(
-                  builder: (_) => InsideMemoryGroupPage(
+                  builder: (_) => MemoryGroupGizmoPage(
                     memoryGroupGizmo: memoryGroupGizmo,
                     innerMemoryGroupGizmoWidget: _memoryGroupGizmoWidget(index),
                   ),

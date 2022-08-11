@@ -1,14 +1,15 @@
-import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
+import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-class CreateMemoryModelPageAbController extends AbController {
+class FragmentGroupGizmoEditPageAbController extends AbController {
   String title = '';
 
   Future<void> commit() async {
-    final memoryRuleModelAbController = Aber.findLast<MemoryModelPageAbController>();
+    final fragmentGroupModelAbController = Aber.findLast<FragmentGroupListPageAbController>();
 
     // 检查是否可提交
     if (title.trim() == '') {
@@ -17,7 +18,9 @@ class CreateMemoryModelPageAbController extends AbController {
       return;
     }
 
-    await memoryRuleModelAbController.addMemoryModel(MemoryModelsCompanion()..title = title.value());
+    await fragmentGroupModelAbController.currentPart().addFragmentGroup(FragmentGroupsCompanion()
+      ..title = title.value()
+      ..fatherFragmentGroupId = (fragmentGroupModelAbController.currentPart().fatherFragmentGroup?.call().id).value());
     SmartDialog.showToast('创建成功');
     Navigator.pop(context);
   }

@@ -68,9 +68,9 @@ class WithCrts {
     required Value<DateTime> updatedAt,
     required Value<String> title,
     required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatusForNormal> normalStatus,
-    required Value<MemoryGroupStatusForNormalPart> normalPartStatus,
-    required Value<MemoryGroupStatusForFullFloating> fullFloatingStatus,
+    required Value<MemoryGroupStatusForInApp> normalStatus,
+    required Value<MemoryGroupStatusForInAppPart> normalPartStatus,
+    required Value<MemoryGroupStatusForAllFloating> fullFloatingStatus,
   }) {
     return MemoryGroupsCompanion(
       id: id,
@@ -177,15 +177,14 @@ class WithCrts {
     );
   }
 
-  static RAssistedMemoryFragment2FragmentCompanion
-      rAssistedMemoryFragment2FragmentCompanion({
+  static RAssistedMemory2FragmentsCompanion rAssistedMemory2FragmentsCompanion({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
   }) {
-    return RAssistedMemoryFragment2FragmentCompanion(
+    return RAssistedMemory2FragmentsCompanion(
       fatherId: fatherId,
       sonId: sonId,
       id: id,
@@ -217,7 +216,6 @@ class WithCrts {
     required Value<String> syncTableName,
     required Value<String> rowId,
     required Value<SyncCurdType?> syncCurdType,
-    required Value<String?> syncUpdateColumns,
     required Value<int> tag,
   }) {
     return SyncsCompanion(
@@ -227,7 +225,6 @@ class WithCrts {
       syncTableName: syncTableName,
       rowId: rowId,
       syncCurdType: syncCurdType,
-      syncUpdateColumns: syncUpdateColumns,
       tag: tag,
     );
   }

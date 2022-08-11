@@ -13,7 +13,7 @@ enum MemoryGroupType {
 }
 
 /// 记忆组状态 for [MemoryGroupType.inApp]
-enum MemoryGroupStatusForNormal {
+enum MemoryGroupStatusForInApp {
   /// 未开始
   notStart,
 
@@ -25,7 +25,7 @@ enum MemoryGroupStatusForNormal {
 }
 
 /// 记忆组状态 for [MemoryGroupType.inApp] 的部分悬浮
-enum MemoryGroupStatusForNormalPart {
+enum MemoryGroupStatusForInAppPart {
   /// 已启用
   enabled,
 
@@ -37,7 +37,7 @@ enum MemoryGroupStatusForNormalPart {
 }
 
 /// 记忆组状态 for [MemoryGroupType.allFloating] 的部分悬浮
-enum MemoryGroupStatusForFullFloating {
+enum MemoryGroupStatusForAllFloating {
   /// 未开始
   notStarted,
 

@@ -1,10 +1,13 @@
-import 'package:aaa/widget_model/MemoryModelPage.dart';
-import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
+import 'package:aaa/page/list/ListPageType.dart';
+import 'package:aaa/page/list/MemoryModeListPage.dart';
+import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
+import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/tool/widget_wrapper/FloatingRoundCornerButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-class MemoryModelChoosePage extends StatelessWidget {
-  const MemoryModelChoosePage({Key? key}) : super(key: key);
+class MemoryModelSelectPage extends StatelessWidget {
+  const MemoryModelSelectPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,7 @@ class MemoryModelChoosePage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            const MemoryModelPage(pageType: MemoryModelPageType.select),
+            const MemoryModeListPage(listPageType: ListPageType.selectPath),
             Positioned(
               top: 0,
               left: 0,
@@ -41,6 +44,13 @@ class MemoryModelChoosePage extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingRoundCornerButton(
+        text: '确认选择',
+        onPressed: () {
+          Aber.findLast<MemoryModeListPageAbController>().confirmSelect();
+        },
+      ),
+      floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -50)),
     );
   }
 }

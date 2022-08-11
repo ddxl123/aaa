@@ -89,8 +89,8 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
           child_fragments: null,
           rFragment2MemoryGroups: null,
           fragmentPermanentMemoryInfos: null,
-          rAssistedMemoryFragment2Fragment_1: null,
-          rAssistedMemoryFragment2Fragment_2: null,
+          rAssistedMemory2Fragments_1: null,
+          rAssistedMemory2Fragments_2: null,
         );
         return newFragment;
       },

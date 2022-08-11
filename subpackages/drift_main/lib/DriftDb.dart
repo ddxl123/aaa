@@ -1,5 +1,6 @@
 library drift_db;
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:drift/drift.dart';
@@ -29,9 +30,7 @@ part 'custom/drift_value.dart';
 
 part 'table/local/Sync.dart';
 
-part 'DriftDb.g.dart';
-
-// part 'DriftDb._.dart';
+part 'DriftDb.drift.dart';
 
 part 'DriftDb.ref.dart';
 
@@ -133,7 +132,7 @@ class DriftDb extends _$DriftDb {
     final String eName = E.toString();
     // Convert to 'Users'
     final TableInfo? tableInfo = (eName.length <= 9 || eName.substring(eName.length - 9, eName.length) != 'Companion')
-        ? _tableInfoMap[eName + 's']
+        ? _tableInfoMap['${eName}s']
         : _tableInfoMap[eName.substring(0, eName.length - 9)];
     return tableInfo ?? (throw 'TableInfo not found.');
   }

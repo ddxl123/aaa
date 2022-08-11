@@ -1,7 +1,7 @@
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
-import 'package:aaa/page/transition/MemoryModelChoosePage.dart';
+import 'package:aaa/page/select/MemoryModelSelectPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/sheetroute/DefaultSheetRoute.dart';
@@ -51,12 +51,14 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return Helper.filter(
+        return filter(
           from: c.configPageType,
           targets: {
             [EditPageType.modifyCheck]: () => FloatingRoundCornerButton(
                   text: '保存并开始',
-                  onPressed: () {},
+                  onPressed: () {
+                    c.commitModifyCheck();
+                  },
                 ),
           },
           orElse: () => Container(),
@@ -69,7 +71,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Text(
-          Helper.filter(
+          filter(
             from: c.configPageType,
             targets: {
               [EditPageType.create]: () => '创建记忆组',
@@ -98,7 +100,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _tickWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return Helper.filter(
+        return filter(
           from: configPageType,
           targets: {
             [EditPageType.create]: () => IconButton(
@@ -113,7 +115,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                     child: const Text('仅保存'),
                     onPressed: () {
                       // TODO: 修改前与修改后的兼容性。
-                      // c.commitModify();
+                      c.commitModify(isShowTip: true, isPop: true);
                     },
                   ),
                 ),
@@ -160,7 +162,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 },
               ),
               onPressed: () {
-                Navigator.push(c.context, MaterialPageRoute(builder: (_) => const MemoryModelChoosePage()));
+                Navigator.push(c.context, MaterialPageRoute(builder: (_) => const MemoryModelSelectPage()));
               },
             ),
           ],

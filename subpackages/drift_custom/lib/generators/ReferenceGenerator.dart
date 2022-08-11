@@ -89,7 +89,7 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
         final StringBuffer funcContent = StringBuffer();
 
         // 得到主要的 users/userInfos
-        final fatherCamel = Helper.toCamelCase(father);
+        final fatherCamel = father.toCamelCase;
 
         final StringBuffer childrenRequiredContent = StringBuffer();
         final StringBuffer childrenAwaitContent = StringBuffer();
@@ -99,11 +99,11 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
         // child 为 UserInfos 类型。
         for (var child in children) {
           // 始终为 userInfos 类型。
-          String childKeep = Helper.toCamelCase(child);
+          String childKeep = child.toCamelCase;
 
           // 当 child !=  father 时，为 userInfos 类型。
           // 当 child == father 时，为 child_userInfos 类型。
-          String childCamel = Helper.toCamelCase(child);
+          String childCamel = child.toCamelCase;
           if (child == father) {
             childCamel = 'child_$childCamel';
           }
@@ -124,8 +124,12 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
     Future<void> Function(\$${father}Table table) $fatherCamel,
   ${childrenRequiredContent.isEmpty ? '' : '{$childrenRequiredContent}'}
   ) async {
-    await $fatherCamel(DriftDb.instance.$fatherCamel);
-    $childrenAwaitContent
+    await DriftDb.instance.transaction(
+      () async {
+      await $fatherCamel(DriftDb.instance.$fatherCamel);
+      $childrenAwaitContent
+      },
+    );
   }
           ''');
 

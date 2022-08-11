@@ -1,15 +1,15 @@
-import 'package:aaa/page/edit/CreateMemoryModelPageAbController.dart';
+import 'package:aaa/page/edit/MemoryModelGizmoEditPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreateMemoryModelPage extends StatelessWidget {
-  const CreateMemoryModelPage({Key? key}) : super(key: key);
+class MemoryModelGizmoEditPage extends StatelessWidget {
+  const MemoryModelGizmoEditPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<CreateMemoryModelPageAbController>(
-      putController: CreateMemoryModelPageAbController(),
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      putController: MemoryModelGizmoEditPageAbController(),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: AppBar(

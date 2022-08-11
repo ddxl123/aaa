@@ -12,12 +12,18 @@ class ResetGenerator extends Generator {
       for (var cls in library.classes) {
         if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('DataClass')) {
           final className = cls.displayName;
-          final camelClassName = Helper.toCamelCase(className);
+          final camelClassName = className.toCamelCase;
           final params = cls.unnamedConstructor!.parameters;
           final singleContent = '''
         extension ${className}Ext on $className {
-          $className reset({${params.map((e) => 'required Value<${e.type}> ${e.name}').join(',')},}) {
-            ${params.map((e) => 'this.${e.name} = ${e.name}.present ? ${e.name}.value : this.${e.name}').join(';\n')};
+          /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+          FutureOr<$className> reset({${params.map((e) => 'required Value<${e.type}> ${e.name}').join(',')}, 
+            required SyncTag? writeSyncTag,}) async {
+            ${params.map((e) => 'this.${e.name} = ${e.name}.present ? ${e.name}.value : this.${e.name}').join(';\n')};   
+          if(writeSyncTag!=null){
+            final ins = DriftDb.instance;
+            await ins.updateReturningWith(ins.${camelClassName}s, entity: toCompanion(false), syncTag: writeSyncTag);
+          }
             return this;
           }
         }

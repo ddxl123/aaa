@@ -1,15 +1,15 @@
-import 'package:aaa/page/edit/CreateFragmentPageAbController.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreateFragmentPage extends StatelessWidget {
-  const CreateFragmentPage({Key? key}) : super(key: key);
+class FragmentGizmoEditPage extends StatelessWidget {
+  const FragmentGizmoEditPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<CreateFragmentPageAbController>(
-      putController: CreateFragmentPageAbController(),
+    return AbBuilder<FragmentGizmoEditPageAbController>(
+      putController: FragmentGizmoEditPageAbController(),
       builder: (controller, abw) {
         return WillPopScope(
           onWillPop: () {

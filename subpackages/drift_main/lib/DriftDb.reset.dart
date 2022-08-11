@@ -8,7 +8,8 @@
 part of drift_db;
 
 extension UserExt on User {
-  User reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<User> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -16,7 +17,8 @@ extension UserExt on User {
     required Value<String?> password,
     required Value<String> email,
     required Value<int> age,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -24,19 +26,26 @@ extension UserExt on User {
     this.password = password.present ? password.value : this.password;
     this.email = email.present ? email.value : this.email;
     this.age = age.present ? age.value : this.age;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.users,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension FragmentExt on Fragment {
-  Fragment reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<Fragment> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentId,
     required Value<String> title,
     required Value<int> priority,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -45,18 +54,25 @@ extension FragmentExt on Fragment {
         : this.fatherFragmentId;
     this.title = title.present ? title.value : this.title;
     this.priority = priority.present ? priority.value : this.priority;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.fragments,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension FragmentGroupExt on FragmentGroup {
-  FragmentGroup reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<FragmentGroup> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentGroupId,
     required Value<String> title,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -64,21 +80,28 @@ extension FragmentGroupExt on FragmentGroup {
         ? fatherFragmentGroupId.value
         : this.fatherFragmentGroupId;
     this.title = title.present ? title.value : this.title;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.fragmentGroups,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension MemoryGroupExt on MemoryGroup {
-  MemoryGroup reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<MemoryGroup> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> title,
     required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatusForNormal> normalStatus,
-    required Value<MemoryGroupStatusForNormalPart> normalPartStatus,
-    required Value<MemoryGroupStatusForFullFloating> fullFloatingStatus,
-  }) {
+    required Value<MemoryGroupStatusForInApp> normalStatus,
+    required Value<MemoryGroupStatusForInAppPart> normalPartStatus,
+    required Value<MemoryGroupStatusForAllFloating> fullFloatingStatus,
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -92,19 +115,26 @@ extension MemoryGroupExt on MemoryGroup {
     this.fullFloatingStatus = fullFloatingStatus.present
         ? fullFloatingStatus.value
         : this.fullFloatingStatus;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.memoryGroups,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension MemoryModelExt on MemoryModel {
-  MemoryModel reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<MemoryModel> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> title,
     required Value<String?> familiarityAlgorithm,
     required Value<String?> nextTimeAlgorithm,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -115,12 +145,18 @@ extension MemoryModelExt on MemoryModel {
     this.nextTimeAlgorithm = nextTimeAlgorithm.present
         ? nextTimeAlgorithm.value
         : this.nextTimeAlgorithm;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.memoryModels,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
-  FragmentPermanentMemoryInfo reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<FragmentPermanentMemoryInfo> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -131,7 +167,8 @@ extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
     required Value<double> stageFamiliarity,
     required Value<DateTime?> nextShowTime,
     required Value<double> showDuration,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -150,87 +187,121 @@ extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
         nextShowTime.present ? nextShowTime.value : this.nextShowTime;
     this.showDuration =
         showDuration.present ? showDuration.value : this.showDuration;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.fragmentPermanentMemoryInfos,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
-  RFragment2FragmentGroup reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<RFragment2FragmentGroup> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.rFragment2FragmentGroups,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
-  RFragment2MemoryGroup reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<RFragment2MemoryGroup> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.rFragment2MemoryGroups,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension RMemoryModel2MemoryGroupExt on RMemoryModel2MemoryGroup {
-  RMemoryModel2MemoryGroup reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<RMemoryModel2MemoryGroup> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.rMemoryModel2MemoryGroups,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
-extension RAssistedMemoryFragment2FragmentDataExt
-    on RAssistedMemoryFragment2FragmentData {
-  RAssistedMemoryFragment2FragmentData reset({
+extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<RAssistedMemory2Fragment> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.rAssistedMemory2Fragments,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension AppInfoExt on AppInfo {
-  AppInfo reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<AppInfo> reset({
     required Value<int> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> token,
     required Value<bool> hasDownloadedInitData,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -238,21 +309,27 @@ extension AppInfoExt on AppInfo {
     this.hasDownloadedInitData = hasDownloadedInitData.present
         ? hasDownloadedInitData.value
         : this.hasDownloadedInitData;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.appInfos,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }
 
 extension SyncExt on Sync {
-  Sync reset({
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  FutureOr<Sync> reset({
     required Value<int> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> syncTableName,
     required Value<String> rowId,
     required Value<SyncCurdType?> syncCurdType,
-    required Value<String?> syncUpdateColumns,
     required Value<int> tag,
-  }) {
+    required SyncTag? writeSyncTag,
+  }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
@@ -261,10 +338,12 @@ extension SyncExt on Sync {
     this.rowId = rowId.present ? rowId.value : this.rowId;
     this.syncCurdType =
         syncCurdType.present ? syncCurdType.value : this.syncCurdType;
-    this.syncUpdateColumns = syncUpdateColumns.present
-        ? syncUpdateColumns.value
-        : this.syncUpdateColumns;
     this.tag = tag.present ? tag.value : this.tag;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.syncs,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
     return this;
   }
 }

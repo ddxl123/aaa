@@ -1,9 +1,9 @@
-import 'package:aaa/page/transition/FragmentGroupChoosePage.dart';
+import 'package:aaa/page/select/FragmentGroupSelectPage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-class CreateFragmentPageAbController extends AbController {
+class FragmentGizmoEditPageAbController extends AbController {
   String title = '';
 
   String content = '';
@@ -13,7 +13,7 @@ class CreateFragmentPageAbController extends AbController {
       SmartDialog.showToast('没有内容');
       Navigator.pop(context);
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupChoosePage()));
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupSelectPage()));
     }
   }
 

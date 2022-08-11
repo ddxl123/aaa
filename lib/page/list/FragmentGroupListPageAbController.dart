@@ -2,13 +2,6 @@ import 'package:aaa/tool/aber/Aber.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-enum FragmentGroupPageType {
-  home,
-
-  /// 添加模式
-  add,
-}
-
 /// TODO: 快速点击按钮时，可能会触发多次函数，可能会抛出 'setState() or markNeedsBuild() called during build.' 等异常。
 class PartListForFragmentHome {
   PartListForFragmentHome({
@@ -16,7 +9,7 @@ class PartListForFragmentHome {
     required this.controller,
   });
 
-  final FragmentGroupPageAbController controller;
+  final FragmentGroupListPageAbController controller;
 
   /// TODO: 调用 dispose 时，会抛出异常。
   final RefreshController refreshController = RefreshController(initialRefresh: true);
@@ -147,7 +140,7 @@ class PartListForFragmentHome {
   }
 }
 
-class FragmentGroupPageAbController extends AbController {
+class FragmentGroupListPageAbController extends AbController {
   /// 必须预留一个顶级的。
   final parts = <Ab<PartListForFragmentHome>>[].ab;
 

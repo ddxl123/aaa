@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
-class MemoryGroupPageAbController extends AbController {
+class MemoryGroupListPageAbController extends AbController {
   final RefreshController refreshController = RefreshController(initialRefresh: true);
 
   final memoryGroupGizmos = <Ab<MemoryGroup>>[].ab;
@@ -30,20 +30,20 @@ class MemoryGroupPageAbController extends AbController {
       );
     }
 
-    Helper.filter(
+    filter(
       from: memoryGroupGizmo().type,
       targets: {
-        [MemoryGroupType.inApp]: () => Helper.filter(
+        [MemoryGroupType.inApp]: () => filter(
               from: memoryGroupGizmo().normalStatus,
               targets: {
-                [MemoryGroupStatusForNormal.notStart]: () => notStart(),
+                [MemoryGroupStatusForInApp.notStart]: () => notStart(),
               },
               orElse: null,
             ),
-        [MemoryGroupType.allFloating]: () => Helper.filter(
+        [MemoryGroupType.allFloating]: () => filter(
               from: memoryGroupGizmo().fullFloatingStatus,
               targets: {
-                [MemoryGroupStatusForFullFloating.notStarted]: () => notStart(),
+                [MemoryGroupStatusForAllFloating.notStarted]: () => notStart(),
               },
               orElse: null,
             ),

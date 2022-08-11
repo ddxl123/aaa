@@ -44,7 +44,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [table] - 要对哪个表进行操作
   ///
-  /// [entity] - 要插入的 [User]/[UsersCompanion] 的实体
+  /// [entity] - 要插入的 [UsersCompanion] 的实体，不能使用 [User]
   ///
   /// [syncTag] - 见 [SyncTag] 的注释
   ///
@@ -61,7 +61,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
         if (table is Users) {
           throw '对 [Users] 的插入不能使用该函数';
         }
-
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         entityDynamic.createdAt = DateTime.now().value();
@@ -89,7 +88,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
               syncTableName: table.actualTableName.value(),
               rowId: (returningEntityDynamic.id as String).value(),
               syncCurdType: SyncCurdType.c.value(),
-              syncUpdateColumns: null.value(),
               tag: syncTag.tag.value(),
             ),
             syncTag: syncTag,
@@ -108,10 +106,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// 如果外部没有事务，内部会自动创建事务。
   ///
-  /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
+  /// [entity] - 要替换的 [UsersCompanion] 的实体，不能为 [User]。
   ///
   /// 注意：该函数不能修改 id。
-  Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+  Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
@@ -129,14 +127,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
         if (!replaceResult) {
           return null;
         }
-
         // 获取已被修改的行
-        final DC returningEntity = await (select(table)..where((tbl) => (tbl as dynamic).id.equal(entityDynamic.id))).getSingle();
-
-        // 获取被修改的 columns
-        // 当 entity 为数据类(非 Companion 类型)时,其中的某个参数值可能为 null,意味着操作者有意的让它值为 null,因而 toColumns(false) 必须为 false,以便遵循操作者的主观意识.
-        // 值可能为 ''/'key_1'/'key_1,key_2'...
-        final String syncUpdateColumns = (entityDynamic as E).toColumns(false).keys.join(',');
+        final DC returningEntity = await (select(table)..where((tbl) => (tbl as dynamic).id.equals(entityDynamic.id.value))).getSingle();
 
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
@@ -146,7 +138,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
               syncTableName: table.actualTableName.value(),
               rowId: ((returningEntity as dynamic).id as String).value(),
               syncCurdType: SyncCurdType.u.value(),
-              syncUpdateColumns: syncUpdateColumns.value(),
               tag: syncTag.tag.value(),
             ),
             syncTag: syncTag,
@@ -199,7 +190,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
               syncTableName: table.actualTableName.value(),
               rowId: (selectEntity.id as String).value(),
               syncCurdType: SyncCurdType.d.value(),
-              syncUpdateColumns: null.value(),
               tag: syncTag.tag.value(),
             ),
             syncTag: syncTag,

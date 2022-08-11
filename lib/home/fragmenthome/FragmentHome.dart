@@ -1,11 +1,10 @@
 import 'package:aaa/home/fragmenthome/FragmentHomeAbController.dart';
-import 'package:aaa/page/edit/CreateFragmentGroupPage.dart';
-import 'package:aaa/page/edit/CreateFragmentPage.dart';
+import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/widget_model/FragmentGroupPage.dart';
-import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
-import 'package:aaa/widget_model/MemoryModelPage.dart';
-import 'package:aaa/widget_model/MemoryModelPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPage.dart';
+import 'package:aaa/page/list/ListPageType.dart';
+import 'package:aaa/page/list/MemoryModeListPage.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -68,11 +67,11 @@ class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderSt
                           ],
                           onChanged: (value) {
                             if (value == 0) {
-                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
                               return;
                             }
                             if (value == 1) {
-                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentGroupPage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupGizmoEditPage()));
                             }
                           },
                         ),
@@ -87,8 +86,8 @@ class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderSt
           body: TabBarView(
             controller: putController.tabController,
             children: const [
-              FragmentGroupPage(pageType: FragmentGroupPageType.home),
-              MemoryModelPage(pageType: MemoryModelPageType.home),
+              FragmentGroupListPage(listPageType: ListPageType.home),
+              MemoryModeListPage(listPageType: ListPageType.home),
             ],
           ),
         );

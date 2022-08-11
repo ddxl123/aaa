@@ -1,12 +1,12 @@
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
-import 'package:aaa/page/edit/CreateFragmentPage.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
-import 'package:aaa/widget_model/FragmentGroupPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,7 +58,7 @@ class Home extends StatelessWidget {
                   );
                 },
               ),
-              AbBuilder<FragmentGroupPageAbController>(
+              AbBuilder<FragmentGroupListPageAbController>(
                 tag: Aber.hashCodeTag,
                 builder: (countController, countAbw) {
                   return Transform.translate(
@@ -77,7 +77,7 @@ class Home extends StatelessWidget {
         return FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
-            Navigator.push(context, MaterialPageRoute(builder: (ctx) => const CreateFragmentPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
           },
         );
       },

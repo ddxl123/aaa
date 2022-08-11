@@ -12,7 +12,7 @@ class ConstructorGenerator extends Generator {
       for (var cls in library.classes) {
         if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('UpdateCompanion')) {
           final className = cls.displayName;
-          final camelClassName = Helper.toCamelCase(className);
+          final camelClassName = className.toCamelCase;
           final params = cls.unnamedConstructor!.parameters;
           final singleContent = '''
         static $className $camelClassName({${params.map((e) => 'required ${e.type} ${e.name}').join(',')},}){

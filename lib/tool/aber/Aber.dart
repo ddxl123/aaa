@@ -1,8 +1,10 @@
 library aber;
 
-import 'package:tools/tools.dart';
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tools/tools.dart';
 
 typedef RefreshFunction = void Function();
 typedef RemoveRefreshFunction = void Function(RefreshFunction);
@@ -103,8 +105,8 @@ class Ab<V> {
   /// 只会尝试重建引用当前对象 [AbBuilder]。
   ///
   /// 也可以看 [refreshEasy], 复杂的修改推荐使用 [modify] 或 [modifyComplex] 方案。
-  void refreshComplex(bool Function(V obj) diff) {
-    if (diff(value)) {
+  FutureOr<void> refreshComplex(FutureOr<bool> Function(V obj) diff) async {
+    if (await diff(value)) {
       _refresh();
     }
   }
