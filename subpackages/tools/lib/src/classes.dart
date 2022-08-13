@@ -1,25 +1,38 @@
-class Check {
-  final bool isOk;
-  final String notMessage;
+class Verify<VC> {
+  final VC vc;
+  final String failMessage;
 
-  Check({required this.isOk, required this.notMessage});
+  final bool Function(VC vc) initIsOk;
+
+  Verify({required this.vc, required this.initIsOk, required this.failMessage});
+
+  bool get isOk => initIsOk(vc);
 
   bool get isNotOk => !isOk;
 }
 
-class Checks {
-  final List<Check> checks;
-  late final String notMessage;
+class VerifyMany {
+  final List<Verify> verifyMany;
+  String _failMessage = 'no failMessage';
 
-  Checks(this.checks);
+  VerifyMany({required this.verifyMany});
 
-  bool get isAllOk {
-    for (var value in checks) {
-      if (!value.isOk) {
-        notMessage = value.notMessage;
+  bool get isVerifyAllOk {
+    for (var verify in verifyMany) {
+      if (verify.isNotOk) {
+        _failMessage = verify.failMessage;
         return false;
       }
     }
     return true;
+  }
+
+  /// 调用时，会同时调用 [isVerifyAllOk]。
+  String get failMessage {
+    final isAllOk = isVerifyAllOk;
+    if (isAllOk) {
+      _failMessage = '不应该在验证成功时调用 failMessage';
+    }
+    return _failMessage;
   }
 }

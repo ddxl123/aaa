@@ -19,7 +19,7 @@ class MemoryGroupGizmoPageAbController extends AbController {
   }
 
   Future<void> refreshMemoryRule() async {
-    final mg = (await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(memoryGroupGizmo().id));
+    final mg = (await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(memoryModelId: memoryGroupGizmo().memoryModelId));
     memoryRule.refreshEasy((oldValue) => mg);
   }
 

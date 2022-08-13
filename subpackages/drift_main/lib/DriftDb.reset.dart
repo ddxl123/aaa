@@ -8,6 +8,10 @@
 part of drift_db;
 
 extension UserExt on User {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<User> reset({
     required Value<String> id,
@@ -36,6 +40,10 @@ extension UserExt on User {
 }
 
 extension FragmentExt on Fragment {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<Fragment> reset({
     required Value<String> id,
@@ -64,6 +72,10 @@ extension FragmentExt on Fragment {
 }
 
 extension FragmentGroupExt on FragmentGroup {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<FragmentGroup> reset({
     required Value<String> id,
@@ -90,31 +102,37 @@ extension FragmentGroupExt on FragmentGroup {
 }
 
 extension MemoryGroupExt on MemoryGroup {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<MemoryGroup> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
+    required Value<String?> memoryModelId,
     required Value<String> title,
     required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatusForInApp> normalStatus,
-    required Value<MemoryGroupStatusForInAppPart> normalPartStatus,
-    required Value<MemoryGroupStatusForAllFloating> fullFloatingStatus,
+    required Value<MemoryGroupStatusForInApp> inAppStatus,
+    required Value<MemoryGroupStatusForInAppPart> inAppPartStatus,
+    required Value<MemoryGroupStatusForAllFloating> allFloatingStatus,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
+    this.memoryModelId =
+        memoryModelId.present ? memoryModelId.value : this.memoryModelId;
     this.title = title.present ? title.value : this.title;
     this.type = type.present ? type.value : this.type;
-    this.normalStatus =
-        normalStatus.present ? normalStatus.value : this.normalStatus;
-    this.normalPartStatus = normalPartStatus.present
-        ? normalPartStatus.value
-        : this.normalPartStatus;
-    this.fullFloatingStatus = fullFloatingStatus.present
-        ? fullFloatingStatus.value
-        : this.fullFloatingStatus;
+    this.inAppStatus =
+        inAppStatus.present ? inAppStatus.value : this.inAppStatus;
+    this.inAppPartStatus =
+        inAppPartStatus.present ? inAppPartStatus.value : this.inAppPartStatus;
+    this.allFloatingStatus = allFloatingStatus.present
+        ? allFloatingStatus.value
+        : this.allFloatingStatus;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryGroups,
@@ -125,6 +143,10 @@ extension MemoryGroupExt on MemoryGroup {
 }
 
 extension MemoryModelExt on MemoryModel {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<MemoryModel> reset({
     required Value<String> id,
@@ -155,6 +177,10 @@ extension MemoryModelExt on MemoryModel {
 }
 
 extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<FragmentPermanentMemoryInfo> reset({
     required Value<String> id,
@@ -197,6 +223,10 @@ extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
 }
 
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<RFragment2FragmentGroup> reset({
     required Value<String?> fatherId,
@@ -221,6 +251,10 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
 }
 
 extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<RFragment2MemoryGroup> reset({
     required Value<String?> fatherId,
@@ -244,31 +278,11 @@ extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
   }
 }
 
-extension RMemoryModel2MemoryGroupExt on RMemoryModel2MemoryGroup {
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-  FutureOr<RMemoryModel2MemoryGroup> reset({
-    required Value<String?> fatherId,
-    required Value<String> sonId,
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
-    required SyncTag? writeSyncTag,
-  }) async {
-    this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
-    this.sonId = sonId.present ? sonId.value : this.sonId;
-    this.id = id.present ? id.value : this.id;
-    this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
-    this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
-    if (writeSyncTag != null) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rMemoryModel2MemoryGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
-    }
-    return this;
-  }
-}
-
 extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<RAssistedMemory2Fragment> reset({
     required Value<String?> fatherId,
@@ -293,6 +307,10 @@ extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
 }
 
 extension AppInfoExt on AppInfo {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<AppInfo> reset({
     required Value<int> id,
@@ -319,6 +337,10 @@ extension AppInfoExt on AppInfo {
 }
 
 extension SyncExt on Sync {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 建议配合 [withRefs] 使用。
+  ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<Sync> reset({
     required Value<int> id,

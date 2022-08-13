@@ -1049,26 +1049,28 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
+  String? memoryModelId;
   String title;
   MemoryGroupType type;
 
   /// [MemoryGroupStatusForInApp]
-  MemoryGroupStatusForInApp normalStatus;
+  MemoryGroupStatusForInApp inAppStatus;
 
   /// [MemoryGroupStatusForInAppPart]
-  MemoryGroupStatusForInAppPart normalPartStatus;
+  MemoryGroupStatusForInAppPart inAppPartStatus;
 
   /// [MemoryGroupStatusForAllFloating]
-  MemoryGroupStatusForAllFloating fullFloatingStatus;
+  MemoryGroupStatusForAllFloating allFloatingStatus;
   MemoryGroup(
       {required this.id,
       required this.createdAt,
       required this.updatedAt,
+      this.memoryModelId,
       required this.title,
       required this.type,
-      required this.normalStatus,
-      required this.normalPartStatus,
-      required this.fullFloatingStatus});
+      required this.inAppStatus,
+      required this.inAppPartStatus,
+      required this.allFloatingStatus});
   factory MemoryGroup.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return MemoryGroup(
@@ -1078,18 +1080,20 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      memoryModelId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}memory_model_id']),
       title: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       type: $MemoryGroupsTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}type']))!,
-      normalStatus: $MemoryGroupsTable.$converter1.mapToDart(const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}normal_status']))!,
-      normalPartStatus: $MemoryGroupsTable.$converter2.mapToDart(const IntType()
+      inAppStatus: $MemoryGroupsTable.$converter1.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}in_app_status']))!,
+      inAppPartStatus: $MemoryGroupsTable.$converter2.mapToDart(const IntType()
           .mapFromDatabaseResponse(
-              data['${effectivePrefix}normal_part_status']))!,
-      fullFloatingStatus: $MemoryGroupsTable.$converter3.mapToDart(
+              data['${effectivePrefix}in_app_part_status']))!,
+      allFloatingStatus: $MemoryGroupsTable.$converter3.mapToDart(
           const IntType().mapFromDatabaseResponse(
-              data['${effectivePrefix}full_floating_status']))!,
+              data['${effectivePrefix}all_floating_status']))!,
     );
   }
   @override
@@ -1098,6 +1102,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || memoryModelId != null) {
+      map['memory_model_id'] = Variable<String?>(memoryModelId);
+    }
     map['title'] = Variable<String>(title);
     {
       final converter = $MemoryGroupsTable.$converter0;
@@ -1105,17 +1112,17 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     }
     {
       final converter = $MemoryGroupsTable.$converter1;
-      map['normal_status'] = Variable<int>(converter.mapToSql(normalStatus)!);
+      map['in_app_status'] = Variable<int>(converter.mapToSql(inAppStatus)!);
     }
     {
       final converter = $MemoryGroupsTable.$converter2;
-      map['normal_part_status'] =
-          Variable<int>(converter.mapToSql(normalPartStatus)!);
+      map['in_app_part_status'] =
+          Variable<int>(converter.mapToSql(inAppPartStatus)!);
     }
     {
       final converter = $MemoryGroupsTable.$converter3;
-      map['full_floating_status'] =
-          Variable<int>(converter.mapToSql(fullFloatingStatus)!);
+      map['all_floating_status'] =
+          Variable<int>(converter.mapToSql(allFloatingStatus)!);
     }
     return map;
   }
@@ -1125,11 +1132,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      memoryModelId: memoryModelId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(memoryModelId),
       title: Value(title),
       type: Value(type),
-      normalStatus: Value(normalStatus),
-      normalPartStatus: Value(normalPartStatus),
-      fullFloatingStatus: Value(fullFloatingStatus),
+      inAppStatus: Value(inAppStatus),
+      inAppPartStatus: Value(inAppPartStatus),
+      allFloatingStatus: Value(allFloatingStatus),
     );
   }
 
@@ -1140,14 +1150,15 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<MemoryGroupType>(json['type']),
-      normalStatus:
-          serializer.fromJson<MemoryGroupStatusForInApp>(json['normalStatus']),
-      normalPartStatus: serializer
-          .fromJson<MemoryGroupStatusForInAppPart>(json['normalPartStatus']),
-      fullFloatingStatus: serializer.fromJson<MemoryGroupStatusForAllFloating>(
-          json['fullFloatingStatus']),
+      inAppStatus:
+          serializer.fromJson<MemoryGroupStatusForInApp>(json['inAppStatus']),
+      inAppPartStatus: serializer
+          .fromJson<MemoryGroupStatusForInAppPart>(json['inAppPartStatus']),
+      allFloatingStatus: serializer
+          .fromJson<MemoryGroupStatusForAllFloating>(json['allFloatingStatus']),
     );
   }
   @override
@@ -1157,14 +1168,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'memoryModelId': serializer.toJson<String?>(memoryModelId),
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<MemoryGroupType>(type),
-      'normalStatus':
-          serializer.toJson<MemoryGroupStatusForInApp>(normalStatus),
-      'normalPartStatus':
-          serializer.toJson<MemoryGroupStatusForInAppPart>(normalPartStatus),
-      'fullFloatingStatus': serializer
-          .toJson<MemoryGroupStatusForAllFloating>(fullFloatingStatus),
+      'inAppStatus': serializer.toJson<MemoryGroupStatusForInApp>(inAppStatus),
+      'inAppPartStatus':
+          serializer.toJson<MemoryGroupStatusForInAppPart>(inAppPartStatus),
+      'allFloatingStatus':
+          serializer.toJson<MemoryGroupStatusForAllFloating>(allFloatingStatus),
     };
   }
 
@@ -1172,20 +1183,22 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           {String? id,
           DateTime? createdAt,
           DateTime? updatedAt,
+          String? memoryModelId,
           String? title,
           MemoryGroupType? type,
-          MemoryGroupStatusForInApp? normalStatus,
-          MemoryGroupStatusForInAppPart? normalPartStatus,
-          MemoryGroupStatusForAllFloating? fullFloatingStatus}) =>
+          MemoryGroupStatusForInApp? inAppStatus,
+          MemoryGroupStatusForInAppPart? inAppPartStatus,
+          MemoryGroupStatusForAllFloating? allFloatingStatus}) =>
       MemoryGroup(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        memoryModelId: memoryModelId ?? this.memoryModelId,
         title: title ?? this.title,
         type: type ?? this.type,
-        normalStatus: normalStatus ?? this.normalStatus,
-        normalPartStatus: normalPartStatus ?? this.normalPartStatus,
-        fullFloatingStatus: fullFloatingStatus ?? this.fullFloatingStatus,
+        inAppStatus: inAppStatus ?? this.inAppStatus,
+        inAppPartStatus: inAppPartStatus ?? this.inAppPartStatus,
+        allFloatingStatus: allFloatingStatus ?? this.allFloatingStatus,
       );
   @override
   String toString() {
@@ -1193,18 +1206,19 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('memoryModelId: $memoryModelId, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
-          ..write('normalStatus: $normalStatus, ')
-          ..write('normalPartStatus: $normalPartStatus, ')
-          ..write('fullFloatingStatus: $fullFloatingStatus')
+          ..write('inAppStatus: $inAppStatus, ')
+          ..write('inAppPartStatus: $inAppPartStatus, ')
+          ..write('allFloatingStatus: $allFloatingStatus')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, updatedAt, title, type,
-      normalStatus, normalPartStatus, fullFloatingStatus);
+  int get hashCode => Object.hash(id, createdAt, updatedAt, memoryModelId,
+      title, type, inAppStatus, inAppPartStatus, allFloatingStatus);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1212,62 +1226,67 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.memoryModelId == this.memoryModelId &&
           other.title == this.title &&
           other.type == this.type &&
-          other.normalStatus == this.normalStatus &&
-          other.normalPartStatus == this.normalPartStatus &&
-          other.fullFloatingStatus == this.fullFloatingStatus);
+          other.inAppStatus == this.inAppStatus &&
+          other.inAppPartStatus == this.inAppPartStatus &&
+          other.allFloatingStatus == this.allFloatingStatus);
 }
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
+  Value<String?> memoryModelId;
   Value<String> title;
   Value<MemoryGroupType> type;
-  Value<MemoryGroupStatusForInApp> normalStatus;
-  Value<MemoryGroupStatusForInAppPart> normalPartStatus;
-  Value<MemoryGroupStatusForAllFloating> fullFloatingStatus;
+  Value<MemoryGroupStatusForInApp> inAppStatus;
+  Value<MemoryGroupStatusForInAppPart> inAppPartStatus;
+  Value<MemoryGroupStatusForAllFloating> allFloatingStatus;
   MemoryGroupsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.memoryModelId = const Value.absent(),
     this.title = const Value.absent(),
     this.type = const Value.absent(),
-    this.normalStatus = const Value.absent(),
-    this.normalPartStatus = const Value.absent(),
-    this.fullFloatingStatus = const Value.absent(),
+    this.inAppStatus = const Value.absent(),
+    this.inAppPartStatus = const Value.absent(),
+    this.allFloatingStatus = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.memoryModelId = const Value.absent(),
     this.title = const Value.absent(),
     this.type = const Value.absent(),
-    this.normalStatus = const Value.absent(),
-    this.normalPartStatus = const Value.absent(),
-    this.fullFloatingStatus = const Value.absent(),
+    this.inAppStatus = const Value.absent(),
+    this.inAppPartStatus = const Value.absent(),
+    this.allFloatingStatus = const Value.absent(),
   }) : id = Value(id);
   static Insertable<MemoryGroup> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String?>? memoryModelId,
     Expression<String>? title,
     Expression<MemoryGroupType>? type,
-    Expression<MemoryGroupStatusForInApp>? normalStatus,
-    Expression<MemoryGroupStatusForInAppPart>? normalPartStatus,
-    Expression<MemoryGroupStatusForAllFloating>? fullFloatingStatus,
+    Expression<MemoryGroupStatusForInApp>? inAppStatus,
+    Expression<MemoryGroupStatusForInAppPart>? inAppPartStatus,
+    Expression<MemoryGroupStatusForAllFloating>? allFloatingStatus,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (memoryModelId != null) 'memory_model_id': memoryModelId,
       if (title != null) 'title': title,
       if (type != null) 'type': type,
-      if (normalStatus != null) 'normal_status': normalStatus,
-      if (normalPartStatus != null) 'normal_part_status': normalPartStatus,
-      if (fullFloatingStatus != null)
-        'full_floating_status': fullFloatingStatus,
+      if (inAppStatus != null) 'in_app_status': inAppStatus,
+      if (inAppPartStatus != null) 'in_app_part_status': inAppPartStatus,
+      if (allFloatingStatus != null) 'all_floating_status': allFloatingStatus,
     });
   }
 
@@ -1275,20 +1294,22 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       {Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<String?>? memoryModelId,
       Value<String>? title,
       Value<MemoryGroupType>? type,
-      Value<MemoryGroupStatusForInApp>? normalStatus,
-      Value<MemoryGroupStatusForInAppPart>? normalPartStatus,
-      Value<MemoryGroupStatusForAllFloating>? fullFloatingStatus}) {
+      Value<MemoryGroupStatusForInApp>? inAppStatus,
+      Value<MemoryGroupStatusForInAppPart>? inAppPartStatus,
+      Value<MemoryGroupStatusForAllFloating>? allFloatingStatus}) {
     return MemoryGroupsCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      memoryModelId: memoryModelId ?? this.memoryModelId,
       title: title ?? this.title,
       type: type ?? this.type,
-      normalStatus: normalStatus ?? this.normalStatus,
-      normalPartStatus: normalPartStatus ?? this.normalPartStatus,
-      fullFloatingStatus: fullFloatingStatus ?? this.fullFloatingStatus,
+      inAppStatus: inAppStatus ?? this.inAppStatus,
+      inAppPartStatus: inAppPartStatus ?? this.inAppPartStatus,
+      allFloatingStatus: allFloatingStatus ?? this.allFloatingStatus,
     );
   }
 
@@ -1304,6 +1325,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (memoryModelId.present) {
+      map['memory_model_id'] = Variable<String?>(memoryModelId.value);
+    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
@@ -1311,20 +1335,20 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       final converter = $MemoryGroupsTable.$converter0;
       map['type'] = Variable<int>(converter.mapToSql(type.value)!);
     }
-    if (normalStatus.present) {
+    if (inAppStatus.present) {
       final converter = $MemoryGroupsTable.$converter1;
-      map['normal_status'] =
-          Variable<int>(converter.mapToSql(normalStatus.value)!);
+      map['in_app_status'] =
+          Variable<int>(converter.mapToSql(inAppStatus.value)!);
     }
-    if (normalPartStatus.present) {
+    if (inAppPartStatus.present) {
       final converter = $MemoryGroupsTable.$converter2;
-      map['normal_part_status'] =
-          Variable<int>(converter.mapToSql(normalPartStatus.value)!);
+      map['in_app_part_status'] =
+          Variable<int>(converter.mapToSql(inAppPartStatus.value)!);
     }
-    if (fullFloatingStatus.present) {
+    if (allFloatingStatus.present) {
       final converter = $MemoryGroupsTable.$converter3;
-      map['full_floating_status'] =
-          Variable<int>(converter.mapToSql(fullFloatingStatus.value)!);
+      map['all_floating_status'] =
+          Variable<int>(converter.mapToSql(allFloatingStatus.value)!);
     }
     return map;
   }
@@ -1335,11 +1359,12 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('memoryModelId: $memoryModelId, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
-          ..write('normalStatus: $normalStatus, ')
-          ..write('normalPartStatus: $normalPartStatus, ')
-          ..write('fullFloatingStatus: $fullFloatingStatus')
+          ..write('inAppStatus: $inAppStatus, ')
+          ..write('inAppPartStatus: $inAppPartStatus, ')
+          ..write('allFloatingStatus: $allFloatingStatus')
           ..write(')'))
         .toString();
   }
@@ -1370,6 +1395,12 @@ class $MemoryGroupsTable extends MemoryGroups
       type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
+  final VerificationMeta _memoryModelIdMeta =
+      const VerificationMeta('memoryModelId');
+  @override
+  late final GeneratedColumn<String?> memoryModelId = GeneratedColumn<String?>(
+      'memory_model_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
@@ -1385,33 +1416,33 @@ class $MemoryGroupsTable extends MemoryGroups
               requiredDuringInsert: false,
               defaultValue: Constant(MemoryGroupType.inApp.index))
           .withConverter<MemoryGroupType>($MemoryGroupsTable.$converter0);
-  final VerificationMeta _normalStatusMeta =
-      const VerificationMeta('normalStatus');
+  final VerificationMeta _inAppStatusMeta =
+      const VerificationMeta('inAppStatus');
   @override
   late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForInApp, int?>
-      normalStatus = GeneratedColumn<int?>('normal_status', aliasedName, false,
+      inAppStatus = GeneratedColumn<int?>('in_app_status', aliasedName, false,
               type: const IntType(),
               requiredDuringInsert: false,
               defaultValue: Constant(MemoryGroupStatusForInApp.notStart.index))
           .withConverter<MemoryGroupStatusForInApp>(
               $MemoryGroupsTable.$converter1);
-  final VerificationMeta _normalPartStatusMeta =
-      const VerificationMeta('normalPartStatus');
+  final VerificationMeta _inAppPartStatusMeta =
+      const VerificationMeta('inAppPartStatus');
   @override
   late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForInAppPart,
-      int?> normalPartStatus = GeneratedColumn<int?>(
-          'normal_part_status', aliasedName, false,
+      int?> inAppPartStatus = GeneratedColumn<int?>(
+          'in_app_part_status', aliasedName, false,
           type: const IntType(),
           requiredDuringInsert: false,
           defaultValue: Constant(MemoryGroupStatusForInAppPart.disabled.index))
       .withConverter<MemoryGroupStatusForInAppPart>(
           $MemoryGroupsTable.$converter2);
-  final VerificationMeta _fullFloatingStatusMeta =
-      const VerificationMeta('fullFloatingStatus');
+  final VerificationMeta _allFloatingStatusMeta =
+      const VerificationMeta('allFloatingStatus');
   @override
   late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForAllFloating,
-      int?> fullFloatingStatus = GeneratedColumn<int?>(
-          'full_floating_status', aliasedName, false,
+      int?> allFloatingStatus = GeneratedColumn<int?>(
+          'all_floating_status', aliasedName, false,
           type: const IntType(),
           requiredDuringInsert: false,
           defaultValue:
@@ -1423,11 +1454,12 @@ class $MemoryGroupsTable extends MemoryGroups
         id,
         createdAt,
         updatedAt,
+        memoryModelId,
         title,
         type,
-        normalStatus,
-        normalPartStatus,
-        fullFloatingStatus
+        inAppStatus,
+        inAppPartStatus,
+        allFloatingStatus
       ];
   @override
   String get aliasedName => _alias ?? 'memory_groups';
@@ -1451,14 +1483,20 @@ class $MemoryGroupsTable extends MemoryGroups
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
+    if (data.containsKey('memory_model_id')) {
+      context.handle(
+          _memoryModelIdMeta,
+          memoryModelId.isAcceptableOrUnknown(
+              data['memory_model_id']!, _memoryModelIdMeta));
+    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
     context.handle(_typeMeta, const VerificationResult.success());
-    context.handle(_normalStatusMeta, const VerificationResult.success());
-    context.handle(_normalPartStatusMeta, const VerificationResult.success());
-    context.handle(_fullFloatingStatusMeta, const VerificationResult.success());
+    context.handle(_inAppStatusMeta, const VerificationResult.success());
+    context.handle(_inAppPartStatusMeta, const VerificationResult.success());
+    context.handle(_allFloatingStatusMeta, const VerificationResult.success());
     return context;
   }
 
@@ -3040,312 +3078,6 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   }
 }
 
-class RMemoryModel2MemoryGroup extends DataClass
-    implements Insertable<RMemoryModel2MemoryGroup> {
-  String? fatherId;
-  String sonId;
-
-  /// 当子表类为 [Users] 时，
-  ///   - 云端创建、云端获取。
-  ///   - 无需自增，无需作为主键。
-  ///
-  /// 当子表类为非 [Users] 时，
-  ///   - 生成方案：user_id + uuid.v4
-  ///
-  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
-  String id;
-
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  /// *** 需要预防客户端时间篡改
-  DateTime createdAt;
-
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  /// *** 需要预防客户端时间篡改
-  DateTime updatedAt;
-  RMemoryModel2MemoryGroup(
-      {this.fatherId,
-      required this.sonId,
-      required this.id,
-      required this.createdAt,
-      required this.updatedAt});
-  factory RMemoryModel2MemoryGroup.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return RMemoryModel2MemoryGroup(
-      fatherId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}father_id']),
-      sonId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}son_id'])!,
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      createdAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
-      updatedAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
-    );
-  }
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (!nullToAbsent || fatherId != null) {
-      map['father_id'] = Variable<String?>(fatherId);
-    }
-    map['son_id'] = Variable<String>(sonId);
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  RMemoryModel2MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
-    return RMemoryModel2MemoryGroupsCompanion(
-      fatherId: fatherId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fatherId),
-      sonId: Value(sonId),
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory RMemoryModel2MemoryGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RMemoryModel2MemoryGroup(
-      fatherId: serializer.fromJson<String?>(json['fatherId']),
-      sonId: serializer.fromJson<String>(json['sonId']),
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'fatherId': serializer.toJson<String?>(fatherId),
-      'sonId': serializer.toJson<String>(sonId),
-      'id': serializer.toJson<String>(id),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  RMemoryModel2MemoryGroup copyWith(
-          {String? fatherId,
-          String? sonId,
-          String? id,
-          DateTime? createdAt,
-          DateTime? updatedAt}) =>
-      RMemoryModel2MemoryGroup(
-        fatherId: fatherId ?? this.fatherId,
-        sonId: sonId ?? this.sonId,
-        id: id ?? this.id,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RMemoryModel2MemoryGroup(')
-          ..write('fatherId: $fatherId, ')
-          ..write('sonId: $sonId, ')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(fatherId, sonId, id, createdAt, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RMemoryModel2MemoryGroup &&
-          other.fatherId == this.fatherId &&
-          other.sonId == this.sonId &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
-}
-
-class RMemoryModel2MemoryGroupsCompanion
-    extends UpdateCompanion<RMemoryModel2MemoryGroup> {
-  Value<String?> fatherId;
-  Value<String> sonId;
-  Value<String> id;
-  Value<DateTime> createdAt;
-  Value<DateTime> updatedAt;
-  RMemoryModel2MemoryGroupsCompanion({
-    this.fatherId = const Value.absent(),
-    this.sonId = const Value.absent(),
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  RMemoryModel2MemoryGroupsCompanion.insert({
-    this.fatherId = const Value.absent(),
-    required String sonId,
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  })  : sonId = Value(sonId),
-        id = Value(id);
-  static Insertable<RMemoryModel2MemoryGroup> custom({
-    Expression<String?>? fatherId,
-    Expression<String>? sonId,
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (fatherId != null) 'father_id': fatherId,
-      if (sonId != null) 'son_id': sonId,
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  RMemoryModel2MemoryGroupsCompanion copyWith(
-      {Value<String?>? fatherId,
-      Value<String>? sonId,
-      Value<String>? id,
-      Value<DateTime>? createdAt,
-      Value<DateTime>? updatedAt}) {
-    return RMemoryModel2MemoryGroupsCompanion(
-      fatherId: fatherId ?? this.fatherId,
-      sonId: sonId ?? this.sonId,
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (fatherId.present) {
-      map['father_id'] = Variable<String?>(fatherId.value);
-    }
-    if (sonId.present) {
-      map['son_id'] = Variable<String>(sonId.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RMemoryModel2MemoryGroupsCompanion(')
-          ..write('fatherId: $fatherId, ')
-          ..write('sonId: $sonId, ')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $RMemoryModel2MemoryGroupsTable extends RMemoryModel2MemoryGroups
-    with TableInfo<$RMemoryModel2MemoryGroupsTable, RMemoryModel2MemoryGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RMemoryModel2MemoryGroupsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _fatherIdMeta = const VerificationMeta('fatherId');
-  @override
-  late final GeneratedColumn<String?> fatherId = GeneratedColumn<String?>(
-      'father_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
-  @override
-  late final GeneratedColumn<String?> sonId = GeneratedColumn<String?>(
-      'son_id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
-      'id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
-      'created_at', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
-  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
-      'updated_at', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
-  @override
-  List<GeneratedColumn> get $columns =>
-      [fatherId, sonId, id, createdAt, updatedAt];
-  @override
-  String get aliasedName => _alias ?? 'r_memory_model2_memory_groups';
-  @override
-  String get actualTableName => 'r_memory_model2_memory_groups';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<RMemoryModel2MemoryGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('father_id')) {
-      context.handle(_fatherIdMeta,
-          fatherId.isAcceptableOrUnknown(data['father_id']!, _fatherIdMeta));
-    }
-    if (data.containsKey('son_id')) {
-      context.handle(
-          _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
-    } else if (isInserting) {
-      context.missing(_sonIdMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RMemoryModel2MemoryGroup map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    return RMemoryModel2MemoryGroup.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $RMemoryModel2MemoryGroupsTable createAlias(String alias) {
-    return $RMemoryModel2MemoryGroupsTable(attachedDatabase, alias);
-  }
-}
-
 class RAssistedMemory2Fragment extends DataClass
     implements Insertable<RAssistedMemory2Fragment> {
   String? fatherId;
@@ -4341,8 +4073,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RFragment2FragmentGroupsTable(this);
   late final $RFragment2MemoryGroupsTable rFragment2MemoryGroups =
       $RFragment2MemoryGroupsTable(this);
-  late final $RMemoryModel2MemoryGroupsTable rMemoryModel2MemoryGroups =
-      $RMemoryModel2MemoryGroupsTable(this);
   late final $RAssistedMemory2FragmentsTable rAssistedMemory2Fragments =
       $RAssistedMemory2FragmentsTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
@@ -4360,7 +4090,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragmentPermanentMemoryInfos,
         rFragment2FragmentGroups,
         rFragment2MemoryGroups,
-        rMemoryModel2MemoryGroups,
         rAssistedMemory2Fragments,
         appInfos,
         syncs
@@ -4383,8 +4112,6 @@ mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
-  $RMemoryModel2MemoryGroupsTable get rMemoryModel2MemoryGroups =>
-      attachedDatabase.rMemoryModel2MemoryGroups;
   $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
       attachedDatabase.rAssistedMemory2Fragments;
 }

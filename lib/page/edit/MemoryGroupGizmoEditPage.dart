@@ -56,8 +56,8 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
           targets: {
             [EditPageType.modifyCheck]: () => FloatingRoundCornerButton(
                   text: '保存并开始',
-                  onPressed: () {
-                    c.commitModifyCheck();
+                  onPressed: () async {
+                    await c.commitModifyCheck();
                   },
                 ),
           },
@@ -134,6 +134,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             const Text('名称：', style: TextStyle(fontSize: 16)),
             Expanded(
               child: TextField(
+                controller: c.titleTextEditingController,
                 minLines: null,
                 maxLines: null,
                 autofocus: true,

@@ -26,6 +26,9 @@ class Ab<V> {
   /// 存储每个引用该对象的 [AbBuilder] 的 [_AbBuilderState.refresh]。
   final Set<RefreshFunction> _refreshFunctions = {};
 
+  /// 使用前使用 [initVerify] 进行初始化。
+  Verify verify = Verify(vc: null, initIsOk: (vc) => false, failMessage: '未使用 initVerifyCheck 进行初始化！');
+
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
 
@@ -131,6 +134,10 @@ class Ab<V> {
   /// 否则可能会造成内存泄露，因为 [_removeRefreshFunction] 还残留在 [controller] 中。
   void broken<C extends AbController>(C controller) {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
+  }
+
+  void initVerify({required bool Function(Ab<V> abV) initIsOk, required String failMessage}) {
+    verify = Verify<Ab<V>>(vc: this, initIsOk: initIsOk, failMessage: failMessage);
   }
 }
 

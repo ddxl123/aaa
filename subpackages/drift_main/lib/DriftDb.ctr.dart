@@ -66,21 +66,23 @@ class WithCrts {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
+    required Value<String?> memoryModelId,
     required Value<String> title,
     required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatusForInApp> normalStatus,
-    required Value<MemoryGroupStatusForInAppPart> normalPartStatus,
-    required Value<MemoryGroupStatusForAllFloating> fullFloatingStatus,
+    required Value<MemoryGroupStatusForInApp> inAppStatus,
+    required Value<MemoryGroupStatusForInAppPart> inAppPartStatus,
+    required Value<MemoryGroupStatusForAllFloating> allFloatingStatus,
   }) {
     return MemoryGroupsCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
+      memoryModelId: memoryModelId,
       title: title,
       type: type,
-      normalStatus: normalStatus,
-      normalPartStatus: normalPartStatus,
-      fullFloatingStatus: fullFloatingStatus,
+      inAppStatus: inAppStatus,
+      inAppPartStatus: inAppPartStatus,
+      allFloatingStatus: allFloatingStatus,
     );
   }
 
@@ -153,22 +155,6 @@ class WithCrts {
     required Value<DateTime> updatedAt,
   }) {
     return RFragment2MemoryGroupsCompanion(
-      fatherId: fatherId,
-      sonId: sonId,
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-    );
-  }
-
-  static RMemoryModel2MemoryGroupsCompanion rMemoryModel2MemoryGroupsCompanion({
-    required Value<String?> fatherId,
-    required Value<String> sonId,
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
-  }) {
-    return RMemoryModel2MemoryGroupsCompanion(
       fatherId: fatherId,
       sonId: sonId,
       id: id,

@@ -7,172 +7,176 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-class WithRefs {
-  static Future<void> users(
-    Future<void> Function($UsersTable table) users,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await users(DriftDb.instance.users);
-      },
-    );
-  }
+Future<void> withRefs(Ref ref) async {
+  await ref._run();
+}
 
-  static Future<void> fragments(
-    Future<void> Function($FragmentsTable table) fragments, {
-    required Future<void> Function($FragmentsTable table)? child_fragments,
-    required Future<void> Function($FragmentPermanentMemoryInfosTable table)?
-        fragmentPermanentMemoryInfos,
-    required Future<void> Function($RFragment2FragmentGroupsTable table)?
-        rFragment2FragmentGroups,
-    required Future<void> Function($RFragment2MemoryGroupsTable table)?
-        rFragment2MemoryGroups,
-    required Future<void> Function($RAssistedMemory2FragmentsTable table)?
-        rAssistedMemory2Fragments_1,
-    required Future<void> Function($RAssistedMemory2FragmentsTable table)?
-        rAssistedMemory2Fragments_2,
-  }) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await fragments(DriftDb.instance.fragments);
-        await child_fragments?.call(DriftDb.instance.fragments);
-        await fragmentPermanentMemoryInfos
-            ?.call(DriftDb.instance.fragmentPermanentMemoryInfos);
-        await rFragment2FragmentGroups
-            ?.call(DriftDb.instance.rFragment2FragmentGroups);
-        await rFragment2MemoryGroups
-            ?.call(DriftDb.instance.rFragment2MemoryGroups);
-        await rAssistedMemory2Fragments_1
-            ?.call(DriftDb.instance.rAssistedMemory2Fragments);
-        await rAssistedMemory2Fragments_2
-            ?.call(DriftDb.instance.rAssistedMemory2Fragments);
-      },
-    );
-  }
+abstract class Ref {
+  Future<void> _run();
+}
 
-  static Future<void> fragmentGroups(
-    Future<void> Function($FragmentGroupsTable table) fragmentGroups, {
-    required Future<void> Function($FragmentGroupsTable table)?
-        child_fragmentGroups,
-    required Future<void> Function($RFragment2FragmentGroupsTable table)?
-        rFragment2FragmentGroups,
-  }) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await fragmentGroups(DriftDb.instance.fragmentGroups);
-        await child_fragmentGroups?.call(DriftDb.instance.fragmentGroups);
-        await rFragment2FragmentGroups
-            ?.call(DriftDb.instance.rFragment2FragmentGroups);
-      },
-    );
-  }
+class RefUsers extends Ref {
+  Future<void> Function($UsersTable table) self;
 
-  static Future<void> memoryGroups(
-    Future<void> Function($MemoryGroupsTable table) memoryGroups, {
-    required Future<void> Function($FragmentPermanentMemoryInfosTable table)?
-        fragmentPermanentMemoryInfos,
-    required Future<void> Function($RFragment2MemoryGroupsTable table)?
-        rFragment2MemoryGroups,
-    required Future<void> Function($RMemoryModel2MemoryGroupsTable table)?
-        rMemoryModel2MemoryGroups,
-  }) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await memoryGroups(DriftDb.instance.memoryGroups);
-        await fragmentPermanentMemoryInfos
-            ?.call(DriftDb.instance.fragmentPermanentMemoryInfos);
-        await rFragment2MemoryGroups
-            ?.call(DriftDb.instance.rFragment2MemoryGroups);
-        await rMemoryModel2MemoryGroups
-            ?.call(DriftDb.instance.rMemoryModel2MemoryGroups);
-      },
-    );
-  }
+  RefUsers({
+    required this.self,
+  });
 
-  static Future<void> memoryModels(
-    Future<void> Function($MemoryModelsTable table) memoryModels, {
-    required Future<void> Function($FragmentPermanentMemoryInfosTable table)?
-        fragmentPermanentMemoryInfos,
-    required Future<void> Function($RMemoryModel2MemoryGroupsTable table)?
-        rMemoryModel2MemoryGroups,
-  }) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await memoryModels(DriftDb.instance.memoryModels);
-        await fragmentPermanentMemoryInfos
-            ?.call(DriftDb.instance.fragmentPermanentMemoryInfos);
-        await rMemoryModel2MemoryGroups
-            ?.call(DriftDb.instance.rMemoryModel2MemoryGroups);
-      },
-    );
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.users);
   }
+}
 
-  static Future<void> fragmentPermanentMemoryInfos(
-    Future<void> Function($FragmentPermanentMemoryInfosTable table)
-        fragmentPermanentMemoryInfos,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await fragmentPermanentMemoryInfos(
-            DriftDb.instance.fragmentPermanentMemoryInfos);
-      },
-    );
+class RefFragments extends Ref {
+  Future<void> Function($FragmentsTable table) self;
+  RefFragments? child_fragments;
+  RefFragmentPermanentMemoryInfos? fragmentPermanentMemoryInfos;
+  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
+  RefRFragment2MemoryGroups? rFragment2MemoryGroups;
+  RefRAssistedMemory2Fragments? rAssistedMemory2Fragments_1;
+  RefRAssistedMemory2Fragments? rAssistedMemory2Fragments_2;
+
+  RefFragments({
+    required this.self,
+    required this.child_fragments,
+    required this.fragmentPermanentMemoryInfos,
+    required this.rFragment2FragmentGroups,
+    required this.rFragment2MemoryGroups,
+    required this.rAssistedMemory2Fragments_1,
+    required this.rAssistedMemory2Fragments_2,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragments);
+    await child_fragments?._run();
+    await fragmentPermanentMemoryInfos?._run();
+    await rFragment2FragmentGroups?._run();
+    await rFragment2MemoryGroups?._run();
+    await rAssistedMemory2Fragments_1?._run();
+    await rAssistedMemory2Fragments_2?._run();
   }
+}
 
-  static Future<void> rFragment2FragmentGroups(
-    Future<void> Function($RFragment2FragmentGroupsTable table)
-        rFragment2FragmentGroups,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await rFragment2FragmentGroups(
-            DriftDb.instance.rFragment2FragmentGroups);
-      },
-    );
+class RefFragmentGroups extends Ref {
+  Future<void> Function($FragmentGroupsTable table) self;
+  RefFragmentGroups? child_fragmentGroups;
+  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
+
+  RefFragmentGroups({
+    required this.self,
+    required this.child_fragmentGroups,
+    required this.rFragment2FragmentGroups,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragmentGroups);
+    await child_fragmentGroups?._run();
+    await rFragment2FragmentGroups?._run();
   }
+}
 
-  static Future<void> rFragment2MemoryGroups(
-    Future<void> Function($RFragment2MemoryGroupsTable table)
-        rFragment2MemoryGroups,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await rFragment2MemoryGroups(DriftDb.instance.rFragment2MemoryGroups);
-      },
-    );
+class RefMemoryModels extends Ref {
+  Future<void> Function($MemoryModelsTable table) self;
+  RefMemoryGroups? memoryGroups;
+  RefFragmentPermanentMemoryInfos? fragmentPermanentMemoryInfos;
+
+  RefMemoryModels({
+    required this.self,
+    required this.memoryGroups,
+    required this.fragmentPermanentMemoryInfos,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.memoryModels);
+    await memoryGroups?._run();
+    await fragmentPermanentMemoryInfos?._run();
   }
+}
 
-  static Future<void> rMemoryModel2MemoryGroups(
-    Future<void> Function($RMemoryModel2MemoryGroupsTable table)
-        rMemoryModel2MemoryGroups,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await rMemoryModel2MemoryGroups(
-            DriftDb.instance.rMemoryModel2MemoryGroups);
-      },
-    );
+class RefMemoryGroups extends Ref {
+  Future<void> Function($MemoryGroupsTable table) self;
+  RefFragmentPermanentMemoryInfos? fragmentPermanentMemoryInfos;
+  RefRFragment2MemoryGroups? rFragment2MemoryGroups;
+
+  RefMemoryGroups({
+    required this.self,
+    required this.fragmentPermanentMemoryInfos,
+    required this.rFragment2MemoryGroups,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.memoryGroups);
+    await fragmentPermanentMemoryInfos?._run();
+    await rFragment2MemoryGroups?._run();
   }
+}
 
-  static Future<void> rAssistedMemory2Fragments(
-    Future<void> Function($RAssistedMemory2FragmentsTable table)
-        rAssistedMemory2Fragments,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await rAssistedMemory2Fragments(
-            DriftDb.instance.rAssistedMemory2Fragments);
-      },
-    );
+class RefFragmentPermanentMemoryInfos extends Ref {
+  Future<void> Function($FragmentPermanentMemoryInfosTable table) self;
+
+  RefFragmentPermanentMemoryInfos({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragmentPermanentMemoryInfos);
   }
+}
 
-  static Future<void> appInfos(
-    Future<void> Function($AppInfosTable table) appInfos,
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-        await appInfos(DriftDb.instance.appInfos);
-      },
-    );
+class RefRFragment2FragmentGroups extends Ref {
+  Future<void> Function($RFragment2FragmentGroupsTable table) self;
+
+  RefRFragment2FragmentGroups({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.rFragment2FragmentGroups);
+  }
+}
+
+class RefRFragment2MemoryGroups extends Ref {
+  Future<void> Function($RFragment2MemoryGroupsTable table) self;
+
+  RefRFragment2MemoryGroups({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.rFragment2MemoryGroups);
+  }
+}
+
+class RefRAssistedMemory2Fragments extends Ref {
+  Future<void> Function($RAssistedMemory2FragmentsTable table) self;
+
+  RefRAssistedMemory2Fragments({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.rAssistedMemory2Fragments);
+  }
+}
+
+class RefAppInfos extends Ref {
+  Future<void> Function($AppInfosTable table) self;
+
+  RefAppInfos({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.appInfos);
   }
 }

@@ -14,19 +14,17 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 如果只传入 [memoryGroupGizmo] 的话，会缺少 [selectedMemoryModel]、[fragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
   MemoryGroupGizmoEditPageAbController({required this.configPageType, required this.memoryGroupGizmo});
 
+  final titleTextEditingController = TextEditingController();
+
   final EditPageType configPageType;
 
   final Ab<MemoryGroup>? memoryGroupGizmo;
 
   /// 标题
-  final title = ''.ab;
-
-  Check checkTitle([Abw? abw]) => Check(isOk: title(abw).trim() != '', notMessage: '标题不能为空！');
+  final title = ''.ab..initVerify(initIsOk: (v) => v().trim() != '', failMessage: '标题不能为空！');
 
   /// 记忆模型
-  final selectedMemoryModel = Ab<MemoryModel?>(null);
-
-  Check checkSelectedMemoryModel([Abw? abw]) => Check(isOk: selectedMemoryModel(abw) != null, notMessage: '记忆模型不能为空！');
+  final selectedMemoryModel = Ab<MemoryModel?>(null)..initVerify(initIsOk: (v) => v() != null, failMessage: '记忆模型不能为空！');
 
   /// 记忆类型
   final type = MemoryGroupType.inApp.ab;
@@ -43,7 +41,12 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 已存碎片
   final fragments = <Ab<Fragment>>[].ab;
 
-  Checks checkAll([Abw? abw]) => Checks([checkTitle(abw), checkSelectedMemoryModel(abw)]);
+  VerifyMany get verifyMany => VerifyMany(
+        verifyMany: [
+          title.verify,
+          selectedMemoryModel.verify,
+        ],
+      );
 
   @override
   void onInit() {
@@ -69,10 +72,11 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   Future<void> initForModify() async {
     final mgg = memoryGroupGizmo!();
-    final fs = await DriftDb.instance.singleDAO.queryFragmentsByFragmentGroupId(mgg.id);
-    final mm = await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(mgg.id);
+    final fs = await DriftDb.instance.singleDAO.queryFragmentInMemoryGroup(mgg.id);
+    final mm = await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(memoryModelId: mgg.memoryModelId);
 
     title.refreshEasy((oldValue) => mgg.title);
+    titleTextEditingController.text = mgg.title;
     selectedMemoryModel.refreshEasy((obj) => mm);
     type.refreshEasy((oldValue) => mgg.type);
     statusForNormal.refreshEasy((oldValue) => mgg.normalStatus);
@@ -83,8 +87,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// 只创建，不检查。
   Future<void> commitCreate() async {
-    if (checkTitle().isNotOk) {
-      SmartDialog.showToast(checkTitle().notMessage);
+    if (title.verify.isNotOk) {
+      SmartDialog.showToast(title.verify.failMessage);
       return;
     }
 
@@ -95,6 +99,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
             id: absent(),
             createdAt: absent(),
             updatedAt: absent(),
+            memoryModelId: (selectedMemoryModel()?.id).value(),
             title: title().value(),
             type: type().value(),
             normalStatus: statusForNormal().value(),
@@ -102,7 +107,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
             fullFloatingStatus: statusForFullFloating().value(),
           ),
           fragments().map((e) => e()).toList(),
-          selectedMemoryModel(),
         );
       },
     );
@@ -117,27 +121,29 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   Future<void> commitModify({required bool isShowTip, required bool isPop}) async {
     await memoryGroupGizmo!.refreshComplex(
       (obj) async {
-        await WithRefs.memoryGroups(
-          (table) async {
-            // 修改并写入。
-            await obj.reset(
-              id: absent(),
-              createdAt: absent(),
-              updatedAt: absent(),
-              title: title().value(),
-              type: type().value(),
-              normalStatus: statusForNormal().value(),
-              normalPartStatus: statusForNormalPart().value(),
-              fullFloatingStatus: statusForFullFloating().value(),
-              writeSyncTag: await SyncTag.create(),
-            );
-          },
-          // TODO: fragmentPermanentMemoryInfos
-          fragmentPermanentMemoryInfos: null,
-          // TODO: rFragment2MemoryGroups
-          rFragment2MemoryGroups: null,
-          // TODO: rMemoryModel2MemoryGroups
-          rMemoryModel2MemoryGroups: null,
+        final st = await SyncTag.create();
+        await withRefs(
+          RefMemoryGroups(
+            self: (table) async {
+              // 修改并写入。
+              await obj.reset(
+                id: absent(),
+                createdAt: absent(),
+                updatedAt: absent(),
+                memoryModelId: (selectedMemoryModel()?.id).value(),
+                title: title().value(),
+                type: type().value(),
+                normalStatus: statusForNormal().value(),
+                normalPartStatus: statusForNormalPart().value(),
+                fullFloatingStatus: statusForFullFloating().value(),
+                writeSyncTag: st,
+              );
+            },
+            // TODO:
+            fragmentPermanentMemoryInfos: null,
+            // TODO:
+            rFragment2MemoryGroups: null,
+          ),
         );
         return true;
       },
@@ -150,15 +156,17 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     }
   }
 
-  /// 修改并检查
+  /// 修改并检查。
+  ///
+  /// 返回是否修改并检查成功。
   Future<void> commitModifyCheck() async {
-    if (checkAll().isAllOk) {
+    if (verifyMany.isVerifyAllOk) {
       await commitModify(isShowTip: false, isPop: false);
       SmartDialog.showToast('启动成功！');
       Navigator.pop(context);
       return;
     }
-    SmartDialog.showToast(checkAll().notMessage);
+    SmartDialog.showToast(verifyMany.failMessage);
   }
 
   void cancel() {

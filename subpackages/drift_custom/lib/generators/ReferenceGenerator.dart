@@ -86,13 +86,14 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
     final StringBuffer bodyContent = StringBuffer();
     father2Children.forEach(
       (father, children) {
-        final StringBuffer funcContent = StringBuffer();
+        final StringBuffer classContent = StringBuffer();
 
         // 得到主要的 users/userInfos
         final fatherCamel = father.toCamelCase;
 
+        final StringBuffer childrenFutureContent = StringBuffer();
         final StringBuffer childrenRequiredContent = StringBuffer();
-        final StringBuffer childrenAwaitContent = StringBuffer();
+        final StringBuffer childrenRunCallContent = StringBuffer();
 
         final tempChildren = <String>[];
 
@@ -109,31 +110,32 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
           }
 
           // 一个类被其他多个类指向时，对其他多个类分配后缀，以防重复。
+          // 生成 userInfos_1 userInfos_2 child_userInfos_1 child_userInfos_2
           if (children.where((element) => element == child).toList().length != 1) {
             tempChildren.add(childCamel);
             final tempChildrenLength = tempChildren.where((element) => element == childCamel).toList().length;
             childCamel = '${childCamel}_$tempChildrenLength';
           }
 
-          childrenRequiredContent.writeln('required Future<void> Function(\$${child}Table table)? $childCamel,');
-          childrenAwaitContent.writeln('await $childCamel?.call(DriftDb.instance.$childKeep);');
+          childrenFutureContent.writeln('Ref$child? $childCamel;');
+          childrenRequiredContent.writeln('required this.$childCamel,');
+          childrenRunCallContent.writeln('await $childCamel?._run();');
         }
+        classContent.writeln('''
+class Ref$father extends Ref {
+  Future<void> Function(\$${father}Table table) self;
+  $childrenFutureContent
 
-        funcContent.writeln('''
-  static Future<void> $fatherCamel(
-    Future<void> Function(\$${father}Table table) $fatherCamel,
-  ${childrenRequiredContent.isEmpty ? '' : '{$childrenRequiredContent}'}
-  ) async {
-    await DriftDb.instance.transaction(
-      () async {
-      await $fatherCamel(DriftDb.instance.$fatherCamel);
-      $childrenAwaitContent
-      },
-    );
+  Ref$father({required this.self, $childrenRequiredContent});
+    
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.$fatherCamel);
+    $childrenRunCallContent
   }
-          ''');
-
-        bodyContent.writeln(funcContent);
+}
+        ''');
+        bodyContent.writeln(classContent);
       },
     );
 
@@ -141,9 +143,15 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-class WithRefs {
-  ${bodyContent.toString()}
+Future<void> withRefs(Ref ref) async { 
+  await ref._run();
 }
+
+abstract class Ref {
+  Future<void> _run();
+}
+
+${bodyContent.toString()}
     ''';
   }
 }

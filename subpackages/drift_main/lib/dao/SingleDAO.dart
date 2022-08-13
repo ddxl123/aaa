@@ -22,6 +22,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     final j = innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.sonId.equalsExp(fragments.id));
     final w = fragmentGroupId == null ? rFragment2FragmentGroups.fatherId.isNull() : rFragment2FragmentGroups.fatherId.equals(fragmentGroupId);
     final List<TypedResult> result = await (select(fragments).join([j])..where(w)).get();
+    print(result);
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
@@ -49,12 +50,14 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return await transaction(
       () async {
         late FragmentGroup returnFragmentGroup;
-        await WithRefs.fragmentGroups(
-          (table) async {
-            returnFragmentGroup = await insertReturningWith(table, entity: willEntity, syncTag: await SyncTag.create());
-          },
-          child_fragmentGroups: null,
-          rFragment2FragmentGroups: null,
+        await withRefs(
+          RefFragmentGroups(
+            self: (table) async {
+              returnFragmentGroup = await insertReturningWith(table, entity: willEntity, syncTag: await SyncTag.create());
+            },
+            child_fragmentGroups: null,
+            rFragment2FragmentGroups: null,
+          ),
         );
         return returnFragmentGroup;
       },
@@ -67,30 +70,32 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
       () async {
         final st = await SyncTag.create();
         late Fragment newFragment;
-        await WithRefs.fragments(
-          (table) async {
-            newFragment = await insertReturningWith(table, entity: willEntity, syncTag: st);
-          },
-          rFragment2FragmentGroups: (_) async => await WithRefs.rFragment2FragmentGroups(
-            (table) async {
-              await insertReturningWith(
-                table,
-                entity: WithCrts.rFragment2FragmentGroupsCompanion(
-                  fatherId: (fatherEntity?.id).value(),
-                  sonId: newFragment.id.value(),
-                  id: absent(),
-                  createdAt: absent(),
-                  updatedAt: absent(),
-                ),
-                syncTag: st,
-              );
+        await withRefs(
+          RefFragments(
+            self: (table) async {
+              newFragment = await insertReturningWith(table, entity: willEntity, syncTag: st);
             },
+            rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+              self: (table) async {
+                await insertReturningWith(
+                  table,
+                  entity: WithCrts.rFragment2FragmentGroupsCompanion(
+                    fatherId: (fatherEntity?.id).value(),
+                    sonId: newFragment.id.value(),
+                    id: absent(),
+                    createdAt: absent(),
+                    updatedAt: absent(),
+                  ),
+                  syncTag: st,
+                );
+              },
+            ),
+            child_fragments: null,
+            rFragment2MemoryGroups: null,
+            fragmentPermanentMemoryInfos: null,
+            rAssistedMemory2Fragments_1: null,
+            rAssistedMemory2Fragments_2: null,
           ),
-          child_fragments: null,
-          rFragment2MemoryGroups: null,
-          fragmentPermanentMemoryInfos: null,
-          rAssistedMemory2Fragments_1: null,
-          rAssistedMemory2Fragments_2: null,
         );
         return newFragment;
       },
@@ -98,54 +103,39 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   /// 创建一个记忆
-  Future<void> insertMemoryGroupWithOther(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments, MemoryModel? willMemoryModel) async {
+  Future<void> insertMemoryGroupWithOther(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments) async {
     return await transaction(
       () async {
         final syncTag = await SyncTag.create();
         late MemoryGroup newMemoryGroup;
 
-        await WithRefs.memoryGroups(
-          (table) async {
-            newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
-          },
-          rFragment2MemoryGroups: (table) async => await WithRefs.rFragment2MemoryGroups(
-            (table) async {
-              await Future.forEach<Fragment>(
-                willFragments,
-                (element) async {
-                  await insertReturningWith(
-                    table,
-                    entity: WithCrts.rFragment2MemoryGroupsCompanion(
-                      fatherId: newMemoryGroup.id.value(),
-                      sonId: element.id.value(),
-                      id: absent(),
-                      createdAt: absent(),
-                      updatedAt: absent(),
-                    ),
-                    syncTag: syncTag,
-                  );
-                },
-              );
+        await withRefs(
+          RefMemoryGroups(
+            self: (table) async {
+              newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
             },
-          ),
-          rMemoryModel2MemoryGroups: (_) async => await WithRefs.rMemoryModel2MemoryGroups(
-            (table) async {
-              if (willMemoryModel != null) {
-                await insertReturningWith(
-                  table,
-                  entity: WithCrts.rMemoryModel2MemoryGroupsCompanion(
-                    fatherId: newMemoryGroup.id.value(),
-                    sonId: willMemoryModel.id.value(),
-                    id: absent(),
-                    createdAt: absent(),
-                    updatedAt: absent(),
-                  ),
-                  syncTag: syncTag,
+            rFragment2MemoryGroups: RefRFragment2MemoryGroups(
+              self: (table) async {
+                await Future.forEach<Fragment>(
+                  willFragments,
+                  (element) async {
+                    await insertReturningWith(
+                      table,
+                      entity: WithCrts.rFragment2MemoryGroupsCompanion(
+                        fatherId: newMemoryGroup.id.value(),
+                        sonId: element.id.value(),
+                        id: absent(),
+                        createdAt: absent(),
+                        updatedAt: absent(),
+                      ),
+                      syncTag: syncTag,
+                    );
+                  },
                 );
-              }
-            },
+              },
+            ),
+            fragmentPermanentMemoryInfos: null,
           ),
-          fragmentPermanentMemoryInfos: null,
         );
       },
     );
@@ -160,12 +150,14 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
       () async {
         final syncTag = await SyncTag.create();
         late MemoryModel newMemoryModel;
-        await WithRefs.memoryModels(
-          (table) async {
-            newMemoryModel = await insertReturningWith(table, entity: willEntry, syncTag: syncTag);
-          },
-          rMemoryModel2MemoryGroups: null,
-          fragmentPermanentMemoryInfos: null,
+        await withRefs(
+          RefMemoryModels(
+            self: (table) async {
+              newMemoryModel = await insertReturningWith(table, entity: willEntry, syncTag: syncTag);
+            },
+            memoryGroups: null,
+            fragmentPermanentMemoryInfos: null,
+          ),
         );
         return newMemoryModel;
       },
@@ -200,9 +192,9 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return gets.map((e) => e.readTable(fragments)).toList();
   }
 
-  Future<MemoryModel?> queryMemoryModelInsideMemoryGroup(String memoryGroupId) async {
-    final j = select(memoryModels).join([innerJoin(rMemoryModel2MemoryGroups, rMemoryModel2MemoryGroups.sonId.equalsExp(memoryModels.id))]);
-    j.where(rMemoryModel2MemoryGroups.fatherId.equals(memoryGroupId));
-    return (await j.getSingleOrNull())?.readTable(memoryModels);
+  Future<MemoryModel?> queryMemoryModelInsideMemoryGroup({required String? memoryModelId}) async {
+    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingleOrNull();
   }
+
+  Future<void> updateMemoryModelInsideMemoryGroup() async {}
 }

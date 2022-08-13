@@ -16,6 +16,10 @@ class ResetGenerator extends Generator {
           final params = cls.unnamedConstructor!.parameters;
           final singleContent = '''
         extension ${className}Ext on $className {
+          /// 将传入的新数据覆盖掉旧数据类实例。
+          ///
+          /// 建议配合 [withRefs] 使用。
+          ///
           /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
           FutureOr<$className> reset({${params.map((e) => 'required Value<${e.type}> ${e.name}').join(',')}, 
             required SyncTag? writeSyncTag,}) async {
