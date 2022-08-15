@@ -136,7 +136,7 @@ class Ab<V> {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
   }
 
-  void initVerify({required bool Function(Ab<V> abV) initIsOk, required String failMessage}) {
+  void initVerify({required FutureOr<bool> Function(Ab<V> abV) initIsOk, required String failMessage}) {
     verify = Verify<Ab<V>>(vc: this, initIsOk: initIsOk, failMessage: failMessage);
   }
 }

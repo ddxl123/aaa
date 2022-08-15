@@ -31,7 +31,18 @@ class FragmentGroupSelectPage extends StatelessWidget {
         text: '确认选择',
         onPressed: () async {
           final c = Aber.find<FragmentGizmoEditPageAbController>();
-          await Aber.findLast<FragmentGroupListPageAbController>().currentPart().addFragment(FragmentsCompanion()..title = c.title.value());
+          final clp = Aber.findLast<FragmentGroupListPageAbController>();
+          await clp.currentPart().addFragment(
+                willFragment: WithCrts.fragmentsCompanion(
+                  id: absent(),
+                  createdAt: absent(),
+                  updatedAt: absent(),
+                  fatherFragmentId: (clp.currentPart().fatherFragmentGroup?.call().id).value(),
+                  title: c.title,
+                  // TODO: 关于优先级的配置
+                  priority: 0,
+                ),
+              );
           SmartDialog.showToast('创建成功', displayTime: const Duration(milliseconds: 1000));
           Navigator.pop(context);
           Navigator.pop(context);

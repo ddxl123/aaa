@@ -22,7 +22,7 @@ part 'table/local/Local.dart';
 
 part 'custom/sync_tag.dart';
 
-part 'custom/memory_group_status.dart';
+part 'custom/memory_group_enum.dart';
 
 part 'custom/sync_curd.dart';
 

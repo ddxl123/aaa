@@ -11,13 +11,13 @@ const List<Type> cloudTableClass = [
 
 @ReferenceTo([])
 class Users extends CloudTableBase {
-  TextColumn get username => text().withDefault(const Constant('还没有名字'))();
+  TextColumn get username => text()();
 
   TextColumn get password => text().nullable()();
 
-  TextColumn get email => text().withDefault(const Constant('-'))();
+  TextColumn get email => text()();
 
-  IntColumn get age => integer().check(age.isBiggerOrEqual(const Constant(0))).withDefault(const Constant(0))();
+  IntColumn get age => integer()();
 }
 
 @ReferenceTo([])
@@ -28,12 +28,12 @@ class Fragments extends CloudTableBase {
   @ReferenceTo([Fragments])
   TextColumn get fatherFragmentId => text().nullable()();
 
-  TextColumn get title => text().withDefault(const Constant('还没有标题'))();
+  TextColumn get title => text()();
 
   /// 优先级/高频程度。
   ///
   /// 数字越大，优先级越高，不能为负数。
-  IntColumn get priority => integer().check(priority.isBiggerOrEqual(const Constant(0))).withDefault(const Constant(0))();
+  IntColumn get priority => integer()();
 }
 
 @ReferenceTo([])
@@ -41,63 +41,51 @@ class FragmentGroups extends CloudTableBase {
   @ReferenceTo([FragmentGroups])
   TextColumn get fatherFragmentGroupId => text().nullable()();
 
-  TextColumn get title => text().withDefault(const Constant('还没有名称'))();
+  TextColumn get title => text()();
 }
 
+/// 当前
+///  新学数量[newLearnCount]：[100]个 剩余100
+///  复习数量：300个 剩余300
+///   1. 取用接下来[24h][takeReviewInterval]内的复习量（包含曾逾期的碎片）
+///  展示优先级：[displayPriority]
+///
+/// 总学习量：共400个碎片 剩余400
+///
+/// 熟练度清零：[点击清零]
+///    - [选择] 不清零在其他碎片组中正在学习的。
+///    - 清零后，会将其碎片的熟练度降至0
+///
+/// 将[熟练度高于0.8][filterOut]的碎片视为完全掌握状态，将不会在当前记忆组中出现。（可写入算法）
 @ReferenceTo([])
 class MemoryGroups extends CloudTableBase {
   @ReferenceTo([MemoryModels])
   TextColumn get memoryModelId => text().nullable()();
 
-  TextColumn get title => text().withDefault(const Constant('还没有名称'))();
+  TextColumn get title => text()();
 
-  IntColumn get type => intEnum<MemoryGroupType>().withDefault(Constant(MemoryGroupType.inApp.index))();
+  IntColumn get type => intEnum<MemoryGroupType>()();
 
-  /// [MemoryGroupStatusForInApp]
-  IntColumn get inAppStatus => intEnum<MemoryGroupStatusForInApp>().withDefault(Constant(MemoryGroupStatusForInApp.notStart.index))();
+  IntColumn get status => intEnum<MemoryGroupStatus>()();
 
-  /// [MemoryGroupStatusForInAppPart]
-  IntColumn get inAppPartStatus => intEnum<MemoryGroupStatusForInAppPart>().withDefault(Constant(MemoryGroupStatusForInAppPart.disabled.index))();
+  /// 新学数量
+  IntColumn get newLearnCount => integer()();
 
-  /// [MemoryGroupStatusForAllFloating]
-  IntColumn get allFloatingStatus =>
-      intEnum<MemoryGroupStatusForAllFloating>().withDefault(Constant(MemoryGroupStatusForAllFloating.notStarted.index))();
+  /// 复习区间
+  TextColumn get reviewInterval => text()();
 
-  ///
-  /// - 当前：
-  ///   - 新学数量：[100]个 剩余100
-  ///     - 当前碎片在其他碎片组中可能在同时学习，或者曾在其他碎片组中曾学习过，会留下熟练度痕迹。
-  ///     - 是否保留痕迹：[是/否]。
-  ///       - 若保留痕迹，则在启动当前碎片组时，会将其[熟练度低于0.2]的碎片视为新碎片进行初始化。（可写入算法）
-  ///       - 若不保留痕迹，则无论其碎片有没有痕迹，都将其视为新碎片进行初始化。
-  ///     - 是否基于痕迹叠加：[是/否]
-  ///       - 若为是，则记忆模型算法的初始熟练度会以痕迹熟练度进行代入。
-  ///         - 痕迹熟练度加权：可以降低或增加痕迹熟练度，从而加权对记忆模型算法的加权。
-  ///       - 若为否，则只会将其视为新碎片，但是记忆模型算法的初始熟练度会以0进行代入。
-  ///     - 保留痕迹与基于痕迹叠加的区别：
-  ///       - 保留痕迹：只会判断是否将存在痕迹的碎片视为新碎片。
-  ///       - 基于痕迹叠加：只会判断是否让记忆模型算法根据痕迹熟练度进行初始运算。
-  ///   - 复习数量：300个 剩余300
-  ///     - 取用接下来[24h]内的复习量（包含曾逾期的碎片）
-  ///     - 过滤掉[熟练度高于0.8]的碎片（相当于将熟练度高于0.8的碎片视为完全掌握状态，可写入算法）
-  ///     - 会根据记忆模型计算。
-  ///   - 总学习量：共400个碎片 剩余400
-  ///
-  /// - 全部：
-  ///   - 总数量：5000个
-  ///   - 未学数量：2000个
-  ///   - 痕迹数量：3000个
-  ///   - 熟练度在[0.2-0.8]范围的数量：2000个
-  ///
-  ///  - 位置：随机混合、优先新学、优先复习。
-  void a() {}
+  /// 过滤碎片
+  TextColumn get filterOut => text()();
+
+  /// 展示优先级
+  IntColumn get displayPriority => intEnum<DisplayPriority>()();
 
   /// 悬浮碎片是否立即触发音频/特效/振动等。
 }
 
 @ReferenceTo([])
 class MemoryModels extends CloudTableBase {
-  TextColumn get title => text().withDefault(const Constant('还没有名称'))();
+  TextColumn get title => text()();
 
   /// 熟悉度算法。用来计算碎片的熟悉度曲线的数学函数，
   ///
@@ -215,7 +203,7 @@ class FragmentPermanentMemoryInfos extends CloudTableBase {
   /// 范围：0~1。
   ///
   /// 在用户触发按钮 **后** ，会根据 [MemoryModels.familiarityAlgorithm] 来计算 **触发按钮前** 的熟练度（触发按钮后的瞬间熟练度必然是1）
-  RealColumn get stageFamiliarity => real().check(stageFamiliarity.isBetween(const Constant(0), const Constant(1))).withDefault(const Constant(0))();
+  RealColumn get stageFamiliarity => real()();
 
   /// 下一次展示的时间点。
   ///
@@ -223,5 +211,5 @@ class FragmentPermanentMemoryInfos extends CloudTableBase {
   DateTimeColumn get nextShowTime => dateTime().nullable()();
 
   /// 碎片展示时长。
-  RealColumn get showDuration => real().withDefault(const Constant(0))();
+  RealColumn get showDuration => real()();
 }

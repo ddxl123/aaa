@@ -180,11 +180,14 @@ class UsersCompanion extends UpdateCompanion<User> {
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.username = const Value.absent(),
+    required String username,
     this.password = const Value.absent(),
-    this.email = const Value.absent(),
-    this.age = const Value.absent(),
-  }) : id = Value(id);
+    required String email,
+    required int age,
+  })  : id = Value(id),
+        username = Value(username),
+        email = Value(email),
+        age = Value(age);
   static Insertable<User> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -294,9 +297,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   late final GeneratedColumn<String?> username = GeneratedColumn<String?>(
       'username', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('还没有名字'));
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _passwordMeta = const VerificationMeta('password');
   @override
   late final GeneratedColumn<String?> password = GeneratedColumn<String?>(
@@ -306,17 +307,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   late final GeneratedColumn<String?> email = GeneratedColumn<String?>(
       'email', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('-'));
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _ageMeta = const VerificationMeta('age');
   @override
   late final GeneratedColumn<int?> age = GeneratedColumn<int?>(
       'age', aliasedName, false,
-      check: () => age.isBiggerOrEqual(const Constant(0)),
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
+      type: const IntType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, createdAt, updatedAt, username, password, email, age];
@@ -345,6 +341,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('username')) {
       context.handle(_usernameMeta,
           username.isAcceptableOrUnknown(data['username']!, _usernameMeta));
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
     }
     if (data.containsKey('password')) {
       context.handle(_passwordMeta,
@@ -353,10 +351,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('email')) {
       context.handle(
           _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
+    } else if (isInserting) {
+      context.missing(_emailMeta);
     }
     if (data.containsKey('age')) {
       context.handle(
           _ageMeta, age.isAcceptableOrUnknown(data['age']!, _ageMeta));
+    } else if (isInserting) {
+      context.missing(_ageMeta);
     }
     return context;
   }
@@ -543,9 +545,11 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.fatherFragmentId = const Value.absent(),
-    this.title = const Value.absent(),
-    this.priority = const Value.absent(),
-  }) : id = Value(id);
+    required String title,
+    required int priority,
+  })  : id = Value(id),
+        title = Value(title),
+        priority = Value(priority);
   static Insertable<Fragment> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -654,17 +658,12 @@ class $FragmentsTable extends Fragments
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('还没有标题'));
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _priorityMeta = const VerificationMeta('priority');
   @override
   late final GeneratedColumn<int?> priority = GeneratedColumn<int?>(
       'priority', aliasedName, false,
-      check: () => priority.isBiggerOrEqual(const Constant(0)),
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
+      type: const IntType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, createdAt, updatedAt, fatherFragmentId, title, priority];
@@ -699,10 +698,14 @@ class $FragmentsTable extends Fragments
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     if (data.containsKey('priority')) {
       context.handle(_priorityMeta,
           priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta));
+    } else if (isInserting) {
+      context.missing(_priorityMeta);
     }
     return context;
   }
@@ -871,8 +874,9 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.fatherFragmentGroupId = const Value.absent(),
-    this.title = const Value.absent(),
-  }) : id = Value(id);
+    required String title,
+  })  : id = Value(id),
+        title = Value(title);
   static Insertable<FragmentGroup> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -976,9 +980,7 @@ class $FragmentGroupsTable extends FragmentGroups
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('还没有名称'));
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, createdAt, updatedAt, fatherFragmentGroupId, title];
@@ -1013,6 +1015,8 @@ class $FragmentGroupsTable extends FragmentGroups
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     return context;
   }
@@ -1052,15 +1056,19 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   String? memoryModelId;
   String title;
   MemoryGroupType type;
+  MemoryGroupStatus status;
 
-  /// [MemoryGroupStatusForInApp]
-  MemoryGroupStatusForInApp inAppStatus;
+  /// 新学数量
+  int newLearnCount;
 
-  /// [MemoryGroupStatusForInAppPart]
-  MemoryGroupStatusForInAppPart inAppPartStatus;
+  /// 复习区间
+  String reviewInterval;
 
-  /// [MemoryGroupStatusForAllFloating]
-  MemoryGroupStatusForAllFloating allFloatingStatus;
+  /// 过滤碎片
+  String filterOut;
+
+  /// 展示优先级
+  DisplayPriority displayPriority;
   MemoryGroup(
       {required this.id,
       required this.createdAt,
@@ -1068,9 +1076,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       this.memoryModelId,
       required this.title,
       required this.type,
-      required this.inAppStatus,
-      required this.inAppPartStatus,
-      required this.allFloatingStatus});
+      required this.status,
+      required this.newLearnCount,
+      required this.reviewInterval,
+      required this.filterOut,
+      required this.displayPriority});
   factory MemoryGroup.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return MemoryGroup(
@@ -1086,14 +1096,17 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       type: $MemoryGroupsTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}type']))!,
-      inAppStatus: $MemoryGroupsTable.$converter1.mapToDart(const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}in_app_status']))!,
-      inAppPartStatus: $MemoryGroupsTable.$converter2.mapToDart(const IntType()
+      status: $MemoryGroupsTable.$converter1.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status']))!,
+      newLearnCount: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}new_learn_count'])!,
+      reviewInterval: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}review_interval'])!,
+      filterOut: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}filter_out'])!,
+      displayPriority: $MemoryGroupsTable.$converter2.mapToDart(const IntType()
           .mapFromDatabaseResponse(
-              data['${effectivePrefix}in_app_part_status']))!,
-      allFloatingStatus: $MemoryGroupsTable.$converter3.mapToDart(
-          const IntType().mapFromDatabaseResponse(
-              data['${effectivePrefix}all_floating_status']))!,
+              data['${effectivePrefix}display_priority']))!,
     );
   }
   @override
@@ -1112,17 +1125,15 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     }
     {
       final converter = $MemoryGroupsTable.$converter1;
-      map['in_app_status'] = Variable<int>(converter.mapToSql(inAppStatus)!);
+      map['status'] = Variable<int>(converter.mapToSql(status)!);
     }
+    map['new_learn_count'] = Variable<int>(newLearnCount);
+    map['review_interval'] = Variable<String>(reviewInterval);
+    map['filter_out'] = Variable<String>(filterOut);
     {
       final converter = $MemoryGroupsTable.$converter2;
-      map['in_app_part_status'] =
-          Variable<int>(converter.mapToSql(inAppPartStatus)!);
-    }
-    {
-      final converter = $MemoryGroupsTable.$converter3;
-      map['all_floating_status'] =
-          Variable<int>(converter.mapToSql(allFloatingStatus)!);
+      map['display_priority'] =
+          Variable<int>(converter.mapToSql(displayPriority)!);
     }
     return map;
   }
@@ -1137,9 +1148,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           : Value(memoryModelId),
       title: Value(title),
       type: Value(type),
-      inAppStatus: Value(inAppStatus),
-      inAppPartStatus: Value(inAppPartStatus),
-      allFloatingStatus: Value(allFloatingStatus),
+      status: Value(status),
+      newLearnCount: Value(newLearnCount),
+      reviewInterval: Value(reviewInterval),
+      filterOut: Value(filterOut),
+      displayPriority: Value(displayPriority),
     );
   }
 
@@ -1153,12 +1166,12 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<MemoryGroupType>(json['type']),
-      inAppStatus:
-          serializer.fromJson<MemoryGroupStatusForInApp>(json['inAppStatus']),
-      inAppPartStatus: serializer
-          .fromJson<MemoryGroupStatusForInAppPart>(json['inAppPartStatus']),
-      allFloatingStatus: serializer
-          .fromJson<MemoryGroupStatusForAllFloating>(json['allFloatingStatus']),
+      status: serializer.fromJson<MemoryGroupStatus>(json['status']),
+      newLearnCount: serializer.fromJson<int>(json['newLearnCount']),
+      reviewInterval: serializer.fromJson<String>(json['reviewInterval']),
+      filterOut: serializer.fromJson<String>(json['filterOut']),
+      displayPriority:
+          serializer.fromJson<DisplayPriority>(json['displayPriority']),
     );
   }
   @override
@@ -1171,11 +1184,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'memoryModelId': serializer.toJson<String?>(memoryModelId),
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<MemoryGroupType>(type),
-      'inAppStatus': serializer.toJson<MemoryGroupStatusForInApp>(inAppStatus),
-      'inAppPartStatus':
-          serializer.toJson<MemoryGroupStatusForInAppPart>(inAppPartStatus),
-      'allFloatingStatus':
-          serializer.toJson<MemoryGroupStatusForAllFloating>(allFloatingStatus),
+      'status': serializer.toJson<MemoryGroupStatus>(status),
+      'newLearnCount': serializer.toJson<int>(newLearnCount),
+      'reviewInterval': serializer.toJson<String>(reviewInterval),
+      'filterOut': serializer.toJson<String>(filterOut),
+      'displayPriority': serializer.toJson<DisplayPriority>(displayPriority),
     };
   }
 
@@ -1186,9 +1199,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           String? memoryModelId,
           String? title,
           MemoryGroupType? type,
-          MemoryGroupStatusForInApp? inAppStatus,
-          MemoryGroupStatusForInAppPart? inAppPartStatus,
-          MemoryGroupStatusForAllFloating? allFloatingStatus}) =>
+          MemoryGroupStatus? status,
+          int? newLearnCount,
+          String? reviewInterval,
+          String? filterOut,
+          DisplayPriority? displayPriority}) =>
       MemoryGroup(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
@@ -1196,9 +1211,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
         memoryModelId: memoryModelId ?? this.memoryModelId,
         title: title ?? this.title,
         type: type ?? this.type,
-        inAppStatus: inAppStatus ?? this.inAppStatus,
-        inAppPartStatus: inAppPartStatus ?? this.inAppPartStatus,
-        allFloatingStatus: allFloatingStatus ?? this.allFloatingStatus,
+        status: status ?? this.status,
+        newLearnCount: newLearnCount ?? this.newLearnCount,
+        reviewInterval: reviewInterval ?? this.reviewInterval,
+        filterOut: filterOut ?? this.filterOut,
+        displayPriority: displayPriority ?? this.displayPriority,
       );
   @override
   String toString() {
@@ -1209,16 +1226,28 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('memoryModelId: $memoryModelId, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
-          ..write('inAppStatus: $inAppStatus, ')
-          ..write('inAppPartStatus: $inAppPartStatus, ')
-          ..write('allFloatingStatus: $allFloatingStatus')
+          ..write('status: $status, ')
+          ..write('newLearnCount: $newLearnCount, ')
+          ..write('reviewInterval: $reviewInterval, ')
+          ..write('filterOut: $filterOut, ')
+          ..write('displayPriority: $displayPriority')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, updatedAt, memoryModelId,
-      title, type, inAppStatus, inAppPartStatus, allFloatingStatus);
+  int get hashCode => Object.hash(
+      id,
+      createdAt,
+      updatedAt,
+      memoryModelId,
+      title,
+      type,
+      status,
+      newLearnCount,
+      reviewInterval,
+      filterOut,
+      displayPriority);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1229,9 +1258,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.memoryModelId == this.memoryModelId &&
           other.title == this.title &&
           other.type == this.type &&
-          other.inAppStatus == this.inAppStatus &&
-          other.inAppPartStatus == this.inAppPartStatus &&
-          other.allFloatingStatus == this.allFloatingStatus);
+          other.status == this.status &&
+          other.newLearnCount == this.newLearnCount &&
+          other.reviewInterval == this.reviewInterval &&
+          other.filterOut == this.filterOut &&
+          other.displayPriority == this.displayPriority);
 }
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
@@ -1241,9 +1272,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String?> memoryModelId;
   Value<String> title;
   Value<MemoryGroupType> type;
-  Value<MemoryGroupStatusForInApp> inAppStatus;
-  Value<MemoryGroupStatusForInAppPart> inAppPartStatus;
-  Value<MemoryGroupStatusForAllFloating> allFloatingStatus;
+  Value<MemoryGroupStatus> status;
+  Value<int> newLearnCount;
+  Value<String> reviewInterval;
+  Value<String> filterOut;
+  Value<DisplayPriority> displayPriority;
   MemoryGroupsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1251,21 +1284,32 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.memoryModelId = const Value.absent(),
     this.title = const Value.absent(),
     this.type = const Value.absent(),
-    this.inAppStatus = const Value.absent(),
-    this.inAppPartStatus = const Value.absent(),
-    this.allFloatingStatus = const Value.absent(),
+    this.status = const Value.absent(),
+    this.newLearnCount = const Value.absent(),
+    this.reviewInterval = const Value.absent(),
+    this.filterOut = const Value.absent(),
+    this.displayPriority = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.memoryModelId = const Value.absent(),
-    this.title = const Value.absent(),
-    this.type = const Value.absent(),
-    this.inAppStatus = const Value.absent(),
-    this.inAppPartStatus = const Value.absent(),
-    this.allFloatingStatus = const Value.absent(),
-  }) : id = Value(id);
+    required String title,
+    required MemoryGroupType type,
+    required MemoryGroupStatus status,
+    required int newLearnCount,
+    required String reviewInterval,
+    required String filterOut,
+    required DisplayPriority displayPriority,
+  })  : id = Value(id),
+        title = Value(title),
+        type = Value(type),
+        status = Value(status),
+        newLearnCount = Value(newLearnCount),
+        reviewInterval = Value(reviewInterval),
+        filterOut = Value(filterOut),
+        displayPriority = Value(displayPriority);
   static Insertable<MemoryGroup> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -1273,9 +1317,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<String?>? memoryModelId,
     Expression<String>? title,
     Expression<MemoryGroupType>? type,
-    Expression<MemoryGroupStatusForInApp>? inAppStatus,
-    Expression<MemoryGroupStatusForInAppPart>? inAppPartStatus,
-    Expression<MemoryGroupStatusForAllFloating>? allFloatingStatus,
+    Expression<MemoryGroupStatus>? status,
+    Expression<int>? newLearnCount,
+    Expression<String>? reviewInterval,
+    Expression<String>? filterOut,
+    Expression<DisplayPriority>? displayPriority,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1284,9 +1330,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       if (memoryModelId != null) 'memory_model_id': memoryModelId,
       if (title != null) 'title': title,
       if (type != null) 'type': type,
-      if (inAppStatus != null) 'in_app_status': inAppStatus,
-      if (inAppPartStatus != null) 'in_app_part_status': inAppPartStatus,
-      if (allFloatingStatus != null) 'all_floating_status': allFloatingStatus,
+      if (status != null) 'status': status,
+      if (newLearnCount != null) 'new_learn_count': newLearnCount,
+      if (reviewInterval != null) 'review_interval': reviewInterval,
+      if (filterOut != null) 'filter_out': filterOut,
+      if (displayPriority != null) 'display_priority': displayPriority,
     });
   }
 
@@ -1297,9 +1345,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<String?>? memoryModelId,
       Value<String>? title,
       Value<MemoryGroupType>? type,
-      Value<MemoryGroupStatusForInApp>? inAppStatus,
-      Value<MemoryGroupStatusForInAppPart>? inAppPartStatus,
-      Value<MemoryGroupStatusForAllFloating>? allFloatingStatus}) {
+      Value<MemoryGroupStatus>? status,
+      Value<int>? newLearnCount,
+      Value<String>? reviewInterval,
+      Value<String>? filterOut,
+      Value<DisplayPriority>? displayPriority}) {
     return MemoryGroupsCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
@@ -1307,9 +1357,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       memoryModelId: memoryModelId ?? this.memoryModelId,
       title: title ?? this.title,
       type: type ?? this.type,
-      inAppStatus: inAppStatus ?? this.inAppStatus,
-      inAppPartStatus: inAppPartStatus ?? this.inAppPartStatus,
-      allFloatingStatus: allFloatingStatus ?? this.allFloatingStatus,
+      status: status ?? this.status,
+      newLearnCount: newLearnCount ?? this.newLearnCount,
+      reviewInterval: reviewInterval ?? this.reviewInterval,
+      filterOut: filterOut ?? this.filterOut,
+      displayPriority: displayPriority ?? this.displayPriority,
     );
   }
 
@@ -1335,20 +1387,23 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       final converter = $MemoryGroupsTable.$converter0;
       map['type'] = Variable<int>(converter.mapToSql(type.value)!);
     }
-    if (inAppStatus.present) {
+    if (status.present) {
       final converter = $MemoryGroupsTable.$converter1;
-      map['in_app_status'] =
-          Variable<int>(converter.mapToSql(inAppStatus.value)!);
+      map['status'] = Variable<int>(converter.mapToSql(status.value)!);
     }
-    if (inAppPartStatus.present) {
+    if (newLearnCount.present) {
+      map['new_learn_count'] = Variable<int>(newLearnCount.value);
+    }
+    if (reviewInterval.present) {
+      map['review_interval'] = Variable<String>(reviewInterval.value);
+    }
+    if (filterOut.present) {
+      map['filter_out'] = Variable<String>(filterOut.value);
+    }
+    if (displayPriority.present) {
       final converter = $MemoryGroupsTable.$converter2;
-      map['in_app_part_status'] =
-          Variable<int>(converter.mapToSql(inAppPartStatus.value)!);
-    }
-    if (allFloatingStatus.present) {
-      final converter = $MemoryGroupsTable.$converter3;
-      map['all_floating_status'] =
-          Variable<int>(converter.mapToSql(allFloatingStatus.value)!);
+      map['display_priority'] =
+          Variable<int>(converter.mapToSql(displayPriority.value)!);
     }
     return map;
   }
@@ -1362,9 +1417,11 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('memoryModelId: $memoryModelId, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
-          ..write('inAppStatus: $inAppStatus, ')
-          ..write('inAppPartStatus: $inAppPartStatus, ')
-          ..write('allFloatingStatus: $allFloatingStatus')
+          ..write('status: $status, ')
+          ..write('newLearnCount: $newLearnCount, ')
+          ..write('reviewInterval: $reviewInterval, ')
+          ..write('filterOut: $filterOut, ')
+          ..write('displayPriority: $displayPriority')
           ..write(')'))
         .toString();
   }
@@ -1405,50 +1462,44 @@ class $MemoryGroupsTable extends MemoryGroups
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('还没有名称'));
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumnWithTypeConverter<MemoryGroupType, int?> type =
       GeneratedColumn<int?>('type', aliasedName, false,
-              type: const IntType(),
-              requiredDuringInsert: false,
-              defaultValue: Constant(MemoryGroupType.inApp.index))
+              type: const IntType(), requiredDuringInsert: true)
           .withConverter<MemoryGroupType>($MemoryGroupsTable.$converter0);
-  final VerificationMeta _inAppStatusMeta =
-      const VerificationMeta('inAppStatus');
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForInApp, int?>
-      inAppStatus = GeneratedColumn<int?>('in_app_status', aliasedName, false,
-              type: const IntType(),
-              requiredDuringInsert: false,
-              defaultValue: Constant(MemoryGroupStatusForInApp.notStart.index))
-          .withConverter<MemoryGroupStatusForInApp>(
-              $MemoryGroupsTable.$converter1);
-  final VerificationMeta _inAppPartStatusMeta =
-      const VerificationMeta('inAppPartStatus');
+  late final GeneratedColumnWithTypeConverter<MemoryGroupStatus, int?> status =
+      GeneratedColumn<int?>('status', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<MemoryGroupStatus>($MemoryGroupsTable.$converter1);
+  final VerificationMeta _newLearnCountMeta =
+      const VerificationMeta('newLearnCount');
   @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForInAppPart,
-      int?> inAppPartStatus = GeneratedColumn<int?>(
-          'in_app_part_status', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultValue: Constant(MemoryGroupStatusForInAppPart.disabled.index))
-      .withConverter<MemoryGroupStatusForInAppPart>(
-          $MemoryGroupsTable.$converter2);
-  final VerificationMeta _allFloatingStatusMeta =
-      const VerificationMeta('allFloatingStatus');
+  late final GeneratedColumn<int?> newLearnCount = GeneratedColumn<int?>(
+      'new_learn_count', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _reviewIntervalMeta =
+      const VerificationMeta('reviewInterval');
   @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatusForAllFloating,
-      int?> allFloatingStatus = GeneratedColumn<int?>(
-          'all_floating_status', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultValue:
-              Constant(MemoryGroupStatusForAllFloating.notStarted.index))
-      .withConverter<MemoryGroupStatusForAllFloating>(
-          $MemoryGroupsTable.$converter3);
+  late final GeneratedColumn<String?> reviewInterval = GeneratedColumn<String?>(
+      'review_interval', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _filterOutMeta = const VerificationMeta('filterOut');
+  @override
+  late final GeneratedColumn<String?> filterOut = GeneratedColumn<String?>(
+      'filter_out', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _displayPriorityMeta =
+      const VerificationMeta('displayPriority');
+  @override
+  late final GeneratedColumnWithTypeConverter<DisplayPriority, int?>
+      displayPriority = GeneratedColumn<int?>(
+              'display_priority', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<DisplayPriority>($MemoryGroupsTable.$converter2);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1457,9 +1508,11 @@ class $MemoryGroupsTable extends MemoryGroups
         memoryModelId,
         title,
         type,
-        inAppStatus,
-        inAppPartStatus,
-        allFloatingStatus
+        status,
+        newLearnCount,
+        reviewInterval,
+        filterOut,
+        displayPriority
       ];
   @override
   String get aliasedName => _alias ?? 'memory_groups';
@@ -1492,11 +1545,34 @@ class $MemoryGroupsTable extends MemoryGroups
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     context.handle(_typeMeta, const VerificationResult.success());
-    context.handle(_inAppStatusMeta, const VerificationResult.success());
-    context.handle(_inAppPartStatusMeta, const VerificationResult.success());
-    context.handle(_allFloatingStatusMeta, const VerificationResult.success());
+    context.handle(_statusMeta, const VerificationResult.success());
+    if (data.containsKey('new_learn_count')) {
+      context.handle(
+          _newLearnCountMeta,
+          newLearnCount.isAcceptableOrUnknown(
+              data['new_learn_count']!, _newLearnCountMeta));
+    } else if (isInserting) {
+      context.missing(_newLearnCountMeta);
+    }
+    if (data.containsKey('review_interval')) {
+      context.handle(
+          _reviewIntervalMeta,
+          reviewInterval.isAcceptableOrUnknown(
+              data['review_interval']!, _reviewIntervalMeta));
+    } else if (isInserting) {
+      context.missing(_reviewIntervalMeta);
+    }
+    if (data.containsKey('filter_out')) {
+      context.handle(_filterOutMeta,
+          filterOut.isAcceptableOrUnknown(data['filter_out']!, _filterOutMeta));
+    } else if (isInserting) {
+      context.missing(_filterOutMeta);
+    }
+    context.handle(_displayPriorityMeta, const VerificationResult.success());
     return context;
   }
 
@@ -1515,15 +1591,10 @@ class $MemoryGroupsTable extends MemoryGroups
 
   static TypeConverter<MemoryGroupType, int> $converter0 =
       const EnumIndexConverter<MemoryGroupType>(MemoryGroupType.values);
-  static TypeConverter<MemoryGroupStatusForInApp, int> $converter1 =
-      const EnumIndexConverter<MemoryGroupStatusForInApp>(
-          MemoryGroupStatusForInApp.values);
-  static TypeConverter<MemoryGroupStatusForInAppPart, int> $converter2 =
-      const EnumIndexConverter<MemoryGroupStatusForInAppPart>(
-          MemoryGroupStatusForInAppPart.values);
-  static TypeConverter<MemoryGroupStatusForAllFloating, int> $converter3 =
-      const EnumIndexConverter<MemoryGroupStatusForAllFloating>(
-          MemoryGroupStatusForAllFloating.values);
+  static TypeConverter<MemoryGroupStatus, int> $converter1 =
+      const EnumIndexConverter<MemoryGroupStatus>(MemoryGroupStatus.values);
+  static TypeConverter<DisplayPriority, int> $converter2 =
+      const EnumIndexConverter<DisplayPriority>(DisplayPriority.values);
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
@@ -1736,10 +1807,11 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.title = const Value.absent(),
+    required String title,
     this.familiarityAlgorithm = const Value.absent(),
     this.nextTimeAlgorithm = const Value.absent(),
-  }) : id = Value(id);
+  })  : id = Value(id),
+        title = Value(title);
   static Insertable<MemoryModel> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -1844,9 +1916,7 @@ class $MemoryModelsTable extends MemoryModels
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('还没有名称'));
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _familiarityAlgorithmMeta =
       const VerificationMeta('familiarityAlgorithm');
   @override
@@ -1893,6 +1963,8 @@ class $MemoryModelsTable extends MemoryModels
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     if (data.containsKey('familiarity_algorithm')) {
       context.handle(
@@ -2188,10 +2260,12 @@ class FragmentPermanentMemoryInfosCompanion
     this.memoryModelId = const Value.absent(),
     this.memoryGroupId = const Value.absent(),
     this.stageButtonValue = const Value.absent(),
-    this.stageFamiliarity = const Value.absent(),
+    required double stageFamiliarity,
     this.nextShowTime = const Value.absent(),
-    this.showDuration = const Value.absent(),
-  }) : id = Value(id);
+    required double showDuration,
+  })  : id = Value(id),
+        stageFamiliarity = Value(stageFamiliarity),
+        showDuration = Value(showDuration);
   static Insertable<FragmentPermanentMemoryInfo> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -2352,11 +2426,7 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
   @override
   late final GeneratedColumn<double?> stageFamiliarity =
       GeneratedColumn<double?>('stage_familiarity', aliasedName, false,
-          check: () =>
-              stageFamiliarity.isBetween(const Constant(0), const Constant(1)),
-          type: const RealType(),
-          requiredDuringInsert: false,
-          defaultValue: const Constant(0));
+          type: const RealType(), requiredDuringInsert: true);
   final VerificationMeta _nextShowTimeMeta =
       const VerificationMeta('nextShowTime');
   @override
@@ -2368,9 +2438,7 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
   @override
   late final GeneratedColumn<double?> showDuration = GeneratedColumn<double?>(
       'show_duration', aliasedName, false,
-      type: const RealType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
+      type: const RealType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2436,6 +2504,8 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
           _stageFamiliarityMeta,
           stageFamiliarity.isAcceptableOrUnknown(
               data['stage_familiarity']!, _stageFamiliarityMeta));
+    } else if (isInserting) {
+      context.missing(_stageFamiliarityMeta);
     }
     if (data.containsKey('next_show_time')) {
       context.handle(
@@ -2448,6 +2518,8 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
           _showDurationMeta,
           showDuration.isAcceptableOrUnknown(
               data['show_duration']!, _showDurationMeta));
+    } else if (isInserting) {
+      context.missing(_showDurationMeta);
     }
     return context;
   }

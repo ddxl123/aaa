@@ -51,7 +51,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
       () async {
         late FragmentGroup returnFragmentGroup;
         await withRefs(
-          RefFragmentGroups(
+          () => RefFragmentGroups(
             self: (table) async {
               returnFragmentGroup = await insertReturningWith(table, entity: willEntity, syncTag: await SyncTag.create());
             },
@@ -65,23 +65,23 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   /// 向当前 [Fragments] 表中插入一条数据, 返回新插入的 [Fragment]。
-  Future<Fragment> insertFragment(FragmentGroup? fatherEntity, FragmentsCompanion willEntity) async {
+  Future<Fragment> insertFragment({required FragmentsCompanion willFragment}) async {
     return await transaction(
       () async {
         final st = await SyncTag.create();
         late Fragment newFragment;
         await withRefs(
-          RefFragments(
+          () => RefFragments(
             self: (table) async {
-              newFragment = await insertReturningWith(table, entity: willEntity, syncTag: st);
+              newFragment = await insertReturningWith(table, entity: willFragment, syncTag: st);
             },
             rFragment2FragmentGroups: RefRFragment2FragmentGroups(
               self: (table) async {
                 await insertReturningWith(
                   table,
                   entity: WithCrts.rFragment2FragmentGroupsCompanion(
-                    fatherId: (fatherEntity?.id).value(),
-                    sonId: newFragment.id.value(),
+                    fatherId: willFragment.fatherFragmentId,
+                    sonId: newFragment.id,
                     id: absent(),
                     createdAt: absent(),
                     updatedAt: absent(),
@@ -103,14 +103,14 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   /// 创建一个记忆
-  Future<void> insertMemoryGroupWithOther(MemoryGroupsCompanion willMemoryGroup, List<Fragment> willFragments) async {
+  Future<void> insertMemoryGroupWithOther({required MemoryGroupsCompanion willMemoryGroup, required List<Fragment> willFragments}) async {
     return await transaction(
       () async {
         final syncTag = await SyncTag.create();
         late MemoryGroup newMemoryGroup;
 
         await withRefs(
-          RefMemoryGroups(
+          () => RefMemoryGroups(
             self: (table) async {
               newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
             },
@@ -123,7 +123,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
                       table,
                       entity: WithCrts.rFragment2MemoryGroupsCompanion(
                         fatherId: newMemoryGroup.id.value(),
-                        sonId: element.id.value(),
+                        sonId: element.id,
                         id: absent(),
                         createdAt: absent(),
                         updatedAt: absent(),
@@ -151,7 +151,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
         final syncTag = await SyncTag.create();
         late MemoryModel newMemoryModel;
         await withRefs(
-          RefMemoryModels(
+          () => RefMemoryModels(
             self: (table) async {
               newMemoryModel = await insertReturningWith(table, entity: willEntry, syncTag: syncTag);
             },

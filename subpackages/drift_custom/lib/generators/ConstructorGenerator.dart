@@ -13,10 +13,10 @@ class ConstructorGenerator extends Generator {
         if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('UpdateCompanion')) {
           final className = cls.displayName;
           final camelClassName = className.toCamelCase;
-          final params = cls.unnamedConstructor!.parameters;
+          final params = cls.getNamedConstructor('insert')!.parameters;
           final singleContent = '''
-        static $className $camelClassName({${params.map((e) => 'required ${e.type} ${e.name}').join(',')},}){
-           return $className(${params.map((e) => '${e.name}: ${e.name}').join(',')},);
+        static $className $camelClassName({${params.map((e) => 'required ${e.name == 'id' && e.type.getDisplayString(withNullability: false) != 'Value<int>' ? 'Value<${e.type}>' : e.type} ${e.name}').join(',')},}){
+           return $className(${params.map((e) => '${e.name}: ${e.isRequired ? (e.name == 'id' ? e.name : 'Value(${e.name})') : e.name}').join(',')},);
         }
         ''';
 

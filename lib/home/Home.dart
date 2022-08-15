@@ -4,7 +4,9 @@ import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
+import 'package:aaa/single_dialog/single_dialog.dart';
 import 'package:aaa/tool/aber/Aber.dart';
+import 'package:aaa/tool/dialog.dart';
 import 'package:aaa/tool/widget_wrapper/KeepStateWidget.dart';
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
@@ -47,15 +49,7 @@ class Home extends StatelessWidget {
                 backgroundColor: Colors.amber,
                 child: const Text('记'),
                 onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (ctx) => const MemoryGroupGizmoEditPage(
-                        configPageType: EditPageType.create,
-                        memoryGroupGizmo: null,
-                      ),
-                    ),
-                  );
+                  showDialogForCreateMemoryGroup(context: context);
                 },
               ),
               AbBuilder<FragmentGroupListPageAbController>(

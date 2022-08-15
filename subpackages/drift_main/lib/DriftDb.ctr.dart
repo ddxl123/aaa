@@ -12,19 +12,19 @@ class WithCrts {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String> username,
+    required String username,
     required Value<String?> password,
-    required Value<String> email,
-    required Value<int> age,
+    required String email,
+    required int age,
   }) {
     return UsersCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      username: username,
+      username: Value(username),
       password: password,
-      email: email,
-      age: age,
+      email: Value(email),
+      age: Value(age),
     );
   }
 
@@ -33,16 +33,16 @@ class WithCrts {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentId,
-    required Value<String> title,
-    required Value<int> priority,
+    required String title,
+    required int priority,
   }) {
     return FragmentsCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
       fatherFragmentId: fatherFragmentId,
-      title: title,
-      priority: priority,
+      title: Value(title),
+      priority: Value(priority),
     );
   }
 
@@ -51,14 +51,14 @@ class WithCrts {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentGroupId,
-    required Value<String> title,
+    required String title,
   }) {
     return FragmentGroupsCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
       fatherFragmentGroupId: fatherFragmentGroupId,
-      title: title,
+      title: Value(title),
     );
   }
 
@@ -67,22 +67,26 @@ class WithCrts {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> memoryModelId,
-    required Value<String> title,
-    required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatusForInApp> inAppStatus,
-    required Value<MemoryGroupStatusForInAppPart> inAppPartStatus,
-    required Value<MemoryGroupStatusForAllFloating> allFloatingStatus,
+    required String title,
+    required MemoryGroupType type,
+    required MemoryGroupStatus status,
+    required int newLearnCount,
+    required String reviewInterval,
+    required String filterOut,
+    required DisplayPriority displayPriority,
   }) {
     return MemoryGroupsCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
       memoryModelId: memoryModelId,
-      title: title,
-      type: type,
-      inAppStatus: inAppStatus,
-      inAppPartStatus: inAppPartStatus,
-      allFloatingStatus: allFloatingStatus,
+      title: Value(title),
+      type: Value(type),
+      status: Value(status),
+      newLearnCount: Value(newLearnCount),
+      reviewInterval: Value(reviewInterval),
+      filterOut: Value(filterOut),
+      displayPriority: Value(displayPriority),
     );
   }
 
@@ -90,7 +94,7 @@ class WithCrts {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String> title,
+    required String title,
     required Value<String?> familiarityAlgorithm,
     required Value<String?> nextTimeAlgorithm,
   }) {
@@ -98,7 +102,7 @@ class WithCrts {
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      title: title,
+      title: Value(title),
       familiarityAlgorithm: familiarityAlgorithm,
       nextTimeAlgorithm: nextTimeAlgorithm,
     );
@@ -113,9 +117,9 @@ class WithCrts {
     required Value<String?> memoryModelId,
     required Value<String?> memoryGroupId,
     required Value<double?> stageButtonValue,
-    required Value<double> stageFamiliarity,
+    required double stageFamiliarity,
     required Value<DateTime?> nextShowTime,
-    required Value<double> showDuration,
+    required double showDuration,
   }) {
     return FragmentPermanentMemoryInfosCompanion(
       id: id,
@@ -125,22 +129,22 @@ class WithCrts {
       memoryModelId: memoryModelId,
       memoryGroupId: memoryGroupId,
       stageButtonValue: stageButtonValue,
-      stageFamiliarity: stageFamiliarity,
+      stageFamiliarity: Value(stageFamiliarity),
       nextShowTime: nextShowTime,
-      showDuration: showDuration,
+      showDuration: Value(showDuration),
     );
   }
 
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
     required Value<String?> fatherId,
-    required Value<String> sonId,
+    required String sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
   }) {
     return RFragment2FragmentGroupsCompanion(
       fatherId: fatherId,
-      sonId: sonId,
+      sonId: Value(sonId),
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -149,14 +153,14 @@ class WithCrts {
 
   static RFragment2MemoryGroupsCompanion rFragment2MemoryGroupsCompanion({
     required Value<String?> fatherId,
-    required Value<String> sonId,
+    required String sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
   }) {
     return RFragment2MemoryGroupsCompanion(
       fatherId: fatherId,
-      sonId: sonId,
+      sonId: Value(sonId),
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -165,14 +169,14 @@ class WithCrts {
 
   static RAssistedMemory2FragmentsCompanion rAssistedMemory2FragmentsCompanion({
     required Value<String?> fatherId,
-    required Value<String> sonId,
+    required String sonId,
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
   }) {
     return RAssistedMemory2FragmentsCompanion(
       fatherId: fatherId,
-      sonId: sonId,
+      sonId: Value(sonId),
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -199,19 +203,19 @@ class WithCrts {
     required Value<int> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String> syncTableName,
-    required Value<String> rowId,
+    required String syncTableName,
+    required String rowId,
     required Value<SyncCurdType?> syncCurdType,
-    required Value<int> tag,
+    required int tag,
   }) {
     return SyncsCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      syncTableName: syncTableName,
-      rowId: rowId,
+      syncTableName: Value(syncTableName),
+      rowId: Value(rowId),
       syncCurdType: syncCurdType,
-      tag: tag,
+      tag: Value(tag),
     );
   }
 }

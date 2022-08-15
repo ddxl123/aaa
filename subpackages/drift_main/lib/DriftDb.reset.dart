@@ -114,9 +114,11 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String?> memoryModelId,
     required Value<String> title,
     required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatusForInApp> inAppStatus,
-    required Value<MemoryGroupStatusForInAppPart> inAppPartStatus,
-    required Value<MemoryGroupStatusForAllFloating> allFloatingStatus,
+    required Value<MemoryGroupStatus> status,
+    required Value<int> newLearnCount,
+    required Value<String> reviewInterval,
+    required Value<String> filterOut,
+    required Value<DisplayPriority> displayPriority,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
@@ -126,13 +128,14 @@ extension MemoryGroupExt on MemoryGroup {
         memoryModelId.present ? memoryModelId.value : this.memoryModelId;
     this.title = title.present ? title.value : this.title;
     this.type = type.present ? type.value : this.type;
-    this.inAppStatus =
-        inAppStatus.present ? inAppStatus.value : this.inAppStatus;
-    this.inAppPartStatus =
-        inAppPartStatus.present ? inAppPartStatus.value : this.inAppPartStatus;
-    this.allFloatingStatus = allFloatingStatus.present
-        ? allFloatingStatus.value
-        : this.allFloatingStatus;
+    this.status = status.present ? status.value : this.status;
+    this.newLearnCount =
+        newLearnCount.present ? newLearnCount.value : this.newLearnCount;
+    this.reviewInterval =
+        reviewInterval.present ? reviewInterval.value : this.reviewInterval;
+    this.filterOut = filterOut.present ? filterOut.value : this.filterOut;
+    this.displayPriority =
+        displayPriority.present ? displayPriority.value : this.displayPriority;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryGroups,

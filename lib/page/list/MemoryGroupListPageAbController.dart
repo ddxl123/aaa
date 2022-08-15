@@ -18,32 +18,32 @@ class MemoryGroupListPageAbController extends AbController {
   }
 
   Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {
-    void notStart() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => MemoryGroupGizmoEditPage(
-            configPageType: EditPageType.modifyCheck,
-            memoryGroupGizmo: memoryGroupGizmo,
-          ),
-        ),
-      );
+    void notInit() {
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (_) => MemoryGroupGizmoEditPage(
+      //       editPageType: EditPageType.initCheck,
+      //       memoryGroupGizmo: memoryGroupGizmo,
+      //     ),
+      //   ),
+      // );
     }
 
     filter(
       from: memoryGroupGizmo().type,
       targets: {
         [MemoryGroupType.inApp]: () => filter(
-              from: memoryGroupGizmo().normalStatus,
+              from: memoryGroupGizmo().status,
               targets: {
-                [MemoryGroupStatusForInApp.notStart]: () => notStart(),
+                [MemoryGroupStatus.notInit]: () => notInit(),
               },
               orElse: null,
             ),
         [MemoryGroupType.allFloating]: () => filter(
-              from: memoryGroupGizmo().fullFloatingStatus,
+              from: memoryGroupGizmo().status,
               targets: {
-                [MemoryGroupStatusForAllFloating.notStarted]: () => notStart(),
+                [MemoryGroupStatus.notInit]: () => notInit(),
               },
               orElse: null,
             ),

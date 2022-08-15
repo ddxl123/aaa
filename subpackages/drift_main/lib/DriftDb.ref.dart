@@ -7,8 +7,12 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-Future<void> withRefs(Ref ref) async {
-  await ref._run();
+Future<void> withRefs(FutureOr<Ref> Function() ref) async {
+  await DriftDb.instance.transaction(
+    () async {
+      await (await ref())._run();
+    },
+  );
 }
 
 abstract class Ref {

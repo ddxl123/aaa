@@ -1,14 +1,16 @@
+import 'dart:async';
+
 class Verify<VC> {
   final VC vc;
   final String failMessage;
 
-  final bool Function(VC vc) initIsOk;
+  final FutureOr<bool> Function(VC vc) initIsOk;
 
   Verify({required this.vc, required this.initIsOk, required this.failMessage});
 
-  bool get isOk => initIsOk(vc);
+  FutureOr<bool> get isOk async => await initIsOk(vc);
 
-  bool get isNotOk => !isOk;
+  FutureOr<bool> get isNotOk async => !(await isOk);
 }
 
 class VerifyMany {
@@ -17,9 +19,9 @@ class VerifyMany {
 
   VerifyMany({required this.verifyMany});
 
-  bool get isVerifyAllOk {
+  FutureOr<bool> get isVerifyAllOk async {
     for (var verify in verifyMany) {
-      if (verify.isNotOk) {
+      if (await verify.isNotOk) {
         _failMessage = verify.failMessage;
         return false;
       }
@@ -28,8 +30,8 @@ class VerifyMany {
   }
 
   /// 调用时，会同时调用 [isVerifyAllOk]。
-  String get failMessage {
-    final isAllOk = isVerifyAllOk;
+  FutureOr<String> get failMessage async {
+    final isAllOk = await isVerifyAllOk;
     if (isAllOk) {
       _failMessage = '不应该在验证成功时调用 failMessage';
     }

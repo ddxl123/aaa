@@ -1,7 +1,7 @@
-import 'package:uuid/uuid.dart';
 
-void main() {
-  final f = Uuid().v4();
-  print(f);
-  print(f.codeUnits);
+void main()async {
+  for (var element in [0, 1, 2]) {
+    await Future.delayed(Duration(seconds: 3));
+    print(element);
+  }
 }

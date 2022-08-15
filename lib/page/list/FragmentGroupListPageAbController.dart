@@ -64,8 +64,8 @@ class PartListForFragmentHome {
     fragmentGroups.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 
-  Future<void> addFragment(FragmentsCompanion entry) async {
-    final newEntry = await DriftDb.instance.singleDAO.insertFragment(fatherFragmentGroup?.call(), entry);
+  Future<void> addFragment({required FragmentsCompanion willFragment}) async {
+    final newEntry = await DriftDb.instance.singleDAO.insertFragment(willFragment: willFragment);
     fragments.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 
