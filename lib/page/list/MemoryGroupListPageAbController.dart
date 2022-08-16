@@ -1,3 +1,4 @@
+import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
@@ -17,33 +18,36 @@ class MemoryGroupListPageAbController extends AbController {
     memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
   }
 
+  @Filter()
   Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {
-    void notInit() {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (_) => MemoryGroupGizmoEditPage(
-      //       editPageType: EditPageType.initCheck,
-      //       memoryGroupGizmo: memoryGroupGizmo,
-      //     ),
-      //   ),
-      // );
-    }
-
     filter(
       from: memoryGroupGizmo().type,
       targets: {
         [MemoryGroupType.inApp]: () => filter(
               from: memoryGroupGizmo().status,
               targets: {
-                [MemoryGroupStatus.notInit]: () => notInit(),
-              },
-              orElse: null,
-            ),
-        [MemoryGroupType.allFloating]: () => filter(
-              from: memoryGroupGizmo().status,
-              targets: {
-                [MemoryGroupStatus.notInit]: () => notInit(),
+                [MemoryGroupStatus.notInit]: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MemoryGroupGizmoEditPage(
+                        editPageType: MemoryGroupGizmoEditPageType.initCheck,
+                        memoryGroupGizmo: memoryGroupGizmo,
+                      ),
+                    ),
+                  );
+                },
+                [MemoryGroupStatus.notStart]: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MemoryGroupGizmoEditPage(
+                        editPageType: MemoryGroupGizmoEditPageType.modifyOtherCheck,
+                        memoryGroupGizmo: memoryGroupGizmo,
+                      ),
+                    ),
+                  );
+                },
               },
               orElse: null,
             ),

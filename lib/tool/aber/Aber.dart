@@ -324,11 +324,19 @@ abstract class AbController {
 
   late final void Function() thisRefresh;
 
+  bool get isEnableLoading => false;
+
   /// [AbBuilder] 内部的 initState，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   void onInit() {}
 
   /// [AbBuilder] 内部的 dispose，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   void dispose() {}
+
+  /// 需要 [isEnableLoading] 为 true。
+  Future<void> loadingFuture() async {}
+
+  /// 需要 [isEnableLoading] 为 true。
+  Widget loadingWidget() => const Text('无加载组件');
 }
 
 /// 将 [AbController]/[AbBuilder]/[Ab] 连接起来的重要类。
@@ -437,6 +445,7 @@ class AbBuilder<C extends AbController> extends StatefulWidget {
     this.tag,
     required this.builder,
   }) : super(key: key);
+
   final C? putController;
   final String? tag;
   final Widget Function(C controller, Abw<C> abw) builder;
@@ -452,6 +461,8 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 
   /// 当前 Widget 所接收的 controller 是否为 put 产生的。
   bool _isPutter = false;
+
+  late final Future<void> _loadingFuture;
 
   @override
   void initState() {
@@ -481,9 +492,8 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
       _controller!.onInit(); // 如果被 find 成功，会导致再次调用 onInit，因此只能放在这里，让它只会调用一次。
     }
 
-    if (_controller != null) {
-      _abw = Abw<C>(refresh, _controller!._removeRefreshFunctions);
-    }
+    _abw = Abw<C>(refresh, _controller!._removeRefreshFunctions);
+    _loadingFuture = _controller!.loadingFuture();
   }
 
   void refresh() {
@@ -491,7 +501,24 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(_controller!, _abw);
+  Widget build(BuildContext context) {
+    return _controller!.isEnableLoading && _isPutter
+        ? FutureBuilder(
+            future: _loadingFuture,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return _controller!.loadingWidget();
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                return _builderWidget();
+              } else {
+                return const Text('快照异常');
+              }
+            },
+          )
+        : _builderWidget();
+  }
+
+  Widget _builderWidget() => widget.builder(_controller!, _abw);
 
   @override
   void dispose() {

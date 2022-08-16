@@ -1,8 +1,7 @@
+import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/dialog.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
-import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
@@ -38,7 +37,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   ///
 
   /// 新学数量
-  final newLearnCount = 100.ab;
+  final newLearnCount = 0.ab;
 
   /// 复习区间
   /// TODO: 进行 [Verify]
@@ -50,6 +49,14 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// 展示优先级
   final displayPriority = DisplayPriority.minx.ab;
+
+  ///
+
+  /// 当前记忆组碎片总数。
+  final totalCount = 0.ab;
+
+  /// 当前记忆组未学习的数量。
+  final notLearnCount = 0.ab;
 
   VerifyMany get verifyInitCheck => VerifyMany(
         verifyMany: [
@@ -64,8 +71,14 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       );
 
   @override
-  void onInit() {
-    filter(
+  bool get isEnableLoading => true;
+
+  @override
+  Widget loadingWidget() => const Material(child: Center(child: Text('加载中...')));
+
+  @override
+  Future<void> loadingFuture() async {
+    await filterFuture(
       from: editPageType,
       targets: {
         [MemoryGroupGizmoEditPageType.initCheck]: () async {
@@ -98,6 +111,10 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     reviewInterval.refreshEasy((oldValue) => mgg.reviewInterval);
     filterOut.refreshEasy((oldValue) => mgg.filterOut);
     displayPriority.refreshEasy((oldValue) => mgg.displayPriority);
+
+    // TODO:
+    totalCount.refreshEasy((oldValue) => 567);
+    notLearnCount.refreshEasy((oldValue) => 345);
   }
 
   Future<void> commitModifyInitCheck() async {
@@ -106,38 +123,41 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         (obj) async {
           final st = await SyncTag.create();
           await withRefs(
-            () => RefMemoryGroups(
-              self: (table) async {
-                // 修改并写入。
-                await obj.reset(
-                  id: absent(),
-                  createdAt: absent(),
-                  updatedAt: absent(),
-                  memoryModelId: (selectedMemoryModel()?.id).value(),
-                  title: title().value(),
-                  type: type().value(),
-                  // TODO: 变更状态
-                  status: absent(),
-                  writeSyncTag: st,
-                  newLearnCount: absent(),
-                  reviewInterval: absent(),
-                  filterOut: absent(),
-                  displayPriority: absent(),
-                );
-              },
-              // TODO:
-              fragmentPermanentMemoryInfos: null,
-              // TODO:
-              rFragment2MemoryGroups: null,
-            ),
+            () async {
+              return RefMemoryGroups(
+                self: (table) async {
+                  // 修改并写入。
+                  await obj.reset(
+                    id: absent(),
+                    createdAt: absent(),
+                    updatedAt: absent(),
+                    memoryModelId: (selectedMemoryModel()?.id).value(),
+                    title: title().value(),
+                    type: type().value(),
+                    status: MemoryGroupStatus.notStart.value(),
+                    writeSyncTag: st,
+                    newLearnCount: absent(),
+                    reviewInterval: absent(),
+                    filterOut: absent(),
+                    displayPriority: absent(),
+                  );
+                },
+                // TODO:
+                fragmentPermanentMemoryInfos: null,
+                // TODO:
+                rFragment2MemoryGroups: null,
+              );
+            },
           );
-          SmartDialog.showToast('修改成功！');
-          Navigator.pop(context);
           return true;
         },
       );
-      SmartDialog.showToast(await verifyInitCheck.failMessage);
+
+      SmartDialog.showToast('初始化成功！');
+      Navigator.pop(context);
+      return;
     }
+    SmartDialog.showToast(await verifyInitCheck.failMessage);
   }
 
   /// TODO: 要注意修改前与修改后的兼容提示。
@@ -177,6 +197,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       );
       SmartDialog.showToast('启动成功！');
       Navigator.pop(context);
+      return;
     }
     SmartDialog.showToast(await verifyModifyOtherCheck.failMessage);
   }

@@ -1,3 +1,4 @@
+import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
@@ -42,6 +43,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
+  @Filter()
   List<Widget> _children() {
     return filter(
       from: editPageType,
@@ -60,6 +62,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
+  @Filter()
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
@@ -79,6 +82,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
+  @Filter()
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
@@ -96,11 +100,12 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
+  /// 叉号
   Widget _crossWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return IconButton(
-          icon: const FaIcon(FontAwesomeIcons.backward, color: Colors.red),
+          icon: const FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.red),
           onPressed: () {
             c.cancel();
           },
@@ -109,6 +114,8 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
+  /// 对号
+  @Filter()
   Widget _tickWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
@@ -279,9 +286,43 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return Row(
           children: [
             const Text('新学数量：'),
-            Slider(
-              value: 0,
-              onChanged: (value) {},
+            Expanded(
+              child: AbStatefulBuilder(
+                // 保留上一次的设置
+                initExtra: {'value': c.newLearnCount(abw).toDouble()},
+                builder: (Map<String, Object?> extra, BuildContext context, void Function() refresh) {
+                  double dynValue = extra['value'] as double;
+                  // 不能超过最大值
+                  if (dynValue > c.notLearnCount()) {
+                    extra['value'] = c.notLearnCount();
+                    dynValue = extra['value'] as double;
+                  }
+                  // 如果没有 space，则 0/300，其中 0 字符长度会动态的变宽成 10 或 100，从而导致刷新的时候滑块抖动。
+                  // space 意味着将 0 前面添加两个 0，即 000/300。
+                  int space = c.notLearnCount().toString().length - dynValue.toInt().toString().length;
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Slider(
+                          label: dynValue.toInt().toString(),
+                          min: 0,
+                          max: c.notLearnCount().toDouble(),
+                          value: dynValue,
+                          divisions: c.notLearnCount(),
+                          onChanged: (n) {
+                            extra['value'] = n;
+                            refresh();
+                          },
+                          onChangeEnd: (n) {
+                            c.newLearnCount.refreshEasy((oldValue) => n.floor());
+                          },
+                        ),
+                      ),
+                      Text('${'0' * space}${dynValue.toInt()}/${c.notLearnCount()}')
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         );

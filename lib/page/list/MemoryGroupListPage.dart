@@ -2,6 +2,7 @@ import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/EditPageType.dart';
 import 'package:aaa/page/gizmo/MemoryGroupGizmoPage.dart';
 import 'package:aaa/single_dialog/single_dialog.dart';
+import 'package:aaa/tool/annotation.dart';
 import 'package:aaa/tool/dialog.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
@@ -90,6 +91,7 @@ class MemoryGroupListPage extends StatelessWidget {
     );
   }
 
+  @Filter()
   Color _statusButtonBackgroundColorFilter(MemoryGroup memoryGroup) {
     return filter(
       from: memoryGroup.type,
@@ -109,6 +111,7 @@ class MemoryGroupListPage extends StatelessWidget {
     );
   }
 
+  @Filter()
   String _statusButtonTextFilter(MemoryGroup memoryGroup) {
     return filter(
       from: memoryGroup.type,
@@ -150,11 +153,13 @@ class MemoryGroupListPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Text(
-                          memoryGroup.title,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          child: Text(
+                            memoryGroup.title,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ],
@@ -168,21 +173,7 @@ class MemoryGroupListPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              RichText(
-                                text: const TextSpan(
-                                  children: [
-                                    // TextSpan(text: '已记 ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                    // TextSpan(text: '1', style: TextStyle(fontSize: 14, color: Colors.black)),
-                                    // TextSpan(text: '  |  ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                    // TextSpan(text: '记过 ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                    // TextSpan(text: '12', style: TextStyle(fontSize: 14, color: Colors.black)),
-                                    // TextSpan(text: '  |  ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                    // TextSpan(text: '未记 ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                    // TextSpan(text: '332', style: TextStyle(fontSize: 14, color: Colors.black)),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 20),
                               Row(
                                 children: [
                                   Expanded(
