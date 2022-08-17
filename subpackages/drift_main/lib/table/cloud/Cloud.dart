@@ -71,8 +71,8 @@ class MemoryGroups extends CloudTableBase {
   /// 新学数量
   IntColumn get newLearnCount => integer()();
 
-  /// 复习区间
-  TextColumn get reviewInterval => text()();
+  /// 取用 [reviewInterval] 时间点内的复习碎片。
+  DateTimeColumn get reviewInterval => dateTime()();
 
   /// 过滤碎片
   TextColumn get filterOut => text()();
@@ -100,7 +100,8 @@ class MemoryModels extends CloudTableBase {
   /// 例如： type:f(t)=1-(0.56(t-d)^0.06)*(1-i)
   ///
   /// 阶段变量：
-  /// 每次展示结束后，都会将 [非固定常量] 设置为新值，之后将会根据新的数学公式进行 [流逝熟悉度] 计算。注意，数学公式结构并不会发生改变，只是刷新了 [非固定常量] 的值。
+  /// 每次展示结束后，都会将 [阶段常量] 设置为新值，之后将会根据新的数学公式进行熟悉度的曲线计算。
+  /// 注意，数学公式结构并不会发生改变，只是刷新了 [非固定常量] 的值。
   TextColumn get familiarityAlgorithm => text().nullable()();
 
   /// 评估下一次展示的时间点的算法。

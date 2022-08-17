@@ -71,7 +71,7 @@ class WithCrts {
     required MemoryGroupType type,
     required MemoryGroupStatus status,
     required int newLearnCount,
-    required String reviewInterval,
+    required DateTime reviewInterval,
     required String filterOut,
     required DisplayPriority displayPriority,
   }) {

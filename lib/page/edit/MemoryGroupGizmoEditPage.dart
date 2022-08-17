@@ -55,7 +55,9 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               _selectFragmentWidget(),
             ],
         [MemoryGroupGizmoEditPageType.modifyOtherCheck]: () => [
-              _newLearnCount(),
+              _newLearnCountWidget(),
+              _reviewIntervalWidget(),
+              _filterOutWidget(),
             ],
       },
       orElse: null,
@@ -280,7 +282,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
-  Widget _newLearnCount() {
+  Widget _newLearnCountWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Row(
@@ -325,6 +327,108 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Widget _reviewIntervalWidget() {
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return AbStatefulBuilder(
+          initExtra: {
+            'tec': TextEditingController(text: (c.reviewInterval(abw).difference(DateTime.now()).inMinutes.toString())),
+          },
+          onDispose: (extra, ctx, refresh) {
+            (extra['tec'] as TextEditingController).dispose();
+          },
+          builder: (extra, context, refresh) {
+            final tec = extra['tec'] as TextEditingController;
+
+            return Row(
+              children: [
+                const Text('复习区间：  '),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(counter: Container()),
+                              maxLength: 9,
+                              controller: tec,
+                              keyboardType: TextInputType.number,
+                              onChanged: (v) {
+                                if (v.trim() == '') {
+                                  c.reviewInterval.refreshEasy((oldValue) => DateTime.now());
+                                  return;
+                                }
+                                final tryInt = int.tryParse(v);
+                                c.reviewInterval.refreshEasy(
+                                  (oldValue) =>
+                                      tryInt == null ? DateTime.fromMillisecondsSinceEpoch(-1) : DateTime.now().add(Duration(minutes: tryInt)),
+                                );
+                              },
+                            ),
+                          ),
+                          const Text('  分钟内  '),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(() {
+                            final time = c.reviewInterval(abw);
+                            return '${time.year}年${time.month}月${time.day}日${time.hour}时前';
+                          }()),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _filterOutWidget() {
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return AbStatefulBuilder(
+          initExtra: {'tec': TextEditingController(text: c.filterOut())},
+          onDispose: (extra, ctx, refresh) {
+            (extra['tec'] as TextEditingController).dispose();
+          },
+          builder: (extra, context, refresh) {
+            final tec = extra['tec'] as TextEditingController;
+
+            return Row(
+              children: [
+                const Text('过滤碎片：  '),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: tec,
+                              onChanged: (v) {
+                                c.filterOut.refreshEasy((oldValue) => v);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

@@ -42,7 +42,7 @@ Future<void> showDialogForCreateMemoryGroup({
           type: MemoryGroupType.inApp,
           status: MemoryGroupStatus.notInit,
           newLearnCount: 0,
-          reviewInterval: '-',
+          reviewInterval: DateTime.now(),
           filterOut: '-',
           displayPriority: DisplayPriority.minx,
         ),

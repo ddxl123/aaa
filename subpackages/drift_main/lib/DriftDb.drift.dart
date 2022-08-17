@@ -1061,8 +1061,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 新学数量
   int newLearnCount;
 
-  /// 复习区间
-  String reviewInterval;
+  /// 取用 [reviewInterval] 时间点内的复习碎片。
+  DateTime reviewInterval;
 
   /// 过滤碎片
   String filterOut;
@@ -1100,7 +1100,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           .mapFromDatabaseResponse(data['${effectivePrefix}status']))!,
       newLearnCount: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}new_learn_count'])!,
-      reviewInterval: const StringType()
+      reviewInterval: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}review_interval'])!,
       filterOut: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}filter_out'])!,
@@ -1128,7 +1128,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       map['status'] = Variable<int>(converter.mapToSql(status)!);
     }
     map['new_learn_count'] = Variable<int>(newLearnCount);
-    map['review_interval'] = Variable<String>(reviewInterval);
+    map['review_interval'] = Variable<DateTime>(reviewInterval);
     map['filter_out'] = Variable<String>(filterOut);
     {
       final converter = $MemoryGroupsTable.$converter2;
@@ -1168,7 +1168,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       type: serializer.fromJson<MemoryGroupType>(json['type']),
       status: serializer.fromJson<MemoryGroupStatus>(json['status']),
       newLearnCount: serializer.fromJson<int>(json['newLearnCount']),
-      reviewInterval: serializer.fromJson<String>(json['reviewInterval']),
+      reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
       filterOut: serializer.fromJson<String>(json['filterOut']),
       displayPriority:
           serializer.fromJson<DisplayPriority>(json['displayPriority']),
@@ -1186,7 +1186,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'type': serializer.toJson<MemoryGroupType>(type),
       'status': serializer.toJson<MemoryGroupStatus>(status),
       'newLearnCount': serializer.toJson<int>(newLearnCount),
-      'reviewInterval': serializer.toJson<String>(reviewInterval),
+      'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
       'filterOut': serializer.toJson<String>(filterOut),
       'displayPriority': serializer.toJson<DisplayPriority>(displayPriority),
     };
@@ -1201,7 +1201,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           MemoryGroupType? type,
           MemoryGroupStatus? status,
           int? newLearnCount,
-          String? reviewInterval,
+          DateTime? reviewInterval,
           String? filterOut,
           DisplayPriority? displayPriority}) =>
       MemoryGroup(
@@ -1274,7 +1274,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<MemoryGroupType> type;
   Value<MemoryGroupStatus> status;
   Value<int> newLearnCount;
-  Value<String> reviewInterval;
+  Value<DateTime> reviewInterval;
   Value<String> filterOut;
   Value<DisplayPriority> displayPriority;
   MemoryGroupsCompanion({
@@ -1299,7 +1299,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required MemoryGroupType type,
     required MemoryGroupStatus status,
     required int newLearnCount,
-    required String reviewInterval,
+    required DateTime reviewInterval,
     required String filterOut,
     required DisplayPriority displayPriority,
   })  : id = Value(id),
@@ -1319,7 +1319,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<MemoryGroupType>? type,
     Expression<MemoryGroupStatus>? status,
     Expression<int>? newLearnCount,
-    Expression<String>? reviewInterval,
+    Expression<DateTime>? reviewInterval,
     Expression<String>? filterOut,
     Expression<DisplayPriority>? displayPriority,
   }) {
@@ -1347,7 +1347,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<MemoryGroupType>? type,
       Value<MemoryGroupStatus>? status,
       Value<int>? newLearnCount,
-      Value<String>? reviewInterval,
+      Value<DateTime>? reviewInterval,
       Value<String>? filterOut,
       Value<DisplayPriority>? displayPriority}) {
     return MemoryGroupsCompanion(
@@ -1395,7 +1395,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       map['new_learn_count'] = Variable<int>(newLearnCount.value);
     }
     if (reviewInterval.present) {
-      map['review_interval'] = Variable<String>(reviewInterval.value);
+      map['review_interval'] = Variable<DateTime>(reviewInterval.value);
     }
     if (filterOut.present) {
       map['filter_out'] = Variable<String>(filterOut.value);
@@ -1484,9 +1484,9 @@ class $MemoryGroupsTable extends MemoryGroups
   final VerificationMeta _reviewIntervalMeta =
       const VerificationMeta('reviewInterval');
   @override
-  late final GeneratedColumn<String?> reviewInterval = GeneratedColumn<String?>(
-      'review_interval', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<DateTime?> reviewInterval =
+      GeneratedColumn<DateTime?>('review_interval', aliasedName, false,
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _filterOutMeta = const VerificationMeta('filterOut');
   @override
   late final GeneratedColumn<String?> filterOut = GeneratedColumn<String?>(
@@ -1630,7 +1630,8 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   /// 例如： type:f(t)=1-(0.56(t-d)^0.06)*(1-i)
   ///
   /// 阶段变量：
-  /// 每次展示结束后，都会将 [非固定常量] 设置为新值，之后将会根据新的数学公式进行 [流逝熟悉度] 计算。注意，数学公式结构并不会发生改变，只是刷新了 [非固定常量] 的值。
+  /// 每次展示结束后，都会将 [阶段常量] 设置为新值，之后将会根据新的数学公式进行熟悉度的曲线计算。
+  /// 注意，数学公式结构并不会发生改变，只是刷新了 [非固定常量] 的值。
   String? familiarityAlgorithm;
 
   /// 评估下一次展示的时间点的算法。

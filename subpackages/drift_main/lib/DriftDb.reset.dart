@@ -116,7 +116,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<MemoryGroupType> type,
     required Value<MemoryGroupStatus> status,
     required Value<int> newLearnCount,
-    required Value<String> reviewInterval,
+    required Value<DateTime> reviewInterval,
     required Value<String> filterOut,
     required Value<DisplayPriority> displayPriority,
     required SyncTag? writeSyncTag,

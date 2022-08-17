@@ -4,7 +4,6 @@ ThemeData themeLight(BuildContext context) {
   return ThemeData.light().copyWith(
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.white,
       actionsIconTheme: const IconThemeData(color: Colors.blue),
       elevation: 0,
       iconTheme: const IconThemeData(color: Colors.blue),

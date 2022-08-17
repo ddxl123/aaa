@@ -27,7 +27,7 @@ class Ab<V> {
   final Set<RefreshFunction> _refreshFunctions = {};
 
   /// 使用前使用 [initVerify] 进行初始化。
-  Verify verify = Verify(vc: null, initIsOk: (vc) => false, failMessage: '未使用 initVerifyCheck 进行初始化！');
+  Verify verify = Verify(vc: null, isNotOk2FailMessage: {(v) => false: '未使用 initVerifyCheck 进行初始化！'});
 
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
@@ -136,8 +136,8 @@ class Ab<V> {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
   }
 
-  void initVerify({required FutureOr<bool> Function(Ab<V> abV) initIsOk, required String failMessage}) {
-    verify = Verify<Ab<V>>(vc: this, initIsOk: initIsOk, failMessage: failMessage);
+  void initVerify({required Map<FutureOr<bool> Function(Ab<V> abv), String> isNotOk2FailMessage}) {
+    verify = Verify<Ab<V>>(vc: this, isNotOk2FailMessage: isNotOk2FailMessage);
   }
 }
 

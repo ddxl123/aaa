@@ -1,3 +1,4 @@
+import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
@@ -19,16 +20,26 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   final Ab<MemoryGroup>? memoryGroupGizmo;
 
-  /// 标题
-  final title = ''.ab..initVerify(initIsOk: (v) => v().trim() != '', failMessage: '标题不能为空！');
+  /// 查看 [MemoryGroups.title]。
+  final title = ''.ab
+    ..initVerify(
+      isNotOk2FailMessage: {
+        (v) => v().trim() == '': '标题不能为空！',
+      },
+    );
 
-  /// 记忆模型
-  final selectedMemoryModel = Ab<MemoryModel?>(null)..initVerify(initIsOk: (v) => v() != null, failMessage: '记忆模型不能为空！');
+  /// 查看 [MemoryGroups.memoryModelId]。
+  final selectedMemoryModel = Ab<MemoryModel?>(null)
+    ..initVerify(
+      isNotOk2FailMessage: {
+        (v) => v() == null: '记忆模型不能为空！',
+      },
+    );
 
-  /// 记忆类型
+  /// 查看 [MemoryGroups.type]。
   final type = MemoryGroupType.inApp.ab;
 
-  /// 记忆组状态
+  /// 查看 [MemoryGroups.status]。
   final status = MemoryGroupStatus.notInit.ab;
 
   /// 已存碎片
@@ -36,18 +47,24 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   ///
 
-  /// 新学数量
+  /// 查看 [MemoryGroups.newLearnCount]。
   final newLearnCount = 0.ab;
 
-  /// 复习区间
+  /// 查看 [MemoryGroups.reviewInterval]
   /// TODO: 进行 [Verify]
-  final reviewInterval = ''.ab;
+  final reviewInterval = DateTime.now().ab
+    ..initVerify(
+      isNotOk2FailMessage: {
+        (v) => v().millisecondsSinceEpoch < 0: '复习区间存在不规范字符！',
+        (v) => v().isBefore(DateTime.now().add(const Duration(minutes: 10))): '复习区间太短啦~',
+      },
+    );
 
-  /// 过滤碎片
+  /// 查看 [MemoryGroups.filterOut]
   /// TODO: 进行 [Verify]
   final filterOut = ''.ab;
 
-  /// 展示优先级
+  /// 查看 [MemoryGroups.displayPriority]
   final displayPriority = DisplayPriority.minx.ab;
 
   ///
@@ -67,7 +84,9 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// TODO: [reviewInterval]/[filterOut]
   VerifyMany get verifyModifyOtherCheck => VerifyMany(
-        verifyMany: [],
+        verifyMany: [
+          reviewInterval.verify,
+        ],
       );
 
   @override
@@ -162,6 +181,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// TODO: 要注意修改前与修改后的兼容提示。
   Future<void> commitModifyModifyOtherCheck() async {
+    SmartDialog.showLoading(msg: '验证中...', backDismiss: false);
+    await Future.delayed(const Duration(milliseconds: 500));
     if (await verifyModifyOtherCheck.isVerifyAllOk) {
       await memoryGroupGizmo!.refreshComplex(
         (obj) async {
@@ -195,10 +216,14 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
           return true;
         },
       );
+
+      SmartDialog.dismiss();
       SmartDialog.showToast('启动成功！');
       Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const InAppStage()));
       return;
     }
+    SmartDialog.dismiss();
     SmartDialog.showToast(await verifyModifyOtherCheck.failMessage);
   }
 

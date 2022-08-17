@@ -55,9 +55,9 @@ class MyApp extends StatelessWidget {
           // 那种材料包需要本地化的支持
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           // 支持哪种语言的切换
-          supportedLocales: const [Locale('zh'), Locale('en')],
+          supportedLocales: const [Locale('zh', 'CN'), Locale('en', 'US')],
           // 默认使用哪种语言
-          locale: const Locale('zh'),
+          locale: const Locale('zh', 'CN'),
           // catcher 相关
           navigatorKey: Catcher.navigatorKey,
           theme: themeLight(context),

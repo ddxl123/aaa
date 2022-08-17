@@ -17,7 +17,16 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       return;
     }
 
-    await memoryRuleModelAbController.addMemoryModel(MemoryModelsCompanion()..title = title.value());
+    await memoryRuleModelAbController.addMemoryModel(
+      WithCrts.memoryModelsCompanion(
+        id: absent(),
+        createdAt: absent(),
+        updatedAt: absent(),
+        title: title,
+        familiarityAlgorithm: ''.value(),
+        nextTimeAlgorithm: ''.value(),
+      ),
+    );
     SmartDialog.showToast('创建成功');
     Navigator.pop(context);
   }
