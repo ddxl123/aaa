@@ -64,10 +64,12 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// TODO: 进行 [Verify]
   final filterOut = ''.ab;
 
-  /// 查看 [MemoryGroups.displayPriority]
-  final displayPriority = DisplayPriority.minx.ab;
+  final newReviewDisplayOrder = NewReviewDisplayOrder.mix.ab;
 
-  ///
+  /// 查看 [MemoryGroups.newReviewDisplayOrder]
+  final newDisplayOrder = NewDisplayOrder.random.ab;
+
+  /// =====
 
   /// 当前记忆组碎片总数。
   final totalCount = 0.ab;
@@ -113,15 +115,17 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   Future<void> initInitCheck() async {
     final mgg = memoryGroupGizmo!();
-    final fs = await DriftDb.instance.singleDAO.queryFragmentInMemoryGroup(mgg.id);
-    final mm = await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(memoryModelId: mgg.memoryModelId);
+    final fs = await DriftDb.instance.singleDAO.queryFragmentsInMemoryGroup(mgg.id);
+    final mm = await DriftDb.instance.singleDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
     title.refreshEasy((oldValue) => mgg.title);
     titleTextEditingController.text = mgg.title;
     selectedMemoryModel.refreshEasy((obj) => mm);
     type.refreshEasy((oldValue) => mgg.type);
     status.refreshEasy((oldValue) => mgg.status);
-    selectedFragments.refreshInevitable((obj) => obj..addAll(fs.map((e) => e.ab)));
+    selectedFragments.refreshInevitable((obj) => obj
+      ..clear_(this)
+      ..addAll(fs.map((e) => e.ab)));
   }
 
   Future<void> initModifyOtherCheck() async {
@@ -129,7 +133,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     newLearnCount.refreshEasy((obj) => mgg.newLearnCount);
     reviewInterval.refreshEasy((oldValue) => mgg.reviewInterval);
     filterOut.refreshEasy((oldValue) => mgg.filterOut);
-    displayPriority.refreshEasy((oldValue) => mgg.displayPriority);
+    newReviewDisplayOrder.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
 
     // TODO:
     totalCount.refreshEasy((oldValue) => 567);
@@ -158,7 +162,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                     newLearnCount: absent(),
                     reviewInterval: absent(),
                     filterOut: absent(),
-                    displayPriority: absent(),
+                    newReviewDisplayOrder: absent(),
+                    newDisplayOrder: absent(),
                   );
                 },
                 // TODO:
@@ -204,7 +209,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                   newLearnCount: newLearnCount().value(),
                   reviewInterval: reviewInterval().value(),
                   filterOut: filterOut().value(),
-                  displayPriority: displayPriority().value(),
+                  newReviewDisplayOrder: newReviewDisplayOrder().value(),
+                  newDisplayOrder: newDisplayOrder().value(),
                 );
               },
               // TODO:
@@ -220,7 +226,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       SmartDialog.dismiss();
       SmartDialog.showToast('启动成功！');
       Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const InAppStage()));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupGizmo!)));
       return;
     }
     SmartDialog.dismiss();

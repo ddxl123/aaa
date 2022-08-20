@@ -1067,8 +1067,11 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 过滤碎片
   String filterOut;
 
-  /// 展示优先级
-  DisplayPriority displayPriority;
+  /// 新旧碎片展示先后顺序。
+  NewReviewDisplayOrder newReviewDisplayOrder;
+
+  /// 新碎片展示先后顺序。
+  NewDisplayOrder newDisplayOrder;
   MemoryGroup(
       {required this.id,
       required this.createdAt,
@@ -1080,7 +1083,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       required this.newLearnCount,
       required this.reviewInterval,
       required this.filterOut,
-      required this.displayPriority});
+      required this.newReviewDisplayOrder,
+      required this.newDisplayOrder});
   factory MemoryGroup.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return MemoryGroup(
@@ -1104,9 +1108,12 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           .mapFromDatabaseResponse(data['${effectivePrefix}review_interval'])!,
       filterOut: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}filter_out'])!,
-      displayPriority: $MemoryGroupsTable.$converter2.mapToDart(const IntType()
+      newReviewDisplayOrder: $MemoryGroupsTable.$converter2.mapToDart(
+          const IntType().mapFromDatabaseResponse(
+              data['${effectivePrefix}new_review_display_order']))!,
+      newDisplayOrder: $MemoryGroupsTable.$converter3.mapToDart(const IntType()
           .mapFromDatabaseResponse(
-              data['${effectivePrefix}display_priority']))!,
+              data['${effectivePrefix}new_display_order']))!,
     );
   }
   @override
@@ -1132,8 +1139,13 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     map['filter_out'] = Variable<String>(filterOut);
     {
       final converter = $MemoryGroupsTable.$converter2;
-      map['display_priority'] =
-          Variable<int>(converter.mapToSql(displayPriority)!);
+      map['new_review_display_order'] =
+          Variable<int>(converter.mapToSql(newReviewDisplayOrder)!);
+    }
+    {
+      final converter = $MemoryGroupsTable.$converter3;
+      map['new_display_order'] =
+          Variable<int>(converter.mapToSql(newDisplayOrder)!);
     }
     return map;
   }
@@ -1152,7 +1164,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       newLearnCount: Value(newLearnCount),
       reviewInterval: Value(reviewInterval),
       filterOut: Value(filterOut),
-      displayPriority: Value(displayPriority),
+      newReviewDisplayOrder: Value(newReviewDisplayOrder),
+      newDisplayOrder: Value(newDisplayOrder),
     );
   }
 
@@ -1170,8 +1183,10 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       newLearnCount: serializer.fromJson<int>(json['newLearnCount']),
       reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
       filterOut: serializer.fromJson<String>(json['filterOut']),
-      displayPriority:
-          serializer.fromJson<DisplayPriority>(json['displayPriority']),
+      newReviewDisplayOrder: serializer
+          .fromJson<NewReviewDisplayOrder>(json['newReviewDisplayOrder']),
+      newDisplayOrder:
+          serializer.fromJson<NewDisplayOrder>(json['newDisplayOrder']),
     );
   }
   @override
@@ -1188,7 +1203,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'newLearnCount': serializer.toJson<int>(newLearnCount),
       'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
       'filterOut': serializer.toJson<String>(filterOut),
-      'displayPriority': serializer.toJson<DisplayPriority>(displayPriority),
+      'newReviewDisplayOrder':
+          serializer.toJson<NewReviewDisplayOrder>(newReviewDisplayOrder),
+      'newDisplayOrder': serializer.toJson<NewDisplayOrder>(newDisplayOrder),
     };
   }
 
@@ -1203,7 +1220,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           int? newLearnCount,
           DateTime? reviewInterval,
           String? filterOut,
-          DisplayPriority? displayPriority}) =>
+          NewReviewDisplayOrder? newReviewDisplayOrder,
+          NewDisplayOrder? newDisplayOrder}) =>
       MemoryGroup(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
@@ -1215,7 +1233,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
         newLearnCount: newLearnCount ?? this.newLearnCount,
         reviewInterval: reviewInterval ?? this.reviewInterval,
         filterOut: filterOut ?? this.filterOut,
-        displayPriority: displayPriority ?? this.displayPriority,
+        newReviewDisplayOrder:
+            newReviewDisplayOrder ?? this.newReviewDisplayOrder,
+        newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
       );
   @override
   String toString() {
@@ -1230,7 +1250,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('newLearnCount: $newLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
           ..write('filterOut: $filterOut, ')
-          ..write('displayPriority: $displayPriority')
+          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
+          ..write('newDisplayOrder: $newDisplayOrder')
           ..write(')'))
         .toString();
   }
@@ -1247,7 +1268,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       newLearnCount,
       reviewInterval,
       filterOut,
-      displayPriority);
+      newReviewDisplayOrder,
+      newDisplayOrder);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1262,7 +1284,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.newLearnCount == this.newLearnCount &&
           other.reviewInterval == this.reviewInterval &&
           other.filterOut == this.filterOut &&
-          other.displayPriority == this.displayPriority);
+          other.newReviewDisplayOrder == this.newReviewDisplayOrder &&
+          other.newDisplayOrder == this.newDisplayOrder);
 }
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
@@ -1276,7 +1299,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<int> newLearnCount;
   Value<DateTime> reviewInterval;
   Value<String> filterOut;
-  Value<DisplayPriority> displayPriority;
+  Value<NewReviewDisplayOrder> newReviewDisplayOrder;
+  Value<NewDisplayOrder> newDisplayOrder;
   MemoryGroupsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1288,7 +1312,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.newLearnCount = const Value.absent(),
     this.reviewInterval = const Value.absent(),
     this.filterOut = const Value.absent(),
-    this.displayPriority = const Value.absent(),
+    this.newReviewDisplayOrder = const Value.absent(),
+    this.newDisplayOrder = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
     required String id,
@@ -1301,7 +1326,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required int newLearnCount,
     required DateTime reviewInterval,
     required String filterOut,
-    required DisplayPriority displayPriority,
+    required NewReviewDisplayOrder newReviewDisplayOrder,
+    required NewDisplayOrder newDisplayOrder,
   })  : id = Value(id),
         title = Value(title),
         type = Value(type),
@@ -1309,7 +1335,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
         newLearnCount = Value(newLearnCount),
         reviewInterval = Value(reviewInterval),
         filterOut = Value(filterOut),
-        displayPriority = Value(displayPriority);
+        newReviewDisplayOrder = Value(newReviewDisplayOrder),
+        newDisplayOrder = Value(newDisplayOrder);
   static Insertable<MemoryGroup> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -1321,7 +1348,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<int>? newLearnCount,
     Expression<DateTime>? reviewInterval,
     Expression<String>? filterOut,
-    Expression<DisplayPriority>? displayPriority,
+    Expression<NewReviewDisplayOrder>? newReviewDisplayOrder,
+    Expression<NewDisplayOrder>? newDisplayOrder,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1334,7 +1362,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       if (newLearnCount != null) 'new_learn_count': newLearnCount,
       if (reviewInterval != null) 'review_interval': reviewInterval,
       if (filterOut != null) 'filter_out': filterOut,
-      if (displayPriority != null) 'display_priority': displayPriority,
+      if (newReviewDisplayOrder != null)
+        'new_review_display_order': newReviewDisplayOrder,
+      if (newDisplayOrder != null) 'new_display_order': newDisplayOrder,
     });
   }
 
@@ -1349,7 +1379,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<int>? newLearnCount,
       Value<DateTime>? reviewInterval,
       Value<String>? filterOut,
-      Value<DisplayPriority>? displayPriority}) {
+      Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
+      Value<NewDisplayOrder>? newDisplayOrder}) {
     return MemoryGroupsCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
@@ -1361,7 +1392,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       newLearnCount: newLearnCount ?? this.newLearnCount,
       reviewInterval: reviewInterval ?? this.reviewInterval,
       filterOut: filterOut ?? this.filterOut,
-      displayPriority: displayPriority ?? this.displayPriority,
+      newReviewDisplayOrder:
+          newReviewDisplayOrder ?? this.newReviewDisplayOrder,
+      newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
     );
   }
 
@@ -1400,10 +1433,15 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     if (filterOut.present) {
       map['filter_out'] = Variable<String>(filterOut.value);
     }
-    if (displayPriority.present) {
+    if (newReviewDisplayOrder.present) {
       final converter = $MemoryGroupsTable.$converter2;
-      map['display_priority'] =
-          Variable<int>(converter.mapToSql(displayPriority.value)!);
+      map['new_review_display_order'] =
+          Variable<int>(converter.mapToSql(newReviewDisplayOrder.value)!);
+    }
+    if (newDisplayOrder.present) {
+      final converter = $MemoryGroupsTable.$converter3;
+      map['new_display_order'] =
+          Variable<int>(converter.mapToSql(newDisplayOrder.value)!);
     }
     return map;
   }
@@ -1421,7 +1459,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('newLearnCount: $newLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
           ..write('filterOut: $filterOut, ')
-          ..write('displayPriority: $displayPriority')
+          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
+          ..write('newDisplayOrder: $newDisplayOrder')
           ..write(')'))
         .toString();
   }
@@ -1492,14 +1531,22 @@ class $MemoryGroupsTable extends MemoryGroups
   late final GeneratedColumn<String?> filterOut = GeneratedColumn<String?>(
       'filter_out', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _displayPriorityMeta =
-      const VerificationMeta('displayPriority');
+  final VerificationMeta _newReviewDisplayOrderMeta =
+      const VerificationMeta('newReviewDisplayOrder');
   @override
-  late final GeneratedColumnWithTypeConverter<DisplayPriority, int?>
-      displayPriority = GeneratedColumn<int?>(
-              'display_priority', aliasedName, false,
+  late final GeneratedColumnWithTypeConverter<NewReviewDisplayOrder, int?>
+      newReviewDisplayOrder = GeneratedColumn<int?>(
+              'new_review_display_order', aliasedName, false,
               type: const IntType(), requiredDuringInsert: true)
-          .withConverter<DisplayPriority>($MemoryGroupsTable.$converter2);
+          .withConverter<NewReviewDisplayOrder>($MemoryGroupsTable.$converter2);
+  final VerificationMeta _newDisplayOrderMeta =
+      const VerificationMeta('newDisplayOrder');
+  @override
+  late final GeneratedColumnWithTypeConverter<NewDisplayOrder, int?>
+      newDisplayOrder = GeneratedColumn<int?>(
+              'new_display_order', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<NewDisplayOrder>($MemoryGroupsTable.$converter3);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1512,7 +1559,8 @@ class $MemoryGroupsTable extends MemoryGroups
         newLearnCount,
         reviewInterval,
         filterOut,
-        displayPriority
+        newReviewDisplayOrder,
+        newDisplayOrder
       ];
   @override
   String get aliasedName => _alias ?? 'memory_groups';
@@ -1572,7 +1620,9 @@ class $MemoryGroupsTable extends MemoryGroups
     } else if (isInserting) {
       context.missing(_filterOutMeta);
     }
-    context.handle(_displayPriorityMeta, const VerificationResult.success());
+    context.handle(
+        _newReviewDisplayOrderMeta, const VerificationResult.success());
+    context.handle(_newDisplayOrderMeta, const VerificationResult.success());
     return context;
   }
 
@@ -1593,8 +1643,11 @@ class $MemoryGroupsTable extends MemoryGroups
       const EnumIndexConverter<MemoryGroupType>(MemoryGroupType.values);
   static TypeConverter<MemoryGroupStatus, int> $converter1 =
       const EnumIndexConverter<MemoryGroupStatus>(MemoryGroupStatus.values);
-  static TypeConverter<DisplayPriority, int> $converter2 =
-      const EnumIndexConverter<DisplayPriority>(DisplayPriority.values);
+  static TypeConverter<NewReviewDisplayOrder, int> $converter2 =
+      const EnumIndexConverter<NewReviewDisplayOrder>(
+          NewReviewDisplayOrder.values);
+  static TypeConverter<NewDisplayOrder, int> $converter3 =
+      const EnumIndexConverter<NewDisplayOrder>(NewDisplayOrder.values);
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
@@ -2015,42 +2068,49 @@ class FragmentPermanentMemoryInfo extends DataClass
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String? fragmentId;
-
-  /// 允许对应的 [MemoryModel] 不存在。
-  String? memoryModelId;
+  String fragmentId;
 
   /// 允许对应的 [MemoryGroup] 不存在。
-  String? memoryGroupId;
+  String memoryGroupId;
 
-  /// 阶段按钮数值 —— 点击的按钮的数值。
-  double? stageButtonValue;
+  /// 在当前记忆组内的， 阶段按钮数值 —— 点击的按钮的数值。
+  double stageButtonValue;
 
-  /// 阶段熟练度 —— 点击按钮前时的熟练度。
+  /// 在当前记忆组内的，阶段熟练度 —— 点击按钮瞬间前的熟练度。
   ///
-  /// 范围：0~1。
+  /// 在用户**触发按钮一瞬间**后 ，会根据 [MemoryModels.familiarityAlgorithm] 来计算**触发按钮一瞬间前**的熟练度（触发按钮后的瞬间熟练度必然是100%）
   ///
-  /// 在用户触发按钮 **后** ，会根据 [MemoryModels.familiarityAlgorithm] 来计算 **触发按钮前** 的熟练度（触发按钮后的瞬间熟练度必然是1）
+  /// 在其碎片没有记忆信息记录时，默认熟练度为0。
   double stageFamiliarity;
 
-  /// 下一次展示的时间点。
+  /// 在当前记忆组内的，下一次计划展示的时间点。
   ///
   /// 在用户触发按钮后，会根据 [MemoryModels.nextTimeAlgorithm] 来计算下一次展示的时间。
-  DateTime? nextShowTime;
+  DateTime planedNextShowTime;
 
-  /// 碎片展示时长。
+  /// 在当前记忆组内的，下次实际展示的时间点。
+  ///
+  /// 在用户触发按钮后，会向上一条记录的 [actualNextShowTime] 设为碎片展示前的时间点。
+  DateTime? actualNextShowTime;
+
+  /// 在当前记忆组内的，碎片展示时长。
   double showDuration;
+
+  /// 在当前记忆组内的，当前记录是否为当前碎片的最新记录。
+  /// 在新纪录被创建的同时，需要把旧记录设为 false。
+  bool isLatestRecord;
   FragmentPermanentMemoryInfo(
       {required this.id,
       required this.createdAt,
       required this.updatedAt,
-      this.fragmentId,
-      this.memoryModelId,
-      this.memoryGroupId,
-      this.stageButtonValue,
+      required this.fragmentId,
+      required this.memoryGroupId,
+      required this.stageButtonValue,
       required this.stageFamiliarity,
-      this.nextShowTime,
-      required this.showDuration});
+      required this.planedNextShowTime,
+      this.actualNextShowTime,
+      required this.showDuration,
+      required this.isLatestRecord});
   factory FragmentPermanentMemoryInfo.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -2062,19 +2122,21 @@ class FragmentPermanentMemoryInfo extends DataClass
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
       fragmentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}fragment_id']),
-      memoryModelId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}memory_model_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}fragment_id'])!,
       memoryGroupId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}memory_group_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}memory_group_id'])!,
       stageButtonValue: const RealType().mapFromDatabaseResponse(
-          data['${effectivePrefix}stage_button_value']),
+          data['${effectivePrefix}stage_button_value'])!,
       stageFamiliarity: const RealType().mapFromDatabaseResponse(
           data['${effectivePrefix}stage_familiarity'])!,
-      nextShowTime: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}next_show_time']),
+      planedNextShowTime: const DateTimeType().mapFromDatabaseResponse(
+          data['${effectivePrefix}planed_next_show_time'])!,
+      actualNextShowTime: const DateTimeType().mapFromDatabaseResponse(
+          data['${effectivePrefix}actual_next_show_time']),
       showDuration: const RealType()
           .mapFromDatabaseResponse(data['${effectivePrefix}show_duration'])!,
+      isLatestRecord: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_latest_record'])!,
     );
   }
   @override
@@ -2083,23 +2145,16 @@ class FragmentPermanentMemoryInfo extends DataClass
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || fragmentId != null) {
-      map['fragment_id'] = Variable<String?>(fragmentId);
-    }
-    if (!nullToAbsent || memoryModelId != null) {
-      map['memory_model_id'] = Variable<String?>(memoryModelId);
-    }
-    if (!nullToAbsent || memoryGroupId != null) {
-      map['memory_group_id'] = Variable<String?>(memoryGroupId);
-    }
-    if (!nullToAbsent || stageButtonValue != null) {
-      map['stage_button_value'] = Variable<double?>(stageButtonValue);
-    }
+    map['fragment_id'] = Variable<String>(fragmentId);
+    map['memory_group_id'] = Variable<String>(memoryGroupId);
+    map['stage_button_value'] = Variable<double>(stageButtonValue);
     map['stage_familiarity'] = Variable<double>(stageFamiliarity);
-    if (!nullToAbsent || nextShowTime != null) {
-      map['next_show_time'] = Variable<DateTime?>(nextShowTime);
+    map['planed_next_show_time'] = Variable<DateTime>(planedNextShowTime);
+    if (!nullToAbsent || actualNextShowTime != null) {
+      map['actual_next_show_time'] = Variable<DateTime?>(actualNextShowTime);
     }
     map['show_duration'] = Variable<double>(showDuration);
+    map['is_latest_record'] = Variable<bool>(isLatestRecord);
     return map;
   }
 
@@ -2108,23 +2163,16 @@ class FragmentPermanentMemoryInfo extends DataClass
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      fragmentId: fragmentId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fragmentId),
-      memoryModelId: memoryModelId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(memoryModelId),
-      memoryGroupId: memoryGroupId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(memoryGroupId),
-      stageButtonValue: stageButtonValue == null && nullToAbsent
-          ? const Value.absent()
-          : Value(stageButtonValue),
+      fragmentId: Value(fragmentId),
+      memoryGroupId: Value(memoryGroupId),
+      stageButtonValue: Value(stageButtonValue),
       stageFamiliarity: Value(stageFamiliarity),
-      nextShowTime: nextShowTime == null && nullToAbsent
+      planedNextShowTime: Value(planedNextShowTime),
+      actualNextShowTime: actualNextShowTime == null && nullToAbsent
           ? const Value.absent()
-          : Value(nextShowTime),
+          : Value(actualNextShowTime),
       showDuration: Value(showDuration),
+      isLatestRecord: Value(isLatestRecord),
     );
   }
 
@@ -2135,13 +2183,16 @@ class FragmentPermanentMemoryInfo extends DataClass
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      fragmentId: serializer.fromJson<String?>(json['fragmentId']),
-      memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
-      memoryGroupId: serializer.fromJson<String?>(json['memoryGroupId']),
-      stageButtonValue: serializer.fromJson<double?>(json['stageButtonValue']),
+      fragmentId: serializer.fromJson<String>(json['fragmentId']),
+      memoryGroupId: serializer.fromJson<String>(json['memoryGroupId']),
+      stageButtonValue: serializer.fromJson<double>(json['stageButtonValue']),
       stageFamiliarity: serializer.fromJson<double>(json['stageFamiliarity']),
-      nextShowTime: serializer.fromJson<DateTime?>(json['nextShowTime']),
+      planedNextShowTime:
+          serializer.fromJson<DateTime>(json['planedNextShowTime']),
+      actualNextShowTime:
+          serializer.fromJson<DateTime?>(json['actualNextShowTime']),
       showDuration: serializer.fromJson<double>(json['showDuration']),
+      isLatestRecord: serializer.fromJson<bool>(json['isLatestRecord']),
     );
   }
   @override
@@ -2151,13 +2202,14 @@ class FragmentPermanentMemoryInfo extends DataClass
       'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'fragmentId': serializer.toJson<String?>(fragmentId),
-      'memoryModelId': serializer.toJson<String?>(memoryModelId),
-      'memoryGroupId': serializer.toJson<String?>(memoryGroupId),
-      'stageButtonValue': serializer.toJson<double?>(stageButtonValue),
+      'fragmentId': serializer.toJson<String>(fragmentId),
+      'memoryGroupId': serializer.toJson<String>(memoryGroupId),
+      'stageButtonValue': serializer.toJson<double>(stageButtonValue),
       'stageFamiliarity': serializer.toJson<double>(stageFamiliarity),
-      'nextShowTime': serializer.toJson<DateTime?>(nextShowTime),
+      'planedNextShowTime': serializer.toJson<DateTime>(planedNextShowTime),
+      'actualNextShowTime': serializer.toJson<DateTime?>(actualNextShowTime),
       'showDuration': serializer.toJson<double>(showDuration),
+      'isLatestRecord': serializer.toJson<bool>(isLatestRecord),
     };
   }
 
@@ -2166,23 +2218,25 @@ class FragmentPermanentMemoryInfo extends DataClass
           DateTime? createdAt,
           DateTime? updatedAt,
           String? fragmentId,
-          String? memoryModelId,
           String? memoryGroupId,
           double? stageButtonValue,
           double? stageFamiliarity,
-          DateTime? nextShowTime,
-          double? showDuration}) =>
+          DateTime? planedNextShowTime,
+          DateTime? actualNextShowTime,
+          double? showDuration,
+          bool? isLatestRecord}) =>
       FragmentPermanentMemoryInfo(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         fragmentId: fragmentId ?? this.fragmentId,
-        memoryModelId: memoryModelId ?? this.memoryModelId,
         memoryGroupId: memoryGroupId ?? this.memoryGroupId,
         stageButtonValue: stageButtonValue ?? this.stageButtonValue,
         stageFamiliarity: stageFamiliarity ?? this.stageFamiliarity,
-        nextShowTime: nextShowTime ?? this.nextShowTime,
+        planedNextShowTime: planedNextShowTime ?? this.planedNextShowTime,
+        actualNextShowTime: actualNextShowTime ?? this.actualNextShowTime,
         showDuration: showDuration ?? this.showDuration,
+        isLatestRecord: isLatestRecord ?? this.isLatestRecord,
       );
   @override
   String toString() {
@@ -2191,12 +2245,13 @@ class FragmentPermanentMemoryInfo extends DataClass
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('fragmentId: $fragmentId, ')
-          ..write('memoryModelId: $memoryModelId, ')
           ..write('memoryGroupId: $memoryGroupId, ')
           ..write('stageButtonValue: $stageButtonValue, ')
           ..write('stageFamiliarity: $stageFamiliarity, ')
-          ..write('nextShowTime: $nextShowTime, ')
-          ..write('showDuration: $showDuration')
+          ..write('planedNextShowTime: $planedNextShowTime, ')
+          ..write('actualNextShowTime: $actualNextShowTime, ')
+          ..write('showDuration: $showDuration, ')
+          ..write('isLatestRecord: $isLatestRecord')
           ..write(')'))
         .toString();
   }
@@ -2207,12 +2262,13 @@ class FragmentPermanentMemoryInfo extends DataClass
       createdAt,
       updatedAt,
       fragmentId,
-      memoryModelId,
       memoryGroupId,
       stageButtonValue,
       stageFamiliarity,
-      nextShowTime,
-      showDuration);
+      planedNextShowTime,
+      actualNextShowTime,
+      showDuration,
+      isLatestRecord);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2221,12 +2277,13 @@ class FragmentPermanentMemoryInfo extends DataClass
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.fragmentId == this.fragmentId &&
-          other.memoryModelId == this.memoryModelId &&
           other.memoryGroupId == this.memoryGroupId &&
           other.stageButtonValue == this.stageButtonValue &&
           other.stageFamiliarity == this.stageFamiliarity &&
-          other.nextShowTime == this.nextShowTime &&
-          other.showDuration == this.showDuration);
+          other.planedNextShowTime == this.planedNextShowTime &&
+          other.actualNextShowTime == this.actualNextShowTime &&
+          other.showDuration == this.showDuration &&
+          other.isLatestRecord == this.isLatestRecord);
 }
 
 class FragmentPermanentMemoryInfosCompanion
@@ -2234,62 +2291,74 @@ class FragmentPermanentMemoryInfosCompanion
   Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String?> fragmentId;
-  Value<String?> memoryModelId;
-  Value<String?> memoryGroupId;
-  Value<double?> stageButtonValue;
+  Value<String> fragmentId;
+  Value<String> memoryGroupId;
+  Value<double> stageButtonValue;
   Value<double> stageFamiliarity;
-  Value<DateTime?> nextShowTime;
+  Value<DateTime> planedNextShowTime;
+  Value<DateTime?> actualNextShowTime;
   Value<double> showDuration;
+  Value<bool> isLatestRecord;
   FragmentPermanentMemoryInfosCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.fragmentId = const Value.absent(),
-    this.memoryModelId = const Value.absent(),
     this.memoryGroupId = const Value.absent(),
     this.stageButtonValue = const Value.absent(),
     this.stageFamiliarity = const Value.absent(),
-    this.nextShowTime = const Value.absent(),
+    this.planedNextShowTime = const Value.absent(),
+    this.actualNextShowTime = const Value.absent(),
     this.showDuration = const Value.absent(),
+    this.isLatestRecord = const Value.absent(),
   });
   FragmentPermanentMemoryInfosCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.fragmentId = const Value.absent(),
-    this.memoryModelId = const Value.absent(),
-    this.memoryGroupId = const Value.absent(),
-    this.stageButtonValue = const Value.absent(),
+    required String fragmentId,
+    required String memoryGroupId,
+    required double stageButtonValue,
     required double stageFamiliarity,
-    this.nextShowTime = const Value.absent(),
+    required DateTime planedNextShowTime,
+    this.actualNextShowTime = const Value.absent(),
     required double showDuration,
+    required bool isLatestRecord,
   })  : id = Value(id),
+        fragmentId = Value(fragmentId),
+        memoryGroupId = Value(memoryGroupId),
+        stageButtonValue = Value(stageButtonValue),
         stageFamiliarity = Value(stageFamiliarity),
-        showDuration = Value(showDuration);
+        planedNextShowTime = Value(planedNextShowTime),
+        showDuration = Value(showDuration),
+        isLatestRecord = Value(isLatestRecord);
   static Insertable<FragmentPermanentMemoryInfo> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String?>? fragmentId,
-    Expression<String?>? memoryModelId,
-    Expression<String?>? memoryGroupId,
-    Expression<double?>? stageButtonValue,
+    Expression<String>? fragmentId,
+    Expression<String>? memoryGroupId,
+    Expression<double>? stageButtonValue,
     Expression<double>? stageFamiliarity,
-    Expression<DateTime?>? nextShowTime,
+    Expression<DateTime>? planedNextShowTime,
+    Expression<DateTime?>? actualNextShowTime,
     Expression<double>? showDuration,
+    Expression<bool>? isLatestRecord,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (fragmentId != null) 'fragment_id': fragmentId,
-      if (memoryModelId != null) 'memory_model_id': memoryModelId,
       if (memoryGroupId != null) 'memory_group_id': memoryGroupId,
       if (stageButtonValue != null) 'stage_button_value': stageButtonValue,
       if (stageFamiliarity != null) 'stage_familiarity': stageFamiliarity,
-      if (nextShowTime != null) 'next_show_time': nextShowTime,
+      if (planedNextShowTime != null)
+        'planed_next_show_time': planedNextShowTime,
+      if (actualNextShowTime != null)
+        'actual_next_show_time': actualNextShowTime,
       if (showDuration != null) 'show_duration': showDuration,
+      if (isLatestRecord != null) 'is_latest_record': isLatestRecord,
     });
   }
 
@@ -2297,24 +2366,26 @@ class FragmentPermanentMemoryInfosCompanion
       {Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String?>? fragmentId,
-      Value<String?>? memoryModelId,
-      Value<String?>? memoryGroupId,
-      Value<double?>? stageButtonValue,
+      Value<String>? fragmentId,
+      Value<String>? memoryGroupId,
+      Value<double>? stageButtonValue,
       Value<double>? stageFamiliarity,
-      Value<DateTime?>? nextShowTime,
-      Value<double>? showDuration}) {
+      Value<DateTime>? planedNextShowTime,
+      Value<DateTime?>? actualNextShowTime,
+      Value<double>? showDuration,
+      Value<bool>? isLatestRecord}) {
     return FragmentPermanentMemoryInfosCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       fragmentId: fragmentId ?? this.fragmentId,
-      memoryModelId: memoryModelId ?? this.memoryModelId,
       memoryGroupId: memoryGroupId ?? this.memoryGroupId,
       stageButtonValue: stageButtonValue ?? this.stageButtonValue,
       stageFamiliarity: stageFamiliarity ?? this.stageFamiliarity,
-      nextShowTime: nextShowTime ?? this.nextShowTime,
+      planedNextShowTime: planedNextShowTime ?? this.planedNextShowTime,
+      actualNextShowTime: actualNextShowTime ?? this.actualNextShowTime,
       showDuration: showDuration ?? this.showDuration,
+      isLatestRecord: isLatestRecord ?? this.isLatestRecord,
     );
   }
 
@@ -2331,25 +2402,30 @@ class FragmentPermanentMemoryInfosCompanion
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (fragmentId.present) {
-      map['fragment_id'] = Variable<String?>(fragmentId.value);
-    }
-    if (memoryModelId.present) {
-      map['memory_model_id'] = Variable<String?>(memoryModelId.value);
+      map['fragment_id'] = Variable<String>(fragmentId.value);
     }
     if (memoryGroupId.present) {
-      map['memory_group_id'] = Variable<String?>(memoryGroupId.value);
+      map['memory_group_id'] = Variable<String>(memoryGroupId.value);
     }
     if (stageButtonValue.present) {
-      map['stage_button_value'] = Variable<double?>(stageButtonValue.value);
+      map['stage_button_value'] = Variable<double>(stageButtonValue.value);
     }
     if (stageFamiliarity.present) {
       map['stage_familiarity'] = Variable<double>(stageFamiliarity.value);
     }
-    if (nextShowTime.present) {
-      map['next_show_time'] = Variable<DateTime?>(nextShowTime.value);
+    if (planedNextShowTime.present) {
+      map['planed_next_show_time'] =
+          Variable<DateTime>(planedNextShowTime.value);
+    }
+    if (actualNextShowTime.present) {
+      map['actual_next_show_time'] =
+          Variable<DateTime?>(actualNextShowTime.value);
     }
     if (showDuration.present) {
       map['show_duration'] = Variable<double>(showDuration.value);
+    }
+    if (isLatestRecord.present) {
+      map['is_latest_record'] = Variable<bool>(isLatestRecord.value);
     }
     return map;
   }
@@ -2361,12 +2437,13 @@ class FragmentPermanentMemoryInfosCompanion
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('fragmentId: $fragmentId, ')
-          ..write('memoryModelId: $memoryModelId, ')
           ..write('memoryGroupId: $memoryGroupId, ')
           ..write('stageButtonValue: $stageButtonValue, ')
           ..write('stageFamiliarity: $stageFamiliarity, ')
-          ..write('nextShowTime: $nextShowTime, ')
-          ..write('showDuration: $showDuration')
+          ..write('planedNextShowTime: $planedNextShowTime, ')
+          ..write('actualNextShowTime: $actualNextShowTime, ')
+          ..write('showDuration: $showDuration, ')
+          ..write('isLatestRecord: $isLatestRecord')
           ..write(')'))
         .toString();
   }
@@ -2402,37 +2479,37 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
   final VerificationMeta _fragmentIdMeta = const VerificationMeta('fragmentId');
   @override
   late final GeneratedColumn<String?> fragmentId = GeneratedColumn<String?>(
-      'fragment_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _memoryModelIdMeta =
-      const VerificationMeta('memoryModelId');
-  @override
-  late final GeneratedColumn<String?> memoryModelId = GeneratedColumn<String?>(
-      'memory_model_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'fragment_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _memoryGroupIdMeta =
       const VerificationMeta('memoryGroupId');
   @override
   late final GeneratedColumn<String?> memoryGroupId = GeneratedColumn<String?>(
-      'memory_group_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'memory_group_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _stageButtonValueMeta =
       const VerificationMeta('stageButtonValue');
   @override
   late final GeneratedColumn<double?> stageButtonValue =
-      GeneratedColumn<double?>('stage_button_value', aliasedName, true,
-          type: const RealType(), requiredDuringInsert: false);
+      GeneratedColumn<double?>('stage_button_value', aliasedName, false,
+          type: const RealType(), requiredDuringInsert: true);
   final VerificationMeta _stageFamiliarityMeta =
       const VerificationMeta('stageFamiliarity');
   @override
   late final GeneratedColumn<double?> stageFamiliarity =
       GeneratedColumn<double?>('stage_familiarity', aliasedName, false,
           type: const RealType(), requiredDuringInsert: true);
-  final VerificationMeta _nextShowTimeMeta =
-      const VerificationMeta('nextShowTime');
+  final VerificationMeta _planedNextShowTimeMeta =
+      const VerificationMeta('planedNextShowTime');
   @override
-  late final GeneratedColumn<DateTime?> nextShowTime =
-      GeneratedColumn<DateTime?>('next_show_time', aliasedName, true,
+  late final GeneratedColumn<DateTime?> planedNextShowTime =
+      GeneratedColumn<DateTime?>('planed_next_show_time', aliasedName, false,
+          type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _actualNextShowTimeMeta =
+      const VerificationMeta('actualNextShowTime');
+  @override
+  late final GeneratedColumn<DateTime?> actualNextShowTime =
+      GeneratedColumn<DateTime?>('actual_next_show_time', aliasedName, true,
           type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _showDurationMeta =
       const VerificationMeta('showDuration');
@@ -2440,18 +2517,27 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
   late final GeneratedColumn<double?> showDuration = GeneratedColumn<double?>(
       'show_duration', aliasedName, false,
       type: const RealType(), requiredDuringInsert: true);
+  final VerificationMeta _isLatestRecordMeta =
+      const VerificationMeta('isLatestRecord');
+  @override
+  late final GeneratedColumn<bool?> isLatestRecord = GeneratedColumn<bool?>(
+      'is_latest_record', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_latest_record IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         id,
         createdAt,
         updatedAt,
         fragmentId,
-        memoryModelId,
         memoryGroupId,
         stageButtonValue,
         stageFamiliarity,
-        nextShowTime,
-        showDuration
+        planedNextShowTime,
+        actualNextShowTime,
+        showDuration,
+        isLatestRecord
       ];
   @override
   String get aliasedName => _alias ?? 'fragment_permanent_memory_infos';
@@ -2481,24 +2567,24 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
           _fragmentIdMeta,
           fragmentId.isAcceptableOrUnknown(
               data['fragment_id']!, _fragmentIdMeta));
-    }
-    if (data.containsKey('memory_model_id')) {
-      context.handle(
-          _memoryModelIdMeta,
-          memoryModelId.isAcceptableOrUnknown(
-              data['memory_model_id']!, _memoryModelIdMeta));
+    } else if (isInserting) {
+      context.missing(_fragmentIdMeta);
     }
     if (data.containsKey('memory_group_id')) {
       context.handle(
           _memoryGroupIdMeta,
           memoryGroupId.isAcceptableOrUnknown(
               data['memory_group_id']!, _memoryGroupIdMeta));
+    } else if (isInserting) {
+      context.missing(_memoryGroupIdMeta);
     }
     if (data.containsKey('stage_button_value')) {
       context.handle(
           _stageButtonValueMeta,
           stageButtonValue.isAcceptableOrUnknown(
               data['stage_button_value']!, _stageButtonValueMeta));
+    } else if (isInserting) {
+      context.missing(_stageButtonValueMeta);
     }
     if (data.containsKey('stage_familiarity')) {
       context.handle(
@@ -2508,11 +2594,19 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
     } else if (isInserting) {
       context.missing(_stageFamiliarityMeta);
     }
-    if (data.containsKey('next_show_time')) {
+    if (data.containsKey('planed_next_show_time')) {
       context.handle(
-          _nextShowTimeMeta,
-          nextShowTime.isAcceptableOrUnknown(
-              data['next_show_time']!, _nextShowTimeMeta));
+          _planedNextShowTimeMeta,
+          planedNextShowTime.isAcceptableOrUnknown(
+              data['planed_next_show_time']!, _planedNextShowTimeMeta));
+    } else if (isInserting) {
+      context.missing(_planedNextShowTimeMeta);
+    }
+    if (data.containsKey('actual_next_show_time')) {
+      context.handle(
+          _actualNextShowTimeMeta,
+          actualNextShowTime.isAcceptableOrUnknown(
+              data['actual_next_show_time']!, _actualNextShowTimeMeta));
     }
     if (data.containsKey('show_duration')) {
       context.handle(
@@ -2521,6 +2615,14 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
               data['show_duration']!, _showDurationMeta));
     } else if (isInserting) {
       context.missing(_showDurationMeta);
+    }
+    if (data.containsKey('is_latest_record')) {
+      context.handle(
+          _isLatestRecordMeta,
+          isLatestRecord.isAcceptableOrUnknown(
+              data['is_latest_record']!, _isLatestRecordMeta));
+    } else if (isInserting) {
+      context.missing(_isLatestRecordMeta);
     }
     return context;
   }

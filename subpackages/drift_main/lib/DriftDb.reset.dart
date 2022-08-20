@@ -118,7 +118,8 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<int> newLearnCount,
     required Value<DateTime> reviewInterval,
     required Value<String> filterOut,
-    required Value<DisplayPriority> displayPriority,
+    required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
+    required Value<NewDisplayOrder> newDisplayOrder,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
@@ -134,8 +135,11 @@ extension MemoryGroupExt on MemoryGroup {
     this.reviewInterval =
         reviewInterval.present ? reviewInterval.value : this.reviewInterval;
     this.filterOut = filterOut.present ? filterOut.value : this.filterOut;
-    this.displayPriority =
-        displayPriority.present ? displayPriority.value : this.displayPriority;
+    this.newReviewDisplayOrder = newReviewDisplayOrder.present
+        ? newReviewDisplayOrder.value
+        : this.newReviewDisplayOrder;
+    this.newDisplayOrder =
+        newDisplayOrder.present ? newDisplayOrder.value : this.newDisplayOrder;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryGroups,
@@ -189,21 +193,20 @@ extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String?> fragmentId,
-    required Value<String?> memoryModelId,
-    required Value<String?> memoryGroupId,
-    required Value<double?> stageButtonValue,
+    required Value<String> fragmentId,
+    required Value<String> memoryGroupId,
+    required Value<double> stageButtonValue,
     required Value<double> stageFamiliarity,
-    required Value<DateTime?> nextShowTime,
+    required Value<DateTime> planedNextShowTime,
+    required Value<DateTime?> actualNextShowTime,
     required Value<double> showDuration,
+    required Value<bool> isLatestRecord,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.fragmentId = fragmentId.present ? fragmentId.value : this.fragmentId;
-    this.memoryModelId =
-        memoryModelId.present ? memoryModelId.value : this.memoryModelId;
     this.memoryGroupId =
         memoryGroupId.present ? memoryGroupId.value : this.memoryGroupId;
     this.stageButtonValue = stageButtonValue.present
@@ -212,10 +215,16 @@ extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
     this.stageFamiliarity = stageFamiliarity.present
         ? stageFamiliarity.value
         : this.stageFamiliarity;
-    this.nextShowTime =
-        nextShowTime.present ? nextShowTime.value : this.nextShowTime;
+    this.planedNextShowTime = planedNextShowTime.present
+        ? planedNextShowTime.value
+        : this.planedNextShowTime;
+    this.actualNextShowTime = actualNextShowTime.present
+        ? actualNextShowTime.value
+        : this.actualNextShowTime;
     this.showDuration =
         showDuration.present ? showDuration.value : this.showDuration;
+    this.isLatestRecord =
+        isLatestRecord.present ? isLatestRecord.value : this.isLatestRecord;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentPermanentMemoryInfos,

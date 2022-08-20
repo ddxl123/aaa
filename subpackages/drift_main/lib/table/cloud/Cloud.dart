@@ -48,7 +48,7 @@ class FragmentGroups extends CloudTableBase {
 ///  新学数量[newLearnCount]：[100]个 剩余100
 ///  复习数量：300个 剩余300
 ///   1. 取用接下来[24h][takeReviewInterval]内的复习量（包含曾逾期的碎片）
-///  展示优先级：[displayPriority]
+///  展示优先级：[newReviewDisplayOrder]
 ///
 /// 总学习量：共400个碎片 剩余400
 ///
@@ -77,8 +77,11 @@ class MemoryGroups extends CloudTableBase {
   /// 过滤碎片
   TextColumn get filterOut => text()();
 
-  /// 展示优先级
-  IntColumn get displayPriority => intEnum<DisplayPriority>()();
+  /// 新旧碎片展示先后顺序。
+  IntColumn get newReviewDisplayOrder => intEnum<NewReviewDisplayOrder>()();
+
+  /// 新碎片展示先后顺序。
+  IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>()();
 
   /// 悬浮碎片是否立即触发音频/特效/振动等。
 }
@@ -182,35 +185,44 @@ class MemoryModels extends CloudTableBase {
 ///
 /// 每次用户在碎片展示中点击按钮后，就会创建一条记录。
 ///
-/// [TableBase.createdAt] 充当每次的碎片展示前一瞬间的时间点。
+/// TODO: 存在的问题：
+/// 1. 用户自己手动配置熟悉度：
+/// 用户可以在其他地方配置记忆记录，由于需要配置 [planedNextShowTime]，
+/// 因此必须检索所有记忆组内是否存在该碎片，并要进行按钮触发配置对应的 [stageButtonValue]。
+///
 @ReferenceTo([])
 class FragmentPermanentMemoryInfos extends CloudTableBase {
   @ReferenceTo([Fragments])
-  TextColumn get fragmentId => text().nullable()();
-
-  /// 允许对应的 [MemoryModel] 不存在。
-  @ReferenceTo([MemoryModels])
-  TextColumn get memoryModelId => text().nullable()();
+  TextColumn get fragmentId => text()();
 
   /// 允许对应的 [MemoryGroup] 不存在。
   @ReferenceTo([MemoryGroups])
-  TextColumn get memoryGroupId => text().nullable()();
+  TextColumn get memoryGroupId => text()();
 
-  /// 阶段按钮数值 —— 点击的按钮的数值。
-  RealColumn get stageButtonValue => real().nullable()();
+  /// 在当前记忆组内的， 阶段按钮数值 —— 点击的按钮的数值。
+  RealColumn get stageButtonValue => real()();
 
-  /// 阶段熟练度 —— 点击按钮前时的熟练度。
+  /// 在当前记忆组内的，阶段熟练度 —— 点击按钮瞬间前的熟练度。
   ///
-  /// 范围：0~1。
+  /// 在用户**触发按钮一瞬间**后 ，会根据 [MemoryModels.familiarityAlgorithm] 来计算**触发按钮一瞬间前**的熟练度（触发按钮后的瞬间熟练度必然是100%）
   ///
-  /// 在用户触发按钮 **后** ，会根据 [MemoryModels.familiarityAlgorithm] 来计算 **触发按钮前** 的熟练度（触发按钮后的瞬间熟练度必然是1）
+  /// 在其碎片没有记忆信息记录时，默认熟练度为0。
   RealColumn get stageFamiliarity => real()();
 
-  /// 下一次展示的时间点。
+  /// 在当前记忆组内的，下一次计划展示的时间点。
   ///
   /// 在用户触发按钮后，会根据 [MemoryModels.nextTimeAlgorithm] 来计算下一次展示的时间。
-  DateTimeColumn get nextShowTime => dateTime().nullable()();
+  DateTimeColumn get planedNextShowTime => dateTime()();
 
-  /// 碎片展示时长。
+  /// 在当前记忆组内的，下次实际展示的时间点。
+  ///
+  /// 在用户触发按钮后，会向上一条记录的 [actualNextShowTime] 设为碎片展示前的时间点。
+  DateTimeColumn get actualNextShowTime => dateTime().nullable()();
+
+  /// 在当前记忆组内的，碎片展示时长。
   RealColumn get showDuration => real()();
+
+  /// 在当前记忆组内的，当前记录是否为当前碎片的最新记录。
+  /// 在新纪录被创建的同时，需要把旧记录设为 false。
+  BoolColumn get isLatestRecord => boolean()();
 }

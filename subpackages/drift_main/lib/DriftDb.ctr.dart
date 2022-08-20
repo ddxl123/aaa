@@ -73,7 +73,8 @@ class WithCrts {
     required int newLearnCount,
     required DateTime reviewInterval,
     required String filterOut,
-    required DisplayPriority displayPriority,
+    required NewReviewDisplayOrder newReviewDisplayOrder,
+    required NewDisplayOrder newDisplayOrder,
   }) {
     return MemoryGroupsCompanion(
       id: id,
@@ -86,7 +87,8 @@ class WithCrts {
       newLearnCount: Value(newLearnCount),
       reviewInterval: Value(reviewInterval),
       filterOut: Value(filterOut),
-      displayPriority: Value(displayPriority),
+      newReviewDisplayOrder: Value(newReviewDisplayOrder),
+      newDisplayOrder: Value(newDisplayOrder),
     );
   }
 
@@ -113,25 +115,27 @@ class WithCrts {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String?> fragmentId,
-    required Value<String?> memoryModelId,
-    required Value<String?> memoryGroupId,
-    required Value<double?> stageButtonValue,
+    required String fragmentId,
+    required String memoryGroupId,
+    required double stageButtonValue,
     required double stageFamiliarity,
-    required Value<DateTime?> nextShowTime,
+    required DateTime planedNextShowTime,
+    required Value<DateTime?> actualNextShowTime,
     required double showDuration,
+    required bool isLatestRecord,
   }) {
     return FragmentPermanentMemoryInfosCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      fragmentId: fragmentId,
-      memoryModelId: memoryModelId,
-      memoryGroupId: memoryGroupId,
-      stageButtonValue: stageButtonValue,
+      fragmentId: Value(fragmentId),
+      memoryGroupId: Value(memoryGroupId),
+      stageButtonValue: Value(stageButtonValue),
       stageFamiliarity: Value(stageFamiliarity),
-      nextShowTime: nextShowTime,
+      planedNextShowTime: Value(planedNextShowTime),
+      actualNextShowTime: actualNextShowTime,
       showDuration: Value(showDuration),
+      isLatestRecord: Value(isLatestRecord),
     );
   }
 

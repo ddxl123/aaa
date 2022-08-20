@@ -19,12 +19,12 @@ class MemoryGroupGizmoPageAbController extends AbController {
   }
 
   Future<void> refreshMemoryRule() async {
-    final mg = (await DriftDb.instance.singleDAO.queryMemoryModelInsideMemoryGroup(memoryModelId: memoryGroupGizmo().memoryModelId));
+    final mg = (await DriftDb.instance.singleDAO.queryMemoryModelById(memoryModelId: memoryGroupGizmo().memoryModelId));
     memoryRule.refreshEasy((oldValue) => mg);
   }
 
   Future<void> refreshFragments() async {
-    final mgs = (await DriftDb.instance.singleDAO.queryFragmentInMemoryGroup(memoryGroupGizmo().id)).map((e) => e.ab);
+    final mgs = (await DriftDb.instance.singleDAO.queryFragmentsInMemoryGroup(memoryGroupGizmo().id)).map((e) => e.ab);
     fragments().clear_(this);
     fragments.refreshInevitable((obj) => obj..addAll(mgs));
   }

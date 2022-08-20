@@ -367,7 +367,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                                 final tryInt = int.tryParse(v);
                                 c.reviewInterval.refreshEasy(
                                   (oldValue) =>
-                                      tryInt == null ? DateTime.fromMillisecondsSinceEpoch(-1) : DateTime.now().add(Duration(minutes: tryInt)),
+                                      tryInt == null ? DateTime.fromMillisecondsSinceEpoch(-60000) : DateTime.now().add(Duration(minutes: tryInt)),
                                 );
                               },
                             ),

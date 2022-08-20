@@ -44,7 +44,8 @@ Future<void> showDialogForCreateMemoryGroup({
           newLearnCount: 0,
           reviewInterval: DateTime.now(),
           filterOut: '-',
-          displayPriority: DisplayPriority.minx,
+          newReviewDisplayOrder: NewReviewDisplayOrder.mix,
+          newDisplayOrder: NewDisplayOrder.random,
         ),
         willFragments: await DriftDb.instance.singleDAO.queryFragmentsByIds(
           Aber.findOrNullLast<FragmentGroupListPageAbController>()?.selectedFragmentIds().toList() ?? [],

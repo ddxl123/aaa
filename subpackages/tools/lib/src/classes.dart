@@ -54,3 +54,10 @@ class VerifyMany {
     return _failMessage;
   }
 }
+
+class Tuple2<T1, T2> {
+  final T1 t1;
+  final T2 t2;
+
+  Tuple2({required this.t1, required this.t2});
+}
