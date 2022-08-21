@@ -58,6 +58,8 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               _newLearnCountWidget(),
               _reviewIntervalWidget(),
               _filterOutWidget(),
+              _newReviewDisplayOrder(),
+              _newDisplayOrder(),
             ],
       },
       orElse: null,
@@ -189,37 +191,15 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return Row(
           children: [
             const Text('展示类型：', style: TextStyle(fontSize: 16)),
-            DropdownButton2<MemoryGroupType>(
+            dropdownButton2<MemoryGroupType>(
               value: c.type(abw),
-              customItemsIndexes: const [1, 3, 5],
-              customItemsHeight: 10,
-              dropdownDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              items: const [
-                DropdownMenuItem(
-                  child: Text('  应用内          '),
-                  value: MemoryGroupType.inApp,
-                ),
-                DropdownMenuItem(
-                  enabled: false,
-                  child: Divider(),
-                ),
-                DropdownMenuItem(
-                  child: Text('  全部悬浮'),
-                  value: MemoryGroupType.allFloating,
-                ),
-                DropdownMenuItem(
-                  enabled: false,
-                  child: Divider(),
-                ),
-                DropdownMenuItem(
-                  child: Text('  跟随模型'),
-                  value: MemoryGroupType.followModel,
-                ),
+              item: [
+                Tuple2(t1: '应用内', t2: MemoryGroupType.inApp),
+                Tuple2(t1: '全部悬浮  ', t2: MemoryGroupType.allFloating),
+                Tuple2(t1: '跟随模型', t2: MemoryGroupType.followModel),
               ],
-              onChanged: (value) {
-                c.type.refreshEasy((oldValue) => value!);
+              onChanged: (v) {
+                c.type.refreshEasy((oldValue) => v!);
               },
             ),
           ],
@@ -429,6 +409,58 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  Widget _newReviewDisplayOrder() {
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+          child: Row(
+            children: [
+              const Text('新碎片 | 复习碎片 展示顺序：'),
+              dropdownButton2<NewReviewDisplayOrder>(
+                value: c.newReviewDisplayOrder(abw),
+                item: [
+                  Tuple2(t1: '混合', t2: NewReviewDisplayOrder.mix),
+                  Tuple2(t1: '优先新碎片', t2: NewReviewDisplayOrder.newReview),
+                  Tuple2(t1: '优先复习碎片  ', t2: NewReviewDisplayOrder.reviewNew),
+                ],
+                onChanged: (v) {
+                  c.newReviewDisplayOrder.refreshEasy((oldValue) => v!);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _newDisplayOrder() {
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: Row(
+            children: [
+              const Text('新碎片 展示顺序：'),
+              dropdownButton2<NewDisplayOrder>(
+                value: c.newDisplayOrder(abw),
+                item: [
+                  Tuple2(t1: '随机', t2: NewDisplayOrder.random),
+                  Tuple2(t1: '标题首字母A~Z顺序  ', t2: NewDisplayOrder.titleA2Z),
+                  Tuple2(t1: '创建时间', t2: NewDisplayOrder.createEarly2Late),
+                ],
+                onChanged: (v) {
+                  c.newDisplayOrder.refreshEasy((oldValue) => v!);
+                },
+              ),
+            ],
+          ),
         );
       },
     );

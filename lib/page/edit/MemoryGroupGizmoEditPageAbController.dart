@@ -45,7 +45,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 已存碎片
   final selectedFragments = <Ab<Fragment>>[].ab;
 
-  ///
+  /// =====
 
   /// 查看 [MemoryGroups.newLearnCount]。
   final newLearnCount = 0.ab;
@@ -134,6 +134,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     reviewInterval.refreshEasy((oldValue) => mgg.reviewInterval);
     filterOut.refreshEasy((oldValue) => mgg.filterOut);
     newReviewDisplayOrder.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
+    newDisplayOrder.refreshEasy((oldValue) => mgg.newDisplayOrder);
 
     // TODO:
     totalCount.refreshEasy((oldValue) => 567);
@@ -167,7 +168,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                   );
                 },
                 // TODO:
-                fragmentPermanentMemoryInfos: null,
+                fragmentMemoryInfos: null,
                 // TODO:
                 rFragment2MemoryGroups: null,
               );
@@ -214,7 +215,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                 );
               },
               // TODO:
-              fragmentPermanentMemoryInfos: null,
+              fragmentMemoryInfos: null,
               // TODO:
               rFragment2MemoryGroups: null,
             ),

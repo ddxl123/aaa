@@ -2049,8 +2049,8 @@ class $MemoryModelsTable extends MemoryModels
   }
 }
 
-class FragmentPermanentMemoryInfo extends DataClass
-    implements Insertable<FragmentPermanentMemoryInfo> {
+class FragmentMemoryInfo extends DataClass
+    implements Insertable<FragmentMemoryInfo> {
   /// 当子表类为 [Users] 时，
   ///   - 云端创建、云端获取。
   ///   - 无需自增，无需作为主键。
@@ -2099,7 +2099,7 @@ class FragmentPermanentMemoryInfo extends DataClass
   /// 在当前记忆组内的，当前记录是否为当前碎片的最新记录。
   /// 在新纪录被创建的同时，需要把旧记录设为 false。
   bool isLatestRecord;
-  FragmentPermanentMemoryInfo(
+  FragmentMemoryInfo(
       {required this.id,
       required this.createdAt,
       required this.updatedAt,
@@ -2111,10 +2111,10 @@ class FragmentPermanentMemoryInfo extends DataClass
       this.actualNextShowTime,
       required this.showDuration,
       required this.isLatestRecord});
-  factory FragmentPermanentMemoryInfo.fromData(Map<String, dynamic> data,
+  factory FragmentMemoryInfo.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return FragmentPermanentMemoryInfo(
+    return FragmentMemoryInfo(
       id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       createdAt: const DateTimeType()
@@ -2158,8 +2158,8 @@ class FragmentPermanentMemoryInfo extends DataClass
     return map;
   }
 
-  FragmentPermanentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
-    return FragmentPermanentMemoryInfosCompanion(
+  FragmentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
+    return FragmentMemoryInfosCompanion(
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
@@ -2176,10 +2176,10 @@ class FragmentPermanentMemoryInfo extends DataClass
     );
   }
 
-  factory FragmentPermanentMemoryInfo.fromJson(Map<String, dynamic> json,
+  factory FragmentMemoryInfo.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FragmentPermanentMemoryInfo(
+    return FragmentMemoryInfo(
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -2213,7 +2213,7 @@ class FragmentPermanentMemoryInfo extends DataClass
     };
   }
 
-  FragmentPermanentMemoryInfo copyWith(
+  FragmentMemoryInfo copyWith(
           {String? id,
           DateTime? createdAt,
           DateTime? updatedAt,
@@ -2225,7 +2225,7 @@ class FragmentPermanentMemoryInfo extends DataClass
           DateTime? actualNextShowTime,
           double? showDuration,
           bool? isLatestRecord}) =>
-      FragmentPermanentMemoryInfo(
+      FragmentMemoryInfo(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -2240,7 +2240,7 @@ class FragmentPermanentMemoryInfo extends DataClass
       );
   @override
   String toString() {
-    return (StringBuffer('FragmentPermanentMemoryInfo(')
+    return (StringBuffer('FragmentMemoryInfo(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -2272,7 +2272,7 @@ class FragmentPermanentMemoryInfo extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is FragmentPermanentMemoryInfo &&
+      (other is FragmentMemoryInfo &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
@@ -2286,8 +2286,7 @@ class FragmentPermanentMemoryInfo extends DataClass
           other.isLatestRecord == this.isLatestRecord);
 }
 
-class FragmentPermanentMemoryInfosCompanion
-    extends UpdateCompanion<FragmentPermanentMemoryInfo> {
+class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
@@ -2299,7 +2298,7 @@ class FragmentPermanentMemoryInfosCompanion
   Value<DateTime?> actualNextShowTime;
   Value<double> showDuration;
   Value<bool> isLatestRecord;
-  FragmentPermanentMemoryInfosCompanion({
+  FragmentMemoryInfosCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -2312,7 +2311,7 @@ class FragmentPermanentMemoryInfosCompanion
     this.showDuration = const Value.absent(),
     this.isLatestRecord = const Value.absent(),
   });
-  FragmentPermanentMemoryInfosCompanion.insert({
+  FragmentMemoryInfosCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -2332,7 +2331,7 @@ class FragmentPermanentMemoryInfosCompanion
         planedNextShowTime = Value(planedNextShowTime),
         showDuration = Value(showDuration),
         isLatestRecord = Value(isLatestRecord);
-  static Insertable<FragmentPermanentMemoryInfo> custom({
+  static Insertable<FragmentMemoryInfo> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -2362,7 +2361,7 @@ class FragmentPermanentMemoryInfosCompanion
     });
   }
 
-  FragmentPermanentMemoryInfosCompanion copyWith(
+  FragmentMemoryInfosCompanion copyWith(
       {Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
@@ -2374,7 +2373,7 @@ class FragmentPermanentMemoryInfosCompanion
       Value<DateTime?>? actualNextShowTime,
       Value<double>? showDuration,
       Value<bool>? isLatestRecord}) {
-    return FragmentPermanentMemoryInfosCompanion(
+    return FragmentMemoryInfosCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -2432,7 +2431,7 @@ class FragmentPermanentMemoryInfosCompanion
 
   @override
   String toString() {
-    return (StringBuffer('FragmentPermanentMemoryInfosCompanion(')
+    return (StringBuffer('FragmentMemoryInfosCompanion(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -2449,14 +2448,12 @@ class FragmentPermanentMemoryInfosCompanion
   }
 }
 
-class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
-    with
-        TableInfo<$FragmentPermanentMemoryInfosTable,
-            FragmentPermanentMemoryInfo> {
+class $FragmentMemoryInfosTable extends FragmentMemoryInfos
+    with TableInfo<$FragmentMemoryInfosTable, FragmentMemoryInfo> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $FragmentPermanentMemoryInfosTable(this.attachedDatabase, [this._alias]);
+  $FragmentMemoryInfosTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
@@ -2540,12 +2537,11 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
         isLatestRecord
       ];
   @override
-  String get aliasedName => _alias ?? 'fragment_permanent_memory_infos';
+  String get aliasedName => _alias ?? 'fragment_memory_infos';
   @override
-  String get actualTableName => 'fragment_permanent_memory_infos';
+  String get actualTableName => 'fragment_memory_infos';
   @override
-  VerificationContext validateIntegrity(
-      Insertable<FragmentPermanentMemoryInfo> instance,
+  VerificationContext validateIntegrity(Insertable<FragmentMemoryInfo> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -2630,15 +2626,14 @@ class $FragmentPermanentMemoryInfosTable extends FragmentPermanentMemoryInfos
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  FragmentPermanentMemoryInfo map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    return FragmentPermanentMemoryInfo.fromData(data,
+  FragmentMemoryInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return FragmentMemoryInfo.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $FragmentPermanentMemoryInfosTable createAlias(String alias) {
-    return $FragmentPermanentMemoryInfosTable(attachedDatabase, alias);
+  $FragmentMemoryInfosTable createAlias(String alias) {
+    return $FragmentMemoryInfosTable(attachedDatabase, alias);
   }
 }
 
@@ -4242,8 +4237,8 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
-  late final $FragmentPermanentMemoryInfosTable fragmentPermanentMemoryInfos =
-      $FragmentPermanentMemoryInfosTable(this);
+  late final $FragmentMemoryInfosTable fragmentMemoryInfos =
+      $FragmentMemoryInfosTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
   late final $RFragment2MemoryGroupsTable rFragment2MemoryGroups =
@@ -4262,7 +4257,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragmentGroups,
         memoryGroups,
         memoryModels,
-        fragmentPermanentMemoryInfos,
+        fragmentMemoryInfos,
         rFragment2FragmentGroups,
         rFragment2MemoryGroups,
         rAssistedMemory2Fragments,
@@ -4281,8 +4276,8 @@ mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $FragmentPermanentMemoryInfosTable get fragmentPermanentMemoryInfos =>
-      attachedDatabase.fragmentPermanentMemoryInfos;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>

@@ -6,7 +6,7 @@ const List<Type> cloudTableClass = [
   FragmentGroups,
   MemoryGroups,
   MemoryModels,
-  FragmentPermanentMemoryInfos,
+  FragmentMemoryInfos,
 ];
 
 @ReferenceTo([])
@@ -181,7 +181,7 @@ class MemoryModels extends CloudTableBase {
   /// 是否"将过就过"：碎片的展示错过了计划时间，是否跳过/优先于冲突碎片/滞后于冲突碎片
 }
 
-/// 碎片的永久存储的记忆信息（包含了历史记忆信息）。
+/// 碎片的记忆信息。
 ///
 /// 每次用户在碎片展示中点击按钮后，就会创建一条记录。
 ///
@@ -191,7 +191,7 @@ class MemoryModels extends CloudTableBase {
 /// 因此必须检索所有记忆组内是否存在该碎片，并要进行按钮触发配置对应的 [stageButtonValue]。
 ///
 @ReferenceTo([])
-class FragmentPermanentMemoryInfos extends CloudTableBase {
+class FragmentMemoryInfos extends CloudTableBase {
   @ReferenceTo([Fragments])
   TextColumn get fragmentId => text()();
 

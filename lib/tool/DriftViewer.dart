@@ -39,6 +39,7 @@ class _DriftViewerState extends State<DriftViewer> {
             onPressed: () {
               showMenu(
                 context: context,
+                elevation: 10,
                 position: const RelativeRect.fromLTRB(1, 0, 0, 0),
                 items: [
                   PopupMenuItem(

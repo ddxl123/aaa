@@ -28,7 +28,13 @@ class _InAppStageState extends State<InAppStage> {
               },
             ),
           ),
-          body: Text(c.currentFragment(abw)?.title ?? '任务已全部完成！'),
+          body: Center(
+            child: Column(
+              children: [
+                Text(c.currentFragmentAndMemoryInfo(abw)?.t1.title ?? '任务已全部完成！'),
+              ],
+            ),
+          ),
         );
       },
     );

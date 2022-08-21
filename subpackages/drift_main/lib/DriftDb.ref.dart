@@ -35,7 +35,7 @@ class RefUsers extends Ref {
 class RefFragments extends Ref {
   Future<void> Function($FragmentsTable table) self;
   RefFragments? child_fragments;
-  RefFragmentPermanentMemoryInfos? fragmentPermanentMemoryInfos;
+  RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
   RefRFragment2MemoryGroups? rFragment2MemoryGroups;
   RefRAssistedMemory2Fragments? rAssistedMemory2Fragments_1;
@@ -44,7 +44,7 @@ class RefFragments extends Ref {
   RefFragments({
     required this.self,
     required this.child_fragments,
-    required this.fragmentPermanentMemoryInfos,
+    required this.fragmentMemoryInfos,
     required this.rFragment2FragmentGroups,
     required this.rFragment2MemoryGroups,
     required this.rAssistedMemory2Fragments_1,
@@ -55,7 +55,7 @@ class RefFragments extends Ref {
   Future<void> _run() async {
     await self(DriftDb.instance.fragments);
     await child_fragments?._run();
-    await fragmentPermanentMemoryInfos?._run();
+    await fragmentMemoryInfos?._run();
     await rFragment2FragmentGroups?._run();
     await rFragment2MemoryGroups?._run();
     await rAssistedMemory2Fragments_1?._run();
@@ -100,33 +100,33 @@ class RefMemoryModels extends Ref {
 
 class RefMemoryGroups extends Ref {
   Future<void> Function($MemoryGroupsTable table) self;
-  RefFragmentPermanentMemoryInfos? fragmentPermanentMemoryInfos;
+  RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRFragment2MemoryGroups? rFragment2MemoryGroups;
 
   RefMemoryGroups({
     required this.self,
-    required this.fragmentPermanentMemoryInfos,
+    required this.fragmentMemoryInfos,
     required this.rFragment2MemoryGroups,
   });
 
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.memoryGroups);
-    await fragmentPermanentMemoryInfos?._run();
+    await fragmentMemoryInfos?._run();
     await rFragment2MemoryGroups?._run();
   }
 }
 
-class RefFragmentPermanentMemoryInfos extends Ref {
-  Future<void> Function($FragmentPermanentMemoryInfosTable table) self;
+class RefFragmentMemoryInfos extends Ref {
+  Future<void> Function($FragmentMemoryInfosTable table) self;
 
-  RefFragmentPermanentMemoryInfos({
+  RefFragmentMemoryInfos({
     required this.self,
   });
 
   @override
   Future<void> _run() async {
-    await self(DriftDb.instance.fragmentPermanentMemoryInfos);
+    await self(DriftDb.instance.fragmentMemoryInfos);
   }
 }
 

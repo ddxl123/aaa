@@ -10,6 +10,10 @@ part of drift_db;
 class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   SingleDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  Future<User> queryUser() async {
+    return await select(users).getSingle();
+  }
+
   /// 查询已同步的、查询未同步的、查询未下载的
   Future<List<FragmentGroup>> queryFragmentGroups(String? fatherFragmentGroupId) async {
     return await (select(fragmentGroups)
@@ -30,72 +34,82 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     return await (select(fragments)..where((tbl) => tbl.id.isIn(ids))).get();
   }
 
-  /// [preCount] - 预加载数量。
-  Future<Tuple2<Fragment, FragmentPermanentMemoryInfo?>?> queryFragmentsForDancer({required MemoryGroup mg}) async {
+  Future<Tuple2<Fragment, FragmentMemoryInfo?>?> queryFragmentsForDancer({required MemoryGroup mg}) async {
     // 查询记忆组内全部的碎片。
     Future<List<Fragment>> getFs() async => await queryFragmentsInMemoryGroup(mg.id);
 
     // 查询当前记忆组内的全部最新的记忆信息，及其对应的碎片。
-    Future<List<TypedResult>> getAllLatestReviews() async =>
-        await (select(fragmentPermanentMemoryInfos).join([innerJoin(fragments, fragmentPermanentMemoryInfos.fragmentId.equalsExp(fragments.id))])
-              ..where(fragmentPermanentMemoryInfos.memoryGroupId.equals(mg.id) &
-                  fragmentPermanentMemoryInfos.isLatestRecord.equals(true) &
-                  fragmentPermanentMemoryInfos.planedNextShowTime.isSmallerOrEqualValue(mg.reviewInterval)))
+    Future<List<TypedResult>> getAllEarliestReviews() async =>
+        await (select(fragmentMemoryInfos).join([innerJoin(fragments, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id))])
+              ..where(fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
+                  fragmentMemoryInfos.isLatestRecord.equals(true) &
+                  fragmentMemoryInfos.planedNextShowTime.isSmallerOrEqualValue(mg.reviewInterval)))
             .get();
 
     // 在复习区间内将可展示的全部复习碎片信息，及其对应的碎片。
-    // 基于 getAllLatestReviews，查询[下一次展示时间]小于等于[复习区间]，并早前晚后排序。
-    Future<List<TypedResult>> getLatestReviewsIntervalAndSort() async => ((await getAllLatestReviews())
-        .where((element) => element.readTable(fragmentPermanentMemoryInfos).planedNextShowTime.isBefore(mg.reviewInterval))
+    // 基于 getAllEarliestReviews，查询[下一次展示时间]小于等于[复习区间]，并早前晚后排序。
+    Future<List<TypedResult>> getEarliestReviewsIntervalAndSort() async => ((await getAllEarliestReviews())
+        .where((element) => element.readTable(fragmentMemoryInfos).planedNextShowTime.isBefore(mg.reviewInterval))
         .toList()
       ..sort(
-        (a, b) =>
-            a.readTable(fragmentPermanentMemoryInfos).planedNextShowTime.compareTo(b.readTable(fragmentPermanentMemoryInfos).planedNextShowTime),
+        (a, b) => a.readTable(fragmentMemoryInfos).planedNextShowTime.compareTo(b.readTable(fragmentMemoryInfos).planedNextShowTime),
       ));
 
-    // 基于 getLatestReviewsIntervalAndSort 获取最早的复习碎片信息，及其对应的碎片。
-    Future<TypedResult?> getLatestReview() async {
-      final glrias = await getLatestReviewsIntervalAndSort();
+    // 基于 getEarliestReviewsIntervalAndSort 获取最早的复习碎片信息，及其对应的碎片。
+    Future<TypedResult?> getEarliestReview() async {
+      final glrias = await getEarliestReviewsIntervalAndSort();
       return glrias.isEmpty ? null : glrias.first;
     }
 
-    // 基于 getAllLatestReviews 筛选出新碎片，即在当前碎片组中没有记录的碎片。
+    // 基于 getAllEarliestReviews 筛选出新碎片，即在当前碎片组中没有记录的碎片。
     Future<List<Fragment>> getNewFs() async {
-      final galr = await getAllLatestReviews();
-      return (await getFs()).where((element) => !galr.map((e) => e.readTable(fragmentPermanentMemoryInfos).fragmentId).contains(element.id)).toList();
+      final galr = await getAllEarliestReviews();
+      return (await getFs()).where((element) => !galr.map((e) => e.readTable(fragmentMemoryInfos).fragmentId).contains(element.id)).toList();
     }
 
     // 基于 getNewFs，随机获取一个碎片。
-    Future<Fragment?> getRandomF() async {
+    Future<Fragment?> getRandomNewF() async {
       final rfs = await getNewFs();
       return rfs.isEmpty ? null : rfs[Random().nextInt(rfs.length)];
     }
 
-    return await filterFuture<NewReviewDisplayOrder, Tuple2<Fragment, FragmentPermanentMemoryInfo?>>(
+    final f = await getRandomNewF();
+    final r = await getEarliestReview();
+    if (f == null && r == null) return null;
+    final ft = f == null ? null : Tuple2(t1: f, t2: null);
+    final rt = r == null ? null : Tuple2(t1: r.readTable(fragments), t2: r.readTable(fragmentMemoryInfos));
+
+    return await filterFuture<NewReviewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
       from: mg.newReviewDisplayOrder,
       targets: {
-        [NewReviewDisplayOrder.mix]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentPermanentMemoryInfo?>>(
+        [NewReviewDisplayOrder.mix]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
               from: mg.newDisplayOrder,
               targets: {
-                [NewDisplayOrder.random]: () async => null,
+                [NewDisplayOrder.random]: () async {
+                  return Random().nextInt(1) == 0 ? (ft ?? rt) : (rt ?? ft);
+                },
+                [NewDisplayOrder.createEarly2Late]: null,
+                [NewDisplayOrder.titleA2Z]: null,
+              },
+              orElse: null,
+            ),
+        [NewReviewDisplayOrder.newReview]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
+              from: mg.newDisplayOrder,
+              targets: {
+                [NewDisplayOrder.random]: () async {
+                  return ft ?? rt;
+                },
                 [NewDisplayOrder.createEarly2Late]: () async => null,
                 [NewDisplayOrder.titleA2Z]: () async => null,
               },
               orElse: null,
             ),
-        [NewReviewDisplayOrder.newReview]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentPermanentMemoryInfo?>>(
+        [NewReviewDisplayOrder.reviewNew]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
               from: mg.newDisplayOrder,
               targets: {
-                [NewDisplayOrder.random]: () async => null,
-                [NewDisplayOrder.createEarly2Late]: () async => null,
-                [NewDisplayOrder.titleA2Z]: () async => null,
-              },
-              orElse: null,
-            ),
-        [NewReviewDisplayOrder.reviewNew]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentPermanentMemoryInfo?>>(
-              from: mg.newDisplayOrder,
-              targets: {
-                [NewDisplayOrder.random]: () async => null,
+                [NewDisplayOrder.random]: () async {
+                  return rt ?? ft;
+                },
                 [NewDisplayOrder.createEarly2Late]: () async => null,
                 [NewDisplayOrder.titleA2Z]: () async => null,
               },
@@ -167,7 +181,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
             ),
             child_fragments: null,
             rFragment2MemoryGroups: null,
-            fragmentPermanentMemoryInfos: null,
+            fragmentMemoryInfos: null,
             rAssistedMemory2Fragments_1: null,
             rAssistedMemory2Fragments_2: null,
           ),
@@ -209,7 +223,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
                 );
               },
             ),
-            fragmentPermanentMemoryInfos: null,
+            fragmentMemoryInfos: null,
           ),
         );
       },
@@ -247,7 +261,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
     //       (table) async {
     //         await updateReturningWith(table, entity: memoryGroup, syncTag: st);
     //       },
-    //       fragmentPermanentMemoryInfos: fragmentPermanentMemoryInfos,
+    //       fragmentMemoryInfos: fragmentMemoryInfos,
     //       rFragment2MemoryGroups: rFragment2MemoryGroups,
     //       rMemoryModel2MemoryGroups: rMemoryModel2MemoryGroups,
     //     );

@@ -183,13 +183,13 @@ extension MemoryModelExt on MemoryModel {
   }
 }
 
-extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
+extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-  FutureOr<FragmentPermanentMemoryInfo> reset({
+  FutureOr<FragmentMemoryInfo> reset({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -227,7 +227,7 @@ extension FragmentPermanentMemoryInfoExt on FragmentPermanentMemoryInfo {
         isLatestRecord.present ? isLatestRecord.value : this.isLatestRecord;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.fragmentPermanentMemoryInfos,
+      await ins.updateReturningWith(ins.fragmentMemoryInfos,
           entity: toCompanion(false), syncTag: writeSyncTag);
     }
     return this;

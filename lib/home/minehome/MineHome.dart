@@ -1,4 +1,7 @@
+import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/home/test/TestHome.dart';
 import 'package:aaa/tool/DriftViewer.dart';
+import 'package:aaa/tool/aber/Aber.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
 
@@ -7,20 +10,19 @@ class MineHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              child: const Text('本地数据库'),
+    return AbBuilder<HomeAbController>(
+      builder: (c, abw) {
+        return Scaffold(
+          body: Center(
+            child: TextButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => DriftViewer(database: DriftDb.instance)));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TestHome()));
               },
+              child: const Text('开发者模块'),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

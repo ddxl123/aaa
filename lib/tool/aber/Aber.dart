@@ -309,6 +309,7 @@ extension AbMapBrokenExt on Ab<Map> {
 }
 
 extension AbExt<V> on V {
+  /// 若 value 初始值为 null时，则应该 Ab<?>(null) 这样进行初始化。
   Ab<V> get ab => Ab<V>(this);
 }
 
@@ -506,6 +507,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
         ? FutureBuilder(
             future: _loadingFuture,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasError) throw '${snapshot.error.toString()}\n${snapshot.stackTrace}';
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return _controller!.loadingWidget();
               } else if (snapshot.connectionState == ConnectionState.done) {

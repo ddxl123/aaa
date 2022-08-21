@@ -110,8 +110,7 @@ class WithCrts {
     );
   }
 
-  static FragmentPermanentMemoryInfosCompanion
-      fragmentPermanentMemoryInfosCompanion({
+  static FragmentMemoryInfosCompanion fragmentMemoryInfosCompanion({
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
@@ -124,7 +123,7 @@ class WithCrts {
     required double showDuration,
     required bool isLatestRecord,
   }) {
-    return FragmentPermanentMemoryInfosCompanion(
+    return FragmentMemoryInfosCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
