@@ -15,7 +15,7 @@ class FragmentGroupListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGroupListPageAbController>(
       putController: FragmentGroupListPageAbController(),
-      tag: Aber.hashCodeTag,
+      tag: Aber.nearest,
       builder: (controller, abw) {
         return Scaffold(
           primary: false,
@@ -28,7 +28,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   Widget _body() {
     return AbBuilder<FragmentGroupListPageAbController>(
-      tag: Aber.hashCodeTag,
+      tag: Aber.nearest,
       builder: (c, abw) {
         return IndexedStack(
           index: c.parts(abw).length - 1,
@@ -75,7 +75,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   Widget _fragmentGroupsBuilder() {
     return AbBuilder<FragmentGroupListPageAbController>(
-      tag: Aber.hashCodeTag,
+      tag: Aber.nearest,
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -97,7 +97,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
                         return AbBuilder<FragmentGroupListPageAbController>(
-                          tag: Aber.hashCodeTag,
+                          tag: Aber.nearest,
                           builder: (countC, countAbw) {
                             return Text(
                               countC.currentPart().indexSelectedFragmentCountForAllSubgroup(index, countAbw).toString() +
@@ -114,7 +114,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
                         return AbBuilder<FragmentGroupListPageAbController>(
-                          tag: Aber.hashCodeTag,
+                          tag: Aber.nearest,
                           builder: (selectController, selectAbw) {
                             return IconButton(
                               icon: () {
@@ -151,7 +151,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   Widget _fragmentsBuilder() {
     return AbBuilder<FragmentGroupListPageAbController>(
-      tag: Aber.hashCodeTag,
+      tag: Aber.nearest,
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -171,7 +171,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
                         return AbBuilder<FragmentGroupListPageAbController>(
-                          tag: Aber.hashCodeTag,
+                          tag: Aber.nearest,
                           builder: (selectController, selectAbw) {
                             return IconButton(
                               icon: FaIcon(
@@ -219,7 +219,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                 child: AbBuilder<FragmentGroupListPageAbController>(
-                  tag: Aber.hashCodeTag,
+                  tag: Aber.nearest,
                   builder: (c, abw) {
                     return Row(
                       children: [
@@ -240,7 +240,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 ),
               ),
               AbBuilder<FragmentGroupListPageAbController>(
-                tag: Aber.hashCodeTag,
+                tag: Aber.nearest,
                 builder: (controller, abw) {
                   return controller.parts(abw).length == 1
                       ? Container()

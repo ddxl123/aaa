@@ -18,7 +18,7 @@ extension UserExt on User {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> username,
-    required Value<String?> password,
+    required Value<String> password,
     required Value<String> email,
     required Value<int> age,
     required SyncTag? writeSyncTag,
@@ -111,7 +111,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String?> memoryModelId,
+    required Value<String> memoryModelId,
     required Value<String> title,
     required Value<MemoryGroupType> type,
     required Value<MemoryGroupStatus> status,
@@ -160,8 +160,9 @@ extension MemoryModelExt on MemoryModel {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> title,
-    required Value<String?> familiarityAlgorithm,
-    required Value<String?> nextTimeAlgorithm,
+    required Value<String> familiarityAlgorithm,
+    required Value<String> nextTimeAlgorithm,
+    required Value<String> buttonData,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
@@ -174,6 +175,7 @@ extension MemoryModelExt on MemoryModel {
     this.nextTimeAlgorithm = nextTimeAlgorithm.present
         ? nextTimeAlgorithm.value
         : this.nextTimeAlgorithm;
+    this.buttonData = buttonData.present ? buttonData.value : this.buttonData;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryModels,

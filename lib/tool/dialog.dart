@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:get/get.dart';
 import 'package:tools/tools.dart';
 
 enum OkBackType {
@@ -71,9 +70,9 @@ Future<void> showDialogCustom({
                                                 fontSize: filter(
                                                   from: titleSize,
                                                   targets: {
-                                                    [TitleSize.large]: () => context.textTheme.titleLarge!.fontSize,
-                                                    [TitleSize.medium]: () => context.textTheme.titleMedium!.fontSize,
-                                                    [TitleSize.small]: () => context.textTheme.titleSmall!.fontSize,
+                                                    [TitleSize.large]: () => Theme.of(context).textTheme.titleLarge!.fontSize,
+                                                    [TitleSize.medium]: () => Theme.of(context).textTheme.titleMedium!.fontSize,
+                                                    [TitleSize.small]: () => Theme.of(context).textTheme.titleSmall!.fontSize,
                                                   },
                                                   orElse: null,
                                                 ),

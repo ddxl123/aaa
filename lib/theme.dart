@@ -9,7 +9,7 @@ ThemeData themeLight(BuildContext context) {
       iconTheme: const IconThemeData(color: Colors.blue),
       titleTextStyle: Theme.of(context).textTheme.titleLarge,
     ),
-    scaffoldBackgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+    scaffoldBackgroundColor: Colors.white,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
       selectedItemColor: Colors.blue,

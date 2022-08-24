@@ -1,7 +1,6 @@
-import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
-import 'package:aaa/page/edit/EditPageType.dart';
+import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -18,7 +17,6 @@ class MemoryGroupListPageAbController extends AbController {
     memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
   }
 
-  @Filter()
   Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {
     filter(
       from: memoryGroupGizmo().type,

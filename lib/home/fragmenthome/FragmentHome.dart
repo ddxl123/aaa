@@ -37,7 +37,7 @@ class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderSt
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text('规则', style: TextStyle(color: Colors.blue)),
+                        child: Text('模型', style: TextStyle(color: Colors.blue)),
                       ),
                     ],
                   ),
@@ -46,15 +46,15 @@ class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderSt
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text('草稿'),
                       DropdownButtonHideUnderline(
                         child: DropdownButton2<int>(
-                          dropdownWidth: 150,
+                          // dropdownWidth: 150,
                           dropdownDecoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
                           customButton: const Padding(
                             padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: Icon(Icons.more_horiz),
                           ),
+
                           items: const [
                             DropdownMenuItem(
                               value: 0,

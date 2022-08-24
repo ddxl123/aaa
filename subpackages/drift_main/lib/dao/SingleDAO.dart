@@ -281,6 +281,7 @@ class SingleDAO extends DatabaseAccessor<DriftDb> with _$SingleDAOMixin {
   }
 
   Future<MemoryModel?> queryMemoryModelById({required String? memoryModelId}) async {
+    if (memoryModelId == null) return null;
     return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingleOrNull();
   }
 

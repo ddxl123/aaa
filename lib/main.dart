@@ -1,45 +1,18 @@
 import 'package:aaa/GlobalAbController.dart';
 import 'package:aaa/home/Home.dart';
 import 'package:aaa/theme.dart';
-import 'package:aaa/tool/CatchRollback.dart';
 import 'package:aaa/tool/aber/Aber.dart';
-import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 void main() {
-  final catcherOptions = CatcherOptions(
-    PageReportMode(),
-    [ConsoleHandler(enableDeviceParameters: false, enableApplicationParameters: false, enableCustomParameters: true)],
-    localizationOptions: [LocalizationOptions.buildDefaultChineseOptions()],
-    filterFunction: (report) {
-      if (report.customParameters[CatchRollback.TEMPORARY_NULL_TAGS] is! List<String>) {
-        report.customParameters[CatchRollback.TEMPORARY_NULL_TAGS] = <String>[];
-      }
-      final nullTags = (report.customParameters[CatchRollback.NULL_TAGS] as List<String>)..clear();
-      final temporaryNullTags = report.customParameters[CatchRollback.TEMPORARY_NULL_TAGS];
-
-      (temporaryNullTags is List<String>) ? (nullTags.addAll(temporaryNullTags)) : (nullTags..clear());
-
-      report.customParameters.remove(CatchRollback.TEMPORARY_NULL_TAGS);
-      return true;
-    },
-    customParameters: {
-      CatchRollback.NULL_TAGS: <String>[],
-    },
-  );
-  Catcher(
-    debugConfig: catcherOptions,
-    profileConfig: catcherOptions,
-    releaseConfig: catcherOptions,
-    runAppFunction: () => runApp(const MyApp()),
-  );
   // flutter_smart_dialog 相关
   SmartDialog.config
     ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last)
     ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
+
   runApp(const MyApp());
 }
 
@@ -58,8 +31,6 @@ class MyApp extends StatelessWidget {
           supportedLocales: const [Locale('zh', 'CN'), Locale('en', 'US')],
           // 默认使用哪种语言
           locale: const Locale('zh', 'CN'),
-          // catcher 相关
-          navigatorKey: Catcher.navigatorKey,
           theme: themeLight(context),
           // flutter_smart_dialog 相关
           navigatorObservers: [FlutterSmartDialog.observer],

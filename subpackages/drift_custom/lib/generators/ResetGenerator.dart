@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:source_gen/source_gen.dart';
 import 'package:build/build.dart';
-import 'package:tools/tools.dart';
+import 'package:drift_custom/tools.dart';
 
 class ResetGenerator extends Generator {
   @override

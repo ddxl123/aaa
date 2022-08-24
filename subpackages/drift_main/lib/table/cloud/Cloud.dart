@@ -13,7 +13,7 @@ const List<Type> cloudTableClass = [
 class Users extends CloudTableBase {
   TextColumn get username => text()();
 
-  TextColumn get password => text().nullable()();
+  TextColumn get password => text()();
 
   TextColumn get email => text()();
 
@@ -60,7 +60,7 @@ class FragmentGroups extends CloudTableBase {
 @ReferenceTo([])
 class MemoryGroups extends CloudTableBase {
   @ReferenceTo([MemoryModels])
-  TextColumn get memoryModelId => text().nullable()();
+  TextColumn get memoryModelId => text()();
 
   TextColumn get title => text()();
 
@@ -105,7 +105,7 @@ class MemoryModels extends CloudTableBase {
   /// 阶段变量：
   /// 每次展示结束后，都会将 [阶段常量] 设置为新值，之后将会根据新的数学公式进行熟悉度的曲线计算。
   /// 注意，数学公式结构并不会发生改变，只是刷新了 [非固定常量] 的值。
-  TextColumn get familiarityAlgorithm => text().nullable()();
+  TextColumn get familiarityAlgorithm => text()();
 
   /// 评估下一次展示的时间点的算法。
   ///
@@ -136,7 +136,7 @@ class MemoryModels extends CloudTableBase {
   ///   - [最终熟练度]的范围应该在 0%~100% 区间，即 0~1。
   ///   - 假设您设定的算法为：[最终熟练度]=[阶段熟练度]*[按钮指定熟练度]，那么[按钮指定熟练度]的最大值应该等于[阶段熟练度的倒数]，这样能保证 [最终熟练度] 的最大值为1。
   ///   - 当然，若您的算法需要的话，也可以让 [最终熟练度] 的值大于1，当程序计算时，也会按照大于1的值进行计算，不过最终向用户展现的最高熟练度仍然为1。
-  TextColumn get nextTimeAlgorithm => text().nullable()();
+  TextColumn get nextTimeAlgorithm => text()();
 
   /// 5 2 1
   /// 4 3 1
@@ -179,6 +179,14 @@ class MemoryModels extends CloudTableBase {
   ///   - 可对算法进行加权。
   ///
   /// 是否"将过就过"：碎片的展示错过了计划时间，是否跳过/优先于冲突碎片/滞后于冲突碎片
+
+  /// 按钮分配
+  ///
+  /// 规则：
+  ///   - 不可滑动：1,2,3
+  ///   - 可滑动：0 1,2,3 5
+  ///   - 可以为小数。
+  TextColumn get buttonData => text()();
 }
 
 /// 碎片的记忆信息。

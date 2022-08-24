@@ -1,7 +1,6 @@
-import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
-import 'package:aaa/page/edit/EditPageType.dart';
+import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:aaa/page/select/MemoryModelSelectPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/tool/aber/Aber.dart';
@@ -25,9 +24,9 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white12,
-            leading: _crossWidget(),
+            leading: _appBarLeadingWidget(),
             title: _appBarTitleWidget(),
-            actions: [_tickWidget()],
+            actions: [__appBarRightButtonWidget()],
           ),
           body: Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
@@ -43,7 +42,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
-  @Filter()
   List<Widget> _children() {
     return filter(
       from: editPageType,
@@ -66,7 +64,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
-  @Filter()
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
@@ -86,7 +83,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
-  @Filter()
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
@@ -105,7 +101,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   }
 
   /// 叉号
-  Widget _crossWidget() {
+  Widget _appBarLeadingWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return IconButton(
@@ -119,8 +115,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   }
 
   /// 对号
-  @Filter()
-  Widget _tickWidget() {
+  Widget __appBarRightButtonWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return filter(
@@ -147,9 +142,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             const Text('名称：', style: TextStyle(fontSize: 16)),
             Expanded(
               child: TextField(
-                controller: c.titleTextEditingController,
-                minLines: null,
-                maxLines: null,
                 autofocus: true,
                 decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
                 onChanged: (text) {

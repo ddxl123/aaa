@@ -13,7 +13,7 @@ class WithCrts {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required String username,
-    required Value<String?> password,
+    required String password,
     required String email,
     required int age,
   }) {
@@ -22,7 +22,7 @@ class WithCrts {
       createdAt: createdAt,
       updatedAt: updatedAt,
       username: Value(username),
-      password: password,
+      password: Value(password),
       email: Value(email),
       age: Value(age),
     );
@@ -66,7 +66,7 @@ class WithCrts {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String?> memoryModelId,
+    required String memoryModelId,
     required String title,
     required MemoryGroupType type,
     required MemoryGroupStatus status,
@@ -80,7 +80,7 @@ class WithCrts {
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      memoryModelId: memoryModelId,
+      memoryModelId: Value(memoryModelId),
       title: Value(title),
       type: Value(type),
       status: Value(status),
@@ -97,16 +97,18 @@ class WithCrts {
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required String title,
-    required Value<String?> familiarityAlgorithm,
-    required Value<String?> nextTimeAlgorithm,
+    required String familiarityAlgorithm,
+    required String nextTimeAlgorithm,
+    required String buttonData,
   }) {
     return MemoryModelsCompanion(
       id: id,
       createdAt: createdAt,
       updatedAt: updatedAt,
       title: Value(title),
-      familiarityAlgorithm: familiarityAlgorithm,
-      nextTimeAlgorithm: nextTimeAlgorithm,
+      familiarityAlgorithm: Value(familiarityAlgorithm),
+      nextTimeAlgorithm: Value(nextTimeAlgorithm),
+      buttonData: Value(buttonData),
     );
   }
 

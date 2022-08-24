@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 /// 需要配套使用 [FloatingRoundCornerButtonLocation]
 class FloatingRoundCornerButton extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
-import 'package:aaa/page/edit/EditPageType.dart';
+import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:aaa/single_dialog/single_dialog.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/dialog.dart';
@@ -53,7 +53,7 @@ class Home extends StatelessWidget {
                 },
               ),
               AbBuilder<FragmentGroupListPageAbController>(
-                tag: Aber.hashCodeTag,
+                tag: Aber.nearest,
                 builder: (countController, countAbw) {
                   return Transform.translate(
                     offset: Offset(putController.selectedCountDistance(countController, countAbw), 0),

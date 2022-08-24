@@ -5,7 +5,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:tools/tools.dart';
+import 'package:drift_custom/tools.dart';
 
 class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
   /// key - 所引用的类名
@@ -143,6 +143,7 @@ class Ref$father extends Ref {
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
+/// 为了规范化，只能在 DAO 区使用这个函数。
 Future<void> withRefs(FutureOr<Ref> Function() ref) async {
   await DriftDb.instance.transaction(
     () async {

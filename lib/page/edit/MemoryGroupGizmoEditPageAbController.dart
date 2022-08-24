@@ -1,5 +1,4 @@
 import 'package:aaa/page/stage/InAppStage.dart';
-import 'package:aaa/tool/annotation.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/dialog.dart';
@@ -7,34 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
-import 'EditPageType.dart';
+import 'edit_page_type.dart';
 
 class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 把 gizmo 内所以信息打包成一个对象进行传入。
   /// 如果只传入 [memoryGroupGizmo] 的话，会缺少 [selectedMemoryModel]、[selectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
   MemoryGroupGizmoEditPageAbController({required this.editPageType, required this.memoryGroupGizmo});
 
-  final titleTextEditingController = TextEditingController();
-
   final MemoryGroupGizmoEditPageType editPageType;
 
   final Ab<MemoryGroup>? memoryGroupGizmo;
 
   /// 查看 [MemoryGroups.title]。
-  final title = ''.ab
-    ..initVerify(
-      isNotOk2FailMessage: {
-        (v) => v().trim() == '': '标题不能为空！',
-      },
-    );
+  final title = ''.ab..initVerify({(v) => v().trim() == '': '标题不能为空！'});
 
   /// 查看 [MemoryGroups.memoryModelId]。
-  final selectedMemoryModel = Ab<MemoryModel?>(null)
-    ..initVerify(
-      isNotOk2FailMessage: {
-        (v) => v() == null: '记忆模型不能为空！',
-      },
-    );
+  final selectedMemoryModel = Ab<MemoryModel?>(null)..initVerify({(v) => v() == null: '记忆模型不能为空！'});
 
   /// 查看 [MemoryGroups.type]。
   final type = MemoryGroupType.inApp.ab;
@@ -54,7 +41,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// TODO: 进行 [Verify]
   final reviewInterval = DateTime.now().ab
     ..initVerify(
-      isNotOk2FailMessage: {
+      {
         (v) => v().millisecondsSinceEpoch < 0: '复习区间存在不规范字符！',
         (v) => v().isBefore(DateTime.now().add(const Duration(minutes: 10))): '复习区间太短啦~',
       },
@@ -119,7 +106,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     final mm = await DriftDb.instance.singleDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
     title.refreshEasy((oldValue) => mgg.title);
-    titleTextEditingController.text = mgg.title;
     selectedMemoryModel.refreshEasy((obj) => mm);
     type.refreshEasy((oldValue) => mgg.type);
     status.refreshEasy((oldValue) => mgg.status);
@@ -155,7 +141,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                     id: absent(),
                     createdAt: absent(),
                     updatedAt: absent(),
-                    memoryModelId: (selectedMemoryModel()?.id).value(),
+                    memoryModelId: selectedMemoryModel()!.id.value(),
                     title: title().value(),
                     type: type().value(),
                     status: MemoryGroupStatus.notStart.value(),

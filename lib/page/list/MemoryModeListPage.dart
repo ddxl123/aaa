@@ -1,4 +1,6 @@
 import 'package:aaa/page/edit/MemoryModelGizmoEditPage.dart';
+import 'package:aaa/page/edit/edit_page_type.dart';
+import 'package:aaa/page/gizmo/MemoryModelGizmoPage.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/page/list/ListPageType.dart';
 import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
@@ -17,7 +19,7 @@ class MemoryModeListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<MemoryModeListPageAbController>(
       putController: MemoryModeListPageAbController(),
-      tag: Aber.hashCodeTag,
+      tag: Aber.nearest,
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: PreferredSize(
@@ -40,7 +42,15 @@ class MemoryModeListPage extends StatelessWidget {
                     ],
                     onChanged: (value) {
                       if (value == 0) {
-                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => const MemoryModelGizmoEditPage()));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => const MemoryModelGizmoEditPage(
+                              memoryModelGizmo: null,
+                              editPageType: MemoryModelGizmoEditPageType.create,
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),
@@ -50,7 +60,7 @@ class MemoryModeListPage extends StatelessWidget {
             preferredSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
           body: AbBuilder<MemoryModeListPageAbController>(
-            tag: Aber.hashCodeTag,
+            tag: Aber.nearest,
             builder: (c, abw) {
               return Padding(
                 padding: const EdgeInsets.all(10),
@@ -59,7 +69,7 @@ class MemoryModeListPage extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                   child: CustomScrollView(
                     slivers: [
-                      _memoryRule(),
+                      _memoryModel(),
                     ],
                   ),
                   onRefresh: () async {
@@ -76,10 +86,10 @@ class MemoryModeListPage extends StatelessWidget {
     );
   }
 
-  Widget _memoryRule() {
+  Widget _memoryModel() {
     return AbBuilder<MemoryModeListPageAbController>(
-      tag: Aber.hashCodeTag,
-      builder: (controller, abw) {
+      tag: Aber.nearest,
+      builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -87,8 +97,13 @@ class MemoryModeListPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextButton(
-                      child: Text(controller.memoryModels()[index](abw).title.toString()),
-                      onPressed: () {},
+                      child: Text(c.memoryModels()[index](abw).title.toString()),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => MemoryModelGizmoPage(memoryModelGizmo: c.memoryModels()[index])),
+                        );
+                      },
                     ),
                   ),
                   filter(
@@ -97,11 +112,11 @@ class MemoryModeListPage extends StatelessWidget {
                       [ListPageType.selectPath]: () => IconButton(
                             icon: FaIcon(
                               FontAwesomeIcons.solidCircle,
-                              color: controller.selected(abw) == controller.memoryModels()[index]() ? Colors.amber : Colors.grey,
+                              color: c.selected(abw) == c.memoryModels()[index]() ? Colors.amber : Colors.grey,
                               size: 14,
                             ),
                             onPressed: () {
-                              controller.selectMemoryModel(controller.memoryModels()[index]());
+                              c.selectMemoryModel(c.memoryModels()[index]());
                             },
                           ),
                     },
@@ -110,7 +125,7 @@ class MemoryModeListPage extends StatelessWidget {
                 ],
               );
             },
-            childCount: controller.memoryModels(abw).length,
+            childCount: c.memoryModels(abw).length,
           ),
         );
       },

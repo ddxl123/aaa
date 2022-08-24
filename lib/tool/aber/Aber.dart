@@ -136,7 +136,7 @@ class Ab<V> {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
   }
 
-  void initVerify({required Map<FutureOr<bool> Function(Ab<V> abv), String> isNotOk2FailMessage}) {
+  void initVerify(Map<FutureOr<bool> Function(Ab<V> abv), String> isNotOk2FailMessage) {
     verify = Verify<Ab<V>>(vc: this, isNotOk2FailMessage: isNotOk2FailMessage);
   }
 }
@@ -468,7 +468,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   @override
   void initState() {
     super.initState();
-    if (widget.tag == Aber.hashCodeTag) {
+    if (widget.tag == Aber.nearest) {
       if (widget.putController == null) {
         _controller = Aber.findLast<C>();
       } else {
@@ -483,7 +483,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 
       _controller = Aber._put<C>(
         widget.putController!,
-        tag: widget.tag == Aber.hashCodeTag ? widget.putController!.hashCode.toString() : widget.tag,
+        tag: widget.tag == Aber.nearest ? widget.putController!.hashCode.toString() : widget.tag,
       );
       _isPutter = true;
       _controller!.context = context; // 必须放在 onInit 前面
@@ -549,14 +549,14 @@ class Aber {
   /// [_createKey] - [AbController]
   static final Map<String, AbController> _controllers = {};
 
-  /// 当将 tag 设为 [hashCodeTag] 时，[key] 将会被设置为 controller 的 hashCode。
+  /// 当将 tag 设为 [nearest] 时，[key] 将会被设置为 controller 的 hashCode。
   ///
   /// 当使用 [find] 来查找对应控制器时，可以将其 tag 值设置为对应 [AbController.hashCode]。
   ///
-  /// 也可以将 [find] 的 tag 值设置为 [hashCodeTag] 来查找最近一个相同类型的控制器。
+  /// 也可以将 [find] 的 tag 值设置为 [nearest] 来查找最近一个相同类型的控制器。
   ///
-  /// 这并不会使 [key] 设置为 [hashCodeTag] 这个字符串，它只是用来作为触发字段。
-  static const String hashCodeTag = 'HASH_CODE_TAG';
+  /// 这并不会使 [key] 设置为 [nearest] 这个字符串，它只是用来作为触发字段。
+  static const String nearest = 'NEAREST_TAG';
 
   /// 当被 put 的 [AbBuilder] 被销毁时，会将其对应的 [AbController] 移除。（在 [AbBuilder] 的 dispose 中调用）
   static void _removeController<C extends AbController>(C controller) {
@@ -564,7 +564,7 @@ class Aber {
       (key, value) {
         final bool yes = value == controller;
         if (yes) {
-          Helper.logger.i('===== 》 AberInfo:  remove $key  |  $value (${value.hashCode})');
+          Helper.logger.i('AberInfo: == remove ==》 key:$key hash_code:${value.hashCode}');
         }
         return yes;
       },
@@ -582,42 +582,65 @@ class Aber {
     if (_controllers.containsKey(key)) throw 'Repeat to add: $key.';
     _controllers.addAll({key: controller});
 
-    Helper.logger.i('===== 》 AberInfo:  put $key  |  $controller (${controller.hashCode})');
+    Helper.logger.i('AberInfo: == put ==》 key:$key hash_code:${controller.hashCode}');
 
     return controller;
   }
 
   /// 查找需要的 [AbController]。
-  static C? findOrNull<C extends AbController>({String? tag}) {
+  static C? findOrNull<C extends AbController>({String? tag, bool isDisableOutputForDebug = false}) {
     final String key = _createKey<C>(tag: tag);
     final c = _controllers[key];
+
+    if (!isDisableOutputForDebug) {
+      Helper.logger.i('AberInfo: == findOrNull ==》 key:$key hash_code:${c?.hashCode}');
+    }
+
     return (c is C?) ? c : (throw 'Serious error! The type of controller found does not match! Need-${C.toString()},Found-${c.toString()}');
   }
 
   /// 查找需要的 [AbController]。
   ///
   /// 没找到会抛出异常。
-  static C find<C extends AbController>({String? tag}) =>
-      findOrNull<C>(tag: tag) ?? (throw 'Not found: ${_createKey<C>(tag: tag)}. You need to create a controller with the constructor first.');
+  static C find<C extends AbController>({String? tag}) {
+    final key = _createKey<C>(tag: tag);
+    final c = findOrNull<C>(tag: tag, isDisableOutputForDebug: true) ??
+        (throw 'Not found: $key You need to create a controller with the constructor first.');
+
+    Helper.logger.i('AberInfo: == find ==》 key:$key hash_code:${c.hashCode}');
+    return c;
+  }
 
   /// 查找所有 [C] 类型的控制器。
-  static List<C> findAll<C extends AbController>() => _controllers.values.whereType<C>().toList();
+  static List<C> findAll<C extends AbController>({bool isDisableOutputForDebug = false}) {
+    final all = _controllers.values.whereType<C>().toList();
+    if (!isDisableOutputForDebug) {
+      Helper.logger.i('AberInfo: == findAll ==》 type:${C.toString()} count:${all.length})');
+    }
+    return all;
+  }
 
   /// 查找最近的一个 [C] 类型的控制器。
   ///
-  /// 通常配合 [hashCodeTag] 使用。
+  /// 通常配合 [nearest] 使用。
   ///
   /// 没有找到会抛出异常。
-  static C findLast<C extends AbController>() => findAll<C>().last;
+  static C findLast<C extends AbController>() {
+    final last = findAll<C>(isDisableOutputForDebug: true).last;
+    Helper.logger.i('AberInfo: == findLast ==》 type:${C.toString()} last_hash_code:${last.hashCode}');
+    return last;
+  }
 
   /// 查找最近的一个 [C] 类型的控制器。
   ///
-  /// 通常配合 [hashCodeTag] 使用。
+  /// 通常配合 [nearest] 使用。
   ///
   /// 没有找到会返回 null。
   static C? findOrNullLast<C extends AbController>() {
-    final all = findAll<C>();
-    return all.isEmpty ? null : all.last;
+    final all = findAll<C>(isDisableOutputForDebug: true);
+    final last = all.isEmpty ? null : all.last;
+    Helper.logger.i('AberInfo: == findOrNullLast ==》 type:${C.toString()} hash_code:${last?.hashCode}');
+    return last;
   }
 }
 

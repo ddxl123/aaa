@@ -121,8 +121,9 @@ class TestHomeAbController extends AbController {
           createdAt: absent(),
           updatedAt: absent(),
           title: 'test ${Random().nextInt(999999)}',
-          familiarityAlgorithm: ''.value(),
-          nextTimeAlgorithm: ''.value(),
+          familiarityAlgorithm: '',
+          nextTimeAlgorithm: '',
+          buttonData: '',
         ),
       );
     }

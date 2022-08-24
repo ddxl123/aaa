@@ -8,6 +8,7 @@ class InAppStageAbController extends AbController {
 
   final Ab<MemoryGroup> memoryGroupGizmo;
 
+  /// 为 null 时表示已完成学习。
   final currentFragmentAndMemoryInfo = Ab<Tuple2<Fragment, FragmentMemoryInfo?>?>(null);
 
   @override
@@ -15,7 +16,7 @@ class InAppStageAbController extends AbController {
 
   @override
   Future<void> loadingFuture() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 500));
     final dancer = await DriftDb.instance.singleDAO.queryFragmentsForDancer(mg: memoryGroupGizmo());
     currentFragmentAndMemoryInfo.refreshInevitable((obj) => dancer);
   }

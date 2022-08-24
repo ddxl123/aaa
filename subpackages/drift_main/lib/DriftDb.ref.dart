@@ -7,6 +7,7 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
+/// 为了规范化，只能在 DAO 区使用这个函数。
 Future<void> withRefs(FutureOr<Ref> Function() ref) async {
   await DriftDb.instance.transaction(
     () async {

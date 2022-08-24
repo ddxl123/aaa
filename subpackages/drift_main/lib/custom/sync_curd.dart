@@ -49,14 +49,15 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [syncTag] - 见 [SyncTag] 的注释
   ///
   /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
-  Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(TableInfo<T, DC> table, {
+  Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
+    TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
     InsertMode? mode,
     UpsertClause<T, DC>? onConflict,
   }) async {
     return await transaction(
-          () async {
+      () async {
         if (table is Users) {
           throw '对 [Users] 的插入不能使用该函数';
         }
@@ -108,12 +109,13 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [entity] - 要替换的 [UsersCompanion] 的实体，不能为 [User]。
   ///
   /// 注意：该函数不能修改 id。
-  Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(TableInfo<T, DC> table, {
+  Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
+    TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
   }) async {
     return await transaction(
-          () async {
+      () async {
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         // TODO: 如果之后执行失败的话，下面所修改的时间需要恢复。
@@ -126,8 +128,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
           return null;
         }
         // 获取已被修改的行
-        final DC returningEntity = await (select(table)
-          ..where((tbl) => (tbl as dynamic).id.equals(entityDynamic.id.value))).getSingle();
+        final DC returningEntity = await (select(table)..where((tbl) => (tbl as dynamic).id.equals(entityDynamic.id.value))).getSingle();
 
         // 增加一条 sync 记录 - 仅对 cloud
         if (table is CloudTableBase) {
@@ -158,18 +159,19 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [filter] - 删除 row 时的 where 语句
   ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  Future<DC?> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(TableInfo<T, DC> table, {
-    required Expression<bool?> Function(T tbl) filter,
+  Future<DC?> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+    TableInfo<T, DC> table, {
+    required Expression<bool> Function(T tbl) filter,
     required SyncTag syncTag,
   }) async {
     return await transaction(
-          () async {
+      () async {
         // 查询要删除的行
-        final selectEntities = await (select(table)
-          ..where(filter)).get();
+        final selectEntities = await (select(table)..where(filter)).get();
         if (selectEntities.isEmpty) {
           return null;
-        } else if (selectEntities.length == 1) {} else {
+        } else if (selectEntities.length == 1) {
+        } else {
           throw '单次操作只能删除零行或一行!';
         }
         final dynamic selectEntity = selectEntities.first;
@@ -198,4 +200,3 @@ extension DriftSyncExt on DatabaseConnectionUser {
     );
   }
 }
-

@@ -1,8 +1,7 @@
 import 'dart:async';
-
+import 'package:drift_custom/tools.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:build/build.dart';
-import 'package:tools/tools.dart';
 
 class ConstructorGenerator extends Generator {
   @override

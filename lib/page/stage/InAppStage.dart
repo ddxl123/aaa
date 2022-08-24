@@ -30,8 +30,9 @@ class _InAppStageState extends State<InAppStage> {
           ),
           body: Center(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(c.currentFragmentAndMemoryInfo(abw)?.t1.title ?? '任务已全部完成！'),
+                Text(c.currentFragmentAndMemoryInfo(abw) == null ? '任务已全部完成！' : c.currentFragmentAndMemoryInfo()!.t1.title),
               ],
             ),
           ),

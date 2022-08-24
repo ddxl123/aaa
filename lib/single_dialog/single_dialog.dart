@@ -1,4 +1,3 @@
-import 'package:aaa/home/fragmenthome/FragmentHomeAbController.dart';
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/tool/dialog.dart';
@@ -37,7 +36,7 @@ Future<void> showDialogForCreateMemoryGroup({
           id: 0.absent(),
           createdAt: 0.absent(),
           updatedAt: 0.absent(),
-          memoryModelId: 0.absent(),
+          memoryModelId: '',
           title: textEditingController.text,
           type: MemoryGroupType.inApp,
           status: MemoryGroupStatus.notInit,
