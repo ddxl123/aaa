@@ -1,7 +1,7 @@
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
@@ -12,7 +12,7 @@ class MemoryGroupListPageAbController extends AbController {
   final memoryGroupGizmos = <Ab<MemoryGroup>>[].ab;
 
   Future<void> refreshPage() async {
-    final mgs = await DriftDb.instance.singleDAO.queryMemoryGroups();
+    final mgs = await DriftDb.instance.queryDAO.queryMemoryGroups();
     memoryGroupGizmos.clear_(this);
     memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
   }
@@ -24,23 +24,12 @@ class MemoryGroupListPageAbController extends AbController {
         [MemoryGroupType.inApp]: () => filter(
               from: memoryGroupGizmo().status,
               targets: {
-                [MemoryGroupStatus.notInit]: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MemoryGroupGizmoEditPage(
-                        editPageType: MemoryGroupGizmoEditPageType.initCheck,
-                        memoryGroupGizmo: memoryGroupGizmo,
-                      ),
-                    ),
-                  );
-                },
                 [MemoryGroupStatus.notStart]: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => MemoryGroupGizmoEditPage(
-                        editPageType: MemoryGroupGizmoEditPageType.modifyOtherCheck,
+                        editPageType: MemoryGroupGizmoEditPageType.modify,
                         memoryGroupGizmo: memoryGroupGizmo,
                       ),
                     ),

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
 
@@ -23,14 +23,14 @@ class TestHomeAbController extends AbController {
   }
 
   Future<void> getUser() async {
-    final result = await DriftDb.instance.singleDAO.queryUser();
+    final result = await DriftDb.instance.queryDAO.queryUser();
     user.refreshInevitable((obj) => result);
   }
 
   Future<void> inserts() async {
     const count = 5;
     for (int i = 0; i < count; i++) {
-      final fg = await DriftDb.instance.singleDAO.insertFragmentGroup(
+      final fg = await DriftDb.instance.insertDAO.insertFragmentGroup(
         WithCrts.fragmentGroupsCompanion(
           id: absent(),
           createdAt: absent(),
@@ -40,7 +40,7 @@ class TestHomeAbController extends AbController {
         ),
       );
       for (int i = 0; i < count; i++) {
-        await DriftDb.instance.singleDAO.insertFragment(
+        await DriftDb.instance.insertDAO.insertFragment(
           willFragment: WithCrts.fragmentsCompanion(
             id: absent(),
             createdAt: absent(),
@@ -53,7 +53,7 @@ class TestHomeAbController extends AbController {
       }
 
       for (int i = 0; i < count; i++) {
-        final fg1 = await DriftDb.instance.singleDAO.insertFragmentGroup(
+        final fg1 = await DriftDb.instance.insertDAO.insertFragmentGroup(
           WithCrts.fragmentGroupsCompanion(
             id: absent(),
             createdAt: absent(),
@@ -63,7 +63,7 @@ class TestHomeAbController extends AbController {
           ),
         );
         for (int i = 0; i < count; i++) {
-          await DriftDb.instance.singleDAO.insertFragment(
+          await DriftDb.instance.insertDAO.insertFragment(
             willFragment: WithCrts.fragmentsCompanion(
               id: absent(),
               createdAt: absent(),
@@ -76,7 +76,7 @@ class TestHomeAbController extends AbController {
         }
 
         for (int i = 0; i < count; i++) {
-          final fg2 = await DriftDb.instance.singleDAO.insertFragmentGroup(
+          final fg2 = await DriftDb.instance.insertDAO.insertFragmentGroup(
             WithCrts.fragmentGroupsCompanion(
               id: absent(),
               createdAt: absent(),
@@ -86,7 +86,7 @@ class TestHomeAbController extends AbController {
             ),
           );
           for (int i = 0; i < count; i++) {
-            await DriftDb.instance.singleDAO.insertFragment(
+            await DriftDb.instance.insertDAO.insertFragment(
               willFragment: WithCrts.fragmentsCompanion(
                 id: absent(),
                 createdAt: absent(),
@@ -99,7 +99,7 @@ class TestHomeAbController extends AbController {
           }
 
           for (int i = 0; i < count; i++) {
-            await DriftDb.instance.singleDAO.insertFragment(
+            await DriftDb.instance.insertDAO.insertFragment(
               willFragment: WithCrts.fragmentsCompanion(
                 id: absent(),
                 createdAt: absent(),
@@ -115,7 +115,7 @@ class TestHomeAbController extends AbController {
     }
 
     for (int i = 0; i < count; i++) {
-      await DriftDb.instance.singleDAO.insertMemoryModel(
+      await DriftDb.instance.insertDAO.insertMemoryModel(
         WithCrts.memoryModelsCompanion(
           id: absent(),
           createdAt: absent(),

@@ -1,7 +1,6 @@
 import 'package:aaa/page/gizmo/MemoryGroupGizmoPage.dart';
 import 'package:aaa/single_dialog/single_dialog.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/tool/aber/Aber.dart';
 import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -94,7 +93,6 @@ class MemoryGroupListPage extends StatelessWidget {
         [MemoryGroupType.inApp]: () => filter(
               from: memoryGroup.status,
               targets: {
-                [MemoryGroupStatus.notInit]: () => Colors.amberAccent,
                 [MemoryGroupStatus.notStart]: () => Colors.amber,
                 [MemoryGroupStatus.goon]: () => Colors.green,
                 [MemoryGroupStatus.completed]: () => Colors.grey,
@@ -113,7 +111,6 @@ class MemoryGroupListPage extends StatelessWidget {
         [MemoryGroupType.inApp]: () => filter(
               from: memoryGroup.status,
               targets: {
-                [MemoryGroupStatus.notInit]: () => '未初始化',
                 [MemoryGroupStatus.notStart]: () => '未开始',
                 [MemoryGroupStatus.goon]: () => '继续',
                 [MemoryGroupStatus.completed]: () => '已完成',
@@ -138,103 +135,38 @@ class MemoryGroupListPage extends StatelessWidget {
         return Hero(
           tag: memoryGroupGizmo.hashCode,
           child: GestureDetector(
-            child: Card(
-              margin: const EdgeInsets.all(20),
-              elevation: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Text(
-                              memoryGroup.title,
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
+            child: CardCustom(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          memoryGroup.title,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        height: 5,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 5,
-                                        color: Colors.amber,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        height: 5,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    RichText(
-                                      text: const TextSpan(
-                                        children: [
-                                          TextSpan(text: '今日 11/50', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                          TextSpan(text: '  |  ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                          TextSpan(text: '总共 50/200', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: Material(
-                            child: InkWell(
+                      ),
+                      Material(
+                        child: InkWell(
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                          splashColor: Colors.green,
+                          child: Ink(
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            decoration: BoxDecoration(
                               borderRadius: const BorderRadius.all(Radius.circular(50)),
-                              splashColor: Colors.green,
-                              child: Ink(
-                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(50)),
-                                  color: statusButtonBackgroundColor,
-                                ),
-                                child: Text(statusButtonText),
-                              ),
-                              onTap: () {
-                                c.onStatusTap(memoryGroupGizmo);
-                              },
+                              color: statusButtonBackgroundColor,
                             ),
+                            child: Text(statusButtonText),
                           ),
+                          onTap: () {
+                            c.onStatusTap(memoryGroupGizmo);
+                          },
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      )
+                    ],
+                  ),
+                ],
               ),
             ),
             onTap: () {

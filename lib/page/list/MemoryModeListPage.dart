@@ -1,7 +1,7 @@
 import 'package:aaa/page/edit/MemoryModelGizmoEditPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:aaa/page/gizmo/MemoryModelGizmoPage.dart';
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:tools/tools.dart';
 import 'package:aaa/page/list/ListPageType.dart';
 import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -45,9 +45,9 @@ class MemoryModeListPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (ctx) => const MemoryModelGizmoEditPage(
+                            builder: (ctx) => MemoryModelGizmoEditPage(
                               memoryModelGizmo: null,
-                              editPageType: MemoryModelGizmoEditPageType.create,
+                              editPageType: MemoryModelGizmoEditPageType.create.ab,
                             ),
                           ),
                         );

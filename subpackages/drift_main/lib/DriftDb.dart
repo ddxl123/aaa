@@ -11,7 +11,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
 import 'dart:math';
 
-part 'dao/SingleDAO.dart';
+part 'dao/QueryDAO.dart';
+
+part 'dao/InsertDAO.dart';
+
+part 'dao/UpdateDAO.dart';
+
+part 'dao/DeleteDAO.dart';
 
 part 'table/Base.dart';
 
@@ -65,7 +71,10 @@ LazyDatabase _openConnection() {
     ...syncTableClass,
   ],
   daos: [
-    SingleDAO,
+    InsertDAO,
+    UpdateDAO,
+    QueryDAO,
+    DeleteDAO,
   ],
 )
 class DriftDb extends _$DriftDb {

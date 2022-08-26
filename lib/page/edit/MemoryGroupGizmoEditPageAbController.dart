@@ -1,10 +1,7 @@
-import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/tool/aber/Aber.dart';
-import 'package:aaa/tool/dialog.dart';
+import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:tools/tools.dart';
 
 import 'edit_page_type.dart';
 
@@ -20,6 +17,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 查看 [MemoryGroups.title]。
   final title = ''.ab..initVerify({(v) => v().trim() == '': '标题不能为空！'});
 
+  final titleTextEditingController = TextEditingController();
+
   /// 查看 [MemoryGroups.memoryModelId]。
   final selectedMemoryModel = Ab<MemoryModel?>(null)..initVerify({(v) => v() == null: '记忆模型不能为空！'});
 
@@ -27,7 +26,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   final type = MemoryGroupType.inApp.ab;
 
   /// 查看 [MemoryGroups.status]。
-  final status = MemoryGroupStatus.notInit.ab;
+  final status = MemoryGroupStatus.notStart.ab;
 
   /// 已存碎片
   final selectedFragments = <Ab<Fragment>>[].ab;
@@ -61,19 +60,19 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 当前记忆组碎片总数。
   final totalCount = 0.ab;
 
-  /// 当前记忆组未学习的数量。
+  /// 当前记忆组剩余未学习的数量。
   final notLearnCount = 0.ab;
 
-  VerifyMany get verifyInitCheck => VerifyMany(
-        verifyMany: [
+  VerifyMany get saveVerify => VerifyMany(
+        [
           title.verify,
-          selectedMemoryModel.verify,
         ],
       );
 
-  /// TODO: [reviewInterval]/[filterOut]
-  VerifyMany get verifyModifyOtherCheck => VerifyMany(
-        verifyMany: [
+  /// TODO:
+  VerifyMany get analyzeVerify => VerifyMany(
+        [
+          saveVerify,
           reviewInterval.verify,
         ],
       );
@@ -86,147 +85,100 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   @override
   Future<void> loadingFuture() async {
-    await filterFuture(
-      from: editPageType,
-      targets: {
-        [MemoryGroupGizmoEditPageType.initCheck]: () async {
-          await initInitCheck();
-        },
-        [MemoryGroupGizmoEditPageType.modifyOtherCheck]: () async {
-          await initModifyOtherCheck();
-        }
-      },
-      orElse: null,
-    );
-  }
-
-  Future<void> initInitCheck() async {
     final mgg = memoryGroupGizmo!();
-    final fs = await DriftDb.instance.singleDAO.queryFragmentsInMemoryGroup(mgg.id);
-    final mm = await DriftDb.instance.singleDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
+    final fs = await DriftDb.instance.queryDAO.queryFragmentsInMemoryGroup(mgg.id);
+    final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
     title.refreshEasy((oldValue) => mgg.title);
+    titleTextEditingController.text = title();
     selectedMemoryModel.refreshEasy((obj) => mm);
     type.refreshEasy((oldValue) => mgg.type);
     status.refreshEasy((oldValue) => mgg.status);
     selectedFragments.refreshInevitable((obj) => obj
       ..clear_(this)
       ..addAll(fs.map((e) => e.ab)));
-  }
 
-  Future<void> initModifyOtherCheck() async {
-    final mgg = memoryGroupGizmo!();
     newLearnCount.refreshEasy((obj) => mgg.newLearnCount);
     reviewInterval.refreshEasy((oldValue) => mgg.reviewInterval);
     filterOut.refreshEasy((oldValue) => mgg.filterOut);
     newReviewDisplayOrder.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
     newDisplayOrder.refreshEasy((oldValue) => mgg.newDisplayOrder);
-
-    // TODO:
     totalCount.refreshEasy((oldValue) => 567);
     notLearnCount.refreshEasy((oldValue) => 345);
   }
 
-  Future<void> commitModifyInitCheck() async {
-    if (await verifyInitCheck.isVerifyAllOk) {
+  /// 返回的 [Tuple2]：是否成功-消息。
+  Future<Tuple2<bool, String>> save() async {
+    if (await saveVerify.isVerifyAllOk) {
       await memoryGroupGizmo!.refreshComplex(
         (obj) async {
-          final st = await SyncTag.create();
-          await withRefs(
-            () async {
-              return RefMemoryGroups(
-                self: (table) async {
-                  // 修改并写入。
-                  await obj.reset(
-                    id: absent(),
-                    createdAt: absent(),
-                    updatedAt: absent(),
-                    memoryModelId: selectedMemoryModel()!.id.value(),
-                    title: title().value(),
-                    type: type().value(),
-                    status: MemoryGroupStatus.notStart.value(),
-                    writeSyncTag: st,
-                    newLearnCount: absent(),
-                    reviewInterval: absent(),
-                    filterOut: absent(),
-                    newReviewDisplayOrder: absent(),
-                    newDisplayOrder: absent(),
-                  );
-                },
-                // TODO:
-                fragmentMemoryInfos: null,
-                // TODO:
-                rFragment2MemoryGroups: null,
+          await DriftDb.instance.updateDAO.resetMemoryGroup(
+            oldMemoryGroupReset: (resetSyncTag) async {
+              await obj.reset(
+                id: absent(),
+                createdAt: absent(),
+                updatedAt: absent(),
+                memoryModelId: selectedMemoryModel()!.id.value(),
+                title: titleTextEditingController.text.value(),
+                type: type().value(),
+                status: MemoryGroupStatus.notStart.value(),
+                newLearnCount: newLearnCount().value(),
+                reviewInterval: reviewInterval().value(),
+                filterOut: filterOut().value(),
+                newReviewDisplayOrder: newReviewDisplayOrder().value(),
+                newDisplayOrder: newDisplayOrder().value(),
+                writeSyncTag: resetSyncTag,
               );
+              title.refreshEasy((oldValue) => titleTextEditingController.text);
             },
           );
           return true;
         },
       );
-
-      SmartDialog.showToast('初始化成功！');
-      Navigator.pop(context);
-      return;
+      return Tuple2(t1: true, t2: '保存成功！');
+    } else {
+      return Tuple2(t1: false, t2: await saveVerify.failMessage);
     }
-    SmartDialog.showToast(await verifyInitCheck.failMessage);
   }
 
+  /// 返回的 [Tuple2]：是否成功-消息。
+  ///
   /// TODO: 要注意修改前与修改后的兼容提示。
-  Future<void> commitModifyModifyOtherCheck() async {
-    SmartDialog.showLoading(msg: '验证中...', backDismiss: false);
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (await verifyModifyOtherCheck.isVerifyAllOk) {
-      await memoryGroupGizmo!.refreshComplex(
-        (obj) async {
-          final st = await SyncTag.create();
-          await withRefs(
-            () => RefMemoryGroups(
-              self: (table) async {
-                // 修改并写入。
-                await obj.reset(
-                  id: absent(),
-                  createdAt: absent(),
-                  updatedAt: absent(),
-                  memoryModelId: absent(),
-                  title: absent(),
-                  type: absent(),
-                  // TODO: 变更状态
-                  status: absent(),
-                  writeSyncTag: st,
-                  newLearnCount: newLearnCount().value(),
-                  reviewInterval: reviewInterval().value(),
-                  filterOut: filterOut().value(),
-                  newReviewDisplayOrder: newReviewDisplayOrder().value(),
-                  newDisplayOrder: newDisplayOrder().value(),
-                );
-              },
-              // TODO:
-              fragmentMemoryInfos: null,
-              // TODO:
-              rFragment2MemoryGroups: null,
-            ),
-          );
-          return true;
-        },
-      );
-
-      SmartDialog.dismiss();
-      SmartDialog.showToast('启动成功！');
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupGizmo!)));
-      return;
+  Future<Tuple2<bool, String>> analyze() async {
+    if (await analyzeVerify.isVerifyAllOk) {
+      return Tuple2(t1: true, t2: '分析成功！');
+    } else {
+      return Tuple2(t1: false, t2: await analyzeVerify.failMessage);
     }
-    SmartDialog.dismiss();
-    SmartDialog.showToast(await verifyModifyOtherCheck.failMessage);
+  }
+
+  /// 返回的 [Tuple2]：是否成功-消息。
+  Future<Tuple2<bool, String>> applyAndStart() async {
+    final analyzeResult = await analyze();
+    if (!analyzeResult.t1) {
+      return analyzeResult;
+    }
+    final saveResult = await save();
+    if (!saveResult.t1) {
+      return saveResult;
+    }
+    return Tuple2(t1: true, t2: '应用并开始成功！');
   }
 
   void cancel() {
-    showDialogCustom(
+    showOkAndCancel(
       context: context,
       title: '是否要丢弃？',
       okText: '丢弃',
       cancelText: '继续编辑',
-      okBack: () => OkBackType.dismissAndPop,
+      onOk: () {
+        SmartDialog.dismiss();
+        Navigator.pop(context);
+      },
+      text: null,
+      onCancel: () {
+        SmartDialog.dismiss();
+      },
     );
   }
 }

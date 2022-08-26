@@ -1,4 +1,4 @@
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:tools/tools.dart';
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -16,7 +16,7 @@ class HomeAbController extends AbController {
   int? lastBackTime;
 
   // 0-30,00-40,000-50,0000-60,00000-70
-  double selectedCountDistance(FragmentGroupListPageAbController controller, [Abw<FragmentGroupListPageAbController>? abw]) {
+  double selectedCountDistance(FragmentGroupListPageAbController controller, [Abw? abw]) {
     final count = controller.selectedFragmentIds(abw).length;
     if (count <= 9) return -30;
     if (count > 9 && count < 100) return -40;

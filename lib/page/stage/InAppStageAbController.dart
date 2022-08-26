@@ -1,4 +1,4 @@
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -17,7 +17,7 @@ class InAppStageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final dancer = await DriftDb.instance.singleDAO.queryFragmentsForDancer(mg: memoryGroupGizmo());
+    final dancer = await DriftDb.instance.queryDAO.queryFragmentsForDancer(mg: memoryGroupGizmo());
     currentFragmentAndMemoryInfo.refreshInevitable((obj) => dancer);
   }
 

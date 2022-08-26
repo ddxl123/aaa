@@ -1,6 +1,6 @@
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
-import 'package:aaa/tool/aber/Aber.dart';
+import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -17,12 +17,12 @@ class MemoryModeListPageAbController extends AbController {
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
-    final newEntity = await DriftDb.instance.singleDAO.insertMemoryModel(willEntity);
+    final newEntity = await DriftDb.instance.insertDAO.insertMemoryModel(willEntity);
     memoryModels.refreshInevitable((obj) => obj..add(newEntity.ab));
   }
 
   Future<void> refreshMemoryModels() async {
-    final mgs = (await DriftDb.instance.singleDAO.queryMemoryModels()).map((e) => e.ab);
+    final mgs = (await DriftDb.instance.queryDAO.queryMemoryModels()).map((e) => e.ab);
     memoryModels().clear_(this);
     memoryModels.refreshInevitable((obj) => obj..addAll(mgs));
   }

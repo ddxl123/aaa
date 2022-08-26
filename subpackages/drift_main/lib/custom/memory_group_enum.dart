@@ -14,9 +14,6 @@ enum MemoryGroupType {
 
 /// 记忆组状态 for [MemoryGroupType.inApp]
 enum MemoryGroupStatus {
-  /// 未初始化
-  notInit,
-
   /// 未开始
   notStart,
 

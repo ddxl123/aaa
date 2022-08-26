@@ -4295,7 +4295,10 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RAssistedMemory2FragmentsTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
-  late final SingleDAO singleDAO = SingleDAO(this as DriftDb);
+  late final InsertDAO insertDAO = InsertDAO(this as DriftDb);
+  late final UpdateDAO updateDAO = UpdateDAO(this as DriftDb);
+  late final QueryDAO queryDAO = QueryDAO(this as DriftDb);
+  late final DeleteDAO deleteDAO = DeleteDAO(this as DriftDb);
   @override
   Iterable<TableInfo<Table, dynamic>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4319,7 +4322,52 @@ abstract class _$DriftDb extends GeneratedDatabase {
 // DaoGenerator
 // **************************************************************************
 
-mixin _$SingleDAOMixin on DatabaseAccessor<DriftDb> {
+mixin _$QueryDAOMixin on DatabaseAccessor<DriftDb> {
+  $UsersTable get users => attachedDatabase.users;
+  $FragmentsTable get fragments => attachedDatabase.fragments;
+  $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
+  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
+  $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
+      attachedDatabase.rFragment2FragmentGroups;
+  $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
+      attachedDatabase.rFragment2MemoryGroups;
+  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
+      attachedDatabase.rAssistedMemory2Fragments;
+}
+mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
+  $UsersTable get users => attachedDatabase.users;
+  $FragmentsTable get fragments => attachedDatabase.fragments;
+  $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
+  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
+  $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
+      attachedDatabase.rFragment2FragmentGroups;
+  $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
+      attachedDatabase.rFragment2MemoryGroups;
+  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
+      attachedDatabase.rAssistedMemory2Fragments;
+}
+mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
+  $UsersTable get users => attachedDatabase.users;
+  $FragmentsTable get fragments => attachedDatabase.fragments;
+  $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
+  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
+  $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
+      attachedDatabase.rFragment2FragmentGroups;
+  $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
+      attachedDatabase.rFragment2MemoryGroups;
+  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
+      attachedDatabase.rAssistedMemory2Fragments;
+}
+mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;

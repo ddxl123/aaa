@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:aaa/tool/freebox/FreeBox.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'package:tools/tools.dart';
+import 'package:drift/drift.dart' as drift;
 
 class DriftViewer extends StatefulWidget {
   const DriftViewer({Key? key, required this.database}) : super(key: key);
@@ -81,12 +81,12 @@ class _DriftViewerState extends State<DriftViewer> {
                     },
                   ),
                   PopupMenuItem(
-                    child: const Text('删除数据库'),
                     onTap: () async {
                       await File(DriftDb.instance.path).delete();
                       setState(() => hasDeleteDb = true);
                     },
                     textStyle: const TextStyle(color: Colors.red),
+                    child: const Text('删除数据库'),
                   ),
                 ],
               );
@@ -109,8 +109,8 @@ class _DriftViewerState extends State<DriftViewer> {
               List<Widget> add({required String title, required Function() onPressed}) => [
                     const Text('添加测试数据'),
                     TextButton(
-                      child: Text(title),
                       onPressed: onPressed,
+                      child: Text(title),
                     )
                   ];
               return Column(

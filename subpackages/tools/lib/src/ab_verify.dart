@@ -1,8 +1,11 @@
 import 'dart:async';
 
-class Verify<VC> {
-  final VC vc;
+abstract class VerifyBase {
   String _failMessage = 'no failMessage';
+}
+
+class Verify<VC> extends VerifyBase {
+  final VC vc;
 
   /// 会按照插入顺序进行验证。
   final Map<FutureOr<bool> Function(VC vc), String> isNotOk2FailMessage;
@@ -30,11 +33,20 @@ class Verify<VC> {
   }
 }
 
-class VerifyMany {
-  final List<Verify> verifyMany;
-  String _failMessage = 'no failMessage';
+class VerifyMany extends VerifyBase {
+  final Set<Verify> verifyMany = {};
 
-  VerifyMany({required this.verifyMany});
+  VerifyMany(List<VerifyBase> items) {
+    for (var item in items) {
+      if (item is Verify) {
+        verifyMany.add(item);
+      } else if (item is VerifyMany) {
+        verifyMany.addAll(item.verifyMany);
+      } else {
+        throw 'item 类型未处理！';
+      }
+    }
+  }
 
   FutureOr<bool> get isVerifyAllOk async {
     for (var verify in verifyMany) {
@@ -53,11 +65,4 @@ class VerifyMany {
     }
     return _failMessage;
   }
-}
-
-class Tuple2<T1, T2> {
-  final T1 t1;
-  final T2 t2;
-
-  Tuple2({required this.t1, required this.t2});
 }

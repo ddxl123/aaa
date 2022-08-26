@@ -40,14 +40,13 @@ class Ab<V> {
   ///
   /// 1. 绑定 [_refreshFunctions] :
   ///   将每个引用该对象的 [AbBuilder] 内的 [_AbBuilderState.refresh],
-  ///   添加到 [_refreshFunctions]中, 供 [_update] 使用。
+  ///   添加到 [_refreshFunctions]中, 供 [_refresh] 使用。
   ///
   /// 2. 绑定 [AbController._removeRefreshFunctions] :
-  ///   将当前对象 (每个被.nb 标记的对象) 的 [_removeRefreshFunction]，
+  ///   将当前对象 (每个被.ab 标记的对象) 的 [_removeRefreshFunction]，
   ///   添加到 [AbController._removeRefreshFunctions] 中, 供 [_AbBuilderState._removeRefreshs] 使用。
   ///
-  ///
-  /// 里面都是 Set 类型，所以不会重复被添加。
+  /// 里面都是 Set 类型，所以不会重复被添加，即无论连续 xx.call(abw) 的多少次，最终只会存在一个。
   V call([Abw? abw]) {
     if (abw == null) return value;
     _refreshFunctions.add(abw._refresh);
@@ -55,13 +54,7 @@ class Ab<V> {
     return value;
   }
 
-  /// 将当前对象标记为将要被重建。
-  V mark<C extends AbController>(C controller) {
-    controller._marksRebuildFunction.add(_refresh);
-    return value;
-  }
-
-  /// 重建引用了当前对象的 [get] 的 [AbBuilder]。
+  /// 重建所有利用 [call] 对当前对象进行引用的，并写入了 [AbBuilder] 相应的 [Abw] 的 [AbBuilder]。
   void _refresh() {
     for (var _refreshFunction in _refreshFunctions) {
       _refreshFunction();
@@ -70,29 +63,31 @@ class Ab<V> {
 
   void refreshForce() => _refresh();
 
-  /// 一种快捷方法，无论值有没有被修改，都会进行重建。
+  /// 无论 [value] 自身有没有被替换，或者 [value] 这个对象的属性有没有被修改，都会尝试重建。
   ///
-  /// 建议在对 [List]/[Map]/[Set] 进行 add/remove/clear 等必然会重建的修改时使用。
+  /// 通常，在对 [List]/[Map]/[Set] 进行 add/remove/clear 等必然会重建的修改时使用。
+  /// 注意：进行 remove/clear 等操作时，需使用对应的 [ListBrokenExt] 方法，否则需要自行手动进行 [broken]。
+  /// 例如：
+  /// ```dart
+  ///   final list = [].ab;
+  ///   list.refreshInevitable((obj)=>obj..clear_(controller));
+  /// ```
   ///
-  /// 注意：remove/clear 建议使用 [ListBrokenExt.removeForAb] 等。
-  void refreshInevitable(V Function(V obj) diff) {
-    value = diff(value);
+  /// 当 [diff] 的返回值与 [value] 不是同一个对象时，[value] 将会被替换掉，并进行重建。
+  FutureOr<void> refreshInevitable(FutureOr<V> Function(V obj) diff) async {
+    value = await diff(value);
     refreshForce();
   }
 
-  /// 当 [value] 为 基本数据类型 时的快捷方案。
+  /// 只有 [value] 自身被替换掉时才会尝试重建，而与 [value] 这个对象的属性有没有被修改完全没有关系。
+  ///
+  /// 通常，在 [value] 为 基本数据类型 时使用。
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  ///
-  /// 只会尝试重建引用当前对象的 [AbBuilder]。
-  ///
-  /// 也可以看 [refreshComplex], 复杂的修改推荐使用 [modify] 或 [modifyComplex] 方案。
   void refreshEasy(V Function(V oldValue) diff, [bool isForce = false]) {
     if (V is num || V is String || V is bool) {
-      if (kDebugMode) {
-        print('Aber-Warning: Modifying values that are not basic data type, '
-            'please use the refreshComplex or modify method.');
-      }
+      print('Aber-Warning: Modifying values that are not basic data type, '
+          'please use the refreshComplex or modify method.');
     }
     final nv = diff(value);
     if (value != nv || isForce) {
@@ -104,10 +99,6 @@ class Ab<V> {
   /// 当 [diff] 返回值为 true 时，才会尝试重建。
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  ///
-  /// 只会尝试重建引用当前对象 [AbBuilder]。
-  ///
-  /// 也可以看 [refreshEasy], 复杂的修改推荐使用 [modify] 或 [modifyComplex] 方案。
   FutureOr<void> refreshComplex(FutureOr<bool> Function(V obj) diff) async {
     if (await diff(value)) {
       _refresh();
@@ -129,9 +120,9 @@ class Ab<V> {
   ///   list.first.broken(controller);
   ///   list.remove(0);
   /// ```
-  /// 可以使用 [ListBrokenExt.removeForAb] 等避免手动调用。
+  /// 可以使用 [ListBrokenExt] 等避免手动调用。
   ///
-  /// 否则可能会造成内存泄露，因为 [_removeRefreshFunction] 还残留在 [controller] 中。
+  /// 否则可能会造成内存泄露，因为置空或替换后， [_removeRefreshFunction] 还残留在 [controller] 中。
   void broken<C extends AbController>(C controller) {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
   }
@@ -319,8 +310,6 @@ abstract class AbController {
   /// 在每个 .ab 属性第一次被引用时，才会把它添加到这里（并不是在初始化时被添加）。
   final Set<RemoveRefreshFunction> _removeRefreshFunctions = {};
 
-  final Set<MarkRebuildFunction> _marksRebuildFunction = {};
-
   late final BuildContext context;
 
   late final void Function() thisRefresh;
@@ -362,7 +351,7 @@ abstract class AbController {
 /// });
 /// ...
 /// ```
-class Abw<C extends AbController> {
+class Abw {
   Abw(this._refresh, this._removeRefreshFunctions);
 
   final RefreshFunction _refresh;
@@ -449,7 +438,7 @@ class AbBuilder<C extends AbController> extends StatefulWidget {
 
   final C? putController;
   final String? tag;
-  final Widget Function(C controller, Abw<C> abw) builder;
+  final Widget Function(C controller, Abw abw) builder;
 
   @override
   State<AbBuilder<C>> createState() => _AbBuilderState<C>();
@@ -458,7 +447,7 @@ class AbBuilder<C extends AbController> extends StatefulWidget {
 class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   C? _controller;
 
-  late final Abw<C> _abw;
+  late final Abw _abw;
 
   /// 当前 Widget 所接收的 controller 是否为 put 产生的。
   bool _isPutter = false;
@@ -493,7 +482,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
       _controller!.onInit(); // 如果被 find 成功，会导致再次调用 onInit，因此只能放在这里，让它只会调用一次。
     }
 
-    _abw = Abw<C>(refresh, _controller!._removeRefreshFunctions);
+    _abw = Abw(refresh, _controller!._removeRefreshFunctions);
     _loadingFuture = _controller!.loadingFuture();
   }
 
@@ -564,7 +553,7 @@ class Aber {
       (key, value) {
         final bool yes = value == controller;
         if (yes) {
-          Helper.logger.i('AberInfo: == remove ==》 key:$key hash_code:${value.hashCode}');
+          logger.i('AberInfo: == remove ==》 key:$key hash_code:${value.hashCode}');
         }
         return yes;
       },
@@ -582,7 +571,7 @@ class Aber {
     if (_controllers.containsKey(key)) throw 'Repeat to add: $key.';
     _controllers.addAll({key: controller});
 
-    Helper.logger.i('AberInfo: == put ==》 key:$key hash_code:${controller.hashCode}');
+    logger.i('AberInfo: == put ==》 key:$key hash_code:${controller.hashCode}');
 
     return controller;
   }
@@ -593,7 +582,7 @@ class Aber {
     final c = _controllers[key];
 
     if (!isDisableOutputForDebug) {
-      Helper.logger.i('AberInfo: == findOrNull ==》 key:$key hash_code:${c?.hashCode}');
+      logger.i('AberInfo: == findOrNull ==》 key:$key hash_code:${c?.hashCode}');
     }
 
     return (c is C?) ? c : (throw 'Serious error! The type of controller found does not match! Need-${C.toString()},Found-${c.toString()}');
@@ -607,7 +596,7 @@ class Aber {
     final c = findOrNull<C>(tag: tag, isDisableOutputForDebug: true) ??
         (throw 'Not found: $key You need to create a controller with the constructor first.');
 
-    Helper.logger.i('AberInfo: == find ==》 key:$key hash_code:${c.hashCode}');
+    logger.i('AberInfo: == find ==》 key:$key hash_code:${c.hashCode}');
     return c;
   }
 
@@ -615,7 +604,7 @@ class Aber {
   static List<C> findAll<C extends AbController>({bool isDisableOutputForDebug = false}) {
     final all = _controllers.values.whereType<C>().toList();
     if (!isDisableOutputForDebug) {
-      Helper.logger.i('AberInfo: == findAll ==》 type:${C.toString()} count:${all.length})');
+      logger.i('AberInfo: == findAll ==》 type:${C.toString()} count:${all.length})');
     }
     return all;
   }
@@ -627,7 +616,7 @@ class Aber {
   /// 没有找到会抛出异常。
   static C findLast<C extends AbController>() {
     final last = findAll<C>(isDisableOutputForDebug: true).last;
-    Helper.logger.i('AberInfo: == findLast ==》 type:${C.toString()} last_hash_code:${last.hashCode}');
+    logger.i('AberInfo: == findLast ==》 type:${C.toString()} last_hash_code:${last.hashCode}');
     return last;
   }
 
@@ -639,7 +628,7 @@ class Aber {
   static C? findOrNullLast<C extends AbController>() {
     final all = findAll<C>(isDisableOutputForDebug: true);
     final last = all.isEmpty ? null : all.last;
-    Helper.logger.i('AberInfo: == findOrNullLast ==》 type:${C.toString()} hash_code:${last?.hashCode}');
+    logger.i('AberInfo: == findOrNullLast ==》 type:${C.toString()} hash_code:${last?.hashCode}');
     return last;
   }
 }

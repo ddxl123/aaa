@@ -63,13 +63,13 @@ dependencies:
   logger: ^1.1.0
 
   drift_main:
-    path: ../aaa/subpackages/drift_main
+    path: ./subpackages/drift_main
 
   drift_custom:
-    path: ../aaa/subpackages/drift_custom
+    path: ./subpackages/drift_custom
 
   tools:
-    path: ../aaa/subpackages/tools
+    path: ./subpackages/tools
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +77,7 @@ dev_dependencies:
 
   # 代码规范约束
   flutter_lints: ^1.0.4
+  import_path: ^1.1.0
 
 
 # For information on the generic Dart part of this file, see the

@@ -73,7 +73,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
           if (mulUsers.length != 1) {
             throw 'users 行数不为1';
           }
-          entityDynamic.id = (mulUsers.first.id + Helper.uuidV4).value();
+          entityDynamic.id = (mulUsers.first.id + uuidV4).value();
         }
 
         // 插入
