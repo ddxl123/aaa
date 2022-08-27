@@ -60,7 +60,7 @@ class FragmentGroups extends CloudTableBase {
 @ReferenceTo([])
 class MemoryGroups extends CloudTableBase {
   @ReferenceTo([MemoryModels])
-  TextColumn get memoryModelId => text()();
+  TextColumn get memoryModelId => text().nullable()();
 
   TextColumn get title => text()();
 

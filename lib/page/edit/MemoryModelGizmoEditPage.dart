@@ -24,16 +24,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             title: _appBarTitleWidget(),
             actions: [_appBarRightButtonWidget()],
           ),
-          body: SingleChildScrollView(
+          body: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            child: Column(
-              children: [
-                _titleWidget(),
-                _familiarityAlgorithmWidget(),
-                _nextTimeAlgorithmWidget(),
-                _buttonDataWidget(),
-              ],
-            ),
+            slivers: [
+              SliverToBoxAdapter(child: _titleWidget()),
+              SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
+              SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
+              SliverToBoxAdapter(child: _buttonDataWidget()),
+            ],
           ),
         );
       },
@@ -50,15 +48,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             [MemoryModelGizmoEditPageType.create]: () => IconButton(
                   icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
                   onPressed: () {
-                    c.cancel(
-                      onOk: () {
-                        SmartDialog.dismiss();
-                        Navigator.pop(c.context);
-                      },
-                      onCancel: () {
-                        SmartDialog.dismiss();
-                      },
-                    );
+                    c.cancel();
                   },
                 ),
             [MemoryModelGizmoEditPageType.look]: () => IconButton(
@@ -70,19 +60,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             [MemoryModelGizmoEditPageType.modify]: () => IconButton(
                   icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
                   onPressed: () {
-                    c.cancel(
-                      onOk: () {
-                        c.titleTextEditingController.text = c.title();
-                        c.familiarityAlgorithmTextEditingController.text = c.familiarityAlgorithm();
-                        c.nextTimeAlgorithmTextEditingController.text = c.nextTimeAlgorithm();
-                        c.buttonDataTextEditingController.text = c.buttonData();
-                        SmartDialog.dismiss();
-                        c.changeTo(type: MemoryModelGizmoEditPageType.look);
-                      },
-                      onCancel: () {
-                        SmartDialog.dismiss();
-                      },
-                    );
+                    c.cancel();
                   },
                 ),
           },
@@ -100,7 +78,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           from: c.editPageType(abw),
           targets: {
             [MemoryModelGizmoEditPageType.create]: () => const Text('创建记忆规则'),
-            [MemoryModelGizmoEditPageType.look, MemoryModelGizmoEditPageType.modify]: () => Text(c.title()),
+            [MemoryModelGizmoEditPageType.look, MemoryModelGizmoEditPageType.modify]: () => Text(c.title(abw)),
           },
           orElse: null,
         );
@@ -131,7 +109,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                   icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
                   onPressed: () {
                     c.commit();
-                    c.changeTo(type: MemoryModelGizmoEditPageType.look);
                   },
                 ),
           },
@@ -147,7 +124,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         tag: Aber.nearest,
         builder: (c, abw) {
           return TextField(
-            controller: c.titleTextEditingController,
+            controller: c.titleEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -156,7 +133,10 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               },
               orElse: null,
             ),
-            decoration: const InputDecoration(border: InputBorder.none, labelText: '名称：'),
+            decoration: const InputDecoration(border: InputBorder.none, labelText: '请输入...'),
+            onChanged: (v) {
+              c.title.refreshEasy((oldValue) => v);
+            },
           );
         },
       ),
@@ -169,7 +149,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         tag: Aber.nearest,
         builder: (c, abw) {
           return TextField(
-            controller: c.familiarityAlgorithmTextEditingController,
+            controller: c.familiarityAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -179,6 +159,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '熟悉度算法：'),
+            onChanged: (v) {
+              c.familiarityAlgorithm.refreshEasy((oldValue) => v);
+            },
           );
         },
       ),
@@ -191,7 +174,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         tag: Aber.nearest,
         builder: (c, abw) {
           return TextField(
-            controller: c.nextTimeAlgorithmTextEditingController,
+            controller: c.nextTimeAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -201,6 +184,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '下次展示时间点算法：'),
+            onChanged: (v) {
+              c.nextTimeAlgorithm.refreshEasy((oldValue) => v);
+            },
           );
         },
       ),
@@ -213,7 +199,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         tag: Aber.nearest,
         builder: (c, abw) {
           return TextField(
-            controller: c.buttonDataTextEditingController,
+            controller: c.buttonDataEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -223,6 +209,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '按钮数值分配：'),
+            onChanged: (v) {
+              c.buttonData.refreshEasy((oldValue) => v);
+            },
           );
         },
       ),

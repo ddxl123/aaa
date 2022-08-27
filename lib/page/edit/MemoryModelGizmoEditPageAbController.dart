@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class MemoryModelGizmoEditPageAbController extends AbController {
   MemoryModelGizmoEditPageAbController({required this.memoryModelGizmo, required this.editPageType});
@@ -13,17 +13,21 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final Ab<MemoryModel>? memoryModelGizmo;
 
-  final titleTextEditingController = TextEditingController();
   final title = ''.ab..initVerify({(v) async => v().trim() == '': '标题不能为空！'});
+  String _title = '';
+  final titleEditingController = TextEditingController();
 
-  final familiarityAlgorithmTextEditingController = TextEditingController();
   final familiarityAlgorithm = ''.ab..initVerify({(v) async => v().trim() == '': '熟悉度算法不能为空！'});
+  String _familiarityAlgorithm = '';
+  final familiarityAlgorithmEditingController = TextEditingController();
 
-  final nextTimeAlgorithmTextEditingController = TextEditingController();
   final nextTimeAlgorithm = ''.ab..initVerify({(v) async => v().trim() == '': '下次展示时间点算法不能为空！'});
+  String _nextTimeAlgorithm = '';
+  final nextTimeAlgorithmEditingController = TextEditingController();
 
-  final buttonDataTextEditingController = TextEditingController();
   final buttonData = ''.ab..initVerify({(v) async => v().trim() == '': '按钮数值分配不能为空！'});
+  String _buttonData = '';
+  final buttonDataEditingController = TextEditingController();
 
   VerifyMany get verifyMany {
     return filter(
@@ -39,30 +43,24 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   bool get isEnableLoading => true;
 
   @override
-  void dispose() {
-    titleTextEditingController.dispose();
-    familiarityAlgorithmTextEditingController.dispose();
-    nextTimeAlgorithmTextEditingController.dispose();
-    buttonDataTextEditingController.dispose();
-    super.dispose();
-  }
-
-  @override
   Future<void> loadingFuture() async {
     await Future.delayed(const Duration(milliseconds: 200));
     final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: memoryModelGizmo?.call().id);
 
-    titleTextEditingController.text = mm?.title ?? '';
-    title.refreshEasy((oldValue) => mm?.title ?? '');
+    _title = mm?.title ?? '';
+    _familiarityAlgorithm = mm?.familiarityAlgorithm ?? '';
+    _nextTimeAlgorithm = mm?.nextTimeAlgorithm ?? '';
+    _buttonData = mm?.buttonData ?? '';
 
-    familiarityAlgorithmTextEditingController.text = mm?.familiarityAlgorithm ?? '';
-    familiarityAlgorithm.refreshEasy((oldValue) => mm?.familiarityAlgorithm ?? '');
+    title.refreshEasy((oldValue) => _title);
+    familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
+    nextTimeAlgorithm.refreshEasy((oldValue) => _nextTimeAlgorithm);
+    buttonData.refreshEasy((oldValue) => _buttonData);
 
-    nextTimeAlgorithmTextEditingController.text = mm?.nextTimeAlgorithm ?? '';
-    nextTimeAlgorithm.refreshEasy((oldValue) => mm?.nextTimeAlgorithm ?? '');
-
-    buttonDataTextEditingController.text = mm?.buttonData ?? '';
-    buttonData.refreshEasy((oldValue) => mm?.buttonData ?? '');
+    titleEditingController.text = _title;
+    familiarityAlgorithmEditingController.text = _familiarityAlgorithm;
+    nextTimeAlgorithmEditingController.text = _nextTimeAlgorithm;
+    buttonDataEditingController.text = _buttonData;
   }
 
   @override
@@ -74,107 +72,129 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     );
   }
 
-  Future<void> commit() async {
-    Future<void> create() async {
-      if (await verifyMany.isVerifyAllOk) {
-        await DriftDb.instance.insertDAO.insertMemoryModel(
-          WithCrts.memoryModelsCompanion(
-            id: absent(),
-            createdAt: absent(),
-            updatedAt: absent(),
-            title: () {
-              title.refreshEasy((oldValue) => titleTextEditingController.text);
-              return title();
-            }(),
-            familiarityAlgorithm: () {
-              familiarityAlgorithm.refreshEasy((oldValue) => familiarityAlgorithmTextEditingController.text);
-              return familiarityAlgorithm();
-            }(),
-            nextTimeAlgorithm: () {
-              nextTimeAlgorithm.refreshEasy((oldValue) => nextTimeAlgorithmTextEditingController.text);
-              return nextTimeAlgorithm();
-            }(),
-            buttonData: () {
-              buttonData.refreshEasy((oldValue) => buttonDataTextEditingController.text);
-              return buttonData();
-            }(),
-          ),
-        );
-        SmartDialog.showToast('创建成功');
-        Navigator.pop(context);
-      } else {
-        SmartDialog.showToast(await verifyMany.failMessage);
-      }
-    }
-
-    Future<void> modify({required bool isWithPop}) async {
-      if (await verifyMany.isVerifyAllOk) {
-        await memoryModelGizmo!.refreshComplex(
-          (obj) async {
-            await DriftDb.instance.updateDAO.resetMemoryModel(
-              oldMemoryModelReset: (SyncTag resetSyncTag) async {
-                await obj.reset(
-                  id: absent(),
-                  createdAt: absent(),
-                  updatedAt: absent(),
-                  title: () {
-                    title.refreshEasy((oldValue) => titleTextEditingController.text);
-                    return title().value();
-                  }(),
-                  familiarityAlgorithm: () {
-                    familiarityAlgorithm.refreshEasy((oldValue) => familiarityAlgorithmTextEditingController.text);
-                    return familiarityAlgorithm().value();
-                  }(),
-                  nextTimeAlgorithm: () {
-                    nextTimeAlgorithm.refreshEasy((oldValue) => nextTimeAlgorithmTextEditingController.text);
-                    return nextTimeAlgorithm().value();
-                  }(),
-                  buttonData: () {
-                    buttonData.refreshEasy((oldValue) => buttonDataTextEditingController.text);
-                    return buttonData().value();
-                  }(),
-                  writeSyncTag: await SyncTag.create(),
-                );
-              },
-            );
-            return true;
+  void commit() {
+    _commit().then(
+      (value) {
+        filter(
+          from: editPageType(),
+          targets: {
+            [MemoryModelGizmoEditPageType.create]: () {
+              if (value.t1) {
+                SmartDialog.showToast(value.t2);
+                Navigator.pop(context);
+              } else {
+                SmartDialog.showToast(value.t2);
+              }
+            },
+            [MemoryModelGizmoEditPageType.modify]: () {
+              if (value.t1) {
+                SmartDialog.showToast(value.t2);
+                changeTo(type: MemoryModelGizmoEditPageType.look);
+              } else {
+                SmartDialog.showToast(value.t2);
+              }
+            }
           },
+          orElse: null,
         );
+      },
+    );
+  }
 
-        SmartDialog.showToast('修改成功');
-        if (isWithPop) Navigator.pop(context);
-      } else {
-        SmartDialog.showToast(await verifyMany.failMessage);
-      }
-    }
-
-    await filterFuture(
+  /// 返回值：是否成功-消息。
+  Future<Tuple2<bool, String>> _commit() async {
+    return await filterFuture<MemoryModelGizmoEditPageType, Tuple2<bool, String>>(
       from: editPageType(),
       targets: {
         [MemoryModelGizmoEditPageType.create]: () async {
-          await create();
+          if (await verifyMany.isVerifyAllOk) {
+            await DriftDb.instance.insertDAO.insertMemoryModel(
+              WithCrts.memoryModelsCompanion(
+                id: absent(),
+                createdAt: absent(),
+                updatedAt: absent(),
+                title: title(),
+                familiarityAlgorithm: familiarityAlgorithm(),
+                nextTimeAlgorithm: nextTimeAlgorithm(),
+                buttonData: buttonData(),
+              ),
+            );
+
+            return Tuple2(t1: true, t2: '创建成功！');
+          } else {
+            return Tuple2(t1: false, t2: await verifyMany.failMessage);
+          }
         },
         [MemoryModelGizmoEditPageType.modify]: () async {
-          await modify(isWithPop: false);
+          if (await verifyMany.isVerifyAllOk) {
+            await memoryModelGizmo!.refreshComplex(
+              (obj) async {
+                await DriftDb.instance.updateDAO.resetMemoryModel(
+                  oldMemoryModelReset: (SyncTag resetSyncTag) async {
+                    await obj.reset(
+                      id: absent(),
+                      createdAt: absent(),
+                      updatedAt: absent(),
+                      title: title().value(),
+                      familiarityAlgorithm: familiarityAlgorithm().value(),
+                      nextTimeAlgorithm: nextTimeAlgorithm().value(),
+                      buttonData: buttonData().value(),
+                      writeSyncTag: await SyncTag.create(),
+                    );
+                  },
+                );
+                return true;
+              },
+            );
+
+            return Tuple2(t1: true, t2: '修改成功！');
+          } else {
+            return Tuple2(t1: false, t2: await verifyMany.failMessage);
+          }
         },
       },
       orElse: null,
     );
   }
 
-  void cancel({
-    required FutureOr<void> Function()? onCancel,
-    required FutureOr<void> Function()? onOk,
-  }) {
+  void cancel() {
     showOkAndCancel(
       context: context,
       title: '是否要丢弃？',
       okText: '丢弃',
       cancelText: '继续编辑',
       text: null,
-      onOk: onOk,
-      onCancel: onCancel,
+      onOk: () => filter(
+        from: editPageType(),
+        targets: {
+          [MemoryModelGizmoEditPageType.create]: () {
+            SmartDialog.dismiss();
+            Navigator.pop(context);
+          },
+          [MemoryModelGizmoEditPageType.modify]: () {
+            recovery();
+            SmartDialog.dismiss();
+            changeTo(type: MemoryModelGizmoEditPageType.look);
+          },
+        },
+        orElse: null,
+      ),
+      onCancel: () {
+        SmartDialog.dismiss();
+      },
     );
+  }
+
+  void recovery() {
+    title.refreshEasy((oldValue) => _title);
+    familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
+    nextTimeAlgorithm.refreshEasy((oldValue) => _nextTimeAlgorithm);
+    buttonData.refreshEasy((oldValue) => _buttonData);
+
+    titleEditingController.text = _title;
+    familiarityAlgorithmEditingController.text = _familiarityAlgorithm;
+    nextTimeAlgorithmEditingController.text = _nextTimeAlgorithm;
+    buttonDataEditingController.text = _buttonData;
   }
 
   void changeTo({required MemoryModelGizmoEditPageType type}) {

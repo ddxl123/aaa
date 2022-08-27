@@ -127,6 +127,7 @@ class Ab<V> {
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
   }
 
+  /// 当直接在 Ab 对象上使用 [initVerify] 无法引用其他成员时，可以使用 [AbController.initComplexVerifies]。
   void initVerify(Map<FutureOr<bool> Function(Ab<V> abv), String> isNotOk2FailMessage) {
     verify = Verify<Ab<V>>(vc: this, isNotOk2FailMessage: isNotOk2FailMessage);
   }
@@ -305,6 +306,10 @@ extension AbExt<V> on V {
 }
 
 abstract class AbController {
+  AbController() {
+    initComplexVerifies();
+  }
+
   /// 存储当前 Controller 对象中所有被 .ab 标记的对象所对应的 [Ab._removeRefreshFunction]。
   ///
   /// 在每个 .ab 属性第一次被引用时，才会把它添加到这里（并不是在初始化时被添加）。
@@ -327,6 +332,15 @@ abstract class AbController {
 
   /// 需要 [isEnableLoading] 为 true。
   Widget loadingWidget() => const Text('无加载组件');
+
+  /// 复杂验证的初始化函数。
+  ///
+  /// 当直接在 Ab 对象上使用 [Ab.initVerify] 无法引用其他成员时，可以在 [initComplexVerifies] 函数内进行 [Ab.initVerify]。
+  ///
+  /// 同时在 [initComplexVerifies] 内使用 [Ab.initVerify] ，在 Ab 对象上的使用 [Ab.initVerify]，前者将变得无效，因此只能选择一个地方使用。
+  ///
+  /// 由 [AbController] 的构造函数调用。
+  FutureOr<void> initComplexVerifies() async {}
 }
 
 /// 将 [AbController]/[AbBuilder]/[Ab] 连接起来的重要类。

@@ -1,12 +1,13 @@
+void main() {
+  C()..i(222);
+}
 
-import 'dart:io';
+class C {
+  C() {
+    i(1111);
+  }
 
-void main() async {
-  var result = await Process.run('pub', [
-    'run',
-    'import_path',
-    'aaa.dart',
-    'package:aaa/theme.dart'
-  ]);
-  print(result.stdout);
+  void i(int i) {
+    print(i.toString());
+  }
 }

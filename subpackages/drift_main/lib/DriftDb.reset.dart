@@ -111,7 +111,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String> id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
-    required Value<String> memoryModelId,
+    required Value<String?> memoryModelId,
     required Value<String> title,
     required Value<MemoryGroupType> type,
     required Value<MemoryGroupStatus> status,

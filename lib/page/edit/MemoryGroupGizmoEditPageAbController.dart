@@ -1,3 +1,4 @@
+import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -14,54 +15,75 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   final Ab<MemoryGroup>? memoryGroupGizmo;
 
-  /// 查看 [MemoryGroups.title]。
-  final title = ''.ab..initVerify({(v) => v().trim() == '': '标题不能为空！'});
+  /// ========== 可操作-基础配置部分 ==========
 
+  /// [MemoryGroup.title]
+  final title = ''.ab..initVerify({(v) => v().trim() == '': '标题不能为空！'});
+  String _title = '';
   final titleTextEditingController = TextEditingController();
 
-  /// 查看 [MemoryGroups.memoryModelId]。
+  /// [MemoryGroup.memoryModelId]
   final selectedMemoryModel = Ab<MemoryModel?>(null)..initVerify({(v) => v() == null: '记忆模型不能为空！'});
+  MemoryModel? _selectedMemoryModel = null;
 
-  /// 查看 [MemoryGroups.type]。
+  /// [MemoryGroup.type]
   final type = MemoryGroupType.inApp.ab;
+  MemoryGroupType _type = MemoryGroupType.inApp;
 
-  /// 查看 [MemoryGroups.status]。
+  /// [MemoryGroup.status]
   final status = MemoryGroupStatus.notStart.ab;
+  MemoryGroupStatus _status = MemoryGroupStatus.notStart;
 
-  /// 已存碎片
   final selectedFragments = <Ab<Fragment>>[].ab;
 
-  /// =====
+  /// ========== 可操作-基础配置部分 ==========
 
-  /// 查看 [MemoryGroups.newLearnCount]。
+  ///
+
+  /// ========== 可操作-当前周期配置部分 ==========
+
+  /// [MemoryGroup.newLearnCount]
   final newLearnCount = 0.ab;
+  int _newLearnCount = 0;
 
-  /// 查看 [MemoryGroups.reviewInterval]
+  /// [MemoryGroup.reviewInterval]
   /// TODO: 进行 [Verify]
   final reviewInterval = DateTime.now().ab
     ..initVerify(
       {
         (v) => v().millisecondsSinceEpoch < 0: '复习区间存在不规范字符！',
-        (v) => v().isBefore(DateTime.now().add(const Duration(minutes: 10))): '复习区间太短啦~',
+        (v) => v().isBefore(DateTime.now().add(const Duration(minutes: 10))): '复习区间太短啦，至少10分钟以上哦~',
       },
     );
+  DateTime _reviewInterval = DateTime.now();
+  final reviewIntervalTextEditingController = TextEditingController();
 
-  /// 查看 [MemoryGroups.filterOut]
+  /// [MemoryGroup.filterOut]
   /// TODO: 进行 [Verify]
   final filterOut = ''.ab;
+  String _filterOut = '';
 
+  /// [MemoryGroup.newReviewDisplayOrder]
   final newReviewDisplayOrder = NewReviewDisplayOrder.mix.ab;
+  NewReviewDisplayOrder _newReviewDisplayOrder = NewReviewDisplayOrder.mix;
 
-  /// 查看 [MemoryGroups.newReviewDisplayOrder]
+  /// [MemoryGroup.newDisplayOrder]
   final newDisplayOrder = NewDisplayOrder.random.ab;
+  NewDisplayOrder _newDisplayOrder = NewDisplayOrder.random;
 
-  /// =====
+  /// ========== 可操作-当前周期配置部分 ==========
+
+  ///
+
+  /// ========== 不可操作-其他部分 ==========
 
   /// 当前记忆组碎片总数。
   final totalCount = 0.ab;
 
   /// 当前记忆组剩余未学习的数量。
   final notLearnCount = 0.ab;
+
+  /// ========== 不可操作-其他部分 ==========
 
   VerifyMany get saveVerify => VerifyMany(
         [
@@ -72,7 +94,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// TODO:
   VerifyMany get analyzeVerify => VerifyMany(
         [
-          saveVerify,
+          title.verify,
+          selectedMemoryModel.verify,
           reviewInterval.verify,
         ],
       );
@@ -89,26 +112,53 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     final fs = await DriftDb.instance.queryDAO.queryFragmentsInMemoryGroup(mgg.id);
     final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
-    title.refreshEasy((oldValue) => mgg.title);
-    titleTextEditingController.text = title();
-    selectedMemoryModel.refreshEasy((obj) => mm);
-    type.refreshEasy((oldValue) => mgg.type);
-    status.refreshEasy((oldValue) => mgg.status);
+    _title = mgg.title;
+    _selectedMemoryModel = mm;
+    _type = mgg.type;
+    _status = mgg.status;
+
+    _newLearnCount = mgg.newLearnCount;
+    _reviewInterval = mgg.reviewInterval;
+    _filterOut = mgg.filterOut;
+    _newReviewDisplayOrder = mgg.newReviewDisplayOrder;
+    _newDisplayOrder = mgg.newDisplayOrder;
+
+    title.refreshEasy((oldValue) => _title);
+    selectedMemoryModel.refreshEasy((obj) => _selectedMemoryModel);
+    type.refreshEasy((oldValue) => _type);
+    status.refreshEasy((oldValue) => _status);
     selectedFragments.refreshInevitable((obj) => obj
       ..clear_(this)
       ..addAll(fs.map((e) => e.ab)));
 
-    newLearnCount.refreshEasy((obj) => mgg.newLearnCount);
-    reviewInterval.refreshEasy((oldValue) => mgg.reviewInterval);
-    filterOut.refreshEasy((oldValue) => mgg.filterOut);
-    newReviewDisplayOrder.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
-    newDisplayOrder.refreshEasy((oldValue) => mgg.newDisplayOrder);
+    newLearnCount.refreshEasy((obj) => _newLearnCount);
+    reviewInterval.refreshEasy((oldValue) => _reviewInterval);
+    filterOut.refreshEasy((oldValue) => _filterOut);
+    newReviewDisplayOrder.refreshEasy((oldValue) => _newReviewDisplayOrder);
+    newDisplayOrder.refreshEasy((oldValue) => _newDisplayOrder);
+
     totalCount.refreshEasy((oldValue) => 567);
     notLearnCount.refreshEasy((oldValue) => 345);
+
+    titleTextEditingController.text = _title;
+    reviewIntervalTextEditingController.text = _reviewInterval.difference(DateTime.now()).inMinutes.toString();
+  }
+
+  void save() {
+    _save().then(
+      (value) {
+        if (value.t1) {
+          SmartDialog.showToast('保存成功！');
+          Navigator.pop(context);
+        } else {
+          SmartDialog.showToast(value.t2);
+        }
+      },
+    );
   }
 
   /// 返回的 [Tuple2]：是否成功-消息。
-  Future<Tuple2<bool, String>> save() async {
+  Future<Tuple2<bool, String>> _save() async {
     if (await saveVerify.isVerifyAllOk) {
       await memoryGroupGizmo!.refreshComplex(
         (obj) async {
@@ -118,7 +168,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                 id: absent(),
                 createdAt: absent(),
                 updatedAt: absent(),
-                memoryModelId: selectedMemoryModel()!.id.value(),
+                memoryModelId: (selectedMemoryModel()?.id).value(),
                 title: titleTextEditingController.text.value(),
                 type: type().value(),
                 status: MemoryGroupStatus.notStart.value(),
@@ -141,10 +191,18 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     }
   }
 
+  void analyze() {
+    _analyze().then(
+      (value) {
+        SmartDialog.showToast(value.t2);
+      },
+    );
+  }
+
   /// 返回的 [Tuple2]：是否成功-消息。
   ///
   /// TODO: 要注意修改前与修改后的兼容提示。
-  Future<Tuple2<bool, String>> analyze() async {
+  Future<Tuple2<bool, String>> _analyze() async {
     if (await analyzeVerify.isVerifyAllOk) {
       return Tuple2(t1: true, t2: '分析成功！');
     } else {
@@ -152,13 +210,27 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     }
   }
 
+  void applyAndStart() {
+    _applyAndStart().then(
+      (value) {
+        if (value.t1) {
+          SmartDialog.showToast(value.t2);
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupGizmo!)));
+        } else {
+          SmartDialog.showToast(value.t2);
+        }
+      },
+    );
+  }
+
   /// 返回的 [Tuple2]：是否成功-消息。
-  Future<Tuple2<bool, String>> applyAndStart() async {
-    final analyzeResult = await analyze();
+  Future<Tuple2<bool, String>> _applyAndStart() async {
+    final analyzeResult = await _analyze();
     if (!analyzeResult.t1) {
       return analyzeResult;
     }
-    final saveResult = await save();
+    final saveResult = await _save();
     if (!saveResult.t1) {
       return saveResult;
     }

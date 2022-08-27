@@ -27,7 +27,7 @@ void showDialogForCreateMemoryGroup({
           id: 0.absent(),
           createdAt: 0.absent(),
           updatedAt: 0.absent(),
-          memoryModelId: '',
+          memoryModelId: null.value(),
           title: tec.text,
           type: MemoryGroupType.inApp,
           status: MemoryGroupStatus.notStart,

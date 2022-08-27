@@ -68,17 +68,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return FloatingRoundCornerButton(
           text: '应用并开始',
           onPressed: () {
-            c.applyAndStart().then(
-              (value) {
-                if (value.t1) {
-                  SmartDialog.showToast(value.t2);
-                  Navigator.pop(c.context);
-                  Navigator.push(c.context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: c.memoryGroupGizmo!)));
-                } else {
-                  SmartDialog.showToast(value.t2);
-                }
-              },
-            );
+            c.applyAndStart();
           },
         );
       },
@@ -116,26 +106,13 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             TextButton(
               child: const Text('分析'),
               onPressed: () {
-                c.analyze().then(
-                  (value) {
-                    SmartDialog.showToast(value.t2);
-                  },
-                );
+                c.analyze();
               },
             ),
             TextButton(
               child: const Text('保存'),
               onPressed: () {
-                c.save().then(
-                  (value) {
-                    if (value.t1) {
-                      SmartDialog.showToast('保存成功！');
-                      Navigator.pop(c.context);
-                    } else {
-                      SmartDialog.showToast(value.t2);
-                    }
-                  },
-                );
+                c.save();
               },
             ),
           ],
@@ -155,6 +132,9 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 child: TextField(
                   controller: c.titleTextEditingController,
                   decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
+                  onChanged: (v) {
+                    c.title.refreshEasy((oldValue) => v);
+                  },
                 ),
               ),
             ],
@@ -325,60 +305,47 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return CardCustom(
       child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
         builder: (c, abw) {
-          return AbStatefulBuilder(
-            initExtra: {
-              'tec': TextEditingController(text: (c.reviewInterval(abw).difference(DateTime.now()).inMinutes.toString())),
-            },
-            onDispose: (extra, ctx, refresh) {
-              (extra['tec'] as TextEditingController).dispose();
-            },
-            builder: (extra, context, refresh) {
-              final tec = extra['tec'] as TextEditingController;
-
-              return Row(
-                children: [
-                  const Text('复习区间：  '),
-                  Expanded(
-                    child: Column(
+          // 'tec': TextEditingController(text: (c.reviewInterval(abw).difference(DateTime.now()).inMinutes.toString())),
+          return Row(
+            children: [
+              const Text('复习区间：  '),
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(counter: Container()),
-                                maxLength: 9,
-                                controller: tec,
-                                keyboardType: TextInputType.number,
-                                onChanged: (v) {
-                                  if (v.trim() == '') {
-                                    c.reviewInterval.refreshEasy((oldValue) => DateTime.now());
-                                    return;
-                                  }
-                                  final tryInt = int.tryParse(v);
-                                  c.reviewInterval.refreshEasy(
-                                    (oldValue) =>
-                                        tryInt == null ? DateTime.fromMillisecondsSinceEpoch(-60000) : DateTime.now().add(Duration(minutes: tryInt)),
-                                  );
-                                },
-                              ),
-                            ),
-                            const Text('  分钟内  '),
-                          ],
+                        Expanded(
+                          child: TextField(
+                            controller: c.reviewIntervalTextEditingController,
+                            maxLength: 9,
+                            keyboardType: TextInputType.number,
+                            onChanged: (v) {
+                              if (v.trim() == '') {
+                                c.reviewInterval.refreshEasy((oldValue) => DateTime.now());
+                                return;
+                              }
+                              final tryInt = int.tryParse(v);
+                              c.reviewInterval.refreshEasy(
+                                (oldValue) => tryInt == null ? DateTime.now() : DateTime.now().add(Duration(minutes: tryInt)),
+                              );
+                            },
+                          ),
                         ),
-                        Row(
-                          children: [
-                            Text(() {
-                              final time = c.reviewInterval(abw);
-                              return '${time.year}年${time.month}月${time.day}日${time.hour}时前';
-                            }()),
-                          ],
-                        )
+                        const Text('  分钟内  '),
                       ],
                     ),
-                  ),
-                ],
-              );
-            },
+                    Row(
+                      children: [
+                        Text(() {
+                          final time = c.reviewInterval(abw);
+                          return '${time.year}年${time.month}月${time.day}日${time.hour}时前';
+                        }()),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
           );
         },
       ),

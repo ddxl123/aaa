@@ -1043,7 +1043,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 必须是本地时间，因为用户是在本地被创建、修改。
   /// *** 需要预防客户端时间篡改
   DateTime updatedAt;
-  String memoryModelId;
+  String? memoryModelId;
   String title;
   MemoryGroupType type;
   MemoryGroupStatus status;
@@ -1066,7 +1066,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       {required this.id,
       required this.createdAt,
       required this.updatedAt,
-      required this.memoryModelId,
+      this.memoryModelId,
       required this.title,
       required this.type,
       required this.status,
@@ -1081,7 +1081,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['memory_model_id'] = Variable<String>(memoryModelId);
+    if (!nullToAbsent || memoryModelId != null) {
+      map['memory_model_id'] = Variable<String>(memoryModelId);
+    }
     map['title'] = Variable<String>(title);
     {
       final converter = $MemoryGroupsTable.$converter0;
@@ -1112,7 +1114,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      memoryModelId: Value(memoryModelId),
+      memoryModelId: memoryModelId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(memoryModelId),
       title: Value(title),
       type: Value(type),
       status: Value(status),
@@ -1131,7 +1135,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-      memoryModelId: serializer.fromJson<String>(json['memoryModelId']),
+      memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<MemoryGroupType>(json['type']),
       status: serializer.fromJson<MemoryGroupStatus>(json['status']),
@@ -1151,7 +1155,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'id': serializer.toJson<String>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
-      'memoryModelId': serializer.toJson<String>(memoryModelId),
+      'memoryModelId': serializer.toJson<String?>(memoryModelId),
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<MemoryGroupType>(type),
       'status': serializer.toJson<MemoryGroupStatus>(status),
@@ -1168,7 +1172,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           {String? id,
           DateTime? createdAt,
           DateTime? updatedAt,
-          String? memoryModelId,
+          Value<String?> memoryModelId = const Value.absent(),
           String? title,
           MemoryGroupType? type,
           MemoryGroupStatus? status,
@@ -1181,7 +1185,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        memoryModelId: memoryModelId ?? this.memoryModelId,
+        memoryModelId:
+            memoryModelId.present ? memoryModelId.value : this.memoryModelId,
         title: title ?? this.title,
         type: type ?? this.type,
         status: status ?? this.status,
@@ -1247,7 +1252,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String> id;
   Value<DateTime> createdAt;
   Value<DateTime> updatedAt;
-  Value<String> memoryModelId;
+  Value<String?> memoryModelId;
   Value<String> title;
   Value<MemoryGroupType> type;
   Value<MemoryGroupStatus> status;
@@ -1274,7 +1279,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    required String memoryModelId,
+    this.memoryModelId = const Value.absent(),
     required String title,
     required MemoryGroupType type,
     required MemoryGroupStatus status,
@@ -1284,7 +1289,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required NewReviewDisplayOrder newReviewDisplayOrder,
     required NewDisplayOrder newDisplayOrder,
   })  : id = Value(id),
-        memoryModelId = Value(memoryModelId),
         title = Value(title),
         type = Value(type),
         status = Value(status),
@@ -1328,7 +1332,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       {Value<String>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<String>? memoryModelId,
+      Value<String?>? memoryModelId,
       Value<String>? title,
       Value<MemoryGroupType>? type,
       Value<MemoryGroupStatus>? status,
@@ -1451,8 +1455,8 @@ class $MemoryGroupsTable extends MemoryGroups
       const VerificationMeta('memoryModelId');
   @override
   late final GeneratedColumn<String> memoryModelId = GeneratedColumn<String>(
-      'memory_model_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'memory_model_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -1545,8 +1549,6 @@ class $MemoryGroupsTable extends MemoryGroups
           _memoryModelIdMeta,
           memoryModelId.isAcceptableOrUnknown(
               data['memory_model_id']!, _memoryModelIdMeta));
-    } else if (isInserting) {
-      context.missing(_memoryModelIdMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -1596,8 +1598,8 @@ class $MemoryGroupsTable extends MemoryGroups
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-      memoryModelId: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}memory_model_id'])!,
+      memoryModelId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}memory_model_id']),
       title: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       type: $MemoryGroupsTable.$converter0.fromSql(attachedDatabase
