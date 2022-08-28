@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aaa/other/verifies.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -13,31 +14,77 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final Ab<MemoryModel>? memoryModelGizmo;
 
-  final title = ''.ab..initVerify({(v) async => v().trim() == '': '标题不能为空！'});
+  /// [MemoryModels.title]
+  final title = ''.ab;
   String _title = '';
   final titleEditingController = TextEditingController();
 
-  final familiarityAlgorithm = ''.ab..initVerify({(v) async => v().trim() == '': '熟悉度算法不能为空！'});
+  /// [MemoryModels.familiarityAlgorithm]
+  final familiarityAlgorithm = ''.ab;
   String _familiarityAlgorithm = '';
   final familiarityAlgorithmEditingController = TextEditingController();
 
-  final nextTimeAlgorithm = ''.ab..initVerify({(v) async => v().trim() == '': '下次展示时间点算法不能为空！'});
+  /// [MemoryModels.nextTimeAlgorithm]
+  final nextTimeAlgorithm = ''.ab;
   String _nextTimeAlgorithm = '';
   final nextTimeAlgorithmEditingController = TextEditingController();
 
-  final buttonData = ''.ab..initVerify({(v) async => v().trim() == '': '按钮数值分配不能为空！'});
+  /// [MemoryModels.buttonData]
+  final buttonData = ''.ab;
   String _buttonData = '';
   final buttonDataEditingController = TextEditingController();
 
-  VerifyMany get verifyMany {
-    return filter(
+  @override
+  void initComplexVerifies() {
+    title.initVerify(
+      (abV) async {
+        if (abV().trim() == '') {
+          return Verify(isOk: false, message: '标题不能为空！');
+        }
+        return null;
+      },
+    );
+    familiarityAlgorithm.initVerify(
+      (abV) {
+        if (abV().trim() == '') return Verify(isOk: false, message: '熟悉度算法不能为空！');
+        return null;
+      },
+    );
+    nextTimeAlgorithm.initVerify(
+      (abV) {
+        if (abV().trim() == '') return Verify(isOk: false, message: '下次展示时间点算法不能为空！');
+        return null;
+      },
+    );
+    buttonData.initVerify(
+      (abV) async {
+        return await vMemoryModelButtonDataVerifyKey(verifyValue: abV());
+      },
+    );
+  }
+
+  Future<bool> get commitVerify {
+    return filterFuture(
       from: editPageType(),
       targets: {
-        [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () => VerifyMany([title.verify]),
+        [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () async => await AbVerify.checkMany(
+              [
+                title.verify,
+              ],
+            ),
       },
       orElse: null,
     );
   }
+
+  Future<bool> get analyzeVerify async => await AbVerify.checkMany(
+        [
+          title.verify,
+          familiarityAlgorithm.verify,
+          nextTimeAlgorithm.verify,
+          buttonData.verify,
+        ],
+      );
 
   @override
   bool get isEnableLoading => true;
@@ -70,6 +117,14 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         child: Text('加载中...'),
       ),
     );
+  }
+
+  Future<void> analyze() async {
+    if (await analyzeVerify) {
+      SmartDialog.showToast('分析成功！');
+    } else {
+      SmartDialog.showToast('分析失败！');
+    }
   }
 
   void commit() {
@@ -107,7 +162,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       from: editPageType(),
       targets: {
         [MemoryModelGizmoEditPageType.create]: () async {
-          if (await verifyMany.isVerifyAllOk) {
+          if (await commitVerify) {
             await DriftDb.instance.insertDAO.insertMemoryModel(
               WithCrts.memoryModelsCompanion(
                 id: absent(),
@@ -122,11 +177,11 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
             return Tuple2(t1: true, t2: '创建成功！');
           } else {
-            return Tuple2(t1: false, t2: await verifyMany.failMessage);
+            return Tuple2(t1: false, t2: '创建失败！');
           }
         },
         [MemoryModelGizmoEditPageType.modify]: () async {
-          if (await verifyMany.isVerifyAllOk) {
+          if (await commitVerify) {
             await memoryModelGizmo!.refreshComplex(
               (obj) async {
                 await DriftDb.instance.updateDAO.resetMemoryModel(
@@ -149,7 +204,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
             return Tuple2(t1: true, t2: '修改成功！');
           } else {
-            return Tuple2(t1: false, t2: await verifyMany.failMessage);
+            return Tuple2(t1: false, t2: '修改失败');
           }
         },
       },

@@ -168,6 +168,7 @@ class MemoryGroupListPage extends StatelessWidget {
                   ),
                 ],
               ),
+              verifyAb: null,
             ),
             onTap: () {
               Navigator.push(

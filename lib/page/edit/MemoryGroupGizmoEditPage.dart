@@ -31,7 +31,15 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             slivers: [
               SliverToBoxAdapter(
                 child: ExpansionTile(
-                  title: const Text('基础配置：'),
+                  maintainState: true,
+                  title: AbwBuilder(
+                    builder: (abw) {
+                      return Text(
+                        '基础配置：',
+                        style: TextStyle(color: putController.isBasicConfigRedErr(abw) ? Colors.red : null),
+                      );
+                    },
+                  ),
                   children: [
                     _titleWidget(),
                     _memoryModelWidget(),
@@ -42,8 +50,16 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
               SliverToBoxAdapter(
                 child: ExpansionTile(
+                  maintainState: true,
                   initiallyExpanded: true,
-                  title: const Text('当前周期：'),
+                  title: AbwBuilder(
+                    builder: (abw) {
+                      return Text(
+                        '当前周期：',
+                        style: TextStyle(color: putController.isCurrentCycleRedErr(abw) ? Colors.red : null),
+                      );
+                    },
+                  ),
                   children: [
                     _newLearnCountWidget(),
                     _reviewIntervalWidget(),
@@ -122,10 +138,10 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   }
 
   Widget _titleWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('名称：', style: TextStyle(fontSize: 16)),
               Expanded(
@@ -138,17 +154,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: c.title,
+        );
+      },
     );
   }
 
   Widget _memoryModelWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('记忆模型：', style: TextStyle(fontSize: 16)),
               TextButton(
@@ -162,17 +179,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 },
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: c.selectedMemoryModel,
+        );
+      },
     );
   }
 
   Widget _showTypeWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('展示类型：', style: TextStyle(fontSize: 16)),
               dropdownButton2<MemoryGroupType>(
@@ -187,17 +205,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 },
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: null,
+        );
+      },
     );
   }
 
   Widget _selectFragmentWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('已选碎片：', style: TextStyle(fontSize: 16)),
               TextButton(
@@ -243,17 +262,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 },
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: null,
+        );
+      },
     );
   }
 
   Widget _newLearnCountWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('新学数量：'),
               Expanded(
@@ -295,18 +315,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: null,
+        );
+      },
     );
   }
 
   Widget _reviewIntervalWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          // 'tec': TextEditingController(text: (c.reviewInterval(abw).difference(DateTime.now()).inMinutes.toString())),
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('复习区间：  '),
               Expanded(
@@ -346,17 +366,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: c.reviewInterval,
+        );
+      },
     );
   }
 
   Widget _filterOutWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return AbStatefulBuilder(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: AbStatefulBuilder(
             initExtra: {'tec': TextEditingController(text: c.filterOut())},
             onDispose: (extra, ctx, refresh) {
               (extra['tec'] as TextEditingController).dispose();
@@ -388,17 +409,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 ],
               );
             },
-          );
-        },
-      ),
+          ),
+          verifyAb: null,
+        );
+      },
     );
   }
 
   Widget _newReviewDisplayOrder() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('新碎片 | 复习碎片 展示顺序：'),
               dropdownButton2<NewReviewDisplayOrder>(
@@ -413,17 +435,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 },
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: null,
+        );
+      },
     );
   }
 
   Widget _newDisplayOrder() {
-    return CardCustom(
-      child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-        builder: (c, abw) {
-          return Row(
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return CardCustom(
+          child: Row(
             children: [
               const Text('新碎片 展示顺序：'),
               dropdownButton2<NewDisplayOrder>(
@@ -438,9 +461,10 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 },
               ),
             ],
-          );
-        },
-      ),
+          ),
+          verifyAb: null,
+        );
+      },
     );
   }
 }

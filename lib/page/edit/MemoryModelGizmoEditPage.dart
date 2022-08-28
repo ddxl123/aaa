@@ -3,9 +3,7 @@ import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tools/tools.dart';
 
 class MemoryModelGizmoEditPage extends StatelessWidget {
   const MemoryModelGizmoEditPage({Key? key, required this.memoryModelGizmo, required this.editPageType}) : super(key: key);
@@ -22,7 +20,10 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           appBar: AppBar(
             leading: _appBarLeadingWidget(),
             title: _appBarTitleWidget(),
-            actions: [_appBarRightButtonWidget()],
+            actions: [
+              _appBarRightAnalyzeWidget(),
+              _appBarRightButtonWidget(),
+            ],
           ),
           body: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -86,6 +87,20 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     );
   }
 
+  Widget _appBarRightAnalyzeWidget() {
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.nearest,
+      builder: (c, abw) {
+        return TextButton(
+          child: const Text('分析'),
+          onPressed: () {
+            c.analyze();
+          },
+        );
+      },
+    );
+  }
+
   Widget _appBarRightButtonWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.nearest,
@@ -119,11 +134,11 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
   }
 
   Widget _titleWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryModelGizmoEditPageAbController>(
-        tag: Aber.nearest,
-        builder: (c, abw) {
-          return TextField(
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.nearest,
+      builder: (c, abw) {
+        return CardCustom(
+          child: TextField(
             controller: c.titleEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -133,22 +148,23 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               },
               orElse: null,
             ),
-            decoration: const InputDecoration(border: InputBorder.none, labelText: '请输入...'),
+            decoration: const InputDecoration(border: InputBorder.none, labelText: '名称：'),
             onChanged: (v) {
               c.title.refreshEasy((oldValue) => v);
             },
-          );
-        },
-      ),
+          ),
+          verifyAb: c.title,
+        );
+      },
     );
   }
 
   Widget _familiarityAlgorithmWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryModelGizmoEditPageAbController>(
-        tag: Aber.nearest,
-        builder: (c, abw) {
-          return TextField(
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.nearest,
+      builder: (c, abw) {
+        return CardCustom(
+          child: TextField(
             controller: c.familiarityAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -162,18 +178,19 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             onChanged: (v) {
               c.familiarityAlgorithm.refreshEasy((oldValue) => v);
             },
-          );
-        },
-      ),
+          ),
+          verifyAb: c.familiarityAlgorithm,
+        );
+      },
     );
   }
 
   Widget _nextTimeAlgorithmWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryModelGizmoEditPageAbController>(
-        tag: Aber.nearest,
-        builder: (c, abw) {
-          return TextField(
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.nearest,
+      builder: (c, abw) {
+        return CardCustom(
+          child: TextField(
             controller: c.nextTimeAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -187,18 +204,19 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             onChanged: (v) {
               c.nextTimeAlgorithm.refreshEasy((oldValue) => v);
             },
-          );
-        },
-      ),
+          ),
+          verifyAb: c.nextTimeAlgorithm,
+        );
+      },
     );
   }
 
   Widget _buttonDataWidget() {
-    return CardCustom(
-      child: AbBuilder<MemoryModelGizmoEditPageAbController>(
-        tag: Aber.nearest,
-        builder: (c, abw) {
-          return TextField(
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.nearest,
+      builder: (c, abw) {
+        return CardCustom(
+          child: TextField(
             controller: c.buttonDataEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -212,9 +230,10 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             onChanged: (v) {
               c.buttonData.refreshEasy((oldValue) => v);
             },
-          );
-        },
-      ),
+          ),
+          verifyAb: c.buttonData,
+        );
+      },
     );
   }
 }

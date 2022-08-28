@@ -1,3 +1,4 @@
+import 'package:aaa/other/verifies.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:tools/tools.dart';
@@ -17,20 +18,20 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// ========== 可操作-基础配置部分 ==========
 
-  /// [MemoryGroup.title]
-  final title = ''.ab..initVerify({(v) => v().trim() == '': '标题不能为空！'});
+  /// [MemoryGroups.title]
+  final title = ''.ab;
   String _title = '';
   final titleTextEditingController = TextEditingController();
 
-  /// [MemoryGroup.memoryModelId]
-  final selectedMemoryModel = Ab<MemoryModel?>(null)..initVerify({(v) => v() == null: '记忆模型不能为空！'});
-  MemoryModel? _selectedMemoryModel = null;
+  /// [MemoryGroups.memoryModelId]
+  final selectedMemoryModel = Ab<MemoryModel?>(null);
+  MemoryModel? _selectedMemoryModel;
 
-  /// [MemoryGroup.type]
+  /// [MemoryGroups.type]
   final type = MemoryGroupType.inApp.ab;
   MemoryGroupType _type = MemoryGroupType.inApp;
 
-  /// [MemoryGroup.status]
+  /// [MemoryGroups.status]
   final status = MemoryGroupStatus.notStart.ab;
   MemoryGroupStatus _status = MemoryGroupStatus.notStart;
 
@@ -42,32 +43,26 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// ========== 可操作-当前周期配置部分 ==========
 
-  /// [MemoryGroup.newLearnCount]
+  /// [MemoryGroups.newLearnCount]
   final newLearnCount = 0.ab;
   int _newLearnCount = 0;
 
-  /// [MemoryGroup.reviewInterval]
-  /// TODO: 进行 [Verify]
-  final reviewInterval = DateTime.now().ab
-    ..initVerify(
-      {
-        (v) => v().millisecondsSinceEpoch < 0: '复习区间存在不规范字符！',
-        (v) => v().isBefore(DateTime.now().add(const Duration(minutes: 10))): '复习区间太短啦，至少10分钟以上哦~',
-      },
-    );
+  /// [MemoryGroups.reviewInterval]
+  /// TODO: 进行 [AbVerify]
+  final reviewInterval = DateTime.now().ab;
   DateTime _reviewInterval = DateTime.now();
   final reviewIntervalTextEditingController = TextEditingController();
 
-  /// [MemoryGroup.filterOut]
-  /// TODO: 进行 [Verify]
+  /// [MemoryGroups.filterOut]
+  /// TODO: 进行 [AbVerify]
   final filterOut = ''.ab;
   String _filterOut = '';
 
-  /// [MemoryGroup.newReviewDisplayOrder]
+  /// [MemoryGroups.newReviewDisplayOrder]
   final newReviewDisplayOrder = NewReviewDisplayOrder.mix.ab;
   NewReviewDisplayOrder _newReviewDisplayOrder = NewReviewDisplayOrder.mix;
 
-  /// [MemoryGroup.newDisplayOrder]
+  /// [MemoryGroups.newDisplayOrder]
   final newDisplayOrder = NewDisplayOrder.random.ab;
   NewDisplayOrder _newDisplayOrder = NewDisplayOrder.random;
 
@@ -83,16 +78,63 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 当前记忆组剩余未学习的数量。
   final notLearnCount = 0.ab;
 
+  /// 是否全部展开
+  final isExpandAll = false.ab;
+
+  final isBasicConfigRedErr = false.ab;
+
+  final isCurrentCycleRedErr = false.ab;
+
   /// ========== 不可操作-其他部分 ==========
 
-  VerifyMany get saveVerify => VerifyMany(
+  @override
+  void initComplexVerifies() {
+    title.initVerify(
+      (abV) {
+        if (abV().trim() == '') return Verify(isOk: false, message: '标题不能为空！');
+        return null;
+      },
+    );
+
+    selectedMemoryModel.initVerify(
+      (abV) async {
+        if (abV() == null) return Verify(isOk: false, message: '记忆模型不能为空！');
+
+        final result = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
+        if (result == null) return Verify(isOk: false, message: '未查询到所选记忆模型的数据实体！');
+        return await vMemoryModelButtonDataVerifyKey(verifyValue: result.buttonData);
+      },
+    );
+
+    reviewInterval.initVerify(
+      (abV) async {
+        if (abV().millisecondsSinceEpoch < 0) return Verify(isOk: false, message: '复习区间存在不规范字符！');
+        if (abV().isBefore(DateTime.now().add(const Duration(minutes: 10)))) return Verify(isOk: false, message: '复习区间太短啦，至少10分钟以上哦~');
+        return null;
+      },
+    );
+  }
+
+  Future<bool> get basicConfigRedErrVerify async => await AbVerify.checkMany(
+        [
+          title.verify,
+          selectedMemoryModel.verify,
+        ],
+      );
+
+  Future<bool> get currentCycleConfigRedErrVerify async => await AbVerify.checkMany(
+        [
+          reviewInterval.verify,
+        ],
+      );
+
+  Future<bool> get saveVerify async => await AbVerify.checkMany(
         [
           title.verify,
         ],
       );
 
-  /// TODO:
-  VerifyMany get analyzeVerify => VerifyMany(
+  Future<bool> get analyzeVerify async => await AbVerify.checkMany(
         [
           title.verify,
           selectedMemoryModel.verify,
@@ -147,6 +189,12 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   void save() {
     _save().then(
       (value) {
+        isBasicConfigRedErr.refreshEasy(
+          (oldValue) async {
+            await title.verify.check();
+            return !title.verify.isOk;
+          },
+        );
         if (value.t1) {
           SmartDialog.showToast('保存成功！');
           Navigator.pop(context);
@@ -159,7 +207,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// 返回的 [Tuple2]：是否成功-消息。
   Future<Tuple2<bool, String>> _save() async {
-    if (await saveVerify.isVerifyAllOk) {
+    if (await saveVerify) {
       await memoryGroupGizmo!.refreshComplex(
         (obj) async {
           await DriftDb.instance.updateDAO.resetMemoryGroup(
@@ -187,13 +235,15 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       );
       return Tuple2(t1: true, t2: '保存成功！');
     } else {
-      return Tuple2(t1: false, t2: await saveVerify.failMessage);
+      return Tuple2(t1: false, t2: '保存失败！');
     }
   }
 
   void analyze() {
     _analyze().then(
       (value) {
+        isBasicConfigRedErr.refreshEasy((oldValue) async => !await basicConfigRedErrVerify);
+        isCurrentCycleRedErr.refreshEasy((oldValue) async => !await currentCycleConfigRedErrVerify);
         SmartDialog.showToast(value.t2);
       },
     );
@@ -203,16 +253,18 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   ///
   /// TODO: 要注意修改前与修改后的兼容提示。
   Future<Tuple2<bool, String>> _analyze() async {
-    if (await analyzeVerify.isVerifyAllOk) {
+    if (await analyzeVerify) {
       return Tuple2(t1: true, t2: '分析成功！');
     } else {
-      return Tuple2(t1: false, t2: await analyzeVerify.failMessage);
+      return Tuple2(t1: false, t2: '分析失败！');
     }
   }
 
   void applyAndStart() {
     _applyAndStart().then(
       (value) {
+        isBasicConfigRedErr.refreshEasy((oldValue) async => !await basicConfigRedErrVerify);
+        isCurrentCycleRedErr.refreshEasy((oldValue) async => !await currentCycleConfigRedErrVerify);
         if (value.t1) {
           SmartDialog.showToast(value.t2);
           Navigator.pop(context);

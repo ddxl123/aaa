@@ -36,6 +36,17 @@ class _InAppStageState extends State<InAppStage> {
               ],
             ),
           ),
+          bottomSheet: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                child: Text('data'),
+                onPressed: () {
+                  c.next();
+                },
+              ),
+            ],
+          ),
         );
       },
     );

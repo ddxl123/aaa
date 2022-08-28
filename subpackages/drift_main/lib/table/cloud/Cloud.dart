@@ -182,7 +182,7 @@ class MemoryModels extends CloudTableBase {
 
   /// 按钮分配
   ///
-  /// 规则：
+  /// 规范：
   ///   - 不可滑动：1,2,3
   ///   - 可滑动：0 1,2,3 5
   ///   - 可以为小数。
