@@ -1,4 +1,4 @@
-import 'package:aaa/other/verifies.dart';
+import 'package:aaa/other/verify_parse.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:tools/tools.dart';
@@ -91,25 +91,27 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   void initComplexVerifies() {
     title.initVerify(
       (abV) {
-        if (abV().trim() == '') return Verify(isOk: false, message: '标题不能为空！');
+        if (abV().trim() == '') return VerifyResult(isOk: false, message: '标题不能为空！');
         return null;
       },
     );
 
     selectedMemoryModel.initVerify(
       (abV) async {
-        if (abV() == null) return Verify(isOk: false, message: '记忆模型不能为空！');
+        if (abV() == null) return VerifyResult(isOk: false, message: '记忆模型不能为空！');
 
         final result = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
-        if (result == null) return Verify(isOk: false, message: '未查询到所选记忆模型的数据实体！');
-        return await vMemoryModelButtonDataVerifyKey(verifyValue: result.buttonData);
+        if (result == null) return VerifyResult(isOk: false, message: '未查询到所选记忆模型的数据实体！');
+
+        final vResult = await vMemoryModelButtonDataVerifyKey(verifyValue: result.buttonData);
+        return vResult.t1.isOk ? vResult.t1 : VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
       },
     );
 
     reviewInterval.initVerify(
       (abV) async {
-        if (abV().millisecondsSinceEpoch < 0) return Verify(isOk: false, message: '复习区间存在不规范字符！');
-        if (abV().isBefore(DateTime.now().add(const Duration(minutes: 10)))) return Verify(isOk: false, message: '复习区间太短啦，至少10分钟以上哦~');
+        if (abV().millisecondsSinceEpoch < 0) return VerifyResult(isOk: false, message: '复习区间存在不规范字符！');
+        if (abV().isBefore(DateTime.now().add(const Duration(minutes: 10)))) return VerifyResult(isOk: false, message: '复习区间太短啦，至少10分钟以上哦~');
         return null;
       },
     );

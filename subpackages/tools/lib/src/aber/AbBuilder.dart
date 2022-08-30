@@ -122,10 +122,10 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
         if (mounted) setState(() {});
       };
       _controller!.onInit(); // 如果被 find 成功，会导致再次调用 onInit，因此只能放在这里，让它只会调用一次。
+      _loadingFuture = _controller!.loadingFuture();
     }
 
     _abw = Abw(refresh, _controller!._removeRefreshFunctions);
-    _loadingFuture = _controller!.loadingFuture();
   }
 
   void refresh() {

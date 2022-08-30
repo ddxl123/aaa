@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 class TestHomeAbController extends AbController {
   final user = Ab<User?>(null);
 
+  final textEditingController = TextEditingController();
+
   @override
   bool get isEnableLoading => true;
 

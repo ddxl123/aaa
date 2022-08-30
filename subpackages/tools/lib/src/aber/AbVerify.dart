@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:tools/tools.dart';
 
-class Verify {
+class VerifyResult {
   final bool isOk;
   final String? message;
 
-  Verify({required this.isOk, required this.message});
+  VerifyResult({required this.isOk, required this.message});
 }
 
 class AbVerify<V> {
   final Ab<V> abV;
-  Verify _verify = Verify(isOk: false, message: '未 check 就进行了调用！');
+  VerifyResult _verify = VerifyResult(isOk: false, message: '未 check 就进行了调用！');
 
-  /// 返回值为 null 将会自动设置一个成功的 [Verify]。
-  final FutureOr<Verify?> Function(Ab<V> abV) verifyCallBack;
+  /// 返回值为 null 将会自动设置一个成功的 [VerifyResult]。
+  final FutureOr<VerifyResult?> Function(Ab<V> abV) verifyCallBack;
 
   final Set<void Function()> checkCallBacks = {};
 
@@ -25,7 +25,7 @@ class AbVerify<V> {
   String get message => _verify.message ?? '成功时调用了message！';
 
   Future<void> check() async {
-    _verify = await verifyCallBack(abV) ?? Verify(isOk: true, message: null);
+    _verify = await verifyCallBack(abV) ?? VerifyResult(isOk: true, message: null);
     for (var checkCallBack in checkCallBacks) {
       checkCallBack();
     }

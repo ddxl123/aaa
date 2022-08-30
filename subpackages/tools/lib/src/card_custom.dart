@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 class CardCustom extends StatefulWidget {
-  const CardCustom({Key? key, required this.child, required this.verifyAb}) : super(key: key);
+  const CardCustom({Key? key, required this.child, this.verifyAb, this.hint}) : super(key: key);
   final Widget child;
   final Ab? verifyAb;
+  final Tuple2<FocusNode, String>? hint;
 
   @override
   State<CardCustom> createState() => _CardCustomState();
@@ -20,30 +21,79 @@ class _CardCustomState extends State<CardCustom> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (widget.hint != null) Row(children: [Expanded(child: HintWidget(hint: widget.hint!))]),
             widget.child,
-            Row(
-              children: [
-                Expanded(
-                  child: AbStatefulBuilder(
-                    initExtra: const {'isHide': true},
-                    builder: (e, c, r) {
-                      widget.verifyAb?.verify.checkCallBacks.add(() {
-                        e['isHide'] = widget.verifyAb?.verify.isOk ?? true;
-                        r();
-                      });
-                      return e['isHide'] == false ? Text(widget.verifyAb!.verify.message, style: const TextStyle(color: Colors.red)) : Container();
-                    },
-                    onDispose: (e, c, r) {
-                      widget.verifyAb?.verify.checkCallBacks.remove(r);
-                      e.clear();
-                    },
-                  ),
-                ),
-              ],
-            ),
+            if (widget.verifyAb != null) Row(children: [Expanded(child: VerifyErrorWidget(verify: widget.verifyAb!.verify))]),
           ],
         ),
       ),
     );
+  }
+}
+
+class VerifyErrorWidget extends StatefulWidget {
+  const VerifyErrorWidget({Key? key, required this.verify}) : super(key: key);
+  final AbVerify verify;
+
+  @override
+  State<VerifyErrorWidget> createState() => _VerifyErrorWidgetState();
+}
+
+class _VerifyErrorWidgetState extends State<VerifyErrorWidget> {
+  bool isHide = true;
+
+  void refresh() {
+    isHide = widget.verify.isOk;
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.verify.checkCallBacks.add(refresh);
+  }
+
+  @override
+  void dispose() {
+    widget.verify.checkCallBacks.remove(refresh);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isHide) return Container();
+    return Text(widget.verify.message, style: const TextStyle(color: Colors.red));
+  }
+}
+
+class HintWidget extends StatefulWidget {
+  const HintWidget({Key? key, required this.hint}) : super(key: key);
+  final Tuple2<FocusNode, String> hint;
+
+  @override
+  State<HintWidget> createState() => _HintWidgetState();
+}
+
+class _HintWidgetState extends State<HintWidget> {
+  @override
+  void initState() {
+    super.initState();
+    widget.hint.t1.addListener(focusListener);
+  }
+
+  @override
+  void dispose() {
+    widget.hint.t1.removeListener(focusListener);
+    super.dispose();
+  }
+
+  void focusListener() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.hint.t1.hasFocus) return Text(widget.hint.t2);
+    return Container();
   }
 }

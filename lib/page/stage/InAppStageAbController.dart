@@ -1,3 +1,4 @@
+import 'package:aaa/other/verify_parse.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,20 @@ class InAppStageAbController extends AbController {
   /// 为 null 时表示已完成学习。
   final currentFragmentAndMemoryInfo = Ab<Tuple2<Fragment, FragmentMemoryInfo?>?>(null);
 
+  /// TODO: 为 null 时，异常日志数据。
+  final vMemoryModelButtonDataVerifyResult = Ab<VMemoryModelButtonDataVerifyResult?>(null);
+
   @override
   bool get isEnableLoading => true;
+
+  @override
+  Widget loadingWidget() {
+    return const Material(
+      child: Center(
+        child: Text('加载中...'),
+      ),
+    );
+  }
 
   @override
   Future<void> loadingFuture() async {
@@ -27,14 +40,11 @@ class InAppStageAbController extends AbController {
   Future<void> next() async {
     final dancer = await DriftDb.instance.queryDAO.queryFragmentsForDancer(mg: memoryGroupGizmo());
     currentFragmentAndMemoryInfo.refreshInevitable((obj) => dancer);
+    await parseButtonData();
   }
 
-  @override
-  Widget loadingWidget() {
-    return const Material(
-      child: Center(
-        child: Text('加载中...'),
-      ),
-    );
+  Future<void> parseButtonData() async {
+    final result = await vMemoryModelButtonDataVerifyKey(verifyValue: memoryModelGizmo().buttonData);
+    vMemoryModelButtonDataVerifyResult.refreshEasy((oldValue) => result.t2);
   }
 }

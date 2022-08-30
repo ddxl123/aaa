@@ -30,43 +30,49 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             slivers: [
               SliverToBoxAdapter(
-                child: ExpansionTile(
-                  maintainState: true,
-                  title: AbwBuilder(
-                    builder: (abw) {
-                      return Text(
-                        '基础配置：',
-                        style: TextStyle(color: putController.isBasicConfigRedErr(abw) ? Colors.red : null),
-                      );
-                    },
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    maintainState: true,
+                    title: AbwBuilder(
+                      builder: (abw) {
+                        return Text(
+                          '基础配置：',
+                          style: TextStyle(color: putController.isBasicConfigRedErr(abw) ? Colors.red : null),
+                        );
+                      },
+                    ),
+                    children: [
+                      _titleWidget(),
+                      _memoryModelWidget(),
+                      _showTypeWidget(),
+                      _selectFragmentWidget(),
+                    ],
                   ),
-                  children: [
-                    _titleWidget(),
-                    _memoryModelWidget(),
-                    _showTypeWidget(),
-                    _selectFragmentWidget(),
-                  ],
                 ),
               ),
               SliverToBoxAdapter(
-                child: ExpansionTile(
-                  maintainState: true,
-                  initiallyExpanded: true,
-                  title: AbwBuilder(
-                    builder: (abw) {
-                      return Text(
-                        '当前周期：',
-                        style: TextStyle(color: putController.isCurrentCycleRedErr(abw) ? Colors.red : null),
-                      );
-                    },
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    maintainState: true,
+                    initiallyExpanded: true,
+                    title: AbwBuilder(
+                      builder: (abw) {
+                        return Text(
+                          '当前周期：',
+                          style: TextStyle(color: putController.isCurrentCycleRedErr(abw) ? Colors.red : null),
+                        );
+                      },
+                    ),
+                    children: [
+                      _newLearnCountWidget(),
+                      _reviewIntervalWidget(),
+                      _filterOutWidget(),
+                      _newReviewDisplayOrder(),
+                      _newDisplayOrder(),
+                    ],
                   ),
-                  children: [
-                    _newLearnCountWidget(),
-                    _reviewIntervalWidget(),
-                    _filterOutWidget(),
-                    _newReviewDisplayOrder(),
-                    _newDisplayOrder(),
-                  ],
                 ),
               ),
             ],

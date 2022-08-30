@@ -13,18 +13,16 @@ class FloatingRoundCornerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(50)),
-      child: TextButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.tealAccent),
-          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15, horizontal: 30)),
-        ),
-        child: Text(text),
-        onPressed: () {
-          onPressed();
-        },
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.tealAccent),
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15, horizontal: 30)),
+        elevation: MaterialStateProperty.all(5),
       ),
+      child: Text(text),
+      onPressed: () {
+        onPressed();
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:aaa/page/stage/InAppStageAbController.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class InAppStage extends StatefulWidget {
   const InAppStage({Key? key, required this.memoryGroupGizmo}) : super(key: key);
@@ -27,6 +28,9 @@ class _InAppStageState extends State<InAppStage> {
                 Navigator.pop(context);
               },
             ),
+            actions: [
+              IconButton(onPressed: (){}, icon:const Icon(Icons.more_horiz))
+            ],
           ),
           body: Center(
             child: Column(
@@ -36,17 +40,31 @@ class _InAppStageState extends State<InAppStage> {
               ],
             ),
           ),
-          bottomSheet: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                child: Text('data'),
-                onPressed: () {
-                  c.next();
+          bottomSheet: _bottomWidget(),
+        );
+      },
+    );
+  }
+
+  Widget _bottomWidget() {
+    return AbBuilder<InAppStageAbController>(
+      builder: (c, abw) {
+        return Row(
+          children: c.vMemoryModelButtonDataVerifyResult(abw)?.center.map(
+                (e) {
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(elevation: MaterialStateProperty.all(3)),
+                        child: Text(e.toString()),
+                        onPressed: () {},
+                      ),
+                    ),
+                  );
                 },
-              ),
-            ],
-          ),
+              ).toList() ??
+              [const Expanded(child: Text('按钮数据获取异常！'))],
         );
       },
     );

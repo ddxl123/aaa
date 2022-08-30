@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aaa/other/verifies.dart';
+import 'package:aaa/other/verify_parse.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -23,6 +23,8 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   final familiarityAlgorithm = ''.ab;
   String _familiarityAlgorithm = '';
   final familiarityAlgorithmEditingController = TextEditingController();
+  final familiarityAlgorithmFocusNode = FocusNode();
+  String get hint =>'';
 
   /// [MemoryModels.nextTimeAlgorithm]
   final nextTimeAlgorithm = ''.ab;
@@ -39,26 +41,26 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     title.initVerify(
       (abV) async {
         if (abV().trim() == '') {
-          return Verify(isOk: false, message: '标题不能为空！');
+          return VerifyResult(isOk: false, message: '标题不能为空！');
         }
         return null;
       },
     );
     familiarityAlgorithm.initVerify(
       (abV) {
-        if (abV().trim() == '') return Verify(isOk: false, message: '熟悉度算法不能为空！');
+        if (abV().trim() == '') return VerifyResult(isOk: false, message: '熟悉度算法不能为空！');
         return null;
       },
     );
     nextTimeAlgorithm.initVerify(
       (abV) {
-        if (abV().trim() == '') return Verify(isOk: false, message: '下次展示时间点算法不能为空！');
+        if (abV().trim() == '') return VerifyResult(isOk: false, message: '下次展示时间点算法不能为空！');
         return null;
       },
     );
     buttonData.initVerify(
       (abV) async {
-        return await vMemoryModelButtonDataVerifyKey(verifyValue: abV());
+        return (await vMemoryModelButtonDataVerifyKey(verifyValue: abV())).t1;
       },
     );
   }

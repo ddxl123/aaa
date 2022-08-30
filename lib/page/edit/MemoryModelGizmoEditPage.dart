@@ -165,6 +165,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return CardCustom(
           child: TextField(
+            focusNode: c.familiarityAlgorithmFocusNode,
             controller: c.familiarityAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -180,6 +181,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             },
           ),
           verifyAb: c.familiarityAlgorithm,
+          hint: Tuple2(t1: c.familiarityAlgorithmFocusNode, t2: ''),
         );
       },
     );

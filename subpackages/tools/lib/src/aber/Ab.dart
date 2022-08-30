@@ -24,7 +24,7 @@ class Ab<V> {
   /// 使用前使用 [initVerify] 进行初始化。
   AbVerify? _verify;
 
-  AbVerify get verify => _verify ?? AbVerify(abV: Ab(null), verifyCallBack: (v) => Verify(isOk: false, message: '未进行 initVerify！'));
+  AbVerify get verify => _verify ?? AbVerify(abV: Ab(null), verifyCallBack: (v) => VerifyResult(isOk: false, message: '未进行 initVerify！'));
 
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
@@ -125,9 +125,9 @@ class Ab<V> {
   }
 
   /// 当直接在 Ab 对象上使用 [initVerify] 无法引用其他成员时，可以使用 [AbController.initComplexVerifies]。
-  void initVerify(FutureOr<Verify?> Function(Ab<V> abV) verifyCallBack) {
+  void initVerify(FutureOr<VerifyResult?> Function(Ab<V> abV) verifyCallBack) {
     if (_verify != null) {
-      _verify = AbVerify(abV: Ab(null), verifyCallBack: (v) => Verify(isOk: false, message: '进行了多次 initVerify！'));
+      _verify = AbVerify(abV: Ab(null), verifyCallBack: (v) => VerifyResult(isOk: false, message: '进行了多次 initVerify！'));
       return;
     }
     _verify = AbVerify<V>(abV: this, verifyCallBack: verifyCallBack);
