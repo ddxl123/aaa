@@ -24,7 +24,8 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   String _familiarityAlgorithm = '';
   final familiarityAlgorithmEditingController = TextEditingController();
   final familiarityAlgorithmFocusNode = FocusNode();
-  String get hint =>'';
+
+  String get hint => '';
 
   /// [MemoryModels.nextTimeAlgorithm]
   final nextTimeAlgorithm = ''.ab;
@@ -174,6 +175,10 @@ class MemoryModelGizmoEditPageAbController extends AbController {
                 familiarityAlgorithm: familiarityAlgorithm(),
                 nextTimeAlgorithm: nextTimeAlgorithm(),
                 buttonData: buttonData(),
+                // TODO
+                applicableGroups: '',
+                applicableFields: '',
+                stimulateAlgorithm: '',
               ),
             );
 
@@ -197,6 +202,10 @@ class MemoryModelGizmoEditPageAbController extends AbController {
                       nextTimeAlgorithm: nextTimeAlgorithm().value(),
                       buttonData: buttonData().value(),
                       writeSyncTag: await SyncTag.create(),
+                      // TODO
+                      applicableGroups: ''.value(),
+                      applicableFields: ''.value(),
+                      stimulateAlgorithm: ''.value(),
                     );
                   },
                 );

@@ -43,16 +43,16 @@ class QueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
         await (select(fragmentMemoryInfos).join([innerJoin(fragments, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id))])
               ..where(fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
                   fragmentMemoryInfos.isLatestRecord.equals(true) &
-                  fragmentMemoryInfos.planedNextShowTime.isSmallerOrEqualValue(mg.reviewInterval)))
+                  fragmentMemoryInfos.planedShowTime.isSmallerOrEqualValue(mg.reviewInterval)))
             .get();
 
     // 在复习区间内将可展示的全部复习碎片信息，及其对应的碎片。
     // 基于 getAllEarliestReviews，查询[下一次展示时间]小于等于[复习区间]，并早前晚后排序。
     Future<List<TypedResult>> getEarliestReviewsIntervalAndSort() async => ((await getAllEarliestReviews())
-        .where((element) => element.readTable(fragmentMemoryInfos).planedNextShowTime.isBefore(mg.reviewInterval))
+        .where((element) => element.readTable(fragmentMemoryInfos).planedShowTime.isBefore(mg.reviewInterval))
         .toList()
       ..sort(
-        (a, b) => a.readTable(fragmentMemoryInfos).planedNextShowTime.compareTo(b.readTable(fragmentMemoryInfos).planedNextShowTime),
+        (a, b) => a.readTable(fragmentMemoryInfos).planedShowTime.compareTo(b.readTable(fragmentMemoryInfos).planedShowTime),
       ));
 
     // 基于 getEarliestReviewsIntervalAndSort 获取最早的复习碎片信息，及其对应的碎片。

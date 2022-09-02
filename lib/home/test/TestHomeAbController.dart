@@ -126,6 +126,9 @@ class TestHomeAbController extends AbController {
           familiarityAlgorithm: '',
           nextTimeAlgorithm: '',
           buttonData: '',
+          applicableGroups: '',
+          applicableFields: '',
+          stimulateAlgorithm: '',
         ),
       );
     }

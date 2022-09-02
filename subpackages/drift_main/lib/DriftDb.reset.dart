@@ -163,6 +163,9 @@ extension MemoryModelExt on MemoryModel {
     required Value<String> familiarityAlgorithm,
     required Value<String> nextTimeAlgorithm,
     required Value<String> buttonData,
+    required Value<String> stimulateAlgorithm,
+    required Value<String> applicableGroups,
+    required Value<String> applicableFields,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
@@ -176,6 +179,15 @@ extension MemoryModelExt on MemoryModel {
         ? nextTimeAlgorithm.value
         : this.nextTimeAlgorithm;
     this.buttonData = buttonData.present ? buttonData.value : this.buttonData;
+    this.stimulateAlgorithm = stimulateAlgorithm.present
+        ? stimulateAlgorithm.value
+        : this.stimulateAlgorithm;
+    this.applicableGroups = applicableGroups.present
+        ? applicableGroups.value
+        : this.applicableGroups;
+    this.applicableFields = applicableFields.present
+        ? applicableFields.value
+        : this.applicableFields;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryModels,
@@ -197,12 +209,12 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<DateTime> updatedAt,
     required Value<String> fragmentId,
     required Value<String> memoryGroupId,
-    required Value<double> stageButtonValue,
-    required Value<double> stageFamiliarity,
-    required Value<DateTime> planedNextShowTime,
-    required Value<DateTime?> actualNextShowTime,
-    required Value<double> showDuration,
     required Value<bool> isLatestRecord,
+    required Value<DateTime> planedShowTime,
+    required Value<DateTime> actualShowTime,
+    required Value<double> clickFamiliarity,
+    required Value<DateTime> clickTime,
+    required Value<double> clickValue,
     required SyncTag? writeSyncTag,
   }) async {
     this.id = id.present ? id.value : this.id;
@@ -211,22 +223,17 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     this.fragmentId = fragmentId.present ? fragmentId.value : this.fragmentId;
     this.memoryGroupId =
         memoryGroupId.present ? memoryGroupId.value : this.memoryGroupId;
-    this.stageButtonValue = stageButtonValue.present
-        ? stageButtonValue.value
-        : this.stageButtonValue;
-    this.stageFamiliarity = stageFamiliarity.present
-        ? stageFamiliarity.value
-        : this.stageFamiliarity;
-    this.planedNextShowTime = planedNextShowTime.present
-        ? planedNextShowTime.value
-        : this.planedNextShowTime;
-    this.actualNextShowTime = actualNextShowTime.present
-        ? actualNextShowTime.value
-        : this.actualNextShowTime;
-    this.showDuration =
-        showDuration.present ? showDuration.value : this.showDuration;
     this.isLatestRecord =
         isLatestRecord.present ? isLatestRecord.value : this.isLatestRecord;
+    this.planedShowTime =
+        planedShowTime.present ? planedShowTime.value : this.planedShowTime;
+    this.actualShowTime =
+        actualShowTime.present ? actualShowTime.value : this.actualShowTime;
+    this.clickFamiliarity = clickFamiliarity.present
+        ? clickFamiliarity.value
+        : this.clickFamiliarity;
+    this.clickTime = clickTime.present ? clickTime.value : this.clickTime;
+    this.clickValue = clickValue.present ? clickValue.value : this.clickValue;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentMemoryInfos,

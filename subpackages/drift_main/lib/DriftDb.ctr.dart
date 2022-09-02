@@ -100,6 +100,9 @@ class WithCrts {
     required String familiarityAlgorithm,
     required String nextTimeAlgorithm,
     required String buttonData,
+    required String stimulateAlgorithm,
+    required String applicableGroups,
+    required String applicableFields,
   }) {
     return MemoryModelsCompanion(
       id: id,
@@ -109,6 +112,9 @@ class WithCrts {
       familiarityAlgorithm: Value(familiarityAlgorithm),
       nextTimeAlgorithm: Value(nextTimeAlgorithm),
       buttonData: Value(buttonData),
+      stimulateAlgorithm: Value(stimulateAlgorithm),
+      applicableGroups: Value(applicableGroups),
+      applicableFields: Value(applicableFields),
     );
   }
 
@@ -118,12 +124,12 @@ class WithCrts {
     required Value<DateTime> updatedAt,
     required String fragmentId,
     required String memoryGroupId,
-    required double stageButtonValue,
-    required double stageFamiliarity,
-    required DateTime planedNextShowTime,
-    required Value<DateTime?> actualNextShowTime,
-    required double showDuration,
     required bool isLatestRecord,
+    required DateTime planedShowTime,
+    required DateTime actualShowTime,
+    required double clickFamiliarity,
+    required DateTime clickTime,
+    required double clickValue,
   }) {
     return FragmentMemoryInfosCompanion(
       id: id,
@@ -131,12 +137,12 @@ class WithCrts {
       updatedAt: updatedAt,
       fragmentId: Value(fragmentId),
       memoryGroupId: Value(memoryGroupId),
-      stageButtonValue: Value(stageButtonValue),
-      stageFamiliarity: Value(stageFamiliarity),
-      planedNextShowTime: Value(planedNextShowTime),
-      actualNextShowTime: actualNextShowTime,
-      showDuration: Value(showDuration),
       isLatestRecord: Value(isLatestRecord),
+      planedShowTime: Value(planedShowTime),
+      actualShowTime: Value(actualShowTime),
+      clickFamiliarity: Value(clickFamiliarity),
+      clickTime: Value(clickTime),
+      clickValue: Value(clickValue),
     );
   }
 

@@ -18,7 +18,7 @@ dependencies:
   # 下拉列表 - 其他 flutter_speed_dial
   dropdown_button2: ^1.7.2
 
-  flutter_smart_dialog: ^4.5.4+2
+  flutter_smart_dialog: 4.5.5
 
 dev_dependencies:
   flutter_test:

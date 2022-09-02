@@ -91,24 +91,32 @@ class MemoryGroups extends CloudTableBase {
 /// 注意，算法结构并不会发生改变，只是刷新了 [分段常量] 的值。
 ///
 /// <在刚展示时获取>
-/// start_time（s_t）：记忆组启动的时间点
+/// global_count_all（g_ct_a）：当前记忆组碎片数量
+/// global_count_new（g_ct_n）：本次展示前，当前记忆组剩余的新碎片数量
+/// global_start_time（g_s_t）：记忆组启动的时间点
 ///   - 数值类型：以秒为单位的时间戳
 /// times（ts）：本次是第几次展示。
 ///   - 单位：次数
 ///   - 数值类型：正整数（1，2，3...）
-/// show_time(s_t)：本次展示的时间点
+///   - 获取方式：检索指定的 [FragmentMemoryInfos] 的数量。
+/// actual_show_time(a_s_t)：本次实际展示的时间点
 ///   - 数值类型：以秒为单位的时间戳
+///   - 获取方式：[FragmentMemoryInfos.actualShowTime]。
+/// planed_show_time（p_s_t）：本次原本计划展示的时间点
+///   - 数值类型：以秒为单位的时间戳
+///   - 获取方式：[FragmentMemoryInfos.planedShowTime]。
 /// click_familiar（c_f）：本次刚展示时的熟悉度。
 ///   - 初始值：默认为0，用户可能会手动分配初始值。
 ///   - 数值类型：任意实数
-/// count_all（ct_a）：当前记忆组碎片数量
-/// count_new（ct_n）：本次展示前，当前记忆组剩余的新碎片数量
+///   - 获取方式：[FragmentMemoryInfos.clickFamiliarity]。
 ///
 /// <在点击按钮时获取>
 /// click_time（c_t）：本次点击按钮时的时间点
 ///   - 数值类型：以秒为单位的时间戳
+///   - 获取方式：[FragmentMemoryInfos.clickTime]。
 /// click_value（c_v）：本次点击按钮的按钮数值
 ///   - 数值类型：任意实数
+///   - 获取方式：[FragmentMemoryInfos.clickValue]。
 ///
 /// 获取第n次展示的某个变量数据：
 ///   - 第n次的变量名：当前变量名加上'_n'后缀
@@ -125,6 +133,11 @@ class MemoryGroups extends CloudTableBase {
 ///     - 简写：本次 c_v，上一次 c_v_r1，上两次 c_v_r2，上n次 c_v_rn...
 ///   - 若上n次不存在，则可用 [n??数值] 来充当不存在的值。
 ///     - 例如，click_value_recent3??123 的含义为：当 click_value_recent3 不存在时，将使用 123 进行代替。
+/// 注意：
+///   1. 使用第n次/上n次的数据时，
+///       - <在刚展示时获取>：第n次/上n次会为空
+///       - <在点击按钮时获取>：第n次/上n次不会为空
+///   2. 前缀为 global 的变量无法使用 '_n' 后缀。
 ///
 /// <自定义变量>
 ///
@@ -151,7 +164,7 @@ class MemoryGroups extends CloudTableBase {
 class MemoryModels extends CloudTableBase {
   TextColumn get title => text()();
 
-  /// 评估碎片熟悉度变化的算法。
+  /// <在点击按钮时>，评估碎片熟悉度变化的算法。
   ///
   /// 每次展示并点击按钮后，将输入以下变量，计算出新的熟悉度函数曲线。
   /// 注意：是 [每次展示并点击按钮 后 ，将输入以下变量]，而非 [每次点击按钮前，或每次展示前，或每次展示后且点击按钮前...]。
@@ -167,16 +180,13 @@ class MemoryModels extends CloudTableBase {
   ///      甚至，用户可以利用编程知识来编写算法，提供了 if-else/for语句, ??语法糖等。
   TextColumn get familiarityAlgorithm => text()();
 
-  /// 评估下一次展示的时间点的算法。
+  /// <在点击按钮时>，评估下一次展示的时间点的算法。
   ///
   /// 每次展示并点击按钮后，将输入以下变量，计算出下一次展示的时间点.
   /// 注意：是 [每次展示并点击按钮 后 ，将输入以下变量]，而非 [每次点击按钮前，或每次展示前，或每次展示后且点击按钮前...]。
-  ///
-  /// y=f(x) 是一个任意函数。
-  ///
   TextColumn get nextTimeAlgorithm => text()();
 
-  /// 按钮算法
+  /// <在刚展示时>，按钮算法
   TextColumn get buttonData => text()();
 
   /// 激发算法
@@ -207,7 +217,7 @@ class MemoryModels extends CloudTableBase {
 /// 每次用户在碎片展示中点击按钮后，就会创建一条记录。
 ///
 /// 1. 用户自己手动配置熟悉度：
-/// 用户可以在其他地方配置记忆记录，由于需要配置 [planedNextShowTime]，
+/// 用户可以在其他地方配置记忆记录，由于需要配置 [planedShowTime]，
 /// 因此必须检索所有记忆组内是否存在该碎片，并要进行按钮触发配置对应的 [stageButtonValue]。
 ///
 @ReferenceTo([])
@@ -215,34 +225,27 @@ class FragmentMemoryInfos extends CloudTableBase {
   @ReferenceTo([Fragments])
   TextColumn get fragmentId => text()();
 
-  /// 允许对应的 [MemoryGroup] 不存在。
   @ReferenceTo([MemoryGroups])
   TextColumn get memoryGroupId => text()();
-
-  /// 在当前记忆组内的， 分段按钮数值 —— 点击的按钮的数值。
-  RealColumn get stageButtonValue => real()();
-
-  /// 在当前记忆组内的，分段熟练度 —— 点击按钮瞬间前的熟练度。
-  ///
-  /// 在用户**触发按钮一瞬间**后 ，会根据 [MemoryModels.familiarityAlgorithm] 来计算**触发按钮一瞬间前**的熟练度（触发按钮后的瞬间熟练度必然是100%）
-  ///
-  /// 在其碎片没有记忆信息记录时，默认熟练度为0。
-  RealColumn get stageFamiliarity => real()();
-
-  /// 在当前记忆组内的，下一次计划展示的时间点。
-  ///
-  /// 在用户触发按钮后，会根据 [MemoryModels.nextTimeAlgorithm] 来计算下一次展示的时间。
-  DateTimeColumn get planedNextShowTime => dateTime()();
-
-  /// 在当前记忆组内的，下次实际展示的时间点。
-  ///
-  /// 在用户触发按钮后，会向上一条记录的 [actualNextShowTime] 设为碎片展示前的时间点。
-  DateTimeColumn get actualNextShowTime => dateTime().nullable()();
-
-  /// 在当前记忆组内的，碎片展示时长。
-  RealColumn get showDuration => real()();
 
   /// 在当前记忆组内的，当前记录是否为当前碎片的最新记录。
   /// 在新纪录被创建的同时，需要把旧记录设为 false。
   BoolColumn get isLatestRecord => boolean()();
+
+  /// =====
+
+  /// 原本计划展示的时间点。
+  DateTimeColumn get planedShowTime => dateTime()();
+
+  /// 实际展示的时间点。
+  DateTimeColumn get actualShowTime => dateTime()();
+
+  /// 刚展示时的熟练度。
+  RealColumn get clickFamiliarity => real()();
+
+  /// 点击按钮的时间。
+  DateTimeColumn get clickTime => dateTime()();
+
+  /// 点击按钮的按钮数值。
+  RealColumn get clickValue => real()();
 }
