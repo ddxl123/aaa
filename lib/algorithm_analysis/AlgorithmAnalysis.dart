@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift_main/DriftDb.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -79,18 +81,16 @@ import 'package:math_expressions/math_expressions.dart';
 ///
 ///
 /// 说明：
-///   1. 利用 "===" 将 [自定义变量语句] 与 [if-use语句] 分开，[自定义变量语句] 放在上方，[if-use语句] 放在下方。
-///       - 只能3个 "="，不能少也不能多。
+///   1. 利用 "==========" 将 [自定义变量语句] 与 [if-use语句] 分开，[自定义变量语句] 放在上方，[if-use语句] 放在下方。
+///       - 必须连续10个 "="，不能少也不能多。
 ///   2. [自定义变量语句] 书写规范：
 ///       - 每个 [自定义变量语句] 的结尾必须加上 ";"。
 ///           - 正确示范1：custom_value = 666;custom_value = 123;（可以放在同一行上，也可以将两个定义放在不同行上）
 ///           - 错误示范1：custom = 123；(分号必须是小写的";"，而不是"；")
-///       - 变量名可以使用汉字、字母、数字、符号来命名。
+///       - 变量名只能使用字母、数字、-、_、$来命名。
 ///           - 正确示范1：if_custom_value = 666;
-///           - 正确示范2：12你好3%￥,~custom = 666;
-///               - 使用该变量时：other_if_custom_value = 12你好3%￥,~custom;
-///       - 变量名不能含有 "="、";"、":" 等内置符号，不能直接命名为 "if"、"use"等内置关键字。
-///           - 错误示范1：custom:value = 666;
+///           - 正确示范2：123custom = 666;
+///       - 不能直接命名为 "if"、"use"等内置关键字。
 ///           - 错误示范2：if = 666;
 ///           - 正确示范1：custom_if = 666;
 ///       - 变量名不能使用已存在的变量名（无论是内置的还是自定义过的）
@@ -99,15 +99,12 @@ import 'package:math_expressions/math_expressions.dart';
 ///           - 正确示范2：   custom_value   =-66666;
 ///           - 正确示范3：custom_value = - 66 6  6.6;
 ///           - 错误示范1：custom val   ue = 123;
-///       - 自定义变量的值可以引用其他变量（无论是内置的还是自定义过的），但不能引用不存在的变量。
+///       - 自定义变量的值可以引用其他变量（无论是内置的还是自定义过的）。
 ///           - 正确示范1：custom_1 = 666;
 ///                      custom_2 = click_value;（click_value为系统变量）
 ///                      custom_3 = custom_1 + custom_2;
 ///                      custom_4 = custom_3 + custom_2;
 ///           - 错误示范1：custom_1 = 666;
-///                      custom_2 = click_value;
-///                      custom_4 = custom_3 + custom_2;（custom_3 并未被定义过）
-///           - 错误示范2：custom_1 = 666;
 ///                      custom_3 = custom_1 + custom_2;（custom_2的定义必须在custom_3的前面位置进行定义）
 ///                      custom_2 = click_value;
 ///                      custom_4 = custom_3 + custom_2;
@@ -124,23 +121,44 @@ import 'package:math_expressions/math_expressions.dart';
 ///                      use: 1-0.56 * custom^0.06+sin(pi)
 ///           - 错误示范1：if: sin(pi)==0
 ///                      use: 1-0.56 * (sin(pi))^0.06
+///       - 如果值为空（null），则可以这样进行判断：
+///           - 正确示范1：if: custom==null
+///                     - 含义：如果 custom 为 null...
+///   4. [注释] 书写规范：
+///       - 使用 <-- 与 --> 包裹起来。
+///         - 正确示范1：<--这是个注释-->
+///       - 注释内容不能含有 <-- 或 -->，且暂未提供转义字符，因此若注释内容想要存在这两个字符，则请更换其他字符进行代替。
+///         - 错误示范1：<--这是个<--注释-->-->
+///         - 错误示范2：<--这是个-->注释-->
+///         - 正确示范1：<--注释内容可以存在"->"、"<-"，因为它和两个横杠的符号不冲突-->
+///       - 注释符号间不能加其他字符。
+///         - 错误示范1：<- -注释符号中不能参杂任何其他字符，包括空格-->
+///       - 注释内不能存在连续10个"="。
+///       - 除了以上，注释里可以写任何内容。
 ///   4. 运算符规范：
-///       - 赋值运算符：=
-///           - 解释：a = 1，将1这个值赋予给a;
-///                  b = a，将a这个值赋予给b;
-///                  以上即a=b=1。
+///       - 赋值运算符：
+///           - 赋值：=
+///             - 解释：a = 1，将1这个值赋予给a;
+///                    b = a，将a这个值赋予给b;
+///                    以上即 a=b=1。
+///           - 空赋值：??=
+///             - 解释：a ??= 1;
+///                   当 a 不存在时，a 被赋值为 1。
+///             - 用途：通常用在 xxx_n 中。
+///
 ///       - 逻辑运算符：
 ///           - 或：|
 ///             - 解释：在 R = A|B 中，A 或 B只要存在一个是 true 的，则 R 便是 ture，否则 R 为 false。
 ///           - 且：&
 ///             - 解释：在 R = A&B 中，只有 A 与 B 同时为 true 时，R 才为 ture，否则 R 为 false。
 ///           - 非：!
-///             - 解释：当 R 为 true 时，!R 为 false，当 R 为 false 时，!R 为 true。
+///             - 解释：当 R 为 true 时，!R 为 false；当 R 为 false 时，!R 为 true。
 ///       - 算术运算符：
 ///           - 加：+
 ///           - 减：-
 ///           - 乘：*
 ///           - 除：/
+///           - 乘方：^
 ///       - 关系运算符：
 ///           - 是否相等：==
 ///           - 是否不相等：!=
@@ -148,39 +166,54 @@ import 'package:math_expressions/math_expressions.dart';
 ///           - 是否小于：<
 ///           - 是否大于等于：>=
 ///           - 是否小于等于：<=
-///       - 空合并运算符：
-///           - ??
-///             - 解释：在 a = b??666 中，
-///                    当 b 未被定义时，则会报错误，
-///                    当 b 为 [分段聚合变量] 时，当检索到的 xxx_n 不存在时，b 将被 666 这个数值代替，并赋值给 a。
 ///
 /// 正确示范：
 /// ```
-/// custom_1 = 123;
-/// 自定义_1 = custom_1;
-/// add_result = custom_1 + 自定义_1;
 ///
-/// ===
+/// <--大部分地方都可以写注释-->
+/// <--
+/// 注释内容也
+/// 可以被换行。
+/// -->
+/// custom_1 = 123;<--注释也可以写在这里-->
+/// custom_2 = custom_1;
+/// add_result = custom_1 + custom_2;
+///
+/// <--这里分隔符必须是连续10个"="，不能少、不能多-->
+/// ==========
 ///
 /// if:
-///   add_result>0
+///   <--简单的判断-->
+///   add_result>0 <--注释也可以写在这里-->
 /// use:
+///   <--简单的公式-->
 ///   1-0.56 * click_time^0.06
 ///
 /// if:
-///   add_result == 0 || (custom_1 != 666 && custom_1 <= 888)
+///   <--复杂的判断-->
+///   <--含义：
+///   add_result 是否为 0，
+///   或者
+///   custom_1 不等于 666 且 custom_2 小于等于 888
+///   -->
+///   add_result == 0 | (custom_1 != 666 & custom_2 <= 888)
 /// use:
-///   1-0.56 * (add_result + custom_1) / sin(custom_1)
+///   <--复杂的公式-->
+///   1-(0.56 * (add_result + 1.2^custom_1)) / sin(custom_2)
 ///
 /// if:
+///   <可以变量与变量之间进行判断>
 ///   add_result > custom_1
 /// use:
+///   <--公式可以直接为数字计算，如下即为 y=6 这条曲线-->
 ///   1+2+3
 ///
 /// if:
+///   <--可以数值与数值之间进行判断-->
 ///   666==666
 /// use:
-///   666
+///   <--公式可以直接为数字，如下即为 y=666.6 这条曲线-->
+///   666.6
 ///```
 class AlgorithmAnalysis {
   final internalVariables = <InternalVariable>[];
@@ -188,36 +221,70 @@ class AlgorithmAnalysis {
   /// 书写的顺序与该数组元素的顺序相同。
   final customVariables = <CustomVariable>[];
 
+  /// 空赋值：name-obtainResult
+  final nullAssignments = <String, double>{};
+
   final ContextModel cm = ContextModel();
 
-  bool isBoundInternalVariable = false;
-
-  void parse(String text) {
-    final separate = text.split('===');
+  Future<void> parse(String text) async {
+    // 去掉全部注释
+    final conciseText = text.replaceAll(RegExp(r'<--([\S\s]*?)-->'), '');
+    final separate = conciseText.split('===');
     if (separate.length != 2) {
-      throw '请正确写入分隔符"==="！';
+      throw '请正确写入分隔符"=========="！';
     }
-    definitionParse(separate.first);
+    await _internalVariablesBindAndObtain(conciseText);
+    definitionVariablesParse(separate.first);
     c(separate.last);
   }
 
-  void definitionParse(String text) {
+  /// 获取需要的内部变量并进行绑定。
+  Future<void> _internalVariablesBindAndObtain(String text) async {
+    for (var internalVariable in internalVariables) {
+      if (text.contains(internalVariable.name)) {
+        await internalVariable.runObtainResult();
+        if (internalVariable.obtainedResult != null) {
+          cm.bindVariableName(internalVariable.name, Number(internalVariable.obtainedResult!));
+        }
+      }
+    }
+  }
+
+  void definitionVariablesParse(String text) {
     final separate = text.trim().split(';');
     for (var e in separate) {
       if (e.trim() == '') break;
       final eSep = e.trim().split('=');
       if (eSep.length != 2) throw '请规范使用赋值符号"="！';
-      // customVariables.add(e)
+      String first = eSep.first.trim();
+      String last = eSep.last.trim();
+      // 空赋值：
+      if (first.contains('??')) {
+        final name = first.split('??').first;
+        final tryResultExp = double.tryParse(last);
+        if (tryResultExp == null) throw '空赋值语句等号后必须是数字类型！';
+        if (!nullAssignments.containsKey(name)) {
+          nullAssignments.addAll({name: tryResultExp});
+        } else {
+          nullAssignments[name] = tryResultExp;
+        }
+
+      } else {
+        customVariables.add(
+          CustomVariable(
+            name: first,
+            obtainedResult: Parser().parse(last).evaluate(EvaluationType.REAL, cm),
+          ),
+        );
+      }
     }
   }
 
   void c(String text) {}
 
   void bindInternalVariable() {
-    if (isBoundInternalVariable) return;
-    isBoundInternalVariable = true;
     for (var e in internalVariables) {
-      cm.bindVariableName(vName, e)
+      // cm.bindVariableName(e.name, Number(value))
     }
   }
 
@@ -238,43 +305,52 @@ enum WhenGet {
   whenClick,
 }
 
-class InternalVariable {
+abstract class VariableBase {
   /// 变量名
   final String name;
 
+  /// 最终结果值
+  double? obtainedResult;
+
+  VariableBase({
+    required this.name,
+    this.obtainedResult,
+  });
+}
+
+class InternalVariable extends VariableBase {
   /// 变量解释
   final String explain;
 
-  /// 可获得的时间点类型。
-  final WhenGet whenGet;
+  /// 数值类型解释
+  final String numericTypeExplain;
 
-  /// 数值类型
-  final String numericType;
+  /// 可获得的时间点类型
+  final WhenGet whenGet;
 
   /// 是否全局
   final bool isCanN;
 
-  /// 获取到的结果
-  double? obtainedResult;
+  /// 获取结果的回调函数。
+  final Future<double> Function() resultGetCallback;
+
+  Future<void> runObtainResult() async {
+    obtainedResult = await resultGetCallback.call();
+  }
 
   InternalVariable({
-    required this.name,
+    required super.name,
     required this.explain,
+    required this.numericTypeExplain,
+    required this.resultGetCallback,
     required this.whenGet,
-    required this.numericType,
     required this.isCanN,
   });
 }
 
-class CustomVariable {
-  /// 变量名
-  final String name;
-
-  /// 计算结果
-  final double calculationResult;
-
+class CustomVariable extends VariableBase {
   CustomVariable({
-    required this.name,
-    required this.calculationResult,
+    required super.name,
+    required super.obtainedResult,
   });
 }

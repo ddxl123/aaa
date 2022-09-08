@@ -64,7 +64,9 @@ class TestHome extends StatelessWidget {
                                     ..bindVariable(x, Number(2.0))
                                     ..bindVariable(y, Number(5));
                                   Expression exp = Parser().parse(c.textEditingController.text);
-                                  print(exp.evaluate(EvaluationType.REAL, cm));
+                                  // print(exp.evaluate(EvaluationType.REAL, cm));
+
+                                  print(exp);
                                 },
                               ),
                             ],
