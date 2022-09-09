@@ -81,8 +81,8 @@ import 'package:math_expressions/math_expressions.dart';
 ///
 ///
 /// 说明：
-///   1. 利用 "==========" 将 [自定义变量语句] 与 [if-use语句] 分开，[自定义变量语句] 放在上方，[if-use语句] 放在下方。
-///       - 必须连续10个 "="，不能少也不能多。
+///   1. [自定义变量语句] 放在上方，[if-use语句] 放在下方。
+///       - 不能更换顺序，也不能混杂。
 ///   2. [自定义变量语句] 书写规范：
 ///       - 每个 [自定义变量语句] 的结尾必须加上 ";"。
 ///           - 正确示范1：custom_value = 666;custom_value = 123;（可以放在同一行上，也可以将两个定义放在不同行上）
@@ -146,6 +146,12 @@ import 'package:math_expressions/math_expressions.dart';
 ///                   当 a 不存在时，a 被赋值为 1。
 ///             - 用途：通常用在 xxx_n 中。
 ///
+///       - 算术运算符：
+///           - 加：+
+///           - 减：-
+///           - 乘：*
+///           - 除：/
+///           - 乘方：^
 ///       - 逻辑运算符：
 ///           - 或：|
 ///             - 解释：在 R = A|B 中，A 或 B只要存在一个是 true 的，则 R 便是 ture，否则 R 为 false。
@@ -153,12 +159,6 @@ import 'package:math_expressions/math_expressions.dart';
 ///             - 解释：在 R = A&B 中，只有 A 与 B 同时为 true 时，R 才为 ture，否则 R 为 false。
 ///           - 非：!
 ///             - 解释：当 R 为 true 时，!R 为 false；当 R 为 false 时，!R 为 true。
-///       - 算术运算符：
-///           - 加：+
-///           - 减：-
-///           - 乘：*
-///           - 除：/
-///           - 乘方：^
 ///       - 关系运算符：
 ///           - 是否相等：==
 ///           - 是否不相等：!=
@@ -170,36 +170,28 @@ import 'package:math_expressions/math_expressions.dart';
 /// 正确示范：
 /// ```
 ///
-/// <--大部分地方都可以写注释-->
+/// <--所有地方都可以写注释，但是注释内不能有注释符号-->
 /// <--
 /// 注释内容也
 /// 可以被换行。
 /// -->
 /// custom_1 = 123;<--注释也可以写在这里-->
-/// custom_2 = custom_1;
-/// add_result = custom_1 + custom_2;
-///
-/// <--这里分隔符必须是连续10个"="，不能少、不能多-->
-/// ==========
+/// custom_2 = cu<--注释甚至可以写在这里，会自动将两边字母粘合-->stom_1;
+/// add_result = custom_1 +<--注释甚至可以写在这里--> custom_2;
 ///
 /// if:
-///   <--简单的判断-->
-///   add_result>0 <--注释也可以写在这里-->
+///   <--如果 add_result 大于 0 -->
+///   add_result>0
 /// use:
-///   <--简单的公式-->
+///   <--则使用下面这个公式-->
 ///   1-0.56 * click_time^0.06
 ///
 /// if:
-///   <--复杂的判断-->
-///   <--含义：
-///   add_result 是否为 0，
-///   或者
-///   custom_1 不等于 666 且 custom_2 小于等于 888
-///   -->
-///   add_result == 0 | (custom_1 != 666 & custom_2 <= 888)
+///   <--如果 add_result+1 为 0，或者， custom_1 不等于 666 且 custom_2 小于等于 1000-->
+///   add_result+1 == 0 | (custom_1 != 666 & custom_2 <= 888+112)
 /// use:
-///   <--复杂的公式-->
-///   1-(0.56 * (add_result + 1.2^custom_1)) / sin(custom_2)
+///   <--则使用下面这个公式-->
+///   1-(0.56 * (add_result??3.5 + 1.2^custom_1)) / sin(custom_2)
 ///
 /// if:
 ///   <可以变量与变量之间进行判断>
@@ -222,71 +214,124 @@ class AlgorithmAnalysis {
   final customVariables = <CustomVariable>[];
 
   /// 空赋值：name-obtainResult
-  final nullAssignments = <String, double>{};
+  final emptyMergeVariables = <String, double>{};
 
   final ContextModel cm = ContextModel();
+
+  /// 逻辑运算符
+  final logicalOperators = <String>[
+    '|',
+    '&',
+    '!',
+  ];
+
+  /// 关系运算符
+  final relationalOperators = <String>[
+    '==',
+    '!=',
+    '<',
+    '>',
+    '<=',
+    '>=',
+  ];
+
+  /// 其他符号
+  final otherSymbol = <String>[
+    '(',
+    ')',
+  ];
 
   Future<void> parse(String text) async {
     // 去掉全部注释
     final conciseText = text.replaceAll(RegExp(r'<--([\S\s]*?)-->'), '');
-    final separate = conciseText.split('===');
-    if (separate.length != 2) {
-      throw '请正确写入分隔符"=========="！';
-    }
-    await _internalVariablesBindAndObtain(conciseText);
-    definitionVariablesParse(separate.first);
-    c(separate.last);
+    // 空合并运算符排查，并去空表达式
+    final finallyConciseText = _emptyMergeDetection(conciseText);
+    // 绑定并获取内置变量值
+    await _internalVariablesBindAndObtain(finallyConciseText);
+
+    // 分离变量定义与if-use语句
+    final ifIndex = finallyConciseText.indexOf('if:');
+    final definitionPart = finallyConciseText.substring(0, ifIndex);
+    final ifUsePart = finallyConciseText.substring(ifIndex);
+
+    _definitionVariablesBindAndObtain(definitionPart);
+    _ifUseParse(ifUsePart);
   }
 
-  /// 获取需要的内部变量并进行绑定。
+  /// 空合并运算符排查，并简化
+  String _emptyMergeDetection(String text) {
+    // 检测出全部 abc??123，并添加至 emptyMergeVariables 中。
+    for (var v in RegExp(r'\(([\S\s]*?)\?\?([\S\s]*?)\)').allMatches(text)) {
+      final emptyMergeSplit = text.substring(v.start, v.end).split('??');
+      if (emptyMergeSplit.length != 2) throw '不规范使用空合并运算符！';
+      final name = emptyMergeSplit.first.trim();
+      final result = double.tryParse(emptyMergeSplit.last.trim());
+      if (result == null) throw '不规范使用空合并运算！';
+      emptyMergeVariables.addAll({name: result});
+    }
+    // 清除空赋值表达式。
+    return text.replaceAll(RegExp(r'\?\?(([0-9]+\.[0-9]+)|([0-9]+))'), '');
+  }
+
+  /// 绑定并获取内置变量值
   Future<void> _internalVariablesBindAndObtain(String text) async {
-    for (var internalVariable in internalVariables) {
-      if (text.contains(internalVariable.name)) {
-        await internalVariable.runObtainResult();
-        if (internalVariable.obtainedResult != null) {
-          cm.bindVariableName(internalVariable.name, Number(internalVariable.obtainedResult!));
+    final name2ValueMap = internalVariables.toName2ValueMap();
+    // 识别出需要的内置变量
+    for (var match in RegExp(name2ValueMap.keys.map((e) => "($e)").join('|')).allMatches(text)) {
+      final iv = name2ValueMap[text.substring(match.start, match.end)]!;
+      await iv.runObtainResult();
+      if (iv.obtainedResult != null) {
+        cm.bindVariableName(iv.name, Number(iv.obtainedResult!));
+      } else {
+        if (!emptyMergeVariables.containsKey(iv.name)) {
+          throw '${iv.name} 内置变量可能为空，请使用"??"进行空赋值！';
         }
+        cm.bindVariableName(iv.name, Number(emptyMergeVariables[iv.name]!));
       }
     }
   }
 
-  void definitionVariablesParse(String text) {
+  /// 绑定并获取自定义变量值
+  ///
+  /// 因为内置变量已经被空赋值了，因此自定义变量始终不为 null，即自定义变量无需空赋值。
+  void _definitionVariablesBindAndObtain(String text) {
     final separate = text.trim().split(';');
     for (var e in separate) {
       if (e.trim() == '') break;
       final eSep = e.trim().split('=');
       if (eSep.length != 2) throw '请规范使用赋值符号"="！';
-      String first = eSep.first.trim();
-      String last = eSep.last.trim();
-      // 空赋值：
-      if (first.contains('??')) {
-        final name = first.split('??').first;
-        final tryResultExp = double.tryParse(last);
-        if (tryResultExp == null) throw '空赋值语句等号后必须是数字类型！';
-        if (!nullAssignments.containsKey(name)) {
-          nullAssignments.addAll({name: tryResultExp});
-        } else {
-          nullAssignments[name] = tryResultExp;
-        }
-
-      } else {
-        customVariables.add(
-          CustomVariable(
-            name: first,
-            obtainedResult: Parser().parse(last).evaluate(EvaluationType.REAL, cm),
-          ),
-        );
+      String name = eSep.first.trim();
+      String valueExp = eSep.last.trim();
+      late final double result;
+      try {
+        result = Parser().parse(valueExp).evaluate(EvaluationType.REAL, cm);
+        cm.bindVariableName(name, Number(result));
+      } on FormatException catch (e) {
+        throw e.message;
+      } on ArgumentError catch (e) {
+        throw e.message;
       }
+      customVariables.add(CustomVariable(name: name, obtainedResult: result));
     }
   }
 
-  void c(String text) {}
-
-  void bindInternalVariable() {
-    for (var e in internalVariables) {
-      // cm.bindVariableName(e.name, Number(value))
+  void _ifUseParse(String text) {
+    final ifUses = text.split('if:');
+    for (var iu in ifUses) {
+      final iuTrim = iu.trim();
+      if (iuTrim == '') break;
+      final i2u = iuTrim.split('use:');
+      if (i2u.length != 2) throw '不规范使用 if-use 语句！';
+      final i = i2u.first;
+      final u = i2u.last;
+      _ifParse(i);
+      _useParse(u);
     }
   }
+
+  void _ifParse(String text) {}
+
+  void _useParse(String text) {}
 
 // Variable x = Variable('x');
 // Variable y = Variable('y');
@@ -353,4 +398,18 @@ class CustomVariable extends VariableBase {
     required super.name,
     required super.obtainedResult,
   });
+}
+
+extension Name2ValueExt<VB extends VariableBase> on List<VB> {
+  Map<String, VB> toName2ValueMap() {
+    final m = <String, VB>{};
+    for (var v in this) {
+      if (!m.containsKey(v.name)) {
+        m.addAll({v.name: v});
+      } else {
+        m[v.name] = v;
+      }
+    }
+    return m;
+  }
 }
