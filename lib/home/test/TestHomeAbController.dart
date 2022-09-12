@@ -9,6 +9,8 @@ class TestHomeAbController extends AbController {
 
   final textEditingController = TextEditingController();
 
+  final analysisResult = '无结果'.ab;
+
   @override
   bool get isEnableLoading => true;
 

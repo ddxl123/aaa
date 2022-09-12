@@ -1,3 +1,4 @@
+import 'package:aaa/algorithm_parser/AlgorithmParser.dart';
 import 'package:drift_main/DriftViewer.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
@@ -57,17 +58,28 @@ class TestHome extends StatelessWidget {
                               ),
                               ElevatedButton(
                                 child: const Text('    分析    '),
-                                onPressed: () {
-                                  Variable x = Variable('x');
-                                  Variable y = Variable('y');
-                                  ContextModel cm = ContextModel()
-                                    ..bindVariable(x, Number(2.0))
-                                    ..bindVariable(y, Number(5));
-                                  Expression exp = Parser().parse(c.textEditingController.text);
-                                  // print(exp.evaluate(EvaluationType.REAL, cm));
-
-                                  print(exp);
+                                onPressed: () async {
+                                  final alg = AlgorithmParser();
+                                  try {
+                                    await c.analysisResult.refreshEasy(
+                                      (oldValue) async => (await alg.parse(
+                                        content: c.textEditingController.text,
+                                        isDebug: true,
+                                      ))
+                                          .toString(),
+                                    );
+                                    c.analysisResult.refreshEasy((oldValue) => alg.debugPrintStringBuffer.toString());
+                                  } catch (e) {
+                                    c.analysisResult.refreshEasy((oldValue) => alg.debugPrintStringBuffer.toString());
+                                  }
                                 },
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(c.analysisResult(abw)),
                               ),
                             ],
                           )

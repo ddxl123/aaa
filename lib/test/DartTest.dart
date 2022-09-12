@@ -46,7 +46,7 @@ class Bracket2Index {
 
 void main() {
   String s = r'false | (2 != 3) & ((4 >= 5 | 6 == 7) & ((8 < 9) | 222 < 0))';
-  print(recursion(s));
+  print(_recursion(s));
 }
 
 bool ifExpParse(String content) => _recursion(content) == 'true' ? true : false;

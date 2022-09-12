@@ -1,7 +1,13 @@
+library algorithm_parser;
+
 import 'dart:async';
 
 import 'package:drift_main/DriftDb.dart';
 import 'package:math_expressions/math_expressions.dart';
+
+part 'AlgorithmConst.dart';
+
+part 'IfExprParse.dart';
 
 ///
 /// [分段变量]：
@@ -206,140 +212,234 @@ import 'package:math_expressions/math_expressions.dart';
 /// use:
 ///   <--公式可以直接为数字，如下即为 y=666.6 这条曲线-->
 ///   666.6
+/// else:
+///   <--
+///   以上所有 if 都不满足条件时，选用 else 的结果
+///   如果并没有 else 指示，请使用 :
+///   "else: throw 描述"
+///   -->
+///   123
+///
 ///```
-class AlgorithmAnalysis {
-  final internalVariables = <InternalVariable>[];
-
-  /// 书写的顺序与该数组元素的顺序相同。
-  final customVariables = <CustomVariable>[];
+///
+/// Variable x = Variable('x');
+/// Variable y = Variable('y');
+/// ContextModel cm = ContextModel()
+///   ..bindVariable(x, Number(2.0))
+///   ..bindVariable(y, Number(5));
+/// Expression exp = Parser().parse(c.textEditingController.text);
+/// print(exp.evaluate(EvaluationType.REAL, cm));
+class AlgorithmParser {
+  final _internalVariables = <InternalVariable>[
+    InternalVariable(
+      name: '\&name',
+      explain: '这是解释',
+      numericTypeExplain: '这是数值类型解释',
+      resultGetCallback: () async {
+        return 100;
+      },
+      whenGet: WhenGet.whenShow,
+      isCanN: false,
+    ),
+  ];
 
   /// 空赋值：name-obtainResult
-  final emptyMergeVariables = <String, double>{};
+  final _emptyMergeVariables = <String, double>{};
 
   final ContextModel cm = ContextModel();
 
-  /// 逻辑运算符
-  final logicalOperators = <String>[
-    '|',
-    '&',
-    '!',
-  ];
+  bool _isParsed = false;
 
-  /// 关系运算符
-  final relationalOperators = <String>[
-    '==',
-    '!=',
-    '<',
-    '>',
-    '<=',
-    '>=',
-  ];
+  bool isDebug = false;
 
-  /// 其他符号
-  final otherSymbol = <String>[
-    '(',
-    ')',
-  ];
+  final StringBuffer debugPrintStringBuffer = StringBuffer();
 
-  Future<void> parse(String text) async {
-    // 去掉全部注释
-    final conciseText = text.replaceAll(RegExp(r'<--([\S\s]*?)-->'), '');
-    // 空合并运算符排查，并去空表达式
-    final finallyConciseText = _emptyMergeDetection(conciseText);
-    // 绑定并获取内置变量值
-    await _internalVariablesBindAndObtain(finallyConciseText);
+  void debugPrint(String content) {
+    if (isDebug) {
+      final String printContent = '\n>>>\n$content';
+      print(printContent);
+      debugPrintStringBuffer.write(printContent);
+    }
+  }
 
-    // 分离变量定义与if-use语句
-    final ifIndex = finallyConciseText.indexOf('if:');
-    final definitionPart = finallyConciseText.substring(0, ifIndex);
-    final ifUsePart = finallyConciseText.substring(ifIndex);
+  void throwAssert({required bool isThrow, required String message}) {
+    if (isThrow) {
+      debugPrintStringBuffer.write('\n抛出的异常信息：$message');
+      throw message;
+    }
+  }
+
+  /// 计算
+  double calculate(String content) {
+    late final double result;
+    try {
+      result = Parser().parse(content).evaluate(EvaluationType.REAL, cm);
+    } catch (e) {
+      throwAssert(isThrow: true, message: '计算异常：$content');
+    }
+    return result;
+  }
+
+  /// TODO: 进行全局 try-catch。
+  Future<double> parse({required String content, required bool isDebug}) async {
+    this.isDebug = isDebug;
+    throwAssert(isThrow: _isParsed, message: '每个 AlgorithmParser 实例只能使用一次 parse！');
+    _isParsed = true;
+    final conciseContent = _clearAnnotated(content);
+    final finallyConciseContent = _emptyMergeDetection(conciseContent);
+    await _internalVariablesBindAndObtain(finallyConciseContent);
+
+    // 分离变量定义与 if-use-else 语句。
+    final ifIndex = finallyConciseContent.indexOf('if:');
+    throwAssert(isThrow: ifIndex == -1, message: '缺少 "if:" 语句！');
+    // 变量定义部分。
+    final definitionPart = finallyConciseContent.substring(0, ifIndex);
+    // if-use 语句部分。
+    final ifUsePart = finallyConciseContent.substring(ifIndex);
+    debugPrint('自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUsePart');
 
     _definitionVariablesBindAndObtain(definitionPart);
-    _ifUseParse(ifUsePart);
+    return _ifUseParse(ifUsePart);
   }
 
-  /// 空合并运算符排查，并简化
-  String _emptyMergeDetection(String text) {
-    // 检测出全部 abc??123，并添加至 emptyMergeVariables 中。
-    for (var v in RegExp(r'\(([\S\s]*?)\?\?([\S\s]*?)\)').allMatches(text)) {
-      final emptyMergeSplit = text.substring(v.start, v.end).split('??');
-      if (emptyMergeSplit.length != 2) throw '不规范使用空合并运算符！';
+  /// 去掉全部注释
+  String _clearAnnotated(String content) {
+    debugPrint('正在清除注释...');
+    final result = content.replaceAll(RegExp(r'<--([\S\s]*?)-->'), '');
+    debugPrint('清除注释成功，清除后：\n$result');
+    return result;
+  }
+
+  /// 空合并运算符评估，并去掉空表达式
+  String _emptyMergeDetection(String content) {
+    debugPrint('正在评估空合并运算符...');
+    final regExp = RegExp(r'\(([\S\s]*?)\?\?([\S\s]*?)\)');
+    // 检测出全部 (abc??123)，并添加至 emptyMergeVariables 中。
+    for (var v in regExp.allMatches(content)) {
+      // (abc ?? 123) -> abc 123
+      final bracketInternal = content.substring(v.start + 1, v.end - 1);
+      debugPrint('检测出空合并：$bracketInternal');
+      final emptyMergeSplit = bracketInternal.split('??');
+      throwAssert(isThrow: emptyMergeSplit.length != 2, message: '不规范使用空合并运算符：${v.group(0)}');
+
+      // abc
       final name = emptyMergeSplit.first.trim();
+      // TODO: 用命名规范来检验
+      throwAssert(isThrow: name == '', message: '不规范名称：$name');
+
+      // 123
       final result = double.tryParse(emptyMergeSplit.last.trim());
-      if (result == null) throw '不规范使用空合并运算！';
-      emptyMergeVariables.addAll({name: result});
+      throwAssert(isThrow: result == null, message: '不规范使用空合并运算符！');
+
+      _emptyMergeVariables.addAll({name: result!});
+      debugPrint('空合并评估成功：$bracketInternal');
     }
+    debugPrint('空合并已全部评估完成！');
     // 清除空赋值表达式。
-    return text.replaceAll(RegExp(r'\?\?(([0-9]+\.[0-9]+)|([0-9]+))'), '');
+    final clearResult = content.replaceAll(RegExp(r'\?\?(([0-9]+\.[0-9]+)|([0-9]+))'), '');
+    debugPrint('评估空合并运算符成功，评估结果：\n$clearResult');
+    return clearResult;
   }
 
-  /// 绑定并获取内置变量值
-  Future<void> _internalVariablesBindAndObtain(String text) async {
-    final name2ValueMap = internalVariables.toName2ValueMap();
-    // 识别出需要的内置变量
-    for (var match in RegExp(name2ValueMap.keys.map((e) => "($e)").join('|')).allMatches(text)) {
-      final iv = name2ValueMap[text.substring(match.start, match.end)]!;
+  /// 扫描使用到的内置变量，并绑定内置变量、获取内置变量的值
+  Future<void> _internalVariablesBindAndObtain(String content) async {
+    debugPrint('正在评估内置变量...');
+    throwAssert(isThrow: _internalVariables.isEmpty, message: '内置变量为 empty！');
+    final regExp = RegExp(_internalVariables.map((e) => "(${e.name})").join('|'));
+    // 识别出需要的内置变量，若没有识别出，则直接过。
+    for (var match in regExp.allMatches(content)) {
+      final iv = _internalVariables.where((element) => element.name == match.group(0)).first;
       await iv.runObtainResult();
+      debugPrint('已扫描到的内置变量及获取到的值：${iv.name} = ${iv.obtainedResult}');
       if (iv.obtainedResult != null) {
         cm.bindVariableName(iv.name, Number(iv.obtainedResult!));
+        debugPrint('绑定 ContextModel 成功：${iv.name} = ${iv.obtainedResult}}');
       } else {
-        if (!emptyMergeVariables.containsKey(iv.name)) {
-          throw '${iv.name} 内置变量可能为空，请使用"??"进行空赋值！';
-        }
-        cm.bindVariableName(iv.name, Number(emptyMergeVariables[iv.name]!));
+        throwAssert(isThrow: !_emptyMergeVariables.containsKey(iv.name), message: '${iv.name} 内置变量存在为空的情况，请使用"??"进行空赋值！');
+        cm.bindVariableName(iv.name, Number(_emptyMergeVariables[iv.name]!));
+        debugPrint('绑定 ContextModel 成功：${iv.name} = ${_emptyMergeVariables[iv.name]!}');
       }
     }
+    debugPrint('评估内置变量成功！');
   }
 
   /// 绑定并获取自定义变量值
   ///
   /// 因为内置变量已经被空赋值了，因此自定义变量始终不为 null，即自定义变量无需空赋值。
-  void _definitionVariablesBindAndObtain(String text) {
-    final separate = text.trim().split(';');
-    for (var e in separate) {
-      if (e.trim() == '') break;
-      final eSep = e.trim().split('=');
-      if (eSep.length != 2) throw '请规范使用赋值符号"="！';
+  void _definitionVariablesBindAndObtain(String content) {
+    debugPrint('正在评估自定义变量...');
+    final semicolonSplit = content.trim().split(';');
+    for (var assign in semicolonSplit) {
+      // 最后一个';'会出现空字符，同时也可以解决连续分号 ';;;' 的问题。
+      if (assign.trim() == '') continue;
+      final eSep = assign.trim().split('=');
+      throwAssert(isThrow: eSep.length != 2, message: '请规范使用赋值符号"="！');
+
       String name = eSep.first.trim();
+      // TODO: 用命名规范来检验
+      throwAssert(isThrow: name.trim() == '', message: '不规范名称：$name');
       String valueExp = eSep.last.trim();
       late final double result;
       try {
-        result = Parser().parse(valueExp).evaluate(EvaluationType.REAL, cm);
+        result = calculate(valueExp);
         cm.bindVariableName(name, Number(result));
       } on FormatException catch (e) {
-        throw e.message;
+        throwAssert(isThrow: true, message: '计算异常：\n自定义变量：$name\n计算内容：$valueExp\n计算结果异常：${e.message}');
       } on ArgumentError catch (e) {
-        throw e.message;
+        throwAssert(isThrow: true, message: '计算异常：\n自定义变量：$name\n计算内容：$valueExp\n计算结果异常：${e.message}');
       }
-      customVariables.add(CustomVariable(name: name, obtainedResult: result));
+      debugPrint('绑定 ContextModel 成功：$name = $valueExp');
     }
+    debugPrint('评估自定义变量成功！');
   }
 
-  void _ifUseParse(String text) {
-    final ifUses = text.split('if:');
+  /// if-use-else 语句解析。
+  double _ifUseParse(String content) {
+    debugPrint('正在评估 if-use-else 语句...');
+    final elseMatches = RegExp('else:').allMatches(content);
+    throwAssert(isThrow: elseMatches.isEmpty, message: '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）');
+    final elseMatch = elseMatches.first;
+    final elseContent = content.substring(elseMatch.end, content.length).trim();
+    debugPrint('else 内容：\n$elseContent');
+    final ifUseContent = content.substring(0, elseMatch.start).trim();
+    debugPrint('if-use 内容：\n$ifUseContent');
+    final ifUses = ifUseContent.split('if:');
+    throwAssert(isThrow: ifUses.length == 1, message: '缺少 "if:" 语句！');
+    // 去掉第一个 'if:' 前的空白。
+    ifUses.removeAt(0);
     for (var iu in ifUses) {
+      debugPrint('解析出 -use- 内容：\n$iu');
       final iuTrim = iu.trim();
-      if (iuTrim == '') break;
+      throwAssert(isThrow: iuTrim == '', message: '不规范使用 if-use 语句！');
+      throwAssert(isThrow: !iuTrim.contains('use:'), message: '缺少 "use:" 语句');
       final i2u = iuTrim.split('use:');
-      if (i2u.length != 2) throw '不规范使用 if-use 语句！';
-      final i = i2u.first;
-      final u = i2u.last;
-      _ifParse(i);
-      _useParse(u);
+      throwAssert(isThrow: i2u.length != 2, message: '不规范使用 if 语句：$iuTrim');
+      final i = i2u.first.trim();
+      debugPrint('解析出 if 内容：\n$i');
+      throwAssert(isThrow: i == '', message: '"if:" 语句内容不能为空！');
+      final u = i2u.last.trim();
+      debugPrint('解析出 use 内容：\n$u');
+      throwAssert(isThrow: u == '', message: '"use:" 语句内容不能为空！');
+      if (_ifParse(i)) {
+        final result = _useParse(u);
+        debugPrint('所使用的 use 语句：$u\n计算结果：$result');
+        return result;
+      }
     }
+    throwAssert(isThrow: elseContent.contains('throw'), message: elseContent.substring(elseContent.indexOf('throw') + 5, elseContent.length));
+    debugPrint('所有 if 语句都不匹配，已执行 else 语句：$elseContent');
+    return calculate(elseContent);
   }
 
-  void _ifParse(String text) {}
+  /// 解析 if 语句。
+  bool _ifParse(String content) {
+    return IfExprParse().parse(content: content, algorithmParser: this);
+  }
 
-  void _useParse(String text) {}
-
-// Variable x = Variable('x');
-// Variable y = Variable('y');
-// ContextModel cm = ContextModel()
-//   ..bindVariable(x, Number(2.0))
-//   ..bindVariable(y, Number(5));
-// Expression exp = Parser().parse(c.textEditingController.text);
-// print(exp.evaluate(EvaluationType.REAL, cm));
+  /// 解析 use 语句。
+  double _useParse(String content) {
+    return calculate(content);
+  }
 }
 
 enum WhenGet {
@@ -350,20 +450,13 @@ enum WhenGet {
   whenClick,
 }
 
-abstract class VariableBase {
+class InternalVariable {
   /// 变量名
   final String name;
 
   /// 最终结果值
   double? obtainedResult;
 
-  VariableBase({
-    required this.name,
-    this.obtainedResult,
-  });
-}
-
-class InternalVariable extends VariableBase {
   /// 变量解释
   final String explain;
 
@@ -379,37 +472,17 @@ class InternalVariable extends VariableBase {
   /// 获取结果的回调函数。
   final Future<double> Function() resultGetCallback;
 
+  /// 出现异常必须使用抛出。
   Future<void> runObtainResult() async {
     obtainedResult = await resultGetCallback.call();
   }
 
   InternalVariable({
-    required super.name,
+    required this.name,
     required this.explain,
     required this.numericTypeExplain,
     required this.resultGetCallback,
     required this.whenGet,
     required this.isCanN,
   });
-}
-
-class CustomVariable extends VariableBase {
-  CustomVariable({
-    required super.name,
-    required super.obtainedResult,
-  });
-}
-
-extension Name2ValueExt<VB extends VariableBase> on List<VB> {
-  Map<String, VB> toName2ValueMap() {
-    final m = <String, VB>{};
-    for (var v in this) {
-      if (!m.containsKey(v.name)) {
-        m.addAll({v.name: v});
-      } else {
-        m[v.name] = v;
-      }
-    }
-    return m;
-  }
 }
