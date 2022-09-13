@@ -181,7 +181,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             },
           ),
           verifyAb: c.familiarityAlgorithm,
-          hint: Tuple2(t1: c.familiarityAlgorithmFocusNode, t2: ''),
         );
       },
     );

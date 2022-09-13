@@ -143,10 +143,28 @@ class QueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
   }
 
   Future<List<Fragment>> queryFragmentsInMemoryGroup(String memoryGroupId) async {
-    final j = select(fragments).join([innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id))]);
-    j.where(rFragment2MemoryGroups.fatherId.equals(memoryGroupId));
-    final gets = await j.get();
-    return gets.map((e) => e.readTable(fragments)).toList();
+    final j = select(fragments)
+      ..join(
+        [
+          innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id)),
+        ],
+      )
+      ..where((tbl) => rFragment2MemoryGroups.fatherId.equals(memoryGroupId));
+    return await j.get();
+  }
+
+  Future<int> queryFragmentsInMemoryGroupForNotLearnCount(String memoryGroupId) async {
+    final count = fragments.id.count();
+    final exp = selectOnly(fragments)
+      ..join([
+        innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: false),
+        innerJoin(memoryGroups, memoryGroups.id.equalsExp(rFragment2MemoryGroups.fatherId), useColumns: false),
+      ])
+      ..where(rFragment2MemoryGroups.fatherId.equals(memoryGroupId))
+      ..addColumns([count]);
+
+    final results = await exp.get();
+    return results.map((e) => e.read(count)).first!;
   }
 
   Future<MemoryModel?> queryMemoryModelById({required String? memoryModelId}) async {

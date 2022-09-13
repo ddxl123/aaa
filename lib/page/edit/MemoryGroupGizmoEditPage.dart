@@ -45,7 +45,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                     children: [
                       _titleWidget(),
                       _memoryModelWidget(),
-                      _showTypeWidget(),
                       _selectFragmentWidget(),
                     ],
                   ),
@@ -71,6 +70,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                       _filterOutWidget(),
                       _newReviewDisplayOrder(),
                       _newDisplayOrder(),
+                      _showModeWidget(),
                     ],
                   ),
                 ),
@@ -192,7 +192,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
-  Widget _showTypeWidget() {
+  Widget _showModeWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
@@ -285,7 +285,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               Expanded(
                 child: AbStatefulBuilder(
                   // 保留上一次的设置
-                  initExtra: {'value': c.newLearnCount(abw).toDouble()},
+                  initExtra: {'value': c.willNewLearnCount(abw).toDouble()},
                   builder: (Map<String, Object?> extra, BuildContext context, void Function() refresh) {
                     double dynValue = extra['value'] as double;
                     // 不能超过最大值
@@ -310,7 +310,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                               refresh();
                             },
                             onChangeEnd: (n) {
-                              c.newLearnCount.refreshEasy((oldValue) => n.floor());
+                              c.willNewLearnCount.refreshEasy((oldValue) => n.floor());
                             },
                           ),
                         ),
@@ -428,7 +428,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return CardCustom(
           child: Row(
             children: [
-              const Text('新碎片 | 复习碎片 展示顺序：'),
+              const Text('新 | 复习 碎片展示顺序：'),
               dropdownButton2<NewReviewDisplayOrder>(
                 value: c.newReviewDisplayOrder(abw),
                 item: [

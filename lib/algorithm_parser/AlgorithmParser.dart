@@ -254,6 +254,12 @@ class AlgorithmParser {
 
   final StringBuffer debugPrintStringBuffer = StringBuffer();
 
+  /// 若为空，则 [parseResult] 一定存在值。
+  String? throwMessage;
+
+  /// [parse] 成功的结果。
+  late final double parseResult;
+
   void debugPrint(String content) {
     if (isDebug) {
       final String printContent = '\n>>>\n$content';
@@ -281,25 +287,30 @@ class AlgorithmParser {
   }
 
   /// TODO: 进行全局 try-catch。
-  Future<double> parse({required String content, required bool isDebug}) async {
-    this.isDebug = isDebug;
-    throwAssert(isThrow: _isParsed, message: '每个 AlgorithmParser 实例只能使用一次 parse！');
-    _isParsed = true;
-    final conciseContent = _clearAnnotated(content);
-    final finallyConciseContent = _emptyMergeDetection(conciseContent);
-    await _internalVariablesBindAndObtain(finallyConciseContent);
+  Future<AlgorithmParser> parse({required String content, required bool isDebug}) async {
+    try {
+      this.isDebug = isDebug;
+      throwAssert(isThrow: _isParsed, message: '每个 AlgorithmParser 实例只能使用一次 parse！');
+      _isParsed = true;
+      final conciseContent = _clearAnnotated(content);
+      final finallyConciseContent = _emptyMergeDetection(conciseContent);
+      await _internalVariablesBindAndObtain(finallyConciseContent);
 
-    // 分离变量定义与 if-use-else 语句。
-    final ifIndex = finallyConciseContent.indexOf('if:');
-    throwAssert(isThrow: ifIndex == -1, message: '缺少 "if:" 语句！');
-    // 变量定义部分。
-    final definitionPart = finallyConciseContent.substring(0, ifIndex);
-    // if-use 语句部分。
-    final ifUsePart = finallyConciseContent.substring(ifIndex);
-    debugPrint('自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUsePart');
+      // 分离变量定义与 if-use-else 语句。
+      final ifIndex = finallyConciseContent.indexOf('if:');
+      throwAssert(isThrow: ifIndex == -1, message: '缺少 "if:" 语句！');
+      // 变量定义部分。
+      final definitionPart = finallyConciseContent.substring(0, ifIndex);
+      // if-use 语句部分。
+      final ifUsePart = finallyConciseContent.substring(ifIndex);
+      debugPrint('自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUsePart');
 
-    _definitionVariablesBindAndObtain(definitionPart);
-    return _ifUseParse(ifUsePart);
+      _definitionVariablesBindAndObtain(definitionPart);
+      parseResult = _ifUseParse(ifUsePart);
+    } catch (e, st) {
+      throwMessage = e.toString();
+    }
+    return this;
   }
 
   /// 去掉全部注释

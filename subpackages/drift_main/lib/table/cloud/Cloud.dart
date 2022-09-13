@@ -45,7 +45,7 @@ class FragmentGroups extends CloudTableBase {
 }
 
 /// 当前
-///  新学数量[newLearnCount]：[100]个 剩余100
+///  新学数量[willNewLearnCount]：[100]个 剩余100
 ///  复习数量：300个 剩余300
 ///   1. 取用接下来[24h][takeReviewInterval]内的复习量（包含曾逾期的碎片）
 ///  展示优先级：[newReviewDisplayOrder]
@@ -69,7 +69,7 @@ class MemoryGroups extends CloudTableBase {
   IntColumn get status => intEnum<MemoryGroupStatus>()();
 
   /// 新学数量
-  IntColumn get newLearnCount => integer()();
+  IntColumn get willNewLearnCount => integer()();
 
   /// 取用 [reviewInterval] 时间点内的复习碎片。
   DateTimeColumn get reviewInterval => dateTime()();

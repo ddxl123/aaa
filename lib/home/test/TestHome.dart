@@ -58,21 +58,7 @@ class TestHome extends StatelessWidget {
                               ),
                               ElevatedButton(
                                 child: const Text('    分析    '),
-                                onPressed: () async {
-                                  final alg = AlgorithmParser();
-                                  try {
-                                    await c.analysisResult.refreshEasy(
-                                      (oldValue) async => (await alg.parse(
-                                        content: c.textEditingController.text,
-                                        isDebug: true,
-                                      ))
-                                          .toString(),
-                                    );
-                                    c.analysisResult.refreshEasy((oldValue) => alg.debugPrintStringBuffer.toString());
-                                  } catch (e) {
-                                    c.analysisResult.refreshEasy((oldValue) => alg.debugPrintStringBuffer.toString());
-                                  }
-                                },
+                                onPressed: () async {},
                               ),
                             ],
                           ),

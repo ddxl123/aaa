@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 class CardCustom extends StatefulWidget {
-  const CardCustom({Key? key, required this.child, this.verifyAb, this.hint}) : super(key: key);
+  const CardCustom({Key? key, required this.child, this.verifyAb}) : super(key: key);
   final Widget child;
   final Ab? verifyAb;
-  final Tuple2<FocusNode, String>? hint;
 
   @override
   State<CardCustom> createState() => _CardCustomState();
@@ -21,7 +20,6 @@ class _CardCustomState extends State<CardCustom> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.hint != null) Row(children: [Expanded(child: HintWidget(hint: widget.hint!))]),
             widget.child,
             if (widget.verifyAb != null) Row(children: [Expanded(child: VerifyErrorWidget(verify: widget.verifyAb!.verify))]),
           ],

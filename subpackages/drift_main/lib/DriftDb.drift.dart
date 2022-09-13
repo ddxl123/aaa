@@ -1477,7 +1477,7 @@ class $MemoryGroupsTable extends MemoryGroups
   final VerificationMeta _newLearnCountMeta =
       const VerificationMeta('newLearnCount');
   @override
-  late final GeneratedColumn<int> newLearnCount = GeneratedColumn<int>(
+  late final GeneratedColumn<int> willNewLearnCount = GeneratedColumn<int>(
       'new_learn_count', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _reviewIntervalMeta =
@@ -1516,7 +1516,7 @@ class $MemoryGroupsTable extends MemoryGroups
         title,
         type,
         status,
-        newLearnCount,
+        willNewLearnCount,
         reviewInterval,
         filterOut,
         newReviewDisplayOrder,
@@ -1561,7 +1561,7 @@ class $MemoryGroupsTable extends MemoryGroups
     if (data.containsKey('new_learn_count')) {
       context.handle(
           _newLearnCountMeta,
-          newLearnCount.isAcceptableOrUnknown(
+          willNewLearnCount.isAcceptableOrUnknown(
               data['new_learn_count']!, _newLearnCountMeta));
     } else if (isInserting) {
       context.missing(_newLearnCountMeta);
