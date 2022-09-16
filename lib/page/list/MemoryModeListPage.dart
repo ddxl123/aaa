@@ -46,7 +46,7 @@ class MemoryModeListPage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (ctx) => MemoryModelGizmoEditPage(
-                              memoryModelGizmo: null,
+                              memoryModelGizmo: Ab(null),
                               editPageType: MemoryModelGizmoEditPageType.create.ab,
                             ),
                           ),

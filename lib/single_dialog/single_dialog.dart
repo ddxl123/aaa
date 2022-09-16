@@ -31,7 +31,7 @@ void showDialogForCreateMemoryGroup({
           title: tec.text,
           type: MemoryGroupType.inApp,
           status: MemoryGroupStatus.notStart,
-          newLearnCount: 0,
+          willNewLearnCount: 0,
           reviewInterval: DateTime.now(),
           filterOut: '-',
           newReviewDisplayOrder: NewReviewDisplayOrder.mix,

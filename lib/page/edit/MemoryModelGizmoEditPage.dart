@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MemoryModelGizmoEditPage extends StatelessWidget {
   const MemoryModelGizmoEditPage({Key? key, required this.memoryModelGizmo, required this.editPageType}) : super(key: key);
-  final Ab<MemoryModel>? memoryModelGizmo;
+  final Ab<MemoryModel?> memoryModelGizmo;
   final Ab<MemoryModelGizmoEditPageType> editPageType;
 
   @override
@@ -139,6 +139,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return CardCustom(
           child: TextField(
+            minLines: 1,
+            maxLines: 3,
             controller: c.titleEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -165,6 +167,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return CardCustom(
           child: TextField(
+            minLines: 1,
+            maxLines: 3,
             focusNode: c.familiarityAlgorithmFocusNode,
             controller: c.familiarityAlgorithmEditingController,
             enabled: filter(
@@ -192,6 +196,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return CardCustom(
           child: TextField(
+            minLines: 1,
+            maxLines: 3,
             controller: c.nextTimeAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
@@ -218,6 +224,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return CardCustom(
           child: TextField(
+            minLines: 1,
+            maxLines: 3,
             controller: c.buttonDataEditingController,
             enabled: filter(
               from: c.editPageType(abw),

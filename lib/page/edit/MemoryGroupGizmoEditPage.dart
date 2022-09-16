@@ -1,3 +1,4 @@
+import 'package:aaa/page/edit/MemoryModelGizmoEditPageAbController.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
@@ -19,69 +20,88 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       putController: MemoryGroupGizmoEditPageAbController(editPageType: editPageType, memoryGroupGizmo: memoryGroupGizmo),
       builder: (putController, putAbw) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white12,
-            leading: _appBarLeadingWidget(),
-            title: _appBarTitleWidget(),
-            actions: [_appBarRightButtonWidget()],
+        return AbBuilder<MemoryModelGizmoEditPageAbController>(
+          putController: MemoryModelGizmoEditPageAbController(
+            editPageType: MemoryModelGizmoEditPageType.look.ab,
+            memoryModelGizmo: putController.selectedMemoryModel,
           ),
-          body: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Theme(
-                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
-                    maintainState: true,
-                    title: AbwBuilder(
-                      builder: (abw) {
-                        return Text(
-                          '基础配置：',
-                          style: TextStyle(color: putController.isBasicConfigRedErr(abw) ? Colors.red : null),
-                        );
-                      },
-                    ),
-                    children: [
-                      _titleWidget(),
-                      _memoryModelWidget(),
-                      _selectFragmentWidget(),
-                    ],
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Theme(
-                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
-                    maintainState: true,
-                    initiallyExpanded: true,
-                    title: AbwBuilder(
-                      builder: (abw) {
-                        return Text(
-                          '当前周期：',
-                          style: TextStyle(color: putController.isCurrentCycleRedErr(abw) ? Colors.red : null),
-                        );
-                      },
-                    ),
-                    children: [
-                      _newLearnCountWidget(),
-                      _reviewIntervalWidget(),
-                      _filterOutWidget(),
-                      _newReviewDisplayOrder(),
-                      _newDisplayOrder(),
-                      _showModeWidget(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          floatingActionButton: _floatingActionButton(),
-          floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -30)),
+          builder: (modelC, modelAbw) {
+            return Scaffold(
+              appBar: _appBar(),
+              body: _body(),
+              floatingActionButton: _floatingActionButton(),
+              floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -30)),
+            );
+          },
         );
       },
     );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      backgroundColor: Colors.white12,
+      leading: _appBarLeadingWidget(),
+      title: _appBarTitleWidget(),
+      actions: [_appBarRightButtonWidget()],
+    );
+  }
+
+  Widget _body() {
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(builder: (c, abw) {
+      return CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Theme(
+              data: Theme.of(c.context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                maintainState: true,
+                title: AbwBuilder(
+                  builder: (abw) {
+                    return Text(
+                      '基础配置：',
+                      style: TextStyle(color: c.isBasicConfigRedErr(abw) ? Colors.red : null),
+                    );
+                  },
+                ),
+                children: [
+                  _titleWidget(),
+                  _memoryModelWidget(),
+                  _selectFragmentWidget(),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Theme(
+              data: Theme.of(c.context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                maintainState: true,
+                initiallyExpanded: true,
+                title: AbwBuilder(
+                  builder: (abw) {
+                    return Text(
+                      '当前周期：',
+                      style: TextStyle(color: c.isCurrentCycleRedErr(abw) ? Colors.red : null),
+                    );
+                  },
+                ),
+                children: [
+                  _newLearnCountWidget(),
+                  _reviewIntervalWidget(),
+                  _filterOutWidget(),
+                  _newReviewDisplayOrder(),
+                  _newDisplayOrder(),
+                  _showModeWidget(),
+                  floatingRoundCornerButtonPlaceholderBox(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _floatingActionButton() {
@@ -202,9 +222,8 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               dropdownButton2<MemoryGroupType>(
                 value: c.type(abw),
                 item: [
-                  Tuple2(t1: '应用内', t2: MemoryGroupType.inApp),
+                  Tuple2(t1: '仅应用内', t2: MemoryGroupType.inApp),
                   Tuple2(t1: '全部悬浮  ', t2: MemoryGroupType.allFloating),
-                  Tuple2(t1: '跟随模型', t2: MemoryGroupType.followModel),
                 ],
                 onChanged: (v) {
                   c.type.refreshEasy((oldValue) => v!);

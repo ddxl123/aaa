@@ -254,6 +254,8 @@ class AlgorithmParser {
 
   final StringBuffer debugPrintStringBuffer = StringBuffer();
 
+  /// 抛出的异常信息。
+  ///
   /// 若为空，则 [parseResult] 一定存在值。
   String? throwMessage;
 
@@ -308,6 +310,7 @@ class AlgorithmParser {
       _definitionVariablesBindAndObtain(definitionPart);
       parseResult = _ifUseParse(ifUsePart);
     } catch (e, st) {
+      print('algorithm_catch $e');
       throwMessage = e.toString();
     }
     return this;

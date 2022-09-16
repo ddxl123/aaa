@@ -4,6 +4,7 @@ import 'package:tools/tools.dart';
 
 /// 本文档的用途：验证与解析 。
 
+@Deprecated('可能不需要')
 class VMemoryModelButtonDataVerifyResult {
   double? first;
   double? last;
@@ -12,6 +13,7 @@ class VMemoryModelButtonDataVerifyResult {
   VMemoryModelButtonDataVerifyResult({required this.first, required this.last, required this.center});
 }
 
+@Deprecated('可能不需要')
 FutureOr<Tuple2<VerifyResult, VMemoryModelButtonDataVerifyResult?>> vMemoryModelButtonDataVerifyKey({required String verifyValue}) {
   String failValue() => ''
       '按钮数值分配不符合规范！\n'

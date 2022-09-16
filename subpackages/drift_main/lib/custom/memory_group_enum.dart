@@ -7,9 +7,6 @@ enum MemoryGroupType {
 
   /// 全部悬浮悬浮
   allFloating,
-
-  /// 跟随模型
-  followModel,
 }
 
 /// 记忆组状态 for [MemoryGroupType.inApp]

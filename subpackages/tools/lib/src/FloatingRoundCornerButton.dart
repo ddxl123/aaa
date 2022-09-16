@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// 需要配套使用 [FloatingRoundCornerButtonLocation]
+///
+/// 若需要占位框，则可以使用 [floatingRoundCornerButtonPlaceholderBox]。
 class FloatingRoundCornerButton extends StatelessWidget {
   const FloatingRoundCornerButton({
     Key? key,
@@ -44,3 +46,5 @@ class FloatingRoundCornerButtonLocation extends FloatingActionButtonLocation {
     return centerDockedOffset + offset;
   }
 }
+
+Widget floatingRoundCornerButtonPlaceholderBox([double height = 100]) => SizedBox(height: height);

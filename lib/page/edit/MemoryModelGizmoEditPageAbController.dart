@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aaa/algorithm_parser/AlgorithmParser.dart';
 import 'package:aaa/other/verify_parse.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
@@ -12,7 +13,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final Ab<MemoryModelGizmoEditPageType> editPageType;
 
-  final Ab<MemoryModel>? memoryModelGizmo;
+  final Ab<MemoryModel?> memoryModelGizmo;
 
   /// [MemoryModels.title]
   final title = ''.ab;
@@ -48,20 +49,27 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       },
     );
     familiarityAlgorithm.initVerify(
-      (abV) {
-        if (abV().trim() == '') return VerifyResult(isOk: false, message: '熟悉度算法不能为空！');
+      (abV) async {
+        // TODO: 增加功能：解析类型-模拟类型/实际类型。
+        final result = await AlgorithmParser().parse(content: familiarityAlgorithm(), isDebug: true);
+        if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
     nextTimeAlgorithm.initVerify(
-      (abV) {
-        if (abV().trim() == '') return VerifyResult(isOk: false, message: '下次展示时间点算法不能为空！');
+      (abV) async {
+        // TODO: 增加功能：解析类型-模拟类型/实际类型。
+        final result = await AlgorithmParser().parse(content: nextTimeAlgorithm(), isDebug: true);
+        if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
     buttonData.initVerify(
       (abV) async {
-        return (await vMemoryModelButtonDataVerifyKey(verifyValue: abV())).t1;
+        // TODO: 增加功能：解析类型-模拟类型/实际类型。
+        final result = await AlgorithmParser().parse(content: buttonData(), isDebug: true);
+        if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
+        return null;
       },
     );
   }
@@ -95,7 +103,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     await Future.delayed(const Duration(milliseconds: 200));
-    final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: memoryModelGizmo?.call().id);
+    final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: memoryModelGizmo()?.id);
 
     _title = mm?.title ?? '';
     _familiarityAlgorithm = mm?.familiarityAlgorithm ?? '';
@@ -189,11 +197,11 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         },
         [MemoryModelGizmoEditPageType.modify]: () async {
           if (await commitVerify) {
-            await memoryModelGizmo!.refreshComplex(
+            await memoryModelGizmo.refreshComplex(
               (obj) async {
                 await DriftDb.instance.updateDAO.resetMemoryModel(
                   oldMemoryModelReset: (SyncTag resetSyncTag) async {
-                    await obj.reset(
+                    await obj!.reset(
                       id: absent(),
                       createdAt: absent(),
                       updatedAt: absent(),

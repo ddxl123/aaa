@@ -1049,7 +1049,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   MemoryGroupStatus status;
 
   /// 新学数量
-  int newLearnCount;
+  int willNewLearnCount;
 
   /// 取用 [reviewInterval] 时间点内的复习碎片。
   DateTime reviewInterval;
@@ -1070,7 +1070,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       required this.title,
       required this.type,
       required this.status,
-      required this.newLearnCount,
+      required this.willNewLearnCount,
       required this.reviewInterval,
       required this.filterOut,
       required this.newReviewDisplayOrder,
@@ -1093,7 +1093,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       final converter = $MemoryGroupsTable.$converter1;
       map['status'] = Variable<int>(converter.toSql(status));
     }
-    map['new_learn_count'] = Variable<int>(newLearnCount);
+    map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
     map['review_interval'] = Variable<DateTime>(reviewInterval);
     map['filter_out'] = Variable<String>(filterOut);
     {
@@ -1120,7 +1120,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title: Value(title),
       type: Value(type),
       status: Value(status),
-      newLearnCount: Value(newLearnCount),
+      willNewLearnCount: Value(willNewLearnCount),
       reviewInterval: Value(reviewInterval),
       filterOut: Value(filterOut),
       newReviewDisplayOrder: Value(newReviewDisplayOrder),
@@ -1139,7 +1139,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<MemoryGroupType>(json['type']),
       status: serializer.fromJson<MemoryGroupStatus>(json['status']),
-      newLearnCount: serializer.fromJson<int>(json['newLearnCount']),
+      willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
       reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
       filterOut: serializer.fromJson<String>(json['filterOut']),
       newReviewDisplayOrder: serializer
@@ -1159,7 +1159,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<MemoryGroupType>(type),
       'status': serializer.toJson<MemoryGroupStatus>(status),
-      'newLearnCount': serializer.toJson<int>(newLearnCount),
+      'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
       'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
       'filterOut': serializer.toJson<String>(filterOut),
       'newReviewDisplayOrder':
@@ -1176,7 +1176,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           String? title,
           MemoryGroupType? type,
           MemoryGroupStatus? status,
-          int? newLearnCount,
+          int? willNewLearnCount,
           DateTime? reviewInterval,
           String? filterOut,
           NewReviewDisplayOrder? newReviewDisplayOrder,
@@ -1190,7 +1190,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
         title: title ?? this.title,
         type: type ?? this.type,
         status: status ?? this.status,
-        newLearnCount: newLearnCount ?? this.newLearnCount,
+        willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
         reviewInterval: reviewInterval ?? this.reviewInterval,
         filterOut: filterOut ?? this.filterOut,
         newReviewDisplayOrder:
@@ -1207,7 +1207,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('title: $title, ')
           ..write('type: $type, ')
           ..write('status: $status, ')
-          ..write('newLearnCount: $newLearnCount, ')
+          ..write('willNewLearnCount: $willNewLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
           ..write('filterOut: $filterOut, ')
           ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
@@ -1225,7 +1225,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title,
       type,
       status,
-      newLearnCount,
+      willNewLearnCount,
       reviewInterval,
       filterOut,
       newReviewDisplayOrder,
@@ -1241,7 +1241,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.title == this.title &&
           other.type == this.type &&
           other.status == this.status &&
-          other.newLearnCount == this.newLearnCount &&
+          other.willNewLearnCount == this.willNewLearnCount &&
           other.reviewInterval == this.reviewInterval &&
           other.filterOut == this.filterOut &&
           other.newReviewDisplayOrder == this.newReviewDisplayOrder &&
@@ -1256,7 +1256,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String> title;
   Value<MemoryGroupType> type;
   Value<MemoryGroupStatus> status;
-  Value<int> newLearnCount;
+  Value<int> willNewLearnCount;
   Value<DateTime> reviewInterval;
   Value<String> filterOut;
   Value<NewReviewDisplayOrder> newReviewDisplayOrder;
@@ -1269,7 +1269,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.title = const Value.absent(),
     this.type = const Value.absent(),
     this.status = const Value.absent(),
-    this.newLearnCount = const Value.absent(),
+    this.willNewLearnCount = const Value.absent(),
     this.reviewInterval = const Value.absent(),
     this.filterOut = const Value.absent(),
     this.newReviewDisplayOrder = const Value.absent(),
@@ -1283,7 +1283,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required String title,
     required MemoryGroupType type,
     required MemoryGroupStatus status,
-    required int newLearnCount,
+    required int willNewLearnCount,
     required DateTime reviewInterval,
     required String filterOut,
     required NewReviewDisplayOrder newReviewDisplayOrder,
@@ -1292,7 +1292,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
         title = Value(title),
         type = Value(type),
         status = Value(status),
-        newLearnCount = Value(newLearnCount),
+        willNewLearnCount = Value(willNewLearnCount),
         reviewInterval = Value(reviewInterval),
         filterOut = Value(filterOut),
         newReviewDisplayOrder = Value(newReviewDisplayOrder),
@@ -1305,7 +1305,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<String>? title,
     Expression<int>? type,
     Expression<int>? status,
-    Expression<int>? newLearnCount,
+    Expression<int>? willNewLearnCount,
     Expression<DateTime>? reviewInterval,
     Expression<String>? filterOut,
     Expression<int>? newReviewDisplayOrder,
@@ -1319,7 +1319,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       if (title != null) 'title': title,
       if (type != null) 'type': type,
       if (status != null) 'status': status,
-      if (newLearnCount != null) 'new_learn_count': newLearnCount,
+      if (willNewLearnCount != null) 'will_new_learn_count': willNewLearnCount,
       if (reviewInterval != null) 'review_interval': reviewInterval,
       if (filterOut != null) 'filter_out': filterOut,
       if (newReviewDisplayOrder != null)
@@ -1336,7 +1336,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<String>? title,
       Value<MemoryGroupType>? type,
       Value<MemoryGroupStatus>? status,
-      Value<int>? newLearnCount,
+      Value<int>? willNewLearnCount,
       Value<DateTime>? reviewInterval,
       Value<String>? filterOut,
       Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
@@ -1349,7 +1349,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       title: title ?? this.title,
       type: type ?? this.type,
       status: status ?? this.status,
-      newLearnCount: newLearnCount ?? this.newLearnCount,
+      willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
       reviewInterval: reviewInterval ?? this.reviewInterval,
       filterOut: filterOut ?? this.filterOut,
       newReviewDisplayOrder:
@@ -1384,8 +1384,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       final converter = $MemoryGroupsTable.$converter1;
       map['status'] = Variable<int>(converter.toSql(status.value));
     }
-    if (newLearnCount.present) {
-      map['new_learn_count'] = Variable<int>(newLearnCount.value);
+    if (willNewLearnCount.present) {
+      map['will_new_learn_count'] = Variable<int>(willNewLearnCount.value);
     }
     if (reviewInterval.present) {
       map['review_interval'] = Variable<DateTime>(reviewInterval.value);
@@ -1416,7 +1416,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('title: $title, ')
           ..write('type: $type, ')
           ..write('status: $status, ')
-          ..write('newLearnCount: $newLearnCount, ')
+          ..write('willNewLearnCount: $willNewLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
           ..write('filterOut: $filterOut, ')
           ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
@@ -1474,11 +1474,11 @@ class $MemoryGroupsTable extends MemoryGroups
       GeneratedColumn<int>('status', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<MemoryGroupStatus>($MemoryGroupsTable.$converter1);
-  final VerificationMeta _newLearnCountMeta =
-      const VerificationMeta('newLearnCount');
+  final VerificationMeta _willNewLearnCountMeta =
+      const VerificationMeta('willNewLearnCount');
   @override
   late final GeneratedColumn<int> willNewLearnCount = GeneratedColumn<int>(
-      'new_learn_count', aliasedName, false,
+      'will_new_learn_count', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _reviewIntervalMeta =
       const VerificationMeta('reviewInterval');
@@ -1558,13 +1558,13 @@ class $MemoryGroupsTable extends MemoryGroups
     }
     context.handle(_typeMeta, const VerificationResult.success());
     context.handle(_statusMeta, const VerificationResult.success());
-    if (data.containsKey('new_learn_count')) {
+    if (data.containsKey('will_new_learn_count')) {
       context.handle(
-          _newLearnCountMeta,
+          _willNewLearnCountMeta,
           willNewLearnCount.isAcceptableOrUnknown(
-              data['new_learn_count']!, _newLearnCountMeta));
+              data['will_new_learn_count']!, _willNewLearnCountMeta));
     } else if (isInserting) {
-      context.missing(_newLearnCountMeta);
+      context.missing(_willNewLearnCountMeta);
     }
     if (data.containsKey('review_interval')) {
       context.handle(
@@ -1608,8 +1608,8 @@ class $MemoryGroupsTable extends MemoryGroups
       status: $MemoryGroupsTable.$converter1.fromSql(attachedDatabase
           .options.types
           .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
-      newLearnCount: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}new_learn_count'])!,
+      willNewLearnCount: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
       reviewInterval: attachedDatabase.options.types.read(
           DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
       filterOut: attachedDatabase.options.types

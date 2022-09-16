@@ -49,9 +49,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// [MemoryGroups.reviewInterval]
   /// TODO: 进行 [AbVerify]
-  final reviewInterval = DateTime
-      .now()
-      .ab;
+  final reviewInterval = DateTime.now().ab;
   DateTime _reviewInterval = DateTime.now();
   final reviewIntervalTextEditingController = TextEditingController();
 
@@ -89,14 +87,14 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   @override
   void initComplexVerifies() {
     title.initVerify(
-          (abV) {
+      (abV) {
         if (abV().trim() == '') return VerifyResult(isOk: false, message: '标题不能为空！');
         return null;
       },
     );
 
     selectedMemoryModel.initVerify(
-          (abV) async {
+      (abV) async {
         if (abV() == null) return VerifyResult(isOk: false, message: '记忆模型不能为空！');
 
         final result = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
@@ -108,39 +106,34 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     );
 
     reviewInterval.initVerify(
-          (abV) async {
+      (abV) async {
         if (abV().millisecondsSinceEpoch < 0) return VerifyResult(isOk: false, message: '复习区间存在不规范字符！');
-        if (abV().isBefore(DateTime.now().add(const Duration(minutes: 10))))
-          return VerifyResult(isOk: false, message: '复习区间太短啦，至少10分钟以上哦~');
+        if (abV().isBefore(DateTime.now().add(const Duration(minutes: 10)))) return VerifyResult(isOk: false, message: '复习区间太短啦，至少10分钟以上哦~');
         return null;
       },
     );
   }
 
-  Future<bool> get basicConfigRedErrVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get basicConfigRedErrVerify async => await AbVerify.checkMany(
         [
           title.verify,
           selectedMemoryModel.verify,
         ],
       );
 
-  Future<bool> get currentCycleConfigRedErrVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get currentCycleConfigRedErrVerify async => await AbVerify.checkMany(
         [
           reviewInterval.verify,
         ],
       );
 
-  Future<bool> get saveVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get saveVerify async => await AbVerify.checkMany(
         [
           title.verify,
         ],
       );
 
-  Future<bool> get analyzeVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get analyzeVerify async => await AbVerify.checkMany(
         [
           title.verify,
           selectedMemoryModel.verify,
@@ -165,7 +158,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     _type = mgg.type;
     _status = mgg.status;
 
-    _willNewLearnCount = mgg.newLearnCount;
+    _willNewLearnCount = mgg.willNewLearnCount;
     _reviewInterval = mgg.reviewInterval;
     _filterOut = mgg.filterOut;
     _newReviewDisplayOrder = mgg.newReviewDisplayOrder;
@@ -175,8 +168,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     selectedMemoryModel.refreshEasy((obj) => _selectedMemoryModel);
     type.refreshEasy((oldValue) => _type);
     status.refreshEasy((oldValue) => _status);
-    selectedFragments.refreshInevitable((obj) =>
-    obj
+    selectedFragments.refreshInevitable((obj) => obj
       ..clear_(this)
       ..addAll(fs.map((e) => e.ab)));
 
@@ -186,21 +178,18 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     newReviewDisplayOrder.refreshEasy((oldValue) => _newReviewDisplayOrder);
     newDisplayOrder.refreshEasy((oldValue) => _newDisplayOrder);
 
-    await DriftDb.instance.queryDAO.queryFragmentsInMemoryGroupForNotLearnCount(memoryGroupId)
-    notLearnCount.refreshEasy((oldValue) => 345);
+    final count = await DriftDb.instance.queryDAO.queryFragmentsInMemoryGroupForNotLearnCount(mgg.id);
+    notLearnCount.refreshEasy((oldValue) => count);
 
     titleTextEditingController.text = _title;
-    reviewIntervalTextEditingController.text = _reviewInterval
-        .difference(DateTime.now())
-        .inMinutes
-        .toString();
+    reviewIntervalTextEditingController.text = _reviewInterval.difference(DateTime.now()).inMinutes.toString();
   }
 
   void save() {
     _save().then(
-          (value) {
+      (value) {
         isBasicConfigRedErr.refreshEasy(
-              (oldValue) async {
+          (oldValue) async {
             await title.verify.check();
             return !title.verify.isOk;
           },
@@ -219,7 +208,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   Future<Tuple2<bool, String>> _save() async {
     if (await saveVerify) {
       await memoryGroupGizmo!.refreshComplex(
-            (obj) async {
+        (obj) async {
           await DriftDb.instance.updateDAO.resetMemoryGroup(
             oldMemoryGroupReset: (resetSyncTag) async {
               await obj.reset(
@@ -230,7 +219,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                 title: titleTextEditingController.text.value(),
                 type: type().value(),
                 status: MemoryGroupStatus.notStart.value(),
-                newLearnCount: willNewLearnCount().value(),
+                willNewLearnCount: willNewLearnCount().value(),
                 reviewInterval: reviewInterval().value(),
                 filterOut: filterOut().value(),
                 newReviewDisplayOrder: newReviewDisplayOrder().value(),
@@ -251,7 +240,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   void analyze() {
     _analyze().then(
-          (value) {
+      (value) {
         isBasicConfigRedErr.refreshEasy((oldValue) async => !await basicConfigRedErrVerify);
         isCurrentCycleRedErr.refreshEasy((oldValue) async => !await currentCycleConfigRedErrVerify);
         SmartDialog.showToast(value.t2);
@@ -272,7 +261,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   void applyAndStart() {
     _applyAndStart().then(
-          (value) {
+      (value) {
         isBasicConfigRedErr.refreshEasy((oldValue) async => !await basicConfigRedErrVerify);
         isCurrentCycleRedErr.refreshEasy((oldValue) async => !await currentCycleConfigRedErrVerify);
         if (value.t1) {

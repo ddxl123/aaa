@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class MemoryModelGizmoPage extends StatefulWidget {
   const MemoryModelGizmoPage({Key? key, required this.memoryModelGizmo}) : super(key: key);
-  final Ab<MemoryModel>? memoryModelGizmo;
+  final Ab<MemoryModel?> memoryModelGizmo;
 
   @override
   State<MemoryModelGizmoPage> createState() => _MemoryModelGizmoPageState();
