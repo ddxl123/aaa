@@ -22,9 +22,9 @@ class IfExprParse {
     _throwAssert(isThrow: _isParsed, message: '每个 IfExprParse 实例只能使用一次 parse！');
     _isParsed = true;
 
-    _allOperatorRegExp = RegExp(AlgorithmConst.allOperatorRegExp.map((e) => '($e)').join('|'));
-    _relationalOperatorRegExp = RegExp(AlgorithmConst.relationalOperatorRegExp.map((e) => '($e)').join('|'));
-    _logicalOperatorRegExp = RegExp(AlgorithmConst.logicalOperatorRegExp.map((e) => '($e)').join('|'));
+    _allOperatorRegExp = RegExp(allOperatorRegExp.map((e) => '($e)').join('|'));
+    _relationalOperatorRegExp = RegExp(oRelationalOperatorRegExp.map((e) => '($e)').join('|'));
+    _logicalOperatorRegExp = RegExp(oLogicalOperatorRegExp.map((e) => '($e)').join('|'));
     _bracketRegExp = RegExp(r'\(|\)');
 
     bool result = _recursion(content) == 'true' ? true : false;

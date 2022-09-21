@@ -20,19 +20,11 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       putController: MemoryGroupGizmoEditPageAbController(editPageType: editPageType, memoryGroupGizmo: memoryGroupGizmo),
       builder: (putController, putAbw) {
-        return AbBuilder<MemoryModelGizmoEditPageAbController>(
-          putController: MemoryModelGizmoEditPageAbController(
-            editPageType: MemoryModelGizmoEditPageType.look.ab,
-            memoryModelGizmo: putController.selectedMemoryModel,
-          ),
-          builder: (modelC, modelAbw) {
-            return Scaffold(
-              appBar: _appBar(),
-              body: _body(),
-              floatingActionButton: _floatingActionButton(),
-              floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -30)),
-            );
-          },
+        return Scaffold(
+          appBar: _appBar(),
+          body: _body(),
+          floatingActionButton: _floatingActionButton(),
+          floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -30)),
         );
       },
     );

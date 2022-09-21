@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
 import 'dart:math';
 
-part 'dao/QueryDAO.dart';
+part 'dao/query/GeneralQueryDAO.dart';
 
 part 'dao/InsertDAO.dart';
 
@@ -73,7 +73,7 @@ LazyDatabase _openConnection() {
   daos: [
     InsertDAO,
     UpdateDAO,
-    QueryDAO,
+    GeneralQueryDAO,
     DeleteDAO,
   ],
 )

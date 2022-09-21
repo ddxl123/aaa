@@ -2,7 +2,6 @@ import 'package:aaa/page/stage/InAppStageAbController.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class InAppStage extends StatefulWidget {
   const InAppStage({Key? key, required this.memoryGroupGizmo}) : super(key: key);
@@ -40,7 +39,7 @@ class _InAppStageState extends State<InAppStage> {
               ],
             ),
           ),
-          bottomSheet: _bottomWidget(),
+          // bottomSheet: _bottomWidget(),
         );
       },
     );

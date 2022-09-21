@@ -34,14 +34,10 @@ class _MemoryHomeState extends State<MemoryHome> with SingleTickerProviderStateM
               KeepStateWidget(
                 builder: (ctx) => const MemoryGroupListPage(),
               ),
+
               const Tab(text: '111'),
             ],
           ),
-          floatingActionButton: FloatingRoundCornerButton(
-            text: '多组记忆',
-            onPressed: () {},
-          ),
-          floatingActionButtonLocation: FloatingRoundCornerButtonLocation(context: context, offset: const Offset(0, -35)),
         );
       },
     );

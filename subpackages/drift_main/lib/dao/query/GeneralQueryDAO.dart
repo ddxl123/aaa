@@ -7,8 +7,8 @@ part of drift_db;
     ...rTableClass,
   ],
 )
-class QueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
-  QueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
+class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
+  GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
   Future<User> queryUser() async {
     return await select(users).getSingle();

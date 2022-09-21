@@ -111,7 +111,7 @@ class MemoryModels extends CloudTableBase {
   TextColumn get nextTimeAlgorithm => text()();
 
   /// <在刚展示时>，按钮算法
-  TextColumn get buttonData => text()();
+  TextColumn get buttonAlgorithm => text()();
 
   /// 激发算法
   ///

@@ -1,4 +1,4 @@
-import 'package:aaa/other/verify_parse.dart';
+import 'package:aaa/algorithm_parser/AlgorithmParser.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:tools/tools.dart';
@@ -96,12 +96,17 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     selectedMemoryModel.initVerify(
       (abV) async {
         if (abV() == null) return VerifyResult(isOk: false, message: '记忆模型不能为空！');
+        final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
+        if (mm == null) return VerifyResult(isOk: false, message: '未查询到对应的记忆模型！');
 
-        final result = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
-        if (result == null) return VerifyResult(isOk: false, message: '未查询到所选记忆模型的数据实体！');
+        final fa = await AlgorithmParser().parse(content: mm.familiarityAlgorithm);
+        final ff = await AlgorithmParser().parse(content: mm.nextTimeAlgorithm);
+        final bd = await AlgorithmParser().parse(content: mm.buttonData);
+        if (fa.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        if (ff.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        if (bd.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
 
-        final vResult = await vMemoryModelButtonDataVerifyKey(verifyValue: result.buttonData);
-        return vResult.t1.isOk ? vResult.t1 : VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        return null;
       },
     );
 

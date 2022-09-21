@@ -1,4 +1,3 @@
-import 'package:aaa/other/verify_parse.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +11,6 @@ class InAppStageAbController extends AbController {
 
   /// 为 null 时表示已完成学习。
   final currentFragmentAndMemoryInfo = Ab<Tuple2<Fragment, FragmentMemoryInfo?>?>(null);
-
-  /// TODO: 为 null 时，异常日志数据。
-  final vMemoryModelButtonDataVerifyResult = Ab<VMemoryModelButtonDataVerifyResult?>(null);
 
   @override
   bool get isEnableLoading => true;
@@ -43,8 +39,5 @@ class InAppStageAbController extends AbController {
     await parseButtonData();
   }
 
-  Future<void> parseButtonData() async {
-    final result = await vMemoryModelButtonDataVerifyKey(verifyValue: memoryModelGizmo().buttonData);
-    vMemoryModelButtonDataVerifyResult.refreshEasy((oldValue) => result.t2);
-  }
+  Future<void> parseButtonData() async {}
 }

@@ -94,7 +94,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         return TextButton(
           child: const Text('分析'),
           onPressed: () {
-            c.analyze();
+            c.analyzeWithHandle();
           },
         );
       },

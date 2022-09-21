@@ -2043,7 +2043,7 @@ class $MemoryModelsTable extends MemoryModels
           type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _buttonDataMeta = const VerificationMeta('buttonData');
   @override
-  late final GeneratedColumn<String> buttonData = GeneratedColumn<String>(
+  late final GeneratedColumn<String> buttonAlgorithm = GeneratedColumn<String>(
       'button_data', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _stimulateAlgorithmMeta =
@@ -2072,7 +2072,7 @@ class $MemoryModelsTable extends MemoryModels
         title,
         familiarityAlgorithm,
         nextTimeAlgorithm,
-        buttonData,
+        buttonAlgorithm,
         stimulateAlgorithm,
         applicableGroups,
         applicableFields
@@ -2124,7 +2124,7 @@ class $MemoryModelsTable extends MemoryModels
     if (data.containsKey('button_data')) {
       context.handle(
           _buttonDataMeta,
-          buttonData.isAcceptableOrUnknown(
+          buttonAlgorithm.isAcceptableOrUnknown(
               data['button_data']!, _buttonDataMeta));
     } else if (isInserting) {
       context.missing(_buttonDataMeta);
@@ -4349,7 +4349,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $SyncsTable syncs = $SyncsTable(this);
   late final InsertDAO insertDAO = InsertDAO(this as DriftDb);
   late final UpdateDAO updateDAO = UpdateDAO(this as DriftDb);
-  late final QueryDAO queryDAO = QueryDAO(this as DriftDb);
+  late final GeneralQueryDAO queryDAO = GeneralQueryDAO(this as DriftDb);
   late final DeleteDAO deleteDAO = DeleteDAO(this as DriftDb);
   @override
   Iterable<TableInfo<Table, dynamic>> get allTables =>

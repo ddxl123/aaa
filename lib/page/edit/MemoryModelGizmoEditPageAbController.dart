@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aaa/algorithm_parser/AlgorithmParser.dart';
-import 'package:aaa/other/verify_parse.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -33,7 +32,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   String _nextTimeAlgorithm = '';
   final nextTimeAlgorithmEditingController = TextEditingController();
 
-  /// [MemoryModels.buttonData]
+  /// [MemoryModels.buttonAlgorithm]
   final buttonData = ''.ab;
   String _buttonData = '';
   final buttonDataEditingController = TextEditingController();
@@ -51,7 +50,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     familiarityAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(content: familiarityAlgorithm(), isDebug: true);
+        final result = await AlgorithmParser().parse(content: familiarityAlgorithm());
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -59,7 +58,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     nextTimeAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(content: nextTimeAlgorithm(), isDebug: true);
+        final result = await AlgorithmParser().parse(content: nextTimeAlgorithm());
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -67,7 +66,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     buttonData.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(content: buttonData(), isDebug: true);
+        final result = await AlgorithmParser().parse(content: buttonData());
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -130,7 +129,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     );
   }
 
-  Future<void> analyze() async {
+  Future<bool> onlyAnalyze() async => await analyzeVerify;
+
+  Future<void> analyzeWithHandle() async {
     if (await analyzeVerify) {
       SmartDialog.showToast('分析成功！');
     } else {
