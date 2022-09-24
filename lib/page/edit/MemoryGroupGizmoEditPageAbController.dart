@@ -1,4 +1,4 @@
-import 'package:aaa/algorithm_parser/AlgorithmParser.dart';
+import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:tools/tools.dart';
@@ -99,12 +99,13 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
         if (mm == null) return VerifyResult(isOk: false, message: '未查询到对应的记忆模型！');
 
-        final fa = await AlgorithmParser().parse(content: mm.familiarityAlgorithm);
-        final ff = await AlgorithmParser().parse(content: mm.nextTimeAlgorithm);
-        final bd = await AlgorithmParser().parse(content: mm.buttonData);
-        if (fa.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-        if (ff.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-        if (bd.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        // TODO: 模拟校验
+        // final fa = await AlgorithmParser().parse(content: mm.familiarityAlgorithm);
+        // final ff = await AlgorithmParser().parse(content: mm.nextTimeAlgorithm);
+        // final bd = await AlgorithmParser().parse(content: mm.buttonData);
+        // if (fa.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        // if (ff.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        // if (bd.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
 
         return null;
       },

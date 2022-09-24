@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aaa/algorithm_parser/AlgorithmParser.dart';
+import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';

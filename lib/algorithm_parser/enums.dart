@@ -10,9 +10,12 @@ enum AlgorithmParseType {
 }
 
 enum WhenAvailable {
-  /// 在刚展示时获取
+  /// 是否全局（同时也是 是否为xxx_n 的标志）。
+  global,
+
+  /// 在刚展示时获取。
   whenShow,
 
-  /// 在点击按钮后获取
+  /// 在点击按钮后获取。
   whenClick,
 }

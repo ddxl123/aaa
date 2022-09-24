@@ -3,8 +3,6 @@ part of algorithm_parser;
 class AlgorithmParser with Explain {
   AlgorithmParser({this.isDebugPrint = true});
 
-  final _internalVariables = <InternalVariable>[];
-
   /// 空赋值：name-obtainResult
   final _emptyMergeVariables = <String, double>{};
 
@@ -50,23 +48,18 @@ class AlgorithmParser with Explain {
     return result;
   }
 
-  // Future<void> _setInternalVariables({
-  //   required ResultFetch? startTimeFetch,
-  // }) async {
-  //   List<InternalVariable> list = [];
-  //   if (startTimeFetch != null) {
-  //     list.add(
-  //       InternalVariable(
-  //         name: '\$start_time',
-  //         explain: '记忆组启动的时间点。',
-  //         numericTypeExplain: '以秒(s)为单位的时间戳。',
-  //         resultFetch: startTimeFetch,
-  //         whenGet: WhenAvailable.whenShow,
-  //         isOnce: true,
-  //       ),
-  //     );
-  //   }
-  // }
+  /// TODO:
+  Future<void> parseAnalyze({
+    required String content,
+  }) async {
+    await parse(
+      content: content,
+      internalVariablesResultHandler:
+          (InternalVariable internalVariable) async {
+        if (internalVariable == InternalVariable.ivgStartTime) {}
+      },
+    );
+  }
 
   /// 对 [content] 算法进行解析。
   ///
@@ -80,12 +73,17 @@ class AlgorithmParser with Explain {
     required InternalVariablesResultHandler internalVariablesResultHandler,
   }) async {
     try {
-      throwAssert(isThrow: _isParsed, message: '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。');
+      throwAssert(
+          isThrow: _isParsed,
+          message:
+              '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。');
       _isParsed = true;
-      throwAssert(isThrow: _internalVariables.isEmpty, message: '请先初始化内置变量！');
+      throwAssert(isThrow: InternalVariable.all.isEmpty, message: '请先初始化内置变量！');
       final conciseContent = _clearAnnotated(content);
       final finallyConciseContent = _emptyMergeDetection(conciseContent);
-      await _internalVariablesBindAndObtain(content: finallyConciseContent, internalVariablesResultHandler: internalVariablesResultHandler);
+      await _internalVariablesBindAndObtain(
+          content: finallyConciseContent,
+          internalVariablesResultHandler: internalVariablesResultHandler);
 
       // 分离变量定义与 if-use-else 语句。
       final ifIndex = finallyConciseContent.indexOf('if:');
@@ -94,7 +92,8 @@ class AlgorithmParser with Explain {
       final definitionPart = finallyConciseContent.substring(0, ifIndex);
       // if-use 语句部分。
       final ifUsePart = finallyConciseContent.substring(ifIndex);
-      debugPrint('自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUsePart');
+      debugPrint(
+          '自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUsePart');
 
       _definitionVariablesBindAndObtain(definitionPart);
       parseResult = _ifUseParse(ifUsePart);
@@ -123,7 +122,9 @@ class AlgorithmParser with Explain {
       final bracketInternal = content.substring(v.start + 1, v.end - 1);
       debugPrint('检测出空合并：$bracketInternal');
       final emptyMergeSplit = bracketInternal.split('??');
-      throwAssert(isThrow: emptyMergeSplit.length != 2, message: '不规范使用空合并运算符：${v.group(0)}');
+      throwAssert(
+          isThrow: emptyMergeSplit.length != 2,
+          message: '不规范使用空合并运算符：${v.group(0)}');
 
       // abc
       final name = emptyMergeSplit.first.trim();
@@ -139,7 +140,8 @@ class AlgorithmParser with Explain {
     }
     debugPrint('空合并已全部评估完成！');
     // 清除空赋值表达式。
-    final clearResult = content.replaceAll(RegExp(r'\?\?(([0-9]+\.[0-9]+)|([0-9]+))'), '');
+    final clearResult =
+        content.replaceAll(RegExp(r'\?\?(([0-9]+\.[0-9]+)|([0-9]+))'), '');
     debugPrint('评估空合并运算符成功，评估结果：\n$clearResult');
     return clearResult;
   }
@@ -150,18 +152,26 @@ class AlgorithmParser with Explain {
     required InternalVariablesResultHandler internalVariablesResultHandler,
   }) async {
     debugPrint('正在评估内置变量...');
-    throwAssert(isThrow: _internalVariables.isEmpty, message: '内置变量为 empty！');
-    final regExp = RegExp(_internalVariables.map((e) => "((${e.name})(_[0-9])?)").join('|'));
+    throwAssert(isThrow: InternalVariable.all.isEmpty, message: '内置变量为 empty！');
+    final Map<String, InternalVariable> mapIV = {};
+    final regExp = RegExp(InternalVariable.all.map(
+      (e) {
+        mapIV.addAll({e.name: e});
+        return "((${e.name})(_[0-9])?)";
+      },
+    ).join('|'));
     // 识别出需要的内置变量，若没有识别出，则直接过。
     for (var match in regExp.allMatches(content)) {
       final name = match.group(0)!;
-      final result = await internalVariablesResultHandler(name);
+      final result = await internalVariablesResultHandler(mapIV[name]!);
       debugPrint('已扫描到的内置变量及获取到的值：$name = $result');
       if (result != null) {
         cm.bindVariableName(name, Number(result));
         debugPrint('绑定 ContextModel 成功：$name = $result');
       } else {
-        throwAssert(isThrow: !_emptyMergeVariables.containsKey(name), message: '$name 内置变量存在为空的情况，请使用"??"进行空赋值！');
+        throwAssert(
+            isThrow: !_emptyMergeVariables.containsKey(name),
+            message: '$name 内置变量存在为空的情况，请使用"??"进行空赋值！');
         cm.bindVariableName(name, Number(_emptyMergeVariables[name]!));
         debugPrint('绑定 ContextModel 成功：$name = ${_emptyMergeVariables[name]!}');
       }
@@ -190,9 +200,13 @@ class AlgorithmParser with Explain {
         result = calculate(valueExp);
         cm.bindVariableName(name, Number(result));
       } on FormatException catch (e) {
-        throwAssert(isThrow: true, message: '计算异常：\n自定义变量：$name\n计算内容：$valueExp\n计算结果异常：${e.message}');
+        throwAssert(
+            isThrow: true,
+            message: '计算异常：\n自定义变量：$name\n计算内容：$valueExp\n计算结果异常：${e.message}');
       } on ArgumentError catch (e) {
-        throwAssert(isThrow: true, message: '计算异常：\n自定义变量：$name\n计算内容：$valueExp\n计算结果异常：${e.message}');
+        throwAssert(
+            isThrow: true,
+            message: '计算异常：\n自定义变量：$name\n计算内容：$valueExp\n计算结果异常：${e.message}');
       }
       debugPrint('绑定 ContextModel 成功：$name = $valueExp');
     }
@@ -203,7 +217,10 @@ class AlgorithmParser with Explain {
   double _ifUseParse(String content) {
     debugPrint('正在评估 if-use-else 语句...');
     final elseMatches = RegExp('else:').allMatches(content);
-    throwAssert(isThrow: elseMatches.isEmpty, message: '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）');
+    throwAssert(
+        isThrow: elseMatches.isEmpty,
+        message:
+            '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）');
     final elseMatch = elseMatches.first;
     final elseContent = content.substring(elseMatch.end, content.length).trim();
     debugPrint('else 内容：\n$elseContent');
@@ -232,7 +249,10 @@ class AlgorithmParser with Explain {
         return result;
       }
     }
-    throwAssert(isThrow: elseContent.contains('throw'), message: elseContent.substring(elseContent.indexOf('throw') + 5, elseContent.length));
+    throwAssert(
+        isThrow: elseContent.contains('throw'),
+        message: elseContent.substring(
+            elseContent.indexOf('throw') + 5, elseContent.length));
     debugPrint('所有 if 语句都不匹配，已执行 else 语句：$elseContent');
     return calculate(elseContent);
   }

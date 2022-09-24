@@ -1,3 +1,3 @@
 part of algorithm_parser;
 
-typedef InternalVariablesResultHandler = Future<double?> Function(String name);
+typedef InternalVariablesResultHandler = Future<double?> Function(InternalVariable internalVariable);

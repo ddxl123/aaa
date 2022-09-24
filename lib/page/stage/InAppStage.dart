@@ -45,27 +45,27 @@ class _InAppStageState extends State<InAppStage> {
     );
   }
 
-  Widget _bottomWidget() {
-    return AbBuilder<InAppStageAbController>(
-      builder: (c, abw) {
-        return Row(
-          children: c.vMemoryModelButtonDataVerifyResult(abw)?.center.map(
-                (e) {
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: ElevatedButton(
-                        style: ButtonStyle(elevation: MaterialStateProperty.all(3)),
-                        child: Text(e.toString()),
-                        onPressed: () {},
-                      ),
-                    ),
-                  );
-                },
-              ).toList() ??
-              [const Expanded(child: Text('按钮数据获取异常！'))],
-        );
-      },
-    );
-  }
-}
+//   Widget _bottomWidget() {
+//     return AbBuilder<InAppStageAbController>(
+//       builder: (c, abw) {
+//         return Row(
+//           children: c.vMemoryModelButtonDataVerifyResult(abw)?.center.map(
+//                 (e) {
+//                   return Expanded(
+//                     child: Padding(
+//                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+//                       child: ElevatedButton(
+//                         style: ButtonStyle(elevation: MaterialStateProperty.all(3)),
+//                         child: Text(e.toString()),
+//                         onPressed: () {},
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               ).toList() ??
+//               [const Expanded(child: Text('按钮数据获取异常！'))],
+//         );
+//       },
+//     );
+//   }
+// }
