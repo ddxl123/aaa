@@ -27,9 +27,7 @@ class _InAppStageState extends State<InAppStage> {
                 Navigator.pop(context);
               },
             ),
-            actions: [
-              IconButton(onPressed: (){}, icon:const Icon(Icons.more_horiz))
-            ],
+            actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz))],
           ),
           body: Center(
             child: Column(
@@ -68,4 +66,4 @@ class _InAppStageState extends State<InAppStage> {
 //       },
 //     );
 //   }
-// }
+}

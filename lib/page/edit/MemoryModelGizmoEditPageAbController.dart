@@ -37,6 +37,8 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   String _buttonData = '';
   final buttonDataEditingController = TextEditingController();
 
+  final allCheck = Ab(null);
+
   @override
   void initComplexVerifies() {
     title.initVerify(
@@ -50,7 +52,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     familiarityAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(content: familiarityAlgorithm());
+        final result = await AlgorithmParser().parseEasy(content: familiarityAlgorithm());
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -58,7 +60,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     nextTimeAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(content: nextTimeAlgorithm());
+        final result = await AlgorithmParser().parseEasy(content: nextTimeAlgorithm());
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -66,9 +68,14 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     buttonData.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(content: buttonData());
+        final result = await AlgorithmParser().parseEasy(content: buttonData());
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
+      },
+    );
+    allCheck.initVerify(
+      (abV) async {
+
       },
     );
   }

@@ -33,13 +33,13 @@ dependencies:
     sdk: flutter
 
   # 本地数据库
-  drift: ^2.0.2+1
+  drift: ^2.1.0
   # drift 需要
-  sqlite3_flutter_libs: ^0.5.9
+  sqlite3_flutter_libs: ^0.5.10
   # drift 需要
   path_provider: ^2.0.11
   # drift 需要
-  path: ^1.8.1
+  path: ^1.8.2
   # drift 需要，在应用内可视化数据库数据
   drift_db_viewer: ^2.0.0
   # 底部导航栏 - 关注 persistent_bottom_nav_bar/salomon_bottom_bar
@@ -48,15 +48,15 @@ dependencies:
   pull_to_refresh: ^2.0.0
   extended_nested_scroll_view: ^5.1.3
   # 下拉列表 - 其他 flutter_speed_dial
-  dropdown_button2: ^1.7.2
+  dropdown_button2: ^1.8.2
   # 图标库
-  font_awesome_flutter: ^10.1.0
+  font_awesome_flutter: ^10.2.1
   # 数学公式解析
   math_expressions: ^2.3.1
 
 
-  build_runner: ^2.2.0
-  source_gen: ^1.2.2
+  build_runner: ^2.2.1
+  source_gen: ^1.2.5
 
   uuid: ^3.0.6
 
@@ -76,7 +76,7 @@ dev_dependencies:
     sdk: flutter
 
   # 代码规范约束
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   import_path: ^1.1.0
 
 

@@ -11,8 +11,9 @@ Widget dropdownButton2<T>({required T value, required List<Tuple2<String, T>> it
   return DropdownButton2<T>(
     value: value,
     alignment: Alignment.center,
-    customItemsIndexes: inserts,
-    customItemsHeight: 10,
+    customItemsHeights: const [10],
+    // customItemsIndexes: inserts,
+    // customItemsHeight: 10,
     dropdownElevation: 2,
     dropdownDecoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),

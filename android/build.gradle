@@ -1,7 +1,13 @@
 buildscript {
     ext.kotlin_version = '1.6.20'
     repositories {
-        maven { url 'http://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/jcenter'
+        }
     }
 
     dependencies {
@@ -12,7 +18,13 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url 'http://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/jcenter'
+        }
     }
 }
 
