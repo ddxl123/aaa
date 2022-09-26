@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aaa/algorithm_parser/AlgorithmContent.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
@@ -33,9 +34,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   final nextTimeAlgorithmEditingController = TextEditingController();
 
   /// [MemoryModels.buttonAlgorithm]
-  final buttonData = ''.ab;
-  String _buttonData = '';
-  final buttonDataEditingController = TextEditingController();
+  final buttonDataAlgorithm = ''.ab;
+  String _buttonDataAlgorithm = '';
+  final buttonDataAlgorithmEditingController = TextEditingController();
 
   final allCheck = Ab(null);
 
@@ -52,7 +53,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     familiarityAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parseEasy(content: familiarityAlgorithm());
+        final result = await AlgorithmParser().parseEasy(content: FamiliarityAlgorithmContent(content: familiarityAlgorithm()));
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -60,23 +61,21 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     nextTimeAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parseEasy(content: nextTimeAlgorithm());
+        final result = await AlgorithmParser().parseEasy(content: FamiliarityAlgorithmContent(content: nextTimeAlgorithm()));
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
-    buttonData.initVerify(
+    buttonDataAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parseEasy(content: buttonData());
+        final result = await AlgorithmParser().parseEasy(content: FamiliarityAlgorithmContent(content: buttonDataAlgorithm()));
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
     allCheck.initVerify(
-      (abV) async {
-
-      },
+      (abV) async {},
     );
   }
 
@@ -99,7 +98,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
           title.verify,
           familiarityAlgorithm.verify,
           nextTimeAlgorithm.verify,
-          buttonData.verify,
+          buttonDataAlgorithm.verify,
         ],
       );
 
@@ -114,17 +113,17 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     _title = mm?.title ?? '';
     _familiarityAlgorithm = mm?.familiarityAlgorithm ?? '';
     _nextTimeAlgorithm = mm?.nextTimeAlgorithm ?? '';
-    _buttonData = mm?.buttonData ?? '';
+    _buttonDataAlgorithm = mm?.buttonData ?? '';
 
     title.refreshEasy((oldValue) => _title);
     familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
     nextTimeAlgorithm.refreshEasy((oldValue) => _nextTimeAlgorithm);
-    buttonData.refreshEasy((oldValue) => _buttonData);
+    buttonDataAlgorithm.refreshEasy((oldValue) => _buttonDataAlgorithm);
 
     titleEditingController.text = _title;
     familiarityAlgorithmEditingController.text = _familiarityAlgorithm;
     nextTimeAlgorithmEditingController.text = _nextTimeAlgorithm;
-    buttonDataEditingController.text = _buttonData;
+    buttonDataAlgorithmEditingController.text = _buttonDataAlgorithm;
   }
 
   @override
@@ -190,7 +189,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
                 title: title(),
                 familiarityAlgorithm: familiarityAlgorithm(),
                 nextTimeAlgorithm: nextTimeAlgorithm(),
-                buttonData: buttonData(),
+                buttonData: buttonDataAlgorithm(),
                 // TODO
                 applicableGroups: '',
                 applicableFields: '',
@@ -216,7 +215,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
                       title: title().value(),
                       familiarityAlgorithm: familiarityAlgorithm().value(),
                       nextTimeAlgorithm: nextTimeAlgorithm().value(),
-                      buttonData: buttonData().value(),
+                      buttonData: buttonDataAlgorithm().value(),
                       writeSyncTag: await SyncTag.create(),
                       // TODO
                       applicableGroups: ''.value(),
@@ -271,12 +270,12 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     title.refreshEasy((oldValue) => _title);
     familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
     nextTimeAlgorithm.refreshEasy((oldValue) => _nextTimeAlgorithm);
-    buttonData.refreshEasy((oldValue) => _buttonData);
+    buttonDataAlgorithm.refreshEasy((oldValue) => _buttonDataAlgorithm);
 
     titleEditingController.text = _title;
     familiarityAlgorithmEditingController.text = _familiarityAlgorithm;
     nextTimeAlgorithmEditingController.text = _nextTimeAlgorithm;
-    buttonDataEditingController.text = _buttonData;
+    buttonDataAlgorithmEditingController.text = _buttonDataAlgorithm;
   }
 
   void changeTo({required MemoryModelGizmoEditPageType type}) {

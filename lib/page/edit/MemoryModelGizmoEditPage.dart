@@ -226,7 +226,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           child: TextField(
             minLines: 1,
             maxLines: 3,
-            controller: c.buttonDataEditingController,
+            controller: c.buttonDataAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -237,10 +237,10 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '按钮数值分配：'),
             onChanged: (v) {
-              c.buttonData.refreshEasy((oldValue) => v);
+              c.buttonDataAlgorithm.refreshEasy((oldValue) => v);
             },
           ),
-          verifyAb: c.buttonData,
+          verifyAb: c.buttonDataAlgorithm,
         );
       },
     );

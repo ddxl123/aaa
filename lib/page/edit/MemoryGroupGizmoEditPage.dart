@@ -159,6 +159,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.title,
           child: Row(
             children: [
               const Text('名称：', style: TextStyle(fontSize: 16)),
@@ -173,7 +174,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: c.title,
         );
       },
     );
@@ -183,6 +183,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.selectedMemoryModel,
           child: Row(
             children: [
               const Text('记忆模型：', style: TextStyle(fontSize: 16)),
@@ -198,7 +199,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: c.selectedMemoryModel,
         );
       },
     );
@@ -208,6 +208,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: null,
           child: Row(
             children: [
               const Text('展示类型：', style: TextStyle(fontSize: 16)),
@@ -215,7 +216,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 value: c.type(abw),
                 item: [
                   Tuple2(t1: '仅应用内', t2: MemoryGroupType.inApp),
-                  Tuple2(t1: '全部悬浮  ', t2: MemoryGroupType.allFloating),
+                  Tuple2(t1: '全部悬浮', t2: MemoryGroupType.allFloating),
                 ],
                 onChanged: (v) {
                   c.type.refreshEasy((oldValue) => v!);
@@ -223,7 +224,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: null,
         );
       },
     );
@@ -233,6 +233,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: null,
           child: Row(
             children: [
               const Text('已选碎片：', style: TextStyle(fontSize: 16)),
@@ -280,7 +281,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: null,
         );
       },
     );
@@ -290,6 +290,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: null,
           child: Row(
             children: [
               const Text('新学数量：'),
@@ -333,7 +334,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: null,
         );
       },
     );
@@ -343,6 +343,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.reviewInterval,
           child: Row(
             children: [
               const Text('复习区间：  '),
@@ -384,7 +385,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: c.reviewInterval,
         );
       },
     );
@@ -394,6 +394,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: null,
           child: AbStatefulBuilder(
             initExtra: {'tec': TextEditingController(text: c.filterOut())},
             onDispose: (extra, ctx, refresh) {
@@ -427,7 +428,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               );
             },
           ),
-          verifyAb: null,
         );
       },
     );
@@ -437,6 +437,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: null,
           child: Row(
             children: [
               const Text('新 | 复习 碎片展示顺序：'),
@@ -445,7 +446,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 item: [
                   Tuple2(t1: '混合', t2: NewReviewDisplayOrder.mix),
                   Tuple2(t1: '优先新碎片', t2: NewReviewDisplayOrder.newReview),
-                  Tuple2(t1: '优先复习碎片  ', t2: NewReviewDisplayOrder.reviewNew),
+                  Tuple2(t1: '优先复习碎片', t2: NewReviewDisplayOrder.reviewNew),
                 ],
                 onChanged: (v) {
                   c.newReviewDisplayOrder.refreshEasy((oldValue) => v!);
@@ -453,7 +454,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: null,
         );
       },
     );
@@ -463,6 +463,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: null,
           child: Row(
             children: [
               const Text('新碎片 展示顺序：'),
@@ -470,7 +471,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                 value: c.newDisplayOrder(abw),
                 item: [
                   Tuple2(t1: '随机', t2: NewDisplayOrder.random),
-                  Tuple2(t1: '标题首字母A~Z顺序  ', t2: NewDisplayOrder.titleA2Z),
+                  Tuple2(t1: '标题首字母A~Z顺序', t2: NewDisplayOrder.titleA2Z),
                   Tuple2(t1: '创建时间', t2: NewDisplayOrder.createEarly2Late),
                 ],
                 onChanged: (v) {
@@ -479,7 +480,6 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               ),
             ],
           ),
-          verifyAb: null,
         );
       },
     );

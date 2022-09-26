@@ -19,3 +19,9 @@ enum WhenAvailable {
   /// 在点击按钮后获取。
   whenClick,
 }
+
+enum AlgorithmContentType {
+  familiarity,
+  nextTime,
+  buttonData,
+}

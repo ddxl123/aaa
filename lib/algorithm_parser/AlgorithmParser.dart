@@ -49,17 +49,21 @@ class AlgorithmParser with Explain {
   }
 
   /// TODO:
-  Future<void> parseAnalyze({required String content}) async {
+  Future<void> parseAnalyze({
+    required String familiarityAlgorithmContent,
+    required String nextTimeAlgorithmContent,
+    required String buttonDataAlgorithmContent,
+  }) async {
     await parse(
-      content: content,
+      content: buttonDataAlgorithmContent,
       internalVariablesResultHandler: (InternalVariable internalVariable, int? number) async {},
     );
   }
 
   /// 仅验证语法是否正确。
-  Future<AlgorithmParser> parseEasy({required String content}) async {
+  Future<AlgorithmParser> parseEasy<T extends AbstractAlgorithmContent>({required T content}) async {
     return await parse(
-      content: content,
+      content: content.content,
       internalVariablesResultHandler: (InternalVariable internalVariable, int? number) async {
         if (internalVariable == InternalVariable.ivgStartTime) return 0;
         if (internalVariable == InternalVariable.ivgCountAll) return 5000;
@@ -89,7 +93,7 @@ class AlgorithmParser with Explain {
     try {
       throwAssert(isThrow: _isParsed, message: '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。');
       _isParsed = true;
-      throwAssert(isThrow: InternalVariable.all.isEmpty, message: '请先初始化内置变量！');
+      throwAssert(isThrow: InternalVariable.getAll.isEmpty, message: '请先初始化内置变量！');
       final conciseContent = _clearAnnotated(content);
       final finallyConciseContent = _emptyMergeDetection(conciseContent);
       await _internalVariablesBindAndObtain(content: finallyConciseContent, internalVariablesResultHandler: internalVariablesResultHandler);
@@ -156,8 +160,8 @@ class AlgorithmParser with Explain {
     required InternalVariablesResultHandler internalVariablesResultHandler,
   }) async {
     debugPrint('正在评估内置变量...');
-    throwAssert(isThrow: InternalVariable.allName.isEmpty, message: '内置变量为 empty！');
-    final regExp = RegExp(InternalVariable.allName.map((e) => "(($e)(_[0-9])?)").join('|'));
+    throwAssert(isThrow: InternalVariable.getAllNames.isEmpty, message: '内置变量为 empty！');
+    final regExp = RegExp(InternalVariable.getAllNames.map((e) => "(($e)(_[0-9])?)").join('|'));
     // 识别出需要的内置变量，若没有识别出，则直接过。
     for (var match in regExp.allMatches(content)) {
       final variableName = match.group(0)!;
