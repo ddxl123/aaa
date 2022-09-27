@@ -1,6 +1,6 @@
 part of algorithm_parser;
 
-class AlgorithmParser with Explain {
+class AlgorithmParser<CS extends ClassificationState> with Explain {
   AlgorithmParser({this.isDebugPrint = true});
 
   /// 空赋值：name-obtainResult
@@ -19,8 +19,7 @@ class AlgorithmParser with Explain {
   /// 若为空，则 [parseResult] 一定存在值。
   String? throwMessage;
 
-  /// [parse] 成功的结果。
-  late final double parseResult;
+  late final CS state;
 
   void debugPrint(String content) {
     if (isDebugPrint) {
@@ -48,37 +47,6 @@ class AlgorithmParser with Explain {
     return result;
   }
 
-  /// TODO:
-  Future<void> parseAnalyze({
-    required String familiarityAlgorithmContent,
-    required String nextTimeAlgorithmContent,
-    required String buttonDataAlgorithmContent,
-  }) async {
-    await parse(
-      content: buttonDataAlgorithmContent,
-      internalVariablesResultHandler: (InternalVariable internalVariable, int? number) async {},
-    );
-  }
-
-  /// 仅验证语法是否正确。
-  Future<AlgorithmParser> parseEasy<T extends AbstractAlgorithmContent>({required T content}) async {
-    return await parse(
-      content: content.content,
-      internalVariablesResultHandler: (InternalVariable internalVariable, int? number) async {
-        if (internalVariable == InternalVariable.ivgStartTime) return 0;
-        if (internalVariable == InternalVariable.ivgCountAll) return 5000;
-        if (internalVariable == InternalVariable.ivsActualShowTime) return 100;
-        if (internalVariable == InternalVariable.ivsPlanedShowTime) return 150;
-        if (internalVariable == InternalVariable.ivsClickFamiliar) return 50;
-        if (internalVariable == InternalVariable.ivsCountNew) return 2500;
-        if (internalVariable == InternalVariable.ivsTimes) return 5;
-        if (internalVariable == InternalVariable.ivcClickTime) return 120;
-        if (internalVariable == InternalVariable.ivcClickValue) return 20;
-        throwAssert(isThrow: true, message: '未处理变量：${internalVariable.name}');
-      },
-    );
-  }
-
   /// 对 [content] 算法进行解析。
   ///
   /// [algorithmParseType] 表示该算法的类型。
@@ -89,11 +57,13 @@ class AlgorithmParser with Explain {
   Future<AlgorithmParser> parse({
     required String content,
     required InternalVariablesResultHandler internalVariablesResultHandler,
+    required CS state,
   }) async {
     try {
       throwAssert(isThrow: _isParsed, message: '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。');
       _isParsed = true;
       throwAssert(isThrow: InternalVariable.getAll.isEmpty, message: '请先初始化内置变量！');
+      this.state = state;
       final conciseContent = _clearAnnotated(content);
       final finallyConciseContent = _emptyMergeDetection(conciseContent);
       await _internalVariablesBindAndObtain(content: finallyConciseContent, internalVariablesResultHandler: internalVariablesResultHandler);
@@ -103,11 +73,11 @@ class AlgorithmParser with Explain {
       throwAssert(isThrow: ifIndex == -1, message: '缺少 "if:" 语句！');
       // 变量定义部分。
       final definitionPart = finallyConciseContent.substring(0, ifIndex);
-      // if-use 语句部分。
-      final ifUsePart = finallyConciseContent.substring(ifIndex);
-      debugPrint('自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUsePart');
+      // if-use-else 语句部分。
+      final ifUseElsePart = finallyConciseContent.substring(ifIndex);
+      debugPrint('自定义变量的定义部分：\n$definitionPart\nif-use-else 语句部分: \n$ifUseElsePart');
       _definitionVariablesBindAndObtain(definitionPart);
-      parseResult = _ifUseParse(ifUsePart);
+      _ifUseElseParse(content: ifUseElsePart);
     } catch (e, st) {
       print('algorithm_catch $e');
       throwMessage = e.toString();
@@ -218,7 +188,7 @@ class AlgorithmParser with Explain {
   }
 
   /// if-use-else 语句解析。
-  double _ifUseParse(String content) {
+  R _ifUseElseParse({required String content}) {
     debugPrint('正在评估 if-use-else 语句...');
     final elseMatches = RegExp('else:').allMatches(content);
     throwAssert(isThrow: elseMatches.isEmpty, message: '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）');
@@ -245,14 +215,14 @@ class AlgorithmParser with Explain {
       debugPrint('解析出 use 内容：\n$u');
       throwAssert(isThrow: u == '', message: '"use:" 语句内容不能为空！');
       if (_ifParse(i)) {
-        final result = _useParse(u);
+        final result = _useParse(content: u, useParser: useParser);
         debugPrint('所使用的 use 语句：$u\n计算结果：$result');
         return result;
       }
     }
     throwAssert(isThrow: elseContent.contains('throw'), message: elseContent.substring(elseContent.indexOf('throw') + 5, elseContent.length));
     debugPrint('所有 if 语句都不匹配，已执行 else 语句：$elseContent');
-    return calculate(elseContent);
+    return _useParse(content: content, useParser: useParser);
   }
 
   /// 解析 if 语句。
@@ -261,7 +231,7 @@ class AlgorithmParser with Explain {
   }
 
   /// 解析 use 语句。
-  double _useParse(String content) {
-    return calculate(content);
+  R _useParse({required String content, required UP useParser}) {
+    return useParser.parse(content: content, algorithmParser: this);
   }
 }
