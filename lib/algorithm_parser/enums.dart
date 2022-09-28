@@ -1,12 +1,15 @@
 part of algorithm_parser;
 
 /// TODO: 未应用
-enum AlgorithmParseType {
+enum SimulationType {
+  /// 语法校验
+  syntaxCheck,
+
   /// 分析出全部可能性，确保算法可用。
-  analyze,
+  autoSimulation,
 
   /// 按照实际操作进行模拟。（模拟前必须自动分析）
-  simulation,
+  manualSimulation,
 }
 
 enum WhenAvailable {

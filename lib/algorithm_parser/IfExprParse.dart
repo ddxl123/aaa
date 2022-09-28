@@ -4,7 +4,6 @@ class IfExprParse {
   bool _isParsed = false;
   late final AlgorithmParser _algorithmParser;
   late final Function(String content) _debugPrint;
-  late final Function({required bool isThrow, required String message}) _throwAssert;
   late final RegExp _allOperatorRegExp;
   late final RegExp _relationalOperatorRegExp;
   late final RegExp _logicalOperatorRegExp;
@@ -16,10 +15,9 @@ class IfExprParse {
   }) {
     _algorithmParser = algorithmParser;
     _debugPrint = _algorithmParser.debugPrint;
-    _throwAssert = _algorithmParser.throwAssert;
 
     _debugPrint('正在评估 if 语句...');
-    _throwAssert(isThrow: _isParsed, message: '每个 IfExprParse 实例只能使用一次 parse！');
+    if (_isParsed) throw '每个 IfExprParse 实例只能使用一次 parse！';
     _isParsed = true;
 
     _allOperatorRegExp = RegExp(allOperatorRegExp.map((e) => '($e)').join('|'));
@@ -43,7 +41,7 @@ class IfExprParse {
       if (bracket == '(') {
         bracketIndex = bracketMatch.start;
       } else if (bracket == ')') {
-        _throwAssert(isThrow: bracketIndex == null, message: '缺少前括号！');
+        if (bracketIndex == null) throw '缺少前括号！';
         final bracketInternal = content.substring(bracketIndex! + 1, bracketMatch.start).trim();
         _debugPrint('已识别到括号部分：($bracketInternal)');
         late final String afterReplace;
@@ -60,7 +58,7 @@ class IfExprParse {
         }
         return _recursion(afterReplace);
       } else {
-        _throwAssert(isThrow: true, message: '括号匹配异常！');
+        throw '括号匹配异常！';
       }
     }
     // 不存在括号的情况。
@@ -95,7 +93,7 @@ class IfExprParse {
   String _singleCompareParse(String content) {
     final contentTrim = content.trim();
     if (contentTrim == 'true' || contentTrim == 'false') return contentTrim;
-    _throwAssert(isThrow: !contentTrim.contains(_relationalOperatorRegExp), message: '"if:"语句必须是一个比较结果！');
+    if (!contentTrim.contains(_relationalOperatorRegExp)) throw '"if:"语句必须是一个比较结果！';
     final singleCompareMatch = _relationalOperatorRegExp.allMatches(contentTrim).first;
     // TODO: 不能直接使用 true 或 false 来命名。
     // 计算

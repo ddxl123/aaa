@@ -1,7 +1,7 @@
 part of algorithm_parser;
 
 class ButtonDataState extends ClassificationState {
-  ButtonDataState({required super.content});
+  ButtonDataState({required super.content, required super.simulationType});
 
   double? resultMin;
   double? resultMax;
@@ -16,19 +16,12 @@ class ButtonDataState extends ClassificationState {
     if (blank.length == 1) {
       _parseComma(comma: blank.first, algorithmParser: algorithmParser);
     } else if (blank.length == 3) {
-      resultMin = double.tryParse(blank.first) ??
-          () {
-            algorithmParser.throwAssert(isThrow: true, message: '${blank.first} 数值解析失败！');
-            return null;
-          }();
-      resultMax = double.tryParse(blank.last) ??
-          () {
-            algorithmParser.throwAssert(isThrow: true, message: '${blank.last} 数值解析失败！');
-            return null;
-          }();
+      resultMin = algorithmParser.calculate(blank.first);
+      resultMax = algorithmParser.calculate(blank.last);
       _parseComma(comma: blank[1], algorithmParser: algorithmParser);
+    } else {
+      throw '"use:$content" 内容书写不规范！';
     }
-    algorithmParser.throwAssert(isThrow: true, message: '"use:$content" 内容书写不规范！');
     return this;
   }
 
@@ -37,11 +30,31 @@ class ButtonDataState extends ClassificationState {
     resultButtonValues.addAll(
       bvs.map(
         (e) {
-          final double? result = double.tryParse(e.trim());
-          algorithmParser.throwAssert(isThrow: result == null, message: '$comma 数值解析失败！');
-          return result!;
+          return algorithmParser.calculate(e);
         },
       ),
     );
+  }
+
+  @override
+  String toStringResult() => '${resultMin ?? ''} ${resultButtonValues.map((e) => e.toString()).join(',')} ${resultMax ?? ''}';
+
+  @override
+  Future<double?> autoSimulationInternalVariablesResultHandler(InternalVariable internalVariable, int? number) async {}
+
+  @override
+  Future<double?> manualSimulationInternalVariablesResultHandler(InternalVariable internalVariable, int? number) async {}
+
+  @override
+  Future<double?> syntaxCheckInternalVariablesResultHandler(InternalVariable internalVariable, int? number) async {
+    if (internalVariable == InternalVariable.ivgCountAll) return 5000;
+    if (internalVariable == InternalVariable.ivgStartTime) return 0;
+
+    if (internalVariable == InternalVariable.ivsPlanedShowTime) return 120;
+    if (internalVariable == InternalVariable.ivsActualShowTime) return 100;
+    if (internalVariable == InternalVariable.ivsShowFamiliar) return 20;
+    if (internalVariable == InternalVariable.ivsCountNew) return 2500;
+    if (internalVariable == InternalVariable.ivsTimes) return 5;
+    throw notProcessIvThrow(internalVariable: internalVariable, number: number);
   }
 }

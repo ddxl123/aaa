@@ -52,7 +52,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     familiarityAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parseEasy(content: FamiliarityAlgorithmContent(content: familiarityAlgorithm()));
+        final result = await AlgorithmParser().parse(state: FamiliarityState(content: familiarityAlgorithm(), simulationType: SimulationType.syntaxCheck));
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -60,7 +60,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     nextTimeAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parseEasy(content: FamiliarityAlgorithmContent(content: nextTimeAlgorithm()));
+        final result = await AlgorithmParser().parse(state: NextTimeState(content: nextTimeAlgorithm(), simulationType: SimulationType.syntaxCheck));
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
@@ -68,7 +68,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     buttonDataAlgorithm.initVerify(
       (abV) async {
         // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parseEasy(content: FamiliarityAlgorithmContent(content: buttonDataAlgorithm()));
+        final result = await AlgorithmParser().parse(state: ButtonDataState(content: buttonDataAlgorithm(), simulationType: SimulationType.syntaxCheck));
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },

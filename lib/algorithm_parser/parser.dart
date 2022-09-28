@@ -24,7 +24,3 @@ part 'explain.dart';
 part 'IfExprParse.dart';
 
 part 'InternalVariable.dart';
-
-part 'QuickParser.dart';
-
-part 'types.dart';
