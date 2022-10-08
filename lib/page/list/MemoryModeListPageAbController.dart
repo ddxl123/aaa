@@ -22,7 +22,7 @@ class MemoryModeListPageAbController extends AbController {
   }
 
   Future<void> refreshMemoryModels() async {
-    final mgs = (await DriftDb.instance.queryDAO.queryMemoryModels()).map((e) => e.ab);
+    final mgs = (await DriftDb.instance.generalQueryDAO.queryAllMemoryModels()).map((e) => e.ab);
     memoryModels().clear_(this);
     memoryModels.refreshInevitable((obj) => obj..addAll(mgs));
   }

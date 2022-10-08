@@ -1,5 +1,7 @@
 part of algorithm_parser;
 
+typedef IvFilter<T extends num> = Future<T?> Function()?;
+
 /// ivg 开头为 全局（xxx_n），
 /// ivs 开头为 当展示时。
 /// ivc 开头为 当点击按钮时。
@@ -27,18 +29,10 @@ class InternalVariable {
   /// 获取时机
   final WhenAvailable whenAvailable;
 
-  static const InternalVariable ivgStartTime = InternalVariable(
-    name: '\$start_time',
-    explain: '记忆组启动的时间点。',
-    numericTypeExplain: '以秒(s)为单位的时间戳。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.global,
-  );
-
   static const InternalVariable ivgCountAll = InternalVariable(
     name: '\$count_all',
     explain: '记忆组启动的时间点。',
-    numericTypeExplain: '以秒(s)为单位的时间戳。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.global,
   );
@@ -59,14 +53,14 @@ class InternalVariable {
   static const InternalVariable ivsActualShowTime = InternalVariable(
     name: '\$actual_show_time',
     explain: '本次实际展示的时间点。',
-    numericTypeExplain: '以秒为单位的时间戳。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
   static const InternalVariable ivsPlanedShowTime = InternalVariable(
     name: '\$planed_show_time',
     explain: '本次原本计划展示的时间点。',
-    numericTypeExplain: '以秒为单位的时间戳。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
@@ -81,7 +75,7 @@ class InternalVariable {
   static const InternalVariable ivcClickTime = InternalVariable(
     name: '\$click_time',
     explain: '本次点击按钮时的时间点。',
-    numericTypeExplain: '以秒为单位的时间戳。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableStateTypes: {FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenClick,
   );
@@ -94,7 +88,6 @@ class InternalVariable {
   );
 
   static Map<String, InternalVariable> getAll = {
-    ivgStartTime.name: ivgStartTime,
     ivgCountAll.name: ivgCountAll,
     ivsCountNew.name: ivsCountNew,
     ivsTimes.name: ivsTimes,
@@ -130,4 +123,34 @@ class InternalVariable {
   }
 
   static InternalVariable getIvByName(String name) => getAll[name]!;
+
+  static Future<num?> filter({
+    required InternalVariable iv,
+    required NType? nType,
+    required int? number,
+    required IvFilter<int> ivgCountAll,
+    required IvFilter<int> ivsCountNew,
+    required IvFilter<int> ivsTimes,
+    required IvFilter<int> ivsActualShowTime,
+    required IvFilter<int> ivsPlanedShowTime,
+    required IvFilter<double> ivsShowFamiliar,
+    required IvFilter<int> ivcClickTime,
+    required IvFilter<double> ivcClickValue,
+  }) async {
+    Future<num?> handler(IvFilter ivFilter) async {
+      return ivFilter == null ? throw '输入的 ${iv.name} 对应的 ivFilter 为 null！' : await ivFilter();
+    }
+
+    if (iv == InternalVariable.ivgCountAll) return await handler(ivgCountAll);
+    if (iv == InternalVariable.ivsCountNew) return await handler(ivsCountNew);
+    if (iv == InternalVariable.ivsTimes) return await handler(ivsTimes);
+    if (iv == InternalVariable.ivsActualShowTime) return await handler(ivsActualShowTime);
+    if (iv == InternalVariable.ivsPlanedShowTime) return await handler(ivsPlanedShowTime);
+    if (iv == InternalVariable.ivsShowFamiliar) return await handler(ivsShowFamiliar);
+    if (iv == InternalVariable.ivcClickTime) return await handler(ivcClickTime);
+    if (iv == InternalVariable.ivcClickValue) return await handler(ivcClickValue);
+    throw '未处理变量：${getNameOrNumber(iv, nType, number)}';
+  }
 }
+
+String getNameOrNumber(InternalVariable internalVariable, NType? nType, int? number) => internalVariable.name + (nType == null ? '' : '_$nType${number!}');

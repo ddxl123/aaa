@@ -5,11 +5,8 @@ enum SimulationType {
   /// 语法校验
   syntaxCheck,
 
-  /// 分析出全部可能性，确保算法可用。
-  autoSimulation,
-
-  /// 按照实际操作进行模拟。（模拟前必须自动分析）
-  manualSimulation,
+  /// 外部处理
+  external,
 }
 
 enum WhenAvailable {
@@ -21,4 +18,9 @@ enum WhenAvailable {
 
   /// 在点击按钮后获取。
   whenClick,
+}
+
+enum NType {
+  times,
+  last,
 }

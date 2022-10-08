@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aaa/algorithm_parser/Simulator.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';
@@ -51,30 +52,47 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     );
     familiarityAlgorithm.initVerify(
       (abV) async {
-        // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(state: FamiliarityState(content: familiarityAlgorithm(), simulationType: SimulationType.syntaxCheck));
+        final result = await AlgorithmParser().parse(
+          state: FamiliarityState(
+            content: familiarityAlgorithm(),
+            simulationType: SimulationType.syntaxCheck,
+            externalResultHandler: null,
+          ),
+        );
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
     nextTimeAlgorithm.initVerify(
       (abV) async {
-        // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(state: NextTimeState(content: nextTimeAlgorithm(), simulationType: SimulationType.syntaxCheck));
+        final result = await AlgorithmParser().parse(
+          state: NextTimeState(
+            content: nextTimeAlgorithm(),
+            simulationType: SimulationType.syntaxCheck,
+            externalResultHandler: null,
+          ),
+        );
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
     buttonDataAlgorithm.initVerify(
       (abV) async {
-        // TODO: 增加功能：解析类型-模拟类型/实际类型。
-        final result = await AlgorithmParser().parse(state: ButtonDataState(content: buttonDataAlgorithm(), simulationType: SimulationType.syntaxCheck));
+        final result = await AlgorithmParser().parse(
+          state: ButtonDataState(
+            content: buttonDataAlgorithm(),
+            simulationType: SimulationType.syntaxCheck,
+            externalResultHandler: null,
+          ),
+        );
         if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
         return null;
       },
     );
     allCheck.initVerify(
-      (abV) async {},
+      (abV) async {
+        await Simulator.auto(content: 'content');
+      },
     );
   }
 
@@ -107,12 +125,12 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     await Future.delayed(const Duration(milliseconds: 200));
-    final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: memoryModelGizmo()?.id);
+    final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryModelGizmo()?.id);
 
     _title = mm?.title ?? '';
     _familiarityAlgorithm = mm?.familiarityAlgorithm ?? '';
     _nextTimeAlgorithm = mm?.nextTimeAlgorithm ?? '';
-    _buttonDataAlgorithm = mm?.buttonData ?? '';
+    _buttonDataAlgorithm = mm?.buttonAlgorithm ?? '';
 
     title.refreshEasy((oldValue) => _title);
     familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
@@ -188,7 +206,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
                 title: title(),
                 familiarityAlgorithm: familiarityAlgorithm(),
                 nextTimeAlgorithm: nextTimeAlgorithm(),
-                buttonData: buttonDataAlgorithm(),
+                buttonAlgorithm: buttonDataAlgorithm(),
                 // TODO
                 applicableGroups: '',
                 applicableFields: '',
@@ -214,7 +232,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
                       title: title().value(),
                       familiarityAlgorithm: familiarityAlgorithm().value(),
                       nextTimeAlgorithm: nextTimeAlgorithm().value(),
-                      buttonData: buttonDataAlgorithm().value(),
+                      buttonAlgorithm: buttonDataAlgorithm().value(),
                       writeSyncTag: await SyncTag.create(),
                       // TODO
                       applicableGroups: ''.value(),

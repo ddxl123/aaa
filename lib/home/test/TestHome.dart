@@ -1,4 +1,4 @@
-import 'package:drift_main/DriftViewer.dart';
+import 'package:drift_main/tool/DriftViewer.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';

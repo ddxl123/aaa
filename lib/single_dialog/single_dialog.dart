@@ -27,6 +27,7 @@ void showDialogForCreateMemoryGroup({
           id: 0.absent(),
           createdAt: 0.absent(),
           updatedAt: 0.absent(),
+          startTime: 0.absent(),
           memoryModelId: null.value(),
           title: tec.text,
           type: MemoryGroupType.inApp,
@@ -37,7 +38,7 @@ void showDialogForCreateMemoryGroup({
           newReviewDisplayOrder: NewReviewDisplayOrder.mix,
           newDisplayOrder: NewDisplayOrder.random,
         ),
-        willFragments: await DriftDb.instance.queryDAO.queryFragmentsByIds(
+        willFragments: await DriftDb.instance.generalQueryDAO.queryFragmentsByIds(
           Aber.findOrNullLast<FragmentGroupListPageAbController>()?.selectedFragmentIds().toList() ?? [],
         ),
       );

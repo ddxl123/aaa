@@ -117,19 +117,23 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   Future<void> _internalVariablesBindAndObtain({required String content}) async {
     debugPrint('正在评估内置变量...');
     if (InternalVariable.getAllNames.isEmpty) throw '内置变量为 empty！';
-    final regExp = RegExp(InternalVariable.getAllNames.map((e) => "(($e)(_[0-9])?)").join('|'));
+    final nTypeNames = '(${NType.values.map((e) => e.name).join('|')})';
+    final vRegExp = RegExp(InternalVariable.getAllNames.map((e) => "(($e)(_$nTypeNames(0-9)+)?)").join('|'));
     // 识别出需要的内置变量，若没有识别出，则直接过。
-    for (var match in regExp.allMatches(content)) {
+    for (var match in vRegExp.allMatches(content)) {
       final variableName = match.group(0)!;
       String easyName = variableName;
+      NType? nType;
       int? number;
-      debugPrint('解析出变量名：$variableName 简单名：$easyName n值：$number');
-      final matches = RegExp(r'(_([0-9]+))$').allMatches(variableName);
-      if (matches.isNotEmpty) {
-        easyName = variableName.substring(0, matches.first.start);
-        number = int.parse(matches.first.group(0)!);
+      debugPrint('解析出变量：$variableName');
+      final nMatch = RegExp('(_$nTypeNames([0-9]+))\$').firstMatch(variableName);
+      if (nMatch != null) {
+        easyName = variableName.substring(0, nMatch.start);
+        final nNameMatch = RegExp(nTypeNames).firstMatch(nMatch.group(0)!);
+        number = int.parse(nMatch.input.substring(nNameMatch!.end + 1, nMatch.input.length));
+        nType = NType.values.where((element) => element.name == nMatch.group(0)!).first;
       }
-      final result = await state.internalVariablesResultHandler(InternalVariable.getIvByName(easyName), number);
+      final result = await state.internalVariablesResultHandler(InternalVariable.getIvByName(easyName), nType, number);
       debugPrint('已扫描到的内置变量及获取到的值：$variableName = $result');
       if (result != null) {
         cm.bindVariableName(variableName, Number(result));

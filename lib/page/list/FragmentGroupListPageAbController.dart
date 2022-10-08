@@ -70,8 +70,8 @@ class PartListForFragmentHome {
   }
 
   Future<void> _refreshPart() async {
-    final newFragmentGroups = (await DriftDb.instance.queryDAO.queryFragmentGroups(fatherFragmentGroup?.call().id)).map((e) => e.ab);
-    final newFragments = (await DriftDb.instance.queryDAO.queryFragmentsByFragmentGroupId(fatherFragmentGroup?.call().id)).map((e) => e.ab);
+    final newFragmentGroups = (await DriftDb.instance.generalQueryDAO.queryFragmentGroups(fatherFragmentGroup?.call().id)).map((e) => e.ab);
+    final newFragments = (await DriftDb.instance.generalQueryDAO.queryFragmentsByFragmentGroupId(fatherFragmentGroup?.call().id)).map((e) => e.ab);
     clean();
     fragmentGroups.refreshInevitable((obj) => obj..addAll(newFragmentGroups));
     fragments.refreshInevitable((obj) => obj..addAll(newFragments));
@@ -81,7 +81,7 @@ class PartListForFragmentHome {
     await Future.forEach<Ab<FragmentGroup>>(
       fragmentGroups(),
       (element) async {
-        final List<String> fs = await DriftDb.instance.queryDAO.queryFragmentsForAllSubgroup(element().id, []);
+        final List<String> fs = await DriftDb.instance.generalQueryDAO.queryFragmentsForAllSubgroup(element().id, []);
 
         // 查询当前组内所有组的全部碎片数量。
         final int allCount = fs.length;
@@ -114,7 +114,7 @@ class PartListForFragmentHome {
 
   /// 只有当当前组内所有组的碎片被全选时，才会执行全不选
   Future<void> selectFragmentGroup(int index, String fgId) async {
-    final List<String> fs = await DriftDb.instance.queryDAO.queryFragmentsForAllSubgroup(fgId, []);
+    final List<String> fs = await DriftDb.instance.generalQueryDAO.queryFragmentsForAllSubgroup(fgId, []);
     final bool? isSelected = indexIsSelectedForFragmentGroup(index);
 
     if (isSelected == true) {

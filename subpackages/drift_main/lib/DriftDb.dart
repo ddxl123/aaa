@@ -13,6 +13,8 @@ import 'dart:math';
 
 part 'dao/query/GeneralQueryDAO.dart';
 
+part 'dao/query/DancerQueryDAO.dart';
+
 part 'dao/InsertDAO.dart';
 
 part 'dao/UpdateDAO.dart';
@@ -73,8 +75,9 @@ LazyDatabase _openConnection() {
   daos: [
     InsertDAO,
     UpdateDAO,
-    GeneralQueryDAO,
     DeleteDAO,
+    GeneralQueryDAO,
+    DancerQueryDAO,
   ],
 )
 class DriftDb extends _$DriftDb {
@@ -141,9 +144,8 @@ class DriftDb extends _$DriftDb {
     // 'User' or 'UsersCompanion'
     final String eName = E.toString();
     // Convert to 'Users'
-    final TableInfo? tableInfo = (eName.length <= 9 || eName.substring(eName.length - 9, eName.length) != 'Companion')
-        ? _tableInfoMap['${eName}s']
-        : _tableInfoMap[eName.substring(0, eName.length - 9)];
+    final TableInfo? tableInfo =
+        (eName.length <= 9 || eName.substring(eName.length - 9, eName.length) != 'Companion') ? _tableInfoMap['${eName}s'] : _tableInfoMap[eName.substring(0, eName.length - 9)];
     return tableInfo ?? (throw 'TableInfo not found.');
   }
 }

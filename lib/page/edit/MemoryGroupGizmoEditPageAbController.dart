@@ -96,7 +96,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     selectedMemoryModel.initVerify(
       (abV) async {
         if (abV() == null) return VerifyResult(isOk: false, message: '记忆模型不能为空！');
-        final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
+        final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
         if (mm == null) return VerifyResult(isOk: false, message: '未查询到对应的记忆模型！');
 
         // TODO: 模拟校验
@@ -156,8 +156,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     final mgg = memoryGroupGizmo!();
-    final fs = await DriftDb.instance.queryDAO.queryFragmentsInMemoryGroup(mgg.id);
-    final mm = await DriftDb.instance.queryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
+    final fs = await DriftDb.instance.generalQueryDAO.queryAllFragmentsInMemoryGroup(mgg.id);
+    final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
     _title = mgg.title;
     _selectedMemoryModel = mm;
@@ -184,7 +184,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     newReviewDisplayOrder.refreshEasy((oldValue) => _newReviewDisplayOrder);
     newDisplayOrder.refreshEasy((oldValue) => _newDisplayOrder);
 
-    final count = await DriftDb.instance.queryDAO.queryFragmentsInMemoryGroupForNotLearnCount(mgg.id);
+    final count = await DriftDb.instance.generalQueryDAO.queryFragmentsInMemoryGroupForNotLearnCount(mgg.id);
     notLearnCount.refreshEasy((oldValue) => count);
 
     titleTextEditingController.text = _title;
@@ -221,6 +221,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
                 id: absent(),
                 createdAt: absent(),
                 updatedAt: absent(),
+                startTime: absent(),
                 memoryModelId: (selectedMemoryModel()?.id).value(),
                 title: titleTextEditingController.text.value(),
                 type: type().value(),

@@ -25,9 +25,13 @@ class AbVerify<V> {
   String get message => _verify.message ?? '成功时调用了message！';
 
   Future<void> check() async {
-    _verify = await verifyCallBack(abV) ?? VerifyResult(isOk: true, message: null);
-    for (var checkCallBack in checkCallBacks) {
-      checkCallBack();
+    try {
+      _verify = await verifyCallBack(abV) ?? VerifyResult(isOk: true, message: null);
+      for (var checkCallBack in checkCallBacks) {
+        checkCallBack();
+      }
+    } catch (e, st) {
+      _verify = VerifyResult(isOk: false, message: 'check 内部异常：$e');
     }
   }
 

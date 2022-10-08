@@ -27,7 +27,7 @@ class TestHomeAbController extends AbController {
   }
 
   Future<void> getUser() async {
-    final result = await DriftDb.instance.queryDAO.queryUser();
+    final result = await DriftDb.instance.generalQueryDAO.queryUser();
     user.refreshInevitable((obj) => result);
   }
 
@@ -127,7 +127,7 @@ class TestHomeAbController extends AbController {
           title: 'test ${Random().nextInt(999999)}',
           familiarityAlgorithm: '',
           nextTimeAlgorithm: '',
-          buttonData: '',
+          buttonAlgorithm: '',
           applicableGroups: '',
           applicableFields: '',
           stimulateAlgorithm: '',

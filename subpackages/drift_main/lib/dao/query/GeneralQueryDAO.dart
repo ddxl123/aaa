@@ -7,7 +7,7 @@ part of drift_db;
     ...rTableClass,
   ],
 )
-class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
+class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMixin {
   GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
   Future<User> queryUser() async {
@@ -17,8 +17,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
   /// 查询已同步的、查询未同步的、查询未下载的
   Future<List<FragmentGroup>> queryFragmentGroups(String? fatherFragmentGroupId) async {
     return await (select(fragmentGroups)
-          ..where(
-              (tbl) => fatherFragmentGroupId == null ? tbl.fatherFragmentGroupId.isNull() : tbl.fatherFragmentGroupId.equals(fatherFragmentGroupId)))
+          ..where((tbl) => fatherFragmentGroupId == null ? tbl.fatherFragmentGroupId.isNull() : tbl.fatherFragmentGroupId.equals(fatherFragmentGroupId)))
         .get();
   }
 
@@ -32,92 +31,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
   /// 只查询了未同步的。
   Future<List<Fragment>> queryFragmentsByIds(List<String> ids) async {
     return await (select(fragments)..where((tbl) => tbl.id.isIn(ids))).get();
-  }
-
-  Future<Tuple2<Fragment, FragmentMemoryInfo?>?> queryFragmentsForDancer({required MemoryGroup mg}) async {
-    // 查询记忆组内全部的碎片。
-    Future<List<Fragment>> getFs() async => await queryFragmentsInMemoryGroup(mg.id);
-
-    // 查询当前记忆组内的全部最新的记忆信息，及其对应的碎片。
-    Future<List<TypedResult>> getAllEarliestReviews() async =>
-        await (select(fragmentMemoryInfos).join([innerJoin(fragments, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id))])
-              ..where(fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
-                  fragmentMemoryInfos.isLatestRecord.equals(true) &
-                  fragmentMemoryInfos.planedShowTime.isSmallerOrEqualValue(mg.reviewInterval)))
-            .get();
-
-    // 在复习区间内将可展示的全部复习碎片信息，及其对应的碎片。
-    // 基于 getAllEarliestReviews，查询[下一次展示时间]小于等于[复习区间]，并早前晚后排序。
-    Future<List<TypedResult>> getEarliestReviewsIntervalAndSort() async => ((await getAllEarliestReviews())
-        .where((element) => element.readTable(fragmentMemoryInfos).planedShowTime.isBefore(mg.reviewInterval))
-        .toList()
-      ..sort(
-        (a, b) => a.readTable(fragmentMemoryInfos).planedShowTime.compareTo(b.readTable(fragmentMemoryInfos).planedShowTime),
-      ));
-
-    // 基于 getEarliestReviewsIntervalAndSort 获取最早的复习碎片信息，及其对应的碎片。
-    Future<TypedResult?> getEarliestReview() async {
-      final glrias = await getEarliestReviewsIntervalAndSort();
-      return glrias.isEmpty ? null : glrias.first;
-    }
-
-    // 基于 getAllEarliestReviews 筛选出新碎片，即在当前碎片组中没有记录的碎片。
-    Future<List<Fragment>> getNewFs() async {
-      final galr = await getAllEarliestReviews();
-      return (await getFs()).where((element) => !galr.map((e) => e.readTable(fragmentMemoryInfos).fragmentId).contains(element.id)).toList();
-    }
-
-    // 基于 getNewFs，随机获取一个碎片。
-    Future<Fragment?> getRandomNewF() async {
-      final rfs = await getNewFs();
-      return rfs.isEmpty ? null : rfs[Random().nextInt(rfs.length)];
-    }
-
-    final f = await getRandomNewF();
-    final r = await getEarliestReview();
-    if (f == null && r == null) return null;
-    final ft = f == null ? null : Tuple2(t1: f, t2: null);
-    final rt = r == null ? null : Tuple2(t1: r.readTable(fragments), t2: r.readTable(fragmentMemoryInfos));
-
-    return await filterFuture<NewReviewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
-      from: mg.newReviewDisplayOrder,
-      targets: {
-        [NewReviewDisplayOrder.mix]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
-              from: mg.newDisplayOrder,
-              targets: {
-                [NewDisplayOrder.random]: () async {
-                  return Random().nextInt(1) == 0 ? (ft ?? rt) : (rt ?? ft);
-                },
-                [NewDisplayOrder.createEarly2Late]: null,
-                [NewDisplayOrder.titleA2Z]: null,
-              },
-              orElse: null,
-            ),
-        [NewReviewDisplayOrder.newReview]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
-              from: mg.newDisplayOrder,
-              targets: {
-                [NewDisplayOrder.random]: () async {
-                  return ft ?? rt;
-                },
-                [NewDisplayOrder.createEarly2Late]: () async => null,
-                [NewDisplayOrder.titleA2Z]: () async => null,
-              },
-              orElse: null,
-            ),
-        [NewReviewDisplayOrder.reviewNew]: () async => await filterFuture<NewDisplayOrder, Tuple2<Fragment, FragmentMemoryInfo?>?>(
-              from: mg.newDisplayOrder,
-              targets: {
-                [NewDisplayOrder.random]: () async {
-                  return rt ?? ft;
-                },
-                [NewDisplayOrder.createEarly2Late]: () async => null,
-                [NewDisplayOrder.titleA2Z]: () async => null,
-              },
-              orElse: null,
-            ),
-      },
-      orElse: null,
-    );
   }
 
   /// 输入的 [ids] 与返回的对象是同一个对象。
@@ -134,15 +47,15 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
     return ids;
   }
 
-  Future<List<MemoryGroup>> queryMemoryGroups() async {
+  Future<List<MemoryGroup>> queryAllMemoryGroups() async {
     return await select(memoryGroups).get();
   }
 
-  Future<List<MemoryModel>> queryMemoryModels() async {
+  Future<List<MemoryModel>> queryAllMemoryModels() async {
     return await select(memoryModels).get();
   }
 
-  Future<List<Fragment>> queryFragmentsInMemoryGroup(String memoryGroupId) async {
+  Future<List<Fragment>> queryAllFragmentsInMemoryGroup(String memoryGroupId) async {
     final j = select(fragments).join(
       [
         innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id)),
@@ -152,21 +65,56 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$QueryDAOMixin {
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
-  Future<int> queryFragmentsInMemoryGroupForNotLearnCount(String memoryGroupId) async {
-    final count = fragments.id.count();
-    final exp = selectOnly(fragments).join([
-      innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: false),
-      innerJoin(memoryGroups, memoryGroups.id.equalsExp(rFragment2MemoryGroups.fatherId), useColumns: false),
-    ])
-      ..where(rFragment2MemoryGroups.fatherId.equals(memoryGroupId))
-      ..addColumns([count]);
-
-    final results = await exp.get();
-    return results.map((e) => e.read(count)).first!;
-  }
-
   Future<MemoryModel?> queryMemoryModelById({required String? memoryModelId}) async {
     if (memoryModelId == null) return null;
     return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingleOrNull();
+  }
+
+  /// 获取 [mg] 内全部碎片数量。
+  Future<int> getFragmentsCount({required MemoryGroup mg}) async {
+    final countExpr = fragments.id.count();
+    final lJoin = selectOnly(fragments).join([innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id))]);
+    lJoin.where(rFragment2MemoryGroups.fatherId.equals(mg.id));
+    final result = await lJoin.getSingle();
+    return result.read(countExpr)!;
+  }
+
+  /// 获取 [mg] 内已经学习过至少一次的碎片数量。
+  ///
+  /// 相似：[DancerQueryDAO.getEarliestLearnedFragment]
+  Future<int> getLearnedFragmentsCount({required MemoryGroup mg}) async {
+    final countExpr = fragments.id.count();
+    final lSelect = selectOnly(fragments);
+    final lJoin = [
+      innerJoin(fragmentMemoryInfos, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id), useColumns: false),
+    ];
+    final lWhere = fragmentMemoryInfos.memoryGroupId.equals(mg.id) & fragmentMemoryInfos.isLatestRecord.equals(true);
+
+    final doJoin = lSelect.join(lJoin);
+    doJoin.addColumns([countExpr]);
+    doJoin.where(lWhere);
+
+    final result = await doJoin.getSingle();
+    return result.read(countExpr)!;
+  }
+
+  /// 获取 [mg] 内从未学习过的碎片数量。
+  ///
+  /// 相似：[DancerQueryDAO.getNewFragment]
+  Future<int> getNewFragmentsCount({required MemoryGroup mg}) async {
+    final countExpr = fragments.id.count();
+    final lSelect = selectOnly(fragments);
+    final lJoin = [
+      innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: false),
+      leftOuterJoin(fragmentMemoryInfos, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id), useColumns: false),
+    ];
+    final lWhere = rFragment2MemoryGroups.fatherId.equals(mg.id) & fragmentMemoryInfos.id.isNull();
+
+    final doJoin = lSelect.join(lJoin);
+    doJoin.where(lWhere);
+    doJoin.addColumns([countExpr]);
+
+    final result = await doJoin.getSingle();
+    return result.read(countExpr)!;
   }
 }

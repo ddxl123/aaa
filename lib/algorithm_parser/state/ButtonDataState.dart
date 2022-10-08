@@ -1,7 +1,11 @@
 part of algorithm_parser;
 
 class ButtonDataState extends ClassificationState {
-  ButtonDataState({required super.content, required super.simulationType});
+  ButtonDataState({
+    required super.content,
+    required super.simulationType,
+    required super.externalResultHandler,
+  });
 
   double? resultMin;
   double? resultMax;
@@ -40,21 +44,27 @@ class ButtonDataState extends ClassificationState {
   String toStringResult() => '${resultMin ?? ''} ${resultButtonValues.map((e) => e.toString()).join(',')} ${resultMax ?? ''}';
 
   @override
-  Future<double?> autoSimulationInternalVariablesResultHandler(InternalVariable internalVariable, int? number) async {}
+  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariable internalVariable, NType? nType, int? number) async {
+    const countCapping = 10000;
+    // 5个月
+    const timeCapping = 12960000;
 
-  @override
-  Future<double?> manualSimulationInternalVariablesResultHandler(InternalVariable internalVariable, int? number) async {}
+    final countAll = Random().nextInt(countCapping);
+    final planedShowTime = Random().nextInt(timeCapping);
+    final actualShowTime = Random().nextInt(timeCapping);
 
-  @override
-  Future<double?> syntaxCheckInternalVariablesResultHandler(InternalVariable internalVariable, int? number) async {
-    if (internalVariable == InternalVariable.ivgCountAll) return 5000;
-    if (internalVariable == InternalVariable.ivgStartTime) return 0;
-
-    if (internalVariable == InternalVariable.ivsPlanedShowTime) return 120;
-    if (internalVariable == InternalVariable.ivsActualShowTime) return 100;
-    if (internalVariable == InternalVariable.ivsShowFamiliar) return 20;
-    if (internalVariable == InternalVariable.ivsCountNew) return 2500;
-    if (internalVariable == InternalVariable.ivsTimes) return 5;
-    throw notProcessIvThrow(internalVariable: internalVariable, number: number);
+    return await InternalVariable.filter(
+      iv: internalVariable,
+      nType: nType,
+      number: number,
+      ivgCountAll: () async => countAll,
+      ivsCountNew: () async => countCapping ~/ 2,
+      ivsTimes: () async => Random().nextInt(9) + 1,
+      ivsActualShowTime: () async => actualShowTime,
+      ivsPlanedShowTime: () async => planedShowTime,
+      ivsShowFamiliar: () async => Random().nextDouble() * 200,
+      ivcClickTime: null,
+      ivcClickValue: null,
+    );
   }
 }

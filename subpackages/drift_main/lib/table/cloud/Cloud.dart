@@ -82,6 +82,9 @@ class MemoryGroups extends CloudTableBase {
 
   /// 新碎片展示先后顺序。
   IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>()();
+
+  /// 开始时间，若未开始则为 null。
+  DateTimeColumn get startTime => dateTime().nullable()();
 }
 
 @ReferenceTo([])

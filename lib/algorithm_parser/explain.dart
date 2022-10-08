@@ -35,20 +35,18 @@ part of algorithm_parser;
 ///   - 获取方式：[FragmentMemoryInfos.clickValue]。
 ///
 /// 获取第n次展示的某个变量数据：
-///   - 第n次的变量名：当前变量名加上'_n'后缀
-///     - 例如：第一次 click_value_1，第二次 click_value_2，第n次 click_value_n...
-///     - 简写：第一次 c_v，第二次 c_v_1，上n次 c_v_n...
+///   - 第n次的变量名：当前变量名加上'_timesn'后缀
+///     - 例如：第一次 click_value_times1，第二次 click_value_times2，第n次 click_value_timesn...
+///     - 本次可以直接使用 click_value 来获取。
 ///   - 若第n次恰好是本次点击按钮后的次数，则第n次等价于本次。
-///     - 例如：本次是第3次，那么 click_value_3 等价于本次。
-///   - 若第n次不存在，则可用 [n??数值] 来充当不存在的值。
-///     - 例如，click_value_2??123 的含义为：当 click_value_2 不存在时，将使用 123 进行代替。
-///     - ??后的数值类型必须与??前的数值类型相同。
+///     - 例如，本次是第1次，那么 click_value_times1 等价于本次；本次是第3次，那么 click_value_times3 等价于本次。
+///   - 若第n次不存在，则可用 [(click_value_timesn??数值)] 来充当不存在的值。
+///     - 例如，(click_value_times2??123) 的含义为当 click_value_times2 不存在时，将使用 123 进行代替。
 /// 获取上n次点击按钮后的某个变量：
-///   - 上n次的变量名：当前变量名加上'_recentn'后缀。
-///     - 例如：本次 click_value，上一次 click_value_recent1，上两次 click_value_recent2，上n次 click_value_recentn...
-///     - 简写：本次 c_v，上一次 c_v_r1，上两次 c_v_r2，上n次 c_v_rn...
-///   - 若上n次不存在，则可用 [n??数值] 来充当不存在的值。
-///     - 例如，click_value_recent3??123 的含义为：当 click_value_recent3 不存在时，将使用 123 进行代替。
+///   - 上n次的变量名：当前变量名加上'_lastn'后缀。
+///     - 例如：本次 click_value，上一次 click_value_last1，上两次 click_value_last2，上n次 click_value_lastn...
+///   - 若上n次不存在，则可用 [(click_value_lastn??数值)] 来充当不存在的值。
+///     - 例如，(click_value_last3??123) 的含义为：当 click_value_recent3 不存在时，将使用 123 进行代替。
 /// 注意：
 ///   1. 使用第n次/上n次的数据时，
 ///       - <在刚展示时获取>：第n次/上n次会为空
@@ -138,10 +136,11 @@ part of algorithm_parser;
 ///             - 解释：a = 1，将1这个值赋予给a;
 ///                    b = a，将a这个值赋予给b;
 ///                    以上即 a=b=1。
-///           - 空赋值：??=
-///             - 解释：a ??= 1;
-///                   当 a 不存在时，a 被赋值为 1。
-///             - 用途：通常用在 xxx_n 中。
+///           - 空赋值：(x??y)
+///             - 解释：a = (b ?? 1);
+///                   当 b 不存在时，b 被赋值为 1，即 a 将为 1。
+///             - 注意：必须带上小括号，否则将会识别失败。
+///             - 用途：通常用在 xxx_xxn 中。
 ///
 ///       - 算术运算符：
 ///           - 加：+
