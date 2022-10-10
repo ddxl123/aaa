@@ -44,7 +44,7 @@ class ButtonDataState extends ClassificationState {
   String toStringResult() => '${resultMin ?? ''} ${resultButtonValues.map((e) => e.toString()).join(',')} ${resultMax ?? ''}';
 
   @override
-  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariable internalVariable, NType? nType, int? number) async {
+  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom internalVariableExtend) async {
     const countCapping = 10000;
     // 5个月
     const timeCapping = 12960000;
@@ -53,18 +53,16 @@ class ButtonDataState extends ClassificationState {
     final planedShowTime = Random().nextInt(timeCapping);
     final actualShowTime = Random().nextInt(timeCapping);
 
-    return await InternalVariable.filter(
-      iv: internalVariable,
-      nType: nType,
-      number: number,
-      ivgCountAll: () async => countAll,
-      ivsCountNew: () async => countCapping ~/ 2,
-      ivsTimes: () async => Random().nextInt(9) + 1,
-      ivsActualShowTime: () async => actualShowTime,
-      ivsPlanedShowTime: () async => planedShowTime,
-      ivsShowFamiliar: () async => Random().nextDouble() * 200,
-      ivcClickTime: null,
-      ivcClickValue: null,
+    return await internalVariableStorage.filterStorage(
+      internalVariableExtend: internalVariableExtend,
+      ivgCountAllIF: IvFilter(ivf: () async => countAll, isCoverResult: true),
+      ivsCountNewIF: IvFilter(ivf: () async => countCapping ~/ 2, isCoverResult: true),
+      ivsTimesIF: IvFilter(ivf: () async => Random().nextInt(9) + 1, isCoverResult: true),
+      ivsActualShowTimeIF: IvFilter(ivf: () async => actualShowTime, isCoverResult: true),
+      ivsPlanedShowTimeIF: IvFilter(ivf: () async => planedShowTime, isCoverResult: true),
+      ivsShowFamiliarIF: IvFilter(ivf: () async => Random().nextDouble() * 200, isCoverResult: true),
+      ivcClickTimeIF: null,
+      ivcClickValueIF: null,
     );
   }
 }

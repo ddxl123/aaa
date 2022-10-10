@@ -47,11 +47,11 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// 解析结果将赋值给 [parseResult]。
   ///
   /// 错误信息将赋值给 [throwMessage]。
-  Future<AlgorithmParser> parse({required CS state}) async {
+  Future<AlgorithmParser<CS>> parse({required CS state}) async {
     try {
       if (_isParsed) throw '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。';
       _isParsed = true;
-      if (InternalVariable.getAll.isEmpty) throw '请先初始化内置变量！';
+      if (InternalVariabler.getAllKV.isEmpty) throw '请先初始化内置变量！';
       this.state = state;
       final conciseContent = _clearAnnotated(state.content);
       final finallyConciseContent = _emptyMergeDetection(conciseContent);
@@ -116,32 +116,40 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// 扫描使用到的内置变量，并绑定内置变量、获取内置变量的值
   Future<void> _internalVariablesBindAndObtain({required String content}) async {
     debugPrint('正在评估内置变量...');
-    if (InternalVariable.getAllNames.isEmpty) throw '内置变量为 empty！';
+    if (InternalVariabler.getAllNames.isEmpty) throw '内置变量为 empty！';
     final nTypeNames = '(${NType.values.map((e) => e.name).join('|')})';
-    final vRegExp = RegExp(InternalVariable.getAllNames.map((e) => "(($e)(_$nTypeNames(0-9)+)?)").join('|'));
+    final vRegExp = RegExp(InternalVariabler.getAllNames.map((e) => "(($e)(_$nTypeNames(0-9)+)?)").join('|'));
     // 识别出需要的内置变量，若没有识别出，则直接过。
     for (var match in vRegExp.allMatches(content)) {
       final variableName = match.group(0)!;
       String easyName = variableName;
-      NType? nType;
-      int? number;
+      NTypeNumber? nTypeNumber;
       debugPrint('解析出变量：$variableName');
       final nMatch = RegExp('(_$nTypeNames([0-9]+))\$').firstMatch(variableName);
       if (nMatch != null) {
         easyName = variableName.substring(0, nMatch.start);
         final nNameMatch = RegExp(nTypeNames).firstMatch(nMatch.group(0)!);
-        number = int.parse(nMatch.input.substring(nNameMatch!.end + 1, nMatch.input.length));
-        nType = NType.values.where((element) => element.name == nMatch.group(0)!).first;
+        final number = int.parse(nMatch.input.substring(nNameMatch!.end + 1, nMatch.input.length));
+        final nType = NType.values.where((element) => element.name == nMatch.group(0)!).first;
+        nTypeNumber = NTypeNumber(nType: nType, number: number);
       }
-      final result = await state.internalVariablesResultHandler(InternalVariable.getIvByName(easyName), nType, number);
-      debugPrint('已扫描到的内置变量及获取到的值：$variableName = $result');
-      if (result != null) {
-        cm.bindVariableName(variableName, Number(result));
-        debugPrint('绑定 ContextModel 成功：$variableName = $result');
-      } else {
-        if (!_emptyMergeVariables.containsKey(variableName)) throw '$variableName 内置变量存在为空的情况，请使用"??"进行空赋值！';
-        cm.bindVariableName(variableName, Number(_emptyMergeVariables[variableName]!));
-        debugPrint('绑定 ContextModel 成功：$variableName = ${_emptyMergeVariables[variableName]!}');
+      // 相同的变量名值绑定一次。
+      if (!cm.variables.containsKey(variableName)) {
+        final result = await state.internalVariablesResultHandler(
+          InternalVariableAtom(
+            internalVariableConst: InternalVariabler.getConstByName(easyName),
+            nTypeNumber: nTypeNumber,
+          ),
+        );
+        debugPrint('已扫描到的内置变量及获取到的值：$variableName = $result');
+        if (result != null) {
+          cm.bindVariableName(variableName, Number(result));
+          debugPrint('绑定 ContextModel 成功：$variableName = $result');
+        } else {
+          if (!_emptyMergeVariables.containsKey(variableName)) throw '$variableName 内置变量存在为空的情况，请使用"??"进行空赋值！';
+          cm.bindVariableName(variableName, Number(_emptyMergeVariables[variableName]!));
+          debugPrint('绑定 ContextModel 成功：$variableName = ${_emptyMergeVariables[variableName]!}');
+        }
       }
     }
     debugPrint('评估内置变量成功！');

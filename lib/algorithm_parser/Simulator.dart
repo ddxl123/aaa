@@ -8,7 +8,7 @@ class Simulator {
       state: ButtonDataState(
         content: content,
         simulationType: SimulationType.external,
-        externalResultHandler: (InternalVariable internalVariable, NType? nType, int? number) async {},
+        externalResultHandler: (InternalVariableConst internalVariable, NType? nType, int? number) async {},
       ),
     );
   }

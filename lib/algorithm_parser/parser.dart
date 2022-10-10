@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:drift_main/DriftDb.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:tools/tools.dart';
 
 part 'state/ButtonDataState.dart';
 

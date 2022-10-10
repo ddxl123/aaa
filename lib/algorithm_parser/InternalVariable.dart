@@ -1,12 +1,109 @@
 part of algorithm_parser;
 
-typedef IvFilter<T extends num> = Future<T?> Function()?;
+class InternalVariabler {
+  InternalVariabler._();
+
+  static const InternalVariableConst ivgCountAllConst = InternalVariableConst(
+    name: '\$count_all',
+    explain: '记忆组启动的时间点。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.global,
+  );
+  static const InternalVariableConst ivsCountNewConst = InternalVariableConst(
+    name: '\$count_new',
+    explain: '本次展示前，当前记忆组剩余的新碎片数量。',
+    numericTypeExplain: '自然数。',
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenShow,
+  );
+  static const InternalVariableConst ivsTimesConst = InternalVariableConst(
+    name: '\$times',
+    explain: '本次是第几次展示。',
+    numericTypeExplain: '正整数（1，2，3...）。',
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenShow,
+  );
+  static const InternalVariableConst ivsActualShowTimeConst = InternalVariableConst(
+    name: '\$actual_show_time',
+    explain: '本次实际展示的时间点。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenShow,
+  );
+  static const InternalVariableConst ivsPlanedShowTimeConst = InternalVariableConst(
+    name: '\$planed_show_time',
+    explain: '本次原本计划展示的时间点。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenShow,
+  );
+
+  static const InternalVariableConst ivsShowFamiliarConst = InternalVariableConst(
+    name: '\$show_familiar',
+    explain: '本次刚展示时的熟悉度。默认为0，用户可能会手动分配初始值。',
+    numericTypeExplain: '任意实数。',
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenShow,
+  );
+  static const InternalVariableConst ivcClickTimeConst = InternalVariableConst(
+    name: '\$click_time',
+    explain: '本次点击按钮时的时间点。',
+    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableStateTypes: {FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenClick,
+  );
+  static const InternalVariableConst ivcClickValueConst = InternalVariableConst(
+    name: '\$click_value',
+    explain: '本次点击按钮的按钮数值。',
+    numericTypeExplain: '任意实数。',
+    usableStateTypes: {FamiliarityState, NextTimeState},
+    whenAvailable: WhenAvailable.whenClick,
+  );
+
+  static Map<String, InternalVariableConst> getAllKV = {
+    ivgCountAllConst.name: ivgCountAllConst,
+    ivsCountNewConst.name: ivsCountNewConst,
+    ivsTimesConst.name: ivsTimesConst,
+    ivsActualShowTimeConst.name: ivsActualShowTimeConst,
+    ivsPlanedShowTimeConst.name: ivsPlanedShowTimeConst,
+    ivsShowFamiliarConst.name: ivsShowFamiliarConst,
+    ivcClickTimeConst.name: ivcClickTimeConst,
+    ivcClickValueConst.name: ivcClickValueConst,
+  };
+
+  static Set<String> get getAllNames => getAllKV.keys.toSet();
+
+  static Set<InternalVariableConst> get getAllConst => getAllKV.values.toSet();
+
+  static Map<String, InternalVariableConst> getAllTarget({required Type algorithmContentType}) {
+    final targetAll = <String, InternalVariableConst>{};
+    getAllKV.forEach((k, v) {
+      if (v.usableStateTypes.contains(algorithmContentType)) {
+        targetAll.addAll({k: v});
+      }
+    });
+    return targetAll;
+  }
+
+  static Set<String> getAllTargetNames({required Type algorithmContentType}) {
+    final targetAll = <String>{};
+    getAllKV.forEach((k, v) {
+      if (v.usableStateTypes.contains(algorithmContentType)) {
+        targetAll.add(k);
+      }
+    });
+    return targetAll;
+  }
+
+  static InternalVariableConst getConstByName(String name) => getAllKV[name]!;
+}
 
 /// ivg 开头为 全局（xxx_n），
 /// ivs 开头为 当展示时。
 /// ivc 开头为 当点击按钮时。
-class InternalVariable {
-  const InternalVariable({
+class InternalVariableConst {
+  const InternalVariableConst({
     required this.name,
     required this.explain,
     required this.numericTypeExplain,
@@ -28,129 +125,54 @@ class InternalVariable {
 
   /// 获取时机
   final WhenAvailable whenAvailable;
+}
 
-  static const InternalVariable ivgCountAll = InternalVariable(
-    name: '\$count_all',
-    explain: '记忆组启动的时间点。',
-    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.global,
-  );
-  static const InternalVariable ivsCountNew = InternalVariable(
-    name: '\$count_new',
-    explain: '本次展示前，当前记忆组剩余的新碎片数量。',
-    numericTypeExplain: '自然数。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenShow,
-  );
-  static const InternalVariable ivsTimes = InternalVariable(
-    name: '\$times',
-    explain: '本次是第几次展示。',
-    numericTypeExplain: '正整数（1，2，3...）。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenShow,
-  );
-  static const InternalVariable ivsActualShowTime = InternalVariable(
-    name: '\$actual_show_time',
-    explain: '本次实际展示的时间点。',
-    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenShow,
-  );
-  static const InternalVariable ivsPlanedShowTime = InternalVariable(
-    name: '\$planed_show_time',
-    explain: '本次原本计划展示的时间点。',
-    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenShow,
-  );
+class NTypeNumber {
+  final NType nType;
+  final int number;
 
-  static const InternalVariable ivsShowFamiliar = InternalVariable(
-    name: '\$show_familiar',
-    explain: '本次刚展示时的熟悉度。默认为0，用户可能会手动分配初始值。',
-    numericTypeExplain: '任意实数。',
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenShow,
-  );
-  static const InternalVariable ivcClickTime = InternalVariable(
-    name: '\$click_time',
-    explain: '本次点击按钮时的时间点。',
-    numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
-    usableStateTypes: {FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenClick,
-  );
-  static const InternalVariable ivcClickValue = InternalVariable(
-    name: '\$click_value',
-    explain: '本次点击按钮的按钮数值。',
-    numericTypeExplain: '任意实数。',
-    usableStateTypes: {FamiliarityState, NextTimeState},
-    whenAvailable: WhenAvailable.whenClick,
-  );
+  NTypeNumber({required this.nType, required this.number});
 
-  static Map<String, InternalVariable> getAll = {
-    ivgCountAll.name: ivgCountAll,
-    ivsCountNew.name: ivsCountNew,
-    ivsTimes.name: ivsTimes,
-    ivsActualShowTime.name: ivsActualShowTime,
-    ivsPlanedShowTime.name: ivsPlanedShowTime,
-    ivsShowFamiliar.name: ivsShowFamiliar,
-    ivcClickTime.name: ivcClickTime,
-    ivcClickValue.name: ivcClickValue,
-  };
+  String get getCombineString => '_${nType.name}$number';
+}
 
-  static Set<String> get getAllNames => getAll.keys.toSet();
+/// [T] 为返回的数值类型。
+typedef IvFilter<T extends num?> = Future<T> Function();
 
-  static Set<InternalVariable> get getAllIvs => getAll.values.toSet();
+/// 无论识别到的变量是否已识别过，都会生成一个新的 [InternalVariableAtom] 实例。
+class InternalVariableAtom {
+  InternalVariableAtom({
+    required this.internalVariableConst,
+    required this.nTypeNumber,
+  });
 
-  static Map<String, InternalVariable> getAllTarget({required Type algorithmContentType}) {
-    final targetAll = <String, InternalVariable>{};
-    getAll.forEach((k, v) {
-      if (v.usableStateTypes.contains(algorithmContentType)) {
-        targetAll.addAll({k: v});
-      }
-    });
-    return targetAll;
-  }
+  final InternalVariableConst internalVariableConst;
+  final NTypeNumber? nTypeNumber;
+  num? result;
 
-  static Set<String> getAllTargetNames({required Type algorithmContentType}) {
-    final targetAll = <String>{};
-    getAll.forEach((k, v) {
-      if (v.usableStateTypes.contains(algorithmContentType)) {
-        targetAll.add(k);
-      }
-    });
-    return targetAll;
-  }
+  String get getCombineName => internalVariableConst.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
 
-  static InternalVariable getIvByName(String name) => getAll[name]!;
-
-  static Future<num?> filter({
-    required InternalVariable iv,
-    required NType? nType,
-    required int? number,
-    required IvFilter<int> ivgCountAll,
-    required IvFilter<int> ivsCountNew,
-    required IvFilter<int> ivsTimes,
-    required IvFilter<int> ivsActualShowTime,
-    required IvFilter<int> ivsPlanedShowTime,
-    required IvFilter<double> ivsShowFamiliar,
-    required IvFilter<int> ivcClickTime,
-    required IvFilter<double> ivcClickValue,
+  Future<num?> filter({
+    required InternalVariableStorage storage,
+    required IvFilter<int?> countAllIF,
+    required IvFilter<int?> countNewIF,
+    required IvFilter<int?> timesIF,
+    required IvFilter<int?> actualShowTimeIF,
+    required IvFilter<int?> planedShowTimeIF,
+    required IvFilter<double?> showFamiliarIF,
+    required IvFilter<int?> clickTimeIF,
+    required IvFilter<double?> clickValueIF,
   }) async {
-    Future<num?> handler(IvFilter ivFilter) async {
-      return ivFilter == null ? throw '输入的 ${iv.name} 对应的 ivFilter 为 null！' : await ivFilter();
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      result = await countAllIF();
     }
-
-    if (iv == InternalVariable.ivgCountAll) return await handler(ivgCountAll);
-    if (iv == InternalVariable.ivsCountNew) return await handler(ivsCountNew);
-    if (iv == InternalVariable.ivsTimes) return await handler(ivsTimes);
-    if (iv == InternalVariable.ivsActualShowTime) return await handler(ivsActualShowTime);
-    if (iv == InternalVariable.ivsPlanedShowTime) return await handler(ivsPlanedShowTime);
-    if (iv == InternalVariable.ivsShowFamiliar) return await handler(ivsShowFamiliar);
-    if (iv == InternalVariable.ivcClickTime) return await handler(ivcClickTime);
-    if (iv == InternalVariable.ivcClickValue) return await handler(ivcClickValue);
-    throw '未处理变量：${getNameOrNumber(iv, nType, number)}';
+    return result;
+//   throw '未处理变量：${InternalVariabler.getCombineName(iv, nType, number)}';
   }
 }
 
-String getNameOrNumber(InternalVariable internalVariable, NType? nType, int? number) => internalVariable.name + (nType == null ? '' : '_$nType${number!}');
+class InternalVariableStorage {
+  /// 存储时，会检测 [InternalVariableAtom.getCombineName] 是否相同，
+  /// 若相同，则复用。若不同，则新增。
+  final List<InternalVariableAtom> storage = [];
+}

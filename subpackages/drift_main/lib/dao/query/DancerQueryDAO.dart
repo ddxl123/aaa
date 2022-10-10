@@ -10,6 +10,8 @@ part of drift_db;
 class DancerQueryDAO extends DatabaseAccessor<DriftDb> with _$DancerQueryDAOMixin {
   DancerQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  /// 返回的 [FragmentMemoryInfo] 是当前碎片的最近一次实例。
+  ///
   /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
   Future<Tuple2<Fragment, FragmentMemoryInfo>?> getEarliestLearnedFragment({required MemoryGroup mg}) async {
     final lSelect = select(fragments);
@@ -78,6 +80,10 @@ class DancerQueryDAO extends DatabaseAccessor<DriftDb> with _$DancerQueryDAOMixi
     return mg.startTime!.millisecondsSinceEpoch ~/ 1000;
   }
 
+  int differenceFromStartTimeStamp({required MemoryGroup mg, required DateTime dateTime}) {
+    return dateTime.millisecondsSinceEpoch ~/ 1000 - getStartTimeStamp(mg: mg);
+  }
+
   Future<int> getCountAll({required MemoryGroup mg}) async {
     return await DriftDb.instance.generalQueryDAO.getFragmentsCount(mg: mg);
   }
@@ -97,10 +103,15 @@ class DancerQueryDAO extends DatabaseAccessor<DriftDb> with _$DancerQueryDAOMixi
   }
 
   int getActualShowTime({required MemoryGroup mg}) {
-    return DateTime.now().millisecondsSinceEpoch ~/ 1000 - getStartTimeStamp(mg: mg);
+    return differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now());
   }
 
-  int getPlanedShowTime(){
+  Future<int?> getPlanedShowTime({required MemoryGroup mg, required Tuple2<Fragment, FragmentMemoryInfo?> tuple}) async {
+    if (tuple.t2 == null) return null;
+    return differenceFromStartTimeStamp(mg: mg, dateTime: tuple.t2!.planedShowTime);
+  }
 
+  Future<void> getShowFamiliar({required MemoryGroup mg, required MemoryModel mm}) async {
+    await AlgorithmParser();
   }
 }
