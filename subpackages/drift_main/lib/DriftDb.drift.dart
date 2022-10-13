@@ -4392,7 +4392,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final UpdateDAO updateDAO = UpdateDAO(this as DriftDb);
   late final DeleteDAO deleteDAO = DeleteDAO(this as DriftDb);
   late final GeneralQueryDAO generalQueryDAO = GeneralQueryDAO(this as DriftDb);
-  late final DancerQueryDAO dancerQueryDAO = DancerQueryDAO(this as DriftDb);
   @override
   Iterable<TableInfo<Table, dynamic>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4417,21 +4416,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
 // **************************************************************************
 
 mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
-  $UsersTable get users => attachedDatabase.users;
-  $FragmentsTable get fragments => attachedDatabase.fragments;
-  $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
-  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
-      attachedDatabase.fragmentMemoryInfos;
-  $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
-      attachedDatabase.rFragment2FragmentGroups;
-  $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
-      attachedDatabase.rFragment2MemoryGroups;
-  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
-      attachedDatabase.rAssistedMemory2Fragments;
-}
-mixin _$DancerQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;

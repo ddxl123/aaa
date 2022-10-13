@@ -13,8 +13,6 @@ import 'dart:math';
 
 part 'dao/query/GeneralQueryDAO.dart';
 
-part 'dao/query/DancerQueryDAO.dart';
-
 part 'dao/InsertDAO.dart';
 
 part 'dao/UpdateDAO.dart';
@@ -77,7 +75,6 @@ LazyDatabase _openConnection() {
     UpdateDAO,
     DeleteDAO,
     GeneralQueryDAO,
-    DancerQueryDAO,
   ],
 )
 class DriftDb extends _$DriftDb {

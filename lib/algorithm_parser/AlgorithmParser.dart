@@ -136,10 +136,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       // 相同的变量名值绑定一次。
       if (!cm.variables.containsKey(variableName)) {
         final result = await state.internalVariablesResultHandler(
-          InternalVariableAtom(
-            internalVariableConst: InternalVariabler.getConstByName(easyName),
-            nTypeNumber: nTypeNumber,
-          ),
+          InternalVariableAtom(internalVariableConst: InternalVariabler.getConstByName(easyName), nTypeNumber: nTypeNumber),
         );
         debugPrint('已扫描到的内置变量及获取到的值：$variableName = $result');
         if (result != null) {

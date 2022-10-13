@@ -7,20 +7,23 @@ class InternalVariabler {
     name: '\$count_all',
     explain: '记忆组启动的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableSuffixTypes: {},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.global,
   );
   static const InternalVariableConst ivsCountNewConst = InternalVariableConst(
     name: '\$count_new',
     explain: '本次展示前，当前记忆组剩余的新碎片数量。',
-    numericTypeExplain: '自然数。',
+    numericTypeExplain: '自然数：0，1，2，3...',
+    usableSuffixTypes: {},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
   static const InternalVariableConst ivsTimesConst = InternalVariableConst(
     name: '\$times',
-    explain: '本次是第几次展示。',
+    explain: '本次是当前碎片的第几次展示。',
     numericTypeExplain: '正整数（1，2，3...）。',
+    usableSuffixTypes: {},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
@@ -28,6 +31,7 @@ class InternalVariabler {
     name: '\$actual_show_time',
     explain: '本次实际展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableSuffixTypes: {NType.times, NType.last},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
@@ -35,14 +39,16 @@ class InternalVariabler {
     name: '\$planed_show_time',
     explain: '本次原本计划展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableSuffixTypes: {NType.times, NType.last},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
 
   static const InternalVariableConst ivsShowFamiliarConst = InternalVariableConst(
     name: '\$show_familiar',
-    explain: '本次刚展示时的熟悉度。默认为0，用户可能会手动分配初始值。',
-    numericTypeExplain: '任意实数。',
+    explain: '本次展示时的熟悉度。会根据熟悉度算法对值进行计算并获取。',
+    numericTypeExplain: '任意数。',
+    usableSuffixTypes: {NType.times, NType.last},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
@@ -50,13 +56,15 @@ class InternalVariabler {
     name: '\$click_time',
     explain: '本次点击按钮时的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
+    usableSuffixTypes: {NType.times, NType.last},
     usableStateTypes: {FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenClick,
   );
   static const InternalVariableConst ivcClickValueConst = InternalVariableConst(
     name: '\$click_value',
     explain: '本次点击按钮的按钮数值。',
-    numericTypeExplain: '任意实数。',
+    numericTypeExplain: '任意数。',
+    usableSuffixTypes: {NType.times, NType.last},
     usableStateTypes: {FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenClick,
   );
@@ -106,25 +114,31 @@ class InternalVariableConst {
   const InternalVariableConst({
     required this.name,
     required this.explain,
-    required this.numericTypeExplain,
     required this.usableStateTypes,
+    required this.usableSuffixTypes,
     required this.whenAvailable,
+    required this.numericTypeExplain,
   });
 
   /// 变量名
   final String name;
+
+  /// 内容类型
+  ///
+  /// [ClassificationState] 子类的类型。
+  final Set<Type> usableStateTypes;
+
+  /// 可使用后缀类型
+  final Set<NType> usableSuffixTypes;
+
+  /// 获取时机
+  final WhenAvailable whenAvailable;
 
   /// 变量解释
   final String explain;
 
   /// 数值类型解释
   final String numericTypeExplain;
-
-  /// 内容类型
-  final Set<Type> usableStateTypes;
-
-  /// 获取时机
-  final WhenAvailable whenAvailable;
 }
 
 class NTypeNumber {
@@ -136,8 +150,13 @@ class NTypeNumber {
   String get getCombineString => '_${nType.name}$number';
 }
 
-/// [T] 为返回的数值类型。
-typedef IvFilter<T extends num?> = Future<T> Function();
+class IvFilter<T extends num?> {
+  /// [T] 为返回的数值类型。
+  final Future<T> Function() ivf;
+  final bool isCover;
+
+  IvFilter({required this.ivf, required this.isCover});
+}
 
 /// 无论识别到的变量是否已识别过，都会生成一个新的 [InternalVariableAtom] 实例。
 class InternalVariableAtom {
@@ -152,6 +171,21 @@ class InternalVariableAtom {
 
   String get getCombineName => internalVariableConst.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
 
+  String get throwMessage => '未处理变量: $getCombineName';
+
+  Future<num?> save({required InternalVariableStorage storage, required IvFilter<num?> ivFilter}) async {
+    for (var element in storage.storage) {
+      if (element.getCombineName == getCombineName) {
+        if (element.result == null || ivFilter.isCover) {
+          return element.result = await ivFilter.ivf();
+        }
+      }
+    }
+    result = await ivFilter.ivf();
+    storage.storage.add(this);
+    return result;
+  }
+
   Future<num?> filter({
     required InternalVariableStorage storage,
     required IvFilter<int?> countAllIF,
@@ -164,10 +198,30 @@ class InternalVariableAtom {
     required IvFilter<double?> clickValueIF,
   }) async {
     if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
-      result = await countAllIF();
+      return await save(storage: storage, ivFilter: countAllIF);
     }
-    return result;
-//   throw '未处理变量：${InternalVariabler.getCombineName(iv, nType, number)}';
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: countNewIF);
+    }
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: timesIF);
+    }
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: actualShowTimeIF);
+    }
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: planedShowTimeIF);
+    }
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: showFamiliarIF);
+    }
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: clickTimeIF);
+    }
+    if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
+      return await save(storage: storage, ivFilter: clickValueIF);
+    }
+    throw throwMessage;
   }
 }
 

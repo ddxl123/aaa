@@ -21,6 +21,9 @@ enum WhenAvailable {
 }
 
 enum NType {
+  /// 第 n 次
   times,
+
+  /// 上 n 次
   last,
 }

@@ -1,4 +1,4 @@
-import 'package:aaa/algorithm_parser/parser.dart';
+part of algorithm_parser;
 
 class Simulator {
   static Future<void> auto({
@@ -8,7 +8,7 @@ class Simulator {
       state: ButtonDataState(
         content: content,
         simulationType: SimulationType.external,
-        externalResultHandler: (InternalVariableConst internalVariable, NType? nType, int? number) async {},
+        externalResultHandler: (InternalVariableAtom internalVariableExtend) async {},
       ),
     );
   }

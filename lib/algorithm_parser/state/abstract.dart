@@ -1,6 +1,6 @@
 part of algorithm_parser;
 
-typedef ResultHandler = Future<num?> Function(InternalVariableAtom internalVariableExtend);
+typedef ResultHandler = Future<num?> Function(InternalVariableAtom atom);
 
 abstract class ClassificationState {
   ClassificationState({
@@ -30,32 +30,32 @@ abstract class ClassificationState {
   /// 处理 if-else-use 已使用的内置变量。
   ///
   /// 根据 [SimulationType] 进行扩展。
-  Future<num?> internalVariablesResultHandler(InternalVariableAtom internalVariableExtend) async {
-    if (!internalVariableExtend.internalVariableConst.usableStateTypes.contains(getStateType)) {
-      throw '该算法内容不能使用 ${internalVariableExtend.getCombineName} 内置变量！';
+  Future<num?> internalVariablesResultHandler(InternalVariableAtom atom) async {
+    if (!atom.internalVariableConst.usableStateTypes.contains(getStateType)) {
+      throw '该算法内容不能使用 ${atom.getCombineName} 内置变量，因为获取到的结果值始终为空。';
     }
-    if (internalVariableExtend.internalVariableConst.whenAvailable == WhenAvailable.global && internalVariableExtend.nTypeNumber != null) {
-      throw '${internalVariableExtend.internalVariableConst.name} 变量不支持 "_xxn" 后缀！';
+    if (atom.nTypeNumber != null && !atom.internalVariableConst.usableSuffixTypes.contains(atom.nTypeNumber!.nType)) {
+      throw '${atom.internalVariableConst.name} 变量不支持 "_${atom.nTypeNumber!.nType}n" 后缀！';
+    }
+
+    if (atom.nTypeNumber != null && atom.nTypeNumber!.number <= 0) {
+      throw '"n"值必须大于 0！';
     }
 
     if (simulationType == SimulationType.syntaxCheck) {
-      return await syntaxCheckInternalVariablesResultHandler(internalVariableExtend);
+      return await syntaxCheckInternalVariablesResultHandler(atom);
     } else if (simulationType == SimulationType.external) {
-      return await externalInternalVariablesResultHandler(internalVariableExtend);
+      return await externalInternalVariablesResultHandler(atom);
     }
     throw '未处理模拟类型：$simulationType';
   }
 
   /// 语法分析。
-  ///
-  /// 可以使用 [InternalVariableConst.filterStorage] 进行筛选。
-  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom internalVariableExtend);
+  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom);
 
   /// 外部处理。
-  ///
-  /// 可以使用 [InternalVariableConst.filterStorage] 进行筛选。
-  Future<num?> externalInternalVariablesResultHandler(InternalVariableAtom internalVariableExtend) async {
-    if (externalResultHandler == null) throw '当为 autoSimulation 类型时，autoSimulationResultHandler 不能为 null！';
-    return await externalResultHandler!(internalVariableExtend);
+  Future<num?> externalInternalVariablesResultHandler(InternalVariableAtom atom) async {
+    if (externalResultHandler == null) throw '当为 SimulationType.external 类型时，externalResultHandler 不能为 null！';
+    return await externalResultHandler!(atom);
   }
 }
