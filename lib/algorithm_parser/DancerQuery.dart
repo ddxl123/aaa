@@ -12,8 +12,8 @@ class DancerQuery {
       innerJoin(driftDb.fragmentMemoryInfos, driftDb.fragmentMemoryInfos.fragmentId.equalsExp(driftDb.fragments.id)),
     ];
     final lWhere = driftDb.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
-    driftDb.fragmentMemoryInfos.isLatestRecord.equals(true) &
-    driftDb.fragmentMemoryInfos.planedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
+        driftDb.fragmentMemoryInfos.isLatestRecord.equals(true) &
+        driftDb.fragmentMemoryInfos.planedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
 
     final doJoin = lSelect.join(lJoin);
     doJoin.where(lWhere);
@@ -105,9 +105,15 @@ class DancerQuery {
   Future<int?> getActualShowTime({required NTypeNumber? nTypeNumber, required MemoryGroup mg, required Tuple2<Fragment, FragmentMemoryInfo?> tuple}) async {
     final current = differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now());
     if (nTypeNumber == null) return current;
-    if (nTypeNumber.nType == NType.times) {
-      driftDb.select(frag)
-    }
+    return await nTypeNumber.filter(
+      timesCb: () async {
+        final lSelect = driftDb.select(driftDb.fragmentMemoryInfos);
+        final lJoin = lSelect.join([innerJoin(driftDb.fragments, driftDb.fragments.id.equalsExp(driftDb.fragmentMemoryInfos.fragmentId))]);
+        final lWhere = lJoin.where(driftDb.fragmentMemoryInfos.memoryGroupId.equals(mg.id));
+        final result = await lJoin.get();
+      },
+      lastCb: () async {},
+    );
   }
 
   /// [InternalVariabler.ivsPlanedShowTimeConst]

@@ -148,6 +148,19 @@ class NTypeNumber {
   NTypeNumber({required this.nType, required this.number});
 
   String get getCombineString => '_${nType.name}$number';
+
+  Future<T> filter<T>({
+    required Future<T> Function() timesCb,
+    required Future<T> Function() lastCb,
+  }) async {
+    if (nType == NType.times) {
+      return await timesCb();
+    }
+    if (nType == NType.last) {
+      return await lastCb();
+    }
+    throw '为处理类型：$nType';
+  }
 }
 
 class IvFilter<T extends num?> {
