@@ -30,14 +30,14 @@ class FamiliarityState extends ClassificationState {
     final actualShowTime = Random().nextInt(timeCapping);
     return await atom.filter(
       storage: internalVariableStorage,
-      countAllIF: IvFilter(ivf: () async => countAll, isCover: true),
-      countNewIF: IvFilter(ivf: () async => countCapping ~/ 2, isCover: true),
-      timesIF: IvFilter(ivf: () async => Random().nextInt(9) + 1, isCover: true),
-      actualShowTimeIF: IvFilter(ivf: () async => actualShowTime, isCover: true),
-      planedShowTimeIF: IvFilter(ivf: () async => planedShowTime, isCover: true),
-      showFamiliarIF: IvFilter(ivf: () async => Random().nextDouble() * 200, isCover: true),
-      clickTimeIF: IvFilter(ivf: () async => actualShowTime + Random().nextInt(600), isCover: true),
-      clickValueIF: IvFilter(ivf: () async => Random().nextDouble() * 200, isCover: true),
+      countAllIF: IvFilter(ivf: () async => [countAll], isReGet: true),
+      countNewIF: IvFilter(ivf: () async => [countCapping ~/ 2], isReGet: true),
+      timesIF: IvFilter(ivf: () async => [Random().nextInt(9) + 1], isReGet: true),
+      actualShowTimeIF: IvFilter(ivf: () async => [actualShowTime], isReGet: true),
+      planedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
+      showFamiliarIF: IvFilter(ivf: () async => [Random().nextDouble() * 200], isReGet: true),
+      clickTimeIF: IvFilter(ivf: () async => [actualShowTime + Random().nextInt(600)], isReGet: true),
+      clickValueIF: IvFilter(ivf: () async => [Random().nextDouble() * 200], isReGet: true),
     );
   }
 }

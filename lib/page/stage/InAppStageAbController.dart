@@ -58,35 +58,35 @@ class InAppStageAbController extends AbController {
             storage: storage(),
             countAllIF: IvFilter(
               ivf: () async => await dancerQuery.getCountAll(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isCover: false,
+              isReGet: false,
             ),
             countNewIF: IvFilter(
               ivf: () async => await dancerQuery.getCountNew(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isCover: false,
+              isReGet: false,
             ),
             timesIF: IvFilter(
               ivf: () async => await dancerQuery.getTimes(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
-              isCover: false,
+              isReGet: false,
             ),
             actualShowTimeIF: IvFilter(
               ivf: () async => await dancerQuery.getActualShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isCover: false,
+              isReGet: false,
             ),
             planedShowTimeIF: IvFilter(
               ivf: () async => await dancerQuery.getPlanedShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
-              isCover: false,
+              isReGet: false,
             ),
             showFamiliarIF: IvFilter(
               ivf: () async => await parseCurrentFamiliarity(),
-              isCover: false,
+              isReGet: false,
             ),
             clickTimeIF: IvFilter(
               ivf: () async => null,
-              isCover: false,
+              isReGet: false,
             ),
             clickValueIF: IvFilter(
               ivf: () async => null,
-              isCover: false,
+              isReGet: false,
             ),
           );
         },
@@ -104,35 +104,35 @@ class InAppStageAbController extends AbController {
             storage: storage(),
             countAllIF: IvFilter(
               ivf: () async => await dancerQuery.getCountAll(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isCover: true,
+              isReGet: true,
             ),
             countNewIF: IvFilter(
               ivf: () async => await dancerQuery.getCountNew(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isCover: true,
+              isReGet: true,
             ),
             timesIF: IvFilter(
               ivf: () async => await dancerQuery.getTimes(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
-              isCover: true,
+              isReGet: true,
             ),
             actualShowTimeIF: IvFilter(
               ivf: () async => await dancerQuery.getActualShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isCover: true,
+              isReGet: true,
             ),
             planedShowTimeIF: IvFilter(
               ivf: () async => await dancerQuery.getPlanedShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
-              isCover: true,
+              isReGet: true,
             ),
             showFamiliarIF: IvFilter(
               ivf: () async => await dancerQuery.getShowFamiliar(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), mm: memoryModelGizmo()),
-              isCover: false,
+              isReGet: false,
             ),
             clickTimeIF: IvFilter(
               ivf: () async => null,
-              isCover: false,
+              isReGet: false,
             ),
             clickValueIF: IvFilter(
               ivf: () async => null,
-              isCover: false,
+              isReGet: false,
             ),
           );
         },
