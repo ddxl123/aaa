@@ -73,7 +73,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// ========== 不可操作-其他部分 ==========
 
   /// 当前记忆组剩余未学习的数量。
-  final notLearnCount = 0.ab;
+  final remainNewFragmentsCount = 0.ab;
 
   /// 是否全部展开
   final isExpandAll = false.ab;
@@ -184,8 +184,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     newReviewDisplayOrder.refreshEasy((oldValue) => _newReviewDisplayOrder);
     newDisplayOrder.refreshEasy((oldValue) => _newDisplayOrder);
 
-    final count = await DriftDb.instance.generalQueryDAO.queryFragmentsInMemoryGroupForNotLearnCount(mgg.id);
-    notLearnCount.refreshEasy((oldValue) => count);
+    final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mgg);
+    remainNewFragmentsCount.refreshEasy((oldValue) => count);
 
     titleTextEditingController.text = _title;
     reviewIntervalTextEditingController.text = _reviewInterval.difference(DateTime.now()).inMinutes.toString();

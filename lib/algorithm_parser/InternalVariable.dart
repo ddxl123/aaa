@@ -27,16 +27,16 @@ class InternalVariabler {
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
-  static const InternalVariableConst ivsActualShowTimeConst = InternalVariableConst(
-    name: '\$actual_show_time',
+  static const InternalVariableConst ivsCurrentActualShowTimeConst = InternalVariableConst(
+    name: '\$current_actual_show_time',
     explain: '本次实际展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableSuffixTypes: {NType.times, NType.last},
     usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
-  static const InternalVariableConst ivsPlanedShowTimeConst = InternalVariableConst(
-    name: '\$planed_show_time',
+  static const InternalVariableConst ivsNextPlanedShowTimeConst = InternalVariableConst(
+    name: '\$next_planed_show_time',
     explain: '本次原本计划展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableSuffixTypes: {NType.times, NType.last},
@@ -73,8 +73,8 @@ class InternalVariabler {
     ivgCountAllConst.name: ivgCountAllConst,
     ivsCountNewConst.name: ivsCountNewConst,
     ivsTimesConst.name: ivsTimesConst,
-    ivsActualShowTimeConst.name: ivsActualShowTimeConst,
-    ivsPlanedShowTimeConst.name: ivsPlanedShowTimeConst,
+    ivsCurrentActualShowTimeConst.name: ivsCurrentActualShowTimeConst,
+    ivsNextPlanedShowTimeConst.name: ivsNextPlanedShowTimeConst,
     ivsShowFamiliarConst.name: ivsShowFamiliarConst,
     ivcClickTimeConst.name: ivcClickTimeConst,
     ivcClickValueConst.name: ivcClickValueConst,
@@ -148,19 +148,6 @@ class NTypeNumber {
   NTypeNumber({required this.nType, required this.number});
 
   String get getCombineString => '_${nType.name}$number';
-
-  Future<T> filter<T>({
-    required Future<T> Function() timesCb,
-    required Future<T> Function() lastCb,
-  }) async {
-    if (nType == NType.times) {
-      return await timesCb();
-    }
-    if (nType == NType.last) {
-      return await lastCb();
-    }
-    throw '为处理类型：$nType';
-  }
 }
 
 class IvFilter<T extends num?> {
@@ -259,9 +246,9 @@ class InternalVariableAtom {
 class InternalVariableWithResults {
   final InternalVariableConst internalVariableConst;
 
-  /// 存储每次的结果，最后一个 index 始终是当前展示的结果。
-  /// 若当前展示的结果无法获取，则必须默认赋值为 null。
-  /// 即 [results.length] 必然大于等于 1。
+  /// 存储每次的结果，按照时间排序。
+  /// 最后一个 index 始终是当前展示的结果。
+  /// 若当前展示的结果无法获取，则必须默认赋值为 null，即 [results.length] 必然大于等于 1。
   final List<num?> results = [];
 
   InternalVariableWithResults({required this.internalVariableConst});

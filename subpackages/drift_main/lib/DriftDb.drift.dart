@@ -2260,14 +2260,14 @@ class FragmentMemoryInfo extends DataClass
   bool isLatestRecord;
 
   /// =====
-  /// 原本计划展示的时间点。
-  DateTime planedShowTime;
+  /// 下一次计划展示的时间点。
+  DateTime nextPlanedShowTime;
 
-  /// 实际展示的时间点。
-  DateTime actualShowTime;
+  /// 当前实际展示的时间点。
+  DateTime currentActualShowTime;
 
   /// 刚展示时的熟练度。
-  double clickFamiliarity;
+  double showFamiliarity;
 
   /// 点击按钮的时间。
   DateTime clickTime;
@@ -2281,9 +2281,9 @@ class FragmentMemoryInfo extends DataClass
       required this.fragmentId,
       required this.memoryGroupId,
       required this.isLatestRecord,
-      required this.planedShowTime,
-      required this.actualShowTime,
-      required this.clickFamiliarity,
+      required this.nextPlanedShowTime,
+      required this.currentActualShowTime,
+      required this.showFamiliarity,
       required this.clickTime,
       required this.clickValue});
   @override
@@ -2295,9 +2295,9 @@ class FragmentMemoryInfo extends DataClass
     map['fragment_id'] = Variable<String>(fragmentId);
     map['memory_group_id'] = Variable<String>(memoryGroupId);
     map['is_latest_record'] = Variable<bool>(isLatestRecord);
-    map['planed_show_time'] = Variable<DateTime>(planedShowTime);
-    map['actual_show_time'] = Variable<DateTime>(actualShowTime);
-    map['click_familiarity'] = Variable<double>(clickFamiliarity);
+    map['next_planed_show_time'] = Variable<DateTime>(nextPlanedShowTime);
+    map['current_actual_show_time'] = Variable<DateTime>(currentActualShowTime);
+    map['show_familiarity'] = Variable<double>(showFamiliarity);
     map['click_time'] = Variable<DateTime>(clickTime);
     map['click_value'] = Variable<double>(clickValue);
     return map;
@@ -2311,9 +2311,9 @@ class FragmentMemoryInfo extends DataClass
       fragmentId: Value(fragmentId),
       memoryGroupId: Value(memoryGroupId),
       isLatestRecord: Value(isLatestRecord),
-      planedShowTime: Value(planedShowTime),
-      actualShowTime: Value(actualShowTime),
-      clickFamiliarity: Value(clickFamiliarity),
+      nextPlanedShowTime: Value(nextPlanedShowTime),
+      currentActualShowTime: Value(currentActualShowTime),
+      showFamiliarity: Value(showFamiliarity),
       clickTime: Value(clickTime),
       clickValue: Value(clickValue),
     );
@@ -2329,9 +2329,11 @@ class FragmentMemoryInfo extends DataClass
       fragmentId: serializer.fromJson<String>(json['fragmentId']),
       memoryGroupId: serializer.fromJson<String>(json['memoryGroupId']),
       isLatestRecord: serializer.fromJson<bool>(json['isLatestRecord']),
-      planedShowTime: serializer.fromJson<DateTime>(json['planedShowTime']),
-      actualShowTime: serializer.fromJson<DateTime>(json['actualShowTime']),
-      clickFamiliarity: serializer.fromJson<double>(json['clickFamiliarity']),
+      nextPlanedShowTime:
+          serializer.fromJson<DateTime>(json['nextPlanedShowTime']),
+      currentActualShowTime:
+          serializer.fromJson<DateTime>(json['currentActualShowTime']),
+      showFamiliarity: serializer.fromJson<double>(json['showFamiliarity']),
       clickTime: serializer.fromJson<DateTime>(json['clickTime']),
       clickValue: serializer.fromJson<double>(json['clickValue']),
     );
@@ -2346,9 +2348,10 @@ class FragmentMemoryInfo extends DataClass
       'fragmentId': serializer.toJson<String>(fragmentId),
       'memoryGroupId': serializer.toJson<String>(memoryGroupId),
       'isLatestRecord': serializer.toJson<bool>(isLatestRecord),
-      'planedShowTime': serializer.toJson<DateTime>(planedShowTime),
-      'actualShowTime': serializer.toJson<DateTime>(actualShowTime),
-      'clickFamiliarity': serializer.toJson<double>(clickFamiliarity),
+      'nextPlanedShowTime': serializer.toJson<DateTime>(nextPlanedShowTime),
+      'currentActualShowTime':
+          serializer.toJson<DateTime>(currentActualShowTime),
+      'showFamiliarity': serializer.toJson<double>(showFamiliarity),
       'clickTime': serializer.toJson<DateTime>(clickTime),
       'clickValue': serializer.toJson<double>(clickValue),
     };
@@ -2361,9 +2364,9 @@ class FragmentMemoryInfo extends DataClass
           String? fragmentId,
           String? memoryGroupId,
           bool? isLatestRecord,
-          DateTime? planedShowTime,
-          DateTime? actualShowTime,
-          double? clickFamiliarity,
+          DateTime? nextPlanedShowTime,
+          DateTime? currentActualShowTime,
+          double? showFamiliarity,
           DateTime? clickTime,
           double? clickValue}) =>
       FragmentMemoryInfo(
@@ -2373,9 +2376,10 @@ class FragmentMemoryInfo extends DataClass
         fragmentId: fragmentId ?? this.fragmentId,
         memoryGroupId: memoryGroupId ?? this.memoryGroupId,
         isLatestRecord: isLatestRecord ?? this.isLatestRecord,
-        planedShowTime: planedShowTime ?? this.planedShowTime,
-        actualShowTime: actualShowTime ?? this.actualShowTime,
-        clickFamiliarity: clickFamiliarity ?? this.clickFamiliarity,
+        nextPlanedShowTime: nextPlanedShowTime ?? this.nextPlanedShowTime,
+        currentActualShowTime:
+            currentActualShowTime ?? this.currentActualShowTime,
+        showFamiliarity: showFamiliarity ?? this.showFamiliarity,
         clickTime: clickTime ?? this.clickTime,
         clickValue: clickValue ?? this.clickValue,
       );
@@ -2388,9 +2392,9 @@ class FragmentMemoryInfo extends DataClass
           ..write('fragmentId: $fragmentId, ')
           ..write('memoryGroupId: $memoryGroupId, ')
           ..write('isLatestRecord: $isLatestRecord, ')
-          ..write('planedShowTime: $planedShowTime, ')
-          ..write('actualShowTime: $actualShowTime, ')
-          ..write('clickFamiliarity: $clickFamiliarity, ')
+          ..write('nextPlanedShowTime: $nextPlanedShowTime, ')
+          ..write('currentActualShowTime: $currentActualShowTime, ')
+          ..write('showFamiliarity: $showFamiliarity, ')
           ..write('clickTime: $clickTime, ')
           ..write('clickValue: $clickValue')
           ..write(')'))
@@ -2405,9 +2409,9 @@ class FragmentMemoryInfo extends DataClass
       fragmentId,
       memoryGroupId,
       isLatestRecord,
-      planedShowTime,
-      actualShowTime,
-      clickFamiliarity,
+      nextPlanedShowTime,
+      currentActualShowTime,
+      showFamiliarity,
       clickTime,
       clickValue);
   @override
@@ -2420,9 +2424,9 @@ class FragmentMemoryInfo extends DataClass
           other.fragmentId == this.fragmentId &&
           other.memoryGroupId == this.memoryGroupId &&
           other.isLatestRecord == this.isLatestRecord &&
-          other.planedShowTime == this.planedShowTime &&
-          other.actualShowTime == this.actualShowTime &&
-          other.clickFamiliarity == this.clickFamiliarity &&
+          other.nextPlanedShowTime == this.nextPlanedShowTime &&
+          other.currentActualShowTime == this.currentActualShowTime &&
+          other.showFamiliarity == this.showFamiliarity &&
           other.clickTime == this.clickTime &&
           other.clickValue == this.clickValue);
 }
@@ -2434,9 +2438,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<String> fragmentId;
   Value<String> memoryGroupId;
   Value<bool> isLatestRecord;
-  Value<DateTime> planedShowTime;
-  Value<DateTime> actualShowTime;
-  Value<double> clickFamiliarity;
+  Value<DateTime> nextPlanedShowTime;
+  Value<DateTime> currentActualShowTime;
+  Value<double> showFamiliarity;
   Value<DateTime> clickTime;
   Value<double> clickValue;
   FragmentMemoryInfosCompanion({
@@ -2446,9 +2450,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     this.fragmentId = const Value.absent(),
     this.memoryGroupId = const Value.absent(),
     this.isLatestRecord = const Value.absent(),
-    this.planedShowTime = const Value.absent(),
-    this.actualShowTime = const Value.absent(),
-    this.clickFamiliarity = const Value.absent(),
+    this.nextPlanedShowTime = const Value.absent(),
+    this.currentActualShowTime = const Value.absent(),
+    this.showFamiliarity = const Value.absent(),
     this.clickTime = const Value.absent(),
     this.clickValue = const Value.absent(),
   });
@@ -2459,18 +2463,18 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     required String fragmentId,
     required String memoryGroupId,
     required bool isLatestRecord,
-    required DateTime planedShowTime,
-    required DateTime actualShowTime,
-    required double clickFamiliarity,
+    required DateTime nextPlanedShowTime,
+    required DateTime currentActualShowTime,
+    required double showFamiliarity,
     required DateTime clickTime,
     required double clickValue,
   })  : id = Value(id),
         fragmentId = Value(fragmentId),
         memoryGroupId = Value(memoryGroupId),
         isLatestRecord = Value(isLatestRecord),
-        planedShowTime = Value(planedShowTime),
-        actualShowTime = Value(actualShowTime),
-        clickFamiliarity = Value(clickFamiliarity),
+        nextPlanedShowTime = Value(nextPlanedShowTime),
+        currentActualShowTime = Value(currentActualShowTime),
+        showFamiliarity = Value(showFamiliarity),
         clickTime = Value(clickTime),
         clickValue = Value(clickValue);
   static Insertable<FragmentMemoryInfo> custom({
@@ -2480,9 +2484,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     Expression<String>? fragmentId,
     Expression<String>? memoryGroupId,
     Expression<bool>? isLatestRecord,
-    Expression<DateTime>? planedShowTime,
-    Expression<DateTime>? actualShowTime,
-    Expression<double>? clickFamiliarity,
+    Expression<DateTime>? nextPlanedShowTime,
+    Expression<DateTime>? currentActualShowTime,
+    Expression<double>? showFamiliarity,
     Expression<DateTime>? clickTime,
     Expression<double>? clickValue,
   }) {
@@ -2493,9 +2497,11 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       if (fragmentId != null) 'fragment_id': fragmentId,
       if (memoryGroupId != null) 'memory_group_id': memoryGroupId,
       if (isLatestRecord != null) 'is_latest_record': isLatestRecord,
-      if (planedShowTime != null) 'planed_show_time': planedShowTime,
-      if (actualShowTime != null) 'actual_show_time': actualShowTime,
-      if (clickFamiliarity != null) 'click_familiarity': clickFamiliarity,
+      if (nextPlanedShowTime != null)
+        'next_planed_show_time': nextPlanedShowTime,
+      if (currentActualShowTime != null)
+        'current_actual_show_time': currentActualShowTime,
+      if (showFamiliarity != null) 'show_familiarity': showFamiliarity,
       if (clickTime != null) 'click_time': clickTime,
       if (clickValue != null) 'click_value': clickValue,
     });
@@ -2508,9 +2514,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       Value<String>? fragmentId,
       Value<String>? memoryGroupId,
       Value<bool>? isLatestRecord,
-      Value<DateTime>? planedShowTime,
-      Value<DateTime>? actualShowTime,
-      Value<double>? clickFamiliarity,
+      Value<DateTime>? nextPlanedShowTime,
+      Value<DateTime>? currentActualShowTime,
+      Value<double>? showFamiliarity,
       Value<DateTime>? clickTime,
       Value<double>? clickValue}) {
     return FragmentMemoryInfosCompanion(
@@ -2520,9 +2526,10 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       fragmentId: fragmentId ?? this.fragmentId,
       memoryGroupId: memoryGroupId ?? this.memoryGroupId,
       isLatestRecord: isLatestRecord ?? this.isLatestRecord,
-      planedShowTime: planedShowTime ?? this.planedShowTime,
-      actualShowTime: actualShowTime ?? this.actualShowTime,
-      clickFamiliarity: clickFamiliarity ?? this.clickFamiliarity,
+      nextPlanedShowTime: nextPlanedShowTime ?? this.nextPlanedShowTime,
+      currentActualShowTime:
+          currentActualShowTime ?? this.currentActualShowTime,
+      showFamiliarity: showFamiliarity ?? this.showFamiliarity,
       clickTime: clickTime ?? this.clickTime,
       clickValue: clickValue ?? this.clickValue,
     );
@@ -2549,14 +2556,16 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     if (isLatestRecord.present) {
       map['is_latest_record'] = Variable<bool>(isLatestRecord.value);
     }
-    if (planedShowTime.present) {
-      map['planed_show_time'] = Variable<DateTime>(planedShowTime.value);
+    if (nextPlanedShowTime.present) {
+      map['next_planed_show_time'] =
+          Variable<DateTime>(nextPlanedShowTime.value);
     }
-    if (actualShowTime.present) {
-      map['actual_show_time'] = Variable<DateTime>(actualShowTime.value);
+    if (currentActualShowTime.present) {
+      map['current_actual_show_time'] =
+          Variable<DateTime>(currentActualShowTime.value);
     }
-    if (clickFamiliarity.present) {
-      map['click_familiarity'] = Variable<double>(clickFamiliarity.value);
+    if (showFamiliarity.present) {
+      map['show_familiarity'] = Variable<double>(showFamiliarity.value);
     }
     if (clickTime.present) {
       map['click_time'] = Variable<DateTime>(clickTime.value);
@@ -2576,9 +2585,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
           ..write('fragmentId: $fragmentId, ')
           ..write('memoryGroupId: $memoryGroupId, ')
           ..write('isLatestRecord: $isLatestRecord, ')
-          ..write('planedShowTime: $planedShowTime, ')
-          ..write('actualShowTime: $actualShowTime, ')
-          ..write('clickFamiliarity: $clickFamiliarity, ')
+          ..write('nextPlanedShowTime: $nextPlanedShowTime, ')
+          ..write('currentActualShowTime: $currentActualShowTime, ')
+          ..write('showFamiliarity: $showFamiliarity, ')
           ..write('clickTime: $clickTime, ')
           ..write('clickValue: $clickValue')
           ..write(')'))
@@ -2630,23 +2639,23 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (is_latest_record IN (0, 1))');
-  final VerificationMeta _planedShowTimeMeta =
-      const VerificationMeta('planedShowTime');
+  final VerificationMeta _nextPlanedShowTimeMeta =
+      const VerificationMeta('nextPlanedShowTime');
   @override
-  late final GeneratedColumn<DateTime> planedShowTime =
-      GeneratedColumn<DateTime>('planed_show_time', aliasedName, false,
+  late final GeneratedColumn<DateTime> nextPlanedShowTime =
+      GeneratedColumn<DateTime>('next_planed_show_time', aliasedName, false,
           type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  final VerificationMeta _actualShowTimeMeta =
-      const VerificationMeta('actualShowTime');
+  final VerificationMeta _currentActualShowTimeMeta =
+      const VerificationMeta('currentActualShowTime');
   @override
-  late final GeneratedColumn<DateTime> actualShowTime =
-      GeneratedColumn<DateTime>('actual_show_time', aliasedName, false,
+  late final GeneratedColumn<DateTime> currentActualShowTime =
+      GeneratedColumn<DateTime>('current_actual_show_time', aliasedName, false,
           type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  final VerificationMeta _clickFamiliarityMeta =
-      const VerificationMeta('clickFamiliarity');
+  final VerificationMeta _showFamiliarityMeta =
+      const VerificationMeta('showFamiliarity');
   @override
-  late final GeneratedColumn<double> clickFamiliarity = GeneratedColumn<double>(
-      'click_familiarity', aliasedName, false,
+  late final GeneratedColumn<double> showFamiliarity = GeneratedColumn<double>(
+      'show_familiarity', aliasedName, false,
       type: DriftSqlType.double, requiredDuringInsert: true);
   final VerificationMeta _clickTimeMeta = const VerificationMeta('clickTime');
   @override
@@ -2666,9 +2675,9 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
         fragmentId,
         memoryGroupId,
         isLatestRecord,
-        planedShowTime,
-        actualShowTime,
-        clickFamiliarity,
+        nextPlanedShowTime,
+        currentActualShowTime,
+        showFamiliarity,
         clickTime,
         clickValue
       ];
@@ -2718,29 +2727,29 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     } else if (isInserting) {
       context.missing(_isLatestRecordMeta);
     }
-    if (data.containsKey('planed_show_time')) {
+    if (data.containsKey('next_planed_show_time')) {
       context.handle(
-          _planedShowTimeMeta,
-          planedShowTime.isAcceptableOrUnknown(
-              data['planed_show_time']!, _planedShowTimeMeta));
+          _nextPlanedShowTimeMeta,
+          nextPlanedShowTime.isAcceptableOrUnknown(
+              data['next_planed_show_time']!, _nextPlanedShowTimeMeta));
     } else if (isInserting) {
-      context.missing(_planedShowTimeMeta);
+      context.missing(_nextPlanedShowTimeMeta);
     }
-    if (data.containsKey('actual_show_time')) {
+    if (data.containsKey('current_actual_show_time')) {
       context.handle(
-          _actualShowTimeMeta,
-          actualShowTime.isAcceptableOrUnknown(
-              data['actual_show_time']!, _actualShowTimeMeta));
+          _currentActualShowTimeMeta,
+          currentActualShowTime.isAcceptableOrUnknown(
+              data['current_actual_show_time']!, _currentActualShowTimeMeta));
     } else if (isInserting) {
-      context.missing(_actualShowTimeMeta);
+      context.missing(_currentActualShowTimeMeta);
     }
-    if (data.containsKey('click_familiarity')) {
+    if (data.containsKey('show_familiarity')) {
       context.handle(
-          _clickFamiliarityMeta,
-          clickFamiliarity.isAcceptableOrUnknown(
-              data['click_familiarity']!, _clickFamiliarityMeta));
+          _showFamiliarityMeta,
+          showFamiliarity.isAcceptableOrUnknown(
+              data['show_familiarity']!, _showFamiliarityMeta));
     } else if (isInserting) {
-      context.missing(_clickFamiliarityMeta);
+      context.missing(_showFamiliarityMeta);
     }
     if (data.containsKey('click_time')) {
       context.handle(_clickTimeMeta,
@@ -2777,12 +2786,14 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
           DriftSqlType.string, data['${effectivePrefix}memory_group_id'])!,
       isLatestRecord: attachedDatabase.options.types
           .read(DriftSqlType.bool, data['${effectivePrefix}is_latest_record'])!,
-      planedShowTime: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}planed_show_time'])!,
-      actualShowTime: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}actual_show_time'])!,
-      clickFamiliarity: attachedDatabase.options.types.read(
-          DriftSqlType.double, data['${effectivePrefix}click_familiarity'])!,
+      nextPlanedShowTime: attachedDatabase.options.types.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}next_planed_show_time'])!,
+      currentActualShowTime: attachedDatabase.options.types.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}current_actual_show_time'])!,
+      showFamiliarity: attachedDatabase.options.types.read(
+          DriftSqlType.double, data['${effectivePrefix}show_familiarity'])!,
       clickTime: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}click_time'])!,
       clickValue: attachedDatabase.options.types

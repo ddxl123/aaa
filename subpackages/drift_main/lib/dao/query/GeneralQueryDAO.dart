@@ -80,8 +80,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   }
 
   /// 获取 [mg] 内已经学习过至少一次的碎片数量。
-  ///
-  /// 相似：[DancerQueryDAO.getEarliestLearnedFragment]
   Future<int> getLearnedFragmentsCount({required MemoryGroup mg}) async {
     final countExpr = fragments.id.count();
     final lSelect = selectOnly(fragments);
@@ -100,7 +98,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
 
   /// 获取 [mg] 内从未学习过的碎片数量。
   ///
-  /// 相似：[DancerQueryDAO.getNewFragment]
+  /// 相似：[DancerQueryDAO.getOneNewFragment]
   Future<int> getNewFragmentsCount({required MemoryGroup mg}) async {
     final countExpr = fragments.id.count();
     final lSelect = selectOnly(fragments);

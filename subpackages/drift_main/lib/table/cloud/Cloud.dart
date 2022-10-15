@@ -144,7 +144,7 @@ class MemoryModels extends CloudTableBase {
 /// 每次用户在碎片展示中点击按钮后，就会创建一条记录。
 ///
 /// 1. 用户自己手动配置熟悉度：
-/// 用户可以在其他地方配置记忆记录，由于需要配置 [planedShowTime]，
+/// 用户可以在其他地方配置记忆记录，由于需要配置 [nextPlanedShowTime]，
 /// 因此必须检索所有记忆组内是否存在该碎片，并要进行按钮触发配置对应的 [stageButtonValue]。
 ///
 @ReferenceTo([])
@@ -161,14 +161,14 @@ class FragmentMemoryInfos extends CloudTableBase {
 
   /// =====
 
-  /// 原本计划展示的时间点。
-  DateTimeColumn get planedShowTime => dateTime()();
+  /// 下一次计划展示的时间点。
+  DateTimeColumn get nextPlanedShowTime => dateTime()();
 
-  /// 实际展示的时间点。
-  DateTimeColumn get actualShowTime => dateTime()();
+  /// 当前实际展示的时间点。
+  DateTimeColumn get currentActualShowTime => dateTime()();
 
   /// 刚展示时的熟练度。
-  RealColumn get clickFamiliarity => real()();
+  RealColumn get showFamiliarity => real()();
 
   /// 点击按钮的时间。
   DateTimeColumn get clickTime => dateTime()();

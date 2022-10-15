@@ -12,10 +12,8 @@ class InAppStageAbController extends AbController {
 
   final dancerQuery = DancerQuery();
 
-  /// 为 null 时表示已完成学习。
-  ///
-  /// [FragmentMemoryInfo] 为当前碎片的最近一次的碎片信息。
-  final fragmentAndEarliestMemoryInfo = Ab<Tuple2<Fragment, FragmentMemoryInfo?>?>(null);
+  /// [DancerQuery.getNewDancer]
+  final fragmentAndMemoryInfos = Ab<Tuple2<Fragment, List<FragmentMemoryInfo>>?>(null);
 
   final storage = InternalVariableStorage().ab;
 
@@ -41,14 +39,67 @@ class InAppStageAbController extends AbController {
   }
 
   Future<void> show() async {
-    final dancer = await dancerQuery.getDancer(mg: memoryGroupGizmo());
-    fragmentAndEarliestMemoryInfo.refreshInevitable((obj) => dancer);
-    if (fragmentAndEarliestMemoryInfo() == null) return;
+    final dancer = await dancerQuery.getNewDancer(mg: memoryGroupGizmo());
+    fragmentAndMemoryInfos.refreshInevitable((obj) => dancer);
+    print(fragmentAndMemoryInfos());
+    if (fragmentAndMemoryInfos() == null) return;
 
-    await parseButtonData();
+    await parse();
   }
 
-  Future<void> parseButtonData() async {
+  Future<void> parse() async {
+    final currentFamiliarity = await parseFamiliarity();
+    await parseButtonData(currentFamiliarity: currentFamiliarity);
+  }
+
+  Future<double> parseFamiliarity() async {
+    final currentFamiliarity = await AlgorithmParser<FamiliarityState>().parse(
+      state: FamiliarityState(
+        content: memoryModelGizmo().familiarityAlgorithm,
+        simulationType: SimulationType.external,
+        externalResultHandler: (InternalVariableAtom atom) async {
+          return await atom.filter(
+            storage: storage(),
+            countAllIF: IvFilter(
+              ivf: () async => await dancerQuery.getCountAll(mg: memoryGroupGizmo()),
+              isReGet: true,
+            ),
+            countNewIF: IvFilter(
+              ivf: () async => await dancerQuery.getCountNew(mg: memoryGroupGizmo()),
+              isReGet: true,
+            ),
+            timesIF: IvFilter(
+              ivf: () async => await dancerQuery.getTimes(tuple: fragmentAndMemoryInfos()!),
+              isReGet: true,
+            ),
+            actualShowTimeIF: IvFilter(
+              ivf: () async => await dancerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
+              isReGet: true,
+            ),
+            planedShowTimeIF: IvFilter(
+              ivf: () async => await dancerQuery.getCurrentPlanedShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
+              isReGet: true,
+            ),
+            showFamiliarIF: IvFilter(
+              ivf: () async => await dancerQuery.getShowFamiliar(tuple: fragmentAndMemoryInfos()!, currentShowFamiliar: null),
+              isReGet: true,
+            ),
+            clickTimeIF: IvFilter(
+              ivf: () async => [null],
+              isReGet: true,
+            ),
+            clickValueIF: IvFilter(
+              ivf: () async => [null],
+              isReGet: true,
+            ),
+          );
+        },
+      ),
+    );
+    return currentFamiliarity.state.result;
+  }
+
+  Future<void> parseButtonData({required double currentFamiliarity}) async {
     await AlgorithmParser().parse(
       state: ButtonDataState(
         content: memoryModelGizmo().buttonAlgorithm,
@@ -57,87 +108,40 @@ class InAppStageAbController extends AbController {
           return await atom.filter(
             storage: storage(),
             countAllIF: IvFilter(
-              ivf: () async => await dancerQuery.getCountAll(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
+              ivf: () async => await dancerQuery.getCountAll(mg: memoryGroupGizmo()),
               isReGet: false,
             ),
             countNewIF: IvFilter(
-              ivf: () async => await dancerQuery.getCountNew(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
+              ivf: () async => await dancerQuery.getCountNew(mg: memoryGroupGizmo()),
               isReGet: false,
             ),
             timesIF: IvFilter(
-              ivf: () async => await dancerQuery.getTimes(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
+              ivf: () async => await dancerQuery.getTimes(tuple: fragmentAndMemoryInfos()!),
               isReGet: false,
             ),
             actualShowTimeIF: IvFilter(
-              ivf: () async => await dancerQuery.getActualShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
+              ivf: () async => await dancerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
               isReGet: false,
             ),
             planedShowTimeIF: IvFilter(
-              ivf: () async => await dancerQuery.getPlanedShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
+              ivf: () async => await dancerQuery.getCurrentPlanedShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
               isReGet: false,
             ),
             showFamiliarIF: IvFilter(
-              ivf: () async => await parseCurrentFamiliarity(),
-              isReGet: false,
+              ivf: () async => await dancerQuery.getShowFamiliar(tuple: fragmentAndMemoryInfos()!, currentShowFamiliar: currentFamiliarity),
+              isReGet: true,
             ),
             clickTimeIF: IvFilter(
-              ivf: () async => null,
+              ivf: () async => [null],
               isReGet: false,
             ),
             clickValueIF: IvFilter(
-              ivf: () async => null,
+              ivf: () async => [null],
               isReGet: false,
             ),
           );
         },
       ),
     );
-  }
-
-  Future<double?> parseCurrentFamiliarity() async {
-    final result = await AlgorithmParser<FamiliarityState>().parse(
-      state: FamiliarityState(
-        content: memoryModelGizmo().familiarityAlgorithm,
-        simulationType: SimulationType.external,
-        externalResultHandler: (InternalVariableAtom atom) async {
-          return await atom.filter(
-            storage: storage(),
-            countAllIF: IvFilter(
-              ivf: () async => await dancerQuery.getCountAll(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isReGet: true,
-            ),
-            countNewIF: IvFilter(
-              ivf: () async => await dancerQuery.getCountNew(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isReGet: true,
-            ),
-            timesIF: IvFilter(
-              ivf: () async => await dancerQuery.getTimes(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
-              isReGet: true,
-            ),
-            actualShowTimeIF: IvFilter(
-              ivf: () async => await dancerQuery.getActualShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo()),
-              isReGet: true,
-            ),
-            planedShowTimeIF: IvFilter(
-              ivf: () async => await dancerQuery.getPlanedShowTime(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), tuple: fragmentAndEarliestMemoryInfo()!),
-              isReGet: true,
-            ),
-            showFamiliarIF: IvFilter(
-              ivf: () async => await dancerQuery.getShowFamiliar(nTypeNumber: atom.nTypeNumber, mg: memoryGroupGizmo(), mm: memoryModelGizmo()),
-              isReGet: false,
-            ),
-            clickTimeIF: IvFilter(
-              ivf: () async => null,
-              isReGet: false,
-            ),
-            clickValueIF: IvFilter(
-              ivf: () async => null,
-              isReGet: false,
-            ),
-          );
-        },
-      ),
-    );
-    return result.state.result;
   }
 }

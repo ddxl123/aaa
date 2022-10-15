@@ -33,7 +33,7 @@ class _InAppStageState extends State<InAppStage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(c.fragmentAndEarliestMemoryInfo(abw) == null ? '任务已全部完成！' : c.fragmentAndEarliestMemoryInfo()!.t1.title),
+                Text(c.fragmentAndMemoryInfos(abw) == null ? '任务已全部完成！' : c.fragmentAndMemoryInfos()!.t1.title),
               ],
             ),
           ),

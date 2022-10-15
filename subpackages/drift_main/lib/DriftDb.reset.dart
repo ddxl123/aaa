@@ -214,9 +214,9 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> fragmentId,
     required Value<String> memoryGroupId,
     required Value<bool> isLatestRecord,
-    required Value<DateTime> planedShowTime,
-    required Value<DateTime> actualShowTime,
-    required Value<double> clickFamiliarity,
+    required Value<DateTime> nextPlanedShowTime,
+    required Value<DateTime> currentActualShowTime,
+    required Value<double> showFamiliarity,
     required Value<DateTime> clickTime,
     required Value<double> clickValue,
     required SyncTag? writeSyncTag,
@@ -229,13 +229,14 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
         memoryGroupId.present ? memoryGroupId.value : this.memoryGroupId;
     this.isLatestRecord =
         isLatestRecord.present ? isLatestRecord.value : this.isLatestRecord;
-    this.planedShowTime =
-        planedShowTime.present ? planedShowTime.value : this.planedShowTime;
-    this.actualShowTime =
-        actualShowTime.present ? actualShowTime.value : this.actualShowTime;
-    this.clickFamiliarity = clickFamiliarity.present
-        ? clickFamiliarity.value
-        : this.clickFamiliarity;
+    this.nextPlanedShowTime = nextPlanedShowTime.present
+        ? nextPlanedShowTime.value
+        : this.nextPlanedShowTime;
+    this.currentActualShowTime = currentActualShowTime.present
+        ? currentActualShowTime.value
+        : this.currentActualShowTime;
+    this.showFamiliarity =
+        showFamiliarity.present ? showFamiliarity.value : this.showFamiliarity;
     this.clickTime = clickTime.present ? clickTime.value : this.clickTime;
     this.clickValue = clickValue.present ? clickValue.value : this.clickValue;
     if (writeSyncTag != null) {

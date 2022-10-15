@@ -3,30 +3,35 @@ part of algorithm_parser;
 class DancerQuery {
   final DriftDb driftDb = DriftDb.instance;
 
-  /// 返回的 [FragmentMemoryInfo] 是当前碎片的最近一次实例。
-  ///
   /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
-  Future<Tuple2<Fragment, FragmentMemoryInfo>?> getEarliestLearnedFragment({required MemoryGroup mg}) async {
+  Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getOneLearnedFragment({required MemoryGroup mg}) async {
     final lSelect = driftDb.select(driftDb.fragments);
     final lJoin = [
       innerJoin(driftDb.fragmentMemoryInfos, driftDb.fragmentMemoryInfos.fragmentId.equalsExp(driftDb.fragments.id)),
     ];
     final lWhere = driftDb.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
         driftDb.fragmentMemoryInfos.isLatestRecord.equals(true) &
-        driftDb.fragmentMemoryInfos.planedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
+        driftDb.fragmentMemoryInfos.nextPlanedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
 
     final doJoin = lSelect.join(lJoin);
     doJoin.where(lWhere);
-    doJoin.orderBy([OrderingTerm.asc(driftDb.fragmentMemoryInfos.planedShowTime)]);
+    doJoin.orderBy([OrderingTerm.asc(driftDb.fragmentMemoryInfos.nextPlanedShowTime)]);
     doJoin.limit(1);
 
     final result = await doJoin.getSingleOrNull();
     if (result == null) return null;
-    return Tuple2(t1: result.readTable(driftDb.fragments), t2: result.readTable(driftDb.fragmentMemoryInfos));
+
+    final recentInfo = result.readTable(driftDb.fragmentMemoryInfos);
+
+    final nSelect = driftDb.select(driftDb.fragmentMemoryInfos);
+    nSelect.where((tbl) => tbl.memoryGroupId.equals(recentInfo.memoryGroupId) & tbl.fragmentId.equals(recentInfo.fragmentId));
+    nSelect.orderBy([(t) => OrderingTerm.asc(t.createdAt)]);
+    final nResult = await nSelect.get();
+    return Tuple2(t1: result.readTable(driftDb.fragments), t2: nResult);
   }
 
   /// 相似：[GeneralQueryDAO.getNewFragmentsCount]
-  Future<Fragment?> getNewFragment({required MemoryGroup mg}) async {
+  Future<Fragment?> getOneNewFragment({required MemoryGroup mg}) async {
     final lSelect = driftDb.select(driftDb.fragments);
     final lJoin = [
       innerJoin(driftDb.rFragment2MemoryGroups, driftDb.rFragment2MemoryGroups.sonId.equalsExp(driftDb.fragments.id)),
@@ -48,14 +53,21 @@ class DancerQuery {
     return result.readTable(driftDb.fragments);
   }
 
-  /// 获取当前需要展示的碎片，已经当前碎片的上一次展示信息。
-  Future<Tuple2<Fragment, FragmentMemoryInfo?>?> getDancer({required MemoryGroup mg}) async {
-    final newFragment = await getNewFragment(mg: mg);
-    final learnedFragment = await getEarliestLearnedFragment(mg: mg);
+  /// [Fragment] 表示当前新展示的碎片。
+  ///
+  /// [FragmentMemoryInfo]s 为当前记忆组当前碎片的全部记忆信息（不包含当前新展示的信息，因为当前新展示的信息未被创建）。
+  /// 按照时间顺序排序。
+  ///
+  /// 若 [FragmentMemoryInfo]s 数组为空，则当前碎片是新碎片。
+  ///
+  /// 为 null 时表示没有下一个了，即已完成学习。
+  Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getNewDancer({required MemoryGroup mg}) async {
+    final newFragment = await getOneNewFragment(mg: mg);
+    final learnedFragment = await getOneLearnedFragment(mg: mg);
 
     if (newFragment == null && learnedFragment == null) return null;
 
-    final newFragmentOrNull = newFragment == null ? null : Tuple2(t1: newFragment, t2: null);
+    final newFragmentOrNull = newFragment == null ? null : Tuple2(t1: newFragment, t2: <FragmentMemoryInfo>[]);
     final learnedFragmentOrNull = learnedFragment == null ? null : Tuple2(t1: learnedFragment.t1, t2: learnedFragment.t2);
 
     return filter(
@@ -81,47 +93,40 @@ class DancerQuery {
   }
 
   /// [InternalVariabler.ivgCountAllConst]
-  Future<int> getCountAll({required MemoryGroup mg}) async {
-    return await DriftDb.instance.generalQueryDAO.getFragmentsCount(mg: mg);
+  Future<List<int>> getCountAll({required MemoryGroup mg}) async {
+    return [await DriftDb.instance.generalQueryDAO.getFragmentsCount(mg: mg)];
   }
 
   /// [InternalVariabler.ivsCountNewConst]
-  Future<int> getCountNew({required MemoryGroup mg}) async {
-    return await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mg);
+  Future<List<int>> getCountNew({required MemoryGroup mg}) async {
+    return [await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mg)];
   }
 
   /// [InternalVariabler.ivsTimesConst]
-  Future<int?> getTimes({required MemoryGroup mg, required Tuple2<Fragment, FragmentMemoryInfo?> tuple}) async {
-    if (tuple.t2 == null) return 1;
-    final countExpr = driftDb.fragmentMemoryInfos.id.count();
-    final lSelect = driftDb.selectOnly(driftDb.fragmentMemoryInfos);
-    lSelect.where(driftDb.fragmentMemoryInfos.memoryGroupId.equals(mg.id) & driftDb.fragmentMemoryInfos.fragmentId.equals(tuple.t1.id));
-    lSelect.addColumns([countExpr]);
-    final result = await lSelect.getSingle();
-    return result.read(countExpr)! + 1;
+  Future<List<int>> getTimes({required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
+    return tuple.t2.isEmpty ? [1] : [tuple.t2.length];
   }
 
-  /// [InternalVariabler.ivsActualShowTimeConst]
-  Future<int?> getActualShowTime({required NTypeNumber? nTypeNumber, required MemoryGroup mg, required Tuple2<Fragment, FragmentMemoryInfo?> tuple}) async {
-    final current = differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now());
-    if (nTypeNumber == null) return current;
-    return await nTypeNumber.filter(
-      timesCb: () async {
-        final lSelect = driftDb.select(driftDb.fragmentMemoryInfos);
-        final lJoin = lSelect.join([innerJoin(driftDb.fragments, driftDb.fragments.id.equalsExp(driftDb.fragmentMemoryInfos.fragmentId))]);
-        final lWhere = lJoin.where(driftDb.fragmentMemoryInfos.memoryGroupId.equals(mg.id));
-        final result = await lJoin.get();
-      },
-      lastCb: () async {},
-    );
+  /// [InternalVariabler.ivsCurrentActualShowTimeConst]
+  Future<List<int>> getCurrentActualShowTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
+    return tuple.t2.map<int>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.currentActualShowTime)).toList()
+      ..add(differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()));
   }
 
-  /// [InternalVariabler.ivsPlanedShowTimeConst]
-  Future<int?> getPlanedShowTime({required NTypeNumber? nTypeNumber, required MemoryGroup mg, required Tuple2<Fragment, FragmentMemoryInfo?> tuple}) async {
-    if (tuple.t2 == null) return null;
-    return differenceFromStartTimeStamp(mg: mg, dateTime: tuple.t2!.planedShowTime);
+  /// [InternalVariabler.ivsNextPlanedShowTimeConst]
+  ///
+  /// 这里与其他的不同，实际上的 [FragmentMemoryInfos.nextPlanedShowTime] 是从上一次展示信息中获取的，
+  /// 但是该函数将会获取本次原本计划展示时间，即上一次的 [nextPlanedShowTime] 来充当当前的原本计划展示时间。
+  /// 也就是说，返回值的 first 必然为 null。
+  Future<List<int?>> getCurrentPlanedShowTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
+    return <int?>[null, ...tuple.t2.map((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.nextPlanedShowTime))];
   }
 
   /// [InternalVariabler.ivsShowFamiliarConst]
-  Future<double?> getShowFamiliar({required NTypeNumber? nTypeNumber, required MemoryGroup mg, required MemoryModel mm}) async {}
+  Future<List<double?>> getShowFamiliar({
+    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+    required double? currentShowFamiliar,
+  }) async {
+    return tuple.t2.map<double?>((e) => e.showFamiliarity).toList()..add(currentShowFamiliar);
+  }
 }

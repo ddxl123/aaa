@@ -17,14 +17,14 @@ part of algorithm_parser;
 ///   - 获取方式：检索指定的 [FragmentMemoryInfos] 的数量。
 /// actual_show_time：本次实际展示的时间点
 ///   - 数值类型：以秒为单位的时间戳
-///   - 获取方式：[FragmentMemoryInfos.actualShowTime]。
+///   - 获取方式：[FragmentMemoryInfos.currentActualShowTime]。
 /// planed_show_time：本次原本计划展示的时间点
 ///   - 数值类型：以秒为单位的时间戳
-///   - 获取方式：[FragmentMemoryInfos.planedShowTime]。
+///   - 获取方式：[FragmentMemoryInfos.nextPlanedShowTime]。
 /// click_familiar：本次刚展示时的熟悉度。
 ///   - 初始值：默认为0，用户可能会手动分配初始值。
 ///   - 数值类型：任意实数
-///   - 获取方式：[FragmentMemoryInfos.clickFamiliarity]。
+///   - 获取方式：[FragmentMemoryInfos.showFamiliarity]。
 ///
 /// <在点击按钮时获取>
 /// click_time：本次点击按钮时的时间点

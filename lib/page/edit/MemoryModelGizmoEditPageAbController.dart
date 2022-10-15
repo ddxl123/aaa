@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:aaa/algorithm_parser/Simulator.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/DriftDb.dart';

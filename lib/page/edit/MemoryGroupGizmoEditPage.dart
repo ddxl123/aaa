@@ -301,22 +301,22 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                   builder: (Map<String, Object?> extra, BuildContext context, void Function() refresh) {
                     double dynValue = extra['value'] as double;
                     // 不能超过最大值
-                    if (dynValue > c.notLearnCount()) {
-                      extra['value'] = c.notLearnCount();
+                    if (dynValue > c.remainNewFragmentsCount()) {
+                      extra['value'] = c.remainNewFragmentsCount();
                       dynValue = extra['value'] as double;
                     }
                     // 如果没有 space，则 0/300，其中 0 字符长度会动态的变宽成 10 或 100，从而导致刷新的时候滑块抖动。
                     // space 意味着将 0 前面添加两个 0，即 000/300。
-                    int space = c.notLearnCount().toString().length - dynValue.toInt().toString().length;
+                    int space = c.remainNewFragmentsCount().toString().length - dynValue.toInt().toString().length;
                     return Row(
                       children: [
                         Expanded(
                           child: Slider(
                             label: dynValue.toInt().toString(),
                             min: 0,
-                            max: c.notLearnCount().toDouble(),
+                            max: c.remainNewFragmentsCount().toDouble(),
                             value: dynValue,
-                            divisions: c.notLearnCount(),
+                            divisions: c.remainNewFragmentsCount(),
                             onChanged: (n) {
                               extra['value'] = n;
                               refresh();
@@ -326,7 +326,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                             },
                           ),
                         ),
-                        Text('${'0' * space}${dynValue.toInt()}/${c.notLearnCount()}')
+                        Text('${'0' * space}${dynValue.toInt()}/${c.remainNewFragmentsCount()}')
                       ],
                     );
                   },
