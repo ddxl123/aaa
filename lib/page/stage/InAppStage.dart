@@ -37,33 +37,60 @@ class _InAppStageState extends State<InAppStage> {
               ],
             ),
           ),
-          // bottomSheet: _bottomWidget(),
+          bottomSheet: _bottomWidget(),
         );
       },
     );
   }
 
-//   Widget _bottomWidget() {
-//     return AbBuilder<InAppStageAbController>(
-//       builder: (c, abw) {
-//         return Row(
-//           children: c.vMemoryModelButtonDataVerifyResult(abw)?.center.map(
-//                 (e) {
-//                   return Expanded(
-//                     child: Padding(
-//                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-//                       child: ElevatedButton(
-//                         style: ButtonStyle(elevation: MaterialStateProperty.all(3)),
-//                         child: Text(e.toString()),
-//                         onPressed: () {},
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               ).toList() ??
-//               [const Expanded(child: Text('按钮数据获取异常！'))],
-//         );
-//       },
-//     );
-//   }
+  Widget _bottomWidget() {
+    return AbBuilder<InAppStageAbController>(
+      builder: (c, abw) {
+        if (c.fragmentAndMemoryInfos(abw) == null) return Container();
+        if (c.buttonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
+        if (!c.buttonDataState(abw)!.isSlidable) {
+          return Row(
+            children: c
+                .buttonDataState()!
+                .resultButtonValues
+                .map(
+                  (e) => Expanded(
+                    child: TextButton(
+                      child: AbwBuilder(
+                        builder: (abw) {
+                          return TextButton(
+                            onPressed: () {},
+                            child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : e.parseTime()),
+                          );
+                        },
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                )
+                .toList(),
+          );
+        } else {
+          return Row(
+            children: c
+                .buttonDataState()!
+                .resultButtonValues
+                .map(
+                  (e) => Expanded(
+                    child: ElevatedButton(
+                      child: AbwBuilder(
+                        builder: (abw) {
+                          return Text(c.isButtonDataShowValue(abw) ? e.value.toString() : e.parseTime());
+                        },
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                )
+                .toList(),
+          );
+        }
+      },
+    );
+  }
 }

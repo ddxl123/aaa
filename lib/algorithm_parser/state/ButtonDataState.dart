@@ -1,5 +1,29 @@
 part of algorithm_parser;
 
+class ButtonDataValue2NextShowTime {
+  final double value;
+
+  /// 从 [NextShowTimeState] 解析结果中获取。
+  int? time;
+
+  String parseTime() {
+    final t = time;
+    if (t == null) throw '时间值为空！';
+    int days = 0;
+    int hours = 0;
+    int minutes = 0;
+    int seconds = 0;
+    final d = Duration(seconds: t);
+    days = d.inDays;
+    hours = days == 0 ? d.inHours : d.inHours % 24;
+    minutes = hours == 0 ? d.inMinutes : d.inMinutes % 60;
+    seconds = minutes == 0 ? d.inSeconds : d.inSeconds % 60;
+    return '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
+  }
+
+  ButtonDataValue2NextShowTime({required this.value});
+}
+
 class ButtonDataState extends ClassificationState {
   ButtonDataState({
     required super.content,
@@ -7,9 +31,9 @@ class ButtonDataState extends ClassificationState {
     required super.externalResultHandler,
   });
 
-  double? resultMin;
-  double? resultMax;
-  final List<double> resultButtonValues = [];
+  ButtonDataValue2NextShowTime? resultMin;
+  ButtonDataValue2NextShowTime? resultMax;
+  final List<ButtonDataValue2NextShowTime> resultButtonValues = [];
 
   bool get isSlidable => resultMin == null || resultMax == null;
 
@@ -20,8 +44,8 @@ class ButtonDataState extends ClassificationState {
     if (blank.length == 1) {
       _parseComma(comma: blank.first, algorithmParser: algorithmParser);
     } else if (blank.length == 3) {
-      resultMin = algorithmParser.calculate(blank.first);
-      resultMax = algorithmParser.calculate(blank.last);
+      resultMin = ButtonDataValue2NextShowTime(value: algorithmParser.calculate(blank.first));
+      resultMax = ButtonDataValue2NextShowTime(value: algorithmParser.calculate(blank.last));
       _parseComma(comma: blank[1], algorithmParser: algorithmParser);
     } else {
       throw '"use:$content" 内容书写不规范！';
@@ -34,7 +58,7 @@ class ButtonDataState extends ClassificationState {
     resultButtonValues.addAll(
       bvs.map(
         (e) {
-          return algorithmParser.calculate(e);
+          return ButtonDataValue2NextShowTime(value: algorithmParser.calculate(e));
         },
       ),
     );
@@ -58,8 +82,8 @@ class ButtonDataState extends ClassificationState {
       countAllIF: IvFilter(ivf: () async => [countAll], isReGet: true),
       countNewIF: IvFilter(ivf: () async => [countCapping ~/ 2], isReGet: true),
       timesIF: IvFilter(ivf: () async => [Random().nextInt(9) + 1], isReGet: true),
-      actualShowTimeIF: IvFilter(ivf: () async => [actualShowTime], isReGet: true),
-      planedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
+      currentActualShowTimeIF: IvFilter(ivf: () async => [actualShowTime], isReGet: true),
+      currentPlanedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
       showFamiliarIF: IvFilter(ivf: () async => [Random().nextDouble() * 200], isReGet: true),
       clickTimeIF: IvFilter(ivf: () async => [null], isReGet: true),
       clickValueIF: IvFilter(ivf: () async => [null], isReGet: true),

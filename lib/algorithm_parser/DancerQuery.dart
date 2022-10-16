@@ -129,4 +129,13 @@ class DancerQuery {
   }) async {
     return tuple.t2.map<double?>((e) => e.showFamiliarity).toList()..add(currentShowFamiliar);
   }
+
+  Future<List<int?>> getClickTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple, required bool isCreateNow}) async {
+    return tuple.t2.map<int?>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.clickTime)).toList()
+      ..add(isCreateNow ? differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()) : null);
+  }
+
+  Future<List<double?>> getClickValue({required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple, required double? clickValue}) async {
+    return tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
+  }
 }

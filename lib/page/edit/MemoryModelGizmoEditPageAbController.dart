@@ -65,7 +65,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     nextTimeAlgorithm.initVerify(
       (abV) async {
         final result = await AlgorithmParser().parse(
-          state: NextTimeState(
+          state: NextShowTimeState(
             content: nextTimeAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,

@@ -12,7 +12,7 @@ part 'state/ButtonDataState.dart';
 
 part 'state/FamiliarityState.dart';
 
-part 'state/NextTimeState.dart';
+part 'state/NextShowTimeState.dart';
 
 part 'state/abstract.dart';
 

@@ -8,7 +8,7 @@ class InternalVariabler {
     explain: '记忆组启动的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableSuffixTypes: {},
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.global,
   );
   static const InternalVariableConst ivsCountNewConst = InternalVariableConst(
@@ -16,7 +16,7 @@ class InternalVariabler {
     explain: '本次展示前，当前记忆组剩余的新碎片数量。',
     numericTypeExplain: '自然数：0，1，2，3...',
     usableSuffixTypes: {},
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
   static const InternalVariableConst ivsTimesConst = InternalVariableConst(
@@ -24,7 +24,7 @@ class InternalVariabler {
     explain: '本次是当前碎片的第几次展示。',
     numericTypeExplain: '正整数（1，2，3...）。',
     usableSuffixTypes: {},
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
   static const InternalVariableConst ivsCurrentActualShowTimeConst = InternalVariableConst(
@@ -32,7 +32,7 @@ class InternalVariabler {
     explain: '本次实际展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableSuffixTypes: {NType.times, NType.last},
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
   static const InternalVariableConst ivsNextPlanedShowTimeConst = InternalVariableConst(
@@ -40,7 +40,7 @@ class InternalVariabler {
     explain: '本次原本计划展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableSuffixTypes: {NType.times, NType.last},
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
 
@@ -49,7 +49,7 @@ class InternalVariabler {
     explain: '本次展示时的熟悉度。会根据熟悉度算法对值进行计算并获取。',
     numericTypeExplain: '任意数。',
     usableSuffixTypes: {NType.times, NType.last},
-    usableStateTypes: {ButtonDataState, FamiliarityState, NextTimeState},
+    usableStateTypes: {ButtonDataState, FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenShow,
   );
   static const InternalVariableConst ivcClickTimeConst = InternalVariableConst(
@@ -57,7 +57,7 @@ class InternalVariabler {
     explain: '本次点击按钮时的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     usableSuffixTypes: {NType.times, NType.last},
-    usableStateTypes: {FamiliarityState, NextTimeState},
+    usableStateTypes: {FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenClick,
   );
   static const InternalVariableConst ivcClickValueConst = InternalVariableConst(
@@ -65,7 +65,7 @@ class InternalVariabler {
     explain: '本次点击按钮的按钮数值。',
     numericTypeExplain: '任意数。',
     usableSuffixTypes: {NType.times, NType.last},
-    usableStateTypes: {FamiliarityState, NextTimeState},
+    usableStateTypes: {FamiliarityState, NextShowTimeState},
     whenAvailable: WhenAvailable.whenClick,
   );
 
@@ -209,8 +209,8 @@ class InternalVariableAtom {
     required IvFilter<int?> countAllIF,
     required IvFilter<int?> countNewIF,
     required IvFilter<int?> timesIF,
-    required IvFilter<int?> actualShowTimeIF,
-    required IvFilter<int?> planedShowTimeIF,
+    required IvFilter<int?> currentActualShowTimeIF,
+    required IvFilter<int?> currentPlanedShowTimeIF,
     required IvFilter<double?> showFamiliarIF,
     required IvFilter<int?> clickTimeIF,
     required IvFilter<double?> clickValueIF,
@@ -225,10 +225,10 @@ class InternalVariableAtom {
       return await save(storage: storage, ivFilter: timesIF);
     }
     if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
-      return await save(storage: storage, ivFilter: actualShowTimeIF);
+      return await save(storage: storage, ivFilter: currentActualShowTimeIF);
     }
     if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
-      return await save(storage: storage, ivFilter: planedShowTimeIF);
+      return await save(storage: storage, ivFilter: currentPlanedShowTimeIF);
     }
     if (internalVariableConst == InternalVariabler.ivgCountAllConst) {
       return await save(storage: storage, ivFilter: showFamiliarIF);
