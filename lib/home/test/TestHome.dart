@@ -1,4 +1,5 @@
 import 'package:drift_main/tool/DriftViewer.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,11 @@ class TestHome extends StatelessWidget {
                               ),
                               ElevatedButton(
                                 child: const Text('    分析    '),
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  final ContextModel cm = ContextModel();
+                                  cm.bindVariable(Variable('name1'), Number(123));
+                                  print(Parser().parse(c.textEditingController.text).evaluate(EvaluationType.REAL, cm));
+                                },
                               ),
                             ],
                           ),

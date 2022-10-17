@@ -1,8 +1,6 @@
 import 'package:aaa/GlobalAbController.dart';
-import 'package:aaa/algorithm_parser/AlgorithmKeyboard.dart';
 import 'package:aaa/home/Home.dart';
 import 'package:aaa/theme.dart';
-import 'package:cool_ui/cool_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -15,10 +13,7 @@ void main() {
     ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last)
     ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
 
-  // 注册自定义键盘
-  AlgorithmKeyboard.register();
-
-  runMockApp(const KeyboardRootWidget(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

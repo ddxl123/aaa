@@ -100,12 +100,30 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         if (mm == null) return VerifyResult(isOk: false, message: '未查询到对应的记忆模型！');
 
         // TODO: 模拟校验
-        // final fa = await AlgorithmParser().parse(content: mm.familiarityAlgorithm);
-        // final ff = await AlgorithmParser().parse(content: mm.nextTimeAlgorithm);
-        // final bd = await AlgorithmParser().parse(content: mm.buttonData);
-        // if (fa.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-        // if (ff.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-        // if (bd.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        final fa = await AlgorithmParser().parse(
+          state: FamiliarityState(
+            content: mm.familiarityAlgorithm,
+            simulationType: SimulationType.syntaxCheck,
+            externalResultHandler: null,
+          ),
+        );
+        final ff = await AlgorithmParser().parse(
+          state: NextShowTimeState(
+            content: mm.nextTimeAlgorithm,
+            simulationType: SimulationType.syntaxCheck,
+            externalResultHandler: null,
+          ),
+        );
+        final bd = await AlgorithmParser().parse(
+          state: ButtonDataState(
+            content: mm.buttonAlgorithm,
+            simulationType: SimulationType.syntaxCheck,
+            externalResultHandler: null,
+          ),
+        );
+        if (fa.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        if (ff.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
+        if (bd.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
 
         return null;
       },

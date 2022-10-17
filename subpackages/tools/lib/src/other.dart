@@ -7,7 +7,7 @@ const Uuid _uuid = Uuid();
 
 String get uuidV4 => _uuid.v4();
 
-Logger logger = Logger(printer: SimplePrinter());
+Logger logger = Logger(printer: PrettyPrinter(methodCount: 0));
 
 class Tuple2<T1, T2> {
   final T1 t1;

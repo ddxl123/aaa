@@ -73,7 +73,7 @@ class DancerQuery {
     return filter(
       from: mg.newReviewDisplayOrder,
       targets: {
-        [NewReviewDisplayOrder.mix]: () => Random().nextInt(1) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
+        [NewReviewDisplayOrder.mix]: () => math.Random().nextInt(1) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
         [NewReviewDisplayOrder.newReview]: () => newFragmentOrNull ?? learnedFragmentOrNull,
         [NewReviewDisplayOrder.reviewNew]: () => learnedFragmentOrNull ?? newFragmentOrNull,
       },
@@ -92,28 +92,28 @@ class DancerQuery {
     return dateTime.millisecondsSinceEpoch ~/ 1000 - getStartTimeStamp(mg: mg);
   }
 
-  /// [InternalVariabler.ivgCountAllConst]
+  /// [InternalVariableConstant.countAllConst]
   Future<List<int>> getCountAll({required MemoryGroup mg}) async {
     return [await DriftDb.instance.generalQueryDAO.getFragmentsCount(mg: mg)];
   }
 
-  /// [InternalVariabler.ivsCountNewConst]
+  /// [InternalVariableConstant.countNewConst]
   Future<List<int>> getCountNew({required MemoryGroup mg}) async {
     return [await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mg)];
   }
 
-  /// [InternalVariabler.ivsTimesConst]
+  /// [InternalVariableConstant.timesConst]
   Future<List<int>> getTimes({required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
     return tuple.t2.isEmpty ? [1] : [tuple.t2.length];
   }
 
-  /// [InternalVariabler.ivsCurrentActualShowTimeConst]
+  /// [InternalVariableConstant.currentActualShowTimeConst]
   Future<List<int>> getCurrentActualShowTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
     return tuple.t2.map<int>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.currentActualShowTime)).toList()
       ..add(differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()));
   }
 
-  /// [InternalVariabler.ivsNextPlanedShowTimeConst]
+  /// [InternalVariableConstant.nextPlanedShowTimeConst]
   ///
   /// 这里与其他的不同，实际上的 [FragmentMemoryInfos.nextPlanedShowTime] 是从上一次展示信息中获取的，
   /// 但是该函数将会获取本次原本计划展示时间，即上一次的 [nextPlanedShowTime] 来充当当前的原本计划展示时间。
@@ -122,7 +122,7 @@ class DancerQuery {
     return <int?>[null, ...tuple.t2.map((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.nextPlanedShowTime))];
   }
 
-  /// [InternalVariabler.ivsShowFamiliarConst]
+  /// [InternalVariableConstant.showFamiliarConst]
   Future<List<double?>> getShowFamiliar({
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required double? currentShowFamiliar,

@@ -1,5 +1,7 @@
 void main() async {
-  print(Duration(seconds: 86401));
-  print(Duration(seconds: 86460).inMinutes);
-  print(Duration(seconds: 86401).inSeconds);
+  print('daF_+R_34Bsdsa%^%\$6'
+          'ZZ'
+          '\nD'
+          '==][4'
+      .toLowerCase());
 }

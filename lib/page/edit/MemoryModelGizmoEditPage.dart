@@ -1,7 +1,5 @@
-import 'package:aaa/algorithm_parser/AlgorithmKeyboard.dart';
 import 'package:aaa/page/edit/MemoryModelGizmoEditPageAbController.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
-import 'package:cool_ui/cool_ui.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -18,39 +16,27 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       putController: MemoryModelGizmoEditPageAbController(memoryModelGizmo: memoryModelGizmo, editPageType: editPageType),
       tag: Aber.nearest,
       builder: (c, abw) {
-        return KeyboardMediaQuery(
-          child: Scaffold(
-            appBar: AppBar(
-              leading: _appBarLeadingWidget(),
-              title: _appBarTitleWidget(),
-              actions: [
-                _appBarRightAnalyzeWidget(),
-                _appBarRightButtonWidget(),
-              ],
-            ),
-            body: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-              slivers: [
-                SliverToBoxAdapter(child: _titleWidget()),
-                SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _buttonDataWidget()),
-              ],
-            ),
-            floatingActionButton: FloatingRoundCornerButton(
-              text: '算法键盘',
-              onPressed: () {},
-            ),
+        return Scaffold(
+          appBar: AppBar(
+            leading: _appBarLeadingWidget(),
+            title: _appBarTitleWidget(),
+            actions: [
+              _appBarRightAnalyzeWidget(),
+              _appBarRightButtonWidget(),
+            ],
+          ),
+          body: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            slivers: [
+              SliverToBoxAdapter(child: _titleWidget()),
+              SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
+              SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
+              SliverToBoxAdapter(child: _buttonDataWidget()),
+            ],
+          ),
+          floatingActionButton: FloatingRoundCornerButton(
+            text: '算法键盘',
+            onPressed: () {},
           ),
         );
       },
@@ -156,8 +142,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       tag: Aber.nearest,
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.title,
           child: TextField(
-            keyboardType: AlgorithmKeyboard.inputType,
             minLines: 1,
             maxLines: 3,
             controller: c.titleEditingController,
@@ -174,7 +160,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               c.title.refreshEasy((oldValue) => v);
             },
           ),
-          verifyAb: c.title,
         );
       },
     );
@@ -185,8 +170,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       tag: Aber.nearest,
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.familiarityAlgorithm,
           child: TextField(
-            keyboardType: AlgorithmKeyboard.inputType,
             minLines: 1,
             maxLines: 3,
             focusNode: c.familiarityAlgorithmFocusNode,
@@ -204,7 +189,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               c.familiarityAlgorithm.refreshEasy((oldValue) => v);
             },
           ),
-          verifyAb: c.familiarityAlgorithm,
         );
       },
     );
@@ -215,8 +199,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       tag: Aber.nearest,
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.nextTimeAlgorithm,
           child: TextField(
-            keyboardType: AlgorithmKeyboard.inputType,
             minLines: 1,
             maxLines: 3,
             controller: c.nextTimeAlgorithmEditingController,
@@ -233,7 +217,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               c.nextTimeAlgorithm.refreshEasy((oldValue) => v);
             },
           ),
-          verifyAb: c.nextTimeAlgorithm,
         );
       },
     );
@@ -244,8 +227,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       tag: Aber.nearest,
       builder: (c, abw) {
         return CardCustom(
+          verifyAb: c.buttonDataAlgorithm,
           child: TextField(
-            keyboardType: AlgorithmKeyboard.inputType,
             minLines: 1,
             maxLines: 3,
             controller: c.buttonDataAlgorithmEditingController,
@@ -262,7 +245,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               c.buttonDataAlgorithm.refreshEasy((oldValue) => v);
             },
           ),
-          verifyAb: c.buttonDataAlgorithm,
         );
       },
     );

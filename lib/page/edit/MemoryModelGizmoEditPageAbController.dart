@@ -90,7 +90,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     );
     allCheck.initVerify(
       (abV) async {
-        await Simulator.auto(content: 'content');
+        // TODO:
       },
     );
   }
