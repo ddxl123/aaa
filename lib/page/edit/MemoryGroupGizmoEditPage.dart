@@ -100,7 +100,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return FloatingRoundCornerButton(
-          text: '应用并开始',
+          text: const Text('应用并开始'),
           onPressed: () {
             c.applyAndStart();
           },

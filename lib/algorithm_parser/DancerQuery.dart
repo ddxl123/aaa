@@ -1,43 +1,43 @@
 part of algorithm_parser;
 
 class DancerQuery {
-  final DriftDb driftDb = DriftDb.instance;
+  final DriftDb driftDbInstance = DriftDb.instance;
 
   /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
   Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getOneLearnedFragment({required MemoryGroup mg}) async {
-    final lSelect = driftDb.select(driftDb.fragments);
+    final lSelect = driftDbInstance.select(driftDbInstance.fragments);
     final lJoin = [
-      innerJoin(driftDb.fragmentMemoryInfos, driftDb.fragmentMemoryInfos.fragmentId.equalsExp(driftDb.fragments.id)),
+      innerJoin(driftDbInstance.fragmentMemoryInfos, driftDbInstance.fragmentMemoryInfos.fragmentId.equalsExp(driftDbInstance.fragments.id)),
     ];
-    final lWhere = driftDb.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
-        driftDb.fragmentMemoryInfos.isLatestRecord.equals(true) &
-        driftDb.fragmentMemoryInfos.nextPlanedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
+    final lWhere = driftDbInstance.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
+        driftDbInstance.fragmentMemoryInfos.isLatestRecord.equals(true) &
+        driftDbInstance.fragmentMemoryInfos.nextPlanedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
 
     final doJoin = lSelect.join(lJoin);
     doJoin.where(lWhere);
-    doJoin.orderBy([OrderingTerm.asc(driftDb.fragmentMemoryInfos.nextPlanedShowTime)]);
+    doJoin.orderBy([OrderingTerm.asc(driftDbInstance.fragmentMemoryInfos.nextPlanedShowTime)]);
     doJoin.limit(1);
 
     final result = await doJoin.getSingleOrNull();
     if (result == null) return null;
 
-    final recentInfo = result.readTable(driftDb.fragmentMemoryInfos);
+    final recentInfo = result.readTable(driftDbInstance.fragmentMemoryInfos);
 
-    final nSelect = driftDb.select(driftDb.fragmentMemoryInfos);
+    final nSelect = driftDbInstance.select(driftDbInstance.fragmentMemoryInfos);
     nSelect.where((tbl) => tbl.memoryGroupId.equals(recentInfo.memoryGroupId) & tbl.fragmentId.equals(recentInfo.fragmentId));
     nSelect.orderBy([(t) => OrderingTerm.asc(t.createdAt)]);
     final nResult = await nSelect.get();
-    return Tuple2(t1: result.readTable(driftDb.fragments), t2: nResult);
+    return Tuple2(t1: result.readTable(driftDbInstance.fragments), t2: nResult);
   }
 
   /// 相似：[GeneralQueryDAO.getNewFragmentsCount]
   Future<Fragment?> getOneNewFragment({required MemoryGroup mg}) async {
-    final lSelect = driftDb.select(driftDb.fragments);
+    final lSelect = driftDbInstance.select(driftDbInstance.fragments);
     final lJoin = [
-      innerJoin(driftDb.rFragment2MemoryGroups, driftDb.rFragment2MemoryGroups.sonId.equalsExp(driftDb.fragments.id)),
-      leftOuterJoin(driftDb.fragmentMemoryInfos, driftDb.fragmentMemoryInfos.fragmentId.equalsExp(driftDb.fragments.id)),
+      innerJoin(driftDbInstance.rFragment2MemoryGroups, driftDbInstance.rFragment2MemoryGroups.sonId.equalsExp(driftDbInstance.fragments.id)),
+      leftOuterJoin(driftDbInstance.fragmentMemoryInfos, driftDbInstance.fragmentMemoryInfos.fragmentId.equalsExp(driftDbInstance.fragments.id)),
     ];
-    final lWhere = driftDb.rFragment2MemoryGroups.fatherId.equals(mg.id) & driftDb.fragmentMemoryInfos.id.isNull();
+    final lWhere = driftDbInstance.rFragment2MemoryGroups.fatherId.equals(mg.id) & driftDbInstance.fragmentMemoryInfos.id.isNull();
 
     final doJoin = lSelect.join(lJoin);
     doJoin.where(lWhere);
@@ -50,7 +50,7 @@ class DancerQuery {
 
     final result = await doJoin.getSingleOrNull();
     if (result == null) return null;
-    return result.readTable(driftDb.fragments);
+    return result.readTable(driftDbInstance.fragments);
   }
 
   /// [Fragment] 表示当前新展示的碎片。
@@ -108,7 +108,10 @@ class DancerQuery {
   }
 
   /// [InternalVariableConstant.currentActualShowTimeConst]
-  Future<List<int>> getCurrentActualShowTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
+  Future<List<int>> getCurrentActualShowTime({
+    required MemoryGroup mg,
+    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+  }) async {
     return tuple.t2.map<int>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.currentActualShowTime)).toList()
       ..add(differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()));
   }
@@ -118,7 +121,10 @@ class DancerQuery {
   /// 这里与其他的不同，实际上的 [FragmentMemoryInfos.nextPlanedShowTime] 是从上一次展示信息中获取的，
   /// 但是该函数将会获取本次原本计划展示时间，即上一次的 [nextPlanedShowTime] 来充当当前的原本计划展示时间。
   /// 也就是说，返回值的 first 必然为 null。
-  Future<List<int?>> getCurrentPlanedShowTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
+  Future<List<int?>> getCurrentPlanedShowTime({
+    required MemoryGroup mg,
+    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+  }) async {
     return <int?>[null, ...tuple.t2.map((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.nextPlanedShowTime))];
   }
 
@@ -130,12 +136,19 @@ class DancerQuery {
     return tuple.t2.map<double?>((e) => e.showFamiliarity).toList()..add(currentShowFamiliar);
   }
 
-  Future<List<int?>> getClickTime({required MemoryGroup mg, required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple, required bool isCreateNow}) async {
+  Future<List<int?>> getClickTime({
+    required MemoryGroup mg,
+    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+    required bool isCreateNow,
+  }) async {
     return tuple.t2.map<int?>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.clickTime)).toList()
       ..add(isCreateNow ? differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()) : null);
   }
 
-  Future<List<double?>> getClickValue({required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple, required double? clickValue}) async {
+  Future<List<double?>> getClickValue({
+    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+    required double? clickValue,
+  }) async {
     return tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
   }
 }

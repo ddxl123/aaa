@@ -1,11 +1,15 @@
 import 'package:aaa/GlobalAbController.dart';
+import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/home/Home.dart';
 import 'package:aaa/theme.dart';
+import 'package:cool_ui/cool_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
+
+import 'algorithm_parser/AlgorithmKeyboard.dart';
 
 void main() {
   // flutter_smart_dialog 相关
@@ -13,7 +17,8 @@ void main() {
     ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last)
     ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
 
-  runApp(const MyApp());
+  AlgorithmKeyboard.register();
+  runMockApp(const KeyboardRootWidget(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -39,6 +39,8 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final allCheck = Ab(null);
 
+  final isAlgorithmKeyboard = false.ab;
+
   @override
   void initComplexVerifies() {
     title.initVerify(
@@ -296,5 +298,13 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   void changeTo({required MemoryModelGizmoEditPageType type}) {
     editPageType.refreshEasy((oldValue) => type);
+  }
+
+  void changeKeyword() {
+    isAlgorithmKeyboard.refreshEasy((oldValue) => !oldValue);
+    final pf = FocusManager.instance.primaryFocus;
+    if (pf == null) return;
+    pf.unfocus();
+    Future.delayed(const Duration(milliseconds: 100), () => pf.requestFocus());
   }
 }

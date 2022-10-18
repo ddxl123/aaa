@@ -56,7 +56,8 @@ dependencies:
   dio: ^4.0.6
   # 返回键拦截器
   back_button_interceptor: ^6.0.0
-
+  # 自定义键盘
+  cool_ui: ^1.3.0
 
   build_runner: ^2.2.1
   source_gen: ^1.2.5

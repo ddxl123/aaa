@@ -44,7 +44,7 @@ class MemoryModelSelectPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingRoundCornerButton(
-        text: '确认选择',
+        text: const Text('确认选择'),
         onPressed: () {
           Aber.findLast<MemoryModeListPageAbController>().confirmSelect();
         },

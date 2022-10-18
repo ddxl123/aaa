@@ -20,6 +20,8 @@ part 'parser/AlgorithmParser.dart';
 
 part 'parser/IfExprParse.dart';
 
+part 'parser/RegExper.dart';
+
 part 'state/abstract.dart';
 
 part 'state/ButtonDataState.dart';

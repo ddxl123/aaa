@@ -103,15 +103,16 @@ class InternalVariableConstant {
     whenAvailable: WhenAvailable.whenClick,
   );
 
+  /// 受 [NType.times] 影响，必须把 [timesConst] 放到最后，若放到前面，正则表达式会先识别 times。
   static Map<String, InternalVariableConst> getAllKV = {
     countAllConst.name: countAllConst,
     countNewConst.name: countNewConst,
-    timesConst.name: timesConst,
     currentActualShowTimeConst.name: currentActualShowTimeConst,
     nextPlanedShowTimeConst.name: nextPlanedShowTimeConst,
     showFamiliarConst.name: showFamiliarConst,
     clickTimeConst.name: clickTimeConst,
     clickValueConst.name: clickValueConst,
+    timesConst.name: timesConst,
   };
 
   static Set<String> get getAllNames => getAllKV.keys.toSet();

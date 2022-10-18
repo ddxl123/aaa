@@ -58,7 +58,7 @@ class TestHome extends StatelessWidget {
                                 child: const Text('    分析    '),
                                 onPressed: () async {
                                   final ContextModel cm = ContextModel();
-                                  cm.bindVariable(Variable('name1'), Number(123));
+                                  cm.bindVariable(Variable('大苏打1'), Number(123));
                                   print(Parser().parse(c.textEditingController.text).evaluate(EvaluationType.REAL, cm));
                                 },
                               ),

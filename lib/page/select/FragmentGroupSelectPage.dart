@@ -27,7 +27,7 @@ class FragmentGroupSelectPage extends StatelessWidget {
       ),
       body: const FragmentGroupListPage(listPageType: ListPageType.selectPath),
       floatingActionButton: FloatingRoundCornerButton(
-        text: '确认选择',
+        text: const Text('确认选择'),
         onPressed: () async {
           final c = Aber.find<FragmentGizmoEditPageAbController>();
           final clp = Aber.findLast<FragmentGroupListPageAbController>();

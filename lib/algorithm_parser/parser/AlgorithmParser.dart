@@ -20,7 +20,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   void debugPrint({required String content, StackTrace? st}) {
     if (isDebugPrint) {
-      final currentSt = RegExp(r'#1[\S\s]*#2').allMatches(StackTrace.current.toString()).first.group(0);
+      final currentSt = RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0);
       debugPrintStringBuffer.write('\n>>>\n$content\n${currentSt?.substring(2, currentSt.length - 2).trim()}\n');
       if (st != null) {
         debugPrintStringBuffer.write('\nthrow:\n$st\n');
@@ -73,7 +73,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// 去掉全部注释
   String _clearAnnotated(String content) {
     debugPrint(content: '正在清除注释...');
-    final result = content.replaceAll(RegExp(r'<--([\S\s]*?)-->'), '');
+    final result = content.replaceAll(RegExper.annotation, '');
     debugPrint(content: '清除注释成功，清除后：\n$result');
     return result;
   }
@@ -81,10 +81,8 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// 空合并运算符评估，并去掉空表达式
   String _emptyMergeDetection(String content) {
     debugPrint(content: '正在评估并清除空合并运算符...');
-    // (abc??123) 集合
-    final regExp = RegExp(r'\(([\S\s]*?)\?\?([\S\s]*?)\)');
     // 检测出全部 (abc??123) 或 (xxx_n??123)，并添加至 emptyMergeVariables 中。
-    for (var v in regExp.allMatches(content)) {
+    for (var v in RegExper.bracketDoubtBracket.allMatches(content)) {
       // (abc ?? 123) -> abc 123
       final bracketInternal = content.substring(v.start + 1, v.end - 1);
       // abc??123
@@ -102,8 +100,8 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     }
     debugPrint(content: '空合并已全部评估并清除完成！');
     // 清除空赋值表达式。
-    final clearResult = content.replaceAll(RegExp(r'\?\?(([0-9]+\.[0-9]+)|([0-9]+))\)'), ')');
-    final remainEmptyMerges = RegExp(r'\?\?').firstMatch(clearResult);
+    final clearResult = content.replaceAll(RegExper.doubtBracket, ')');
+    final remainEmptyMerges = RegExper.doubt.firstMatch(clearResult);
     if (remainEmptyMerges != null) {
       final start = remainEmptyMerges.start - 20;
       final end = remainEmptyMerges.end + 20;
@@ -117,19 +115,16 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   Future<void> _internalVariablesBindAndObtain({required String content}) async {
     debugPrint(content: '正在评估内置变量...');
     if (InternalVariableConstant.getAllNames.isEmpty) throw '初始内置变量为 empty！';
-    final nTypeNames = '(${NType.values.map((e) => e.name.split('.').last).join('|')})';
-    final vRegExp = RegExp(InternalVariableConstant.getAllNames.map((e) => "(($e)(_$nTypeNames([0-9]+))?)").join('|'));
-    // 识别出需要的内置变量，若没有识别出，则直接过。
-    for (var match in vRegExp.allMatches(content)) {
+    for (var match in RegExper.ivcOrNSuffix.allMatches(content)) {
       final variableName = match.group(0)!;
       String easyName = variableName;
       NTypeNumber? nTypeNumber;
       debugPrint(content: '解析出变量：$variableName');
-      final nMatch = RegExp('(_$nTypeNames([0-9]+))\$').firstMatch(variableName);
+      final nMatch = RegExper.nSuffix.firstMatch(variableName);
       if (nMatch != null) {
         final nMatchStr = nMatch.group(0)!;
         easyName = variableName.substring(0, nMatch.start);
-        final nTypeMatch = RegExp(nTypeNames).firstMatch(nMatchStr);
+        final nTypeMatch = RegExper.nTypeNames.firstMatch(nMatchStr);
         final nType = NType.values.where((element) => element.name.split(',').last == nTypeMatch!.group(0)!).first;
         final number = int.parse(nMatchStr.substring(nType.name.split('.').last.length + 1, nMatchStr.length));
         nTypeNumber = NTypeNumber(nType: nType, number: number);
@@ -179,8 +174,9 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       }
 
       String nameTrim = eSep.first.trim();
-      // TODO: 用命名规范来检验
-      if (nameTrim == '') throw '不规范名称：$nameTrim';
+
+      checkNameConvent(name: nameTrim);
+
       String valueExp = eSep.last.trim();
       late final double result;
       try {
@@ -199,7 +195,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// if-use-else 语句解析。
   void _ifUseElseParse({required String content}) {
     debugPrint(content: '正在评估 if-use-else 语句...');
-    final elseMatches = RegExp('else:').allMatches(content);
+    final elseMatches = RegExper.elseKeyword.allMatches(content);
     if (elseMatches.isEmpty) throw '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）';
     final elseMatch = elseMatches.first;
     final elseContent = content.substring(elseMatch.end, content.length).trim();

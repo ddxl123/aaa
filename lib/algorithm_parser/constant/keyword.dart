@@ -8,3 +8,12 @@ const keywords = <String>{
   'true',
   'false',
 };
+
+const keywordsWithColon = <String>[
+  'if:',
+  'use:',
+  'else:',
+  'throw',
+  'true',
+  'false',
+];

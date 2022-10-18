@@ -8,10 +8,12 @@ class FloatingRoundCornerButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
+    this.border,
   }) : super(key: key);
 
-  final String text;
+  final Widget text;
   final void Function() onPressed;
+  final OutlinedBorder? border;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,9 @@ class FloatingRoundCornerButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(Colors.tealAccent),
         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15, horizontal: 30)),
         elevation: MaterialStateProperty.all(5),
+        shape: MaterialStateProperty.all(border),
       ),
-      child: Text(text),
+      child: text,
       onPressed: () {
         onPressed();
       },

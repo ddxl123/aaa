@@ -26,17 +26,17 @@ const oRelationalOperatorRegExp = [
   '>',
 ];
 
-const emptyMergeOperator = '??';
+const oEmptyMergeOperator = '??';
 
-const emptyMergeOperatorRegExp = r'\?\?';
+const oEmptyMergeOperatorRegExp = r'\?\?';
 
-/// 不包含 [emptyMergeOperator]
+/// 不包含 [oEmptyMergeOperator]
 List<String> get allOperator => const [
       ...oLogicalOperator,
       ...oRelationalOperator,
     ];
 
-/// 不包含 [emptyMergeOperatorRegExp]
+/// 不包含 [oEmptyMergeOperatorRegExp]
 List<String> get allOperatorRegExp => const [
       ...oLogicalOperatorRegExp,
       ...oRelationalOperatorRegExp,

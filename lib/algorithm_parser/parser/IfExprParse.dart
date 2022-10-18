@@ -4,10 +4,6 @@ class IfExprParse {
   bool _isParsed = false;
   late final AlgorithmParser _algorithmParser;
   late final Function({required String content, StackTrace? st}) _debugPrint;
-  late final RegExp _allOperatorRegExp;
-  late final RegExp _relationalOperatorRegExp;
-  late final RegExp _logicalOperatorRegExp;
-  late final RegExp _bracketRegExp;
 
   bool parse({
     required String content,
@@ -20,11 +16,6 @@ class IfExprParse {
     if (_isParsed) throw '每个 IfExprParse 实例只能使用一次 parse！';
     _isParsed = true;
 
-    _allOperatorRegExp = RegExp(allOperatorRegExp.map((e) => '($e)').join('|'));
-    _relationalOperatorRegExp = RegExp(oRelationalOperatorRegExp.map((e) => '($e)').join('|'));
-    _logicalOperatorRegExp = RegExp(oLogicalOperatorRegExp.map((e) => '($e)').join('|'));
-    _bracketRegExp = RegExp(r'\(|\)');
-
     bool result = _recursion(content) == 'true' ? true : false;
     _debugPrint(content: '评估 if 语句成功：\nif 语句：\n$content\n结果：\n$result');
     return result;
@@ -36,7 +27,7 @@ class IfExprParse {
   String _recursion(String content) {
     // 存在括号的情况。
     int? bracketIndex;
-    for (var bracketMatch in _bracketRegExp.allMatches(content)) {
+    for (var bracketMatch in RegExper.bracket.allMatches(content)) {
       final bracket = bracketMatch.group(0)!;
       if (bracket == '(') {
         bracketIndex = bracketMatch.start;
@@ -45,7 +36,7 @@ class IfExprParse {
         final bracketInternal = content.substring(bracketIndex + 1, bracketMatch.start).trim();
         _debugPrint(content: '已识别到括号部分：($bracketInternal)');
         late final String afterReplace;
-        if (bracketInternal.contains(_allOperatorRegExp) || bracketInternal == 'true' || bracketInternal == 'false') {
+        if (bracketInternal.contains(RegExper.allOperator) || bracketInternal == 'true' || bracketInternal == 'false') {
           final boolResult = _multiCompareParse(bracketInternal);
           afterReplace = content.replaceAll(content.substring(bracketIndex, bracketMatch.end), boolResult);
           _debugPrint(content: '已评估并替换括号内容：($bracketInternal) = $boolResult');
@@ -70,16 +61,16 @@ class IfExprParse {
   ///
   /// 返回字符串 true 或 false。
   String _multiCompareParse(String content) {
-    if (!content.contains(_logicalOperatorRegExp)) {
+    if (!content.contains(RegExper.logicalOperator)) {
       _debugPrint(content: '$content 是一个独立的比较关系');
       return _singleCompareParse(content);
     }
 
     _debugPrint(content: '$content 是一个非独立的比较关系');
     String? result;
-    for (var multiCompareMatch in _logicalOperatorRegExp.allMatches(content)) {
-      final leftResult = result ?? _singleCompareParse(content.substring(0, multiCompareMatch.start).split(_logicalOperatorRegExp).last.trim());
-      final rightResult = _singleCompareParse(content.substring(multiCompareMatch.end, content.length).split(_logicalOperatorRegExp).first.trim());
+    for (var multiCompareMatch in RegExper.logicalOperator.allMatches(content)) {
+      final leftResult = result ?? _singleCompareParse(content.substring(0, multiCompareMatch.start).split(RegExper.logicalOperator).last.trim());
+      final rightResult = _singleCompareParse(content.substring(multiCompareMatch.end, content.length).split(RegExper.logicalOperator).first.trim());
       final center = multiCompareMatch.group(0)!;
       result = _logicalEvaluate(left: leftResult, center: center, right: rightResult);
     }
@@ -93,8 +84,8 @@ class IfExprParse {
   String _singleCompareParse(String content) {
     final contentTrim = content.trim();
     if (contentTrim == 'true' || contentTrim == 'false') return contentTrim;
-    if (!contentTrim.contains(_relationalOperatorRegExp)) throw '"if:"语句必须是一个比较语句：$content';
-    final singleCompareMatch = _relationalOperatorRegExp.allMatches(contentTrim).first;
+    if (!contentTrim.contains(RegExper.relationalOperator)) throw '"if:"语句必须是一个比较语句：$content';
+    final singleCompareMatch = RegExper.relationalOperator.allMatches(contentTrim).first;
     // TODO: 不能直接使用 true 或 false 来命名。
     final left = _algorithmParser.calculate(contentTrim.substring(0, singleCompareMatch.start));
     final right = _algorithmParser.calculate(contentTrim.substring(singleCompareMatch.end, contentTrim.length));
