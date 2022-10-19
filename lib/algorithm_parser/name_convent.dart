@@ -1,7 +1,7 @@
 part of algorithm_parser;
 
 /// 自定义变量命名规范检查。
-String checkNameConvent({required String name}) {
+void checkNameConvent({required String name}) {
   final nameTrim = name.trim();
   if (nameTrim == '') {
     throw '自定义变量名称不能为空字符！';
@@ -25,5 +25,4 @@ String checkNameConvent({required String name}) {
         '内置变量：${constAllNames.join(',')}\n'
         '扩展类型：${NType.values.map((e) => e.name.split('.').last).join(',')}';
   }
-  return nameTrim;
 }

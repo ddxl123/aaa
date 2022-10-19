@@ -1,7 +1,3 @@
 void main() async {
-  print('daF_+R_34Bsdsa%^%\$6'
-          'ZZ'
-          '\nD'
-          '==][4'
-      .toLowerCase());
+  print(RegExp(r'[0-9]').allMatches('dsad123d1').map((e) => e.group(0)));
 }

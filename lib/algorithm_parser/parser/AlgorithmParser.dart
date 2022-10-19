@@ -1,5 +1,39 @@
 part of algorithm_parser;
 
+class Name {
+  final String originalName;
+  late final String replacedName;
+
+  static const digitalConversionMap = <String, String>{
+    '0': '_T_ZERO_T_',
+    '1': '_T_ONE_T_',
+    '2': '_T_TWO_T_',
+    '3': '_T_THREE_T_',
+    '4': '_T_FOUR_T_',
+    '5': '_T_FIVE_T_',
+    '6': '_T_SIX_T_',
+    '7': '_T_SEVEN_T_',
+    '8': '_T_EIGHT_T_',
+    '9': '_T_NINE_T_',
+  };
+
+  Name(this.originalName) {
+    replacedName = originalName.replaceAllMapped(
+      RegExper.oneDigitNumber,
+      (match) => digitalConversionMap[match.group(0)] ?? (throw '未知数字：$originalName'),
+    );
+  }
+
+  @override
+  int get hashCode => (originalName + replacedName).hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Name ? other.originalName == originalName && other.replacedName == replacedName : false;
+  }
+}
+
 class AlgorithmParser<CS extends ClassificationState> with Explain {
   AlgorithmParser({this.isDebugPrint = true});
 
@@ -48,19 +82,23 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       if (InternalVariableConstant.getAllKV.isEmpty) throw '请先初始化内置变量！';
       this.state = state;
       debugPrint(content: '【开始解析 ${state.getStateType}...】');
-      final lowerCaseContent = state.content.toLowerCase();
-      final conciseContent = _clearAnnotated(lowerCaseContent);
-      final finallyConciseContent = _emptyMergeDetection(conciseContent);
-      await _internalVariablesBindAndObtain(content: finallyConciseContent);
+      String content = '';
+      // 全部转化为小写
+      content = _clearAnnotated(state.content);
+      content = content.toLowerCase();
 
       // 分离变量定义与 if-use-else 语句。
-      final ifIndex = finallyConciseContent.indexOf('if:');
+      final ifIndex = content.indexOf('if:');
       if (ifIndex == -1) throw '缺少 "if:" 语句！';
       // 变量定义部分。
-      final definitionPart = finallyConciseContent.substring(0, ifIndex);
+      final definitionPart = content.substring(0, ifIndex);
       // if-use-else 语句部分。
-      final ifUseElsePart = finallyConciseContent.substring(ifIndex);
+      final ifUseElsePart = content.substring(ifIndex);
       debugPrint(content: '- 自定义变量的定义部分：\n$definitionPart\n- if-use-else 语句部分: \n$ifUseElsePart');
+
+      content = _emptyMergeDetection(content);
+      await _internalVariablesBindAndObtain(content: content);
+
       _definitionVariablesBindAndObtain(definitionPart);
       _ifUseElseParse(content: ifUseElsePart);
     } catch (e, st) {
@@ -92,19 +130,22 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
       // abc
       final name = emptyMergeSplit.first.trim();
-      // TODO: 用命名规范来检验
-      if (name == '') throw '不规范名称：$name';
+      // 123
+      final val = emptyMergeSplit.last.trim();
 
-      _emptyMergeVariables.addAll({name: emptyMergeSplit.last.trim()});
-      debugPrint(content: '空合并评估并清除成功：$bracketInternal');
+      if (!_emptyMergeVariables.containsKey(name) || (_emptyMergeVariables.containsKey(name) && _emptyMergeVariables[name] == null)) {
+        _emptyMergeVariables.addAll({name: val});
+        debugPrint(content: '空合并存储成功：$name : $val');
+      }
+      debugPrint(content: '空合并已被存储过：$name : $val');
     }
     debugPrint(content: '空合并已全部评估并清除完成！');
     // 清除空赋值表达式。
     final clearResult = content.replaceAll(RegExper.doubtBracket, ')');
     final remainEmptyMerges = RegExper.doubt.firstMatch(clearResult);
     if (remainEmptyMerges != null) {
-      final start = remainEmptyMerges.start - 20;
-      final end = remainEmptyMerges.end + 20;
+      final start = remainEmptyMerges.start - 10;
+      final end = remainEmptyMerges.end + 10;
       throw '空合并表达式必须被小括号包裹：\n${clearResult.substring(start < 0 ? 0 : start, end > clearResult.length ? clearResult.length : end)}';
     }
     debugPrint(content: '评估并清除空合并运算符成功，评估结果：\n$clearResult');

@@ -41,4 +41,7 @@ class RegExper {
 
   /// 识别 () 的正则表达式。
   static final bracket = RegExp(r'\(|\)');
+
+  /// 识别全部个位数字的正则表达式。
+  static final oneDigitNumber = RegExp(r'[0-9]');
 }
