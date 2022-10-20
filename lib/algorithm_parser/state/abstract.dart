@@ -38,7 +38,7 @@ abstract class ClassificationState {
       throw '${atom.internalVariableConst.name} 变量不支持 "_${atom.nTypeNumber!.nType}n" 后缀！';
     }
 
-    if (atom.nTypeNumber != null && atom.nTypeNumber!.number <= 0) {
+    if (atom.nTypeNumber != null && atom.nTypeNumber!.suffixNumber <= 0) {
       throw '"n"值必须大于 0！';
     }
 

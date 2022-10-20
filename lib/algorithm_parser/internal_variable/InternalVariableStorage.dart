@@ -2,11 +2,11 @@ part of algorithm_parser;
 
 class NTypeNumber {
   final NType nType;
-  final int number;
+  final int suffixNumber;
 
-  NTypeNumber({required this.nType, required this.number});
+  NTypeNumber({required this.nType, required this.suffixNumber});
 
-  String get getCombineString => '_${nType.name}$number';
+  String get getCombineString => '_${nType.name}$suffixNumber';
 }
 
 class IvFilter<T extends num?> {
@@ -40,10 +40,10 @@ class InternalVariableAtom {
         return i.results.last;
       }
       if (nTypeNumber!.nType == NType.times) {
-        return i.getResult(index: nTypeNumber!.number);
+        return i.getResult(index: nTypeNumber!.suffixNumber);
       }
       if (nTypeNumber!.nType == NType.last) {
-        return i.getResult(index: i.results.length - 1 - nTypeNumber!.number);
+        return i.getResult(index: i.results.length - 1 - nTypeNumber!.suffixNumber);
       }
       throw '未处理类型：${nTypeNumber!.nType}';
     }

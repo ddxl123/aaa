@@ -1,15 +1,15 @@
 part of algorithm_parser;
 
 /// 自定义变量命名规范检查。
-void checkNameConvent({required String name}) {
+String checkNameConvent({required String name}) {
   final nameTrim = name.trim();
   if (nameTrim == '') {
     throw '自定义变量名称不能为空字符！';
   }
-  if (nameTrim.contains(RegExp(r'\s'))) {
+  if (nameTrim.contains(RegExper.blank)) {
     throw '自定义变量名称不能包含空白字符：$nameTrim\n空白字符：空格(全/半角)、制表符、换页符等';
   }
-  if (name.contains(RegExp(r'[^A-Za-z0-9_]'))) {
+  if (name.contains(RegExper.nameNonConvention)) {
     throw '自定义变量名称必须由字母、数字或下划线组成：$nameTrim';
   }
 
@@ -25,4 +25,5 @@ void checkNameConvent({required String name}) {
         '内置变量：${constAllNames.join(',')}\n'
         '扩展类型：${NType.values.map((e) => e.name.split('.').last).join(',')}';
   }
+  return name;
 }

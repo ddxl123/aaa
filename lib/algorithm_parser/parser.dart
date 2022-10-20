@@ -20,6 +20,8 @@ part 'internal_variable/InternalVariableConstant.dart';
 
 part 'parser/AlgorithmParser.dart';
 
+part 'parser/EmptyMergeParser.dart';
+
 part 'parser/IfExprParse.dart';
 
 part 'parser/RegExper.dart';

@@ -1,50 +1,18 @@
 part of algorithm_parser;
 
-class Name {
-  final String originalName;
-  late final String replacedName;
-
-  static const digitalConversionMap = <String, String>{
-    '0': '_T_ZERO_T_',
-    '1': '_T_ONE_T_',
-    '2': '_T_TWO_T_',
-    '3': '_T_THREE_T_',
-    '4': '_T_FOUR_T_',
-    '5': '_T_FIVE_T_',
-    '6': '_T_SIX_T_',
-    '7': '_T_SEVEN_T_',
-    '8': '_T_EIGHT_T_',
-    '9': '_T_NINE_T_',
-  };
-
-  Name(this.originalName) {
-    replacedName = originalName.replaceAllMapped(
-      RegExper.oneDigitNumber,
-      (match) => digitalConversionMap[match.group(0)] ?? (throw '未知数字：$originalName'),
-    );
-  }
-
-  @override
-  int get hashCode => (originalName + replacedName).hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Name ? other.originalName == originalName && other.replacedName == replacedName : false;
-  }
-}
-
 class AlgorithmParser<CS extends ClassificationState> with Explain {
   AlgorithmParser({this.isDebugPrint = true});
 
   /// 空赋值：name-计算表达式
-  final _emptyMergeVariables = <String, String>{};
+  // final _emptyMergeVariables = <String, String>{};
 
   final ContextModel cm = ContextModel();
 
   bool _isParsed = false;
 
   late final CS state;
+
+  static const nullTag = '_tag_null_tag_';
 
   bool isDebugPrint;
 
@@ -68,9 +36,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     try {
       return Parser().parse(content).evaluate(EvaluationType.REAL, cm);
     } catch (e, st) {
-      if (e.toString().contains('Variable not bound')) {
-        throw '变量非内置变量，或变量未被定义：$content';
-      }
       throw '解析失败：$content\n$e';
     }
   }
@@ -80,11 +45,13 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       if (_isParsed) throw '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。';
       _isParsed = true;
       if (InternalVariableConstant.getAllKV.isEmpty) throw '请先初始化内置变量！';
+
       this.state = state;
+
       debugPrint(content: '【开始解析 ${state.getStateType}...】');
-      String content = '';
-      // 全部转化为小写
-      content = _clearAnnotated(state.content);
+
+      String content = state.content;
+      content = _clearAnnotated(content);
       content = content.toLowerCase();
 
       // 分离变量定义与 if-use-else 语句。
@@ -96,10 +63,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       final ifUseElsePart = content.substring(ifIndex);
       debugPrint(content: '- 自定义变量的定义部分：\n$definitionPart\n- if-use-else 语句部分: \n$ifUseElsePart');
 
-      content = _emptyMergeDetection(content);
-      await _internalVariablesBindAndObtain(content: content);
+      content = _definitionVariablesBindAndObtain(definitionPart: definitionPart, ifUseElsePart: ifUseElsePart);
+      content = await _internalVariablesBindAndObtain(content: content);
+      content = _emptyMergeEval(content: content);
 
-      _definitionVariablesBindAndObtain(definitionPart);
       _ifUseElseParse(content: ifUseElsePart);
     } catch (e, st) {
       debugPrint(content: '$e\n已绑定 cm：${cm.variables.keys.toString()}', st: st);
@@ -116,121 +83,100 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     return result;
   }
 
-  /// 空合并运算符评估，并去掉空表达式
-  String _emptyMergeDetection(String content) {
-    debugPrint(content: '正在评估并清除空合并运算符...');
-    // 检测出全部 (abc??123) 或 (xxx_n??123)，并添加至 emptyMergeVariables 中。
-    for (var v in RegExper.bracketDoubtBracket.allMatches(content)) {
-      // (abc ?? 123) -> abc 123
-      final bracketInternal = content.substring(v.start + 1, v.end - 1);
-      // abc??123
-      debugPrint(content: '检测出空合并：$bracketInternal');
-      final emptyMergeSplit = bracketInternal.split('??');
-      if (emptyMergeSplit.length != 2) throw '不规范使用空合并运算符：${v.group(0)}';
-
-      // abc
-      final name = emptyMergeSplit.first.trim();
-      // 123
-      final val = emptyMergeSplit.last.trim();
-
-      if (!_emptyMergeVariables.containsKey(name) || (_emptyMergeVariables.containsKey(name) && _emptyMergeVariables[name] == null)) {
-        _emptyMergeVariables.addAll({name: val});
-        debugPrint(content: '空合并存储成功：$name : $val');
-      }
-      debugPrint(content: '空合并已被存储过：$name : $val');
-    }
-    debugPrint(content: '空合并已全部评估并清除完成！');
-    // 清除空赋值表达式。
-    final clearResult = content.replaceAll(RegExper.doubtBracket, ')');
-    final remainEmptyMerges = RegExper.doubt.firstMatch(clearResult);
-    if (remainEmptyMerges != null) {
-      final start = remainEmptyMerges.start - 10;
-      final end = remainEmptyMerges.end + 10;
-      throw '空合并表达式必须被小括号包裹：\n${clearResult.substring(start < 0 ? 0 : start, end > clearResult.length ? clearResult.length : end)}';
-    }
-    debugPrint(content: '评估并清除空合并运算符成功，评估结果：\n$clearResult');
-    return clearResult;
+  /// 空合并评估
+  String _emptyMergeEval({required String content}) {
+    debugPrint(content: '正在评估空合并运算符...');
+    final result = EmptyMergeParser().parse(content: content);
+    debugPrint(content: '空合并评估成功！');
+    return result;
   }
 
-  /// 扫描使用到的内置变量，并绑定内置变量、获取内置变量的值
-  Future<void> _internalVariablesBindAndObtain({required String content}) async {
+  /// 扫描使用到的内置变量，获取内置变量的值，替换结果值。
+  Future<String> _internalVariablesBindAndObtain({required String content}) async {
     debugPrint(content: '正在评估内置变量...');
     if (InternalVariableConstant.getAllNames.isEmpty) throw '初始内置变量为 empty！';
+
+    // 内置变量：对应的结果值
+    final internalVariable2Results = <String, num?>{};
+
     for (var match in RegExper.ivcOrNSuffix.allMatches(content)) {
-      final variableName = match.group(0)!;
-      String easyName = variableName;
+      final fullName = match.group(0)!;
+      String simplifyName = fullName;
       NTypeNumber? nTypeNumber;
-      debugPrint(content: '解析出变量：$variableName');
-      final nMatch = RegExper.nSuffix.firstMatch(variableName);
+      debugPrint(content: '解析出变量：$fullName');
+      final nMatch = RegExper.nSuffix.firstMatch(fullName);
       if (nMatch != null) {
         final nMatchStr = nMatch.group(0)!;
-        easyName = variableName.substring(0, nMatch.start);
+        simplifyName = fullName.substring(0, nMatch.start);
         final nTypeMatch = RegExper.nTypeNames.firstMatch(nMatchStr);
         final nType = NType.values.where((element) => element.name.split(',').last == nTypeMatch!.group(0)!).first;
         final number = int.parse(nMatchStr.substring(nType.name.split('.').last.length + 1, nMatchStr.length));
-        nTypeNumber = NTypeNumber(nType: nType, number: number);
+        nTypeNumber = NTypeNumber(nType: nType, suffixNumber: number);
       }
+      Future<num?> getResult() async => await state.internalVariablesResultHandler(
+            InternalVariableAtom(
+              internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
+              nTypeNumber: nTypeNumber,
+            ),
+          );
       // 相同的变量名值只绑定一次。
-      if (!cm.variables.containsKey(variableName)) {
-        final result = await state.internalVariablesResultHandler(
-          InternalVariableAtom(
-            internalVariableConst: InternalVariableConstant.getConstByName(easyName),
-            nTypeNumber: nTypeNumber,
-          ),
-        );
-        debugPrint(content: '已扫描到的内置变量及获取到的值：$variableName = $result');
-        if (result != null) {
-          cm.bindVariableName(variableName, Number(result));
-          debugPrint(content: '绑定 ContextModel 成功：$variableName = $result');
-        } else {
-          if (!_emptyMergeVariables.containsKey(variableName)) throw '$variableName 内置变量存在为空的情况，请使用"??"进行空赋值！';
-          final emptyMergeResult = calculate(_emptyMergeVariables[variableName]!);
-          cm.bindVariableName(variableName, Number(emptyMergeResult));
-          debugPrint(content: '绑定 ContextModel 成功：$variableName = $emptyMergeResult');
+      if (internalVariable2Results.containsKey(fullName)) {
+        if (internalVariable2Results[fullName] == null) {
+          internalVariable2Results[fullName] = await getResult();
         }
+      } else {
+        internalVariable2Results.addAll({fullName: await getResult()});
       }
+      debugPrint(content: '获取内置变量结果值：$fullName = ${internalVariable2Results[fullName]}');
     }
+    final replaceResult = content.replaceAllMapped(
+      RegExper.ivcOrNSuffix,
+      (match) {
+        final result = internalVariable2Results[match.group(0)!];
+        return result != null ? result.toString() : nullTag;
+      },
+    );
+    debugPrint(content: '内置变量结果值替换结果：$replaceResult');
     debugPrint(content: '评估内置变量成功！');
+    return replaceResult;
   }
 
   /// 绑定并获取自定义变量值。
   ///
   /// 因为内置变量已经被空赋值了，因此自定义变量始终不为 null，即自定义变量无需空赋值。
-  void _definitionVariablesBindAndObtain(String content) {
+  String _definitionVariablesBindAndObtain({required String definitionPart, required String ifUseElsePart}) {
     debugPrint(content: '正在评估自定义变量...');
-    final semicolonSplit = content.trim().split(';');
+    final name2Value = <String, String>{};
+    final semicolonSplit = definitionPart.trim().split(';');
     for (var assign in semicolonSplit) {
       // 最后一个';'会出现空字符，同时也可以解决连续分号 ';;;' 的问题。
       final assignTrim = assign.trim();
       if (assignTrim == '') continue;
       final eSep = assignTrim.split('=');
       if (eSep.length != 2) {
-        if (eSep.length == 1) {
+        if (eSep.isEmpty || eSep.length == 1) {
           throw '需要对自定义变量进行赋值：$assignTrim';
-        }
-        if (eSep.length > 1) {
+        } else {
           throw '多个自定义变量间需要使用";"隔开：$assignTrim';
         }
-        throw '未知自定义变量异常：$assignTrim';
       }
 
-      String nameTrim = eSep.first.trim();
-
-      checkNameConvent(name: nameTrim);
-
-      String valueExp = eSep.last.trim();
-      late final double result;
-      try {
-        result = calculate(valueExp);
-        cm.bindVariableName(nameTrim, Number(result));
-      } on FormatException catch (e) {
-        throw '计算异常：\n自定义变量：$nameTrim\n计算内容：$valueExp\n计算结果异常：${e.message}';
-      } on ArgumentError catch (e) {
-        throw '计算异常：\n自定义变量：$nameTrim\n计算内容：$valueExp\n计算结果异常：${e.message}';
+      final name = checkNameConvent(name: eSep.first.trim());
+      final value = eSep.last.trim().replaceAllMapped(RegExp(name2Value.keys.toList().map((e) => '($e)').join('|')), (match) {
+        debugPrint(content: 'match: ${RegExp(['1'].toList().map((e) => '($e)').join('|')).pattern}');
+        debugPrint(content: 'match: ${name2Value}');
+        debugPrint(content: 'match: ${match.group(0)}');
+        return name2Value[match.group(0)!]!;
+      });
+      if (name2Value.containsKey(name)) {
+        throw '自定义变量名不能重复：$name';
       }
-      debugPrint(content: '绑定 ContextModel 成功：$nameTrim = $valueExp');
+      name2Value.addAll({name: value});
     }
+    final result = ifUseElsePart.replaceAllMapped(RegExp(name2Value.keys.map((e) => '($e)').join('|')), (match) => '(${name2Value[match.group(0)!]!})');
+    debugPrint(content: '评估自定义变量结果：\n$result');
     debugPrint(content: '评估自定义变量成功！');
+    return result;
   }
 
   /// if-use-else 语句解析。
