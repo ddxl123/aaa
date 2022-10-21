@@ -51,23 +51,18 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       debugPrint(content: '【开始解析 ${state.getStateType}...】');
 
       String content = state.content;
-      content = _clearAnnotated(content);
-      content = content.toLowerCase();
+      content = _clearAnnotated(content: content);
+      content = _toLowerCase(content: content);
 
-      // 分离变量定义与 if-use-else 语句。
-      final ifIndex = content.indexOf('if:');
-      if (ifIndex == -1) throw '缺少 "if:" 语句！';
-      // 变量定义部分。
-      final definitionPart = content.substring(0, ifIndex);
-      // if-use-else 语句部分。
-      final ifUseElsePart = content.substring(ifIndex);
-      debugPrint(content: '- 自定义变量的定义部分：\n$definitionPart\n- if-use-else 语句部分: \n$ifUseElsePart');
+      final separateContent = _separate(content: content);
+      final definitionPart = separateContent.t1;
+      final ifUseElsePart = separateContent.t2;
 
-      content = _definitionVariablesBindAndObtain(definitionPart: definitionPart, ifUseElsePart: ifUseElsePart);
-      content = await _internalVariablesBindAndObtain(content: content);
+      content = _evalCustomVariables(definitionPart: definitionPart, ifUseElsePart: ifUseElsePart);
+      content = await _evalInternalVariables(content: content);
       content = _emptyMergeEval(content: content);
 
-      _ifUseElseParse(content: ifUseElsePart);
+      _evalIfUseElse(content: content);
     } catch (e, st) {
       debugPrint(content: '$e\n已绑定 cm：${cm.variables.keys.toString()}', st: st);
     }
@@ -76,23 +71,80 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   }
 
   /// 去掉全部注释
-  String _clearAnnotated(String content) {
-    debugPrint(content: '正在清除注释...');
+  String _clearAnnotated({required String content}) {
     final result = content.replaceAll(RegExper.annotation, '');
-    debugPrint(content: '清除注释成功，清除后：\n$result');
+    debugPrint(content: '清除注释完成！');
     return result;
   }
 
-  /// 空合并评估
-  String _emptyMergeEval({required String content}) {
-    debugPrint(content: '正在评估空合并运算符...');
-    final result = EmptyMergeParser().parse(content: content);
-    debugPrint(content: '空合并评估成功！');
+  /// 小写化
+  String _toLowerCase({required String content}) {
+    final result = content.toLowerCase();
+    debugPrint(content: '全部转化成小写字母完成！');
+    return result;
+  }
+
+  /// 分离自定义变量与if-use-else语句。
+  ///
+  /// [Tuple2.t1] - 自定义变量部分。
+  ///
+  /// [Tuple2.t2] - if-use-else语句部分。
+  Tuple2<String, String> _separate({required String content}) {
+    // 分离变量定义与 if-use-else 语句。
+    final ifIndex = content.indexOf('if:');
+    if (ifIndex == -1) throw '缺少 "if:" 语句！';
+    // 变量定义部分。
+    final definitionPart = content.substring(0, ifIndex);
+    // if-use-else 语句部分。
+    final ifUseElsePart = content.substring(ifIndex);
+    debugPrint(content: '分离自定义变量与 if-use-else 语句完成！');
+    debugPrint(content: '- 自定义变量的定义部分 》》》\n$definitionPart\n- if-use-else 语句部分 》》》\n$ifUseElsePart');
+    return Tuple2(t1: definitionPart, t2: ifUseElsePart);
+  }
+
+  /// 绑定并获取自定义变量值。
+  ///
+  /// 因为内置变量已经被空赋值了，因此自定义变量始终不为 null，即自定义变量无需空赋值。
+  String _evalCustomVariables({required String definitionPart, required String ifUseElsePart}) {
+    debugPrint(content: '正在评估自定义变量...');
+    final name2Value = <String, String>{};
+    final semicolonSplit = definitionPart.trim().split(';');
+    for (var assign in semicolonSplit) {
+      // 最后一个';'会出现空字符，同时也可以解决连续分号 ';;;' 的问题。
+      final assignTrim = assign.trim();
+      if (assignTrim == '') continue;
+      final eSep = assignTrim.split('=');
+      if (eSep.length != 2) {
+        if (eSep.isEmpty || eSep.length == 1) {
+          throw '需要对自定义变量进行赋值：$assignTrim';
+        } else {
+          throw '多个自定义变量间需要使用";"隔开：$assignTrim';
+        }
+      }
+
+      final name = checkNameConvent(name: eSep.first.trim());
+      final value = eSep.last.trim().replaceAllMapped(
+        RegExp(name2Value.keys.toList().map((e) => '($e)').join('|').nothingMatches()),
+        (match) {
+          return name2Value[match.group(0)!]!;
+        },
+      );
+      if (name2Value.containsKey(name)) {
+        throw '自定义变量名不能重复：$name';
+      }
+      name2Value.addAll({name: value});
+    }
+    final result = ifUseElsePart.replaceAllMapped(
+      RegExp(name2Value.keys.map((e) => '($e)').join('|').nothingMatches()),
+      (match) => '(${name2Value[match.group(0)!]!})',
+    );
+    debugPrint(content: '评估自定义变量结果：\n$result');
+    debugPrint(content: '评估自定义变量完成！');
     return result;
   }
 
   /// 扫描使用到的内置变量，获取内置变量的值，替换结果值。
-  Future<String> _internalVariablesBindAndObtain({required String content}) async {
+  Future<String> _evalInternalVariables({required String content}) async {
     debugPrint(content: '正在评估内置变量...');
     if (InternalVariableConstant.getAllNames.isEmpty) throw '初始内置变量为 empty！';
 
@@ -141,46 +193,17 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     return replaceResult;
   }
 
-  /// 绑定并获取自定义变量值。
-  ///
-  /// 因为内置变量已经被空赋值了，因此自定义变量始终不为 null，即自定义变量无需空赋值。
-  String _definitionVariablesBindAndObtain({required String definitionPart, required String ifUseElsePart}) {
-    debugPrint(content: '正在评估自定义变量...');
-    final name2Value = <String, String>{};
-    final semicolonSplit = definitionPart.trim().split(';');
-    for (var assign in semicolonSplit) {
-      // 最后一个';'会出现空字符，同时也可以解决连续分号 ';;;' 的问题。
-      final assignTrim = assign.trim();
-      if (assignTrim == '') continue;
-      final eSep = assignTrim.split('=');
-      if (eSep.length != 2) {
-        if (eSep.isEmpty || eSep.length == 1) {
-          throw '需要对自定义变量进行赋值：$assignTrim';
-        } else {
-          throw '多个自定义变量间需要使用";"隔开：$assignTrim';
-        }
-      }
-
-      final name = checkNameConvent(name: eSep.first.trim());
-      final value = eSep.last.trim().replaceAllMapped(RegExp(name2Value.keys.toList().map((e) => '($e)').join('|')), (match) {
-        debugPrint(content: 'match: ${RegExp(['1'].toList().map((e) => '($e)').join('|')).pattern}');
-        debugPrint(content: 'match: ${name2Value}');
-        debugPrint(content: 'match: ${match.group(0)}');
-        return name2Value[match.group(0)!]!;
-      });
-      if (name2Value.containsKey(name)) {
-        throw '自定义变量名不能重复：$name';
-      }
-      name2Value.addAll({name: value});
-    }
-    final result = ifUseElsePart.replaceAllMapped(RegExp(name2Value.keys.map((e) => '($e)').join('|')), (match) => '(${name2Value[match.group(0)!]!})');
-    debugPrint(content: '评估自定义变量结果：\n$result');
-    debugPrint(content: '评估自定义变量成功！');
+  /// 空合并评估
+  String _emptyMergeEval({required String content}) {
+    debugPrint(content: '正在评估空合并运算符...');
+    final result = EmptyMergeParser().parse(content: content);
+    debugPrint(content: '空合并替换结果：$result');
+    debugPrint(content: '空合并评估成功！');
     return result;
   }
 
   /// if-use-else 语句解析。
-  void _ifUseElseParse({required String content}) {
+  void _evalIfUseElse({required String content}) {
     debugPrint(content: '正在评估 if-use-else 语句...');
     final elseMatches = RegExper.elseKeyword.allMatches(content);
     if (elseMatches.isEmpty) throw '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）';
