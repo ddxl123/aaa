@@ -27,3 +27,6 @@ enum NType {
   /// 上 n 次
   last,
 }
+
+/// [NType.times] 转 'times'
+List<String> nTypeEnum2Names() => NType.values.map((e) => e.name.split('.').last).toList();

@@ -14,36 +14,48 @@ class IndexAndContent {
 }
 
 class EmptyMergeParser {
+  late final AlgorithmParser algorithmParser;
+  bool _isParsed = false;
+
+  /// 消除空合并。
+  ///
   /// 处理多处无相关的空合并。
   ///
-  /// 处理类似 '(aaa)-(null???((null??(111+(null??333)))+(null??222)))eee' 的复杂表达式。
-  String parse({required String content}) {
+  /// 处理类似 '(aaa)-(null??((null??(111+((null)??333)))+(null??222)))eee' 的复杂表达式。
+  String parse<T extends ClassificationState>({required String content, required AlgorithmParser<T> algorithmParser}) {
+    if (_isParsed) throw '每个 EmptyMergeParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 EmptyMergeParser 实例。';
+    _isParsed = true;
+    this.algorithmParser = algorithmParser;
+    return _recursion(content: content);
+  }
+
+  String _recursion({required String content}) {
     final result = singlePlace(content: content);
     if (result == null) {
       return content;
     }
-    return parse(content: result);
+    return _recursion(content: result);
   }
 
   /// 处理单处空合并，包含内嵌空合并处理。
   String? singlePlace({required String content}) {
     IndexAndContent? left;
     IndexAndContent? right;
-    final match = RegExp(r'\?\?').firstMatch(content);
+    final match = RegExper.doubt.firstMatch(content);
     if (match == null) {
       return null;
     }
     left = toFront(match);
     right = toAfter(match);
     print('left: $left right: $right');
-    if (left.content.trim() == 'null') {
+    if (left.content.trim() == AlgorithmParser.nullTag) {
       final replaceResult = content.replaceRange(left.boundIndex + 1, right.boundIndex, right.content);
       print('replaceResult: $replaceResult');
-      return parse(content: replaceResult);
+      return _recursion(content: replaceResult);
     } else {
       final replaceResult = content.replaceRange(left.boundIndex + 1, right.boundIndex, left.content);
       print('replaceResult: $replaceResult');
-      return parse(content: replaceResult);
+      return _recursion(content: replaceResult);
     }
   }
 
@@ -55,24 +67,27 @@ class EmptyMergeParser {
     for (int i = match.start - 1; i >= 0; i--) {
       final indexStr = match.input[i];
       if (indexStr == '(') {
-        print('content: $content');
         hasLeftBracket = true;
         break;
       }
-      if (indexStr.contains(RegExp(r'\W')) && indexStr != ' ') {
-        throw '空合并操作符左边存在不规范字符：$indexStr';
+      if (indexStr == ')') {
+        if (content != '') {
+          algorithmParser.debugPrint(content: match.input.substring(i - 1, i + 1));
+          algorithmParser.debugPrint(content: content);
+          throw '不规范使用空合并操作符！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。';
+        }
+      } else {
+        content = indexStr + content;
       }
-      content = indexStr + content;
     }
     if (!hasLeftBracket) {
-      throw '空合并操作符缺少左括号：${content.length < 10 ? content : content.substring(content.length - 10, content.length)}??';
+      throw '空合并操作符左边变量缺少左括号！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。';
     }
     if (content.trim() == '') {
-      throw '空合并操作符左边缺少可空变量！';
+      throw '空合并操作符左边缺少可能为空的变量！';
     }
 
-    // 含最外层'('
-    final leftBracketIndex = match.start - content.length - 1;
+    final leftBracketIndex = match.start - content.length - 2;
     return IndexAndContent(boundIndex: leftBracketIndex, content: content);
   }
 
@@ -103,13 +118,12 @@ class EmptyMergeParser {
       content += indexStr;
     }
     if (leftBrackets.isEmpty) {
-      throw '空合并缺少右括号: $content';
+      throw '空合并缺少右括号: $content??';
     }
     if (leftBrackets.length > 1) {
       throw '空合并括号分配异常：$content';
     }
 
-    // 含最外层')'
     final rightBracketIndex = match.end + content.length;
     return IndexAndContent(boundIndex: rightBracketIndex, content: content);
   }

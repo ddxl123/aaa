@@ -3,9 +3,6 @@ part of algorithm_parser;
 class AlgorithmParser<CS extends ClassificationState> with Explain {
   AlgorithmParser({this.isDebugPrint = true});
 
-  /// 空赋值：name-计算表达式
-  // final _emptyMergeVariables = <String, String>{};
-
   final ContextModel cm = ContextModel();
 
   bool _isParsed = false;
@@ -22,10 +19,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   void debugPrint({required String content, StackTrace? st}) {
     if (isDebugPrint) {
-      final currentSt = RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0);
-      debugPrintStringBuffer.write('\n>>>\n$content\n${currentSt?.substring(2, currentSt.length - 2).trim()}\n');
+      final currentSt = RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!.trim();
+      debugPrintStringBuffer.write('\n-------------------------------------------------------------------\n$content\n${currentSt.substring(2, currentSt.length - 2).trim()}');
       if (st != null) {
-        debugPrintStringBuffer.write('\nthrow:\n$st\n');
+        debugPrintStringBuffer.write('\nthrow:\n$st');
         throwMessage = content;
       }
     }
@@ -35,8 +32,8 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   double calculate(String content) {
     try {
       return Parser().parse(content).evaluate(EvaluationType.REAL, cm);
-    } catch (e, st) {
-      throw '解析失败：$content\n$e';
+    } catch (e) {
+      throw '运算解析失败：$content\n$e';
     }
   }
 
@@ -64,9 +61,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
       _evalIfUseElse(content: content);
     } catch (e, st) {
-      debugPrint(content: '$e\n已绑定 cm：${cm.variables.keys.toString()}', st: st);
+      debugPrint(content: '语法错误：$e', st: st);
     }
     logger.i(debugPrintStringBuffer);
+    debugPrint(content: '【解析完成 ${state.getStateType}！】');
     return this;
   }
 
@@ -102,12 +100,29 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     return Tuple2(t1: definitionPart, t2: ifUseElsePart);
   }
 
-  /// 绑定并获取自定义变量值。
+  /// 评估自定义变量。
   ///
-  /// 因为内置变量已经被空赋值了，因此自定义变量始终不为 null，即自定义变量无需空赋值。
+  /// 清除自定义变量部分，并替换 if-use-else 语句中的全部自定义变量。
+  ///
+  /// 返回被替换后的 if-use-else 语句。
   String _evalCustomVariables({required String definitionPart, required String ifUseElsePart}) {
     debugPrint(content: '正在评估自定义变量...');
     final name2Value = <String, String>{};
+
+    // 替换变量
+    String replace(String inputContent) {
+      debugPrint(content: '已存：$name2Value');
+      final replaceResult = inputContent.replaceAllMapped(
+        RegExper.variableMatching('(${name2Value.keys.map((e) => '($e)').join('|').nothingMatches()})'),
+        (match) {
+          final returnResult = '(${name2Value[match.group(0)!]!})';
+          return returnResult;
+        },
+      );
+
+      return replaceResult;
+    }
+
     final semicolonSplit = definitionPart.trim().split(';');
     for (var assign in semicolonSplit) {
       // 最后一个';'会出现空字符，同时也可以解决连续分号 ';;;' 的问题。
@@ -123,27 +138,24 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       }
 
       final name = checkNameConvent(name: eSep.first.trim());
-      final value = eSep.last.trim().replaceAllMapped(
-        RegExp(name2Value.keys.toList().map((e) => '($e)').join('|').nothingMatches()),
-        (match) {
-          return name2Value[match.group(0)!]!;
-        },
-      );
+      final originalVal = eSep.last.trim();
+      final nowVal = replace(originalVal);
+      debugPrint(content: '识别到：name:$name originalVal:$originalVal nowVal:$nowVal');
       if (name2Value.containsKey(name)) {
         throw '自定义变量名不能重复：$name';
       }
-      name2Value.addAll({name: value});
+      name2Value.addAll({name: nowVal});
     }
-    final result = ifUseElsePart.replaceAllMapped(
-      RegExp(name2Value.keys.map((e) => '($e)').join('|').nothingMatches()),
-      (match) => '(${name2Value[match.group(0)!]!})',
-    );
-    debugPrint(content: '评估自定义变量结果：\n$result');
+
+    final result = replace(ifUseElsePart);
+    debugPrint(content: '替换结果：\n$result');
     debugPrint(content: '评估自定义变量完成！');
     return result;
   }
 
-  /// 扫描使用到的内置变量，获取内置变量的值，替换结果值。
+  /// 评估内置变量。
+  ///
+  /// 扫描使用到的内置变量，并获取内置变量的值，最后替换成结果值。
   Future<String> _evalInternalVariables({required String content}) async {
     debugPrint(content: '正在评估内置变量...');
     if (InternalVariableConstant.getAllNames.isEmpty) throw '初始内置变量为 empty！';
@@ -151,12 +163,13 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     // 内置变量：对应的结果值
     final internalVariable2Results = <String, num?>{};
 
-    for (var match in RegExper.ivcOrNSuffix.allMatches(content)) {
+    for (var match in RegExper.fullName.allMatches(content)) {
       final fullName = match.group(0)!;
       String simplifyName = fullName;
       NTypeNumber? nTypeNumber;
       debugPrint(content: '解析出变量：$fullName');
       final nMatch = RegExper.nSuffix.firstMatch(fullName);
+      // 若变量含后缀
       if (nMatch != null) {
         final nMatchStr = nMatch.group(0)!;
         simplifyName = fullName.substring(0, nMatch.start);
@@ -179,26 +192,28 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       } else {
         internalVariable2Results.addAll({fullName: await getResult()});
       }
-      debugPrint(content: '获取内置变量结果值：$fullName = ${internalVariable2Results[fullName]}');
+      debugPrint(content: '内置变量结果值：$fullName = ${internalVariable2Results[fullName]}');
     }
     final replaceResult = content.replaceAllMapped(
-      RegExper.ivcOrNSuffix,
+      RegExper.fullName,
       (match) {
+        debugPrint(content: '>>>>>>>>>>>>>>>>>>>>>>>>>>${match.pattern}');
+        debugPrint(content: '${match.group(0)}');
         final result = internalVariable2Results[match.group(0)!];
         return result != null ? result.toString() : nullTag;
       },
     );
-    debugPrint(content: '内置变量结果值替换结果：$replaceResult');
+    debugPrint(content: '替换结果：\n$replaceResult');
     debugPrint(content: '评估内置变量成功！');
     return replaceResult;
   }
 
-  /// 空合并评估
+  /// 评估空合并。
   String _emptyMergeEval({required String content}) {
     debugPrint(content: '正在评估空合并运算符...');
-    final result = EmptyMergeParser().parse(content: content);
-    debugPrint(content: '空合并替换结果：$result');
-    debugPrint(content: '空合并评估成功！');
+    final result = EmptyMergeParser().parse(content: content, algorithmParser: this);
+    debugPrint(content: '替换结果：\n$result');
+    debugPrint(content: '评估空合并完成！');
     return result;
   }
 

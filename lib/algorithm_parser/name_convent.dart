@@ -20,7 +20,7 @@ String checkNameConvent({required String name}) {
   if (constAllNames.contains(nameTrim)) {
     throw '自定义变量名称不能与内置变量名称相同：$nameTrim\n内置变量：${constAllNames.join(',')}';
   }
-  if (RegExper.ivcOrNSuffix.hasMatch(name)) {
+  if (RegExper.fullName.hasMatch(name)) {
     throw '自定义变量名称不能与内置变量名称的扩展名相同：$nameTrim\n'
         '内置变量：${constAllNames.join(',')}\n'
         '扩展类型：${NType.values.map((e) => e.name.split('.').last).join(',')}';

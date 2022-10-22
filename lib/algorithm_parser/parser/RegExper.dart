@@ -3,32 +3,55 @@ part of algorithm_parser;
 class RegExper {
   RegExper._();
 
+  /// 匹配变量名称的正则表达式。
+  static RegExp variableMatching(String matchContent) {
+    // ((?<=\W)_abc(?=\W))|(^_abc(?=\W))|((?<=\W)_abc$)
+    return RegExp(
+      r'((?<=\W)'
+      '$matchContent'
+      r'(?=\W))'
+      r'|'
+      r'(^'
+      '$matchContent'
+      r'(?=\W))'
+      r'|'
+      r'((?<=\W)'
+      '$matchContent'
+      r'$)',
+    );
+  }
+
   /// 控制台截取的日志的正则表达式。
   static final consolePrint = RegExp(r'#1[\S\s]*#2');
 
   /// 匹配注释的正则表达式。
   static final annotation = RegExp(r'<--([\S\s]*?)-->');
 
-  /// 匹配 (abc??123) 的正则表达式。
-  // static final bracketDoubtBracket = RegExp(r'\(([^\(\)]*?)\?\?([^\(\)]*?)\)');
-
-  /// 匹配 ??123) 的正则表达式。
-  // static final doubtBracket = RegExp(r'\?\?([^\(\)]*?)\)');
-
   /// 匹配 ?? 的正则表达式。
   static final doubt = RegExp(r'\?\?');
 
-  /// 匹配 [NType] 名称的正则表达式。
-  static final nTypeNames = RegExp('(${NType.values.map((e) => e.name.split('.').last).join('|').nothingMatches()})');
-
-  /// 匹配 _times1 后缀的正则表达式。
-  static RegExp get nSuffix => RegExp('(_$nTypeNames([0-9]+))\$');
-
   /// 匹配 abc 或 abc_times1 的正则表达式。
-  static RegExp get ivcOrNSuffix => RegExp(InternalVariableConstant.getAllNames.map((e) => "(($e)(_$nTypeNames([0-9]+))?)").join('|').nothingMatches());
+  ///
+  /// 注意前后不包含变量正则表达式。
+  static RegExp get fullName => variableMatching(
+        '(${InternalVariableConstant.getAllNames.map((e) => '($e)').join('|').nothingMatches()})'
+        '(_(${nTypeEnum2Names().map((e) => '($e)').join('|').nothingMatches()})([0-9]+))?',
+      );
+
+  /// 匹配 _[NType]1 后缀的正则表达式，且以其为结尾。
+  ///
+  /// 识别 [fullName] 是否为含 [NType] 类型的变量。
+  static RegExp get nSuffix => RegExp('(_(${nTypeEnum2Names().map((e) => '($e)').join('|').nothingMatches()})([0-9]+))\$');
+
+  /// 匹配 [NType]。
+  ///
+  /// 识别 [nSuffix] 内的 [NType]。
+  static RegExp get nTypeNames => RegExp('(${nTypeEnum2Names().map((e) => '($e)').join('|')})');
 
   /// 匹配 else: 的正则表达式。
-  static final elseKeyword = RegExp('else:');
+  ///
+  /// 注意前缀不包含变量正则表达式。
+  static final elseKeyword = RegExp(r'\Welse:');
 
   /// 匹配全部运算符的正则表达式。（有个别不包含在内）
   static final allOperator = RegExp(allOperatorRegExp.map((e) => '($e)').join('|').nothingMatches());
