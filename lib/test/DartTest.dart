@@ -1,9 +1,7 @@
 void main() async {
-  print('大苏打'.replaceAllMapped(
-    RegExp('(${['1'].map((e) => '($e)').join('|')})'),
-    (match) {
-      print('match: ${match.start}');
-      return '';
-    },
-  ));
+  final Type t1 = A;
+  final Type t2 = A;
+  print(t1 == t2);
 }
+
+class A {}

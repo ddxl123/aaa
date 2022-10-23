@@ -31,15 +31,18 @@ abstract class ClassificationState {
   ///
   /// 根据 [SimulationType] 进行扩展。
   Future<num?> internalVariablesResultHandler(InternalVariableAtom atom) async {
-    if (!atom.internalVariableConst.usableStateTypes.contains(getStateType)) {
-      throw '该算法内容不能使用 ${atom.getCombineName} 内置变量，因为获取到的结果值始终为空。';
+    final usableState = atom.getCurrentUsableStateForCurrentState();
+    if (usableState == null) {
+      throw '该算法内容不能使用 ${atom.getCombineName} 变量，因为获取到的结果值始终为空！';
     }
-    if (atom.nTypeNumber != null && !atom.internalVariableConst.usableSuffixTypes.contains(atom.nTypeNumber!.nType)) {
+
+    final isUsableSuffix = usableState.usableSuffixNTypes.contains(atom.nTypeNumber!.nType);
+    if (atom.nTypeNumber != null && !isUsableSuffix) {
       throw '${atom.internalVariableConst.name} 变量不支持 "_${atom.nTypeNumber!.nType}n" 后缀！';
     }
 
     if (atom.nTypeNumber != null && atom.nTypeNumber!.suffixNumber <= 0) {
-      throw '"n"值必须大于 0！';
+      throw '"_${atom.nTypeNumber!.nType}n" 内的 "n" 值必须大于 0！';
     }
 
     if (simulationType == SimulationType.syntaxCheck) {

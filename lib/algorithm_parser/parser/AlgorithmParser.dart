@@ -181,6 +181,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       Future<num?> getResult() async => await state.internalVariablesResultHandler(
             InternalVariableAtom(
               internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
+              currentState: state,
               nTypeNumber: nTypeNumber,
             ),
           );

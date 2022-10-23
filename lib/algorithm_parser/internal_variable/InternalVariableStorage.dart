@@ -20,14 +20,24 @@ class IvFilter<T extends num?> {
 }
 
 /// 无论识别到的变量是否已识别过，都会生成一个新的 [InternalVariableAtom] 实例。
-class InternalVariableAtom {
+class InternalVariableAtom<CS extends ClassificationState> {
   InternalVariableAtom({
     required this.internalVariableConst,
+    required this.currentState,
     required this.nTypeNumber,
   });
 
   final InternalVariableConst internalVariableConst;
+  final CS currentState;
   final NTypeNumber? nTypeNumber;
+
+  /// 返回空表示当前 [internalVariableConst] 不能使用 [currentState]。
+  UsableState? getCurrentUsableStateForCurrentState() {
+    final manyUsable = internalVariableConst.usableStates.where((element) => element.usableStateType == currentState.getStateType);
+    if (manyUsable.isEmpty) return null;
+    if (manyUsable.length == 1) return manyUsable.single;
+    throw '初始化配置异常：usable 里出现了两个相同实例！';
+  }
 
   String get getCombineName => internalVariableConst.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
 
