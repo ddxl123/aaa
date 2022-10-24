@@ -104,7 +104,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   ///
   /// 清除自定义变量部分，并替换 if-use-else 语句中的全部自定义变量。
   ///
-  /// 返回被替换后的 if-use-else 语句。
+  /// 返回被替换后的 if-use-else 语句，结果中的变量只存在内置变量。
   String _evalCustomVariables({required String definitionPart, required String ifUseElsePart}) {
     debugPrint(content: '正在评估自定义变量...');
     final name2Value = <String, String>{};
@@ -178,20 +178,22 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
         final number = int.parse(nMatchStr.substring(nType.name.split('.').last.length + 1, nMatchStr.length));
         nTypeNumber = NTypeNumber(nType: nType, suffixNumber: number);
       }
-      Future<num?> getResult() async => await state.internalVariablesResultHandler(
-            InternalVariableAtom(
-              internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
-              currentState: state,
-              nTypeNumber: nTypeNumber,
-            ),
-          );
+      // 相同的变量名值只绑定一次，但是 hasNullMerge 必须每次都执行。
+      final atom = InternalVariableAtom(
+        internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
+        currentState: state,
+        nTypeNumber: nTypeNumber,
+        hasNullMerge: match.input.substring(match.end, match.input.length).contains(RegExp(r'^(((\))|( ))*)\?\?')),
+      );
+      atom.handle();
+
       // 相同的变量名值只绑定一次。
       if (internalVariable2Results.containsKey(fullName)) {
         if (internalVariable2Results[fullName] == null) {
-          internalVariable2Results[fullName] = await getResult();
+          internalVariable2Results[fullName] = await state.internalVariablesResultHandler(atom);
         }
       } else {
-        internalVariable2Results.addAll({fullName: await getResult()});
+        internalVariable2Results.addAll({fullName: await state.internalVariablesResultHandler(atom)});
       }
       debugPrint(content: '内置变量结果值：$fullName = ${internalVariable2Results[fullName]}');
     }

@@ -25,11 +25,17 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required this.internalVariableConst,
     required this.currentState,
     required this.nTypeNumber,
+    required this.hasNullMerge,
   });
 
   final InternalVariableConst internalVariableConst;
   final CS currentState;
   final NTypeNumber? nTypeNumber;
+
+  /// 变量后面是否存在空合并符号。
+  final bool hasNullMerge;
+
+  String get getCombineName => internalVariableConst.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
 
   /// 返回空表示当前 [internalVariableConst] 不能使用 [currentState]。
   UsableState? getCurrentUsableStateForCurrentState() {
@@ -39,7 +45,40 @@ class InternalVariableAtom<CS extends ClassificationState> {
     throw '初始化配置异常：usable 里出现了两个相同实例！';
   }
 
-  String get getCombineName => internalVariableConst.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
+  /// 排查错误。
+  void handle() {
+    final usableState = getCurrentUsableStateForCurrentState();
+    if (usableState == null) {
+      throw '该算法内容不能使用 $getCombineName 变量，因为获取到的结果值始终为空！';
+    }
+
+    if (nTypeNumber != null) {
+      final isUsableSuffix = usableState.usableSuffixNTypes.contains(nTypeNumber!.nType);
+      if (!isUsableSuffix) {
+        throw '${internalVariableConst.name} 变量不支持 "_${nTypeNumber!.nType}n" 后缀！';
+      }
+
+      if (nTypeNumber!.suffixNumber <= 0) {
+        throw '"_${nTypeNumber!.nType}n" 内的 "n" 值必须大于 0！';
+      }
+
+      if (!hasNullMerge) {
+        throw '$getCombineName 扩展变量存在为空的可能性，请使用空合并运算符(??)来预防！';
+      }
+    }
+
+    if (nTypeNumber == null) {
+      if (usableState.selfExistStatus == SelfExistStatus.nullable && !hasNullMerge) {
+        throw '$getCombineName 变量存在为空的可能性，请使用空合并运算符(??)来预防！';
+      }
+      if (usableState.selfExistStatus == SelfExistStatus.notEmpty && hasNullMerge) {
+        throw '$getCombineName 变量必然不为空，请去掉空合并运算符(??)！';
+      }
+      if (usableState.selfExistStatus == SelfExistStatus.empty && !hasNullMerge) {
+        throw '$getCombineName 变量在当前算法下必然为空，请使用空合并运算符(??)来预防！';
+      }
+    }
+  }
 
   Future<num?> save({
     required InternalVariableStorage storage,
