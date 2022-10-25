@@ -102,7 +102,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst nextPlanedShowTimeConst = InternalVariableConst(
     name: 'next_planed_show_time',
-    explain: '下次计划展示的时间点。',
+    explain: '本次计划下次展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
@@ -150,12 +150,12 @@ class InternalVariableConstant {
   static Map<String, InternalVariableConst> getAllKV = {
     countAllConst.name: countAllConst,
     countNewConst.name: countNewConst,
+    timesConst.name: timesConst,
     currentActualShowTimeConst.name: currentActualShowTimeConst,
     nextPlanedShowTimeConst.name: nextPlanedShowTimeConst,
     showFamiliarConst.name: showFamiliarConst,
     clickTimeConst.name: clickTimeConst,
     clickValueConst.name: clickValueConst,
-    timesConst.name: timesConst,
   };
 
   static Set<String> get getAllNames => getAllKV.keys.toSet();

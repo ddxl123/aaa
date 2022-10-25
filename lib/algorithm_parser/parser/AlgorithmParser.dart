@@ -175,7 +175,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
         simplifyName = fullName.substring(0, nMatch.start);
         final nTypeMatch = RegExper.nTypeNames.firstMatch(nMatchStr);
         final nType = NType.values.where((element) => element.name.split(',').last == nTypeMatch!.group(0)!).first;
-        final number = int.parse(nMatchStr.substring(nType.name.split('.').last.length + 1, nMatchStr.length));
+        final number = int.tryParse(nMatchStr.substring(nType.name.split('.').last.length + 1, nMatchStr.length));
+        if (number == null) {
+          throw '扩展类型的后缀必须携带数值，例如 xxx_times1';
+        }
         nTypeNumber = NTypeNumber(nType: nType, suffixNumber: number);
       }
       // 相同的变量名值只绑定一次，但是 hasNullMerge 必须每次都执行。
@@ -183,7 +186,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
         internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
         currentState: state,
         nTypeNumber: nTypeNumber,
-        hasNullMerge: match.input.substring(match.end, match.input.length).contains(RegExp(r'^(((\))|( ))*)\?\?')),
+        hasNullMerge: match.input.substring(match.end, match.input.length).contains(RegExper.isExistNullMerge),
       );
       atom.handle();
 

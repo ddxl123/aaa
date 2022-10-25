@@ -30,23 +30,25 @@ class RegExper {
   /// 匹配 ?? 的正则表达式。
   static final doubt = RegExp(r'\?\?');
 
-  /// 匹配 abc 或 abc_times1 的正则表达式。
+  /// 匹配 abc 或 abc_times 或 abc_times1 的正则表达式。
+  ///
+  /// 包含 abc_times 是为了能提示用户应该在结尾增加数值。
   ///
   /// 注意前后不包含变量正则表达式。
   static RegExp get fullName => variableMatching(
         '(${InternalVariableConstant.getAllNames.map((e) => '($e)').join('|').nothingMatches()})'
-        '(_(${nTypeEnum2Names().map((e) => '($e)').join('|').nothingMatches()})([0-9]+))?',
+        '(_(${NType.values.map((e) => '(${e.name})').join('|').nothingMatches()})([0-9]*))?',
       );
 
   /// 匹配 _[NType]1 后缀的正则表达式，且以其为结尾。
   ///
   /// 识别 [fullName] 是否为含 [NType] 类型的变量。
-  static RegExp get nSuffix => RegExp('(_(${nTypeEnum2Names().map((e) => '($e)').join('|').nothingMatches()})([0-9]+))\$');
+  static RegExp get nSuffix => RegExp('(_(${NType.values.map((e) => '(${e.name})').join('|').nothingMatches()})([0-9]*))\$');
 
   /// 匹配 [NType]。
   ///
   /// 识别 [nSuffix] 内的 [NType]。
-  static RegExp get nTypeNames => RegExp('(${nTypeEnum2Names().map((e) => '($e)').join('|')})');
+  static RegExp get nTypeNames => RegExp('(${NType.values.map((e) => '(${e.name})').join('|')})');
 
   /// 匹配 else: 的正则表达式。
   ///
@@ -73,6 +75,9 @@ class RegExper {
 
   /// 匹配非字母、数字、下划线的正则表达式。
   static final nameNonConvention = RegExp(r'\W');
+
+  /// 匹配变量右侧是否存在空合并运算符。
+  static final isExistNullMerge = RegExp(r'^(((\))|( ))*)\?\?');
 }
 
 extension NothingMatches on String {

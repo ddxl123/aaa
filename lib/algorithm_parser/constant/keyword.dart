@@ -9,11 +9,11 @@ const keywords = <String>{
   'false',
 };
 
-const keywordsWithColon = <String>[
+const keywordsWithColon = <String>{
   'if:',
   'use:',
   'else:',
   'throw',
   'true',
   'false',
-];
+};

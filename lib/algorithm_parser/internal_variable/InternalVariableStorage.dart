@@ -59,7 +59,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
       }
 
       if (nTypeNumber!.suffixNumber <= 0) {
-        throw '"_${nTypeNumber!.nType}n" 内的 "n" 值必须大于 0！';
+        throw '"_${nTypeNumber!.nType.name}n" 内的 "n" 值必须大于 0！';
       }
 
       if (!hasNullMerge) {
@@ -75,7 +75,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
         throw '$getCombineName 变量必然不为空，请去掉空合并运算符(??)！';
       }
       if (usableState.selfExistStatus == SelfExistStatus.empty && !hasNullMerge) {
-        throw '$getCombineName 变量在当前算法下必然为空，请使用空合并运算符(??)来预防！';
+        throw '$getCombineName 变量在当前算法下必然为空，请使用空合并运算符(??)来预防，或者放弃使用该变量！';
       }
     }
   }
@@ -84,6 +84,9 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required InternalVariableStorage storage,
     required IvFilter<num?> ivFilter,
   }) async {
+    if (getCurrentUsableStateForCurrentState()?.selfExistStatus == SelfExistStatus.empty) {
+      return null;
+    }
     num? singleResult({required InternalVariableWithResults i}) {
       if (nTypeNumber == null) {
         return i.results.last;

@@ -47,14 +47,14 @@ class EmptyMergeParser {
     }
     left = toFront(match);
     right = toAfter(match);
-    print('left: $left right: $right');
+    algorithmParser.debugPrint(content: 'left: $left right: $right');
     if (left.content.trim() == AlgorithmParser.nullTag) {
       final replaceResult = content.replaceRange(left.boundIndex + 1, right.boundIndex, right.content);
-      print('replaceResult: $replaceResult');
+      algorithmParser.debugPrint(content: 'replaceResult: $replaceResult');
       return _recursion(content: replaceResult);
     } else {
       final replaceResult = content.replaceRange(left.boundIndex + 1, right.boundIndex, left.content);
-      print('replaceResult: $replaceResult');
+      algorithmParser.debugPrint(content: 'replaceResult: $replaceResult');
       return _recursion(content: replaceResult);
     }
   }
@@ -117,6 +117,9 @@ class EmptyMergeParser {
       }
       content += indexStr;
     }
+    if (content.trim() == '') {
+      throw '空合并运算符右边缺少值！';
+    }
     if (leftBrackets.isEmpty) {
       throw '空合并缺少右括号: $content??';
     }
@@ -124,7 +127,7 @@ class EmptyMergeParser {
       throw '空合并括号分配异常：$content';
     }
 
-    final rightBracketIndex = match.end + content.length;
+    final rightBracketIndex = match.end + content.length + 1;
     return IndexAndContent(boundIndex: rightBracketIndex, content: content);
   }
 }

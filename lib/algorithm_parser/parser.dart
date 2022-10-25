@@ -12,6 +12,8 @@ part 'constant/keyword.dart';
 
 part 'constant/operator.dart';
 
+part 'constant/other.dart';
+
 part 'internal_variable/InternalVariableStorage.dart';
 
 part 'internal_variable/InternalVariableConstant.dart';
@@ -23,7 +25,7 @@ part 'parser/EmptyMergeParser.dart';
 part 'parser/IfExprParse.dart';
 
 part 'parser/RegExper.dart';
-
+ 
 part 'state/abstract.dart';
 
 part 'state/ButtonDataState.dart';
