@@ -1,7 +1,7 @@
 part of algorithm_parser;
 
 class AlgorithmParser<CS extends ClassificationState> with Explain {
-  AlgorithmParser({this.isDebugPrint = true});
+  AlgorithmParser({this.isDebugPrint = false});
 
   final ContextModel cm = ContextModel();
 
@@ -45,9 +45,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
       this.state = state;
 
+      debugPrint(content: RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!);
       debugPrint(content: '【开始解析 ${state.getStateType}...】');
 
-      String content = state.content;
+      String content = state.useContent;
       content = _clearAnnotated(content: content);
       content = _toLowerCase(content: content);
 
@@ -63,8 +64,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     } catch (e, st) {
       debugPrint(content: '语法错误：$e', st: st);
     }
-    logger.i(debugPrintStringBuffer);
     debugPrint(content: '【解析完成 ${state.getStateType}！】');
+    if (isDebugPrint) {
+      logger.i(debugPrintStringBuffer);
+    }
     return this;
   }
 
@@ -203,7 +206,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     final replaceResult = content.replaceAllMapped(
       RegExper.fullName,
       (match) {
-        debugPrint(content: '>>>>>>>>>>>>>>>>>>>>>>>>>>${match.pattern}');
         debugPrint(content: '${match.group(0)}');
         final result = internalVariable2Results[match.group(0)!];
         return result != null ? result.toString() : nullTag;
@@ -270,6 +272,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   /// 解析 use 语句。
   void _useParse({required String content}) {
-    state.parse(content: content, algorithmParser: this);
+    state.useParse(useContent: content, algorithmParser: this);
   }
 }

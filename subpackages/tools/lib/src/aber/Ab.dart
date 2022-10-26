@@ -24,7 +24,7 @@ class Ab<V> {
   /// 使用前使用 [initVerify] 进行初始化。
   AbVerify? _verify;
 
-  AbVerify get verify => _verify ?? AbVerify(abV: Ab(null), verifyCallBack: (v) => VerifyResult(isOk: false, message: '未进行 initVerify！'));
+  AbVerify get verify => _verify ?? AbVerify(abV: Ab(null), verifyCallBack: (v) async => VerifyResult(isOk: false, message: '未进行 initVerify！'));
 
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
@@ -71,8 +71,8 @@ class Ab<V> {
   /// ```
   ///
   /// 当 [diff] 的返回值与 [value] 不是同一个对象时，[value] 将会被替换掉，并进行重建。
-  FutureOr<void> refreshInevitable(FutureOr<V> Function(V obj) diff) async {
-    value = await diff(value);
+  void refreshInevitable(V Function(V obj) diff) {
+    value = diff(value);
     refreshForce();
   }
 
@@ -81,12 +81,12 @@ class Ab<V> {
   /// 通常，在 [value] 为 基本数据类型 时使用。
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  FutureOr<void> refreshEasy(FutureOr<V> Function(V oldValue) diff, [bool isForce = false]) async {
+  void refreshEasy(V Function(V oldValue) diff, [bool isForce = false]) async {
     if (V is num || V is String || V is bool) {
       print('Aber-Warning: Modifying values that are not basic data type, '
           'please use the refreshComplex or modify method.');
     }
-    final nv = await diff(value);
+    final nv = diff(value);
     if (value != nv || isForce) {
       value = nv;
       _refresh();
@@ -96,8 +96,8 @@ class Ab<V> {
   /// 当 [diff] 返回值为 true 时，才会尝试重建。
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  FutureOr<void> refreshComplex(FutureOr<bool> Function(V obj) diff) async {
-    if (await diff(value)) {
+  void refreshComplex(bool Function(V obj) diff) async {
+    if (diff(value)) {
       _refresh();
     }
   }
@@ -125,9 +125,9 @@ class Ab<V> {
   }
 
   /// 当直接在 Ab 对象上使用 [initVerify] 无法引用其他成员时，可以使用 [AbController.initComplexVerifies]。
-  void initVerify(FutureOr<VerifyResult?> Function(Ab<V> abV) verifyCallBack) {
+  void initVerify(Future<VerifyResult?> Function(Ab<V> abV) verifyCallBack) {
     if (_verify != null) {
-      _verify = AbVerify(abV: Ab(null), verifyCallBack: (v) => VerifyResult(isOk: false, message: '进行了多次 initVerify！'));
+      _verify = AbVerify(abV: Ab(null), verifyCallBack: (v) async => VerifyResult(isOk: false, message: '进行了多次 initVerify！'));
       return;
     }
     _verify = AbVerify<V>(abV: this, verifyCallBack: verifyCallBack);

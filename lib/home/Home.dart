@@ -26,8 +26,7 @@ class Home extends StatelessWidget {
             body: SafeArea(child: _body()),
             bottomNavigationBar: _bottomNavigationBar(),
             floatingActionButton: _floatingActionButton(context),
-            floatingActionButtonLocation:
-                controller.isFragmentSelecting(abw) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation: controller.isFragmentSelecting(abw) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerDocked,
           ),
         );
       },

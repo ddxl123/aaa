@@ -1,8 +1,12 @@
 part of algorithm_parser;
 
+/// String 类型时的 use 写法：
+/// use: 123
+///
+/// 单位：秒
 class NextShowTimeState extends ClassificationState {
   NextShowTimeState({
-    required super.content,
+    required super.useContent,
     required super.simulationType,
     required super.externalResultHandler,
   });
@@ -10,8 +14,8 @@ class NextShowTimeState extends ClassificationState {
   late int result;
 
   @override
-  NextShowTimeState parse({required String content, required AlgorithmParser algorithmParser}) {
-    result = algorithmParser.calculate(content).toInt();
+  NextShowTimeState useParse({required String useContent, required AlgorithmParser algorithmParser}) {
+    result = algorithmParser.calculate(useContent).toInt();
     return this;
   }
 
@@ -19,7 +23,7 @@ class NextShowTimeState extends ClassificationState {
   String toStringResult() => result.toString();
 
   @override
-  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
+  Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
     const countCapping = 10000;
     // 5个月
     const timeCapping = 12960000;

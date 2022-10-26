@@ -14,7 +14,7 @@ class AbVerify<V> {
   VerifyResult _verify = VerifyResult(isOk: false, message: '未 check 就进行了调用！');
 
   /// 返回值为 null 将会自动设置一个成功的 [VerifyResult]。
-  final FutureOr<VerifyResult?> Function(Ab<V> abV) verifyCallBack;
+  final Future<VerifyResult?> Function(Ab<V> abV) verifyCallBack;
 
   final Set<void Function()> checkCallBacks = {};
 

@@ -87,7 +87,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   @override
   void initComplexVerifies() {
     title.initVerify(
-      (abV) {
+      (abV) async {
         if (abV().trim() == '') return VerifyResult(isOk: false, message: '标题不能为空！');
         return null;
       },
@@ -102,21 +102,21 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         // TODO: 模拟校验
         final fa = await AlgorithmParser().parse(
           state: FamiliarityState(
-            content: mm.familiarityAlgorithm,
+            useContent: mm.familiarityAlgorithm,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
         final ff = await AlgorithmParser().parse(
           state: NextShowTimeState(
-            content: mm.nextTimeAlgorithm,
+            useContent: mm.nextTimeAlgorithm,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
         final bd = await AlgorithmParser().parse(
           state: ButtonDataState(
-            content: mm.buttonAlgorithm,
+            useContent: mm.buttonAlgorithm,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -211,13 +211,9 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   void save() {
     _save().then(
-      (value) {
-        isBasicConfigRedErr.refreshEasy(
-          (oldValue) async {
-            await title.verify.check();
-            return !title.verify.isOk;
-          },
-        );
+      (value) async {
+        await title.verify.check();
+        isBasicConfigRedErr.refreshEasy((oldValue) => !title.verify.isOk);
         if (value.t1) {
           SmartDialog.showToast('保存成功！');
           Navigator.pop(context);
@@ -231,32 +227,28 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 返回的 [Tuple2]：是否成功-消息。
   Future<Tuple2<bool, String>> _save() async {
     if (await saveVerify) {
-      await memoryGroupGizmo!.refreshComplex(
-        (obj) async {
-          await DriftDb.instance.updateDAO.resetMemoryGroup(
-            oldMemoryGroupReset: (resetSyncTag) async {
-              await obj.reset(
-                id: absent(),
-                createdAt: absent(),
-                updatedAt: absent(),
-                startTime: absent(),
-                memoryModelId: (selectedMemoryModel()?.id).value(),
-                title: titleTextEditingController.text.value(),
-                type: type().value(),
-                status: MemoryGroupStatus.notStart.value(),
-                willNewLearnCount: willNewLearnCount().value(),
-                reviewInterval: reviewInterval().value(),
-                filterOut: filterOut().value(),
-                newReviewDisplayOrder: newReviewDisplayOrder().value(),
-                newDisplayOrder: newDisplayOrder().value(),
-                writeSyncTag: resetSyncTag,
-              );
-              title.refreshEasy((oldValue) => titleTextEditingController.text);
-            },
+      await DriftDb.instance.updateDAO.resetMemoryGroup(
+        oldMemoryGroupReset: (resetSyncTag) async {
+          await memoryGroupGizmo!().reset(
+            id: absent(),
+            createdAt: absent(),
+            updatedAt: absent(),
+            startTime: absent(),
+            memoryModelId: (selectedMemoryModel()?.id).value(),
+            title: titleTextEditingController.text.value(),
+            type: type().value(),
+            status: MemoryGroupStatus.notStart.value(),
+            willNewLearnCount: willNewLearnCount().value(),
+            reviewInterval: reviewInterval().value(),
+            filterOut: filterOut().value(),
+            newReviewDisplayOrder: newReviewDisplayOrder().value(),
+            newDisplayOrder: newDisplayOrder().value(),
+            writeSyncTag: resetSyncTag,
           );
-          return true;
+          title.refreshEasy((oldValue) => titleTextEditingController.text);
         },
       );
+      memoryGroupGizmo!.refreshForce();
       return Tuple2(t1: true, t2: '保存成功！');
     } else {
       return Tuple2(t1: false, t2: '保存失败！');
@@ -265,9 +257,11 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   void analyze() {
     _analyze().then(
-      (value) {
-        isBasicConfigRedErr.refreshEasy((oldValue) async => !await basicConfigRedErrVerify);
-        isCurrentCycleRedErr.refreshEasy((oldValue) async => !await currentCycleConfigRedErrVerify);
+      (value) async {
+        final ibcre = !await basicConfigRedErrVerify;
+        final iccre = !await currentCycleConfigRedErrVerify;
+        isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);
+        isCurrentCycleRedErr.refreshEasy((oldValue) => iccre);
         SmartDialog.showToast(value.t2);
       },
     );
@@ -286,9 +280,11 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   void applyAndStart() {
     _applyAndStart().then(
-      (value) {
-        isBasicConfigRedErr.refreshEasy((oldValue) async => !await basicConfigRedErrVerify);
-        isCurrentCycleRedErr.refreshEasy((oldValue) async => !await currentCycleConfigRedErrVerify);
+      (value) async {
+        final ibcre = !await basicConfigRedErrVerify;
+        final iccre = !await currentCycleConfigRedErrVerify;
+        isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);
+        isCurrentCycleRedErr.refreshEasy((oldValue) => iccre);
         if (value.t1) {
           SmartDialog.showToast(value.t2);
           Navigator.pop(context);

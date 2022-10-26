@@ -1,8 +1,10 @@
 part of algorithm_parser;
 
+/// String 类型时的 use 写法：
+/// use: 123
 class FamiliarityState extends ClassificationState {
   FamiliarityState({
-    required super.content,
+    required super.useContent,
     required super.simulationType,
     required super.externalResultHandler,
   });
@@ -10,8 +12,8 @@ class FamiliarityState extends ClassificationState {
   late double result;
 
   @override
-  FamiliarityState parse({required String content, required AlgorithmParser algorithmParser}) {
-    result = algorithmParser.calculate(content);
+  FamiliarityState useParse({required String useContent, required AlgorithmParser algorithmParser}) {
+    result = algorithmParser.calculate(useContent);
     return this;
   }
 
@@ -19,7 +21,7 @@ class FamiliarityState extends ClassificationState {
   String toStringResult() => result.toString();
 
   @override
-  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
+  Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
     const countCapping = 10000;
     // 5个月
     const timeCapping = 12960000;

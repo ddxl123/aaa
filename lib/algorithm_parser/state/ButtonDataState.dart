@@ -1,11 +1,19 @@
 part of algorithm_parser;
 
+/// String 类型时的 use 写法：
+/// use: 1 2,3 4
+/// 或
+/// use: 2,3
 class ButtonDataValue2NextShowTime {
+  ButtonDataValue2NextShowTime({required this.value});
+
+  /// 从 [ButtonDataState] 获取到的 use 中的单个数值。
   final double value;
 
   /// 从 [NextShowTimeState] 解析结果中获取。
   int? time;
 
+  /// 将 [time] 转换为以 天、时、分、秒 为单位的结果。
   String parseTime() {
     final t = time;
     if (t == null) throw '时间值为空！';
@@ -21,12 +29,13 @@ class ButtonDataValue2NextShowTime {
     return '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
   }
 
-  ButtonDataValue2NextShowTime({required this.value});
+  @override
+  String toString() => 'ButtonDataValue2NextShowTime(value:$value,time:$time)';
 }
 
 class ButtonDataState extends ClassificationState {
   ButtonDataState({
-    required super.content,
+    required super.useContent,
     required super.simulationType,
     required super.externalResultHandler,
   });
@@ -38,8 +47,8 @@ class ButtonDataState extends ClassificationState {
   bool get isSlidable => resultMin == null || resultMax == null;
 
   @override
-  ButtonDataState parse({required String content, required AlgorithmParser algorithmParser}) {
-    final trim = content.trim();
+  ButtonDataState useParse({required String useContent, required AlgorithmParser algorithmParser}) {
+    final trim = useContent.trim();
     final blank = trim.split(' ')..removeWhere((element) => element.trim() == '');
     if (blank.length == 1) {
       _parseComma(comma: blank.first, algorithmParser: algorithmParser);
@@ -48,7 +57,7 @@ class ButtonDataState extends ClassificationState {
       resultMax = ButtonDataValue2NextShowTime(value: algorithmParser.calculate(blank.last));
       _parseComma(comma: blank[1], algorithmParser: algorithmParser);
     } else {
-      throw '"use:$content" 内容书写不规范！';
+      throw '"use:$useContent" 内容书写不规范！';
     }
     return this;
   }
@@ -68,7 +77,7 @@ class ButtonDataState extends ClassificationState {
   String toStringResult() => '${resultMin ?? ''} ${resultButtonValues.map((e) => e.toString()).join(',')} ${resultMax ?? ''}';
 
   @override
-  Future<num?> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
+  Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
     const countCapping = 10000;
     // 5个月
     const timeCapping = 12960000;

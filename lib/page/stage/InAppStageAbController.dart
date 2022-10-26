@@ -47,7 +47,6 @@ class InAppStageAbController extends AbController {
   Future<void> show() async {
     final dancer = await dancerQuery.getNewDancer(mg: memoryGroupGizmo());
     fragmentAndMemoryInfos.refreshInevitable((obj) => dancer);
-    print(fragmentAndMemoryInfos());
     if (fragmentAndMemoryInfos() == null) return;
 
     await parse();
@@ -56,7 +55,6 @@ class InAppStageAbController extends AbController {
   Future<void> parse() async {
     final currentShowFamiliar = await parseFamiliarity();
     final pbd = await parseButtonData(currentShowFamiliar: currentShowFamiliar);
-
     if (pbd.resultMin != null) {
       await parseNextShowTime(currentShowFamiliar: currentShowFamiliar, buttonDataValue2NextShowTime: pbd.resultMin!);
     }
@@ -73,7 +71,7 @@ class InAppStageAbController extends AbController {
   Future<double> parseFamiliarity() async {
     final currentFamiliarity = await AlgorithmParser<FamiliarityState>().parse(
       state: FamiliarityState(
-        content: memoryModelGizmo().familiarityAlgorithm,
+        useContent: memoryModelGizmo().familiarityAlgorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -120,7 +118,7 @@ class InAppStageAbController extends AbController {
   Future<ButtonDataState> parseButtonData({required double currentShowFamiliar}) async {
     return (await AlgorithmParser<ButtonDataState>().parse(
       state: ButtonDataState(
-        content: memoryModelGizmo().buttonAlgorithm,
+        useContent: memoryModelGizmo().buttonAlgorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -167,11 +165,11 @@ class InAppStageAbController extends AbController {
   Future<void> parseNextShowTime({required double currentShowFamiliar, required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     final r = await AlgorithmParser<NextShowTimeState>().parse(
       state: NextShowTimeState(
-        content: memoryModelGizmo().nextTimeAlgorithm,
+        useContent: memoryModelGizmo().nextTimeAlgorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
-          await atom.filter(
-            storage: storage(),
+          return await atom.filter(
+            storage: InternalVariableStorage(),
             countAllIF: IvFilter(
               ivf: () async => await dancerQuery.getCountAll(mg: memoryGroupGizmo()),
               isReGet: false,

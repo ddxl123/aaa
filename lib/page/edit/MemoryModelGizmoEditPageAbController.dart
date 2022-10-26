@@ -55,7 +55,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       (abV) async {
         final result = await AlgorithmParser().parse(
           state: FamiliarityState(
-            content: familiarityAlgorithm(),
+            useContent: familiarityAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -68,7 +68,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       (abV) async {
         final result = await AlgorithmParser().parse(
           state: NextShowTimeState(
-            content: nextTimeAlgorithm(),
+            useContent: nextTimeAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -81,7 +81,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       (abV) async {
         final result = await AlgorithmParser().parse(
           state: ButtonDataState(
-            content: buttonDataAlgorithm(),
+            useContent: buttonDataAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -222,29 +222,25 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         },
         [MemoryModelGizmoEditPageType.modify]: () async {
           if (await commitVerify) {
-            await memoryModelGizmo.refreshComplex(
-              (obj) async {
-                await DriftDb.instance.updateDAO.resetMemoryModel(
-                  oldMemoryModelReset: (SyncTag resetSyncTag) async {
-                    await obj!.reset(
-                      id: absent(),
-                      createdAt: absent(),
-                      updatedAt: absent(),
-                      title: title().value(),
-                      familiarityAlgorithm: familiarityAlgorithm().value(),
-                      nextTimeAlgorithm: nextTimeAlgorithm().value(),
-                      buttonAlgorithm: buttonDataAlgorithm().value(),
-                      writeSyncTag: await SyncTag.create(),
-                      // TODO
-                      applicableGroups: ''.value(),
-                      applicableFields: ''.value(),
-                      stimulateAlgorithm: ''.value(),
-                    );
-                  },
+            await DriftDb.instance.updateDAO.resetMemoryModel(
+              oldMemoryModelReset: (SyncTag resetSyncTag) async {
+                await memoryModelGizmo()!.reset(
+                  id: absent(),
+                  createdAt: absent(),
+                  updatedAt: absent(),
+                  title: title().value(),
+                  familiarityAlgorithm: familiarityAlgorithm().value(),
+                  nextTimeAlgorithm: nextTimeAlgorithm().value(),
+                  buttonAlgorithm: buttonDataAlgorithm().value(),
+                  writeSyncTag: await SyncTag.create(),
+                  // TODO
+                  applicableGroups: ''.value(),
+                  applicableFields: ''.value(),
+                  stimulateAlgorithm: ''.value(),
                 );
-                return true;
               },
             );
+            memoryModelGizmo.refreshForce();
 
             return Tuple2(t1: true, t2: '修改成功！');
           } else {

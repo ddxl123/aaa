@@ -30,7 +30,7 @@ abstract class AbController {
 
   /// 需要 [isEnableLoading] 为 true。
   void loadingError(Object e, StackTrace st) {
-    print('出现 loadingError 未实现！$e');
+    logger.i('出现 loadingError 未实现！$runtimeType');
   }
 
   /// 复杂验证的初始化函数。

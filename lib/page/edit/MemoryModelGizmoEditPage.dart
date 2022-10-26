@@ -1,4 +1,5 @@
 import 'package:aaa/algorithm_parser/AlgorithmKeyboard.dart';
+import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryModelGizmoEditPageAbController.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:cool_ui/cool_ui.dart';
@@ -35,6 +36,17 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                 SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
                 SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
                 SliverToBoxAdapter(child: _buttonDataWidget()),
+                SliverToBoxAdapter(
+                  child: ElevatedButton(
+                    child: const Text('使用默认记忆规则'),
+                    onPressed: () {
+                      final content = DefaultAlgorithmContent();
+                      c.familiarityAlgorithmEditingController.text = content.defaultFamiliarContent;
+                      c.buttonDataAlgorithmEditingController.text = content.defaultButtonDataContent;
+                      c.nextTimeAlgorithmEditingController.text = content.defaultNextShowTimeContent;
+                    },
+                  ),
+                ),
               ],
             ),
             floatingActionButton: AbwBuilder(
@@ -100,7 +112,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         return filter(
           from: c.editPageType(abw),
           targets: {
-            [MemoryModelGizmoEditPageType.create]: () => const Text('创建记忆规则'),
+            [MemoryModelGizmoEditPageType.create]: () => const Text('创建记忆模型'),
             [MemoryModelGizmoEditPageType.look, MemoryModelGizmoEditPageType.modify]: () => Text(c.title(abw)),
           },
           orElse: null,

@@ -25,7 +25,7 @@ part 'parser/EmptyMergeParser.dart';
 part 'parser/IfExprParse.dart';
 
 part 'parser/RegExper.dart';
- 
+
 part 'state/abstract.dart';
 
 part 'state/ButtonDataState.dart';
@@ -35,6 +35,8 @@ part 'state/FamiliarityState.dart';
 part 'state/NextShowTimeState.dart';
 
 part 'DancerQuery.dart';
+
+part 'DefaultAlgorithmContent.dart';
 
 part 'enums.dart';
 

@@ -1,10 +1,7 @@
-import 'package:aaa/page/edit/MemoryModelGizmoEditPageAbController.dart';
-import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:aaa/page/select/MemoryModelSelectPage.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -212,7 +209,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
           child: Row(
             children: [
               const Text('展示类型：', style: TextStyle(fontSize: 16)),
-              dropdownButton2<MemoryGroupType>(
+              CustomDropdownBodyButton<MemoryGroupType>(
                 value: c.type(abw),
                 item: [
                   Tuple2(t1: '仅应用内', t2: MemoryGroupType.inApp),
@@ -441,7 +438,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
           child: Row(
             children: [
               const Text('新 | 复习 碎片展示顺序：'),
-              dropdownButton2<NewReviewDisplayOrder>(
+              CustomDropdownBodyButton<NewReviewDisplayOrder>(
                 value: c.newReviewDisplayOrder(abw),
                 item: [
                   Tuple2(t1: '混合', t2: NewReviewDisplayOrder.mix),
@@ -467,7 +464,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
           child: Row(
             children: [
               const Text('新碎片 展示顺序：'),
-              dropdownButton2<NewDisplayOrder>(
+              CustomDropdownBodyButton<NewDisplayOrder>(
                 value: c.newDisplayOrder(abw),
                 item: [
                   Tuple2(t1: '随机', t2: NewDisplayOrder.random),

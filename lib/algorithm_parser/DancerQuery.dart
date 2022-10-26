@@ -64,7 +64,6 @@ class DancerQuery {
   Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getNewDancer({required MemoryGroup mg}) async {
     final newFragment = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
-
     if (newFragment == null && learnedFragment == null) return null;
 
     final newFragmentOrNull = newFragment == null ? null : Tuple2(t1: newFragment, t2: <FragmentMemoryInfo>[]);
@@ -73,7 +72,7 @@ class DancerQuery {
     return filter(
       from: mg.newReviewDisplayOrder,
       targets: {
-        [NewReviewDisplayOrder.mix]: () => math.Random().nextInt(1) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
+        [NewReviewDisplayOrder.mix]: () => math.Random().nextInt(2) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
         [NewReviewDisplayOrder.newReview]: () => newFragmentOrNull ?? learnedFragmentOrNull,
         [NewReviewDisplayOrder.reviewNew]: () => learnedFragmentOrNull ?? newFragmentOrNull,
       },
@@ -149,6 +148,7 @@ class DancerQuery {
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required double? clickValue,
   }) async {
-    return tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
+    final f = tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
+    return f;
   }
 }

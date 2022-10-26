@@ -27,7 +27,7 @@ class _InAppStageState extends State<InAppStage> {
                 Navigator.pop(context);
               },
             ),
-            actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz))],
+            actions: [_moreButtonWidget()],
           ),
           body: Center(
             child: Column(
@@ -38,6 +38,24 @@ class _InAppStageState extends State<InAppStage> {
             ),
           ),
           bottomSheet: _bottomWidget(),
+        );
+      },
+    );
+  }
+
+  Widget _moreButtonWidget() {
+    return AbBuilder<InAppStageAbController>(
+      builder: (c, abw) {
+        return CustomDropdownBodyButton(
+          value: 0,
+          dropdownWidth: 150,
+          customButton: const CustomDropdownPrimaryButtonContainer(child: Icon(Icons.more_horiz)),
+          item: [
+            Tuple2(t1: '按钮显示时间', t2: 0),
+          ],
+          onChanged: (v) {
+            c.isButtonDataShowValue.refreshEasy((oldValue) => !oldValue);
+          },
         );
       },
     );

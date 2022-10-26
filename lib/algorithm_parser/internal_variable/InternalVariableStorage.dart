@@ -80,13 +80,14 @@ class InternalVariableAtom<CS extends ClassificationState> {
     }
   }
 
-  Future<num?> save({
+  Future<NumberOrNull> save({
     required InternalVariableStorage storage,
     required IvFilter<num?> ivFilter,
   }) async {
     if (getCurrentUsableStateForCurrentState()?.selfExistStatus == SelfExistStatus.empty) {
-      return null;
+      return NumberOrNull(null);
     }
+    // 获取需要的 index 对应的结果值。
     num? singleResult({required InternalVariableWithResults i}) {
       if (nTypeNumber == null) {
         return i.results.last;
@@ -107,7 +108,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
           final ivfResults = await ivFilter.ivf();
           element.results.addAll(ivfResults);
         }
-        return singleResult(i: element);
+        return NumberOrNull(singleResult(i: element));
       }
     }
 
@@ -115,10 +116,10 @@ class InternalVariableAtom<CS extends ClassificationState> {
     storage.storage.add(newI);
     final ivfResults = await ivFilter.ivf();
     newI.results.addAll(ivfResults);
-    return singleResult(i: newI);
+    return NumberOrNull(singleResult(i: newI));
   }
 
-  Future<num?> filter({
+  Future<NumberOrNull> filter({
     required InternalVariableStorage storage,
     required IvFilter<int?> countAllIF,
     required IvFilter<int?> countNewIF,
