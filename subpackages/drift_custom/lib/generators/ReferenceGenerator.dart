@@ -122,6 +122,7 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
           childrenRunCallContent.writeln('await $childCamel?._run();');
         }
         classContent.writeln('''
+/// [$father]
 class Ref$father extends Ref {
   Future<void> Function(\$${father}Table table) self;
   $childrenFutureContent
@@ -143,11 +144,16 @@ class Ref$father extends Ref {
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-/// 为了规范化，只能在 DAO 区使用这个函数。
-Future<void> withRefs(FutureOr<Ref> Function() ref) async {
+/// 增删改时，必须用这个函数。
+///
+/// 增：[withRefs] + [DriftSyncExt.insertReturningWith]
+/// 删：[withRefs] + [DriftSyncExt.deleteWith]
+/// 改：[withRefs] + [UserExt.reset]
+Future<void> withRefs({required SyncTag? syncTag, required FutureOr<Ref> Function(SyncTag syncTag) ref,}) async {
   await DriftDb.instance.transaction(
     () async {
-      await (await ref())._run();
+      final internalSyncTag = await SyncTag.create();
+      await (await ref(syncTag??internalSyncTag))._run();
     },
   );
 }

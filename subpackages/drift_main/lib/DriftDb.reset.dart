@@ -7,14 +7,37 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
+extension DriftValueExt<T> on T {
+  /// 赋予新值
+  ///
+  /// drift.Value('value') 的快捷方法。
+  ///
+  /// 使用方法： '123'.toValue()。
+  Value<T> toValue() {
+    return Value<T>(this);
+  }
+
+  /// 保持原值不变。
+  ///
+  /// drift.Value.absent() 的快捷方法。
+  ///
+  /// 使用方法：直接在任意对象中调用 toAbsent()。
+  Value<A> toAbsent<A>() {
+    return Value<A>.absent();
+  }
+}
+
+/// [Users]
 extension UserExt on User {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<User> reset({
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> username,
@@ -23,7 +46,8 @@ extension UserExt on User {
     required Value<int> age,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.username = username.present ? username.value : this.username;
@@ -39,14 +63,17 @@ extension UserExt on User {
   }
 }
 
+/// [Fragments]
 extension FragmentExt on Fragment {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<Fragment> reset({
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentId,
@@ -54,7 +81,8 @@ extension FragmentExt on Fragment {
     required Value<int> priority,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.fatherFragmentId = fatherFragmentId.present
@@ -71,21 +99,25 @@ extension FragmentExt on Fragment {
   }
 }
 
+/// [FragmentGroups]
 extension FragmentGroupExt on FragmentGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<FragmentGroup> reset({
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentGroupId,
     required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.fatherFragmentGroupId = fatherFragmentGroupId.present
@@ -101,14 +133,17 @@ extension FragmentGroupExt on FragmentGroup {
   }
 }
 
+/// [MemoryGroups]
 extension MemoryGroupExt on MemoryGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<MemoryGroup> reset({
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String?> memoryModelId,
@@ -123,7 +158,8 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<DateTime?> startTime,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.memoryModelId =
@@ -152,14 +188,17 @@ extension MemoryGroupExt on MemoryGroup {
   }
 }
 
+/// [MemoryModels]
 extension MemoryModelExt on MemoryModel {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<MemoryModel> reset({
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> title,
@@ -171,7 +210,8 @@ extension MemoryModelExt on MemoryModel {
     required Value<String> applicableFields,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.title = title.present ? title.value : this.title;
@@ -201,14 +241,17 @@ extension MemoryModelExt on MemoryModel {
   }
 }
 
+/// [FragmentMemoryInfos]
 extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<FragmentMemoryInfo> reset({
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> fragmentId,
@@ -221,7 +264,8 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<double> clickValue,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.fragmentId = fragmentId.present ? fragmentId.value : this.fragmentId;
@@ -248,8 +292,11 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   }
 }
 
+/// [RFragment2FragmentGroups]
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
@@ -257,14 +304,15 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   FutureOr<RFragment2FragmentGroup> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required SyncTag? writeSyncTag,
   }) async {
+    if (id != null) throw 'id 不能被修改！';
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
-    this.id = id.present ? id.value : this.id;
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     if (writeSyncTag != null) {
@@ -276,8 +324,11 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   }
 }
 
+/// [RFragment2MemoryGroups]
 extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
@@ -285,14 +336,15 @@ extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
   FutureOr<RFragment2MemoryGroup> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required SyncTag? writeSyncTag,
   }) async {
+    if (id != null) throw 'id 不能被修改！';
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
-    this.id = id.present ? id.value : this.id;
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     if (writeSyncTag != null) {
@@ -304,8 +356,11 @@ extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
   }
 }
 
+/// [RAssistedMemory2Fragments]
 extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
@@ -313,14 +368,15 @@ extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
   FutureOr<RAssistedMemory2Fragment> reset({
     required Value<String?> fatherId,
     required Value<String> sonId,
-    required Value<String> id,
+    Value<String>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required SyncTag? writeSyncTag,
   }) async {
+    if (id != null) throw 'id 不能被修改！';
     this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
     this.sonId = sonId.present ? sonId.value : this.sonId;
-    this.id = id.present ? id.value : this.id;
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     if (writeSyncTag != null) {
@@ -332,21 +388,25 @@ extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
   }
 }
 
+/// [AppInfos]
 extension AppInfoExt on AppInfo {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<AppInfo> reset({
-    required Value<int> id,
+    Value<int>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> token,
     required Value<bool> hasDownloadedInitData,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.token = token.present ? token.value : this.token;
@@ -362,14 +422,17 @@ extension AppInfoExt on AppInfo {
   }
 }
 
+/// [Syncs]
 extension SyncExt on Sync {
   /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
   ///
   /// 建议配合 [withRefs] 使用。
   ///
   /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
   FutureOr<Sync> reset({
-    required Value<int> id,
+    Value<int>? id,
     required Value<DateTime> createdAt,
     required Value<DateTime> updatedAt,
     required Value<String> syncTableName,
@@ -378,7 +441,8 @@ extension SyncExt on Sync {
     required Value<int> tag,
     required SyncTag? writeSyncTag,
   }) async {
-    this.id = id.present ? id.value : this.id;
+    if (id != null) throw 'id 不能被修改！';
+    this.id = this.id;
     this.createdAt = createdAt.present ? createdAt.value : this.createdAt;
     this.updatedAt = updatedAt.present ? updatedAt.value : this.updatedAt;
     this.syncTableName =

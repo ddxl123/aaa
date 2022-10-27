@@ -7,6 +7,7 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
+/// 这个类在创建表对象时，可以让每个 column 都能被编辑器提示，以防遗漏。
 class WithCrts {
   static UsersCompanion usersCompanion({
     required Value<String> id,

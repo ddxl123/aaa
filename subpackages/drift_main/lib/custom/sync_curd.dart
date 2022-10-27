@@ -28,6 +28,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
   /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
+  ///
+  /// [isWithRefsUsed] - 必须搭配 [withRefs] 使用。
+  ///
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// 对 [Users] 的插入不能使用该函数，但可以使用 [updateReturningWith] 函数对 user 进行更新。
@@ -63,8 +66,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
         }
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
-        entityDynamic.createdAt = DateTime.now().value();
-        entityDynamic.updatedAt = DateTime.now().value();
+        entityDynamic.createdAt = DateTime.now().toValue();
+        entityDynamic.updatedAt = DateTime.now().toValue();
 
         // 仅对 CloudTableBase 类型表生成 id，
         // LocalTableBase 类型表全部都是自增主键。
@@ -73,7 +76,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
           if (mulUsers.length != 1) {
             throw 'users 行数不为1';
           }
-          entityDynamic.id = (mulUsers.first.id + uuidV4).value();
+          entityDynamic.id = (mulUsers.first.id + uuidV4).toValue();
         }
 
         // 插入
@@ -85,10 +88,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.value(),
-              rowId: (returningEntityDynamic.id as String).value(),
-              syncCurdType: SyncCurdType.c.value(),
-              tag: syncTag.tag.value(),
+              syncTableName: table.actualTableName.toValue(),
+              rowId: (returningEntityDynamic.id as String).toValue(),
+              syncCurdType: SyncCurdType.c.toValue(),
+              tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
           );
@@ -100,6 +103,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
   }
 
   /// 根据 [entity] 的 id，修改一条数据，并自动修改 updatedAt。
+  ///
+  /// 必须搭配 [withRefs] 与 [UserExt.reset] 使用。
+  ///
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// TODO: 测试：返回已被更新的行，返回 null 表示将更新的行不存在，或新旧值相同未发生更新。
@@ -119,7 +125,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         // TODO: 如果之后执行失败的话，下面所修改的时间需要恢复。
-        entityDynamic.updatedAt = DateTime.now().value();
+        entityDynamic.updatedAt = DateTime.now().toValue();
 
         // 修改某行
         final newUpdate = update(table);
@@ -135,10 +141,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.value(),
-              rowId: ((returningEntity as dynamic).id as String).value(),
-              syncCurdType: SyncCurdType.u.value(),
-              tag: syncTag.tag.value(),
+              syncTableName: table.actualTableName.toValue(),
+              rowId: ((returningEntity as dynamic).id as String).toValue(),
+              syncCurdType: SyncCurdType.u.toValue(),
+              tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
           );
@@ -150,6 +156,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
   }
 
   /// 删除一条数据。
+  ///
+  /// 必须搭配 [withRefs] 与 [DriftSyncExt.deleteWith] 使用。
+  ///
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// 返回已被删除的行，返回 null 表示将删除的行不存在。
@@ -187,10 +196,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.value(),
-              rowId: (selectEntity.id as String).value(),
-              syncCurdType: SyncCurdType.d.value(),
-              tag: syncTag.tag.value(),
+              syncTableName: table.actualTableName.toValue(),
+              rowId: (selectEntity.id as String).toValue(),
+              syncCurdType: SyncCurdType.d.toValue(),
+              tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
           );

@@ -33,10 +33,10 @@ class FragmentGroupSelectPage extends StatelessWidget {
           final clp = Aber.findLast<FragmentGroupListPageAbController>();
           await clp.currentPart().addFragment(
                 willFragment: WithCrts.fragmentsCompanion(
-                  id: absent(),
-                  createdAt: absent(),
-                  updatedAt: absent(),
-                  fatherFragmentId: (clp.currentPart().fatherFragmentGroup?.call().id).value(),
+                  id: toAbsent(),
+                  createdAt: toAbsent(),
+                  updatedAt: toAbsent(),
+                  fatherFragmentId: (clp.currentPart().fatherFragmentGroup?.call().id).toValue(),
                   title: c.title,
                   // TODO: 关于优先级的配置
                   priority: 0,

@@ -120,7 +120,7 @@ class _DriftViewerState extends State<DriftViewer> {
                     onPressed: () async {
                       await DriftDb.instance.insertReturningWith(
                         DriftDb.instance.users,
-                        entity: UsersCompanion(username: '啊啊啊'.value()),
+                        entity: UsersCompanion(username: '啊啊啊'.toValue()),
                         syncTag: await SyncTag.create(),
                       );
                       Navigator.pop(context);
@@ -133,16 +133,16 @@ class _DriftViewerState extends State<DriftViewer> {
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
                         entity: UsersCompanion(
-                          id: '3'.value(),
-                          username: '顶顶顶'.value(),
+                          id: '3'.toValue(),
+                          username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
                       );
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
                         entity: UsersCompanion(
-                          id: '3'.value(),
-                          username: '顶顶顶'.value(),
+                          id: '3'.toValue(),
+                          username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
                       );

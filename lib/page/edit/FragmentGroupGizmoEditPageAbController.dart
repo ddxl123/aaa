@@ -19,8 +19,8 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
     }
 
     await fragmentGroupModelAbController.currentPart().addFragmentGroup(FragmentGroupsCompanion()
-      ..title = title.value()
-      ..fatherFragmentGroupId = (fragmentGroupModelAbController.currentPart().fatherFragmentGroup?.call().id).value());
+      ..title = title.toValue()
+      ..fatherFragmentGroupId = (fragmentGroupModelAbController.currentPart().fatherFragmentGroup?.call().id).toValue());
     SmartDialog.showToast('创建成功');
     Navigator.pop(context);
   }

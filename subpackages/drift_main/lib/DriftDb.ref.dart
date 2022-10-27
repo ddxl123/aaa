@@ -7,11 +7,19 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-/// 为了规范化，只能在 DAO 区使用这个函数。
-Future<void> withRefs(FutureOr<Ref> Function() ref) async {
+/// 增删改时，必须用这个函数。
+///
+/// 增：[withRefs] + [DriftSyncExt.insertReturningWith]
+/// 删：[withRefs] + [DriftSyncExt.deleteWith]
+/// 改：[withRefs] + [UserExt.reset]
+Future<void> withRefs({
+  required SyncTag? syncTag,
+  required FutureOr<Ref> Function(SyncTag syncTag) ref,
+}) async {
   await DriftDb.instance.transaction(
     () async {
-      await (await ref())._run();
+      final internalSyncTag = await SyncTag.create();
+      await (await ref(syncTag ?? internalSyncTag))._run();
     },
   );
 }
@@ -20,6 +28,7 @@ abstract class Ref {
   Future<void> _run();
 }
 
+/// [Users]
 class RefUsers extends Ref {
   Future<void> Function($UsersTable table) self;
 
@@ -33,6 +42,7 @@ class RefUsers extends Ref {
   }
 }
 
+/// [Fragments]
 class RefFragments extends Ref {
   Future<void> Function($FragmentsTable table) self;
   RefFragments? child_fragments;
@@ -64,6 +74,7 @@ class RefFragments extends Ref {
   }
 }
 
+/// [FragmentGroups]
 class RefFragmentGroups extends Ref {
   Future<void> Function($FragmentGroupsTable table) self;
   RefFragmentGroups? child_fragmentGroups;
@@ -83,6 +94,7 @@ class RefFragmentGroups extends Ref {
   }
 }
 
+/// [MemoryModels]
 class RefMemoryModels extends Ref {
   Future<void> Function($MemoryModelsTable table) self;
   RefMemoryGroups? memoryGroups;
@@ -99,6 +111,7 @@ class RefMemoryModels extends Ref {
   }
 }
 
+/// [MemoryGroups]
 class RefMemoryGroups extends Ref {
   Future<void> Function($MemoryGroupsTable table) self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
@@ -118,6 +131,7 @@ class RefMemoryGroups extends Ref {
   }
 }
 
+/// [FragmentMemoryInfos]
 class RefFragmentMemoryInfos extends Ref {
   Future<void> Function($FragmentMemoryInfosTable table) self;
 
@@ -131,6 +145,7 @@ class RefFragmentMemoryInfos extends Ref {
   }
 }
 
+/// [RFragment2FragmentGroups]
 class RefRFragment2FragmentGroups extends Ref {
   Future<void> Function($RFragment2FragmentGroupsTable table) self;
 
@@ -144,6 +159,7 @@ class RefRFragment2FragmentGroups extends Ref {
   }
 }
 
+/// [RFragment2MemoryGroups]
 class RefRFragment2MemoryGroups extends Ref {
   Future<void> Function($RFragment2MemoryGroupsTable table) self;
 
@@ -157,6 +173,7 @@ class RefRFragment2MemoryGroups extends Ref {
   }
 }
 
+/// [RAssistedMemory2Fragments]
 class RefRAssistedMemory2Fragments extends Ref {
   Future<void> Function($RAssistedMemory2FragmentsTable table) self;
 
@@ -170,6 +187,7 @@ class RefRAssistedMemory2Fragments extends Ref {
   }
 }
 
+/// [AppInfos]
 class RefAppInfos extends Ref {
   Future<void> Function($AppInfosTable table) self;
 

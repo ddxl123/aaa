@@ -71,7 +71,7 @@ class MemoryGroups extends CloudTableBase {
   /// 新学数量
   IntColumn get willNewLearnCount => integer()();
 
-  /// 取用 [reviewInterval] 时间点内的复习碎片。
+  /// 取用 [reviewInterval] 时间点内的复习碎片。(从记忆组启动时的时间点开始计算)
   DateTimeColumn get reviewInterval => dateTime()();
 
   /// 过滤碎片
@@ -161,16 +161,16 @@ class FragmentMemoryInfos extends CloudTableBase {
 
   /// =====
 
-  /// 下一次计划展示的时间点。
+  /// 下一次计划展示的时间点。(从记忆组启动时的时间点开始计算)
   DateTimeColumn get nextPlanedShowTime => dateTime()();
 
-  /// 当前实际展示的时间点。
+  /// 当前实际展示的时间点。(从记忆组启动时的时间点开始计算)
   DateTimeColumn get currentActualShowTime => dateTime()();
 
   /// 刚展示时的熟练度。
   RealColumn get showFamiliarity => real()();
 
-  /// 点击按钮的时间。
+  /// 点击按钮的时间。(从记忆组启动时的时间点开始计算)
   DateTimeColumn get clickTime => dateTime()();
 
   /// 点击按钮的按钮数值。

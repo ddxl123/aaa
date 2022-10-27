@@ -17,11 +17,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   Future<void> resetMemoryGroup({required ResetFutureFunction oldMemoryGroupReset}) async {
     await withRefs(
-      () async {
-        final resetSyncTag = await SyncTag.create();
+      syncTag: await SyncTag.create(),
+      ref: (syncTag) async {
         return RefMemoryGroups(
           self: (table) async {
-            await oldMemoryGroupReset(resetSyncTag);
+            await oldMemoryGroupReset(syncTag);
           },
           // TODO:
           fragmentMemoryInfos: null,
@@ -34,11 +34,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   Future<void> resetMemoryModel({required ResetFutureFunction oldMemoryModelReset}) async {
     await withRefs(
-      () async {
-        final resetSyncTag = await SyncTag.create();
+      syncTag: await SyncTag.create(),
+      ref: (syncTag) async {
         return RefMemoryModels(
           self: (table) async {
-            await oldMemoryModelReset(resetSyncTag);
+            await oldMemoryModelReset(syncTag);
           },
           // TODO: 需要检测。
           memoryGroups: null,

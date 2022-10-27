@@ -14,7 +14,9 @@ class ButtonDataValue2NextShowTime {
   int? time;
 
   /// 将 [time] 转换为以 天、时、分、秒 为单位的结果。
-  String parseTime() {
+  ///
+  /// 返回 null 表示时间小于等于 0。
+  String? parseTime() {
     final t = time;
     if (t == null) throw '时间值为空！';
     int days = 0;
@@ -26,7 +28,8 @@ class ButtonDataValue2NextShowTime {
     hours = days == 0 ? d.inHours : d.inHours % 24;
     minutes = hours == 0 ? d.inMinutes : d.inMinutes % 60;
     seconds = minutes == 0 ? d.inSeconds : d.inSeconds % 60;
-    return '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
+    final result = '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
+    return result == '' ? null : '$result后';
   }
 
   @override

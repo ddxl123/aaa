@@ -1051,7 +1051,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 新学数量
   int willNewLearnCount;
 
-  /// 取用 [reviewInterval] 时间点内的复习碎片。
+  /// 取用 [reviewInterval] 时间点内的复习碎片。(从记忆组启动时的时间点开始计算)
   DateTime reviewInterval;
 
   /// 过滤碎片
@@ -2260,16 +2260,16 @@ class FragmentMemoryInfo extends DataClass
   bool isLatestRecord;
 
   /// =====
-  /// 下一次计划展示的时间点。
+  /// 下一次计划展示的时间点。(从记忆组启动时的时间点开始计算)
   DateTime nextPlanedShowTime;
 
-  /// 当前实际展示的时间点。
+  /// 当前实际展示的时间点。(从记忆组启动时的时间点开始计算)
   DateTime currentActualShowTime;
 
   /// 刚展示时的熟练度。
   double showFamiliarity;
 
-  /// 点击按钮的时间。
+  /// 点击按钮的时间。(从记忆组启动时的时间点开始计算)
   DateTime clickTime;
 
   /// 点击按钮的按钮数值。

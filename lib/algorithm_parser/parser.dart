@@ -34,7 +34,7 @@ part 'state/FamiliarityState.dart';
 
 part 'state/NextShowTimeState.dart';
 
-part 'DancerQuery.dart';
+part '../page/stage/PerformerQuery.dart';
 
 part 'DefaultAlgorithmContent.dart';
 

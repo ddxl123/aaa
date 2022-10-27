@@ -201,9 +201,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
           if (await commitVerify) {
             await DriftDb.instance.insertDAO.insertMemoryModel(
               WithCrts.memoryModelsCompanion(
-                id: absent(),
-                createdAt: absent(),
-                updatedAt: absent(),
+                id: toAbsent(),
+                createdAt: toAbsent(),
+                updatedAt: toAbsent(),
                 title: title(),
                 familiarityAlgorithm: familiarityAlgorithm(),
                 nextTimeAlgorithm: nextTimeAlgorithm(),
@@ -225,18 +225,18 @@ class MemoryModelGizmoEditPageAbController extends AbController {
             await DriftDb.instance.updateDAO.resetMemoryModel(
               oldMemoryModelReset: (SyncTag resetSyncTag) async {
                 await memoryModelGizmo()!.reset(
-                  id: absent(),
-                  createdAt: absent(),
-                  updatedAt: absent(),
-                  title: title().value(),
-                  familiarityAlgorithm: familiarityAlgorithm().value(),
-                  nextTimeAlgorithm: nextTimeAlgorithm().value(),
-                  buttonAlgorithm: buttonDataAlgorithm().value(),
+                  id: toAbsent(),
+                  createdAt: toAbsent(),
+                  updatedAt: toAbsent(),
+                  title: title().toValue(),
+                  familiarityAlgorithm: familiarityAlgorithm().toValue(),
+                  nextTimeAlgorithm: nextTimeAlgorithm().toValue(),
+                  buttonAlgorithm: buttonDataAlgorithm().toValue(),
                   writeSyncTag: await SyncTag.create(),
                   // TODO
-                  applicableGroups: ''.value(),
-                  applicableFields: ''.value(),
-                  stimulateAlgorithm: ''.value(),
+                  applicableGroups: ''.toValue(),
+                  applicableFields: ''.toValue(),
+                  stimulateAlgorithm: ''.toValue(),
                 );
               },
             );

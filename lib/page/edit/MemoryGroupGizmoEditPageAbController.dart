@@ -230,19 +230,19 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       await DriftDb.instance.updateDAO.resetMemoryGroup(
         oldMemoryGroupReset: (resetSyncTag) async {
           await memoryGroupGizmo!().reset(
-            id: absent(),
-            createdAt: absent(),
-            updatedAt: absent(),
-            startTime: absent(),
-            memoryModelId: (selectedMemoryModel()?.id).value(),
-            title: titleTextEditingController.text.value(),
-            type: type().value(),
-            status: MemoryGroupStatus.notStart.value(),
-            willNewLearnCount: willNewLearnCount().value(),
-            reviewInterval: reviewInterval().value(),
-            filterOut: filterOut().value(),
-            newReviewDisplayOrder: newReviewDisplayOrder().value(),
-            newDisplayOrder: newDisplayOrder().value(),
+            id: toAbsent(),
+            createdAt: toAbsent(),
+            updatedAt: toAbsent(),
+            startTime: toAbsent(),
+            memoryModelId: (selectedMemoryModel()?.id).toValue(),
+            title: titleTextEditingController.text.toValue(),
+            type: type().toValue(),
+            status: MemoryGroupStatus.notStart.toValue(),
+            willNewLearnCount: willNewLearnCount().toValue(),
+            reviewInterval: reviewInterval().toValue(),
+            filterOut: filterOut().toValue(),
+            newReviewDisplayOrder: newReviewDisplayOrder().toValue(),
+            newDisplayOrder: newDisplayOrder().toValue(),
             writeSyncTag: resetSyncTag,
           );
           title.refreshEasy((oldValue) => titleTextEditingController.text);

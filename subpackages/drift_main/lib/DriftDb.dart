@@ -33,8 +33,6 @@ part 'custom/memory_group_enum.dart';
 
 part 'custom/sync_curd.dart';
 
-part 'custom/drift_value.dart';
-
 part 'table/local/Sync.dart';
 
 part 'DriftDb.drift.dart';
@@ -112,13 +110,13 @@ class DriftDb extends _$DriftDb {
     if ((await select(users).getSingleOrNull()) == null) {
       await into(users).insert(
         UsersCompanion(
-          id: '1'.value(),
-          createdAt: DateTime.now().value(),
-          updatedAt: DateTime.now().value(),
-          username: '测试username'.value(),
-          password: '测试password'.value(),
-          email: '测试email'.value(),
-          age: 999.value(),
+          id: '1'.toValue(),
+          createdAt: DateTime.now().toValue(),
+          updatedAt: DateTime.now().toValue(),
+          username: '测试username'.toValue(),
+          password: '测试password'.toValue(),
+          email: '测试email'.toValue(),
+          age: 999.toValue(),
         ),
       );
     }
