@@ -11,29 +11,20 @@ class ButtonDataValue2NextShowTime {
   final double value;
 
   /// 从 [NextShowTimeState] 解析结果中获取。
-  int? time;
+  int? nextShowTime;
 
-  /// 将 [time] 转换为以 天、时、分、秒 为单位的结果。
+  /// 将 [nextShowTime] 转换为以 天、时、分、秒 为单位的结果。
   ///
   /// 返回 null 表示时间小于等于 0。
   String? parseTime() {
-    final t = time;
+    final t = nextShowTime;
     if (t == null) throw '时间值为空！';
-    int days = 0;
-    int hours = 0;
-    int minutes = 0;
-    int seconds = 0;
-    final d = Duration(seconds: t);
-    days = d.inDays;
-    hours = days == 0 ? d.inHours : d.inHours % 24;
-    minutes = hours == 0 ? d.inMinutes : d.inMinutes % 60;
-    seconds = minutes == 0 ? d.inSeconds : d.inSeconds % 60;
-    final result = '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
-    return result == '' ? null : '$result后';
+    final result = time2TextTime(longSeconds: t);
+    return result == null ? null : '$result后';
   }
 
   @override
-  String toString() => 'ButtonDataValue2NextShowTime(value:$value,time:$time)';
+  String toString() => 'ButtonDataValue2NextShowTime(value:$value,time:$nextShowTime)';
 }
 
 class ButtonDataState extends ClassificationState {

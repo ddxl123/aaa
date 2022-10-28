@@ -71,8 +71,12 @@ class MemoryGroups extends CloudTableBase {
   /// 新学数量
   IntColumn get willNewLearnCount => integer()();
 
-  /// 取用 [reviewInterval] 时间点内的复习碎片。(从记忆组启动时的时间点开始计算)
-  DateTimeColumn get reviewInterval => dateTime()();
+  /// 取用 [reviewInterval] 时间点内的复习碎片。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  IntColumn get reviewInterval => integer()();
 
   /// 过滤碎片
   TextColumn get filterOut => text()();
@@ -83,7 +87,9 @@ class MemoryGroups extends CloudTableBase {
   /// 新碎片展示先后顺序。
   IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>()();
 
-  /// 开始时间，若未开始则为 null。
+  /// 开始时间的时间点，若未开始则为 null。
+  ///
+  /// 这里是标准时间
   DateTimeColumn get startTime => dateTime().nullable()();
 }
 
@@ -144,7 +150,7 @@ class MemoryModels extends CloudTableBase {
 /// 每次用户在碎片展示中点击按钮后，就会创建一条记录。
 ///
 /// 1. 用户自己手动配置熟悉度：
-/// 用户可以在其他地方配置记忆记录，由于需要配置 [nextPlanedShowTime]，
+/// 用户可以在其他地方配置记忆记录，由于需要配置 [nextPlanShowTime]，
 /// 因此必须检索所有记忆组内是否存在该碎片，并要进行按钮触发配置对应的 [stageButtonValue]。
 ///
 @ReferenceTo([])
@@ -156,22 +162,37 @@ class FragmentMemoryInfos extends CloudTableBase {
   TextColumn get memoryGroupId => text()();
 
   /// 在当前记忆组内的，当前记录是否为当前碎片的最新记录。
+  ///
   /// 在新纪录被创建的同时，需要把旧记录设为 false。
+  ///
+  /// 只要在当前记忆组内存在记录，最新的一个记录的 [isLatestRecord] 总是为 true。
   BoolColumn get isLatestRecord => boolean()();
 
   /// =====
 
-  /// 下一次计划展示的时间点。(从记忆组启动时的时间点开始计算)
-  DateTimeColumn get nextPlanedShowTime => dateTime()();
+  /// 下一次计划展示的时间点。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  IntColumn get nextPlanShowTime => integer()();
 
-  /// 当前实际展示的时间点。(从记忆组启动时的时间点开始计算)
-  DateTimeColumn get currentActualShowTime => dateTime()();
+  /// 当前实际展示的时间点。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  IntColumn get currentActualShowTime => integer()();
 
   /// 刚展示时的熟练度。
   RealColumn get showFamiliarity => real()();
 
-  /// 点击按钮的时间。(从记忆组启动时的时间点开始计算)
-  DateTimeColumn get clickTime => dateTime()();
+  /// 点击按钮的时间。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  IntColumn get clickTime => integer()();
 
   /// 点击按钮的按钮数值。
   RealColumn get clickValue => real()();

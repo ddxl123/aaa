@@ -45,3 +45,25 @@ extension TccExt on String {
   /// 把 UserInfos 转成 userInfos。
   String get toCamelCase => this[0].toLowerCase() + substring(1, length);
 }
+
+/// [target]减[start] 的时间差，返回单位秒。
+int timeDifference({required DateTime target, required DateTime start}) {
+  return target.difference(start).inSeconds;
+}
+
+/// x秒 转换成 x天x时x分x秒。
+///
+/// 例如，601秒 转化成 1时0分1秒。
+String? time2TextTime({required int longSeconds}) {
+  int days = 0;
+  int hours = 0;
+  int minutes = 0;
+  int seconds = 0;
+  final d = Duration(seconds: longSeconds);
+  days = d.inDays;
+  hours = days == 0 ? d.inHours : d.inHours % 24;
+  minutes = hours == 0 ? d.inMinutes : d.inMinutes % 60;
+  seconds = minutes == 0 ? d.inSeconds : d.inSeconds % 60;
+  final result = '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
+  return result == '' ? null : result;
+}

@@ -349,32 +349,23 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
+                        const Text('接下来  '),
                         Expanded(
                           child: TextField(
                             controller: c.reviewIntervalTextEditingController,
                             maxLength: 9,
                             keyboardType: TextInputType.number,
                             onChanged: (v) {
-                              if (v.trim() == '') {
-                                c.reviewInterval.refreshEasy((oldValue) => DateTime.now());
-                                return;
-                              }
-                              final tryInt = int.tryParse(v);
-                              c.reviewInterval.refreshEasy(
-                                (oldValue) => tryInt == null ? DateTime.now() : DateTime.now().add(Duration(minutes: tryInt)),
-                              );
+                              c.reviewInterval.refreshEasy((oldValue) => int.tryParse(v) ?? -1);
                             },
                           ),
                         ),
-                        const Text('  分钟内  '),
+                        const Text('  秒内  '),
                       ],
                     ),
                     Row(
                       children: [
-                        Text(() {
-                          final time = c.reviewInterval(abw);
-                          return '${time.year}年${time.month}月${time.day}日${time.hour}时前';
-                        }()),
+                        Text('${DateTime.now().add(Duration(seconds: c.reviewInterval(abw)))}前'),
                       ],
                     )
                   ],

@@ -70,6 +70,7 @@ class _InAppStageState extends State<InAppStage> {
         if (c.fragmentAndMemoryInfos(abw) == null) return const SizedBox(height: 0);
         if (c.buttonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
         if (!c.buttonDataState(abw)!.isSlidable) {
+          // 不可滑动
           return Row(
             children: c.buttonDataState()!.resultButtonValues.map(
               (e) {
@@ -78,22 +79,22 @@ class _InAppStageState extends State<InAppStage> {
                   return const SizedBox(height: 0);
                 }
                 return Expanded(
-                  child: TextButton(
-                    child: AbwBuilder(
-                      builder: (abw) {
-                        return TextButton(
-                          onPressed: () {},
-                          child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
-                        );
-                      },
-                    ),
-                    onPressed: () {},
+                  child: AbwBuilder(
+                    builder: (abw) {
+                      return TextButton(
+                        child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
+                        onPressed: () async {
+                          await c.finishAndStartNextPerform(clickValue: e.value);
+                        },
+                      );
+                    },
                   ),
                 );
               },
             ).toList(),
           );
         } else {
+          // 可滑动
           return Row(
             children: c.buttonDataState()!.resultButtonValues.map(
               (e) {
@@ -108,7 +109,9 @@ class _InAppStageState extends State<InAppStage> {
                         return Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime);
                       },
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      await c.finishAndStartNextPerform(clickValue: e.value);
+                    },
                   ),
                 );
               },

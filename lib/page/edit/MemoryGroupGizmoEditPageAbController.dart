@@ -49,8 +49,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// [MemoryGroups.reviewInterval]
   /// TODO: 进行 [AbVerify]
-  final reviewInterval = DateTime.now().ab;
-  DateTime _reviewInterval = DateTime.now();
+  final reviewInterval = 0.ab;
+  int _reviewInterval = 0;
   final reviewIntervalTextEditingController = TextEditingController();
 
   /// [MemoryGroups.filterOut]
@@ -131,8 +131,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
     reviewInterval.initVerify(
       (abV) async {
-        if (abV().millisecondsSinceEpoch < 0) return VerifyResult(isOk: false, message: '复习区间存在不规范字符！');
-        if (abV().isBefore(DateTime.now().add(const Duration(minutes: 10)))) return VerifyResult(isOk: false, message: '复习区间太短啦，至少10分钟以上哦~');
+        if (abV() < 0) return VerifyResult(isOk: false, message: '复习区间存在不规范字符！');
+        if (abV() < 600) return VerifyResult(isOk: false, message: '复习区间太短啦，至少10分钟(600秒)以上哦~');
         return null;
       },
     );
@@ -206,7 +206,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
 
     titleTextEditingController.text = _title;
-    reviewIntervalTextEditingController.text = _reviewInterval.difference(DateTime.now()).inMinutes.toString();
+    reviewIntervalTextEditingController.text = _reviewInterval.toString();
   }
 
   void save() {

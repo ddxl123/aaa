@@ -34,7 +34,7 @@ part 'state/FamiliarityState.dart';
 
 part 'state/NextShowTimeState.dart';
 
-part '../page/stage/PerformerQuery.dart';
+part '../page/stage/PerformerDAO.dart';
 
 part 'DefaultAlgorithmContent.dart';
 

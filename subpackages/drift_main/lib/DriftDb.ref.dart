@@ -12,9 +12,11 @@ part of drift_db;
 /// 增：[withRefs] + [DriftSyncExt.insertReturningWith]
 /// 删：[withRefs] + [DriftSyncExt.deleteWith]
 /// 改：[withRefs] + [UserExt.reset]
+///
+/// [syncTag] - 若为null，则内部会自动创建一个事务。
 Future<void> withRefs({
   required SyncTag? syncTag,
-  required FutureOr<Ref> Function(SyncTag syncTag) ref,
+  required Future<Ref> Function(SyncTag syncTag) ref,
 }) async {
   await DriftDb.instance.transaction(
     () async {

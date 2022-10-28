@@ -3,12 +3,12 @@ part of algorithm_parser;
 class PerformerQuery {
   final DriftDb dft = DriftDb.instance;
 
-  /// 获取新的舞者。
+  /// 获取新的表演者。
   ///
   /// [Fragment] 表示当前新展示的碎片。
   ///
   /// [FragmentMemoryInfo]s 为当前记忆组当前碎片的全部记忆信息（不包含当前新展示的信息，因为当前新展示的信息未被创建）。
-  /// 按照时间顺序排序。
+  /// 按照时间顺序排序，last 为 [FragmentMemoryInfo.isLatestRecord] 为 true 的记录。
   ///
   /// 若 [FragmentMemoryInfo]s 数组为空，则当前碎片是新碎片。
   ///
@@ -32,9 +32,9 @@ class PerformerQuery {
     );
   }
 
-  /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
-  ///
   /// 获取要复习的碎片。
+  ///
+  /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
   Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getOneLearnedFragment({required MemoryGroup mg}) async {
     final lSelect = dft.select(dft.fragments);
     final lJoin = [
@@ -44,11 +44,11 @@ class PerformerQuery {
     // 获取每个碎片的最近的一次碎片记忆信息
     final lWhere = dft.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
         dft.fragmentMemoryInfos.isLatestRecord.equals(true) &
-        dft.fragmentMemoryInfos.nextPlanedShowTime.isSmallerOrEqualValue(mg.reviewInterval);
+        dft.fragmentMemoryInfos.nextPlanShowTime.isSmallerOrEqualValue(mg.reviewInterval);
 
     final doJoin = lSelect.join(lJoin);
     doJoin.where(lWhere);
-    doJoin.orderBy([OrderingTerm.asc(dft.fragmentMemoryInfos.nextPlanedShowTime)]);
+    doJoin.orderBy([OrderingTerm.asc(dft.fragmentMemoryInfos.nextPlanShowTime)]);
     doJoin.limit(1);
 
     // 获取碎片
@@ -98,25 +98,49 @@ class PerformerQuery {
   ///
   /// [fragmentMemoryInfo] - 当前表演者的上一次碎片记忆信息([FragmentMemoryInfo.isLatestRecord] 为 true 的)。
   Future<void> finishAndStartNextPerform({
-    required FragmentMemoryInfo fragmentMemoryInfo,
+    required FragmentMemoryInfo? lastFragmentMemoryInfo,
+    required FragmentMemoryInfosCompanion newFragmentMemoryInfo,
   }) async {
-    await withRefs(
-      syncTag: null,
-      ref: (SyncTag syncTag) async {
-        return RefFragmentMemoryInfos(
-          self: ($FragmentMemoryInfosTable table) async {
-            await fragmentMemoryInfo.reset(
-              createdAt: toAbsent(),
-              updatedAt: DateTime.now().toValue(),
-              fragmentId: toAbsent(),
-              memoryGroupId: toAbsent(),
-              isLatestRecord: false.toValue(),
-              nextPlanedShowTime: ,
-              currentActualShowTime: currentActualShowTime,
-              showFamiliarity: showFamiliarity,
-              clickTime: clickTime,
-              clickValue: clickValue,
-              writeSyncTag: syncTag,
+    await dft.transaction(
+      () async {
+        final st = await SyncTag.create();
+        // 修改旧的
+        if (lastFragmentMemoryInfo != null) {
+          await withRefs(
+            syncTag: st,
+            ref: (SyncTag syncTag) async {
+              return RefFragmentMemoryInfos(
+                self: ($FragmentMemoryInfosTable table) async {
+                  await lastFragmentMemoryInfo.reset(
+                    createdAt: toAbsent(),
+                    updatedAt: DateTime.now().toValue(),
+                    fragmentId: toAbsent(),
+                    memoryGroupId: toAbsent(),
+                    isLatestRecord: false.toValue(),
+                    nextPlanShowTime: toAbsent(),
+                    currentActualShowTime: toAbsent(),
+                    showFamiliarity: toAbsent(),
+                    clickTime: toAbsent(),
+                    clickValue: toAbsent(),
+                    writeSyncTag: syncTag,
+                  );
+                },
+              );
+            },
+          );
+        }
+        // 生成新的
+        await withRefs(
+          syncTag: st,
+          ref: (SyncTag syncTag) async {
+            return RefFragmentMemoryInfos(
+              self: ($FragmentMemoryInfosTable table) async {
+                await dft.insertReturningWith(
+                  dft.fragmentMemoryInfos,
+                  entity: newFragmentMemoryInfo,
+                  syncTag: syncTag,
+                );
+              },
             );
           },
         );
@@ -125,15 +149,6 @@ class PerformerQuery {
   }
 
   /// ========================================================================================
-
-  int getStartTimeStamp({required MemoryGroup mg}) {
-    if (mg.startTime == null) throw '启动时间为 null！';
-    return mg.startTime!.millisecondsSinceEpoch ~/ 1000;
-  }
-
-  int differenceFromStartTimeStamp({required MemoryGroup mg, required DateTime dateTime}) {
-    return dateTime.millisecondsSinceEpoch ~/ 1000 - getStartTimeStamp(mg: mg);
-  }
 
   /// [InternalVariableConstant.countAllConst]
   Future<List<int>> getCountAll({required MemoryGroup mg}) async {
@@ -154,21 +169,21 @@ class PerformerQuery {
   Future<List<int>> getCurrentActualShowTime({
     required MemoryGroup mg,
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+    required int currentShowTime,
   }) async {
-    return tuple.t2.map<int>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.currentActualShowTime)).toList()
-      ..add(differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()));
+    return tuple.t2.map<int>((e) => e.currentActualShowTime).toList()..add(currentShowTime);
   }
 
   /// [InternalVariableConstant.nextPlanedShowTimeConst]
   ///
-  /// 这里与其他的不同，实际上的 [FragmentMemoryInfos.nextPlanedShowTime] 是从上一次展示信息中获取的，
-  /// 但是该函数将会获取本次原本计划展示时间，即上一次的 [nextPlanedShowTime] 来充当当前的原本计划展示时间。
+  /// 这里与其他的不同，实际上的 [FragmentMemoryInfos.nextPlanShowTime] 是从上一次展示信息中获取的，
+  /// 但是该函数将会获取本次原本计划展示时间，即上一次的 [nextPlanShowTime] 来充当当前的原本计划展示时间。
   /// 也就是说，返回值的 first 必然为 null。
   Future<List<int?>> getCurrentPlanedShowTime({
     required MemoryGroup mg,
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
   }) async {
-    return <int?>[null, ...tuple.t2.map((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.nextPlanedShowTime))];
+    return <int?>[null, ...tuple.t2.map((e) => e.nextPlanShowTime)];
   }
 
   /// [InternalVariableConstant.showFamiliarConst]
@@ -184,8 +199,7 @@ class PerformerQuery {
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required bool isCreateNow,
   }) async {
-    return tuple.t2.map<int?>((e) => differenceFromStartTimeStamp(mg: mg, dateTime: e.clickTime)).toList()
-      ..add(isCreateNow ? differenceFromStartTimeStamp(mg: mg, dateTime: DateTime.now()) : null);
+    return tuple.t2.map<int?>((e) => e.clickTime).toList()..add(isCreateNow ? timeDifference(target: DateTime.now(), start: mg.startTime!) : null);
   }
 
   Future<List<double?>> getClickValue({

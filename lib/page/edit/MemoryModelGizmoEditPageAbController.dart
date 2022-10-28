@@ -199,7 +199,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       targets: {
         [MemoryModelGizmoEditPageType.create]: () async {
           if (await commitVerify) {
-            await DriftDb.instance.insertDAO.insertMemoryModel(
+            await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
               WithCrts.memoryModelsCompanion(
                 id: toAbsent(),
                 createdAt: toAbsent(),

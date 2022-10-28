@@ -17,7 +17,7 @@ class MemoryModeListPageAbController extends AbController {
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
-    final newEntity = await DriftDb.instance.insertDAO.insertMemoryModel(willEntity);
+    final newEntity = await DriftDb.instance.insertDAO.insertMemoryModelWithRef(willEntity);
     memoryModels.refreshInevitable((obj) => obj..add(newEntity.ab));
   }
 

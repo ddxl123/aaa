@@ -1,5 +1,9 @@
 part of algorithm_parser;
 
+/// 下一次展示时间的算法状态
+///
+/// [result] 距离记忆组启动的时间差(秒)。
+///
 /// String 类型时的 use 写法：
 /// use: 123
 ///

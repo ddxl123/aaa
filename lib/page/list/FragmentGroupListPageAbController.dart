@@ -60,12 +60,12 @@ class PartListForFragmentHome {
   }
 
   Future<void> addFragmentGroup(FragmentGroupsCompanion entry) async {
-    final newEntry = await DriftDb.instance.insertDAO.insertFragmentGroup(entry);
+    final newEntry = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(entry);
     fragmentGroups.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 
   Future<void> addFragment({required FragmentsCompanion willFragment}) async {
-    final newEntry = await DriftDb.instance.insertDAO.insertFragment(willFragment: willFragment);
+    final newEntry = await DriftDb.instance.insertDAO.insertFragmentWithRef(willFragment: willFragment);
     fragments.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 

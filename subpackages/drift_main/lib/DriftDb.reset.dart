@@ -151,7 +151,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<MemoryGroupType> type,
     required Value<MemoryGroupStatus> status,
     required Value<int> willNewLearnCount,
-    required Value<DateTime> reviewInterval,
+    required Value<int> reviewInterval,
     required Value<String> filterOut,
     required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
     required Value<NewDisplayOrder> newDisplayOrder,
@@ -257,10 +257,10 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> fragmentId,
     required Value<String> memoryGroupId,
     required Value<bool> isLatestRecord,
-    required Value<DateTime> nextPlanedShowTime,
-    required Value<DateTime> currentActualShowTime,
+    required Value<int> nextPlanShowTime,
+    required Value<int> currentActualShowTime,
     required Value<double> showFamiliarity,
-    required Value<DateTime> clickTime,
+    required Value<int> clickTime,
     required Value<double> clickValue,
     required SyncTag? writeSyncTag,
   }) async {
@@ -273,9 +273,9 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
         memoryGroupId.present ? memoryGroupId.value : this.memoryGroupId;
     this.isLatestRecord =
         isLatestRecord.present ? isLatestRecord.value : this.isLatestRecord;
-    this.nextPlanedShowTime = nextPlanedShowTime.present
-        ? nextPlanedShowTime.value
-        : this.nextPlanedShowTime;
+    this.nextPlanShowTime = nextPlanShowTime.present
+        ? nextPlanShowTime.value
+        : this.nextPlanShowTime;
     this.currentActualShowTime = currentActualShowTime.present
         ? currentActualShowTime.value
         : this.currentActualShowTime;

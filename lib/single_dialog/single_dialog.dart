@@ -22,7 +22,7 @@ void showDialogForCreateMemoryGroup({
         SmartDialog.showToast('名称不能为空！');
         return;
       }
-      await DriftDb.instance.insertDAO.insertMemoryGroupWithOther(
+      await DriftDb.instance.insertDAO.insertMemoryGroupWithOtherWithRef(
         willMemoryGroup: WithCrts.memoryGroupsCompanion(
           id: 0.toAbsent(),
           createdAt: 0.toAbsent(),
@@ -33,7 +33,7 @@ void showDialogForCreateMemoryGroup({
           type: MemoryGroupType.inApp,
           status: MemoryGroupStatus.notStart,
           willNewLearnCount: 0,
-          reviewInterval: DateTime.now(),
+          reviewInterval: 0,
           filterOut: '-',
           newReviewDisplayOrder: NewReviewDisplayOrder.mix,
           newDisplayOrder: NewDisplayOrder.random,

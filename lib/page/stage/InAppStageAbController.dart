@@ -23,6 +23,10 @@ class InAppStageAbController extends AbController {
   /// 若为 false，则表示按钮天数值。
   final isButtonDataShowValue = false.ab;
 
+  late int currentShowTime;
+
+  late double currentShowFamiliar;
+
   @override
   bool get isEnableLoading => true;
 
@@ -44,22 +48,44 @@ class InAppStageAbController extends AbController {
   Future<void> _init() async {
     final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryGroupGizmo().memoryModelId);
     memoryModelGizmo = mm!.ab;
+
+    currentShowTime = timeDifference(target: DateTime.now(), start: memoryGroupGizmo().startTime!);
+    currentShowFamiliar = await _parseFamiliarity();
+
     await _perform();
   }
 
   /// 点击数值按钮后进行调用。
   ///
   /// 完成当前表演，并进行下一次表演。
-  Future<void> finishAndStartNextPerform() async {
-    await withRefs(
-      syncTag: null,
-      ref: (SyncTag syncTag) async {
-        return RefFragmentMemoryInfos(
-          self: ($FragmentMemoryInfosTable table) async {
-          },
-        );
-      },
+  Future<void> finishAndStartNextPerform({required double clickValue}) async {
+    if (fragmentAndMemoryInfos() == null) {
+      throw '没有下一个碎片了，却仍然请求了下一个碎片！';
+    }
+    // 为 null 表示该碎片是第一次展示
+    final latestRecordInfo = fragmentAndMemoryInfos()!.t2.isEmpty ? null : fragmentAndMemoryInfos()!.t2.last;
+
+    final nextShowTime = ButtonDataValue2NextShowTime(value: clickValue);
+    await _parseNextShowTime(buttonDataValue2NextShowTime: nextShowTime);
+
+    await performerQuery.finishAndStartNextPerform(
+      lastFragmentMemoryInfo: latestRecordInfo,
+      newFragmentMemoryInfo: WithCrts.fragmentMemoryInfosCompanion(
+        id: toAbsent(),
+        createdAt: DateTime.now().toValue(),
+        updatedAt: DateTime.now().toValue(),
+        fragmentId: fragmentAndMemoryInfos()!.t1.id,
+        memoryGroupId: memoryGroupGizmo().id,
+        isLatestRecord: true,
+        nextPlanShowTime: nextShowTime.nextShowTime!,
+        currentActualShowTime: currentShowTime,
+        showFamiliarity: currentShowFamiliar,
+        clickTime: timeDifference(target: DateTime.now(), start: memoryGroupGizmo().startTime!),
+        clickValue: clickValue,
+      ),
     );
+
+    await _perform();
   }
 
   /// 获取新舞者并执行表演。
@@ -72,16 +98,15 @@ class InAppStageAbController extends AbController {
   }
 
   Future<void> _parse() async {
-    final currentShowFamiliar = await _parseFamiliarity();
-    final pbd = await _parseButtonData(currentShowFamiliar: currentShowFamiliar);
+    final pbd = await _parseButtonData();
     if (pbd.resultMin != null) {
-      await _parseNextShowTime(currentShowFamiliar: currentShowFamiliar, buttonDataValue2NextShowTime: pbd.resultMin!);
+      await _parseNextShowTime(buttonDataValue2NextShowTime: pbd.resultMin!);
     }
     if (pbd.resultMax != null) {
-      await _parseNextShowTime(currentShowFamiliar: currentShowFamiliar, buttonDataValue2NextShowTime: pbd.resultMax!);
+      await _parseNextShowTime(buttonDataValue2NextShowTime: pbd.resultMax!);
     }
     for (var element in pbd.resultButtonValues) {
-      await _parseNextShowTime(currentShowFamiliar: currentShowFamiliar, buttonDataValue2NextShowTime: element);
+      await _parseNextShowTime(buttonDataValue2NextShowTime: element);
     }
 
     buttonDataState.refreshEasy((oldValue) => pbd);
@@ -109,7 +134,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
+              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!, currentShowTime: currentShowTime),
               isReGet: false,
             ),
             currentPlanedShowTimeIF: IvFilter(
@@ -136,7 +161,7 @@ class InAppStageAbController extends AbController {
   }
 
   /// 解析按钮的数值数据。
-  Future<ButtonDataState> _parseButtonData({required double currentShowFamiliar}) async {
+  Future<ButtonDataState> _parseButtonData() async {
     return (await AlgorithmParser<ButtonDataState>().parse(
       state: ButtonDataState(
         useContent: memoryModelGizmo().buttonAlgorithm,
@@ -157,7 +182,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
+              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!, currentShowTime: currentShowTime),
               isReGet: false,
             ),
             currentPlanedShowTimeIF: IvFilter(
@@ -184,14 +209,14 @@ class InAppStageAbController extends AbController {
   }
 
   /// 解析每个按钮的下一次展示时间。
-  Future<void> _parseNextShowTime({required double currentShowFamiliar, required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
+  Future<void> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     final r = await AlgorithmParser<NextShowTimeState>().parse(
       state: NextShowTimeState(
         useContent: memoryModelGizmo().nextTimeAlgorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
-            storage: InternalVariableStorage(),
+            storage: storage(),
             countAllIF: IvFilter(
               ivf: () async => await performerQuery.getCountAll(mg: memoryGroupGizmo()),
               isReGet: false,
@@ -202,7 +227,7 @@ class InAppStageAbController extends AbController {
             ),
             timesIF: IvFilter(ivf: () async => await performerQuery.getTimes(tuple: fragmentAndMemoryInfos()!), isReGet: false),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!),
+              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: fragmentAndMemoryInfos()!, currentShowTime: currentShowTime),
               isReGet: false,
             ),
             currentPlanedShowTimeIF: IvFilter(
@@ -225,6 +250,6 @@ class InAppStageAbController extends AbController {
         },
       ),
     );
-    buttonDataValue2NextShowTime.time = r.state.result;
+    buttonDataValue2NextShowTime.nextShowTime = r.state.result;
   }
 }

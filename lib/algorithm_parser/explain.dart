@@ -20,7 +20,7 @@ part of algorithm_parser;
 ///   - 获取方式：[FragmentMemoryInfos.currentActualShowTime]。
 /// planed_show_time：本次原本计划展示的时间点
 ///   - 数值类型：以秒为单位的时间戳
-///   - 获取方式：[FragmentMemoryInfos.nextPlanedShowTime]。
+///   - 获取方式：[FragmentMemoryInfos.nextPlanShowTime]。
 /// click_familiar：本次刚展示时的熟悉度。
 ///   - 初始值：默认为0，用户可能会手动分配初始值。
 ///   - 数值类型：任意实数

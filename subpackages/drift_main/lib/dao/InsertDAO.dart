@@ -11,11 +11,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   InsertDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
   /// 向当前 [FragmentGroups] 表中插入一条数据, 返回新插入的 [FragmentGroup]。
-  Future<FragmentGroup> insertFragmentGroup(FragmentGroupsCompanion willEntity) async {
+  Future<FragmentGroup> insertFragmentGroupWithRef(FragmentGroupsCompanion willEntity) async {
     late FragmentGroup returnFragmentGroup;
     await withRefs(
       syncTag: await SyncTag.create(),
-      ref: (syncTag) => RefFragmentGroups(
+      ref: (syncTag) async => RefFragmentGroups(
         self: (table) async {
           returnFragmentGroup = await insertReturningWith(table, entity: willEntity, syncTag: syncTag);
         },
@@ -27,11 +27,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }
 
   /// 向当前 [Fragments] 表中插入一条数据, 返回新插入的 [Fragment]。
-  Future<Fragment> insertFragment({required FragmentsCompanion willFragment}) async {
+  Future<Fragment> insertFragmentWithRef({required FragmentsCompanion willFragment}) async {
     late Fragment newFragment;
     await withRefs(
       syncTag: await SyncTag.create(),
-      ref: (syncTag) => RefFragments(
+      ref: (syncTag) async => RefFragments(
         self: (table) async {
           newFragment = await insertReturningWith(table, entity: willFragment, syncTag: syncTag);
         },
@@ -61,11 +61,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }
 
   /// 创建一个记忆
-  Future<void> insertMemoryGroupWithOther({required MemoryGroupsCompanion willMemoryGroup, required List<Fragment> willFragments}) async {
+  Future<void> insertMemoryGroupWithOtherWithRef({required MemoryGroupsCompanion willMemoryGroup, required List<Fragment> willFragments}) async {
     late MemoryGroup newMemoryGroup;
     await withRefs(
       syncTag: await SyncTag.create(),
-      ref: (syncTag) => RefMemoryGroups(
+      ref: (syncTag) async => RefMemoryGroups(
         self: (table) async {
           newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
         },
@@ -94,11 +94,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     );
   }
 
-  Future<MemoryModel> insertMemoryModel(MemoryModelsCompanion willEntry) async {
+  Future<MemoryModel> insertMemoryModelWithRef(MemoryModelsCompanion willEntry) async {
     late MemoryModel newMemoryModel;
     await withRefs(
       syncTag: await SyncTag.create(),
-      ref: (syncTag) => RefMemoryModels(
+      ref: (syncTag) async => RefMemoryModels(
         self: (table) async {
           newMemoryModel = await insertReturningWith(table, entity: willEntry, syncTag: syncTag);
         },

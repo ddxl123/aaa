@@ -1051,8 +1051,12 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 新学数量
   int willNewLearnCount;
 
-  /// 取用 [reviewInterval] 时间点内的复习碎片。(从记忆组启动时的时间点开始计算)
-  DateTime reviewInterval;
+  /// 取用 [reviewInterval] 时间点内的复习碎片。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  int reviewInterval;
 
   /// 过滤碎片
   String filterOut;
@@ -1063,7 +1067,9 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 新碎片展示先后顺序。
   NewDisplayOrder newDisplayOrder;
 
-  /// 开始时间，若未开始则为 null。
+  /// 开始时间的时间点，若未开始则为 null。
+  ///
+  /// 这里是标准时间
   DateTime? startTime;
   MemoryGroup(
       {required this.id,
@@ -1098,7 +1104,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       map['status'] = Variable<int>(converter.toSql(status));
     }
     map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
-    map['review_interval'] = Variable<DateTime>(reviewInterval);
+    map['review_interval'] = Variable<int>(reviewInterval);
     map['filter_out'] = Variable<String>(filterOut);
     {
       final converter = $MemoryGroupsTable.$converter2;
@@ -1150,7 +1156,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       type: serializer.fromJson<MemoryGroupType>(json['type']),
       status: serializer.fromJson<MemoryGroupStatus>(json['status']),
       willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
-      reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
+      reviewInterval: serializer.fromJson<int>(json['reviewInterval']),
       filterOut: serializer.fromJson<String>(json['filterOut']),
       newReviewDisplayOrder: serializer
           .fromJson<NewReviewDisplayOrder>(json['newReviewDisplayOrder']),
@@ -1171,7 +1177,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'type': serializer.toJson<MemoryGroupType>(type),
       'status': serializer.toJson<MemoryGroupStatus>(status),
       'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
-      'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
+      'reviewInterval': serializer.toJson<int>(reviewInterval),
       'filterOut': serializer.toJson<String>(filterOut),
       'newReviewDisplayOrder':
           serializer.toJson<NewReviewDisplayOrder>(newReviewDisplayOrder),
@@ -1189,7 +1195,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           MemoryGroupType? type,
           MemoryGroupStatus? status,
           int? willNewLearnCount,
-          DateTime? reviewInterval,
+          int? reviewInterval,
           String? filterOut,
           NewReviewDisplayOrder? newReviewDisplayOrder,
           NewDisplayOrder? newDisplayOrder,
@@ -1274,7 +1280,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<MemoryGroupType> type;
   Value<MemoryGroupStatus> status;
   Value<int> willNewLearnCount;
-  Value<DateTime> reviewInterval;
+  Value<int> reviewInterval;
   Value<String> filterOut;
   Value<NewReviewDisplayOrder> newReviewDisplayOrder;
   Value<NewDisplayOrder> newDisplayOrder;
@@ -1303,7 +1309,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required MemoryGroupType type,
     required MemoryGroupStatus status,
     required int willNewLearnCount,
-    required DateTime reviewInterval,
+    required int reviewInterval,
     required String filterOut,
     required NewReviewDisplayOrder newReviewDisplayOrder,
     required NewDisplayOrder newDisplayOrder,
@@ -1326,7 +1332,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<int>? type,
     Expression<int>? status,
     Expression<int>? willNewLearnCount,
-    Expression<DateTime>? reviewInterval,
+    Expression<int>? reviewInterval,
     Expression<String>? filterOut,
     Expression<int>? newReviewDisplayOrder,
     Expression<int>? newDisplayOrder,
@@ -1359,7 +1365,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<MemoryGroupType>? type,
       Value<MemoryGroupStatus>? status,
       Value<int>? willNewLearnCount,
-      Value<DateTime>? reviewInterval,
+      Value<int>? reviewInterval,
       Value<String>? filterOut,
       Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
       Value<NewDisplayOrder>? newDisplayOrder,
@@ -1412,7 +1418,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       map['will_new_learn_count'] = Variable<int>(willNewLearnCount.value);
     }
     if (reviewInterval.present) {
-      map['review_interval'] = Variable<DateTime>(reviewInterval.value);
+      map['review_interval'] = Variable<int>(reviewInterval.value);
     }
     if (filterOut.present) {
       map['filter_out'] = Variable<String>(filterOut.value);
@@ -1511,9 +1517,9 @@ class $MemoryGroupsTable extends MemoryGroups
   final VerificationMeta _reviewIntervalMeta =
       const VerificationMeta('reviewInterval');
   @override
-  late final GeneratedColumn<DateTime> reviewInterval =
-      GeneratedColumn<DateTime>('review_interval', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  late final GeneratedColumn<int> reviewInterval = GeneratedColumn<int>(
+      'review_interval', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _filterOutMeta = const VerificationMeta('filterOut');
   @override
   late final GeneratedColumn<String> filterOut = GeneratedColumn<String>(
@@ -1648,8 +1654,8 @@ class $MemoryGroupsTable extends MemoryGroups
           .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
       willNewLearnCount: attachedDatabase.options.types.read(
           DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
-      reviewInterval: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
+      reviewInterval: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}review_interval'])!,
       filterOut: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}filter_out'])!,
       newReviewDisplayOrder: $MemoryGroupsTable.$converter2.fromSql(
@@ -2260,17 +2266,29 @@ class FragmentMemoryInfo extends DataClass
   bool isLatestRecord;
 
   /// =====
-  /// 下一次计划展示的时间点。(从记忆组启动时的时间点开始计算)
-  DateTime nextPlanedShowTime;
+  /// 下一次计划展示的时间点。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  int nextPlanShowTime;
 
-  /// 当前实际展示的时间点。(从记忆组启动时的时间点开始计算)
-  DateTime currentActualShowTime;
+  /// 当前实际展示的时间点。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  int currentActualShowTime;
 
   /// 刚展示时的熟练度。
   double showFamiliarity;
 
-  /// 点击按钮的时间。(从记忆组启动时的时间点开始计算)
-  DateTime clickTime;
+  /// 点击按钮的时间。
+  ///
+  /// 单位秒。
+  ///
+  /// 从记忆组启动时的时间点开始计算。
+  int clickTime;
 
   /// 点击按钮的按钮数值。
   double clickValue;
@@ -2281,7 +2299,7 @@ class FragmentMemoryInfo extends DataClass
       required this.fragmentId,
       required this.memoryGroupId,
       required this.isLatestRecord,
-      required this.nextPlanedShowTime,
+      required this.nextPlanShowTime,
       required this.currentActualShowTime,
       required this.showFamiliarity,
       required this.clickTime,
@@ -2295,10 +2313,10 @@ class FragmentMemoryInfo extends DataClass
     map['fragment_id'] = Variable<String>(fragmentId);
     map['memory_group_id'] = Variable<String>(memoryGroupId);
     map['is_latest_record'] = Variable<bool>(isLatestRecord);
-    map['next_planed_show_time'] = Variable<DateTime>(nextPlanedShowTime);
-    map['current_actual_show_time'] = Variable<DateTime>(currentActualShowTime);
+    map['next_plan_show_time'] = Variable<int>(nextPlanShowTime);
+    map['current_actual_show_time'] = Variable<int>(currentActualShowTime);
     map['show_familiarity'] = Variable<double>(showFamiliarity);
-    map['click_time'] = Variable<DateTime>(clickTime);
+    map['click_time'] = Variable<int>(clickTime);
     map['click_value'] = Variable<double>(clickValue);
     return map;
   }
@@ -2311,7 +2329,7 @@ class FragmentMemoryInfo extends DataClass
       fragmentId: Value(fragmentId),
       memoryGroupId: Value(memoryGroupId),
       isLatestRecord: Value(isLatestRecord),
-      nextPlanedShowTime: Value(nextPlanedShowTime),
+      nextPlanShowTime: Value(nextPlanShowTime),
       currentActualShowTime: Value(currentActualShowTime),
       showFamiliarity: Value(showFamiliarity),
       clickTime: Value(clickTime),
@@ -2329,12 +2347,11 @@ class FragmentMemoryInfo extends DataClass
       fragmentId: serializer.fromJson<String>(json['fragmentId']),
       memoryGroupId: serializer.fromJson<String>(json['memoryGroupId']),
       isLatestRecord: serializer.fromJson<bool>(json['isLatestRecord']),
-      nextPlanedShowTime:
-          serializer.fromJson<DateTime>(json['nextPlanedShowTime']),
+      nextPlanShowTime: serializer.fromJson<int>(json['nextPlanShowTime']),
       currentActualShowTime:
-          serializer.fromJson<DateTime>(json['currentActualShowTime']),
+          serializer.fromJson<int>(json['currentActualShowTime']),
       showFamiliarity: serializer.fromJson<double>(json['showFamiliarity']),
-      clickTime: serializer.fromJson<DateTime>(json['clickTime']),
+      clickTime: serializer.fromJson<int>(json['clickTime']),
       clickValue: serializer.fromJson<double>(json['clickValue']),
     );
   }
@@ -2348,11 +2365,10 @@ class FragmentMemoryInfo extends DataClass
       'fragmentId': serializer.toJson<String>(fragmentId),
       'memoryGroupId': serializer.toJson<String>(memoryGroupId),
       'isLatestRecord': serializer.toJson<bool>(isLatestRecord),
-      'nextPlanedShowTime': serializer.toJson<DateTime>(nextPlanedShowTime),
-      'currentActualShowTime':
-          serializer.toJson<DateTime>(currentActualShowTime),
+      'nextPlanShowTime': serializer.toJson<int>(nextPlanShowTime),
+      'currentActualShowTime': serializer.toJson<int>(currentActualShowTime),
       'showFamiliarity': serializer.toJson<double>(showFamiliarity),
-      'clickTime': serializer.toJson<DateTime>(clickTime),
+      'clickTime': serializer.toJson<int>(clickTime),
       'clickValue': serializer.toJson<double>(clickValue),
     };
   }
@@ -2364,10 +2380,10 @@ class FragmentMemoryInfo extends DataClass
           String? fragmentId,
           String? memoryGroupId,
           bool? isLatestRecord,
-          DateTime? nextPlanedShowTime,
-          DateTime? currentActualShowTime,
+          int? nextPlanShowTime,
+          int? currentActualShowTime,
           double? showFamiliarity,
-          DateTime? clickTime,
+          int? clickTime,
           double? clickValue}) =>
       FragmentMemoryInfo(
         id: id ?? this.id,
@@ -2376,7 +2392,7 @@ class FragmentMemoryInfo extends DataClass
         fragmentId: fragmentId ?? this.fragmentId,
         memoryGroupId: memoryGroupId ?? this.memoryGroupId,
         isLatestRecord: isLatestRecord ?? this.isLatestRecord,
-        nextPlanedShowTime: nextPlanedShowTime ?? this.nextPlanedShowTime,
+        nextPlanShowTime: nextPlanShowTime ?? this.nextPlanShowTime,
         currentActualShowTime:
             currentActualShowTime ?? this.currentActualShowTime,
         showFamiliarity: showFamiliarity ?? this.showFamiliarity,
@@ -2392,7 +2408,7 @@ class FragmentMemoryInfo extends DataClass
           ..write('fragmentId: $fragmentId, ')
           ..write('memoryGroupId: $memoryGroupId, ')
           ..write('isLatestRecord: $isLatestRecord, ')
-          ..write('nextPlanedShowTime: $nextPlanedShowTime, ')
+          ..write('nextPlanShowTime: $nextPlanShowTime, ')
           ..write('currentActualShowTime: $currentActualShowTime, ')
           ..write('showFamiliarity: $showFamiliarity, ')
           ..write('clickTime: $clickTime, ')
@@ -2409,7 +2425,7 @@ class FragmentMemoryInfo extends DataClass
       fragmentId,
       memoryGroupId,
       isLatestRecord,
-      nextPlanedShowTime,
+      nextPlanShowTime,
       currentActualShowTime,
       showFamiliarity,
       clickTime,
@@ -2424,7 +2440,7 @@ class FragmentMemoryInfo extends DataClass
           other.fragmentId == this.fragmentId &&
           other.memoryGroupId == this.memoryGroupId &&
           other.isLatestRecord == this.isLatestRecord &&
-          other.nextPlanedShowTime == this.nextPlanedShowTime &&
+          other.nextPlanShowTime == this.nextPlanShowTime &&
           other.currentActualShowTime == this.currentActualShowTime &&
           other.showFamiliarity == this.showFamiliarity &&
           other.clickTime == this.clickTime &&
@@ -2438,10 +2454,10 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<String> fragmentId;
   Value<String> memoryGroupId;
   Value<bool> isLatestRecord;
-  Value<DateTime> nextPlanedShowTime;
-  Value<DateTime> currentActualShowTime;
+  Value<int> nextPlanShowTime;
+  Value<int> currentActualShowTime;
   Value<double> showFamiliarity;
-  Value<DateTime> clickTime;
+  Value<int> clickTime;
   Value<double> clickValue;
   FragmentMemoryInfosCompanion({
     this.id = const Value.absent(),
@@ -2450,7 +2466,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     this.fragmentId = const Value.absent(),
     this.memoryGroupId = const Value.absent(),
     this.isLatestRecord = const Value.absent(),
-    this.nextPlanedShowTime = const Value.absent(),
+    this.nextPlanShowTime = const Value.absent(),
     this.currentActualShowTime = const Value.absent(),
     this.showFamiliarity = const Value.absent(),
     this.clickTime = const Value.absent(),
@@ -2463,16 +2479,16 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     required String fragmentId,
     required String memoryGroupId,
     required bool isLatestRecord,
-    required DateTime nextPlanedShowTime,
-    required DateTime currentActualShowTime,
+    required int nextPlanShowTime,
+    required int currentActualShowTime,
     required double showFamiliarity,
-    required DateTime clickTime,
+    required int clickTime,
     required double clickValue,
   })  : id = Value(id),
         fragmentId = Value(fragmentId),
         memoryGroupId = Value(memoryGroupId),
         isLatestRecord = Value(isLatestRecord),
-        nextPlanedShowTime = Value(nextPlanedShowTime),
+        nextPlanShowTime = Value(nextPlanShowTime),
         currentActualShowTime = Value(currentActualShowTime),
         showFamiliarity = Value(showFamiliarity),
         clickTime = Value(clickTime),
@@ -2484,10 +2500,10 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     Expression<String>? fragmentId,
     Expression<String>? memoryGroupId,
     Expression<bool>? isLatestRecord,
-    Expression<DateTime>? nextPlanedShowTime,
-    Expression<DateTime>? currentActualShowTime,
+    Expression<int>? nextPlanShowTime,
+    Expression<int>? currentActualShowTime,
     Expression<double>? showFamiliarity,
-    Expression<DateTime>? clickTime,
+    Expression<int>? clickTime,
     Expression<double>? clickValue,
   }) {
     return RawValuesInsertable({
@@ -2497,8 +2513,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       if (fragmentId != null) 'fragment_id': fragmentId,
       if (memoryGroupId != null) 'memory_group_id': memoryGroupId,
       if (isLatestRecord != null) 'is_latest_record': isLatestRecord,
-      if (nextPlanedShowTime != null)
-        'next_planed_show_time': nextPlanedShowTime,
+      if (nextPlanShowTime != null) 'next_plan_show_time': nextPlanShowTime,
       if (currentActualShowTime != null)
         'current_actual_show_time': currentActualShowTime,
       if (showFamiliarity != null) 'show_familiarity': showFamiliarity,
@@ -2514,10 +2529,10 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       Value<String>? fragmentId,
       Value<String>? memoryGroupId,
       Value<bool>? isLatestRecord,
-      Value<DateTime>? nextPlanedShowTime,
-      Value<DateTime>? currentActualShowTime,
+      Value<int>? nextPlanShowTime,
+      Value<int>? currentActualShowTime,
       Value<double>? showFamiliarity,
-      Value<DateTime>? clickTime,
+      Value<int>? clickTime,
       Value<double>? clickValue}) {
     return FragmentMemoryInfosCompanion(
       id: id ?? this.id,
@@ -2526,7 +2541,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       fragmentId: fragmentId ?? this.fragmentId,
       memoryGroupId: memoryGroupId ?? this.memoryGroupId,
       isLatestRecord: isLatestRecord ?? this.isLatestRecord,
-      nextPlanedShowTime: nextPlanedShowTime ?? this.nextPlanedShowTime,
+      nextPlanShowTime: nextPlanShowTime ?? this.nextPlanShowTime,
       currentActualShowTime:
           currentActualShowTime ?? this.currentActualShowTime,
       showFamiliarity: showFamiliarity ?? this.showFamiliarity,
@@ -2556,19 +2571,18 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     if (isLatestRecord.present) {
       map['is_latest_record'] = Variable<bool>(isLatestRecord.value);
     }
-    if (nextPlanedShowTime.present) {
-      map['next_planed_show_time'] =
-          Variable<DateTime>(nextPlanedShowTime.value);
+    if (nextPlanShowTime.present) {
+      map['next_plan_show_time'] = Variable<int>(nextPlanShowTime.value);
     }
     if (currentActualShowTime.present) {
       map['current_actual_show_time'] =
-          Variable<DateTime>(currentActualShowTime.value);
+          Variable<int>(currentActualShowTime.value);
     }
     if (showFamiliarity.present) {
       map['show_familiarity'] = Variable<double>(showFamiliarity.value);
     }
     if (clickTime.present) {
-      map['click_time'] = Variable<DateTime>(clickTime.value);
+      map['click_time'] = Variable<int>(clickTime.value);
     }
     if (clickValue.present) {
       map['click_value'] = Variable<double>(clickValue.value);
@@ -2585,7 +2599,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
           ..write('fragmentId: $fragmentId, ')
           ..write('memoryGroupId: $memoryGroupId, ')
           ..write('isLatestRecord: $isLatestRecord, ')
-          ..write('nextPlanedShowTime: $nextPlanedShowTime, ')
+          ..write('nextPlanShowTime: $nextPlanShowTime, ')
           ..write('currentActualShowTime: $currentActualShowTime, ')
           ..write('showFamiliarity: $showFamiliarity, ')
           ..write('clickTime: $clickTime, ')
@@ -2639,18 +2653,18 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (is_latest_record IN (0, 1))');
-  final VerificationMeta _nextPlanedShowTimeMeta =
-      const VerificationMeta('nextPlanedShowTime');
+  final VerificationMeta _nextPlanShowTimeMeta =
+      const VerificationMeta('nextPlanShowTime');
   @override
-  late final GeneratedColumn<DateTime> nextPlanedShowTime =
-      GeneratedColumn<DateTime>('next_planed_show_time', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  late final GeneratedColumn<int> nextPlanShowTime = GeneratedColumn<int>(
+      'next_plan_show_time', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _currentActualShowTimeMeta =
       const VerificationMeta('currentActualShowTime');
   @override
-  late final GeneratedColumn<DateTime> currentActualShowTime =
-      GeneratedColumn<DateTime>('current_actual_show_time', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  late final GeneratedColumn<int> currentActualShowTime = GeneratedColumn<int>(
+      'current_actual_show_time', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _showFamiliarityMeta =
       const VerificationMeta('showFamiliarity');
   @override
@@ -2659,9 +2673,9 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: DriftSqlType.double, requiredDuringInsert: true);
   final VerificationMeta _clickTimeMeta = const VerificationMeta('clickTime');
   @override
-  late final GeneratedColumn<DateTime> clickTime = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> clickTime = GeneratedColumn<int>(
       'click_time', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _clickValueMeta = const VerificationMeta('clickValue');
   @override
   late final GeneratedColumn<double> clickValue = GeneratedColumn<double>(
@@ -2675,7 +2689,7 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
         fragmentId,
         memoryGroupId,
         isLatestRecord,
-        nextPlanedShowTime,
+        nextPlanShowTime,
         currentActualShowTime,
         showFamiliarity,
         clickTime,
@@ -2727,13 +2741,13 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     } else if (isInserting) {
       context.missing(_isLatestRecordMeta);
     }
-    if (data.containsKey('next_planed_show_time')) {
+    if (data.containsKey('next_plan_show_time')) {
       context.handle(
-          _nextPlanedShowTimeMeta,
-          nextPlanedShowTime.isAcceptableOrUnknown(
-              data['next_planed_show_time']!, _nextPlanedShowTimeMeta));
+          _nextPlanShowTimeMeta,
+          nextPlanShowTime.isAcceptableOrUnknown(
+              data['next_plan_show_time']!, _nextPlanShowTimeMeta));
     } else if (isInserting) {
-      context.missing(_nextPlanedShowTimeMeta);
+      context.missing(_nextPlanShowTimeMeta);
     }
     if (data.containsKey('current_actual_show_time')) {
       context.handle(
@@ -2786,16 +2800,15 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
           DriftSqlType.string, data['${effectivePrefix}memory_group_id'])!,
       isLatestRecord: attachedDatabase.options.types
           .read(DriftSqlType.bool, data['${effectivePrefix}is_latest_record'])!,
-      nextPlanedShowTime: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime,
-          data['${effectivePrefix}next_planed_show_time'])!,
+      nextPlanShowTime: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}next_plan_show_time'])!,
       currentActualShowTime: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime,
+          DriftSqlType.int,
           data['${effectivePrefix}current_actual_show_time'])!,
       showFamiliarity: attachedDatabase.options.types.read(
           DriftSqlType.double, data['${effectivePrefix}show_familiarity'])!,
       clickTime: attachedDatabase.options.types
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}click_time'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}click_time'])!,
       clickValue: attachedDatabase.options.types
           .read(DriftSqlType.double, data['${effectivePrefix}click_value'])!,
     );
