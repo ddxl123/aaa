@@ -15,6 +15,7 @@ typedef ResetFutureFunction = Future<void> Function(SyncTag resetSyncTag);
 class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   UpdateDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  /// [oldMemoryGroupReset] - 使用 [UserExt.reset]。
   Future<void> resetMemoryGroup({required ResetFutureFunction oldMemoryGroupReset}) async {
     await withRefs(
       syncTag: await SyncTag.create(),

@@ -1,5 +1,6 @@
 part of aber;
 
+/// [Aber]、[AbBuilder]
 abstract class AbController {
   AbController() {
     initComplexVerifies();
@@ -14,6 +15,7 @@ abstract class AbController {
 
   late final void Function() thisRefresh;
 
+  /// 如果启用，会有加载过渡。
   bool get isEnableLoading => false;
 
   /// [AbBuilder] 内部的 initState，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
@@ -29,9 +31,23 @@ abstract class AbController {
   Widget loadingWidget() => const Text('未配置 loading Widget！');
 
   /// 需要 [isEnableLoading] 为 true。
-  void loadingError(Object e, StackTrace st) {
-    logger.i('出现 loadingError 未实现！$runtimeType');
-  }
+  ///
+  /// 会提供 [error] 和 [stackTrace]
+  Widget loadingErrorWidget(ExceptionContent exceptionContent) => BuildExceptionWidget(
+        title: '加载出现异常！',
+        exceptionContent: exceptionContent,
+        logCallback: (title, ec) {
+          logger.e(title, ec.error, ec.stackTrace);
+        },
+      );
+
+  Widget buildInternalExceptionWidget(ExceptionContent exceptionContent) => BuildExceptionWidget(
+        title: '内部构建异常！',
+        exceptionContent: exceptionContent,
+        logCallback: (title, ec) {
+          logger.e(title, ec.error, ec.stackTrace);
+        },
+      );
 
   /// 复杂验证的初始化函数。
   ///

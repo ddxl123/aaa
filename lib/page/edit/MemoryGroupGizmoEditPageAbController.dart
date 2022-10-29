@@ -121,11 +121,9 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
             externalResultHandler: null,
           ),
         );
-        if (fa.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-        if (ff.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-        if (bd.throwMessage != null) return VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！');
-
-        return null;
+        return (fa.exceptionContent != null || ff.exceptionContent != null || bd.exceptionContent != null)
+            ? VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！')
+            : null;
       },
     );
 
@@ -209,6 +207,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     reviewIntervalTextEditingController.text = _reviewInterval.toString();
   }
 
+  /// 仅保存。
   void save() {
     _save().then(
       (value) async {
@@ -224,13 +223,14 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     );
   }
 
+  /// 仅保存。
+  ///
   /// 返回的 [Tuple2]：是否成功-消息。
   Future<Tuple2<bool, String>> _save() async {
     if (await saveVerify) {
       await DriftDb.instance.updateDAO.resetMemoryGroup(
         oldMemoryGroupReset: (resetSyncTag) async {
           await memoryGroupGizmo!().reset(
-            id: toAbsent(),
             createdAt: toAbsent(),
             updatedAt: toAbsent(),
             startTime: toAbsent(),
@@ -278,14 +278,35 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     }
   }
 
-  void applyAndStart() {
-    _applyAndStart().then(
+  /// 保存并开始。
+  Future<void> applyAndStart() async {
+    await _applyAndStart().then(
       (value) async {
         final ibcre = !await basicConfigRedErrVerify;
         final iccre = !await currentCycleConfigRedErrVerify;
         isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);
         isCurrentCycleRedErr.refreshEasy((oldValue) => iccre);
         if (value.t1) {
+          await DriftDb.instance.updateDAO.resetMemoryGroup(
+            oldMemoryGroupReset: (SyncTag resetSyncTag) async {
+              await memoryGroupGizmo!().reset(
+                createdAt: toAbsent(),
+                updatedAt: toAbsent(),
+                memoryModelId: toAbsent(),
+                title: toAbsent(),
+                type: toAbsent(),
+                status: toAbsent(),
+                willNewLearnCount: toAbsent(),
+                reviewInterval: toAbsent(),
+                filterOut: toAbsent(),
+                newReviewDisplayOrder: toAbsent(),
+                newDisplayOrder: toAbsent(),
+                startTime: DateTime.now().toValue(),
+                writeSyncTag: resetSyncTag,
+              );
+            },
+          );
+          memoryGroupGizmo!.refreshForce();
           SmartDialog.showToast(value.t2);
           Navigator.pop(context);
           Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupGizmo!)));
@@ -296,6 +317,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     );
   }
 
+  /// 保存并开始。
+  ///
   /// 返回的 [Tuple2]：是否成功-消息。
   Future<Tuple2<bool, String>> _applyAndStart() async {
     final analyzeResult = await _analyze();

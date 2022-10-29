@@ -1,52 +1,70 @@
 part of algorithm_parser;
 
 class AlgorithmParser<CS extends ClassificationState> with Explain {
-  AlgorithmParser({this.isDebugPrint = false});
-
-  final ContextModel cm = ContextModel();
+  final ContextModel _cm = ContextModel();
 
   bool _isParsed = false;
 
-  late final CS state;
+  late final CS _state;
 
   static const nullTag = '_tag_null_tag_';
 
-  bool isDebugPrint;
+  /// 是否记录并输出日志
+  final bool _isRecordLog = false;
 
-  StringBuffer debugPrintStringBuffer = StringBuffer();
+  final StringBuffer _logStringBuffer = StringBuffer();
 
-  String? throwMessage;
+  ExceptionContent? exceptionContent;
 
-  void debugPrint({required String content, StackTrace? st}) {
-    if (isDebugPrint) {
+  /// 记录日志。
+  ///
+  /// 异常捕获会在 [recordLog] 之前捕获。
+  void recordLog({required String content}) {
+    if (_isRecordLog) {
       final currentSt = RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!.trim();
-      debugPrintStringBuffer.write('\n-------------------------------------------------------------------\n$content\n${currentSt.substring(2, currentSt.length - 2).trim()}');
-      if (st != null) {
-        debugPrintStringBuffer.write('\nthrow:\n$st');
-        throwMessage = content;
-      }
+      _logStringBuffer.write(
+        '\n-------------------------------------------------------------------\n$content\n${currentSt.substring(2, currentSt.length - 2).trim()}',
+      );
+    }
+  }
+
+  /// 最终展示日志。
+  void showLog() {
+    if (_isRecordLog) {
+      logger.i(_logStringBuffer);
     }
   }
 
   /// 计算
   double calculate(String content) {
     try {
-      return Parser().parse(content).evaluate(EvaluationType.REAL, cm);
+      return Parser().parse(content).evaluate(EvaluationType.REAL, _cm);
     } catch (e) {
       throw '运算解析失败：$content\n$e';
     }
   }
 
+  Future<T> handle<T>({
+    required Future<T> Function(CS state) onSuccess,
+    required Future<T> Function(ExceptionContent ec) onError,
+  }) async {
+    if (exceptionContent == null) {
+      return await onSuccess(_state);
+    }
+    return await onError(exceptionContent!);
+  }
+
+  /// 使用 [handle] 来处理结果。
   Future<AlgorithmParser<CS>> parse({required CS state}) async {
     try {
       if (_isParsed) throw '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。';
       _isParsed = true;
       if (InternalVariableConstant.getAllKV.isEmpty) throw '请先初始化内置变量！';
 
-      this.state = state;
+      _state = state;
 
-      debugPrint(content: RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!);
-      debugPrint(content: '【开始解析 ${state.getStateType}...】');
+      recordLog(content: RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!);
+      recordLog(content: '【开始解析 ${state.getStateType}...】');
 
       String content = state.useContent;
       content = _clearAnnotated(content: content);
@@ -61,27 +79,27 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       content = _emptyMergeEval(content: content);
 
       _evalIfUseElse(content: content);
-    } catch (e, st) {
-      debugPrint(content: '语法错误：$e', st: st);
+    } catch (o, st) {
+      exceptionContent = ExceptionContent(error: o, stackTrace: st);
+      recordLog(content: exceptionContent.toString());
     }
-    debugPrint(content: '【解析完成 ${state.getStateType}！】');
-    if (isDebugPrint) {
-      logger.i(debugPrintStringBuffer);
-    }
+
+    recordLog(content: '【解析完成 ${state.getStateType}！】');
+    showLog();
     return this;
   }
 
   /// 去掉全部注释
   String _clearAnnotated({required String content}) {
     final result = content.replaceAll(RegExper.annotation, '');
-    debugPrint(content: '清除注释完成！');
+    recordLog(content: '清除注释完成！');
     return result;
   }
 
   /// 小写化
   String _toLowerCase({required String content}) {
     final result = content.toLowerCase();
-    debugPrint(content: '全部转化成小写字母完成！');
+    recordLog(content: '全部转化成小写字母完成！');
     return result;
   }
 
@@ -98,8 +116,8 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     final definitionPart = content.substring(0, ifIndex);
     // if-use-else 语句部分。
     final ifUseElsePart = content.substring(ifIndex);
-    debugPrint(content: '分离自定义变量与 if-use-else 语句完成！');
-    debugPrint(content: '- 自定义变量的定义部分 》》》\n$definitionPart\n- if-use-else 语句部分 》》》\n$ifUseElsePart');
+    recordLog(content: '分离自定义变量与 if-use-else 语句完成！');
+    recordLog(content: '- 自定义变量的定义部分 》》》\n$definitionPart\n- if-use-else 语句部分 》》》\n$ifUseElsePart');
     return Tuple2(t1: definitionPart, t2: ifUseElsePart);
   }
 
@@ -109,12 +127,12 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   ///
   /// 返回被替换后的 if-use-else 语句，结果中的变量只存在内置变量。
   String _evalCustomVariables({required String definitionPart, required String ifUseElsePart}) {
-    debugPrint(content: '正在评估自定义变量...');
+    recordLog(content: '正在评估自定义变量...');
     final name2Value = <String, String>{};
 
     // 替换变量
     String replace(String inputContent) {
-      debugPrint(content: '已存：$name2Value');
+      recordLog(content: '已存：$name2Value');
       final replaceResult = inputContent.replaceAllMapped(
         RegExper.variableMatching('(${name2Value.keys.map((e) => '($e)').join('|').nothingMatches()})'),
         (match) {
@@ -143,7 +161,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       final name = checkNameConvent(name: eSep.first.trim());
       final originalVal = eSep.last.trim();
       final nowVal = replace(originalVal);
-      debugPrint(content: '识别到：name:$name originalVal:$originalVal nowVal:$nowVal');
+      recordLog(content: '识别到：name:$name originalVal:$originalVal nowVal:$nowVal');
       if (name2Value.containsKey(name)) {
         throw '自定义变量名不能重复：$name';
       }
@@ -151,8 +169,8 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     }
 
     final result = replace(ifUseElsePart);
-    debugPrint(content: '替换结果：\n$result');
-    debugPrint(content: '评估自定义变量完成！');
+    recordLog(content: '替换结果：\n$result');
+    recordLog(content: '评估自定义变量完成！');
     return result;
   }
 
@@ -160,7 +178,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   ///
   /// 扫描使用到的内置变量，并获取内置变量的值，最后替换成结果值。
   Future<String> _evalInternalVariables({required String content}) async {
-    debugPrint(content: '正在评估内置变量...');
+    recordLog(content: '正在评估内置变量...');
     if (InternalVariableConstant.getAllNames.isEmpty) throw '初始内置变量为 empty！';
 
     // 内置变量：对应的结果值
@@ -170,7 +188,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       final fullName = match.group(0)!;
       String simplifyName = fullName;
       NTypeNumber? nTypeNumber;
-      debugPrint(content: '解析出变量：$fullName');
+      recordLog(content: '解析出变量：$fullName');
       final nMatch = RegExper.nSuffix.firstMatch(fullName);
       // 若变量含后缀
       if (nMatch != null) {
@@ -187,7 +205,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       // 相同的变量名值只绑定一次，但是 hasNullMerge 必须每次都执行。
       final atom = InternalVariableAtom(
         internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
-        currentState: state,
+        currentState: _state,
         nTypeNumber: nTypeNumber,
         hasNullMerge: match.input.substring(match.end, match.input.length).contains(RegExper.isExistNullMerge),
       );
@@ -196,73 +214,73 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       // 相同的变量名值只绑定一次。
       if (internalVariable2Results.containsKey(fullName)) {
         if (internalVariable2Results[fullName] == null) {
-          internalVariable2Results[fullName] = await state.internalVariablesResultHandler(atom);
+          internalVariable2Results[fullName] = await _state.internalVariablesResultHandler(atom);
         }
       } else {
-        internalVariable2Results.addAll({fullName: await state.internalVariablesResultHandler(atom)});
+        internalVariable2Results.addAll({fullName: await _state.internalVariablesResultHandler(atom)});
       }
-      debugPrint(content: '内置变量结果值：$fullName = ${internalVariable2Results[fullName]}');
+      recordLog(content: '内置变量结果值：$fullName = ${internalVariable2Results[fullName]}');
     }
     final replaceResult = content.replaceAllMapped(
       RegExper.fullName,
       (match) {
-        debugPrint(content: '${match.group(0)}');
+        recordLog(content: '${match.group(0)}');
         final result = internalVariable2Results[match.group(0)!];
         return result != null ? result.toString() : nullTag;
       },
     );
-    debugPrint(content: '替换结果：\n$replaceResult');
-    debugPrint(content: '评估内置变量成功！');
+    recordLog(content: '替换结果：\n$replaceResult');
+    recordLog(content: '评估内置变量成功！');
     return replaceResult;
   }
 
   /// 评估空合并。
   String _emptyMergeEval({required String content}) {
-    debugPrint(content: '正在评估空合并运算符...');
+    recordLog(content: '正在评估空合并运算符...');
     final result = EmptyMergeParser().parse(content: content, algorithmParser: this);
-    debugPrint(content: '替换结果：\n$result');
-    debugPrint(content: '评估空合并完成！');
+    recordLog(content: '替换结果：\n$result');
+    recordLog(content: '评估空合并完成！');
     return result;
   }
 
   /// if-use-else 语句解析。
   void _evalIfUseElse({required String content}) {
-    debugPrint(content: '正在评估 if-use-else 语句...');
+    recordLog(content: '正在评估 if-use-else 语句...');
     final elseMatches = RegExper.elseKeyword.allMatches(content);
     if (elseMatches.isEmpty) throw '缺少 "else:" 语句！若不想使用 "else:" 语句，请使用 "else: throw 说明" 来进行异常处理！（程序会解析"说明"信息并展示给用户查看）';
     final elseMatch = elseMatches.first;
     final elseContent = content.substring(elseMatch.end, content.length).trim();
     if (elseContent == '') throw '"else:" 语句不能为空！';
-    debugPrint(content: 'else 内容：\n$elseContent');
+    recordLog(content: 'else 内容：\n$elseContent');
     final ifUseContent = content.substring(0, elseMatch.start).trim();
-    debugPrint(content: 'if-use 内容：\n$ifUseContent');
+    recordLog(content: 'if-use 内容：\n$ifUseContent');
     final ifUses = ifUseContent.split('if:');
     if (ifUses.length == 1) throw '缺少 "if:" 语句！';
     // 去掉第一个 'if:' 前的空白。
     ifUses.removeAt(0);
     for (var iu in ifUses) {
-      debugPrint(content: '解析出 -use:- 内容：\n$iu');
+      recordLog(content: '解析出 -use:- 内容：\n$iu');
       final iuTrim = iu.trim();
       if (iuTrim == '') throw '不规范使用 if-use 语句！';
       if (!iuTrim.contains('use:')) throw '缺少 "use:" 语句：$iuTrim';
       final i2u = iuTrim.split('use:');
       if (i2u.length != 2) throw '不规范使用 if 语句：$iuTrim';
       final i = i2u.first.trim();
-      debugPrint(content: '解析出 if 内容：\n$i');
+      recordLog(content: '解析出 if 内容：\n$i');
       if (i == '') throw '"if:" 语句内容不能为空：$iuTrim';
       final u = i2u.last.trim();
-      debugPrint(content: '解析出 use 内容：\n$u');
+      recordLog(content: '解析出 use 内容：\n$u');
       if (u == '') throw '"use:" 语句内容不能为空：$iuTrim';
       if (_ifParse(content: i)) {
         _useParse(content: u);
-        debugPrint(content: '所使用的 use 语句：$u\n计算结果：${state.toStringResult()}');
+        recordLog(content: '所使用的 use 语句：$u\n计算结果：${_state.toStringResult()}');
         return;
       }
     }
     if (elseContent.contains('throw')) throw elseContent.substring(elseContent.indexOf('throw') + 5, elseContent.length);
-    debugPrint(content: '所有 if 语句都不匹配，已执行 else 语句：$elseContent');
+    recordLog(content: '所有 if 语句都不匹配，已执行 else 语句：$elseContent');
     _useParse(content: elseContent);
-    debugPrint(content: 'else 语句计算结果：${state.toStringResult()}');
+    recordLog(content: 'else 语句计算结果：${_state.toStringResult()}');
   }
 
   /// 解析 if 语句。
@@ -272,6 +290,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   /// 解析 use 语句。
   void _useParse({required String content}) {
-    state.useParse(useContent: content, algorithmParser: this);
+    _state.useParse(useContent: content, algorithmParser: this);
   }
 }

@@ -101,18 +101,19 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 相似：[DancerQueryDAO.getOneNewFragment]
   Future<int> getNewFragmentsCount({required MemoryGroup mg}) async {
     final countExpr = fragments.id.count();
-    final lSelect = selectOnly(fragments);
+    final lSelect = select(fragments);
     final lJoin = [
-      innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: false),
-      leftOuterJoin(fragmentMemoryInfos, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id), useColumns: false),
+      innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: true),
+      leftOuterJoin(fragmentMemoryInfos, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id), useColumns: true),
     ];
-    final lWhere = rFragment2MemoryGroups.fatherId.equals(mg.id) & fragmentMemoryInfos.id.isNull();
+    // final lWhere = rFragment2MemoryGroups.fatherId.equals(mg.id) & fragmentMemoryInfos.id.isNull();
 
     final doJoin = lSelect.join(lJoin);
-    doJoin.where(lWhere);
-    doJoin.addColumns([countExpr]);
+    // doJoin.where(lWhere);
+    // doJoin.addColumns([countExpr]);
 
-    final result = await doJoin.getSingle();
-    return result.read(countExpr)!;
+    final result = await doJoin.get();
+    logger.d(JsonEncoder.withIndent(' ').convert(result.map((e) => e.rawData.data).toList()));
+    return 1;
   }
 }

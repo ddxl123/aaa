@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
@@ -66,4 +67,21 @@ String? time2TextTime({required int longSeconds}) {
   seconds = minutes == 0 ? d.inSeconds : d.inSeconds % 60;
   final result = '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
   return result == '' ? null : result;
+}
+
+class ExceptionContent {
+  final Object error;
+  final StackTrace stackTrace;
+
+  ExceptionContent({required this.error, required this.stackTrace});
+
+  @override
+  String toString() => '($hashCode=====>>>>>start:\nExceptionContent:\nerror:\n$error\nstackTrace:\n$stackTrace\n:end<<<<<=====$hashCode)\n';
+}
+
+extension PrintSuffixExt<T> on T {
+  T print() {
+    logger.d(this,null,StackTrace.current);
+    return this;
+  }
 }

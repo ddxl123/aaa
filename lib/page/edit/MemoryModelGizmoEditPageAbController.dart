@@ -53,41 +53,53 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     );
     familiarityAlgorithm.initVerify(
       (abV) async {
-        final result = await AlgorithmParser().parse(
+        final result = await AlgorithmParser<FamiliarityState>().parse(
           state: FamiliarityState(
             useContent: familiarityAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
-        if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
-        return null;
+        return await result.handle(
+          onSuccess: (FamiliarityState state) async => null,
+          onError: (ExceptionContent ec) async {
+            return VerifyResult(isOk: false, message: ec.error.toString());
+          },
+        );
       },
     );
     nextTimeAlgorithm.initVerify(
       (abV) async {
-        final result = await AlgorithmParser().parse(
+        final result = await AlgorithmParser<NextShowTimeState>().parse(
           state: NextShowTimeState(
             useContent: nextTimeAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
-        if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
-        return null;
+        return await result.handle(
+          onSuccess: (NextShowTimeState state) async => null,
+          onError: (ExceptionContent ec) async {
+            return VerifyResult(isOk: false, message: ec.error.toString());
+          },
+        );
       },
     );
     buttonDataAlgorithm.initVerify(
       (abV) async {
-        final result = await AlgorithmParser().parse(
+        final result = await AlgorithmParser<ButtonDataState>().parse(
           state: ButtonDataState(
             useContent: buttonDataAlgorithm(),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
-        if (result.throwMessage != null) return VerifyResult(isOk: false, message: result.throwMessage);
-        return null;
+        return await result.handle(
+          onSuccess: (ButtonDataState state) async => null,
+          onError: (ExceptionContent ec) async {
+            return VerifyResult(isOk: false, message: ec.error.toString());
+          },
+        );
       },
     );
     allCheck.initVerify(
@@ -225,7 +237,6 @@ class MemoryModelGizmoEditPageAbController extends AbController {
             await DriftDb.instance.updateDAO.resetMemoryModel(
               oldMemoryModelReset: (SyncTag resetSyncTag) async {
                 await memoryModelGizmo()!.reset(
-                  id: toAbsent(),
                   createdAt: toAbsent(),
                   updatedAt: toAbsent(),
                   title: title().toValue(),

@@ -3,21 +3,19 @@ part of algorithm_parser;
 class IfExprParse {
   bool _isParsed = false;
   late final AlgorithmParser _algorithmParser;
-  late final Function({required String content, StackTrace? st}) _debugPrint;
 
   bool parse({
     required String content,
     required AlgorithmParser algorithmParser,
   }) {
     _algorithmParser = algorithmParser;
-    _debugPrint = _algorithmParser.debugPrint;
 
-    _debugPrint(content: '正在评估 if 语句...');
+    _algorithmParser.recordLog(content: '正在评估 if 语句...');
     if (_isParsed) throw '每个 IfExprParse 实例只能使用一次 parse！若想多次使用，则需要创建多个 IfExprParse 实例。';
     _isParsed = true;
 
     bool result = _recursion(content) == 'true' ? true : false;
-    _debugPrint(content: '评估 if 语句成功：\nif 语句：\n$content\n结果：\n$result');
+    _algorithmParser.recordLog(content: '评估 if 语句成功：\nif 语句：\n$content\n结果：\n$result');
     return result;
   }
 
@@ -34,18 +32,18 @@ class IfExprParse {
       } else if (bracket == ')') {
         if (bracketIndex == null) throw '缺少前括号：$content';
         final bracketInternal = content.substring(bracketIndex + 1, bracketMatch.start).trim();
-        _debugPrint(content: '已识别到括号部分：($bracketInternal)');
+        _algorithmParser.recordLog(content: '已识别到括号部分：($bracketInternal)');
         late final String afterReplace;
         if (bracketInternal.contains(RegExper.allOperator) || bracketInternal == 'true' || bracketInternal == 'false') {
           final boolResult = _multiCompareParse(bracketInternal);
           afterReplace = content.replaceAll(content.substring(bracketIndex, bracketMatch.end), boolResult);
-          _debugPrint(content: '已评估并替换括号内容：($bracketInternal) = $boolResult');
+          _algorithmParser.recordLog(content: '已评估并替换括号内容：($bracketInternal) = $boolResult');
         } else {
           // 当括号内没有任何逻辑运算符和关系运算符时，可能只有算术运算符，因此需要进行计算。
-          _debugPrint(content: bracketInternal);
+          _algorithmParser.recordLog(content: bracketInternal);
           final calResult = _algorithmParser.calculate(bracketInternal).toString();
           afterReplace = content.replaceAll(content.substring(bracketIndex, bracketMatch.end), calResult);
-          _debugPrint(content: '已计算并替换括号内容：($bracketInternal) = $calResult');
+          _algorithmParser.recordLog(content: '已计算并替换括号内容：($bracketInternal) = $calResult');
         }
         return _recursion(afterReplace);
       } else {
@@ -53,7 +51,7 @@ class IfExprParse {
       }
     }
     // 不存在括号的情况。
-    _debugPrint(content: '未识别到括号！');
+    _algorithmParser.recordLog(content: '未识别到括号！');
     return _multiCompareParse(content);
   }
 
@@ -62,11 +60,11 @@ class IfExprParse {
   /// 返回字符串 true 或 false。
   String _multiCompareParse(String content) {
     if (!content.contains(RegExper.logicalOperator)) {
-      _debugPrint(content: '$content 是一个独立的比较关系');
+      _algorithmParser.recordLog(content: '$content 是一个独立的比较关系');
       return _singleCompareParse(content);
     }
 
-    _debugPrint(content: '$content 是一个非独立的比较关系');
+    _algorithmParser.recordLog(content: '$content 是一个非独立的比较关系');
     String? result;
     for (var multiCompareMatch in RegExper.logicalOperator.allMatches(content)) {
       final leftResult = result ?? _singleCompareParse(content.substring(0, multiCompareMatch.start).split(RegExper.logicalOperator).last.trim());
@@ -74,7 +72,7 @@ class IfExprParse {
       final center = multiCompareMatch.group(0)!;
       result = _logicalEvaluate(left: leftResult, center: center, right: rightResult);
     }
-    _debugPrint(content: '评估 $content 的结果为：$result');
+    _algorithmParser.recordLog(content: '评估 $content 的结果为：$result');
     return result!;
   }
 
@@ -91,7 +89,7 @@ class IfExprParse {
     final right = _algorithmParser.calculate(contentTrim.substring(singleCompareMatch.end, contentTrim.length));
     final center = singleCompareMatch.group(0)!;
     final result = _relationalEvaluate(left: left, rel: center, right: right);
-    _debugPrint(content: '$content 的比较结果：$left $center $right -> $result');
+    _algorithmParser.recordLog(content: '$content 的比较结果：$left $center $right -> $result');
     return result;
   }
 

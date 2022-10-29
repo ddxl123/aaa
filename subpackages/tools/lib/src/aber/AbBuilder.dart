@@ -139,7 +139,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
             future: _loadingFuture,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasError) {
-                _controller!.loadingError(snapshot.error!, snapshot.stackTrace!);
+                return _controller!.loadingErrorWidget(ExceptionContent(error: snapshot.error!, stackTrace: snapshot.stackTrace!));
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return _controller!.loadingWidget();
@@ -153,11 +153,17 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
         : _builderWidget();
   }
 
-  Widget _builderWidget() => widget.builder(_controller!, _abw);
+  Widget _builderWidget() {
+    try {
+      return widget.builder(_controller!, _abw);
+    } catch (e, st) {
+      return _controller!.buildInternalExceptionWidget(ExceptionContent(error: e, stackTrace: st));
+    }
+  }
 
   @override
   void dispose() {
-    _removeRefreshs();
+    _removeRefresh();
 
     if (_isPutter) {
       _controller!.dispose();
@@ -169,7 +175,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   }
 
   /// 当前 Widget 被移除时，需要同时将所添加过的 [refresh] 函数对象移除掉。
-  void _removeRefreshs() {
+  void _removeRefresh() {
     for (var element in _controller!._removeRefreshFunctions) {
       element(refresh);
     }

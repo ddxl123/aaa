@@ -35,7 +35,7 @@ class _InAppStageState extends State<InAppStage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(c.fragmentAndMemoryInfos(abw) == null ? '任务已全部完成！' : c.fragmentAndMemoryInfos()!.t1.title),
+                  Text(c.currentFragmentAndMemoryInfos(abw) == null ? '任务已全部完成！' : c.currentFragmentAndMemoryInfos()!.t1.title),
                 ],
               ),
             ),
@@ -54,7 +54,7 @@ class _InAppStageState extends State<InAppStage> {
           dropdownWidth: 150,
           customButton: const CustomDropdownPrimaryButtonContainer(child: Icon(Icons.more_horiz)),
           item: [
-            Tuple2(t1: c.isButtonDataShowValue(abw) ? '按钮显示时间' : '按钮显示数值', t2: 0),
+            Tuple2(t1: c.isButtonDataShowValue(abw) ? '按钮显示时间' : '按钮显示算法数值', t2: 0),
           ],
           onChanged: (v) {
             c.isButtonDataShowValue.refreshEasy((oldValue) => !oldValue);
@@ -67,12 +67,12 @@ class _InAppStageState extends State<InAppStage> {
   Widget _bottomWidget() {
     return AbBuilder<InAppStageAbController>(
       builder: (c, abw) {
-        if (c.fragmentAndMemoryInfos(abw) == null) return const SizedBox(height: 0);
-        if (c.buttonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
-        if (!c.buttonDataState(abw)!.isSlidable) {
+        if (c.currentFragmentAndMemoryInfos(abw) == null) return const SizedBox(height: 0);
+        if (c.currentButtonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
+        if (!c.currentButtonDataState(abw)!.isSlidable) {
           // 不可滑动
           return Row(
-            children: c.buttonDataState()!.resultButtonValues.map(
+            children: c.currentButtonDataState()!.resultButtonValues.map(
               (e) {
                 final parseTime = e.parseTime();
                 if (parseTime == null) {
@@ -96,7 +96,7 @@ class _InAppStageState extends State<InAppStage> {
         } else {
           // 可滑动
           return Row(
-            children: c.buttonDataState()!.resultButtonValues.map(
+            children: c.currentButtonDataState()!.resultButtonValues.map(
               (e) {
                 final parseTime = e.parseTime();
                 if (parseTime == null) {

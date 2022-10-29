@@ -47,14 +47,14 @@ class EmptyMergeParser {
     }
     left = toFront(match);
     right = toAfter(match);
-    algorithmParser.debugPrint(content: 'left: $left right: $right');
+    algorithmParser.recordLog(content: 'left: $left right: $right');
     if (left.content.trim() == AlgorithmParser.nullTag) {
       final replaceResult = content.replaceRange(left.boundIndex + 1, right.boundIndex, right.content);
-      algorithmParser.debugPrint(content: 'replaceResult: $replaceResult');
+      algorithmParser.recordLog(content: 'replaceResult: $replaceResult');
       return _recursion(content: replaceResult);
     } else {
       final replaceResult = content.replaceRange(left.boundIndex + 1, right.boundIndex, left.content);
-      algorithmParser.debugPrint(content: 'replaceResult: $replaceResult');
+      algorithmParser.recordLog(content: 'replaceResult: $replaceResult');
       return _recursion(content: replaceResult);
     }
   }
@@ -72,8 +72,8 @@ class EmptyMergeParser {
       }
       if (indexStr == ')') {
         if (content != '') {
-          algorithmParser.debugPrint(content: match.input.substring(i - 1, i + 1));
-          algorithmParser.debugPrint(content: content);
+          algorithmParser.recordLog(content: match.input.substring(i - 1, i + 1));
+          algorithmParser.recordLog(content: content);
           throw '不规范使用空合并操作符！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。';
         }
       } else {

@@ -1,6 +1,7 @@
 library drift_db;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/drift.dart';

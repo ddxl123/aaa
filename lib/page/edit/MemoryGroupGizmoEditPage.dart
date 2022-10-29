@@ -313,7 +313,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                             min: 0,
                             max: c.remainNewFragmentsCount().toDouble(),
                             value: dynValue,
-                            divisions: c.remainNewFragmentsCount(),
+                            divisions: c.remainNewFragmentsCount() == 0 ? null : c.remainNewFragmentsCount(),
                             onChanged: (n) {
                               extra['value'] = n;
                               refresh();

@@ -19,6 +19,8 @@ part 'AbwBuilder.dart';
 
 part 'BrokenExt.dart';
 
+part 'BuildExceptionWidget.dart';
+
 part 'typedef.dart';
 
 class Aber {
@@ -36,13 +38,18 @@ class Aber {
   /// 这并不会使 [key] 设置为 [nearest] 这个字符串，它只是用来作为触发字段。
   static const String nearest = 'NEAREST_TAG';
 
+  /// 日志输出
+  static void debug(String content) {
+    // logger.i(content);
+  }
+
   /// 当被 put 的 [AbBuilder] 被销毁时，会将其对应的 [AbController] 移除。（在 [AbBuilder] 的 dispose 中调用）
   static void _removeController<C extends AbController>(C controller) {
     _controllers.removeWhere(
-          (key, value) {
+      (key, value) {
         final bool yes = value == controller;
         if (yes) {
-          logger.i('AberInfo: == remove ==》 key:$key hash_code:${value.hashCode}');
+          debug('AberInfo: == remove ==》 key:$key hash_code:${value.hashCode}');
         }
         return yes;
       },
@@ -60,7 +67,7 @@ class Aber {
     if (_controllers.containsKey(key)) throw 'Repeat to add: $key.';
     _controllers.addAll({key: controller});
 
-    logger.i('AberInfo: == put ==》 key:$key hash_code:${controller.hashCode}');
+    debug('AberInfo: == put ==》 key:$key hash_code:${controller.hashCode}');
 
     return controller;
   }
@@ -71,7 +78,7 @@ class Aber {
     final c = _controllers[key];
 
     if (!isDisableOutputForDebug) {
-      logger.i('AberInfo: == findOrNull ==》 key:$key hash_code:${c?.hashCode}');
+      debug('AberInfo: == findOrNull ==》 key:$key hash_code:${c?.hashCode}');
     }
 
     return (c is C?) ? c : (throw 'Serious error! The type of controller found does not match! Need-${C.toString()},Found-${c.toString()}');
@@ -82,10 +89,9 @@ class Aber {
   /// 没找到会抛出异常。
   static C find<C extends AbController>({String? tag}) {
     final key = _createKey<C>(tag: tag);
-    final c = findOrNull<C>(tag: tag, isDisableOutputForDebug: true) ??
-        (throw 'Not found: $key You need to create a controller with the constructor first.');
+    final c = findOrNull<C>(tag: tag, isDisableOutputForDebug: true) ?? (throw 'Not found: $key You need to create a controller with the constructor first.');
 
-    logger.i('AberInfo: == find ==》 key:$key hash_code:${c.hashCode}');
+    debug('AberInfo: == find ==》 key:$key hash_code:${c.hashCode}');
     return c;
   }
 
@@ -93,7 +99,7 @@ class Aber {
   static List<C> findAll<C extends AbController>({bool isDisableOutputForDebug = false}) {
     final all = _controllers.values.whereType<C>().toList();
     if (!isDisableOutputForDebug) {
-      logger.i('AberInfo: == findAll ==》 type:${C.toString()} count:${all.length})');
+      debug('AberInfo: == findAll ==》 type:${C.toString()} count:${all.length})');
     }
     return all;
   }
@@ -105,7 +111,7 @@ class Aber {
   /// 没有找到会抛出异常。
   static C findLast<C extends AbController>() {
     final last = findAll<C>(isDisableOutputForDebug: true).last;
-    logger.i('AberInfo: == findLast ==》 type:${C.toString()} last_hash_code:${last.hashCode}');
+    debug('AberInfo: == findLast ==》 type:${C.toString()} last_hash_code:${last.hashCode}');
     return last;
   }
 
@@ -117,7 +123,7 @@ class Aber {
   static C? findOrNullLast<C extends AbController>() {
     final all = findAll<C>(isDisableOutputForDebug: true);
     final last = all.isEmpty ? null : all.last;
-    logger.i('AberInfo: == findOrNullLast ==》 type:${C.toString()} hash_code:${last?.hashCode}');
+    debug('AberInfo: == findOrNullLast ==》 type:${C.toString()} hash_code:${last?.hashCode}');
     return last;
   }
 }
