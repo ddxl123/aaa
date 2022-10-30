@@ -96,10 +96,15 @@ class PerformerQuery {
 
   /// 结束当前表演，并开始下一个表演。
   ///
-  /// [fragmentMemoryInfo] - 当前表演者的上一次碎片记忆信息([FragmentMemoryInfo.isLatestRecord] 为 true 的)。
+  /// [lastFragmentMemoryInfo] - 点击按钮前的最近一个碎片信息，即当前 [FragmentMemoryInfo.isLatestRecord] 为 true 的碎片信息。
+  ///
+  /// [newFragmentMemoryInfo] - 点击按钮后产生的新碎片信息。
+  ///
+  /// [memoryGroupAb] - 需要将 [MemoryGroup.willNewLearnCount] 减去 1。
   Future<void> finishAndStartNextPerform({
     required FragmentMemoryInfo? lastFragmentMemoryInfo,
     required FragmentMemoryInfosCompanion newFragmentMemoryInfo,
+    required Ab<MemoryGroup> memoryGroupAb,
   }) async {
     await dft.transaction(
       () async {
@@ -112,8 +117,6 @@ class PerformerQuery {
               return RefFragmentMemoryInfos(
                 self: ($FragmentMemoryInfosTable table) async {
                   await lastFragmentMemoryInfo.reset(
-                    createdAt: toAbsent(),
-                    updatedAt: DateTime.now().toValue(),
                     fragmentId: toAbsent(),
                     memoryGroupId: toAbsent(),
                     isLatestRecord: false.toValue(),
@@ -141,6 +144,25 @@ class PerformerQuery {
                   syncTag: syncTag,
                 );
               },
+            );
+          },
+        );
+
+        await DriftDb.instance.updateDAO.resetMemoryGroup(
+          syncTag: st,
+          oldMemoryGroupReset: (SyncTag resetSyncTag) async {
+            await memoryGroupAb().reset(
+              memoryModelId: memoryModelId,
+              title: title,
+              type: type,
+              status: status,
+              willNewLearnCount: willNewLearnCount,
+              reviewInterval: reviewInterval,
+              filterOut: filterOut,
+              newReviewDisplayOrder: newReviewDisplayOrder,
+              newDisplayOrder: newDisplayOrder,
+              startTime: startTime,
+              writeSyncTag: writeSyncTag,
             );
           },
         );

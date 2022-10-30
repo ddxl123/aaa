@@ -98,22 +98,26 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
 
   /// 获取 [mg] 内从未学习过的碎片数量。
   ///
-  /// 相似：[DancerQueryDAO.getOneNewFragment]
+  /// 用 [mg] 内全部碎片数量，减去已学习过的碎片数量。
   Future<int> getNewFragmentsCount({required MemoryGroup mg}) async {
-    final countExpr = fragments.id.count();
-    final lSelect = select(fragments);
-    final lJoin = [
-      innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: true),
-      leftOuterJoin(fragmentMemoryInfos, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id), useColumns: true),
-    ];
-    // final lWhere = rFragment2MemoryGroups.fatherId.equals(mg.id) & fragmentMemoryInfos.id.isNull();
+    final allCountExpr = fragments.id.count();
+    final allCountSelect = selectOnly(fragments).join([
+      innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: false),
+    ])
+      ..where(rFragment2MemoryGroups.fatherId.equals(mg.id))
+      ..addColumns([allCountExpr]);
+    final allCountResult = (await allCountSelect.getSingle()).read(allCountExpr)!;
 
-    final doJoin = lSelect.join(lJoin);
-    // doJoin.where(lWhere);
-    // doJoin.addColumns([countExpr]);
+    final learnedCountExpr = fragmentMemoryInfos.isLatestRecord.count();
+    final learnedCountSelect = selectOnly(fragmentMemoryInfos)
+      ..where(fragmentMemoryInfos.memoryGroupId.equals(mg.id) & fragmentMemoryInfos.isLatestRecord.equals(true))
+      ..addColumns([learnedCountExpr]);
+    final learnedCountResult = (await learnedCountSelect.getSingle()).read(learnedCountExpr)!;
 
-    final result = await doJoin.get();
-    logger.d(JsonEncoder.withIndent(' ').convert(result.map((e) => e.rawData.data).toList()));
-    return 1;
+    final diff = allCountResult - learnedCountResult;
+    if (diff < 0) {
+      throw '查找出的数量小于0！';
+    }
+    return diff;
   }
 }

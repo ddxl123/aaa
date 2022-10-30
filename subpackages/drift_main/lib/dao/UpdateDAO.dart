@@ -16,9 +16,12 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   UpdateDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
   /// [oldMemoryGroupReset] - 使用 [UserExt.reset]。
-  Future<void> resetMemoryGroup({required ResetFutureFunction oldMemoryGroupReset}) async {
+  Future<void> resetMemoryGroup({
+    required ResetFutureFunction oldMemoryGroupReset,
+    required SyncTag? syncTag,
+  }) async {
     await withRefs(
-      syncTag: await SyncTag.create(),
+      syncTag: syncTag ?? await SyncTag.create(),
       ref: (syncTag) async {
         return RefMemoryGroups(
           self: (table) async {
@@ -33,9 +36,12 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     );
   }
 
-  Future<void> resetMemoryModel({required ResetFutureFunction oldMemoryModelReset}) async {
+  Future<void> resetMemoryModel({
+    required ResetFutureFunction oldMemoryModelReset,
+    required SyncTag? syncTag,
+  }) async {
     await withRefs(
-      syncTag: await SyncTag.create(),
+      syncTag: syncTag ?? await SyncTag.create(),
       ref: (syncTag) async {
         return RefMemoryModels(
           self: (table) async {

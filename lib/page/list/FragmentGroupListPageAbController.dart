@@ -39,8 +39,7 @@ class PartListForFragmentHome {
 
   int indexFragmentCountForAllSubgroup(int index, Abw abw) => fragmentCountForAllSubgroup()[indexAbFragmentGroup(index)]?.call(abw) ?? 0;
 
-  int indexSelectedFragmentCountForAllSubgroup(int index, Abw abw) =>
-      selectedFragmentCountForAllSubgroup()[indexAbFragmentGroup(index)]?.call(abw) ?? 0;
+  int indexSelectedFragmentCountForAllSubgroup(int index, Abw abw) => selectedFragmentCountForAllSubgroup()[indexAbFragmentGroup(index)]?.call(abw) ?? 0;
 
   /// 当前碎片是否已被选择。
   bool indexIsSelectedForFragment(int index, Abw abw) => controller.selectedFragmentIds(abw).contains(indexFragment(index).id);
@@ -64,6 +63,7 @@ class PartListForFragmentHome {
     fragmentGroups.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 
+  /// TODO: 未使用 [withRefs]。
   Future<void> addFragment({required FragmentsCompanion willFragment}) async {
     final newEntry = await DriftDb.instance.insertDAO.insertFragmentWithRef(willFragment: willFragment);
     fragments.refreshInevitable((obj) => obj..add(newEntry.ab));

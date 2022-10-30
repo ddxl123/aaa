@@ -6,7 +6,7 @@ const List<Type> localTableClass = [
 
 @ReferenceTo([])
 class AppInfos extends LocalTableBase {
-  TextColumn get token => text().withDefault(const Constant('unknown'))();
+  TextColumn get token => text()();
 
-  BoolColumn get hasDownloadedInitData => boolean().withDefault(const Constant(false))();
+  BoolColumn get hasDownloadedInitData => boolean()();
 }

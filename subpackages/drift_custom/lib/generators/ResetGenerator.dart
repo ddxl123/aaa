@@ -20,14 +20,33 @@ class ResetGenerator extends Generator {
           /// 将传入的新数据覆盖掉旧数据类实例。
           ///
           /// 值覆写方式：[DriftValueExt]
-          ///
-          /// 建议配合 [withRefs] 使用。
-          ///
+          /// 
+          /// 只能修改当前 id 的行。
+          /// 
+          /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+          /// 
           /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-          FutureOr<$className> reset({${params.map((e) => e.name == 'id' ? 'Value<${e.type}>? ${e.name}' : 'required Value<${e.type}> ${e.name}').join(',')}, 
-            required SyncTag? writeSyncTag,}) async {
-            if(id != null) throw 'id 不能被修改！';
-            ${params.map((e) => e.name == 'id' ? 'this.${e.name} = this.${e.name}' : 'this.${e.name} = ${e.name}.present ? ${e.name}.value : this.${e.name}').join(';\n')};   
+          /// 
+          /// 使用方式查看 [withRefs]。
+          FutureOr<$className> reset({
+          ${params.map(
+                    (e) {
+                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      return isWriteBlank ? '' : 'required Value<${e.type}> ${e.name}';
+                    },
+                  ).where(
+                    (element) => element != '',
+                  ).join(',')}, 
+            required SyncTag? writeSyncTag,
+            }) async {
+            ${params.map(
+                    (e) {
+                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      return isWriteBlank ? '' : 'this.${e.name} = ${e.name}.present ? ${e.name}.value : this.${e.name}';
+                    },
+                  ).where(
+                    (element) => element != '',
+                  ).join(';\n')};   
           if(writeSyncTag!=null){
             final ins = DriftDb.instance;
             await ins.updateReturningWith(ins.${camelClassName}s, entity: toCompanion(false), syncTag: writeSyncTag);

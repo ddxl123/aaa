@@ -14,8 +14,22 @@ class ConstructorGenerator extends Generator {
           final camelClassName = className.toCamelCase;
           final params = cls.getNamedConstructor('insert')!.parameters;
           final singleContent = '''
-        static $className $camelClassName({${params.map((e) => 'required ${e.name == 'id' && e.type.getDisplayString(withNullability: false) != 'Value<int>' ? 'Value<${e.type}>' : e.type} ${e.name}').join(',')},}){
-           return $className(${params.map((e) => '${e.name}: ${e.isRequired ? (e.name == 'id' ? e.name : 'Value(${e.name})') : e.name}').join(',')},);
+        static $className $camelClassName({${params.map(
+                    (e) {
+                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      return isWriteBlank ? '' : 'required ${e.type} ${e.name}';
+                    },
+                  ).where(
+                    (element) => element != '',
+                  ).join(',')},}){
+           return $className(${params.map(
+                    (e) {
+                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      return isWriteBlank ? '' : '${e.name}: ${e.isRequired ? 'Value(${e.name})' : e.name}';
+                    },
+                  ).where(
+                    (element) => element != '',
+                  ).join(',')},);
         }
         ''';
 
@@ -43,6 +57,10 @@ class ConstructorGenerator extends Generator {
 part of drift_db;
 
 /// 这个类在创建表对象时，可以让每个 column 都能被编辑器提示，以防遗漏。
+/// 
+/// id createdAt updatedAt 已经在 [DriftSyncExt.insertReturningWith] 中自动更新了。
+///
+/// 使用方式查看 [withRefs]。
 class WithCrts {
   $allContent
 }

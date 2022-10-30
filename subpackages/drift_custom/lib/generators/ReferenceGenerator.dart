@@ -146,7 +146,7 @@ part of drift_db;
 
 /// 增删改时，必须用这个函数。
 ///
-/// 增：[withRefs] + [DriftSyncExt.insertReturningWith]
+/// 增：[withRefs] + [DriftSyncExt.insertReturningWith] + [WithCrts]
 /// 删：[withRefs] + [DriftSyncExt.deleteWith]
 /// 改：[withRefs] + [UserExt.reset]
 ///

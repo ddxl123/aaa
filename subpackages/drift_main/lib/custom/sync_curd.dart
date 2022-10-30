@@ -29,8 +29,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
   /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
   ///
-  /// [isWithRefsUsed] - 必须搭配 [withRefs] 使用。
-  ///
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// 对 [Users] 的插入不能使用该函数，但可以使用 [updateReturningWith] 函数对 user 进行更新。
@@ -52,6 +50,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [syncTag] - 见 [SyncTag] 的注释
   ///
   /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
+  ///
+  /// 必须搭配 [withRefs] 与 []使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,

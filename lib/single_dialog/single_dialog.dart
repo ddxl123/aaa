@@ -24,10 +24,7 @@ void showDialogForCreateMemoryGroup({
       }
       await DriftDb.instance.insertDAO.insertMemoryGroupWithOtherWithRef(
         willMemoryGroup: WithCrts.memoryGroupsCompanion(
-          id: 0.toAbsent(),
-          createdAt: 0.toAbsent(),
-          updatedAt: 0.toAbsent(),
-          startTime: 0.toAbsent(),
+          startTime: null.toValue(),
           memoryModelId: null.toValue(),
           title: tec.text,
           type: MemoryGroupType.inApp,

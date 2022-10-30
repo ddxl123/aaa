@@ -13,7 +13,7 @@ class MemoryModeListPageAbController extends AbController {
 
   @override
   void onInit() {
-    selected.refreshEasy((oldValue) => Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.selectedMemoryModel() ?? oldValue);
+    selected.refreshEasy((oldValue) => Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.selectedMemoryModel.abObj() ?? oldValue);
   }
 
   Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
@@ -36,7 +36,7 @@ class MemoryModeListPageAbController extends AbController {
   }
 
   void confirmSelect() {
-    Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.selectedMemoryModel.refreshInevitable((obj) => selected());
+    Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.selectedMemoryModel.abObj.refreshInevitable((obj) => selected());
     Navigator.pop(context);
   }
 }

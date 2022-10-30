@@ -273,7 +273,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               },
               orElse: null,
             ),
-            decoration: const InputDecoration(border: InputBorder.none, labelText: '按钮数值分配：'),
+            decoration: const InputDecoration(border: InputBorder.none, labelText: '按钮数值分配算法：'),
             onChanged: (v) {
               c.buttonDataAlgorithm.refreshEasy((oldValue) => v);
             },

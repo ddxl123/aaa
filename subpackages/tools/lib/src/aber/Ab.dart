@@ -6,6 +6,10 @@ extension AbExt<V> on V {
 }
 
 class Ab<V> {
+  /// 当 [V] 的默认值为 null 时，
+  /// 应使用 final count = Ab<int?>(null) 方式来初始化，
+  /// 而不能使用 final count = null.ab 方式。
+  /// 因为 null.ab 可能无法识别到 XX? 到底是什么类型。
   Ab(V initial) {
     value = initial;
   }

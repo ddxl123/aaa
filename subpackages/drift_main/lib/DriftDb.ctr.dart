@@ -8,20 +8,18 @@
 part of drift_db;
 
 /// 这个类在创建表对象时，可以让每个 column 都能被编辑器提示，以防遗漏。
+///
+/// id createdAt updatedAt 已经在 [DriftSyncExt.insertReturningWith] 中自动更新了。
+///
+/// 使用方式查看 [withRefs]。
 class WithCrts {
   static UsersCompanion usersCompanion({
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required String username,
     required String password,
     required String email,
     required int age,
   }) {
     return UsersCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       username: Value(username),
       password: Value(password),
       email: Value(email),
@@ -30,17 +28,11 @@ class WithCrts {
   }
 
   static FragmentsCompanion fragmentsCompanion({
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentId,
     required String title,
     required int priority,
   }) {
     return FragmentsCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       fatherFragmentId: fatherFragmentId,
       title: Value(title),
       priority: Value(priority),
@@ -48,25 +40,16 @@ class WithCrts {
   }
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required Value<String?> fatherFragmentGroupId,
     required String title,
   }) {
     return FragmentGroupsCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       fatherFragmentGroupId: fatherFragmentGroupId,
       title: Value(title),
     );
   }
 
   static MemoryGroupsCompanion memoryGroupsCompanion({
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required Value<String?> memoryModelId,
     required String title,
     required MemoryGroupType type,
@@ -79,9 +62,6 @@ class WithCrts {
     required Value<DateTime?> startTime,
   }) {
     return MemoryGroupsCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       memoryModelId: memoryModelId,
       title: Value(title),
       type: Value(type),
@@ -96,9 +76,6 @@ class WithCrts {
   }
 
   static MemoryModelsCompanion memoryModelsCompanion({
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required String title,
     required String familiarityAlgorithm,
     required String nextTimeAlgorithm,
@@ -108,9 +85,6 @@ class WithCrts {
     required String applicableFields,
   }) {
     return MemoryModelsCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       title: Value(title),
       familiarityAlgorithm: Value(familiarityAlgorithm),
       nextTimeAlgorithm: Value(nextTimeAlgorithm),
@@ -122,9 +96,6 @@ class WithCrts {
   }
 
   static FragmentMemoryInfosCompanion fragmentMemoryInfosCompanion({
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required String fragmentId,
     required String memoryGroupId,
     required bool isLatestRecord,
@@ -135,9 +106,6 @@ class WithCrts {
     required double clickValue,
   }) {
     return FragmentMemoryInfosCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       fragmentId: Value(fragmentId),
       memoryGroupId: Value(memoryGroupId),
       isLatestRecord: Value(isLatestRecord),
@@ -152,80 +120,50 @@ class WithCrts {
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
     required Value<String?> fatherId,
     required String sonId,
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
   }) {
     return RFragment2FragmentGroupsCompanion(
       fatherId: fatherId,
       sonId: Value(sonId),
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
     );
   }
 
   static RFragment2MemoryGroupsCompanion rFragment2MemoryGroupsCompanion({
     required Value<String?> fatherId,
     required String sonId,
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
   }) {
     return RFragment2MemoryGroupsCompanion(
       fatherId: fatherId,
       sonId: Value(sonId),
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
     );
   }
 
   static RAssistedMemory2FragmentsCompanion rAssistedMemory2FragmentsCompanion({
     required Value<String?> fatherId,
     required String sonId,
-    required Value<String> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
   }) {
     return RAssistedMemory2FragmentsCompanion(
       fatherId: fatherId,
       sonId: Value(sonId),
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
     );
   }
 
   static AppInfosCompanion appInfosCompanion({
-    required Value<int> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
-    required Value<String> token,
-    required Value<bool> hasDownloadedInitData,
+    required String token,
+    required bool hasDownloadedInitData,
   }) {
     return AppInfosCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      token: token,
-      hasDownloadedInitData: hasDownloadedInitData,
+      token: Value(token),
+      hasDownloadedInitData: Value(hasDownloadedInitData),
     );
   }
 
   static SyncsCompanion syncsCompanion({
-    required Value<int> id,
-    required Value<DateTime> createdAt,
-    required Value<DateTime> updatedAt,
     required String syncTableName,
     required String rowId,
     required Value<SyncCurdType?> syncCurdType,
     required int tag,
   }) {
     return SyncsCompanion(
-      id: id,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
       syncTableName: Value(syncTableName),
       rowId: Value(rowId),
       syncCurdType: syncCurdType,

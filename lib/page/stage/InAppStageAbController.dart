@@ -53,6 +53,7 @@ class InAppStageAbController extends AbController {
     final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryGroupGizmo().memoryModelId);
     memoryModelGizmo = mm!.ab;
 
+
     await _perform();
   }
 
@@ -73,9 +74,6 @@ class InAppStageAbController extends AbController {
     await performerQuery.finishAndStartNextPerform(
       lastFragmentMemoryInfo: latestRecordInfo,
       newFragmentMemoryInfo: WithCrts.fragmentMemoryInfosCompanion(
-        id: toAbsent(),
-        createdAt: DateTime.now().toValue(),
-        updatedAt: DateTime.now().toValue(),
         fragmentId: currentFragmentAndMemoryInfos()!.t1.id,
         memoryGroupId: memoryGroupGizmo().id,
         isLatestRecord: true,

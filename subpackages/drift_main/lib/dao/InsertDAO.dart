@@ -42,9 +42,6 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               entity: WithCrts.rFragment2FragmentGroupsCompanion(
                 fatherId: willFragment.fatherFragmentId,
                 sonId: newFragment.id,
-                id: toAbsent(),
-                createdAt: toAbsent(),
-                updatedAt: toAbsent(),
               ),
               syncTag: syncTag,
             );
@@ -79,9 +76,6 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                   entity: WithCrts.rFragment2MemoryGroupsCompanion(
                     fatherId: newMemoryGroup.id.toValue(),
                     sonId: element.id,
-                    id: toAbsent(),
-                    createdAt: toAbsent(),
-                    updatedAt: toAbsent(),
                   ),
                   syncTag: syncTag,
                 );

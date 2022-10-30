@@ -155,13 +155,15 @@ class UsersCompanion extends UpdateCompanion<User> {
   });
   UsersCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     required String username,
     required String password,
     required String email,
     required int age,
   })  : id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
         username = Value(username),
         password = Value(password),
         email = Value(email),
@@ -261,16 +263,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _usernameMeta = const VerificationMeta('username');
   @override
   late final GeneratedColumn<String> username = GeneratedColumn<String>(
@@ -311,10 +309,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('username')) {
       context.handle(_usernameMeta,
@@ -522,12 +524,14 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   });
   FragmentsCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     this.fatherFragmentId = const Value.absent(),
     required String title,
     required int priority,
   })  : id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
         title = Value(title),
         priority = Value(priority);
   static Insertable<Fragment> custom({
@@ -618,16 +622,12 @@ class $FragmentsTable extends Fragments
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _fatherFragmentIdMeta =
       const VerificationMeta('fatherFragmentId');
   @override
@@ -664,10 +664,14 @@ class $FragmentsTable extends Fragments
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('father_fragment_id')) {
       context.handle(
@@ -849,11 +853,13 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   });
   FragmentGroupsCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     this.fatherFragmentGroupId = const Value.absent(),
     required String title,
   })  : id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
         title = Value(title);
   static Insertable<FragmentGroup> custom({
     Expression<String>? id,
@@ -938,16 +944,12 @@ class $FragmentGroupsTable extends FragmentGroups
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _fatherFragmentGroupIdMeta =
       const VerificationMeta('fatherFragmentGroupId');
   @override
@@ -979,10 +981,14 @@ class $FragmentGroupsTable extends FragmentGroups
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('father_fragment_group_id')) {
       context.handle(
@@ -1049,6 +1055,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   MemoryGroupStatus status;
 
   /// 新学数量
+  ///
+  /// 每次新学完一个，都会将该值减去1。
   int willNewLearnCount;
 
   /// 取用 [reviewInterval] 时间点内的复习碎片。
@@ -1302,8 +1310,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   });
   MemoryGroupsCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     this.memoryModelId = const Value.absent(),
     required String title,
     required MemoryGroupType type,
@@ -1315,6 +1323,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required NewDisplayOrder newDisplayOrder,
     this.startTime = const Value.absent(),
   })  : id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
         title = Value(title),
         type = Value(type),
         status = Value(status),
@@ -1475,16 +1485,12 @@ class $MemoryGroupsTable extends MemoryGroups
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _memoryModelIdMeta =
       const VerificationMeta('memoryModelId');
   @override
@@ -1579,10 +1585,14 @@ class $MemoryGroupsTable extends MemoryGroups
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('memory_model_id')) {
       context.handle(
@@ -1921,8 +1931,8 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   });
   MemoryModelsCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     required String title,
     required String familiarityAlgorithm,
     required String nextTimeAlgorithm,
@@ -1931,6 +1941,8 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     required String applicableGroups,
     required String applicableFields,
   })  : id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
         title = Value(title),
         familiarityAlgorithm = Value(familiarityAlgorithm),
         nextTimeAlgorithm = Value(nextTimeAlgorithm),
@@ -2060,16 +2072,12 @@ class $MemoryModelsTable extends MemoryModels
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -2141,10 +2149,14 @@ class $MemoryModelsTable extends MemoryModels
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -2262,7 +2274,10 @@ class FragmentMemoryInfo extends DataClass
   String memoryGroupId;
 
   /// 在当前记忆组内的，当前记录是否为当前碎片的最新记录。
+  ///
   /// 在新纪录被创建的同时，需要把旧记录设为 false。
+  ///
+  /// 只要在当前记忆组内存在记录，最新的一个记录的 [isLatestRecord] 总是为 true。
   bool isLatestRecord;
 
   /// =====
@@ -2474,8 +2489,8 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   });
   FragmentMemoryInfosCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     required String fragmentId,
     required String memoryGroupId,
     required bool isLatestRecord,
@@ -2485,6 +2500,8 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     required int clickTime,
     required double clickValue,
   })  : id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
         fragmentId = Value(fragmentId),
         memoryGroupId = Value(memoryGroupId),
         isLatestRecord = Value(isLatestRecord),
@@ -2624,16 +2641,12 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _fragmentIdMeta = const VerificationMeta('fragmentId');
   @override
   late final GeneratedColumn<String> fragmentId = GeneratedColumn<String>(
@@ -2712,10 +2725,14 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('fragment_id')) {
       context.handle(
@@ -2952,10 +2969,12 @@ class RFragment2FragmentGroupsCompanion
     this.fatherId = const Value.absent(),
     required String sonId,
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
   })  : sonId = Value(sonId),
-        id = Value(id);
+        id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
   static Insertable<RFragment2FragmentGroup> custom({
     Expression<String>? fatherId,
     Expression<String>? sonId,
@@ -3046,16 +3065,12 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [fatherId, sonId, id, createdAt, updatedAt];
@@ -3087,10 +3102,14 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
@@ -3253,10 +3272,12 @@ class RFragment2MemoryGroupsCompanion
     this.fatherId = const Value.absent(),
     required String sonId,
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
   })  : sonId = Value(sonId),
-        id = Value(id);
+        id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
   static Insertable<RFragment2MemoryGroup> custom({
     Expression<String>? fatherId,
     Expression<String>? sonId,
@@ -3347,16 +3368,12 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [fatherId, sonId, id, createdAt, updatedAt];
@@ -3388,10 +3405,14 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
@@ -3553,10 +3574,12 @@ class RAssistedMemory2FragmentsCompanion
     this.fatherId = const Value.absent(),
     required String sonId,
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
   })  : sonId = Value(sonId),
-        id = Value(id);
+        id = Value(id),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
   static Insertable<RAssistedMemory2Fragment> custom({
     Expression<String>? fatherId,
     Expression<String>? sonId,
@@ -3647,16 +3670,12 @@ class $RAssistedMemory2FragmentsTable extends RAssistedMemory2Fragments
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [fatherId, sonId, id, createdAt, updatedAt];
@@ -3688,10 +3707,14 @@ class $RAssistedMemory2FragmentsTable extends RAssistedMemory2Fragments
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
@@ -3840,11 +3863,14 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
   });
   AppInfosCompanion.insert({
     this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.token = const Value.absent(),
-    this.hasDownloadedInitData = const Value.absent(),
-  });
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required String token,
+    required bool hasDownloadedInitData,
+  })  : createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
+        token = Value(token),
+        hasDownloadedInitData = Value(hasDownloadedInitData);
   static Insertable<AppInfo> custom({
     Expression<int>? id,
     Expression<DateTime>? createdAt,
@@ -3929,32 +3955,25 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _tokenMeta = const VerificationMeta('token');
   @override
   late final GeneratedColumn<String> token = GeneratedColumn<String>(
       'token', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('unknown'));
+      type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _hasDownloadedInitDataMeta =
       const VerificationMeta('hasDownloadedInitData');
   @override
   late final GeneratedColumn<bool> hasDownloadedInitData =
       GeneratedColumn<bool>('has_downloaded_init_data', aliasedName, false,
           type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (has_downloaded_init_data IN (0, 1))',
-          defaultValue: const Constant(false));
+          requiredDuringInsert: true,
+          defaultConstraints: 'CHECK (has_downloaded_init_data IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns =>
       [id, createdAt, updatedAt, token, hasDownloadedInitData];
@@ -3973,20 +3992,28 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('token')) {
       context.handle(
           _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
+    } else if (isInserting) {
+      context.missing(_tokenMeta);
     }
     if (data.containsKey('has_downloaded_init_data')) {
       context.handle(
           _hasDownloadedInitDataMeta,
           hasDownloadedInitData.isAcceptableOrUnknown(
               data['has_downloaded_init_data']!, _hasDownloadedInitDataMeta));
+    } else if (isInserting) {
+      context.missing(_hasDownloadedInitDataMeta);
     }
     return context;
   }
@@ -4172,13 +4199,15 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   });
   SyncsCompanion.insert({
     this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     required String syncTableName,
     required String rowId,
     this.syncCurdType = const Value.absent(),
     required int tag,
-  })  : syncTableName = Value(syncTableName),
+  })  : createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
+        syncTableName = Value(syncTableName),
         rowId = Value(rowId),
         tag = Value(tag);
   static Insertable<Sync> custom({
@@ -4280,16 +4309,12 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _syncTableNameMeta =
       const VerificationMeta('syncTableName');
   @override
@@ -4331,10 +4356,14 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('sync_table_name')) {
       context.handle(

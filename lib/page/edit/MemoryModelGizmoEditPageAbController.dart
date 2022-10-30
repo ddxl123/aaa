@@ -213,9 +213,6 @@ class MemoryModelGizmoEditPageAbController extends AbController {
           if (await commitVerify) {
             await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
               WithCrts.memoryModelsCompanion(
-                id: toAbsent(),
-                createdAt: toAbsent(),
-                updatedAt: toAbsent(),
                 title: title(),
                 familiarityAlgorithm: familiarityAlgorithm(),
                 nextTimeAlgorithm: nextTimeAlgorithm(),
@@ -235,10 +232,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         [MemoryModelGizmoEditPageType.modify]: () async {
           if (await commitVerify) {
             await DriftDb.instance.updateDAO.resetMemoryModel(
+              syncTag: null,
               oldMemoryModelReset: (SyncTag resetSyncTag) async {
                 await memoryModelGizmo()!.reset(
-                  createdAt: toAbsent(),
-                  updatedAt: toAbsent(),
                   title: title().toValue(),
                   familiarityAlgorithm: familiarityAlgorithm().toValue(),
                   nextTimeAlgorithm: nextTimeAlgorithm().toValue(),

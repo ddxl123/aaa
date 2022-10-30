@@ -69,6 +69,8 @@ class MemoryGroups extends CloudTableBase {
   IntColumn get status => intEnum<MemoryGroupStatus>()();
 
   /// 新学数量
+  ///
+  /// 每次新学完一个，都会将该值减去1。
   IntColumn get willNewLearnCount => integer()();
 
   /// 取用 [reviewInterval] 时间点内的复习碎片。

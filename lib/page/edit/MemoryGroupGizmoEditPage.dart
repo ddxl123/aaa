@@ -109,7 +109,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return Text(c.title(abw));
+        return Text(c.title.abObj(abw));
       },
     );
   }
@@ -156,7 +156,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
-          verifyAb: c.title,
+          verifyAb: c.title.abObj,
           child: Row(
             children: [
               const Text('名称：', style: TextStyle(fontSize: 16)),
@@ -165,7 +165,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                   controller: c.titleTextEditingController,
                   decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
                   onChanged: (v) {
-                    c.title.refreshEasy((oldValue) => v);
+                    c.title.abObj.refreshEasy((oldValue) => v);
                   },
                 ),
               ),
@@ -180,14 +180,14 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
-          verifyAb: c.selectedMemoryModel,
+          verifyAb: c.selectedMemoryModel.abObj,
           child: Row(
             children: [
               const Text('记忆模型：', style: TextStyle(fontSize: 16)),
               TextButton(
                 child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
                   builder: (gzC, gzAbw) {
-                    return Text(gzC.selectedMemoryModel(gzAbw)?.title ?? '点击选择');
+                    return Text(gzC.selectedMemoryModel.abObj(gzAbw)?.title ?? '点击选择');
                   },
                 ),
                 onPressed: () {
@@ -210,13 +210,13 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             children: [
               const Text('展示类型：', style: TextStyle(fontSize: 16)),
               CustomDropdownBodyButton<MemoryGroupType>(
-                value: c.type(abw),
+                value: c.type.abObj(abw),
                 item: [
                   Tuple2(t1: '仅应用内', t2: MemoryGroupType.inApp),
                   Tuple2(t1: '全部悬浮', t2: MemoryGroupType.allFloating),
                 ],
                 onChanged: (v) {
-                  c.type.refreshEasy((oldValue) => v!);
+                  c.type.abObj.refreshEasy((oldValue) => v!);
                 },
               ),
             ],
@@ -294,13 +294,13 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               Expanded(
                 child: AbStatefulBuilder(
                   // 保留上一次的设置
-                  initExtra: {'value': c.willNewLearnCount(abw).toDouble()},
+                  initExtra: {'value': c.willNewLearnCount.abObj(abw)},
                   builder: (Map<String, Object?> extra, BuildContext context, void Function() refresh) {
-                    double dynValue = extra['value'] as double;
+                    int dynValue = extra['value'] as int;
                     // 不能超过最大值
                     if (dynValue > c.remainNewFragmentsCount()) {
                       extra['value'] = c.remainNewFragmentsCount();
-                      dynValue = extra['value'] as double;
+                      dynValue = extra['value'] as int;
                     }
                     // 如果没有 space，则 0/300，其中 0 字符长度会动态的变宽成 10 或 100，从而导致刷新的时候滑块抖动。
                     // space 意味着将 0 前面添加两个 0，即 000/300。
@@ -312,14 +312,14 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                             label: dynValue.toInt().toString(),
                             min: 0,
                             max: c.remainNewFragmentsCount().toDouble(),
-                            value: dynValue,
+                            value: dynValue.toDouble(),
                             divisions: c.remainNewFragmentsCount() == 0 ? null : c.remainNewFragmentsCount(),
                             onChanged: (n) {
-                              extra['value'] = n;
+                              extra['value'] = n.toInt();
                               refresh();
                             },
                             onChangeEnd: (n) {
-                              c.willNewLearnCount.refreshEasy((oldValue) => n.floor());
+                              c.willNewLearnCount.abObj.refreshEasy((oldValue) => n.floor());
                             },
                           ),
                         ),
@@ -340,7 +340,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
-          verifyAb: c.reviewInterval,
+          verifyAb: c.reviewInterval.abObj,
           child: Row(
             children: [
               const Text('复习区间：  '),
@@ -356,7 +356,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                             maxLength: 9,
                             keyboardType: TextInputType.number,
                             onChanged: (v) {
-                              c.reviewInterval.refreshEasy((oldValue) => int.tryParse(v) ?? -1);
+                              c.reviewInterval.abObj.refreshEasy((oldValue) => int.tryParse(v) ?? -1);
                             },
                           ),
                         ),
@@ -365,7 +365,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Text('${DateTime.now().add(Duration(seconds: c.reviewInterval(abw)))}前'),
+                        Text('${DateTime.now().add(Duration(seconds: c.reviewInterval.abObj(abw)))}前'),
                       ],
                     )
                   ],
@@ -384,7 +384,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return CardCustom(
           verifyAb: null,
           child: AbStatefulBuilder(
-            initExtra: {'tec': TextEditingController(text: c.filterOut())},
+            initExtra: {'tec': TextEditingController(text: c.filterOut.abObj())},
             onDispose: (extra, ctx, refresh) {
               (extra['tec'] as TextEditingController).dispose();
             },
@@ -393,7 +393,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
 
               return Row(
                 children: [
-                  const Text('过滤碎片：  '),
+                  const Text('过滤碎片算法：  '),
                   Expanded(
                     child: Column(
                       children: [
@@ -403,7 +403,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                               child: TextField(
                                 controller: tec,
                                 onChanged: (v) {
-                                  c.filterOut.refreshEasy((oldValue) => v);
+                                  c.filterOut.abObj.refreshEasy((oldValue) => v);
                                 },
                               ),
                             ),
@@ -430,14 +430,14 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             children: [
               const Text('新 | 复习 碎片展示顺序：'),
               CustomDropdownBodyButton<NewReviewDisplayOrder>(
-                value: c.newReviewDisplayOrder(abw),
+                value: c.newReviewDisplayOrder.abObj(abw),
                 item: [
                   Tuple2(t1: '混合', t2: NewReviewDisplayOrder.mix),
                   Tuple2(t1: '优先新碎片', t2: NewReviewDisplayOrder.newReview),
                   Tuple2(t1: '优先复习碎片', t2: NewReviewDisplayOrder.reviewNew),
                 ],
                 onChanged: (v) {
-                  c.newReviewDisplayOrder.refreshEasy((oldValue) => v!);
+                  c.newReviewDisplayOrder.abObj.refreshEasy((oldValue) => v!);
                 },
               ),
             ],
@@ -456,14 +456,14 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             children: [
               const Text('新碎片 展示顺序：'),
               CustomDropdownBodyButton<NewDisplayOrder>(
-                value: c.newDisplayOrder(abw),
+                value: c.newDisplayOrder.abObj(abw),
                 item: [
                   Tuple2(t1: '随机', t2: NewDisplayOrder.random),
                   Tuple2(t1: '标题首字母A~Z顺序', t2: NewDisplayOrder.titleA2Z),
                   Tuple2(t1: '创建时间', t2: NewDisplayOrder.createEarly2Late),
                 ],
                 onChanged: (v) {
-                  c.newDisplayOrder.refreshEasy((oldValue) => v!);
+                  c.newDisplayOrder.abObj.refreshEasy((oldValue) => v!);
                 },
               ),
             ],

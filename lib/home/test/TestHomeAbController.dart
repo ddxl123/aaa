@@ -37,9 +37,6 @@ class TestHomeAbController extends AbController {
     for (int i = 0; i < count; i++) {
       final fg = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
         WithCrts.fragmentGroupsCompanion(
-          id: toAbsent(),
-          createdAt: toAbsent(),
-          updatedAt: toAbsent(),
           fatherFragmentGroupId: null.toValue(),
           title: 'test ${Random().nextInt(999999)}',
         ),
@@ -47,9 +44,6 @@ class TestHomeAbController extends AbController {
       for (int i = 0; i < count; i++) {
         await DriftDb.instance.insertDAO.insertFragmentWithRef(
           willFragment: WithCrts.fragmentsCompanion(
-            id: toAbsent(),
-            createdAt: toAbsent(),
-            updatedAt: toAbsent(),
             fatherFragmentId: null.toValue(),
             title: 'test ${Random().nextInt(999999)}',
             priority: 0,
@@ -60,9 +54,6 @@ class TestHomeAbController extends AbController {
       for (int i = 0; i < count; i++) {
         final fg1 = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
           WithCrts.fragmentGroupsCompanion(
-            id: toAbsent(),
-            createdAt: toAbsent(),
-            updatedAt: toAbsent(),
             fatherFragmentGroupId: fg.id.toValue(),
             title: 'test ${Random().nextInt(999999)}',
           ),
@@ -70,9 +61,6 @@ class TestHomeAbController extends AbController {
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragmentWithRef(
             willFragment: WithCrts.fragmentsCompanion(
-              id: toAbsent(),
-              createdAt: toAbsent(),
-              updatedAt: toAbsent(),
               fatherFragmentId: fg.id.toValue(),
               title: 'test ${Random().nextInt(999999)}',
               priority: 0,
@@ -83,9 +71,6 @@ class TestHomeAbController extends AbController {
         for (int i = 0; i < count; i++) {
           final fg2 = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
             WithCrts.fragmentGroupsCompanion(
-              id: toAbsent(),
-              createdAt: toAbsent(),
-              updatedAt: toAbsent(),
               fatherFragmentGroupId: fg1.id.toValue(),
               title: 'test ${Random().nextInt(999999)}',
             ),
@@ -93,9 +78,6 @@ class TestHomeAbController extends AbController {
           for (int i = 0; i < count; i++) {
             await DriftDb.instance.insertDAO.insertFragmentWithRef(
               willFragment: WithCrts.fragmentsCompanion(
-                id: toAbsent(),
-                createdAt: toAbsent(),
-                updatedAt: toAbsent(),
                 fatherFragmentId: fg1.id.toValue(),
                 title: 'test ${Random().nextInt(999999)}',
                 priority: 0,
@@ -106,9 +88,6 @@ class TestHomeAbController extends AbController {
           for (int i = 0; i < count; i++) {
             await DriftDb.instance.insertDAO.insertFragmentWithRef(
               willFragment: WithCrts.fragmentsCompanion(
-                id: toAbsent(),
-                createdAt: toAbsent(),
-                updatedAt: toAbsent(),
                 fatherFragmentId: fg2.id.toValue(),
                 title: 'test ${Random().nextInt(999999)}',
                 priority: 0,
@@ -122,9 +101,6 @@ class TestHomeAbController extends AbController {
     for (int i = 0; i < count; i++) {
       await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
         WithCrts.memoryModelsCompanion(
-          id: toAbsent(),
-          createdAt: toAbsent(),
-          updatedAt: toAbsent(),
           title: 'test ${Random().nextInt(999999)}',
           familiarityAlgorithm: '',
           nextTimeAlgorithm: '',
