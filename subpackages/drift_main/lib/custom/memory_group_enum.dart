@@ -9,18 +9,6 @@ enum MemoryGroupType {
   allFloating,
 }
 
-/// 记忆组状态 for [MemoryGroupType.inApp]
-enum MemoryGroupStatus {
-  /// 未开始
-  notStart,
-
-  /// 继续
-  goon,
-
-  /// 已完成
-  completed,
-}
-
 /// 新旧碎片展示先后顺序。
 enum NewReviewDisplayOrder {
   /// 随机混合

@@ -141,9 +141,8 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String?> memoryModelId,
     required Value<String> title,
     required Value<MemoryGroupType> type,
-    required Value<MemoryGroupStatus> status,
     required Value<int> willNewLearnCount,
-    required Value<int> reviewInterval,
+    required Value<DateTime> reviewInterval,
     required Value<String> filterOut,
     required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
     required Value<NewDisplayOrder> newDisplayOrder,
@@ -154,7 +153,6 @@ extension MemoryGroupExt on MemoryGroup {
         memoryModelId.present ? memoryModelId.value : this.memoryModelId;
     this.title = title.present ? title.value : this.title;
     this.type = type.present ? type.value : this.type;
-    this.status = status.present ? status.value : this.status;
     this.willNewLearnCount = willNewLearnCount.present
         ? willNewLearnCount.value
         : this.willNewLearnCount;

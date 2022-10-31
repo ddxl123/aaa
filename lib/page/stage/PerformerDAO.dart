@@ -44,7 +44,7 @@ class PerformerQuery {
     // 获取每个碎片的最近的一次碎片记忆信息
     final lWhere = dft.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
         dft.fragmentMemoryInfos.isLatestRecord.equals(true) &
-        dft.fragmentMemoryInfos.nextPlanShowTime.isSmallerOrEqualValue(mg.reviewInterval);
+        dft.fragmentMemoryInfos.nextPlanShowTime.isSmallerOrEqualValue(timeDifference(target: mg.reviewInterval, start: mg.startTime!));
 
     final doJoin = lSelect.join(lJoin);
     doJoin.where(lWhere);
@@ -152,17 +152,16 @@ class PerformerQuery {
           syncTag: st,
           oldMemoryGroupReset: (SyncTag resetSyncTag) async {
             await memoryGroupAb().reset(
-              memoryModelId: memoryModelId,
-              title: title,
-              type: type,
-              status: status,
-              willNewLearnCount: willNewLearnCount,
-              reviewInterval: reviewInterval,
-              filterOut: filterOut,
-              newReviewDisplayOrder: newReviewDisplayOrder,
-              newDisplayOrder: newDisplayOrder,
-              startTime: startTime,
-              writeSyncTag: writeSyncTag,
+              memoryModelId: toAbsent(),
+              title: toAbsent(),
+              type: toAbsent(),
+              willNewLearnCount: (memoryGroupAb().willNewLearnCount--).toValue(),
+              reviewInterval: toAbsent(),
+              filterOut: toAbsent(),
+              newReviewDisplayOrder: toAbsent(),
+              newDisplayOrder: toAbsent(),
+              startTime: toAbsent(),
+              writeSyncTag: resetSyncTag,
             );
           },
         );

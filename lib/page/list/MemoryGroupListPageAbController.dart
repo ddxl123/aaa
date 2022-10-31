@@ -21,23 +21,17 @@ class MemoryGroupListPageAbController extends AbController {
     filter(
       from: memoryGroupGizmo().type,
       targets: {
-        [MemoryGroupType.inApp]: () => filter(
-              from: memoryGroupGizmo().status,
-              targets: {
-                [MemoryGroupStatus.notStart]: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MemoryGroupGizmoEditPage(
-                        editPageType: MemoryGroupGizmoEditPageType.modify,
-                        memoryGroupGizmo: memoryGroupGizmo,
-                      ),
-                    ),
-                  );
-                },
-              },
-              orElse: null,
+        [MemoryGroupType.inApp]: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => MemoryGroupGizmoEditPage(
+                editPageType: MemoryGroupGizmoEditPageType.modify,
+                memoryGroupGizmo: memoryGroupGizmo,
+              ),
             ),
+          );
+        },
       },
       orElse: null,
     );

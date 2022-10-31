@@ -1052,7 +1052,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   String? memoryModelId;
   String title;
   MemoryGroupType type;
-  MemoryGroupStatus status;
 
   /// 新学数量
   ///
@@ -1060,11 +1059,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   int willNewLearnCount;
 
   /// 取用 [reviewInterval] 时间点内的复习碎片。
-  ///
-  /// 单位秒。
-  ///
-  /// 从记忆组启动时的时间点开始计算。
-  int reviewInterval;
+  DateTime reviewInterval;
 
   /// 过滤碎片
   String filterOut;
@@ -1075,9 +1070,10 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 新碎片展示先后顺序。
   NewDisplayOrder newDisplayOrder;
 
-  /// 开始时间的时间点，若未开始则为 null。
+  /// 开始时间的时间点。
   ///
-  /// 这里是标准时间
+  /// 若未开始，则为 null。
+  /// 若已完成，则为 [DateTime.fromMicrosecondsSinceEpoch(0)]
   DateTime? startTime;
   MemoryGroup(
       {required this.id,
@@ -1086,7 +1082,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       this.memoryModelId,
       required this.title,
       required this.type,
-      required this.status,
       required this.willNewLearnCount,
       required this.reviewInterval,
       required this.filterOut,
@@ -1107,20 +1102,16 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       final converter = $MemoryGroupsTable.$converter0;
       map['type'] = Variable<int>(converter.toSql(type));
     }
-    {
-      final converter = $MemoryGroupsTable.$converter1;
-      map['status'] = Variable<int>(converter.toSql(status));
-    }
     map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
-    map['review_interval'] = Variable<int>(reviewInterval);
+    map['review_interval'] = Variable<DateTime>(reviewInterval);
     map['filter_out'] = Variable<String>(filterOut);
     {
-      final converter = $MemoryGroupsTable.$converter2;
+      final converter = $MemoryGroupsTable.$converter1;
       map['new_review_display_order'] =
           Variable<int>(converter.toSql(newReviewDisplayOrder));
     }
     {
-      final converter = $MemoryGroupsTable.$converter3;
+      final converter = $MemoryGroupsTable.$converter2;
       map['new_display_order'] =
           Variable<int>(converter.toSql(newDisplayOrder));
     }
@@ -1140,7 +1131,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           : Value(memoryModelId),
       title: Value(title),
       type: Value(type),
-      status: Value(status),
       willNewLearnCount: Value(willNewLearnCount),
       reviewInterval: Value(reviewInterval),
       filterOut: Value(filterOut),
@@ -1162,9 +1152,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<MemoryGroupType>(json['type']),
-      status: serializer.fromJson<MemoryGroupStatus>(json['status']),
       willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
-      reviewInterval: serializer.fromJson<int>(json['reviewInterval']),
+      reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
       filterOut: serializer.fromJson<String>(json['filterOut']),
       newReviewDisplayOrder: serializer
           .fromJson<NewReviewDisplayOrder>(json['newReviewDisplayOrder']),
@@ -1183,9 +1172,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'memoryModelId': serializer.toJson<String?>(memoryModelId),
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<MemoryGroupType>(type),
-      'status': serializer.toJson<MemoryGroupStatus>(status),
       'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
-      'reviewInterval': serializer.toJson<int>(reviewInterval),
+      'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
       'filterOut': serializer.toJson<String>(filterOut),
       'newReviewDisplayOrder':
           serializer.toJson<NewReviewDisplayOrder>(newReviewDisplayOrder),
@@ -1201,9 +1189,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           Value<String?> memoryModelId = const Value.absent(),
           String? title,
           MemoryGroupType? type,
-          MemoryGroupStatus? status,
           int? willNewLearnCount,
-          int? reviewInterval,
+          DateTime? reviewInterval,
           String? filterOut,
           NewReviewDisplayOrder? newReviewDisplayOrder,
           NewDisplayOrder? newDisplayOrder,
@@ -1216,7 +1203,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
             memoryModelId.present ? memoryModelId.value : this.memoryModelId,
         title: title ?? this.title,
         type: type ?? this.type,
-        status: status ?? this.status,
         willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
         reviewInterval: reviewInterval ?? this.reviewInterval,
         filterOut: filterOut ?? this.filterOut,
@@ -1234,7 +1220,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('memoryModelId: $memoryModelId, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
-          ..write('status: $status, ')
           ..write('willNewLearnCount: $willNewLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
           ..write('filterOut: $filterOut, ')
@@ -1253,7 +1238,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       memoryModelId,
       title,
       type,
-      status,
       willNewLearnCount,
       reviewInterval,
       filterOut,
@@ -1270,7 +1254,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.memoryModelId == this.memoryModelId &&
           other.title == this.title &&
           other.type == this.type &&
-          other.status == this.status &&
           other.willNewLearnCount == this.willNewLearnCount &&
           other.reviewInterval == this.reviewInterval &&
           other.filterOut == this.filterOut &&
@@ -1286,9 +1269,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String?> memoryModelId;
   Value<String> title;
   Value<MemoryGroupType> type;
-  Value<MemoryGroupStatus> status;
   Value<int> willNewLearnCount;
-  Value<int> reviewInterval;
+  Value<DateTime> reviewInterval;
   Value<String> filterOut;
   Value<NewReviewDisplayOrder> newReviewDisplayOrder;
   Value<NewDisplayOrder> newDisplayOrder;
@@ -1300,7 +1282,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.memoryModelId = const Value.absent(),
     this.title = const Value.absent(),
     this.type = const Value.absent(),
-    this.status = const Value.absent(),
     this.willNewLearnCount = const Value.absent(),
     this.reviewInterval = const Value.absent(),
     this.filterOut = const Value.absent(),
@@ -1315,9 +1296,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.memoryModelId = const Value.absent(),
     required String title,
     required MemoryGroupType type,
-    required MemoryGroupStatus status,
     required int willNewLearnCount,
-    required int reviewInterval,
+    required DateTime reviewInterval,
     required String filterOut,
     required NewReviewDisplayOrder newReviewDisplayOrder,
     required NewDisplayOrder newDisplayOrder,
@@ -1327,7 +1307,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
         updatedAt = Value(updatedAt),
         title = Value(title),
         type = Value(type),
-        status = Value(status),
         willNewLearnCount = Value(willNewLearnCount),
         reviewInterval = Value(reviewInterval),
         filterOut = Value(filterOut),
@@ -1340,9 +1319,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<String>? memoryModelId,
     Expression<String>? title,
     Expression<int>? type,
-    Expression<int>? status,
     Expression<int>? willNewLearnCount,
-    Expression<int>? reviewInterval,
+    Expression<DateTime>? reviewInterval,
     Expression<String>? filterOut,
     Expression<int>? newReviewDisplayOrder,
     Expression<int>? newDisplayOrder,
@@ -1355,7 +1333,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       if (memoryModelId != null) 'memory_model_id': memoryModelId,
       if (title != null) 'title': title,
       if (type != null) 'type': type,
-      if (status != null) 'status': status,
       if (willNewLearnCount != null) 'will_new_learn_count': willNewLearnCount,
       if (reviewInterval != null) 'review_interval': reviewInterval,
       if (filterOut != null) 'filter_out': filterOut,
@@ -1373,9 +1350,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<String?>? memoryModelId,
       Value<String>? title,
       Value<MemoryGroupType>? type,
-      Value<MemoryGroupStatus>? status,
       Value<int>? willNewLearnCount,
-      Value<int>? reviewInterval,
+      Value<DateTime>? reviewInterval,
       Value<String>? filterOut,
       Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
       Value<NewDisplayOrder>? newDisplayOrder,
@@ -1387,7 +1363,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       memoryModelId: memoryModelId ?? this.memoryModelId,
       title: title ?? this.title,
       type: type ?? this.type,
-      status: status ?? this.status,
       willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
       reviewInterval: reviewInterval ?? this.reviewInterval,
       filterOut: filterOut ?? this.filterOut,
@@ -1420,26 +1395,22 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       final converter = $MemoryGroupsTable.$converter0;
       map['type'] = Variable<int>(converter.toSql(type.value));
     }
-    if (status.present) {
-      final converter = $MemoryGroupsTable.$converter1;
-      map['status'] = Variable<int>(converter.toSql(status.value));
-    }
     if (willNewLearnCount.present) {
       map['will_new_learn_count'] = Variable<int>(willNewLearnCount.value);
     }
     if (reviewInterval.present) {
-      map['review_interval'] = Variable<int>(reviewInterval.value);
+      map['review_interval'] = Variable<DateTime>(reviewInterval.value);
     }
     if (filterOut.present) {
       map['filter_out'] = Variable<String>(filterOut.value);
     }
     if (newReviewDisplayOrder.present) {
-      final converter = $MemoryGroupsTable.$converter2;
+      final converter = $MemoryGroupsTable.$converter1;
       map['new_review_display_order'] =
           Variable<int>(converter.toSql(newReviewDisplayOrder.value));
     }
     if (newDisplayOrder.present) {
-      final converter = $MemoryGroupsTable.$converter3;
+      final converter = $MemoryGroupsTable.$converter2;
       map['new_display_order'] =
           Variable<int>(converter.toSql(newDisplayOrder.value));
     }
@@ -1458,7 +1429,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('memoryModelId: $memoryModelId, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
-          ..write('status: $status, ')
           ..write('willNewLearnCount: $willNewLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
           ..write('filterOut: $filterOut, ')
@@ -1508,12 +1478,6 @@ class $MemoryGroupsTable extends MemoryGroups
       GeneratedColumn<int>('type', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<MemoryGroupType>($MemoryGroupsTable.$converter0);
-  final VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
-  late final GeneratedColumnWithTypeConverter<MemoryGroupStatus, int> status =
-      GeneratedColumn<int>('status', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<MemoryGroupStatus>($MemoryGroupsTable.$converter1);
   final VerificationMeta _willNewLearnCountMeta =
       const VerificationMeta('willNewLearnCount');
   @override
@@ -1523,9 +1487,9 @@ class $MemoryGroupsTable extends MemoryGroups
   final VerificationMeta _reviewIntervalMeta =
       const VerificationMeta('reviewInterval');
   @override
-  late final GeneratedColumn<int> reviewInterval = GeneratedColumn<int>(
-      'review_interval', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<DateTime> reviewInterval =
+      GeneratedColumn<DateTime>('review_interval', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _filterOutMeta = const VerificationMeta('filterOut');
   @override
   late final GeneratedColumn<String> filterOut = GeneratedColumn<String>(
@@ -1538,7 +1502,7 @@ class $MemoryGroupsTable extends MemoryGroups
       newReviewDisplayOrder = GeneratedColumn<int>(
               'new_review_display_order', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<NewReviewDisplayOrder>($MemoryGroupsTable.$converter2);
+          .withConverter<NewReviewDisplayOrder>($MemoryGroupsTable.$converter1);
   final VerificationMeta _newDisplayOrderMeta =
       const VerificationMeta('newDisplayOrder');
   @override
@@ -1546,7 +1510,7 @@ class $MemoryGroupsTable extends MemoryGroups
       newDisplayOrder = GeneratedColumn<int>(
               'new_display_order', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<NewDisplayOrder>($MemoryGroupsTable.$converter3);
+          .withConverter<NewDisplayOrder>($MemoryGroupsTable.$converter2);
   final VerificationMeta _startTimeMeta = const VerificationMeta('startTime');
   @override
   late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
@@ -1560,7 +1524,6 @@ class $MemoryGroupsTable extends MemoryGroups
         memoryModelId,
         title,
         type,
-        status,
         willNewLearnCount,
         reviewInterval,
         filterOut,
@@ -1607,7 +1570,6 @@ class $MemoryGroupsTable extends MemoryGroups
       context.missing(_titleMeta);
     }
     context.handle(_typeMeta, const VerificationResult.success());
-    context.handle(_statusMeta, const VerificationResult.success());
     if (data.containsKey('will_new_learn_count')) {
       context.handle(
           _willNewLearnCountMeta,
@@ -1659,19 +1621,16 @@ class $MemoryGroupsTable extends MemoryGroups
       type: $MemoryGroupsTable.$converter0.fromSql(attachedDatabase
           .options.types
           .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
-      status: $MemoryGroupsTable.$converter1.fromSql(attachedDatabase
-          .options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
       willNewLearnCount: attachedDatabase.options.types.read(
           DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
-      reviewInterval: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}review_interval'])!,
+      reviewInterval: attachedDatabase.options.types.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
       filterOut: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}filter_out'])!,
-      newReviewDisplayOrder: $MemoryGroupsTable.$converter2.fromSql(
+      newReviewDisplayOrder: $MemoryGroupsTable.$converter1.fromSql(
           attachedDatabase.options.types.read(DriftSqlType.int,
               data['${effectivePrefix}new_review_display_order'])!),
-      newDisplayOrder: $MemoryGroupsTable.$converter3.fromSql(
+      newDisplayOrder: $MemoryGroupsTable.$converter2.fromSql(
           attachedDatabase.options.types.read(
               DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
       startTime: attachedDatabase.options.types
@@ -1686,12 +1645,10 @@ class $MemoryGroupsTable extends MemoryGroups
 
   static TypeConverter<MemoryGroupType, int> $converter0 =
       const EnumIndexConverter<MemoryGroupType>(MemoryGroupType.values);
-  static TypeConverter<MemoryGroupStatus, int> $converter1 =
-      const EnumIndexConverter<MemoryGroupStatus>(MemoryGroupStatus.values);
-  static TypeConverter<NewReviewDisplayOrder, int> $converter2 =
+  static TypeConverter<NewReviewDisplayOrder, int> $converter1 =
       const EnumIndexConverter<NewReviewDisplayOrder>(
           NewReviewDisplayOrder.values);
-  static TypeConverter<NewDisplayOrder, int> $converter3 =
+  static TypeConverter<NewDisplayOrder, int> $converter2 =
       const EnumIndexConverter<NewDisplayOrder>(NewDisplayOrder.values);
 }
 

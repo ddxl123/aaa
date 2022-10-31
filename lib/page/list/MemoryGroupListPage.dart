@@ -90,15 +90,15 @@ class MemoryGroupListPage extends StatelessWidget {
     return filter(
       from: memoryGroup.type,
       targets: {
-        [MemoryGroupType.inApp]: () => filter(
-              from: memoryGroup.status,
-              targets: {
-                [MemoryGroupStatus.notStart]: () => Colors.amber,
-                [MemoryGroupStatus.goon]: () => Colors.green,
-                [MemoryGroupStatus.completed]: () => Colors.grey,
-              },
-              orElse: () => Colors.red,
-            ),
+        [MemoryGroupType.inApp]: () {
+          if (memoryGroup.startTime == null) {
+            return Colors.amberAccent;
+          } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
+            return Colors.grey;
+          } else {
+            return Colors.greenAccent;
+          }
+        },
       },
       orElse: () => Colors.red,
     );
@@ -108,15 +108,15 @@ class MemoryGroupListPage extends StatelessWidget {
     return filter(
       from: memoryGroup.type,
       targets: {
-        [MemoryGroupType.inApp]: () => filter(
-              from: memoryGroup.status,
-              targets: {
-                [MemoryGroupStatus.notStart]: () => '未开始',
-                [MemoryGroupStatus.goon]: () => '继续',
-                [MemoryGroupStatus.completed]: () => '已完成',
-              },
-              orElse: () => 'unknown',
-            ),
+        [MemoryGroupType.inApp]: () {
+          if (memoryGroup.startTime == null) {
+            return '未执行';
+          } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
+            return '已完成';
+          } else {
+            return '继续';
+          }
+        },
       },
       orElse: () => 'unknown',
     );
@@ -127,15 +127,12 @@ class MemoryGroupListPage extends StatelessWidget {
       tag: Aber.nearest,
       builder: (c, abw) {
         final memoryGroupGizmo = c.memoryGroupGizmos(abw)[index];
-        final memoryGroup = memoryGroupGizmo(abw);
-
-        final statusButtonBackgroundColor = _statusButtonBackgroundColorFilter(memoryGroup);
-        final statusButtonText = _statusButtonTextFilter(memoryGroup);
 
         return Hero(
           tag: memoryGroupGizmo.hashCode,
           child: GestureDetector(
             child: CardCustom(
+              verifyAb: null,
               child: Column(
                 children: [
                   Row(
@@ -143,32 +140,30 @@ class MemoryGroupListPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          memoryGroup.title,
+                          memoryGroupGizmo(abw).title,
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Material(
-                        child: InkWell(
-                          borderRadius: const BorderRadius.all(Radius.circular(50)),
-                          splashColor: Colors.green,
-                          child: Ink(
-                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(Radius.circular(50)),
-                              color: statusButtonBackgroundColor,
+                      AbwBuilder(
+                        builder: (abw) {
+                          return OutlinedButton(
+                            style: ButtonStyle(
+                              side: MaterialStateProperty.all(const BorderSide(color: Colors.blue, width: 1)),
+                              backgroundColor: MaterialStateProperty.all(_statusButtonBackgroundColorFilter(memoryGroupGizmo(abw))),
                             ),
-                            child: Text(statusButtonText),
-                          ),
-                          onTap: () {
-                            c.onStatusTap(memoryGroupGizmo);
-                          },
-                        ),
-                      )
+                            child: () {
+                              return Text(_statusButtonTextFilter(memoryGroupGizmo(abw)));
+                            }(),
+                            onPressed: () {
+                              c.onStatusTap(memoryGroupGizmo);
+                            },
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ],
               ),
-              verifyAb: null,
             ),
             onTap: () {
               Navigator.push(

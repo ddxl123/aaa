@@ -9,17 +9,19 @@ class FloatingRoundCornerButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.border,
+    this.color = Colors.tealAccent,
   }) : super(key: key);
 
   final Widget text;
   final void Function() onPressed;
   final OutlinedBorder? border;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.tealAccent),
+        backgroundColor: MaterialStateProperty.all(color),
         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15, horizontal: 30)),
         elevation: MaterialStateProperty.all(5),
         shape: MaterialStateProperty.all(border),

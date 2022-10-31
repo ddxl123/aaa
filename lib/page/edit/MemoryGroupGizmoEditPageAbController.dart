@@ -37,9 +37,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// [MemoryGroups.type]
   final type = Storage<MemoryGroupType>(abObj: MemoryGroupType.inApp.ab, tempValue: MemoryGroupType.inApp);
 
-  /// [MemoryGroups.status]
-  final status = Storage<MemoryGroupStatus>(abObj: MemoryGroupStatus.notStart.ab, tempValue: MemoryGroupStatus.notStart);
-
   final selectedFragments = <Ab<Fragment>>[].ab;
 
   /// ========== 可操作-基础配置部分 ==========
@@ -53,7 +50,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// [MemoryGroups.reviewInterval]
   /// TODO: 进行 [AbVerify]
-  final reviewInterval = Storage<int>(abObj: 0.ab, tempValue: 0);
+  final reviewInterval = Storage<DateTime>(abObj: DateTime.now().ab, tempValue: DateTime.now());
   final reviewIntervalTextEditingController = TextEditingController();
 
   /// [MemoryGroups.filterOut]
@@ -129,8 +126,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
     reviewInterval.abObj.initVerify(
       (abV) async {
-        if (abV() < 0) return VerifyResult(isOk: false, message: '复习区间存在不规范字符！');
-        if (abV() < 600) return VerifyResult(isOk: false, message: '复习区间太短啦，至少10分钟(600秒)以上哦~');
+        if (abV().difference(DateTime.now()).inSeconds < 600) return VerifyResult(isOk: false, message: '复习区间至少10分钟(600秒)以上哦~');
         return null;
       },
     );
@@ -178,7 +174,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     title.tempValue = mgg.title;
     selectedMemoryModel.tempValue = mm;
     type.tempValue = mgg.type;
-    status.tempValue = mgg.status;
 
     willNewLearnCount.tempValue = mgg.willNewLearnCount;
     reviewInterval.tempValue = mgg.reviewInterval;
@@ -189,7 +184,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     title.abObj.refreshEasy((oldValue) => title.tempValue);
     selectedMemoryModel.abObj.refreshEasy((obj) => selectedMemoryModel.tempValue);
     type.abObj.refreshEasy((oldValue) => type.tempValue);
-    status.abObj.refreshEasy((oldValue) => status.tempValue);
     selectedFragments.refreshInevitable((obj) => obj
       ..clear_(this)
       ..addAll(fs.map((e) => e.ab)));
@@ -204,7 +198,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
 
     titleTextEditingController.text = title.tempValue;
-    reviewIntervalTextEditingController.text = reviewInterval.tempValue.toString();
+    reviewIntervalTextEditingController.text = timeDifference(target: reviewInterval.tempValue, start: DateTime.now()).toString();
   }
 
   /// 仅保存。
@@ -236,7 +230,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
             memoryModelId: (selectedMemoryModel.abObj()?.id).toValue(),
             title: titleTextEditingController.text.toValue(),
             type: type.abObj().toValue(),
-            status: MemoryGroupStatus.notStart.toValue(),
             willNewLearnCount: willNewLearnCount.abObj().toValue(),
             reviewInterval: reviewInterval.abObj().toValue(),
             filterOut: filterOut.abObj().toValue(),

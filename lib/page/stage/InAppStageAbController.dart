@@ -53,7 +53,6 @@ class InAppStageAbController extends AbController {
     final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryGroupGizmo().memoryModelId);
     memoryModelGizmo = mm!.ab;
 
-
     await _perform();
   }
 
@@ -83,7 +82,10 @@ class InAppStageAbController extends AbController {
         clickTime: timeDifference(target: DateTime.now(), start: memoryGroupGizmo().startTime!),
         clickValue: clickValue,
       ),
+      memoryGroupAb: memoryGroupGizmo,
     );
+
+    memoryGroupGizmo.refreshForce();
 
     await _perform();
   }
@@ -137,7 +139,8 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: currentFragmentAndMemoryInfos()!, currentShowTime: currentActualShowTime),
+              ivf: () async =>
+                  await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: currentFragmentAndMemoryInfos()!, currentShowTime: currentActualShowTime),
               isReGet: false,
             ),
             currentPlanedShowTimeIF: IvFilter(
@@ -192,7 +195,8 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: currentFragmentAndMemoryInfos()!, currentShowTime: currentActualShowTime),
+              ivf: () async =>
+                  await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: currentFragmentAndMemoryInfos()!, currentShowTime: currentActualShowTime),
               isReGet: false,
             ),
             currentPlanedShowTimeIF: IvFilter(
@@ -244,7 +248,8 @@ class InAppStageAbController extends AbController {
             ),
             timesIF: IvFilter(ivf: () async => await performerQuery.getTimes(tuple: currentFragmentAndMemoryInfos()!), isReGet: false),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: currentFragmentAndMemoryInfos()!, currentShowTime: currentActualShowTime),
+              ivf: () async =>
+                  await performerQuery.getCurrentActualShowTime(mg: memoryGroupGizmo(), tuple: currentFragmentAndMemoryInfos()!, currentShowTime: currentActualShowTime),
               isReGet: false,
             ),
             currentPlanedShowTimeIF: IvFilter(

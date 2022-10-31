@@ -66,19 +66,13 @@ class MemoryGroups extends CloudTableBase {
 
   IntColumn get type => intEnum<MemoryGroupType>()();
 
-  IntColumn get status => intEnum<MemoryGroupStatus>()();
-
   /// 新学数量
   ///
   /// 每次新学完一个，都会将该值减去1。
   IntColumn get willNewLearnCount => integer()();
 
   /// 取用 [reviewInterval] 时间点内的复习碎片。
-  ///
-  /// 单位秒。
-  ///
-  /// 从记忆组启动时的时间点开始计算。
-  IntColumn get reviewInterval => integer()();
+  DateTimeColumn get reviewInterval => dateTime()();
 
   /// 过滤碎片
   TextColumn get filterOut => text()();
@@ -89,9 +83,10 @@ class MemoryGroups extends CloudTableBase {
   /// 新碎片展示先后顺序。
   IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>()();
 
-  /// 开始时间的时间点，若未开始则为 null。
+  /// 开始时间的时间点。
   ///
-  /// 这里是标准时间
+  /// 若未开始，则为 null。
+  /// 若已完成，则为 [DateTime.fromMicrosecondsSinceEpoch(0)]
   DateTimeColumn get startTime => dateTime().nullable()();
 }
 

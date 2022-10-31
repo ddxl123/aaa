@@ -96,12 +96,21 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return FloatingRoundCornerButton(
-          text: const Text('应用并开始'),
-          onPressed: () {
-            c.applyAndStart();
-          },
-        );
+        return c.memoryGroupGizmo!().startTime == null
+            ? FloatingRoundCornerButton(
+                color: Colors.amberAccent,
+                text: const Text('应用并开始', style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  c.applyAndStart();
+                },
+              )
+            : FloatingRoundCornerButton(
+                color: Colors.greenAccent,
+                text: const Text('继续', style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  c.applyAndStart();
+                },
+              );
       },
     );
   }
@@ -356,7 +365,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                             maxLength: 9,
                             keyboardType: TextInputType.number,
                             onChanged: (v) {
-                              c.reviewInterval.abObj.refreshEasy((oldValue) => int.tryParse(v) ?? -1);
+                              c.reviewInterval.abObj.refreshEasy((oldValue) => DateTime.now().add(Duration(seconds: int.tryParse(v) ?? 0)));
                             },
                           ),
                         ),
@@ -365,7 +374,11 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Text('${DateTime.now().add(Duration(seconds: c.reviewInterval.abObj(abw)))}前'),
+                        AbwBuilder(
+                          builder: (abwT) {
+                            return Text('${c.reviewInterval.abObj(abwT)}前');
+                          },
+                        ),
                       ],
                     )
                   ],
