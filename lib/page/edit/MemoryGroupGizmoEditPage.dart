@@ -145,14 +145,14 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
           children: [
             TextButton(
               child: const Text('分析'),
-              onPressed: () {
-                c.analyze();
+              onPressed: () async {
+                await c.analyze();
               },
             ),
             TextButton(
               child: const Text('保存'),
-              onPressed: () {
-                c.save();
+              onPressed: () async {
+                await c.save();
               },
             ),
           ],

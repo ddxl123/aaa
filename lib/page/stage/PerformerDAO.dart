@@ -16,6 +16,9 @@ class PerformerQuery {
   Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getNewPerformer({required MemoryGroup mg}) async {
     final newFragment = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
+    logger.d('newFragment:$newFragment');
+
+    logger.d('learnedFragment:$learnedFragment');
     if (newFragment == null && learnedFragment == null) return null;
 
     final newFragmentOrNull = newFragment == null ? null : Tuple2(t1: newFragment, t2: <FragmentMemoryInfo>[]);
@@ -69,10 +72,20 @@ class PerformerQuery {
   ///
   /// 获取新碎片。
   Future<Fragment?> getOneNewFragment({required MemoryGroup mg}) async {
-    final lSelect = dft.select(dft.fragments);
+    if (mg.willNewLearnCount < 0) {
+      throw 'willNewLearnCount 不能小于 0！';
+    }
+    // 识别是否还需要学习新碎片。
+    if (mg.willNewLearnCount == 0) {
+      return null;
+    }
+
+    final lSelect = dft.select(dft.rFragment2MemoryGroups);
     final lJoin = [
-      innerJoin(dft.rFragment2MemoryGroups, dft.rFragment2MemoryGroups.sonId.equalsExp(dft.fragments.id)),
-      leftOuterJoin(dft.fragmentMemoryInfos, dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.fragments.id)),
+      leftOuterJoin(
+        dft.fragmentMemoryInfos,
+        dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.rFragment2MemoryGroups.sonId) & dft.fragmentMemoryInfos.memoryGroupId.equalsExp(dft.rFragment2MemoryGroups.fatherId),
+      ),
     ];
 
     // 获取在当前记忆组内的没有创建过碎片记忆信息的碎片。（获取新碎片）
@@ -89,7 +102,9 @@ class PerformerQuery {
 
     final result = await doJoin.getSingleOrNull();
     if (result == null) return null;
-    return result.readTable(dft.fragments);
+
+    final fragmentSelect = dft.select(dft.fragments)..where((tbl) => tbl.id.equals(result.readTable(dft.rFragment2MemoryGroups).sonId));
+    return await fragmentSelect.getSingle();
   }
 
   /// ========================================================================================
@@ -100,11 +115,13 @@ class PerformerQuery {
   ///
   /// [newFragmentMemoryInfo] - 点击按钮后产生的新碎片信息。
   ///
-  /// [memoryGroupAb] - 需要将 [MemoryGroup.willNewLearnCount] 减去 1。
+  /// [isOldIsNew] - 将产生碎片信息的碎片是否为 新碎片（非复习碎片），
+  /// 若为新的，则需要将 [MemoryGroup.willNewLearnCount] 减去 1。
   Future<void> finishAndStartNextPerform({
     required FragmentMemoryInfo? lastFragmentMemoryInfo,
     required FragmentMemoryInfosCompanion newFragmentMemoryInfo,
     required Ab<MemoryGroup> memoryGroupAb,
+    required bool isOldIsNew,
   }) async {
     await dft.transaction(
       () async {
@@ -148,23 +165,25 @@ class PerformerQuery {
           },
         );
 
-        await DriftDb.instance.updateDAO.resetMemoryGroup(
-          syncTag: st,
-          oldMemoryGroupReset: (SyncTag resetSyncTag) async {
-            await memoryGroupAb().reset(
-              memoryModelId: toAbsent(),
-              title: toAbsent(),
-              type: toAbsent(),
-              willNewLearnCount: (memoryGroupAb().willNewLearnCount--).toValue(),
-              reviewInterval: toAbsent(),
-              filterOut: toAbsent(),
-              newReviewDisplayOrder: toAbsent(),
-              newDisplayOrder: toAbsent(),
-              startTime: toAbsent(),
-              writeSyncTag: resetSyncTag,
-            );
-          },
-        );
+        if(isOldIsNew){
+          await DriftDb.instance.updateDAO.resetMemoryGroup(
+            syncTag: st,
+            oldMemoryGroupReset: (SyncTag resetSyncTag) async {
+              await memoryGroupAb().reset(
+                memoryModelId: toAbsent(),
+                title: toAbsent(),
+                type: toAbsent(),
+                willNewLearnCount: (memoryGroupAb().willNewLearnCount-1).toValue(),
+                reviewInterval: toAbsent(),
+                filterOut: toAbsent(),
+                newReviewDisplayOrder: toAbsent(),
+                newDisplayOrder: toAbsent(),
+                startTime: toAbsent(),
+                writeSyncTag: resetSyncTag,
+              );
+            },
+          );
+        }
       },
     );
   }

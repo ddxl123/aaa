@@ -202,8 +202,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   }
 
   /// 仅保存。
-  void save() {
-    _save(isApply: false).then(
+  Future<void> save() async {
+    await _save(isApply: false).then(
       (value) async {
         await title.abObj.verify.check();
         isBasicConfigRedErr.refreshEasy((oldValue) => !title.abObj.verify.isOk);
@@ -247,8 +247,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     }
   }
 
-  void analyze() {
-    _analyze().then(
+  Future<void> analyze() async {
+    await _analyze().then(
       (value) async {
         final ibcre = !await basicConfigRedErrVerify;
         final iccre = !await currentCycleConfigRedErrVerify;

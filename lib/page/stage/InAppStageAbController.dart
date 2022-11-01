@@ -59,7 +59,9 @@ class InAppStageAbController extends AbController {
   /// 完成当前表演，并进行下一次表演。
   ///
   /// 点击数值按钮后进行调用。
-  Future<void> finishAndStartNextPerform({required double clickValue}) async {
+  Future<void> finishAndStartNextPerform({
+    required double clickValue,
+  }) async {
     if (currentFragmentAndMemoryInfos() == null) {
       throw '没有下一个碎片了，却仍然请求了下一个碎片！';
     }
@@ -83,6 +85,7 @@ class InAppStageAbController extends AbController {
         clickValue: clickValue,
       ),
       memoryGroupAb: memoryGroupGizmo,
+      isOldIsNew: currentFragmentAndMemoryInfos()!.t2.isEmpty,
     );
 
     memoryGroupGizmo.refreshForce();

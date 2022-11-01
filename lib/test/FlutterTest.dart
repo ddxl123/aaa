@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 
 class FlutterTest extends StatelessWidget {
@@ -8,57 +11,71 @@ class FlutterTest extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(),
-        body: Navigator(
-          initialRoute: '/',
-          onGenerateRoute: (rs) {
-            return MaterialPageRoute(builder: (ctx) => const FirstPage());
-          },
-        ),
+        body: const A(),
       ),
     );
   }
 }
 
-class FirstPage extends StatelessWidget {
-  const FirstPage({Key? key}) : super(key: key);
+class A extends StatefulWidget {
+  const A({Key? key}) : super(key: key);
 
   @override
+  State<A> createState() => _AState();
+}
+
+class _AState extends State<A> {
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('this first page'),
-        TextButton(
-          child: const Text('pop in first page'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        TextButton(
-          child: const Text('push second page'),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (ctx) => const SecondPage()));
-          },
-        ),
-      ],
+    return Center(
+      child: TextButton(
+        child: const Text('to 2'),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => B()));
+        },
+      ),
     );
   }
 }
 
-class SecondPage extends StatelessWidget {
-  const SecondPage({Key? key}) : super(key: key);
+class B extends StatefulWidget {
+  const B({Key? key}) : super(key: key);
+
+  @override
+  State<B> createState() => _BState();
+}
+
+class _BState extends State<B> {
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor,name: 'a',context: context);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.removeByName('a');
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+
+    print("BACK BUTTON!:${Random().nextInt(100)}"); // Do some stuff.
+    print('stopDefaultButtonEvent:$stopDefaultButtonEvent');
+    print('aaa:${info.ifRouteChanged(context)}');
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('this second page'),
-        TextButton(
-          child: const Text('pop in second page'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(),
+      body: TextButton(
+        child: const Text('back'),
+        onPressed: () {
+          showAboutDialog(context: context);
+        },
+      ),
     );
   }
 }

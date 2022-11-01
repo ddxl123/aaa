@@ -57,7 +57,7 @@ LazyDatabase _openConnection() {
       // 获取数据库所在的文件夹路径
       final dbFolder = await getApplicationDocumentsDirectory();
       DriftDb.instance.path = join(dbFolder.path, dbFileName);
-      return NativeDatabase(File(DriftDb.instance.path));
+      return NativeDatabase(File(DriftDb.instance.path),logStatements: true);
     },
   );
 }
