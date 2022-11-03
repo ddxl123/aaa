@@ -1,14 +1,5 @@
 part of drift_db;
 
-/// 记忆组类型
-enum MemoryGroupType {
-  /// 应用内
-  inApp,
-
-  /// 全部悬浮悬浮
-  allFloating,
-}
-
 /// 新旧碎片展示先后顺序。
 enum NewReviewDisplayOrder {
   /// 随机混合

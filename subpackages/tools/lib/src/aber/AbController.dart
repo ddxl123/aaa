@@ -22,7 +22,9 @@ abstract class AbController {
   void onInit() {}
 
   /// [AbBuilder] 内部的 dispose，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
-  void dispose() {}
+  void onDispose() {
+    _removeRefreshFunctions.clear();
+  }
 
   /// 需要 [isEnableLoading] 为 true。
   Future<void> loadingFuture() async {}

@@ -82,7 +82,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                   _filterOutWidget(),
                   _newReviewDisplayOrder(),
                   _newDisplayOrder(),
-                  _showModeWidget(),
+                  _isEnableFloatingWindow(),
                   floatingRoundCornerButtonPlaceholderBox(),
                 ],
               ),
@@ -99,7 +99,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return c.memoryGroupGizmo!().startTime == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
-                text: const Text('应用并开始', style: TextStyle(color: Colors.white)),
+                text: const Text('应用并执行', style: TextStyle(color: Colors.white)),
                 onPressed: () {
                   c.applyAndStart();
                 },
@@ -171,7 +171,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
               const Text('名称：', style: TextStyle(fontSize: 16)),
               Expanded(
                 child: TextField(
-                  controller: c.titleTextEditingController,
+                  controller: c.cTitleTextEditingController,
                   decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
                   onChanged: (v) {
                     c.title.abObj.refreshEasy((oldValue) => v);
@@ -210,23 +210,27 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
     );
   }
 
-  Widget _showModeWidget() {
+  Widget _isEnableFloatingWindow() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return CardCustom(
           verifyAb: null,
-          child: Row(
+          child: Column(
             children: [
-              const Text('展示类型：', style: TextStyle(fontSize: 16)),
-              CustomDropdownBodyButton<MemoryGroupType>(
-                value: c.type.abObj(abw),
-                item: [
-                  Tuple2(t1: '仅应用内', t2: MemoryGroupType.inApp),
-                  Tuple2(t1: '全部悬浮', t2: MemoryGroupType.allFloating),
+              Row(
+                children: [
+                  const Text('是否启用悬浮窗：', style: TextStyle(fontSize: 16)),
+                  Switch(
+                    value: false,
+                    onChanged: (v) {},
+                  ),
                 ],
-                onChanged: (v) {
-                  c.type.abObj.refreshEasy((oldValue) => v!);
-                },
+              ),
+              Row(
+                children: [
+                  const Text('悬浮算法：'),
+                  Expanded(child: TextField()),
+                ],
               ),
             ],
           ),
@@ -301,38 +305,37 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             children: [
               const Text('新学数量：'),
               Expanded(
-                child: AbStatefulBuilder(
+                child: StfBuilder1<int>(
                   // 保留上一次的设置
-                  initExtra: {'value': c.willNewLearnCount.abObj(abw)},
-                  builder: (Map<String, Object?> extra, BuildContext context, void Function() refresh) {
-                    int dynValue = extra['value'] as int;
+                  initValue: c.willNewLearnCount.abObj(abw),
+                  builder: (int value, BuildContext context, ResetValue<int> resetValue) {
+                    int finallyValue = value;
                     // 不能超过最大值
-                    if (dynValue > c.remainNewFragmentsCount()) {
-                      extra['value'] = c.remainNewFragmentsCount();
-                      dynValue = extra['value'] as int;
+                    if (finallyValue > c.remainNewFragmentsCount()) {
+                      resetValue(c.remainNewFragmentsCount(), true);
+                      return Container();
                     }
                     // 如果没有 space，则 0/300，其中 0 字符长度会动态的变宽成 10 或 100，从而导致刷新的时候滑块抖动。
                     // space 意味着将 0 前面添加两个 0，即 000/300。
-                    int space = c.remainNewFragmentsCount().toString().length - dynValue.toInt().toString().length;
+                    int space = c.remainNewFragmentsCount().toString().length - finallyValue.toInt().toString().length;
                     return Row(
                       children: [
                         Expanded(
                           child: Slider(
-                            label: dynValue.toInt().toString(),
+                            label: finallyValue.toInt().toString(),
                             min: 0,
                             max: c.remainNewFragmentsCount().toDouble(),
-                            value: dynValue.toDouble(),
+                            value: finallyValue.toDouble(),
                             divisions: c.remainNewFragmentsCount() == 0 ? null : c.remainNewFragmentsCount(),
                             onChanged: (n) {
-                              extra['value'] = n.toInt();
-                              refresh();
+                              resetValue(n.toInt(), true);
                             },
                             onChangeEnd: (n) {
                               c.willNewLearnCount.abObj.refreshEasy((oldValue) => n.floor());
                             },
                           ),
                         ),
-                        Text('${'0' * space}${dynValue.toInt()}/${c.remainNewFragmentsCount()}')
+                        Text('${'0' * space}${finallyValue.toInt()}/${c.remainNewFragmentsCount()}')
                       ],
                     );
                   },
@@ -361,7 +364,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                         const Text('接下来  '),
                         Expanded(
                           child: TextField(
-                            controller: c.reviewIntervalTextEditingController,
+                            controller: c.cReviewIntervalTextEditingController,
                             maxLength: 9,
                             keyboardType: TextInputType.number,
                             onChanged: (v) {
@@ -396,38 +399,28 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return CardCustom(
           verifyAb: null,
-          child: AbStatefulBuilder(
-            initExtra: {'tec': TextEditingController(text: c.filterOut.abObj())},
-            onDispose: (extra, ctx, refresh) {
-              (extra['tec'] as TextEditingController).dispose();
-            },
-            builder: (extra, context, refresh) {
-              final tec = extra['tec'] as TextEditingController;
-
-              return Row(
-                children: [
-                  const Text('过滤碎片算法：  '),
-                  Expanded(
-                    child: Column(
+          child: Row(
+            children: [
+              const Text('过滤碎片算法：  '),
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: tec,
-                                onChanged: (v) {
-                                  c.filterOut.abObj.refreshEasy((oldValue) => v);
-                                },
-                              ),
-                            ),
-                          ],
+                        Expanded(
+                          child: TextField(
+                            controller: c.cFilterOutAlgorithmTextEditingController,
+                            onChanged: (v) {
+                              c.filterOutAlgorithm.abObj.refreshEasy((oldValue) => v);
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },

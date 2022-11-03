@@ -52,24 +52,28 @@ class WithCrts {
   static MemoryGroupsCompanion memoryGroupsCompanion({
     required Value<String?> memoryModelId,
     required String title,
-    required MemoryGroupType type,
     required int willNewLearnCount,
     required DateTime reviewInterval,
-    required String filterOut,
+    required bool isEnableFilterOutAlgorithm,
+    required String filterOutAlgorithm,
     required NewReviewDisplayOrder newReviewDisplayOrder,
     required NewDisplayOrder newDisplayOrder,
     required Value<DateTime?> startTime,
+    required bool isEnableFloatingAlgorithm,
+    required String floatingAlgorithm,
   }) {
     return MemoryGroupsCompanion(
       memoryModelId: memoryModelId,
       title: Value(title),
-      type: Value(type),
       willNewLearnCount: Value(willNewLearnCount),
       reviewInterval: Value(reviewInterval),
-      filterOut: Value(filterOut),
+      isEnableFilterOutAlgorithm: Value(isEnableFilterOutAlgorithm),
+      filterOutAlgorithm: Value(filterOutAlgorithm),
       newReviewDisplayOrder: Value(newReviewDisplayOrder),
       newDisplayOrder: Value(newDisplayOrder),
       startTime: startTime,
+      isEnableFloatingAlgorithm: Value(isEnableFloatingAlgorithm),
+      floatingAlgorithm: Value(floatingAlgorithm),
     );
   }
 

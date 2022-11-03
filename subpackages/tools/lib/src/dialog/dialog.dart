@@ -15,7 +15,6 @@ void showTextField1({
 }) {
   final tec = TextEditingController();
   showDialogCustom(
-    context: context,
     textsBody: [
       ..._titleAndTextList(context: context, title: title, text: text),
       Row(
@@ -58,14 +57,12 @@ void showOkAndCancel({
   required FutureOr<void> Function()? onOk,
 }) {
   showDialogCustom(
-    context: context,
     textsBody: [..._titleAndTextList(context: context, title: title, text: text)],
     buttonsBody: [..._okAndCancelButtonList(cancelText: cancelText, okText: okText, onOk: onOk, onCancel: onCancel)],
   );
 }
 
 void showDialogCustom({
-  required BuildContext context,
   required List<Widget> textsBody,
   required List<Widget> buttonsBody,
 }) {
@@ -75,7 +72,7 @@ void showDialogCustom({
       return Builder(
         builder: (ctx) {
           return AnimatedPadding(
-            padding: MediaQuery.of(ctx).viewInsets + MediaQuery.of(context).padding,
+            padding: MediaQuery.of(ctx).viewInsets + MediaQuery.of(ctx).padding,
             duration: const Duration(milliseconds: 100),
             child: Container(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),

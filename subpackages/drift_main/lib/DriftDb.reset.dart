@@ -140,31 +140,43 @@ extension MemoryGroupExt on MemoryGroup {
   FutureOr<MemoryGroup> reset({
     required Value<String?> memoryModelId,
     required Value<String> title,
-    required Value<MemoryGroupType> type,
     required Value<int> willNewLearnCount,
     required Value<DateTime> reviewInterval,
-    required Value<String> filterOut,
+    required Value<bool> isEnableFilterOutAlgorithm,
+    required Value<String> filterOutAlgorithm,
     required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
     required Value<NewDisplayOrder> newDisplayOrder,
     required Value<DateTime?> startTime,
+    required Value<bool> isEnableFloatingAlgorithm,
+    required Value<String> floatingAlgorithm,
     required SyncTag? writeSyncTag,
   }) async {
     this.memoryModelId =
         memoryModelId.present ? memoryModelId.value : this.memoryModelId;
     this.title = title.present ? title.value : this.title;
-    this.type = type.present ? type.value : this.type;
     this.willNewLearnCount = willNewLearnCount.present
         ? willNewLearnCount.value
         : this.willNewLearnCount;
     this.reviewInterval =
         reviewInterval.present ? reviewInterval.value : this.reviewInterval;
-    this.filterOut = filterOut.present ? filterOut.value : this.filterOut;
+    this.isEnableFilterOutAlgorithm = isEnableFilterOutAlgorithm.present
+        ? isEnableFilterOutAlgorithm.value
+        : this.isEnableFilterOutAlgorithm;
+    this.filterOutAlgorithm = filterOutAlgorithm.present
+        ? filterOutAlgorithm.value
+        : this.filterOutAlgorithm;
     this.newReviewDisplayOrder = newReviewDisplayOrder.present
         ? newReviewDisplayOrder.value
         : this.newReviewDisplayOrder;
     this.newDisplayOrder =
         newDisplayOrder.present ? newDisplayOrder.value : this.newDisplayOrder;
     this.startTime = startTime.present ? startTime.value : this.startTime;
+    this.isEnableFloatingAlgorithm = isEnableFloatingAlgorithm.present
+        ? isEnableFloatingAlgorithm.value
+        : this.isEnableFloatingAlgorithm;
+    this.floatingAlgorithm = floatingAlgorithm.present
+        ? floatingAlgorithm.value
+        : this.floatingAlgorithm;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryGroups,

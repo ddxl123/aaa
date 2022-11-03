@@ -165,20 +165,22 @@ class PerformerQuery {
           },
         );
 
-        if(isOldIsNew){
+        if (isOldIsNew) {
           await DriftDb.instance.updateDAO.resetMemoryGroup(
             syncTag: st,
             oldMemoryGroupReset: (SyncTag resetSyncTag) async {
               await memoryGroupAb().reset(
                 memoryModelId: toAbsent(),
                 title: toAbsent(),
-                type: toAbsent(),
-                willNewLearnCount: (memoryGroupAb().willNewLearnCount-1).toValue(),
+                willNewLearnCount: (memoryGroupAb().willNewLearnCount - 1).toValue(),
                 reviewInterval: toAbsent(),
-                filterOut: toAbsent(),
+                isEnableFilterOutAlgorithm: toAbsent(),
+                filterOutAlgorithm: toAbsent(),
                 newReviewDisplayOrder: toAbsent(),
                 newDisplayOrder: toAbsent(),
                 startTime: toAbsent(),
+                isEnableFloatingAlgorithm: toAbsent(),
+                floatingAlgorithm: toAbsent(),
                 writeSyncTag: resetSyncTag,
               );
             },

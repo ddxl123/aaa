@@ -19,21 +19,18 @@ class Home extends StatelessWidget {
     return AbBuilder<HomeAbController>(
       putController: HomeAbController(),
       builder: (controller, abw) {
-        return WillPopScope(
-          onWillPop: controller.onWillPop,
-          child: Scaffold(
-            extendBody: true,
-            body: SafeArea(child: _body()),
-            bottomNavigationBar: _bottomNavigationBar(),
-            floatingActionButton: _floatingActionButton(context),
-            floatingActionButtonLocation: controller.isFragmentSelecting(abw) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerDocked,
-          ),
+        return Scaffold(
+          extendBody: true,
+          body: SafeArea(child: _body()),
+          bottomNavigationBar: _bottomNavigationBar(),
+          floatingActionButton: _floatingActionButton(),
+          floatingActionButtonLocation: controller.isFragmentSelecting(abw) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerDocked,
         );
       },
     );
   }
 
-  Widget _floatingActionButton(BuildContext context) {
+  Widget _floatingActionButton() {
     return AbBuilder<HomeAbController>(
       builder: (putController, putAbw) {
         if (putController.isFragmentSelecting(putAbw)) {
@@ -44,7 +41,7 @@ class Home extends StatelessWidget {
                 backgroundColor: Colors.amber,
                 child: const Text('记'),
                 onPressed: () async {
-                  showDialogForCreateMemoryGroup(context: context);
+                  showDialogForCreateMemoryGroup(context: putController.context);
                 },
               ),
               AbBuilder<FragmentGroupListPageAbController>(
@@ -66,7 +63,7 @@ class Home extends StatelessWidget {
         return FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
-            Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
+            Navigator.push(putController.context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
           },
         );
       },

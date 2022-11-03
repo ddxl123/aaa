@@ -166,7 +166,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
     _removeRefresh();
 
     if (_isPutter) {
-      _controller!.dispose();
+      _controller!.onDispose();
       Aber._removeController<C>(_controller!);
       _controller = null;
     }

@@ -18,6 +18,7 @@ class MemoryGroupListPage extends StatelessWidget {
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -44,7 +45,6 @@ class MemoryGroupListPage extends StatelessWidget {
                 ),
               ],
             ),
-            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
           body: AbBuilder<MemoryGroupListPageAbController>(
             tag: Aber.nearest,
@@ -87,39 +87,23 @@ class MemoryGroupListPage extends StatelessWidget {
   }
 
   Color _statusButtonBackgroundColorFilter(MemoryGroup memoryGroup) {
-    return filter(
-      from: memoryGroup.type,
-      targets: {
-        [MemoryGroupType.inApp]: () {
-          if (memoryGroup.startTime == null) {
-            return Colors.amberAccent;
-          } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
-            return Colors.grey;
-          } else {
-            return Colors.greenAccent;
-          }
-        },
-      },
-      orElse: () => Colors.red,
-    );
+    if (memoryGroup.startTime == null) {
+      return Colors.amberAccent;
+    } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
+      return Colors.grey;
+    } else {
+      return Colors.greenAccent;
+    }
   }
 
   String _statusButtonTextFilter(MemoryGroup memoryGroup) {
-    return filter(
-      from: memoryGroup.type,
-      targets: {
-        [MemoryGroupType.inApp]: () {
-          if (memoryGroup.startTime == null) {
-            return '未执行';
-          } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
-            return '已完成';
-          } else {
-            return '继续';
-          }
-        },
-      },
-      orElse: () => 'unknown',
-    );
+    if (memoryGroup.startTime == null) {
+      return '未执行';
+    } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
+      return '已完成';
+    } else {
+      return '继续';
+    }
   }
 
   Widget _memoryGroupGizmoWidget(int index) {

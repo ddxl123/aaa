@@ -56,15 +56,13 @@ class FragmentGroups extends CloudTableBase {
 ///    - [选择] 不清零在其他碎片组中正在学习的。
 ///    - 清零后，会将其碎片的熟练度降至0
 ///
-/// 将[熟练度高于0.8][filterOut]的碎片视为完全掌握状态，将不会在当前记忆组中出现。（可写入算法）
+/// 将[熟练度高于0.8][filterOutAlgorithm]的碎片视为完全掌握状态，将不会在当前记忆组中出现。（可写入算法）
 @ReferenceTo([])
 class MemoryGroups extends CloudTableBase {
   @ReferenceTo([MemoryModels])
   TextColumn get memoryModelId => text().nullable()();
 
   TextColumn get title => text()();
-
-  IntColumn get type => intEnum<MemoryGroupType>()();
 
   /// 新学数量
   ///
@@ -74,8 +72,11 @@ class MemoryGroups extends CloudTableBase {
   /// 取用 [reviewInterval] 时间点内的复习碎片。
   DateTimeColumn get reviewInterval => dateTime()();
 
-  /// 过滤碎片
-  TextColumn get filterOut => text()();
+  /// 是否启用 [filterOutAlgorithm]
+  BoolColumn get isEnableFilterOutAlgorithm => boolean()();
+
+  /// 过滤碎片算法。
+  TextColumn get filterOutAlgorithm => text()();
 
   /// 新旧碎片展示先后顺序。
   IntColumn get newReviewDisplayOrder => intEnum<NewReviewDisplayOrder>()();
@@ -88,6 +89,12 @@ class MemoryGroups extends CloudTableBase {
   /// 若未开始，则为 null。
   /// 若已完成，则为 [DateTime.fromMicrosecondsSinceEpoch(0)]
   DateTimeColumn get startTime => dateTime().nullable()();
+
+  /// 是否启用 [floatingAlgorithm]
+  BoolColumn get isEnableFloatingAlgorithm => boolean()();
+
+  /// 悬浮算法。
+  TextColumn get floatingAlgorithm => text()();
 }
 
 @ReferenceTo([])

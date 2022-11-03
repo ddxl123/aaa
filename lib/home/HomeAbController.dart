@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,50 @@ class HomeAbController extends AbController {
   final isFragmentSelecting = false.ab;
 
   // 双击返回键才会退出应用。
-  int? lastBackTime;
+  Timer? timer;
+
+  @override
+  void onInit() {
+    super.onInit();
+    BackButtonInterceptor.add(_homeBack, context: context);
+  }
+
+  @override
+  void onDispose() {
+     .remove(_homeBack);
+    super.onDispose();
+  }
+
+  Future<bool> _homeBack(bool stopDefaultButtonEvent, RouteInfo routeInfo) async {
+    void timerCancel() {
+      timer?.cancel();
+      timer = null;
+    }
+
+    if (SmartDialog.config.isExistDialog) {
+      SmartDialog.dismiss();
+      return true;
+    }
+
+    // 如果一个对话框(或任何其他路由)是打开的，则不拦截。
+    if (routeInfo.ifRouteChanged(context)) {
+      timerCancel();
+      return false;
+    }
+    if (isFragmentSelecting() == true) {
+      timerCancel();
+      isFragmentSelecting.refreshEasy((oldValue) => false);
+      return true;
+    }
+    if (timer == null) {
+      const time = Duration(milliseconds: 1000);
+      SmartDialog.showToast('再按一次退出！', displayTime: time);
+      timer = Timer(time, () => timerCancel());
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   // 0-30,00-40,000-50,0000-60,00000-70
   double selectedCountDistance(FragmentGroupListPageAbController controller, [Abw? abw]) {
@@ -24,22 +70,5 @@ class HomeAbController extends AbController {
     if (count > 999 && count < 10000) return -60;
     if (count > 9999 && count < 100000) return -70;
     return -80;
-  }
-
-  Future<bool> onWillPop() async {
-    // 双击返回键才会退出应用。
-    int now = DateTime.now().millisecondsSinceEpoch;
-    if (lastBackTime != null && now - lastBackTime! < 1500) {
-      return true;
-    }
-    lastBackTime = now;
-    SmartDialog.showToast('再按一次退出！');
-    await Future.delayed(
-      const Duration(milliseconds: 1500),
-      () {
-        lastBackTime = null;
-      },
-    );
-    return false;
   }
 }

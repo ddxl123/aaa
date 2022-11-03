@@ -17,23 +17,15 @@ class MemoryGroupListPageAbController extends AbController {
     memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
   }
 
-  Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {
-    filter(
-      from: memoryGroupGizmo().type,
-      targets: {
-        [MemoryGroupType.inApp]: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MemoryGroupGizmoEditPage(
-                editPageType: MemoryGroupGizmoEditPageType.modify,
-                memoryGroupGizmo: memoryGroupGizmo,
-              ),
-            ),
-          );
-        },
-      },
-      orElse: null,
+  void onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MemoryGroupGizmoEditPage(
+          editPageType: MemoryGroupGizmoEditPageType.modify,
+          memoryGroupGizmo: memoryGroupGizmo,
+        ),
+      ),
     );
   }
 }
