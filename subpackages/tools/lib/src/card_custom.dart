@@ -14,7 +14,7 @@ class _CardCustomState extends State<CardCustom> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+      margin: const EdgeInsets.fromLTRB(20, 7, 20, 7),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Column(

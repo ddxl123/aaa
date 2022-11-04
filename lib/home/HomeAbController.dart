@@ -26,7 +26,7 @@ class HomeAbController extends AbController {
 
   @override
   void onDispose() {
-     .remove(_homeBack);
+    BackButtonInterceptor.remove(_homeBack);
     super.onDispose();
   }
 

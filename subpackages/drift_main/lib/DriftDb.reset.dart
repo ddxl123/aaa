@@ -142,12 +142,14 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String> title,
     required Value<int> willNewLearnCount,
     required Value<DateTime> reviewInterval,
-    required Value<bool> isEnableFilterOutAlgorithm,
-    required Value<String> filterOutAlgorithm,
     required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
     required Value<NewDisplayOrder> newDisplayOrder,
     required Value<DateTime?> startTime,
+    required Value<bool> isEnableFilterOutAlgorithm,
+    required Value<bool> isFilterOutAlgorithmFollowMemoryModel,
+    required Value<String> filterOutAlgorithm,
     required Value<bool> isEnableFloatingAlgorithm,
+    required Value<bool> isFloatingAlgorithmFollowMemoryModel,
     required Value<String> floatingAlgorithm,
     required SyncTag? writeSyncTag,
   }) async {
@@ -159,21 +161,29 @@ extension MemoryGroupExt on MemoryGroup {
         : this.willNewLearnCount;
     this.reviewInterval =
         reviewInterval.present ? reviewInterval.value : this.reviewInterval;
-    this.isEnableFilterOutAlgorithm = isEnableFilterOutAlgorithm.present
-        ? isEnableFilterOutAlgorithm.value
-        : this.isEnableFilterOutAlgorithm;
-    this.filterOutAlgorithm = filterOutAlgorithm.present
-        ? filterOutAlgorithm.value
-        : this.filterOutAlgorithm;
     this.newReviewDisplayOrder = newReviewDisplayOrder.present
         ? newReviewDisplayOrder.value
         : this.newReviewDisplayOrder;
     this.newDisplayOrder =
         newDisplayOrder.present ? newDisplayOrder.value : this.newDisplayOrder;
     this.startTime = startTime.present ? startTime.value : this.startTime;
+    this.isEnableFilterOutAlgorithm = isEnableFilterOutAlgorithm.present
+        ? isEnableFilterOutAlgorithm.value
+        : this.isEnableFilterOutAlgorithm;
+    this.isFilterOutAlgorithmFollowMemoryModel =
+        isFilterOutAlgorithmFollowMemoryModel.present
+            ? isFilterOutAlgorithmFollowMemoryModel.value
+            : this.isFilterOutAlgorithmFollowMemoryModel;
+    this.filterOutAlgorithm = filterOutAlgorithm.present
+        ? filterOutAlgorithm.value
+        : this.filterOutAlgorithm;
     this.isEnableFloatingAlgorithm = isEnableFloatingAlgorithm.present
         ? isEnableFloatingAlgorithm.value
         : this.isEnableFloatingAlgorithm;
+    this.isFloatingAlgorithmFollowMemoryModel =
+        isFloatingAlgorithmFollowMemoryModel.present
+            ? isFloatingAlgorithmFollowMemoryModel.value
+            : this.isFloatingAlgorithmFollowMemoryModel;
     this.floatingAlgorithm = floatingAlgorithm.present
         ? floatingAlgorithm.value
         : this.floatingAlgorithm;

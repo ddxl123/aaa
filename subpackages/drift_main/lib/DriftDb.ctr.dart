@@ -54,12 +54,14 @@ class WithCrts {
     required String title,
     required int willNewLearnCount,
     required DateTime reviewInterval,
-    required bool isEnableFilterOutAlgorithm,
-    required String filterOutAlgorithm,
     required NewReviewDisplayOrder newReviewDisplayOrder,
     required NewDisplayOrder newDisplayOrder,
     required Value<DateTime?> startTime,
+    required bool isEnableFilterOutAlgorithm,
+    required bool isFilterOutAlgorithmFollowMemoryModel,
+    required String filterOutAlgorithm,
     required bool isEnableFloatingAlgorithm,
+    required bool isFloatingAlgorithmFollowMemoryModel,
     required String floatingAlgorithm,
   }) {
     return MemoryGroupsCompanion(
@@ -67,12 +69,16 @@ class WithCrts {
       title: Value(title),
       willNewLearnCount: Value(willNewLearnCount),
       reviewInterval: Value(reviewInterval),
-      isEnableFilterOutAlgorithm: Value(isEnableFilterOutAlgorithm),
-      filterOutAlgorithm: Value(filterOutAlgorithm),
       newReviewDisplayOrder: Value(newReviewDisplayOrder),
       newDisplayOrder: Value(newDisplayOrder),
       startTime: startTime,
+      isEnableFilterOutAlgorithm: Value(isEnableFilterOutAlgorithm),
+      isFilterOutAlgorithmFollowMemoryModel:
+          Value(isFilterOutAlgorithmFollowMemoryModel),
+      filterOutAlgorithm: Value(filterOutAlgorithm),
       isEnableFloatingAlgorithm: Value(isEnableFloatingAlgorithm),
+      isFloatingAlgorithmFollowMemoryModel:
+          Value(isFloatingAlgorithmFollowMemoryModel),
       floatingAlgorithm: Value(floatingAlgorithm),
     );
   }

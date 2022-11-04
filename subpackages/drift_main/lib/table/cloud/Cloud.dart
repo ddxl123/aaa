@@ -72,12 +72,6 @@ class MemoryGroups extends CloudTableBase {
   /// 取用 [reviewInterval] 时间点内的复习碎片。
   DateTimeColumn get reviewInterval => dateTime()();
 
-  /// 是否启用 [filterOutAlgorithm]
-  BoolColumn get isEnableFilterOutAlgorithm => boolean()();
-
-  /// 过滤碎片算法。
-  TextColumn get filterOutAlgorithm => text()();
-
   /// 新旧碎片展示先后顺序。
   IntColumn get newReviewDisplayOrder => intEnum<NewReviewDisplayOrder>()();
 
@@ -90,8 +84,20 @@ class MemoryGroups extends CloudTableBase {
   /// 若已完成，则为 [DateTime.fromMicrosecondsSinceEpoch(0)]
   DateTimeColumn get startTime => dateTime().nullable()();
 
+  /// 是否启用 [filterOutAlgorithm]
+  BoolColumn get isEnableFilterOutAlgorithm => boolean()();
+
+  /// 是否跟随记忆模型。
+  BoolColumn get isFilterOutAlgorithmFollowMemoryModel => boolean()();
+
+  /// 过滤碎片算法。
+  TextColumn get filterOutAlgorithm => text()();
+
   /// 是否启用 [floatingAlgorithm]
   BoolColumn get isEnableFloatingAlgorithm => boolean()();
+
+  /// 是否跟随记忆模型。
+  BoolColumn get isFloatingAlgorithmFollowMemoryModel => boolean()();
 
   /// 悬浮算法。
   TextColumn get floatingAlgorithm => text()();

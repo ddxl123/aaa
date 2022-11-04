@@ -1,24 +1,16 @@
 import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/Storage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-import 'edit_page_type.dart';
-
-class Storage<V> {
-  final Ab<V> abObj;
-
-  /// 存储未修改前的值，该值的用途是恢复未修改前的值。
-  V tempValue;
-
-  Storage({required this.abObj, required this.tempValue});
-}
+import '../edit_page_type.dart';
 
 class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 把 gizmo 内所以信息打包成一个对象进行传入。
-  /// 如果只传入 [memoryGroupGizmo] 的话，会缺少 [selectedMemoryModel]、[selectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
+  /// 如果只传入 [memoryGroupGizmo] 的话，会缺少 [bSelectedMemoryModel]、[bSelectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
   MemoryGroupGizmoEditPageAbController({required this.editPageType, required this.memoryGroupGizmo});
 
   final MemoryGroupGizmoEditPageType editPageType;
@@ -28,13 +20,13 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// ========== 可操作-基础配置部分 ==========
 
   /// [MemoryGroups.title]
-  final title = Storage<String>(abObj: ''.ab, tempValue: '');
-  final cTitleTextEditingController = TextEditingController();
+  final bTitle = Storage<String>(abObj: ''.ab, tempValue: '');
+  final bcTitleTextEditingController = TextEditingController();
 
   /// [MemoryGroups.memoryModelId]
-  final selectedMemoryModel = Storage<MemoryModel?>(abObj: Ab<MemoryModel?>(null), tempValue: null);
+  final bSelectedMemoryModel = Storage<MemoryModel?>(abObj: Ab<MemoryModel?>(null), tempValue: null);
 
-  final selectedFragments = <Ab<Fragment>>[].ab;
+  final bSelectedFragments = <Ab<Fragment>>[].ab;
 
   /// ========== 可操作-基础配置部分 ==========
 
@@ -43,35 +35,45 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// ========== 可操作-当前周期配置部分 ==========
 
   /// [MemoryGroups.willNewLearnCount]
-  final willNewLearnCount = Storage<int>(abObj: 0.ab, tempValue: 0);
+  final cWillNewLearnCount = Storage<int>(abObj: 0.ab, tempValue: 0);
 
   /// [MemoryGroups.reviewInterval]
   /// TODO: 进行 [AbVerify]
-  final reviewInterval = Storage<DateTime>(abObj: DateTime
-      .now()
-      .ab, tempValue: DateTime.now());
-  final cReviewIntervalTextEditingController = TextEditingController();
+  final cReviewInterval = Storage<DateTime>(abObj: DateTime.now().ab, tempValue: DateTime.now());
+  final ccReviewIntervalTextEditingController = TextEditingController();
 
   /// [MemoryGroups.newReviewDisplayOrder]
-  final newReviewDisplayOrder = Storage<NewReviewDisplayOrder>(abObj: NewReviewDisplayOrder.mix.ab, tempValue: NewReviewDisplayOrder.mix);
+  final cNewReviewDisplayOrder = Storage<NewReviewDisplayOrder>(abObj: NewReviewDisplayOrder.mix.ab, tempValue: NewReviewDisplayOrder.mix);
 
   /// [MemoryGroups.newDisplayOrder]
-  final newDisplayOrder = Storage<NewDisplayOrder>(abObj: NewDisplayOrder.random.ab, tempValue: NewDisplayOrder.random);
+  final cNewDisplayOrder = Storage<NewDisplayOrder>(abObj: NewDisplayOrder.random.ab, tempValue: NewDisplayOrder.random);
 
-  /// 是否启用 [filterOutAlgorithm]。
-  final isEnableFilterOutAlgorithm = Storage<bool>(abObj: false.ab, tempValue: false);
+  /// =========================================================================================
+
+  /// [MemoryGroups.isEnableFilterOutAlgorithm]
+  final cIsEnableFilterOutAlgorithm = Storage<bool>(abObj: false.ab, tempValue: false);
+
+  /// [MemoryGroups.isFilterOutAlgorithmFollowMemoryModel]
+  final cIsFilterOutAlgorithmFollowMemoryModel = Storage<bool>(abObj: false.ab, tempValue: false);
 
   /// [MemoryGroups.filterOutAlgorithm]
   /// TODO: 进行 [AbVerify]
-  final filterOutAlgorithm = Storage<String>(abObj: ''.ab, tempValue: '');
-  final cFilterOutAlgorithmTextEditingController = TextEditingController();
+  final cFilterOutAlgorithm = Storage<String>(abObj: ''.ab, tempValue: '');
+  final ccFilterOutAlgorithmTextEditingController = TextEditingController();
 
-  /// 是否启用 [filterOutAlgorithm]。
-  final isEnableFloatingAlgorithm = Storage<bool>(abObj: false.ab, tempValue: false);
+  /// =========================================================================================
+
+  /// [MemoryGroups.isEnableFloatingAlgorithm]
+  final cIsEnableFloatingAlgorithm = Storage<bool>(abObj: false.ab, tempValue: false);
+
+  /// [MemoryGroups.isFloatingAlgorithmFollowMemoryModel]
+  final cIsFloatingAlgorithmFollowMemoryModel = Storage<bool>(abObj: false.ab, tempValue: false);
 
   /// [MemoryGroups.floatingAlgorithm]
-  final floatingAlgorithm = Storage<String>(abObj: ''.ab, tempValue: '');
-  final cFloatingAlgorithmTextEditingController = TextEditingController();
+  final cFloatingAlgorithm = Storage<String>(abObj: ''.ab, tempValue: '');
+  final ccFloatingAlgorithmTextEditingController = TextEditingController();
+
+  /// =========================================================================================
 
   /// ========== 可操作-当前周期配置部分 ==========
 
@@ -85,8 +87,10 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 是否全部展开
   final isExpandAll = false.ab;
 
+  /// 是否基础配置标题栏红字报错。
   final isBasicConfigRedErr = false.ab;
 
+  /// 是否当前周期配置标题栏红字报错。
   final isCurrentCycleRedErr = false.ab;
 
   /// ========== 不可操作-其他部分 ==========
@@ -94,23 +98,23 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   @override
   void onDispose() {
     super.onDispose();
-    cTitleTextEditingController.dispose();
-    cFilterOutAlgorithmTextEditingController.dispose();
-    cFloatingAlgorithmTextEditingController.dispose();
-    cReviewIntervalTextEditingController.dispose();
+    bcTitleTextEditingController.dispose();
+    ccFilterOutAlgorithmTextEditingController.dispose();
+    ccFloatingAlgorithmTextEditingController.dispose();
+    ccReviewIntervalTextEditingController.dispose();
   }
 
   @override
   void initComplexVerifies() {
-    title.abObj.initVerify(
-          (abV) async {
+    bTitle.abObj.initVerify(
+      (abV) async {
         if (abV().trim() == '') return VerifyResult(isOk: false, message: '标题不能为空！');
         return null;
       },
     );
 
-    selectedMemoryModel.abObj.initVerify(
-          (abV) async {
+    bSelectedMemoryModel.abObj.initVerify(
+      (abV) async {
         if (abV() == null) return VerifyResult(isOk: false, message: '记忆模型不能为空！');
         final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
         if (mm == null) return VerifyResult(isOk: false, message: '未查询到对应的记忆模型！');
@@ -143,44 +147,38 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       },
     );
 
-    reviewInterval.abObj.initVerify(
-          (abV) async {
-        if (abV()
-            .difference(DateTime.now())
-            .inSeconds < 600) return VerifyResult(isOk: false, message: '复习区间至少10分钟(600秒)以上哦~');
+    cReviewInterval.abObj.initVerify(
+      (abV) async {
+        if (abV().difference(DateTime.now()).inSeconds < 600) return VerifyResult(isOk: false, message: '复习区间至少10分钟(600秒)以上哦~');
         return null;
       },
     );
   }
 
-  Future<bool> get basicConfigRedErrVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get basicConfigRedErrVerify async => await AbVerify.checkMany(
         [
-          title.abObj.verify,
-          selectedMemoryModel.abObj.verify,
+          bTitle.abObj.verify,
+          bSelectedMemoryModel.abObj.verify,
         ],
       );
 
-  Future<bool> get currentCycleConfigRedErrVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get currentCycleConfigRedErrVerify async => await AbVerify.checkMany(
         [
-          reviewInterval.abObj.verify,
+          cReviewInterval.abObj.verify,
         ],
       );
 
-  Future<bool> get saveVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get saveVerify async => await AbVerify.checkMany(
         [
-          title.abObj.verify,
+          bTitle.abObj.verify,
         ],
       );
 
-  Future<bool> get analyzeVerify async =>
-      await AbVerify.checkMany(
+  Future<bool> get analyzeVerify async => await AbVerify.checkMany(
         [
-          title.abObj.verify,
-          selectedMemoryModel.abObj.verify,
-          reviewInterval.abObj.verify,
+          bTitle.abObj.verify,
+          bSelectedMemoryModel.abObj.verify,
+          cReviewInterval.abObj.verify,
         ],
       );
 
@@ -196,42 +194,68 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     final fs = await DriftDb.instance.generalQueryDAO.queryAllFragmentsInMemoryGroup(mgg.id);
     final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
-    title.tempValue = mgg.title;
-    selectedMemoryModel.tempValue = mm;
-
-    willNewLearnCount.tempValue = mgg.willNewLearnCount;
-    reviewInterval.tempValue = mgg.reviewInterval;
-    filterOutAlgorithm.tempValue = mgg.filterOutAlgorithm;
-    newReviewDisplayOrder.tempValue = mgg.newReviewDisplayOrder;
-    newDisplayOrder.tempValue = mgg.newDisplayOrder;
-
-    title.abObj.refreshEasy((oldValue) => title.tempValue);
-    selectedMemoryModel.abObj.refreshEasy((obj) => selectedMemoryModel.tempValue);
-    selectedFragments.refreshInevitable((obj) =>
-    obj
+    // 保存初始值
+    bTitle
+      ..tempValue = mgg.title
+      ..abObj.refreshEasy((oldValue) => mgg.title);
+    bcTitleTextEditingController.text = mgg.title;
+    bSelectedMemoryModel
+      ..tempValue = mm
+      ..abObj.refreshEasy((obj) => mm);
+    bSelectedFragments.refreshInevitable((obj) => obj
       ..clear_(this)
       ..addAll(fs.map((e) => e.ab)));
 
-    willNewLearnCount.abObj.refreshEasy((obj) => willNewLearnCount.tempValue);
-    reviewInterval.abObj.refreshEasy((oldValue) => reviewInterval.tempValue);
-    filterOutAlgorithm.abObj.refreshEasy((oldValue) => filterOutAlgorithm.tempValue);
-    newReviewDisplayOrder.abObj.refreshEasy((oldValue) => newReviewDisplayOrder.tempValue);
-    newDisplayOrder.abObj.refreshEasy((oldValue) => newDisplayOrder.tempValue);
+    cWillNewLearnCount
+      ..tempValue = mgg.willNewLearnCount
+      ..abObj.refreshEasy((obj) => mgg.willNewLearnCount);
+    cReviewInterval
+      ..tempValue = mgg.reviewInterval
+      ..abObj.refreshEasy((oldValue) => mgg.reviewInterval);
+    ccReviewIntervalTextEditingController.text = timeDifference(target: mgg.reviewInterval, start: DateTime.now()).toString();
+    cNewReviewDisplayOrder
+      ..tempValue = mgg.newReviewDisplayOrder
+      ..abObj.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
+
+    cIsEnableFilterOutAlgorithm
+      ..tempValue = mgg.isEnableFilterOutAlgorithm
+      ..abObj.refreshEasy((oldValue) => mgg.isEnableFilterOutAlgorithm);
+    cIsFilterOutAlgorithmFollowMemoryModel
+      ..tempValue = mgg.isFilterOutAlgorithmFollowMemoryModel
+      ..abObj.refreshEasy((oldValue) => mgg.isFilterOutAlgorithmFollowMemoryModel);
+    cFilterOutAlgorithm
+      ..tempValue = mgg.filterOutAlgorithm
+      ..abObj.refreshEasy((oldValue) => mgg.filterOutAlgorithm);
+    ccFilterOutAlgorithmTextEditingController.text = mgg.filterOutAlgorithm;
+
+    cIsEnableFloatingAlgorithm
+      ..tempValue = mgg.isEnableFloatingAlgorithm
+      ..abObj.refreshEasy((oldValue) => mgg.isEnableFloatingAlgorithm);
+    cIsFloatingAlgorithmFollowMemoryModel
+      ..tempValue = mgg.isFloatingAlgorithmFollowMemoryModel
+      ..abObj.refreshEasy((oldValue) => mgg.isFloatingAlgorithmFollowMemoryModel);
+    cFloatingAlgorithm
+      ..tempValue = mgg.floatingAlgorithm
+      ..abObj.refreshEasy((oldValue) => mgg.floatingAlgorithm);
+    ccFloatingAlgorithmTextEditingController.text = mgg.floatingAlgorithm;
+
+    cNewReviewDisplayOrder
+      ..tempValue = mgg.newReviewDisplayOrder
+      ..abObj.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
+    cNewDisplayOrder
+      ..tempValue = mgg.newDisplayOrder
+      ..abObj.refreshEasy((oldValue) => mgg.newDisplayOrder);
 
     final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mgg);
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
-
-    cTitleTextEditingController.text = title.tempValue;
-    cReviewIntervalTextEditingController.text = timeDifference(target: reviewInterval.tempValue, start: DateTime.now()).toString();
-    cFloatingAlgorithmTextEditingController.text = floatingAlgorithm.tempValue ?? '';
   }
 
   /// 仅保存。
   Future<void> save() async {
     await _save(isApply: false).then(
-          (value) async {
-        await title.abObj.verify.check();
-        isBasicConfigRedErr.refreshEasy((oldValue) => !title.abObj.verify.isOk);
+      (value) async {
+        await bTitle.abObj.verify.check();
+        isBasicConfigRedErr.refreshEasy((oldValue) => !bTitle.abObj.verify.isOk);
         if (value.t1) {
           SmartDialog.showToast('保存成功！');
           Navigator.pop(context);
@@ -252,21 +276,20 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         oldMemoryGroupReset: (resetSyncTag) async {
           await memoryGroupGizmo!().reset(
             startTime: isApply ? DateTime.now().toValue() : toAbsent(),
-            memoryModelId: (selectedMemoryModel
-                .abObj()
-                ?.id).toValue(),
-            title: cTitleTextEditingController.text.toValue(),
-            willNewLearnCount: willNewLearnCount.abObj().toValue(),
-            reviewInterval: reviewInterval.abObj().toValue(),
-            isEnableFilterOutAlgorithm
-            :,
-            filterOutAlgorithm: filterOutAlgorithm.abObj().toValue(),
-            newReviewDisplayOrder: newReviewDisplayOrder.abObj().toValue(),
-            newDisplayOrder: newDisplayOrder.abObj().toValue(),
-            floatingAlgorithm: floatingAlgorithm.abObj().toValue(),
+            memoryModelId: (bSelectedMemoryModel.abObj()?.id).toValue(),
+            title: bTitle.abObj().toValue(),
+            willNewLearnCount: cWillNewLearnCount.abObj().toValue(),
+            reviewInterval: cReviewInterval.abObj().toValue(),
+            newReviewDisplayOrder: cNewReviewDisplayOrder.abObj().toValue(),
+            newDisplayOrder: cNewDisplayOrder.abObj().toValue(),
+            isFilterOutAlgorithmFollowMemoryModel: cIsFilterOutAlgorithmFollowMemoryModel.abObj().toValue(),
+            isEnableFilterOutAlgorithm: cIsEnableFilterOutAlgorithm.abObj().toValue(),
+            filterOutAlgorithm: cFilterOutAlgorithm.abObj().toValue(),
+            isFloatingAlgorithmFollowMemoryModel: cIsFloatingAlgorithmFollowMemoryModel.abObj().toValue(),
+            isEnableFloatingAlgorithm: cIsEnableFloatingAlgorithm.abObj().toValue(),
+            floatingAlgorithm: cFloatingAlgorithm.abObj().toValue(),
             writeSyncTag: resetSyncTag,
           );
-          title.abObj.refreshEasy((oldValue) => cTitleTextEditingController.text);
         },
       );
       memoryGroupGizmo!.refreshForce();
@@ -278,7 +301,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   Future<void> analyze() async {
     await _analyze().then(
-          (value) async {
+      (value) async {
         final ibcre = !await basicConfigRedErrVerify;
         final iccre = !await currentCycleConfigRedErrVerify;
         isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);
@@ -302,7 +325,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 保存并开始。
   Future<void> applyAndStart() async {
     await _applyAndStart().then(
-          (value) async {
+      (value) async {
         final ibcre = !await basicConfigRedErrVerify;
         final iccre = !await currentCycleConfigRedErrVerify;
         isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);

@@ -1,5 +1,5 @@
 import 'package:drift_main/DriftDb.dart';
-import 'package:aaa/page/edit/MemoryGroupGizmoEditPage.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';

@@ -1060,12 +1060,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 取用 [reviewInterval] 时间点内的复习碎片。
   DateTime reviewInterval;
 
-  /// 是否启用 [filterOutAlgorithm]
-  bool isEnableFilterOutAlgorithm;
-
-  /// 过滤碎片算法。
-  String filterOutAlgorithm;
-
   /// 新旧碎片展示先后顺序。
   NewReviewDisplayOrder newReviewDisplayOrder;
 
@@ -1078,8 +1072,20 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   /// 若已完成，则为 [DateTime.fromMicrosecondsSinceEpoch(0)]
   DateTime? startTime;
 
+  /// 是否启用 [filterOutAlgorithm]
+  bool isEnableFilterOutAlgorithm;
+
+  /// 是否跟随记忆模型。
+  bool isFilterOutAlgorithmFollowMemoryModel;
+
+  /// 过滤碎片算法。
+  String filterOutAlgorithm;
+
   /// 是否启用 [floatingAlgorithm]
   bool isEnableFloatingAlgorithm;
+
+  /// 是否跟随记忆模型。
+  bool isFloatingAlgorithmFollowMemoryModel;
 
   /// 悬浮算法。
   String floatingAlgorithm;
@@ -1091,12 +1097,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       required this.title,
       required this.willNewLearnCount,
       required this.reviewInterval,
-      required this.isEnableFilterOutAlgorithm,
-      required this.filterOutAlgorithm,
       required this.newReviewDisplayOrder,
       required this.newDisplayOrder,
       this.startTime,
+      required this.isEnableFilterOutAlgorithm,
+      required this.isFilterOutAlgorithmFollowMemoryModel,
+      required this.filterOutAlgorithm,
       required this.isEnableFloatingAlgorithm,
+      required this.isFloatingAlgorithmFollowMemoryModel,
       required this.floatingAlgorithm});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1110,9 +1118,6 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     map['title'] = Variable<String>(title);
     map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
     map['review_interval'] = Variable<DateTime>(reviewInterval);
-    map['is_enable_filter_out_algorithm'] =
-        Variable<bool>(isEnableFilterOutAlgorithm);
-    map['filter_out_algorithm'] = Variable<String>(filterOutAlgorithm);
     {
       final converter = $MemoryGroupsTable.$converter0;
       map['new_review_display_order'] =
@@ -1126,8 +1131,15 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     if (!nullToAbsent || startTime != null) {
       map['start_time'] = Variable<DateTime>(startTime);
     }
+    map['is_enable_filter_out_algorithm'] =
+        Variable<bool>(isEnableFilterOutAlgorithm);
+    map['is_filter_out_algorithm_follow_memory_model'] =
+        Variable<bool>(isFilterOutAlgorithmFollowMemoryModel);
+    map['filter_out_algorithm'] = Variable<String>(filterOutAlgorithm);
     map['is_enable_floating_algorithm'] =
         Variable<bool>(isEnableFloatingAlgorithm);
+    map['is_floating_algorithm_follow_memory_model'] =
+        Variable<bool>(isFloatingAlgorithmFollowMemoryModel);
     map['floating_algorithm'] = Variable<String>(floatingAlgorithm);
     return map;
   }
@@ -1143,14 +1155,18 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title: Value(title),
       willNewLearnCount: Value(willNewLearnCount),
       reviewInterval: Value(reviewInterval),
-      isEnableFilterOutAlgorithm: Value(isEnableFilterOutAlgorithm),
-      filterOutAlgorithm: Value(filterOutAlgorithm),
       newReviewDisplayOrder: Value(newReviewDisplayOrder),
       newDisplayOrder: Value(newDisplayOrder),
       startTime: startTime == null && nullToAbsent
           ? const Value.absent()
           : Value(startTime),
+      isEnableFilterOutAlgorithm: Value(isEnableFilterOutAlgorithm),
+      isFilterOutAlgorithmFollowMemoryModel:
+          Value(isFilterOutAlgorithmFollowMemoryModel),
+      filterOutAlgorithm: Value(filterOutAlgorithm),
       isEnableFloatingAlgorithm: Value(isEnableFloatingAlgorithm),
+      isFloatingAlgorithmFollowMemoryModel:
+          Value(isFloatingAlgorithmFollowMemoryModel),
       floatingAlgorithm: Value(floatingAlgorithm),
     );
   }
@@ -1166,17 +1182,21 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title: serializer.fromJson<String>(json['title']),
       willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
       reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
-      isEnableFilterOutAlgorithm:
-          serializer.fromJson<bool>(json['isEnableFilterOutAlgorithm']),
-      filterOutAlgorithm:
-          serializer.fromJson<String>(json['filterOutAlgorithm']),
       newReviewDisplayOrder: serializer
           .fromJson<NewReviewDisplayOrder>(json['newReviewDisplayOrder']),
       newDisplayOrder:
           serializer.fromJson<NewDisplayOrder>(json['newDisplayOrder']),
       startTime: serializer.fromJson<DateTime?>(json['startTime']),
+      isEnableFilterOutAlgorithm:
+          serializer.fromJson<bool>(json['isEnableFilterOutAlgorithm']),
+      isFilterOutAlgorithmFollowMemoryModel: serializer
+          .fromJson<bool>(json['isFilterOutAlgorithmFollowMemoryModel']),
+      filterOutAlgorithm:
+          serializer.fromJson<String>(json['filterOutAlgorithm']),
       isEnableFloatingAlgorithm:
           serializer.fromJson<bool>(json['isEnableFloatingAlgorithm']),
+      isFloatingAlgorithmFollowMemoryModel: serializer
+          .fromJson<bool>(json['isFloatingAlgorithmFollowMemoryModel']),
       floatingAlgorithm: serializer.fromJson<String>(json['floatingAlgorithm']),
     );
   }
@@ -1191,15 +1211,19 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'title': serializer.toJson<String>(title),
       'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
       'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
-      'isEnableFilterOutAlgorithm':
-          serializer.toJson<bool>(isEnableFilterOutAlgorithm),
-      'filterOutAlgorithm': serializer.toJson<String>(filterOutAlgorithm),
       'newReviewDisplayOrder':
           serializer.toJson<NewReviewDisplayOrder>(newReviewDisplayOrder),
       'newDisplayOrder': serializer.toJson<NewDisplayOrder>(newDisplayOrder),
       'startTime': serializer.toJson<DateTime?>(startTime),
+      'isEnableFilterOutAlgorithm':
+          serializer.toJson<bool>(isEnableFilterOutAlgorithm),
+      'isFilterOutAlgorithmFollowMemoryModel':
+          serializer.toJson<bool>(isFilterOutAlgorithmFollowMemoryModel),
+      'filterOutAlgorithm': serializer.toJson<String>(filterOutAlgorithm),
       'isEnableFloatingAlgorithm':
           serializer.toJson<bool>(isEnableFloatingAlgorithm),
+      'isFloatingAlgorithmFollowMemoryModel':
+          serializer.toJson<bool>(isFloatingAlgorithmFollowMemoryModel),
       'floatingAlgorithm': serializer.toJson<String>(floatingAlgorithm),
     };
   }
@@ -1212,12 +1236,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           String? title,
           int? willNewLearnCount,
           DateTime? reviewInterval,
-          bool? isEnableFilterOutAlgorithm,
-          String? filterOutAlgorithm,
           NewReviewDisplayOrder? newReviewDisplayOrder,
           NewDisplayOrder? newDisplayOrder,
           Value<DateTime?> startTime = const Value.absent(),
+          bool? isEnableFilterOutAlgorithm,
+          bool? isFilterOutAlgorithmFollowMemoryModel,
+          String? filterOutAlgorithm,
           bool? isEnableFloatingAlgorithm,
+          bool? isFloatingAlgorithmFollowMemoryModel,
           String? floatingAlgorithm}) =>
       MemoryGroup(
         id: id ?? this.id,
@@ -1228,15 +1254,21 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
         title: title ?? this.title,
         willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
         reviewInterval: reviewInterval ?? this.reviewInterval,
-        isEnableFilterOutAlgorithm:
-            isEnableFilterOutAlgorithm ?? this.isEnableFilterOutAlgorithm,
-        filterOutAlgorithm: filterOutAlgorithm ?? this.filterOutAlgorithm,
         newReviewDisplayOrder:
             newReviewDisplayOrder ?? this.newReviewDisplayOrder,
         newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
         startTime: startTime.present ? startTime.value : this.startTime,
+        isEnableFilterOutAlgorithm:
+            isEnableFilterOutAlgorithm ?? this.isEnableFilterOutAlgorithm,
+        isFilterOutAlgorithmFollowMemoryModel:
+            isFilterOutAlgorithmFollowMemoryModel ??
+                this.isFilterOutAlgorithmFollowMemoryModel,
+        filterOutAlgorithm: filterOutAlgorithm ?? this.filterOutAlgorithm,
         isEnableFloatingAlgorithm:
             isEnableFloatingAlgorithm ?? this.isEnableFloatingAlgorithm,
+        isFloatingAlgorithmFollowMemoryModel:
+            isFloatingAlgorithmFollowMemoryModel ??
+                this.isFloatingAlgorithmFollowMemoryModel,
         floatingAlgorithm: floatingAlgorithm ?? this.floatingAlgorithm,
       );
   @override
@@ -1249,12 +1281,16 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           ..write('title: $title, ')
           ..write('willNewLearnCount: $willNewLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
-          ..write('isEnableFilterOutAlgorithm: $isEnableFilterOutAlgorithm, ')
-          ..write('filterOutAlgorithm: $filterOutAlgorithm, ')
           ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
           ..write('newDisplayOrder: $newDisplayOrder, ')
           ..write('startTime: $startTime, ')
+          ..write('isEnableFilterOutAlgorithm: $isEnableFilterOutAlgorithm, ')
+          ..write(
+              'isFilterOutAlgorithmFollowMemoryModel: $isFilterOutAlgorithmFollowMemoryModel, ')
+          ..write('filterOutAlgorithm: $filterOutAlgorithm, ')
           ..write('isEnableFloatingAlgorithm: $isEnableFloatingAlgorithm, ')
+          ..write(
+              'isFloatingAlgorithmFollowMemoryModel: $isFloatingAlgorithmFollowMemoryModel, ')
           ..write('floatingAlgorithm: $floatingAlgorithm')
           ..write(')'))
         .toString();
@@ -1269,12 +1305,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       title,
       willNewLearnCount,
       reviewInterval,
-      isEnableFilterOutAlgorithm,
-      filterOutAlgorithm,
       newReviewDisplayOrder,
       newDisplayOrder,
       startTime,
+      isEnableFilterOutAlgorithm,
+      isFilterOutAlgorithmFollowMemoryModel,
+      filterOutAlgorithm,
       isEnableFloatingAlgorithm,
+      isFloatingAlgorithmFollowMemoryModel,
       floatingAlgorithm);
   @override
   bool operator ==(Object other) =>
@@ -1287,12 +1325,16 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           other.title == this.title &&
           other.willNewLearnCount == this.willNewLearnCount &&
           other.reviewInterval == this.reviewInterval &&
-          other.isEnableFilterOutAlgorithm == this.isEnableFilterOutAlgorithm &&
-          other.filterOutAlgorithm == this.filterOutAlgorithm &&
           other.newReviewDisplayOrder == this.newReviewDisplayOrder &&
           other.newDisplayOrder == this.newDisplayOrder &&
           other.startTime == this.startTime &&
+          other.isEnableFilterOutAlgorithm == this.isEnableFilterOutAlgorithm &&
+          other.isFilterOutAlgorithmFollowMemoryModel ==
+              this.isFilterOutAlgorithmFollowMemoryModel &&
+          other.filterOutAlgorithm == this.filterOutAlgorithm &&
           other.isEnableFloatingAlgorithm == this.isEnableFloatingAlgorithm &&
+          other.isFloatingAlgorithmFollowMemoryModel ==
+              this.isFloatingAlgorithmFollowMemoryModel &&
           other.floatingAlgorithm == this.floatingAlgorithm);
 }
 
@@ -1304,12 +1346,14 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String> title;
   Value<int> willNewLearnCount;
   Value<DateTime> reviewInterval;
-  Value<bool> isEnableFilterOutAlgorithm;
-  Value<String> filterOutAlgorithm;
   Value<NewReviewDisplayOrder> newReviewDisplayOrder;
   Value<NewDisplayOrder> newDisplayOrder;
   Value<DateTime?> startTime;
+  Value<bool> isEnableFilterOutAlgorithm;
+  Value<bool> isFilterOutAlgorithmFollowMemoryModel;
+  Value<String> filterOutAlgorithm;
   Value<bool> isEnableFloatingAlgorithm;
+  Value<bool> isFloatingAlgorithmFollowMemoryModel;
   Value<String> floatingAlgorithm;
   MemoryGroupsCompanion({
     this.id = const Value.absent(),
@@ -1319,12 +1363,14 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.title = const Value.absent(),
     this.willNewLearnCount = const Value.absent(),
     this.reviewInterval = const Value.absent(),
-    this.isEnableFilterOutAlgorithm = const Value.absent(),
-    this.filterOutAlgorithm = const Value.absent(),
     this.newReviewDisplayOrder = const Value.absent(),
     this.newDisplayOrder = const Value.absent(),
     this.startTime = const Value.absent(),
+    this.isEnableFilterOutAlgorithm = const Value.absent(),
+    this.isFilterOutAlgorithmFollowMemoryModel = const Value.absent(),
+    this.filterOutAlgorithm = const Value.absent(),
     this.isEnableFloatingAlgorithm = const Value.absent(),
+    this.isFloatingAlgorithmFollowMemoryModel = const Value.absent(),
     this.floatingAlgorithm = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
@@ -1335,12 +1381,14 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required String title,
     required int willNewLearnCount,
     required DateTime reviewInterval,
-    required bool isEnableFilterOutAlgorithm,
-    required String filterOutAlgorithm,
     required NewReviewDisplayOrder newReviewDisplayOrder,
     required NewDisplayOrder newDisplayOrder,
     this.startTime = const Value.absent(),
+    required bool isEnableFilterOutAlgorithm,
+    required bool isFilterOutAlgorithmFollowMemoryModel,
+    required String filterOutAlgorithm,
     required bool isEnableFloatingAlgorithm,
+    required bool isFloatingAlgorithmFollowMemoryModel,
     required String floatingAlgorithm,
   })  : id = Value(id),
         createdAt = Value(createdAt),
@@ -1348,11 +1396,15 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
         title = Value(title),
         willNewLearnCount = Value(willNewLearnCount),
         reviewInterval = Value(reviewInterval),
-        isEnableFilterOutAlgorithm = Value(isEnableFilterOutAlgorithm),
-        filterOutAlgorithm = Value(filterOutAlgorithm),
         newReviewDisplayOrder = Value(newReviewDisplayOrder),
         newDisplayOrder = Value(newDisplayOrder),
+        isEnableFilterOutAlgorithm = Value(isEnableFilterOutAlgorithm),
+        isFilterOutAlgorithmFollowMemoryModel =
+            Value(isFilterOutAlgorithmFollowMemoryModel),
+        filterOutAlgorithm = Value(filterOutAlgorithm),
         isEnableFloatingAlgorithm = Value(isEnableFloatingAlgorithm),
+        isFloatingAlgorithmFollowMemoryModel =
+            Value(isFloatingAlgorithmFollowMemoryModel),
         floatingAlgorithm = Value(floatingAlgorithm);
   static Insertable<MemoryGroup> custom({
     Expression<String>? id,
@@ -1362,12 +1414,14 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<String>? title,
     Expression<int>? willNewLearnCount,
     Expression<DateTime>? reviewInterval,
-    Expression<bool>? isEnableFilterOutAlgorithm,
-    Expression<String>? filterOutAlgorithm,
     Expression<int>? newReviewDisplayOrder,
     Expression<int>? newDisplayOrder,
     Expression<DateTime>? startTime,
+    Expression<bool>? isEnableFilterOutAlgorithm,
+    Expression<bool>? isFilterOutAlgorithmFollowMemoryModel,
+    Expression<String>? filterOutAlgorithm,
     Expression<bool>? isEnableFloatingAlgorithm,
+    Expression<bool>? isFloatingAlgorithmFollowMemoryModel,
     Expression<String>? floatingAlgorithm,
   }) {
     return RawValuesInsertable({
@@ -1378,16 +1432,22 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       if (title != null) 'title': title,
       if (willNewLearnCount != null) 'will_new_learn_count': willNewLearnCount,
       if (reviewInterval != null) 'review_interval': reviewInterval,
-      if (isEnableFilterOutAlgorithm != null)
-        'is_enable_filter_out_algorithm': isEnableFilterOutAlgorithm,
-      if (filterOutAlgorithm != null)
-        'filter_out_algorithm': filterOutAlgorithm,
       if (newReviewDisplayOrder != null)
         'new_review_display_order': newReviewDisplayOrder,
       if (newDisplayOrder != null) 'new_display_order': newDisplayOrder,
       if (startTime != null) 'start_time': startTime,
+      if (isEnableFilterOutAlgorithm != null)
+        'is_enable_filter_out_algorithm': isEnableFilterOutAlgorithm,
+      if (isFilterOutAlgorithmFollowMemoryModel != null)
+        'is_filter_out_algorithm_follow_memory_model':
+            isFilterOutAlgorithmFollowMemoryModel,
+      if (filterOutAlgorithm != null)
+        'filter_out_algorithm': filterOutAlgorithm,
       if (isEnableFloatingAlgorithm != null)
         'is_enable_floating_algorithm': isEnableFloatingAlgorithm,
+      if (isFloatingAlgorithmFollowMemoryModel != null)
+        'is_floating_algorithm_follow_memory_model':
+            isFloatingAlgorithmFollowMemoryModel,
       if (floatingAlgorithm != null) 'floating_algorithm': floatingAlgorithm,
     });
   }
@@ -1400,12 +1460,14 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<String>? title,
       Value<int>? willNewLearnCount,
       Value<DateTime>? reviewInterval,
-      Value<bool>? isEnableFilterOutAlgorithm,
-      Value<String>? filterOutAlgorithm,
       Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
       Value<NewDisplayOrder>? newDisplayOrder,
       Value<DateTime?>? startTime,
+      Value<bool>? isEnableFilterOutAlgorithm,
+      Value<bool>? isFilterOutAlgorithmFollowMemoryModel,
+      Value<String>? filterOutAlgorithm,
       Value<bool>? isEnableFloatingAlgorithm,
+      Value<bool>? isFloatingAlgorithmFollowMemoryModel,
       Value<String>? floatingAlgorithm}) {
     return MemoryGroupsCompanion(
       id: id ?? this.id,
@@ -1415,15 +1477,21 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       title: title ?? this.title,
       willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
       reviewInterval: reviewInterval ?? this.reviewInterval,
-      isEnableFilterOutAlgorithm:
-          isEnableFilterOutAlgorithm ?? this.isEnableFilterOutAlgorithm,
-      filterOutAlgorithm: filterOutAlgorithm ?? this.filterOutAlgorithm,
       newReviewDisplayOrder:
           newReviewDisplayOrder ?? this.newReviewDisplayOrder,
       newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
       startTime: startTime ?? this.startTime,
+      isEnableFilterOutAlgorithm:
+          isEnableFilterOutAlgorithm ?? this.isEnableFilterOutAlgorithm,
+      isFilterOutAlgorithmFollowMemoryModel:
+          isFilterOutAlgorithmFollowMemoryModel ??
+              this.isFilterOutAlgorithmFollowMemoryModel,
+      filterOutAlgorithm: filterOutAlgorithm ?? this.filterOutAlgorithm,
       isEnableFloatingAlgorithm:
           isEnableFloatingAlgorithm ?? this.isEnableFloatingAlgorithm,
+      isFloatingAlgorithmFollowMemoryModel:
+          isFloatingAlgorithmFollowMemoryModel ??
+              this.isFloatingAlgorithmFollowMemoryModel,
       floatingAlgorithm: floatingAlgorithm ?? this.floatingAlgorithm,
     );
   }
@@ -1452,13 +1520,6 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     if (reviewInterval.present) {
       map['review_interval'] = Variable<DateTime>(reviewInterval.value);
     }
-    if (isEnableFilterOutAlgorithm.present) {
-      map['is_enable_filter_out_algorithm'] =
-          Variable<bool>(isEnableFilterOutAlgorithm.value);
-    }
-    if (filterOutAlgorithm.present) {
-      map['filter_out_algorithm'] = Variable<String>(filterOutAlgorithm.value);
-    }
     if (newReviewDisplayOrder.present) {
       final converter = $MemoryGroupsTable.$converter0;
       map['new_review_display_order'] =
@@ -1472,9 +1533,24 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     if (startTime.present) {
       map['start_time'] = Variable<DateTime>(startTime.value);
     }
+    if (isEnableFilterOutAlgorithm.present) {
+      map['is_enable_filter_out_algorithm'] =
+          Variable<bool>(isEnableFilterOutAlgorithm.value);
+    }
+    if (isFilterOutAlgorithmFollowMemoryModel.present) {
+      map['is_filter_out_algorithm_follow_memory_model'] =
+          Variable<bool>(isFilterOutAlgorithmFollowMemoryModel.value);
+    }
+    if (filterOutAlgorithm.present) {
+      map['filter_out_algorithm'] = Variable<String>(filterOutAlgorithm.value);
+    }
     if (isEnableFloatingAlgorithm.present) {
       map['is_enable_floating_algorithm'] =
           Variable<bool>(isEnableFloatingAlgorithm.value);
+    }
+    if (isFloatingAlgorithmFollowMemoryModel.present) {
+      map['is_floating_algorithm_follow_memory_model'] =
+          Variable<bool>(isFloatingAlgorithmFollowMemoryModel.value);
     }
     if (floatingAlgorithm.present) {
       map['floating_algorithm'] = Variable<String>(floatingAlgorithm.value);
@@ -1492,12 +1568,16 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
           ..write('title: $title, ')
           ..write('willNewLearnCount: $willNewLearnCount, ')
           ..write('reviewInterval: $reviewInterval, ')
-          ..write('isEnableFilterOutAlgorithm: $isEnableFilterOutAlgorithm, ')
-          ..write('filterOutAlgorithm: $filterOutAlgorithm, ')
           ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
           ..write('newDisplayOrder: $newDisplayOrder, ')
           ..write('startTime: $startTime, ')
+          ..write('isEnableFilterOutAlgorithm: $isEnableFilterOutAlgorithm, ')
+          ..write(
+              'isFilterOutAlgorithmFollowMemoryModel: $isFilterOutAlgorithmFollowMemoryModel, ')
+          ..write('filterOutAlgorithm: $filterOutAlgorithm, ')
           ..write('isEnableFloatingAlgorithm: $isEnableFloatingAlgorithm, ')
+          ..write(
+              'isFloatingAlgorithmFollowMemoryModel: $isFloatingAlgorithmFollowMemoryModel, ')
           ..write('floatingAlgorithm: $floatingAlgorithm')
           ..write(')'))
         .toString();
@@ -1548,22 +1628,6 @@ class $MemoryGroupsTable extends MemoryGroups
   late final GeneratedColumn<DateTime> reviewInterval =
       GeneratedColumn<DateTime>('review_interval', aliasedName, false,
           type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  final VerificationMeta _isEnableFilterOutAlgorithmMeta =
-      const VerificationMeta('isEnableFilterOutAlgorithm');
-  @override
-  late final GeneratedColumn<bool> isEnableFilterOutAlgorithm =
-      GeneratedColumn<bool>(
-          'is_enable_filter_out_algorithm', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints:
-              'CHECK (is_enable_filter_out_algorithm IN (0, 1))');
-  final VerificationMeta _filterOutAlgorithmMeta =
-      const VerificationMeta('filterOutAlgorithm');
-  @override
-  late final GeneratedColumn<String> filterOutAlgorithm =
-      GeneratedColumn<String>('filter_out_algorithm', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _newReviewDisplayOrderMeta =
       const VerificationMeta('newReviewDisplayOrder');
   @override
@@ -1585,6 +1649,32 @@ class $MemoryGroupsTable extends MemoryGroups
   late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
       'start_time', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  final VerificationMeta _isEnableFilterOutAlgorithmMeta =
+      const VerificationMeta('isEnableFilterOutAlgorithm');
+  @override
+  late final GeneratedColumn<bool> isEnableFilterOutAlgorithm =
+      GeneratedColumn<bool>(
+          'is_enable_filter_out_algorithm', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints:
+              'CHECK (is_enable_filter_out_algorithm IN (0, 1))');
+  final VerificationMeta _isFilterOutAlgorithmFollowMemoryModelMeta =
+      const VerificationMeta('isFilterOutAlgorithmFollowMemoryModel');
+  @override
+  late final GeneratedColumn<bool> isFilterOutAlgorithmFollowMemoryModel =
+      GeneratedColumn<bool>(
+          'is_filter_out_algorithm_follow_memory_model', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints:
+              'CHECK (is_filter_out_algorithm_follow_memory_model IN (0, 1))');
+  final VerificationMeta _filterOutAlgorithmMeta =
+      const VerificationMeta('filterOutAlgorithm');
+  @override
+  late final GeneratedColumn<String> filterOutAlgorithm =
+      GeneratedColumn<String>('filter_out_algorithm', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _isEnableFloatingAlgorithmMeta =
       const VerificationMeta('isEnableFloatingAlgorithm');
   @override
@@ -1593,6 +1683,16 @@ class $MemoryGroupsTable extends MemoryGroups
           type: DriftSqlType.bool,
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_enable_floating_algorithm IN (0, 1))');
+  final VerificationMeta _isFloatingAlgorithmFollowMemoryModelMeta =
+      const VerificationMeta('isFloatingAlgorithmFollowMemoryModel');
+  @override
+  late final GeneratedColumn<bool> isFloatingAlgorithmFollowMemoryModel =
+      GeneratedColumn<bool>(
+          'is_floating_algorithm_follow_memory_model', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints:
+              'CHECK (is_floating_algorithm_follow_memory_model IN (0, 1))');
   final VerificationMeta _floatingAlgorithmMeta =
       const VerificationMeta('floatingAlgorithm');
   @override
@@ -1608,12 +1708,14 @@ class $MemoryGroupsTable extends MemoryGroups
         title,
         willNewLearnCount,
         reviewInterval,
-        isEnableFilterOutAlgorithm,
-        filterOutAlgorithm,
         newReviewDisplayOrder,
         newDisplayOrder,
         startTime,
+        isEnableFilterOutAlgorithm,
+        isFilterOutAlgorithmFollowMemoryModel,
+        filterOutAlgorithm,
         isEnableFloatingAlgorithm,
+        isFloatingAlgorithmFollowMemoryModel,
         floatingAlgorithm
       ];
   @override
@@ -1670,6 +1772,13 @@ class $MemoryGroupsTable extends MemoryGroups
     } else if (isInserting) {
       context.missing(_reviewIntervalMeta);
     }
+    context.handle(
+        _newReviewDisplayOrderMeta, const VerificationResult.success());
+    context.handle(_newDisplayOrderMeta, const VerificationResult.success());
+    if (data.containsKey('start_time')) {
+      context.handle(_startTimeMeta,
+          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
+    }
     if (data.containsKey('is_enable_filter_out_algorithm')) {
       context.handle(
           _isEnableFilterOutAlgorithmMeta,
@@ -1679,6 +1788,15 @@ class $MemoryGroupsTable extends MemoryGroups
     } else if (isInserting) {
       context.missing(_isEnableFilterOutAlgorithmMeta);
     }
+    if (data.containsKey('is_filter_out_algorithm_follow_memory_model')) {
+      context.handle(
+          _isFilterOutAlgorithmFollowMemoryModelMeta,
+          isFilterOutAlgorithmFollowMemoryModel.isAcceptableOrUnknown(
+              data['is_filter_out_algorithm_follow_memory_model']!,
+              _isFilterOutAlgorithmFollowMemoryModelMeta));
+    } else if (isInserting) {
+      context.missing(_isFilterOutAlgorithmFollowMemoryModelMeta);
+    }
     if (data.containsKey('filter_out_algorithm')) {
       context.handle(
           _filterOutAlgorithmMeta,
@@ -1686,13 +1804,6 @@ class $MemoryGroupsTable extends MemoryGroups
               data['filter_out_algorithm']!, _filterOutAlgorithmMeta));
     } else if (isInserting) {
       context.missing(_filterOutAlgorithmMeta);
-    }
-    context.handle(
-        _newReviewDisplayOrderMeta, const VerificationResult.success());
-    context.handle(_newDisplayOrderMeta, const VerificationResult.success());
-    if (data.containsKey('start_time')) {
-      context.handle(_startTimeMeta,
-          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
     }
     if (data.containsKey('is_enable_floating_algorithm')) {
       context.handle(
@@ -1702,6 +1813,15 @@ class $MemoryGroupsTable extends MemoryGroups
               _isEnableFloatingAlgorithmMeta));
     } else if (isInserting) {
       context.missing(_isEnableFloatingAlgorithmMeta);
+    }
+    if (data.containsKey('is_floating_algorithm_follow_memory_model')) {
+      context.handle(
+          _isFloatingAlgorithmFollowMemoryModelMeta,
+          isFloatingAlgorithmFollowMemoryModel.isAcceptableOrUnknown(
+              data['is_floating_algorithm_follow_memory_model']!,
+              _isFloatingAlgorithmFollowMemoryModelMeta));
+    } else if (isInserting) {
+      context.missing(_isFloatingAlgorithmFollowMemoryModelMeta);
     }
     if (data.containsKey('floating_algorithm')) {
       context.handle(
@@ -1734,11 +1854,6 @@ class $MemoryGroupsTable extends MemoryGroups
           DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
       reviewInterval: attachedDatabase.options.types.read(
           DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
-      isEnableFilterOutAlgorithm: attachedDatabase.options.types.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}is_enable_filter_out_algorithm'])!,
-      filterOutAlgorithm: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}filter_out_algorithm'])!,
       newReviewDisplayOrder: $MemoryGroupsTable.$converter0.fromSql(
           attachedDatabase.options.types.read(DriftSqlType.int,
               data['${effectivePrefix}new_review_display_order'])!),
@@ -1747,9 +1862,21 @@ class $MemoryGroupsTable extends MemoryGroups
               DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
       startTime: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}start_time']),
+      isEnableFilterOutAlgorithm: attachedDatabase.options.types.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}is_enable_filter_out_algorithm'])!,
+      isFilterOutAlgorithmFollowMemoryModel: attachedDatabase.options.types.read(
+          DriftSqlType.bool,
+          data[
+              '${effectivePrefix}is_filter_out_algorithm_follow_memory_model'])!,
+      filterOutAlgorithm: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}filter_out_algorithm'])!,
       isEnableFloatingAlgorithm: attachedDatabase.options.types.read(
           DriftSqlType.bool,
           data['${effectivePrefix}is_enable_floating_algorithm'])!,
+      isFloatingAlgorithmFollowMemoryModel: attachedDatabase.options.types.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}is_floating_algorithm_follow_memory_model'])!,
       floatingAlgorithm: attachedDatabase.options.types.read(
           DriftSqlType.string, data['${effectivePrefix}floating_algorithm'])!,
     );
