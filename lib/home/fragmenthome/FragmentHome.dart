@@ -23,71 +23,38 @@ class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderSt
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
             child: Row(
               children: [
-                const Expanded(child: Text('data')),
                 Expanded(
                   flex: 2,
                   child: TabBar(
+                    isScrollable: true,
+                    indicatorWeight: 5,
                     controller: putController.tabController,
                     tabs: const [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text('碎片', style: TextStyle(color: Colors.blue)),
+                      Tab(
+                        text: '碎片',
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text('模型', style: TextStyle(color: Colors.blue)),
+                      Tab(
+                        text: '算法',
                       ),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2<int>(
-                          // dropdownWidth: 150,
-                          dropdownDecoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                          customButton: const Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            child: Icon(Icons.more_horiz),
-                          ),
-
-                          items: const [
-                            DropdownMenuItem(
-                              value: 0,
-                              child: Text('添加碎片'),
-                            ),
-                            DropdownMenuItem(
-                              value: 1,
-                              child: Text('添加碎片组'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value == 0) {
-                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
-                              return;
-                            }
-                            if (value == 1) {
-                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupGizmoEditPage()));
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                const Spacer(),
               ],
             ),
-            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
           body: TabBarView(
             controller: putController.tabController,
-            children: const [
-              FragmentGroupListPage(listPageType: ListPageType.home),
-              MemoryModeListPage(listPageType: ListPageType.home),
+            children: [
+              KeepStateWidget(
+                builder: (_) => const FragmentGroupListPage(listPageType: ListPageType.home),
+              ),
+              KeepStateWidget(
+                builder: (_) => const MemoryModeListPage(listPageType: ListPageType.home),
+              ),
             ],
           ),
         );

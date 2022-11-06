@@ -36,10 +36,10 @@ class HomeAbController extends AbController {
       timer = null;
     }
 
-    if (SmartDialog.config.isExistDialog) {
-      SmartDialog.dismiss();
-      return true;
-    }
+    // if (SmartDialog.config.isExistDialog) {
+    //   SmartDialog.dismiss();
+    //   return true;
+    // }
 
     // 如果一个对话框(或任何其他路由)是打开的，则不拦截。
     if (routeInfo.ifRouteChanged(context)) {

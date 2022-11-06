@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/DriftDb.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -141,6 +142,8 @@ class PartListForFragmentHome {
 }
 
 class FragmentGroupListPageAbController extends AbController {
+  final groupChainController = ScrollController();
+
   /// 必须预留一个顶级的。
   final parts = <Ab<PartListForFragmentHome>>[].ab;
 
@@ -161,6 +164,7 @@ class FragmentGroupListPageAbController extends AbController {
     }
     await currentPart()._refreshPart();
     await currentPart().querySelectedAndFragmentCountFromAllSubgroup();
+    await groupChainController.animateTo(groupChainController.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.easeOutCirc);
   }
 
   void _backPart() {

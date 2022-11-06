@@ -1,7 +1,8 @@
 import 'package:aaa/GlobalAbController.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/home/Home.dart';
-import 'package:aaa/theme.dart';
+import 'package:aaa/test/FlutterTest.dart';
+import 'package:aaa/theme/theme.dart';
 import 'package:cool_ui/cool_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
       putController: GlobalAbController(),
       builder: (controller, abw) {
         return MaterialApp(
-          // 那种材料包需要本地化的支持
+          // 哪种材料包需要本地化的支持
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           // 支持哪种语言的切换
           supportedLocales: const [Locale('zh', 'CN'), Locale('en', 'US')],
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
           // pull_to_refresh 相关
           home: RefreshConfiguration(
             footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
-            child: const Home(),
+            child: const FlutterTest(),
             // child: const FlutterTest(),
           ),
         );

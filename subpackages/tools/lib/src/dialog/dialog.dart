@@ -15,6 +15,7 @@ void showTextField1({
 }) {
   final tec = TextEditingController();
   showDialogCustom(
+    context: context,
     textsBody: [
       ..._titleAndTextList(context: context, title: title, text: text),
       Row(
@@ -63,11 +64,13 @@ void showOkAndCancel({
 }
 
 void showDialogCustom({
+  BuildContext? context,
   required List<Widget> textsBody,
   required List<Widget> buttonsBody,
 }) {
   SmartDialog.show(
-    backDismiss: false,
+    backDismiss: true,
+    bindWidget: context,
     builder: (_) {
       return Builder(
         builder: (ctx) {

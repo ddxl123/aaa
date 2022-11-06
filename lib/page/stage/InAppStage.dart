@@ -52,7 +52,7 @@ class _InAppStageState extends State<InAppStage> {
         return CustomDropdownBodyButton(
           value: 0,
           dropdownWidth: 150,
-          customButton: const CustomDropdownPrimaryButtonContainer(child: Icon(Icons.more_horiz)),
+          customButton: const Icon(Icons.more_horiz),
           item: [
             Tuple2(t1: c.isButtonDataShowValue(abw) ? '按钮显示时间' : '按钮显示算法数值', t2: 0),
           ],

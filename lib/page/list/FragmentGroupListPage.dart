@@ -1,4 +1,6 @@
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
+import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:aaa/page/list/ListPageType.dart';
@@ -100,9 +102,7 @@ class FragmentGroupListPage extends StatelessWidget {
                           tag: Aber.nearest,
                           builder: (countC, countAbw) {
                             return Text(
-                              countC.currentPart().indexSelectedFragmentCountForAllSubgroup(index, countAbw).toString() +
-                                  '/' +
-                                  countC.currentPart().indexFragmentCountForAllSubgroup(index, countAbw).toString(),
+                              '${countC.currentPart().indexSelectedFragmentCountForAllSubgroup(index, countAbw)}/${countC.currentPart().indexFragmentCountForAllSubgroup(index, countAbw)}',
                             );
                           },
                         );
@@ -128,9 +128,7 @@ class FragmentGroupListPage extends StatelessWidget {
                                 return const FaIcon(FontAwesomeIcons.solidCircle, color: Colors.grey, size: 14);
                               }(),
                               onPressed: () async {
-                                await selectController
-                                    .currentPart()
-                                    .selectFragmentGroup(index, selectController.currentPart().indexFragmentGroup(index).id);
+                                await selectController.currentPart().selectFragmentGroup(index, selectController.currentPart().indexFragmentGroup(index).id);
                               },
                             );
                           },
@@ -210,52 +208,57 @@ class FragmentGroupListPage extends StatelessWidget {
               // bottom: BorderSide(width: 0.5, color: Colors.grey),
               ),
         ),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                reverse: true,
-                scrollDirection: Axis.horizontal,
-                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                child: AbBuilder<FragmentGroupListPageAbController>(
+        child: Row(
+          children: [
+            Expanded(
+              child: AbBuilder<FragmentGroupListPageAbController>(
                   tag: Aber.nearest,
                   builder: (c, abw) {
-                    return Row(
-                      children: [
-                        ...c.parts(abw).map(
-                              (e) => TextButton(
-                                child: Text(
-                                  e().fatherFragmentGroup?.call(abw) == null ? '~ >' : e().fatherFragmentGroup!(abw).title.toString() + ' >',
+                    return SingleChildScrollView(
+                      controller: c.groupChainController,
+                      scrollDirection: Axis.horizontal,
+                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                      child: Row(
+                        children: [
+                          ...c.parts(abw).map(
+                                (e) => TextButton(
+                                  child: Text(
+                                    e().fatherFragmentGroup?.call(abw) == null ? '~ >' : '${e().fatherFragmentGroup!(abw).title} >',
+                                  ),
+                                  onPressed: () {
+                                    c.backPartJump(e);
+                                  },
                                 ),
-                                onPressed: () {
-                                  c.backPartJump(e);
-                                },
                               ),
-                            ),
-                        SizedBox(width: MediaQuery.of(context).size.width / 3)
-                      ],
+                          SizedBox(width: MediaQuery.of(context).size.width / 3),
+                        ],
+                      ),
                     );
+                  }),
+            ),
+            AbBuilder<FragmentGroupListPageAbController>(
+              tag: Aber.nearest,
+              builder: (c, abw) {
+                return CustomDropdownBodyButton(
+                  value: 0,
+                  customButton: const Icon(Icons.more_horiz),
+                  dropdownWidth: 180,
+                  itemAlignment: Alignment.centerLeft,
+                  item: [
+                    Tuple2(t1: '添加碎片', t2: 0),
+                    Tuple2(t1: '添加碎片组', t2: 1),
+                  ],
+                  onChanged: (v) {
+                    if (v == 0) {
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
+                    } else if (v == 1) {
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupGizmoEditPage()));
+                    }
                   },
-                ),
-              ),
-              AbBuilder<FragmentGroupListPageAbController>(
-                tag: Aber.nearest,
-                builder: (controller, abw) {
-                  return controller.parts(abw).length == 1
-                      ? Container()
-                      : Positioned(
-                          right: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.settings),
-                            tooltip: '查看当前组配置',
-                            onPressed: () {},
-                          ),
-                        );
-                },
-              ),
-            ],
-          ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

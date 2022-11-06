@@ -41,6 +41,7 @@ class Home extends StatelessWidget {
                 backgroundColor: Colors.amber,
                 child: const Text('记'),
                 onPressed: () async {
+                  // showAboutDialog(context: putController.context);
                   showDialogForCreateMemoryGroup(context: putController.context);
                 },
               ),
@@ -96,6 +97,7 @@ class Home extends StatelessWidget {
           Widget button({required IconData iconData, required String label, required Function() onPressed, Color? color}) {
             return MaterialButton(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              onPressed: onPressed,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -104,7 +106,6 @@ class Home extends StatelessWidget {
                   Text(label, style: TextStyle(fontSize: 12, color: color)),
                 ],
               ),
-              onPressed: onPressed,
             );
           }
 

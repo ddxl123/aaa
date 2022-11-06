@@ -39,15 +39,17 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   }
 
   Widget _body() {
-    return AbBuilder<MemoryGroupGizmoEditPageAbController>(builder: (c, abw) {
-      return const CustomScrollView(
-        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        slivers: [
-          BasicConfigWidget(),
-          CurrentCircleWidget(),
-        ],
-      );
-    });
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return const CustomScrollView(
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          slivers: [
+            BasicConfigWidget(),
+            CurrentCircleWidget(),
+          ],
+        );
+      },
+    );
   }
 
   Widget _floatingActionButton() {
@@ -56,7 +58,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return c.memoryGroupGizmo!().startTime == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
-                text: const Text('应用并执行', style: TextStyle(color: Colors.white)),
+                text: const Text('保存并执行', style: TextStyle(color: Colors.white)),
                 onPressed: () {
                   c.applyAndStart();
                 },
