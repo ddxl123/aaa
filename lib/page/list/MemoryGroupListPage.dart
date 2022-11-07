@@ -14,57 +14,21 @@ class MemoryGroupListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<MemoryGroupListPageAbController>(
       putController: MemoryGroupListPageAbController(),
-      tag: Aber.nearest,
-      builder: (putController, putAbw) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                DropdownButtonHideUnderline(
-                  child: DropdownButton2<int>(
-                    dropdownDecoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                    dropdownWidth: 150,
-                    customButton: const Padding(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      child: Icon(Icons.more_horiz),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        child: Text('添加记忆组'),
-                        value: 0,
-                      )
-                    ],
-                    onChanged: (value) {
-                      if (value == 0) {
-                        showDialogForCreateMemoryGroup(context: context);
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
+      tag: Aber.single,
+      builder: (c, putAbw) {
+        return SmartRefresher(
+          controller: c.refreshController,
+          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          child: CustomScrollView(
+            slivers: [
+              _memoryGroupGizmoList(c.context),
+            ],
           ),
-          body: AbBuilder<MemoryGroupListPageAbController>(
-            tag: Aber.nearest,
-            builder: (c, abw) {
-              return SmartRefresher(
-                controller: c.refreshController,
-                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                child: CustomScrollView(
-                  slivers: [
-                    _memoryGroupGizmoList(c.context),
-                  ],
-                ),
-                onRefresh: () async {
-                  await Future.delayed(const Duration(milliseconds: 200));
-                  await c.refreshPage();
-                  c.refreshController.refreshCompleted();
-                },
-              );
-            },
-          ),
+          onRefresh: () async {
+            await Future.delayed(const Duration(milliseconds: 200));
+            await c.refreshPage();
+            c.refreshController.refreshCompleted();
+          },
         );
       },
     );
@@ -72,7 +36,7 @@ class MemoryGroupListPage extends StatelessWidget {
 
   Widget _memoryGroupGizmoList(BuildContext context) {
     return AbBuilder<MemoryGroupListPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -108,7 +72,7 @@ class MemoryGroupListPage extends StatelessWidget {
 
   Widget _memoryGroupGizmoWidget(int index) {
     return AbBuilder<MemoryGroupListPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         final memoryGroupGizmo = c.memoryGroupGizmos(abw)[index];
 

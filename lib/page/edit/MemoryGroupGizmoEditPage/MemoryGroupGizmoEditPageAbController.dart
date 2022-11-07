@@ -358,7 +358,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   void cancel() {
     showOkAndCancel(
-      context: context,
       title: '是否要丢弃？',
       okText: '丢弃',
       cancelText: '继续编辑',

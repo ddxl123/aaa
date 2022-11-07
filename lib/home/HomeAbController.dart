@@ -30,22 +30,27 @@ class HomeAbController extends AbController {
     super.onDispose();
   }
 
+  /// 注意按照顺序。
   Future<bool> _homeBack(bool stopDefaultButtonEvent, RouteInfo routeInfo) async {
     void timerCancel() {
       timer?.cancel();
       timer = null;
     }
 
-    // if (SmartDialog.config.isExistDialog) {
-    //   SmartDialog.dismiss();
-    //   return true;
-    // }
-
     // 如果一个对话框(或任何其他路由)是打开的，则不拦截。
     if (routeInfo.ifRouteChanged(context)) {
       timerCancel();
       return false;
     }
+
+    final groupChain = Aber.findOrNullLast<FragmentGroupListPageAbController>();
+    if (groupChain != null) {
+      final bp = groupChain.backPart();
+      if (bp) {
+        return true;
+      }
+    }
+
     if (isFragmentSelecting() == true) {
       timerCancel();
       isFragmentSelecting.refreshEasy((oldValue) => false);

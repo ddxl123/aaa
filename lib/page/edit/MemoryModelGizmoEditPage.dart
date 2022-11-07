@@ -17,7 +17,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       putController: MemoryModelGizmoEditPageAbController(memoryModelGizmo: memoryModelGizmo, editPageType: editPageType),
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return KeyboardRootWidget(
           child: Scaffold(
@@ -38,7 +38,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                 SliverToBoxAdapter(child: _buttonDataWidget()),
                 SliverToBoxAdapter(
                   child: ElevatedButton(
-                    child: const Text('使用默认记忆规则'),
+                    child: const Text('使用默认记忆算法'),
                     onPressed: () {
                       final content = DefaultAlgorithmContent();
                       c.familiarityAlgorithmEditingController.text = content.defaultFamiliarContent;
@@ -75,7 +75,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _appBarLeadingWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return filter(
           from: c.editPageType(abw),
@@ -107,7 +107,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return filter(
           from: c.editPageType(abw),
@@ -123,7 +123,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _appBarRightAnalyzeWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return TextButton(
           child: const Text('分析'),
@@ -137,7 +137,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _appBarRightButtonWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return filter(
           from: c.editPageType(abw),
@@ -169,7 +169,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _titleWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return CardCustom(
           verifyAb: c.title,
@@ -197,7 +197,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _familiarityAlgorithmWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return CardCustom(
           verifyAb: c.familiarityAlgorithm,
@@ -227,7 +227,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _nextTimeAlgorithmWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return CardCustom(
           verifyAb: c.nextTimeAlgorithm,
@@ -256,7 +256,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
 
   Widget _buttonDataWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return CardCustom(
           verifyAb: c.buttonDataAlgorithm,

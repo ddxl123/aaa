@@ -1,59 +1,80 @@
+import 'dart:math';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:tools/src/other.dart';
 
 /// 自定义带有主要按钮的 dropdown。
-class CustomDropdownBodyButton<T> extends StatelessWidget {
+class CustomDropdownBodyButton<T> extends StatefulWidget {
   const CustomDropdownBodyButton({
     Key? key,
-    required this.value,
-    this.customButton,
-    this.dropdownWidth,
-    required this.item,
+    required this.initValue,
+    this.primaryButton,
+    required this.items,
     required this.onChanged,
     this.itemAlignment = Alignment.center,
   }) : super(key: key);
 
-  final T value;
-  final Widget? customButton;
-  final double? dropdownWidth;
-  final List<Tuple2<String, T>> item;
+  final T initValue;
+  final Widget? primaryButton;
+  final List<Item<T>> items;
   final void Function(T? value) onChanged;
   final Alignment itemAlignment;
 
   @override
+  State<CustomDropdownBodyButton<T>> createState() => _CustomDropdownBodyButtonState<T>();
+}
+
+class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T>> {
+  double maxWidth = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    for (var value in widget.items) {
+      maxWidth = max(maxWidth, value.text.length * 18);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DropdownButton2<T>(
-      value: value,
-      customButton: customButton == null
+      value: widget.initValue,
+      customButton: widget.primaryButton == null
           ? null
           : Container(
               padding: Theme.of(context).buttonTheme.padding,
               alignment: Alignment.center,
-              child: customButton,
+              child: widget.primaryButton,
             ),
-      underline: customButton == null ? null : Container(),
+      underline: widget.primaryButton == null ? null : Container(),
       dropdownElevation: 2,
-      dropdownWidth: dropdownWidth,
+      dropdownWidth: maxWidth + 50,
       barrierColor: Colors.black26,
       dropdownDecoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
       itemPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       items: [
-        ...item.map(
+        ...widget.items.map(
           (e) => DropdownMenuItem<T>(
             alignment: Alignment.center,
-            value: e.t2,
+            value: e.value,
             child: Container(
               padding: Theme.of(context).buttonTheme.padding,
-              alignment: itemAlignment,
-              child: Text(e.t1),
+              alignment: widget.itemAlignment,
+              child: Text(e.text),
             ),
           ),
         ),
       ],
-      onChanged: onChanged,
+      onChanged: widget.onChanged,
     );
   }
+}
+
+class Item<T> {
+  final T value;
+  final String text;
+
+  Item({required this.value, required this.text});
 }

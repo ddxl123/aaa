@@ -15,36 +15,23 @@ class FragmentHome extends StatefulWidget {
   State<FragmentHome> createState() => _FragmentHomeState();
 }
 
-class _FragmentHomeState extends State<FragmentHome> with SingleTickerProviderStateMixin {
+class _FragmentHomeState extends State<FragmentHome> {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<FragmentHomeAbController>(
       putController: FragmentHomeAbController(),
       builder: (putController, putAbw) {
         return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: TabBar(
-                    isScrollable: true,
-                    indicatorWeight: 5,
-                    controller: putController.tabController,
-                    tabs: const [
-                      Tab(
-                        text: '碎片',
-                      ),
-                      Tab(
-                        text: '算法',
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-              ],
-            ),
+          appBar: CustomAppBar(
+            tabController: putController.tabController,
+            tabs: const [
+              Tab(
+                text: '碎片',
+              ),
+              Tab(
+                text: '算法',
+              ),
+            ],
           ),
           body: TabBarView(
             controller: putController.tabController,

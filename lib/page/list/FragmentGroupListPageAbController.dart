@@ -164,22 +164,32 @@ class FragmentGroupListPageAbController extends AbController {
     }
     await currentPart()._refreshPart();
     await currentPart().querySelectedAndFragmentCountFromAllSubgroup();
-    await groupChainController.animateTo(groupChainController.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.easeOutCirc);
+    await groupChainController.animateTo(groupChainController.position.maxScrollExtent, duration: const Duration(milliseconds: 1000), curve: Curves.easeOutCirc);
   }
 
-  void _backPart() {
-    if (parts().length == 1) return;
+  /// 若返回 true，则 back 成功。
+  /// 若返回 false，则当前为 root。
+  bool _backPart() {
+    if (parts().length == 1) return false;
     parts().last().dispose();
     parts().removeLast_(this);
     parts.refreshForce();
     currentPart().refreshController.position!.jumpTo(currentPart().currentPosition);
+    return true;
   }
 
-  Future<void> backPart() async {
-    _backPart();
-    await currentPart().querySelectedAndFragmentCountFromAllSubgroup();
+  /// [_backPart] 后再进行 query。
+  bool backPart() {
+    final bp = _backPart();
+    if (bp) {
+      // 这里不需要 await
+      currentPart().querySelectedAndFragmentCountFromAllSubgroup();
+      return true;
+    }
+    return false;
   }
 
+  /// back 到指定 part。
   Future<void> backPartJump(Ab<PartListForFragmentHome> p) async {
     final index = parts().indexOf(p);
     final removeCount = parts().length - 1 - index;

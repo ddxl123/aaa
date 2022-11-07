@@ -2,6 +2,7 @@ library tools;
 
 export 'src/aber/AbVerify.dart';
 export 'src/card_custom.dart';
+export 'src/custom_appbar.dart';
 export 'src/dropdown_button.dart';
 export 'src/filter.dart';
 export 'src/other.dart';

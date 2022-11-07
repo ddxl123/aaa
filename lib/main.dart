@@ -1,4 +1,4 @@
-import 'package:aaa/GlobalAbController.dart';
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/home/Home.dart';
 import 'package:aaa/test/FlutterTest.dart';
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           // pull_to_refresh 相关
           home: RefreshConfiguration(
             footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
-            child: const FlutterTest(),
+            child: const Home(),
             // child: const FlutterTest(),
           ),
         );

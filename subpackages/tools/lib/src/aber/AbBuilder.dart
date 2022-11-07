@@ -1,26 +1,34 @@
 part of aber;
 
-///
+/// 创建一个 AbController 控制器：
 /// ```dart
 /// class Controller extends AbController {
 ///   final Ab<int> count = 0.ab;
 /// }
 /// ```
 ///
-/// 创建控制器并使用
+/// 使用一个控制器：
 /// ```dart
 /// class XXX extends StatelessWidget {
 ///   @override
 ///   Widget build(BuildContext context) {
 ///     return AbBuilder<Controller>(
-///         controller: Controller(),
+///         putController: Controller(),
+///         // 可以使用 tag，给 Controller 实例添加一个 tag。
 ///         tag: tag,
 ///         builder: (Controller controller, Abw<Controller> abw){
-///             return Text(controller.count.get(abw).toString);
+///             return Text(controller.count(abw).toString);
 ///           }
 ///       );
 ///   }
 /// }
+///
+/// /// 在任意地方获取到控制器。
+/// void findController() {
+///   Aber.find<Controller>(tag: tag);
+///   Aber.findOrNull<Controller>(tag: tag);
+/// }
+///
 /// ```
 ///
 /// 如果控制器已被创建过，则直接这样做：
@@ -29,8 +37,10 @@ part of aber;
 ///   @override
 ///   Widget build(BuildContext context) {
 ///     return AbBuilder<Controller>(
+///         // 可以使用 tag，这将查找到被对应 tag 标记的 Controller 实例。
+///         tag: tag,
 ///         builder: (Controller controller, Abw<Controller> abw){
-///             return Text(controller.count.get(abw).toString);
+///             return Text(controller.count(abw).toString);
 ///           }
 ///       );
 ///   }
@@ -42,16 +52,16 @@ part of aber;
 /// class XXX extends StatelessWidget {
 ///   @override
 ///   Widget build(BuildContext context) {
-///     return AbBuilder(
-///         controller OneController(),
+///     return AbBuilder<OneController>(
+///         putController: OneController(),
 ///         builder: (OneController one, Abw<OneController> oneAbw){
-///             return AbBuilder(
-///               controller TwoController(),
+///             return AbBuilder<TwoController>(
+///               putController: TwoController(),
 ///               builder: (TwoController two, Abw<TwoController> twoAbw){
 ///                   return Column(
 ///                       children: [
-///                           Text(one.count.get(oneAbw).toString),
-///                           Text(two.count.get(twoAbw).toString),
+///                           Text(one.count(oneAbw).toString),
+///                           Text(two.count(twoAbw).toString),
 ///                         ]
 ///                     );
 ///                 }
@@ -62,7 +72,11 @@ part of aber;
 /// }
 /// ```
 ///
-/// [putController] 禁止使用 [Aber.find], 只能用构造函数进行创建，例如： controller: Aber.find<Controller>(tag: 'tag')
+/// [putController] 禁止使用 [Aber.find] 来传递, 只能用构造函数进行创建，会仅使用 [tag] 来查找，
+/// 错误写法:
+/// ```dart
+/// putController: Aber.find<Controller>()
+/// ```
 ///
 /// 主要目的是为了保证当前 widget 与当前 controller 的生命周期相对应（比如 initState/dispose）：
 ///   - 如果在父 [AbBuilder] 中创建了 [putController]，子 [AbBuilder] find 了这个父 [putController],
@@ -70,6 +84,10 @@ part of aber;
 ///   - 只有在父 [AbBuilder] 被销毁时，才会将这个父 [putController] 销毁。
 ///   - 也就是说，controller 在 AWidget 中被创建，只有当该 AWidget 被销毁时，它才会被自动销毁。
 ///
+///
+/// See also:
+///
+///   * 将 [tag] 标记为 [Aber.single]，来创建独立的控制器。
 class AbBuilder<C extends AbController> extends StatefulWidget {
   const AbBuilder({
     Key? key,
@@ -99,7 +117,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
   @override
   void initState() {
     super.initState();
-    if (widget.tag == Aber.nearest) {
+    if (widget.tag == Aber.single) {
       if (widget.putController == null) {
         _controller = Aber.findLast<C>();
       } else {
@@ -114,7 +132,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 
       _controller = Aber._put<C>(
         widget.putController!,
-        tag: widget.tag == Aber.nearest ? widget.putController!.hashCode.toString() : widget.tag,
+        tag: widget.tag == Aber.single ? widget.putController!.hashCode.toString() : widget.tag,
       );
       _isPutter = true;
       _controller!.context = context; // 必须放在 onInit 前面

@@ -19,48 +19,40 @@ class MemoryModeListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<MemoryModeListPageAbController>(
       putController: MemoryModeListPageAbController(),
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                DropdownButtonHideUnderline(
-                  child: DropdownButton2<int>(
-                    dropdownDecoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                    dropdownWidth: 150,
-                    customButton: const Padding(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      child: Icon(Icons.more_horiz),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        child: Text('添加记忆规则'),
-                        value: 0,
-                      )
-                    ],
-                    onChanged: (value) {
-                      if (value == 0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => MemoryModelGizmoEditPage(
-                              memoryModelGizmo: Ab(null),
-                              editPageType: MemoryModelGizmoEditPageType.create.ab,
-                            ),
+                CustomDropdownBodyButton(
+                  primaryButton: const Icon(Icons.more_horiz),
+                  initValue: 0,
+                  itemAlignment: Alignment.centerLeft,
+                  items: [
+                    Item(value: 0, text: '添加记忆算法'),
+                  ],
+                  onChanged: (value) {
+                    if (value == 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) => MemoryModelGizmoEditPage(
+                            memoryModelGizmo: Ab(null),
+                            editPageType: MemoryModelGizmoEditPageType.create.ab,
                           ),
-                        );
-                      }
-                    },
-                  ),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
-            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
           body: AbBuilder<MemoryModeListPageAbController>(
-            tag: Aber.nearest,
+            tag: Aber.single,
             builder: (c, abw) {
               return Padding(
                 padding: const EdgeInsets.all(10),
@@ -88,7 +80,7 @@ class MemoryModeListPage extends StatelessWidget {
 
   Widget _memoryModel() {
     return AbBuilder<MemoryModeListPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(

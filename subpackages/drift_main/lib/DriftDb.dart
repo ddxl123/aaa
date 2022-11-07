@@ -44,6 +44,8 @@ part 'DriftDb.ctr.dart';
 
 part 'DriftDb.reset.dart';
 
+const bool isLogStatements = false;
+
 /// 执行：flutter packages pub run build_runner build --delete-conflicting-outputs
 ///
 ///
@@ -57,7 +59,7 @@ LazyDatabase _openConnection() {
       // 获取数据库所在的文件夹路径
       final dbFolder = await getApplicationDocumentsDirectory();
       DriftDb.instance.path = join(dbFolder.path, dbFileName);
-      return NativeDatabase(File(DriftDb.instance.path),logStatements: true);
+      return NativeDatabase(File(DriftDb.instance.path), logStatements: isLogStatements);
     },
   );
 }

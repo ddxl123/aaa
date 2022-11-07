@@ -3,6 +3,8 @@ import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryGroupListPage.dart';
 import 'package:flutter/material.dart';
 
+import '../../single_dialog/single_dialog.dart';
+
 class MemoryHome extends StatefulWidget {
   const MemoryHome({Key? key}) : super(key: key);
 
@@ -10,21 +12,30 @@ class MemoryHome extends StatefulWidget {
   State<MemoryHome> createState() => _MemoryHomeState();
 }
 
-class _MemoryHomeState extends State<MemoryHome> with SingleTickerProviderStateMixin<MemoryHome> {
+class _MemoryHomeState extends State<MemoryHome> {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryHomeAbController>(
       putController: MemoryHomeAbController(),
       builder: (putController, putAbw) {
         return Scaffold(
-          appBar: TabBar(
-            controller: putController.tabController,
+          appBar: CustomAppBar(
+            tabController: putController.tabController,
             tabs: const [
-              Tab(
-                child: Text('记忆组', style: TextStyle(color: Colors.blue)),
-              ),
-              Tab(
-                child: Text('统计', style: TextStyle(color: Colors.blue)),
+              Tab(text: '记忆组'),
+              Tab(text: '统计'),
+            ],
+            otherWidgets: [
+              CustomDropdownBodyButton(
+                initValue: 0,
+                primaryButton: const Icon(Icons.more_horiz),
+                itemAlignment: Alignment.centerLeft,
+                items: [
+                  Item(value: 0, text: '创建记忆组'),
+                ],
+                onChanged: (v) {
+                  showDialogForCreateMemoryGroup();
+                },
               ),
             ],
           ),
@@ -34,7 +45,6 @@ class _MemoryHomeState extends State<MemoryHome> with SingleTickerProviderStateM
               KeepStateWidget(
                 builder: (ctx) => const MemoryGroupListPage(),
               ),
-
               const Tab(text: '111'),
             ],
           ),

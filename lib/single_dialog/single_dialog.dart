@@ -1,14 +1,10 @@
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
 import 'package:drift_main/DriftDb.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
-void showDialogForCreateMemoryGroup({
-  required BuildContext context,
-}) {
+void showDialogForCreateMemoryGroup() {
   showTextField1(
-    context: context,
     title: '创建记忆组：',
     okText: '创建',
     cancelText: '取消',

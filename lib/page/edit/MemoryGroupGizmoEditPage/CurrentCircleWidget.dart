@@ -274,11 +274,11 @@ class CurrentCircleWidget extends StatelessWidget {
             children: [
               const Text('新 | 复习 碎片展示顺序：'),
               CustomDropdownBodyButton<NewReviewDisplayOrder>(
-                value: c.cNewReviewDisplayOrder.abObj(abw),
-                item: [
-                  Tuple2(t1: '混合', t2: NewReviewDisplayOrder.mix),
-                  Tuple2(t1: '优先新碎片', t2: NewReviewDisplayOrder.newReview),
-                  Tuple2(t1: '优先复习碎片', t2: NewReviewDisplayOrder.reviewNew),
+                initValue: c.cNewReviewDisplayOrder.abObj(abw),
+                items: [
+                  Item(value: NewReviewDisplayOrder.mix, text: '混合'),
+                  Item(value: NewReviewDisplayOrder.newReview, text: '优先新碎片'),
+                  Item(value: NewReviewDisplayOrder.reviewNew, text: '优先复习碎片'),
                 ],
                 onChanged: (v) {
                   c.cNewReviewDisplayOrder.abObj.refreshEasy((oldValue) => v!);
@@ -300,11 +300,11 @@ class CurrentCircleWidget extends StatelessWidget {
             children: [
               const Text('新碎片 展示顺序：'),
               CustomDropdownBodyButton<NewDisplayOrder>(
-                value: c.cNewDisplayOrder.abObj(abw),
-                item: [
-                  Tuple2(t1: '随机', t2: NewDisplayOrder.random),
-                  Tuple2(t1: '标题首字母A~Z顺序', t2: NewDisplayOrder.titleA2Z),
-                  Tuple2(t1: '创建时间', t2: NewDisplayOrder.createEarly2Late),
+                initValue: c.cNewDisplayOrder.abObj(abw),
+                items: [
+                  Item(value: NewDisplayOrder.random, text: '随机'),
+                  Item(value: NewDisplayOrder.titleA2Z, text: '标题首字母A~Z顺序'),
+                  Item(value: NewDisplayOrder.createEarly2Late, text: '创建时间'),
                 ],
                 onChanged: (v) {
                   c.cNewDisplayOrder.abObj.refreshEasy((oldValue) => v!);

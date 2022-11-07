@@ -27,14 +27,16 @@ class Aber {
   /// [_createKey] - [AbController]
   static final Map<String, AbController> _controllers = {};
 
-  /// 当将 tag 设为 [nearest] 时，[key] 将会被设置为 controller 的 hashCode。
+  /// 当在 [AbBuilder] 中将 tag 设为 [single] 时，将创建独立的控制器。
   ///
-  /// 当使用 [find] 来查找对应控制器时，可以将其 tag 值设置为对应 [AbController.hashCode]。
+  /// 可以将 [find] 的 tag 值设置为 [single] ，它将会查找到最后一个被设置为 [single] 的同类型控制器。
+  /// 这与 [findLast] 的区别是，[findLast] 会获取同类型的全部控制器中的最后一个控制器，并不单单是被设置为 [single] 的同类型控制器。
   ///
-  /// 也可以将 [find] 的 tag 值设置为 [nearest] 来查找最近一个相同类型的控制器。
+  /// 当将 tag 设为 [single] 时，[key] 将会被设置为 controller 的 hashCode，
+  /// 这意味着，当使用 [find] 来查找对应控制器时，必须将其 tag 值设置为对应 [AbController.hashCode] 才能被查找到，否则查找不到。
   ///
-  /// 这并不会使 [key] 设置为 [nearest] 这个字符串，它只是用来作为触发字段。
-  static const String nearest = 'NEAREST_TAG';
+  /// 这并不会使 [key] 设置为 [single] 这个字符串，它只是用来作为触发字段。
+  static const String single = 'SINGLE_TAG';
 
   /// 日志输出
   static void debug(String content) {
@@ -104,7 +106,7 @@ class Aber {
 
   /// 查找最近的一个 [C] 类型的控制器。
   ///
-  /// 通常配合 [nearest] 使用。
+  /// 通常配合 [single] 使用。
   ///
   /// 没有找到会抛出异常。
   static C findLast<C extends AbController>() {
@@ -115,7 +117,7 @@ class Aber {
 
   /// 查找最近的一个 [C] 类型的控制器。
   ///
-  /// 通常配合 [nearest] 使用。
+  /// 通常配合 [single] 使用。
   ///
   /// 没有找到会返回 null。
   static C? findOrNullLast<C extends AbController>() {

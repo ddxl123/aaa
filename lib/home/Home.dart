@@ -1,3 +1,4 @@
+import 'package:aaa/global/Global.dart';
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
@@ -41,12 +42,11 @@ class Home extends StatelessWidget {
                 backgroundColor: Colors.amber,
                 child: const Text('记'),
                 onPressed: () async {
-                  // showAboutDialog(context: putController.context);
-                  showDialogForCreateMemoryGroup(context: putController.context);
+                  showDialogForCreateMemoryGroup();
                 },
               ),
               AbBuilder<FragmentGroupListPageAbController>(
-                tag: Aber.nearest,
+                tag: Aber.single,
                 builder: (countController, countAbw) {
                   return Transform.translate(
                     offset: Offset(putController.selectedCountDistance(countController, countAbw), 0),
@@ -128,6 +128,7 @@ class Home extends StatelessWidget {
             ),
           );
         }
+        // TODO: 经常出现这个异常：Wrong gap location in AnimatedBottomNavigationBar towards FloatingActionButtonLocation => consider use GapLocation.end instead of GapLocation.center or change FloatingActionButtonLocation
         return AnimatedBottomNavigationBar.builder(
           itemCount: 4,
           activeIndex: hController.currentPageIndex(hAbw),

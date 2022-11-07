@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 void showTextField1({
-  required BuildContext context,
   required String? title,
   required String? text,
   required String hintText,
@@ -15,9 +14,8 @@ void showTextField1({
 }) {
   final tec = TextEditingController();
   showDialogCustom(
-    context: context,
     textsBody: [
-      ..._titleAndTextList(context: context, title: title, text: text),
+      ..._titleAndTextList(title: title, text: text),
       Row(
         children: [
           Expanded(
@@ -49,7 +47,6 @@ void showTextField1({
 }
 
 void showOkAndCancel({
-  required BuildContext context,
   required String? title,
   required String? text,
   required String cancelText,
@@ -58,89 +55,86 @@ void showOkAndCancel({
   required FutureOr<void> Function()? onOk,
 }) {
   showDialogCustom(
-    textsBody: [..._titleAndTextList(context: context, title: title, text: text)],
+    textsBody: [..._titleAndTextList(title: title, text: text)],
     buttonsBody: [..._okAndCancelButtonList(cancelText: cancelText, okText: okText, onOk: onOk, onCancel: onCancel)],
   );
 }
 
 void showDialogCustom({
-  BuildContext? context,
   required List<Widget> textsBody,
   required List<Widget> buttonsBody,
 }) {
   SmartDialog.show(
     backDismiss: true,
-    bindWidget: context,
+    useSystem: true,
     builder: (_) {
-      return Builder(
-        builder: (ctx) {
-          return AnimatedPadding(
-            padding: MediaQuery.of(ctx).viewInsets + MediaQuery.of(ctx).padding,
-            duration: const Duration(milliseconds: 100),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              constraints: const BoxConstraints(maxHeight: 800, maxWidth: 300),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [BoxShadow(spreadRadius: -5, offset: Offset(3, 3), blurRadius: 8)],
-              ),
-              child: IntrinsicHeight(
-                child: IntrinsicWidth(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            // 文字部分
-                            children: textsBody,
-                          ),
-                        ),
+      return AnimatedPadding(
+        padding: MediaQuery.of(_).viewInsets + MediaQuery.of(_).padding,
+        duration: const Duration(milliseconds: 100),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          constraints: const BoxConstraints(maxHeight: 800, maxWidth: 300),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: const [BoxShadow(spreadRadius: -5, offset: Offset(3, 3), blurRadius: 8)],
+          ),
+          child: IntrinsicHeight(
+            child: IntrinsicWidth(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // 文字部分
+                        children: textsBody,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        // 按钮部分
-                        children: buttonsBody,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    // 按钮部分
+                    children: buttonsBody,
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       );
     },
   );
 }
 
 List<Widget> _titleAndTextList({
-  required BuildContext context,
   required String? title,
   required String? text,
 }) {
   return [
-    title == null ? Container() : _titleWidget(context: context, title: title),
+    title == null ? Container() : _titleWidget(title: title),
     text == null ? Container() : const SizedBox(height: 10),
-    text == null ? Container() : _textWidget(context: context, text: text),
+    text == null ? Container() : _textWidget(text: text),
   ];
 }
 
 Widget _titleWidget({
-  required BuildContext context,
   required String title,
 }) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
       Expanded(
-        child: Text(
-          title,
-          style: TextStyle(fontSize: Theme.of(context).textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
+        child: Builder(
+          builder: (_) {
+            return Text(
+              title,
+              style: TextStyle(fontSize: Theme.of(_).textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
+            );
+          },
         ),
       ),
     ],
@@ -148,7 +142,6 @@ Widget _titleWidget({
 }
 
 Widget _textWidget({
-  required BuildContext context,
   required String text,
 }) {
   return Row(

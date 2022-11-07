@@ -17,7 +17,7 @@ class FragmentGroupListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGroupListPageAbController>(
       putController: FragmentGroupListPageAbController(),
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (controller, abw) {
         return Scaffold(
           primary: false,
@@ -30,7 +30,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   Widget _body() {
     return AbBuilder<FragmentGroupListPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return IndexedStack(
           index: c.parts(abw).length - 1,
@@ -77,7 +77,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   Widget _fragmentGroupsBuilder() {
     return AbBuilder<FragmentGroupListPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -99,7 +99,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
                         return AbBuilder<FragmentGroupListPageAbController>(
-                          tag: Aber.nearest,
+                          tag: Aber.single,
                           builder: (countC, countAbw) {
                             return Text(
                               '${countC.currentPart().indexSelectedFragmentCountForAllSubgroup(index, countAbw)}/${countC.currentPart().indexFragmentCountForAllSubgroup(index, countAbw)}',
@@ -114,7 +114,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
                         return AbBuilder<FragmentGroupListPageAbController>(
-                          tag: Aber.nearest,
+                          tag: Aber.single,
                           builder: (selectController, selectAbw) {
                             return IconButton(
                               icon: () {
@@ -149,7 +149,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   Widget _fragmentsBuilder() {
     return AbBuilder<FragmentGroupListPageAbController>(
-      tag: Aber.nearest,
+      tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -169,7 +169,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
                         return AbBuilder<FragmentGroupListPageAbController>(
-                          tag: Aber.nearest,
+                          tag: Aber.single,
                           builder: (selectController, selectAbw) {
                             return IconButton(
                               icon: FaIcon(
@@ -212,7 +212,7 @@ class FragmentGroupListPage extends StatelessWidget {
           children: [
             Expanded(
               child: AbBuilder<FragmentGroupListPageAbController>(
-                  tag: Aber.nearest,
+                  tag: Aber.single,
                   builder: (c, abw) {
                     return SingleChildScrollView(
                       controller: c.groupChainController,
@@ -237,16 +237,15 @@ class FragmentGroupListPage extends StatelessWidget {
                   }),
             ),
             AbBuilder<FragmentGroupListPageAbController>(
-              tag: Aber.nearest,
+              tag: Aber.single,
               builder: (c, abw) {
                 return CustomDropdownBodyButton(
-                  value: 0,
-                  customButton: const Icon(Icons.more_horiz),
-                  dropdownWidth: 180,
+                  initValue: 0,
+                  primaryButton: const Icon(Icons.more_horiz),
                   itemAlignment: Alignment.centerLeft,
-                  item: [
-                    Tuple2(t1: '添加碎片', t2: 0),
-                    Tuple2(t1: '添加碎片组', t2: 1),
+                  items: [
+                    Item(value: 0, text: '添加碎片'),
+                    Item(value: 1, text: '添加碎片组'),
                   ],
                   onChanged: (v) {
                     if (v == 0) {
