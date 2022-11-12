@@ -75,6 +75,9 @@ dependencies:
   tools:
     path: ./subpackages/tools
 
+  httper:
+    path: ./subpackages/httper
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

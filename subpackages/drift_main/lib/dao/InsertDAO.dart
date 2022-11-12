@@ -50,8 +50,6 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         child_fragments: null,
         rFragment2MemoryGroups: null,
         fragmentMemoryInfos: null,
-        rAssistedMemory2Fragments_1: null,
-        rAssistedMemory2Fragments_2: null,
       ),
     );
     return newFragment;

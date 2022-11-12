@@ -51,8 +51,6 @@ class RefFragments extends Ref {
   RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
   RefRFragment2MemoryGroups? rFragment2MemoryGroups;
-  RefRAssistedMemory2Fragments? rAssistedMemory2Fragments_1;
-  RefRAssistedMemory2Fragments? rAssistedMemory2Fragments_2;
 
   RefFragments({
     required this.self,
@@ -60,8 +58,6 @@ class RefFragments extends Ref {
     required this.fragmentMemoryInfos,
     required this.rFragment2FragmentGroups,
     required this.rFragment2MemoryGroups,
-    required this.rAssistedMemory2Fragments_1,
-    required this.rAssistedMemory2Fragments_2,
   });
 
   @override
@@ -71,8 +67,6 @@ class RefFragments extends Ref {
     await fragmentMemoryInfos?._run();
     await rFragment2FragmentGroups?._run();
     await rFragment2MemoryGroups?._run();
-    await rAssistedMemory2Fragments_1?._run();
-    await rAssistedMemory2Fragments_2?._run();
   }
 }
 
@@ -172,20 +166,6 @@ class RefRFragment2MemoryGroups extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.rFragment2MemoryGroups);
-  }
-}
-
-/// [RAssistedMemory2Fragments]
-class RefRAssistedMemory2Fragments extends Ref {
-  Future<void> Function($RAssistedMemory2FragmentsTable table) self;
-
-  RefRAssistedMemory2Fragments({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.rAssistedMemory2Fragments);
   }
 }
 

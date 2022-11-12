@@ -3641,309 +3641,6 @@ class $RFragment2MemoryGroupsTable extends RFragment2MemoryGroups
   }
 }
 
-class RAssistedMemory2Fragment extends DataClass
-    implements Insertable<RAssistedMemory2Fragment> {
-  String? fatherId;
-  String sonId;
-
-  /// 当子表类为 [Users] 时，
-  ///   - 云端创建、云端获取。
-  ///   - 无需自增，无需作为主键。
-  ///
-  /// 当子表类为非 [Users] 时，
-  ///   - 生成方案：user_id + uuid.v4
-  ///
-  /// 云端的 id 无论是创建还是存储，都用字符串类型，若为雪花id，则也要转成字符串类型，以方便开发减少业务逻辑。
-  String id;
-
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  /// *** 需要预防客户端时间篡改
-  DateTime createdAt;
-
-  /// 必须是本地时间，因为用户是在本地被创建、修改。
-  /// *** 需要预防客户端时间篡改
-  DateTime updatedAt;
-  RAssistedMemory2Fragment(
-      {this.fatherId,
-      required this.sonId,
-      required this.id,
-      required this.createdAt,
-      required this.updatedAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (!nullToAbsent || fatherId != null) {
-      map['father_id'] = Variable<String>(fatherId);
-    }
-    map['son_id'] = Variable<String>(sonId);
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  RAssistedMemory2FragmentsCompanion toCompanion(bool nullToAbsent) {
-    return RAssistedMemory2FragmentsCompanion(
-      fatherId: fatherId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fatherId),
-      sonId: Value(sonId),
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory RAssistedMemory2Fragment.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RAssistedMemory2Fragment(
-      fatherId: serializer.fromJson<String?>(json['fatherId']),
-      sonId: serializer.fromJson<String>(json['sonId']),
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'fatherId': serializer.toJson<String?>(fatherId),
-      'sonId': serializer.toJson<String>(sonId),
-      'id': serializer.toJson<String>(id),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  RAssistedMemory2Fragment copyWith(
-          {Value<String?> fatherId = const Value.absent(),
-          String? sonId,
-          String? id,
-          DateTime? createdAt,
-          DateTime? updatedAt}) =>
-      RAssistedMemory2Fragment(
-        fatherId: fatherId.present ? fatherId.value : this.fatherId,
-        sonId: sonId ?? this.sonId,
-        id: id ?? this.id,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RAssistedMemory2Fragment(')
-          ..write('fatherId: $fatherId, ')
-          ..write('sonId: $sonId, ')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(fatherId, sonId, id, createdAt, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RAssistedMemory2Fragment &&
-          other.fatherId == this.fatherId &&
-          other.sonId == this.sonId &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
-}
-
-class RAssistedMemory2FragmentsCompanion
-    extends UpdateCompanion<RAssistedMemory2Fragment> {
-  Value<String?> fatherId;
-  Value<String> sonId;
-  Value<String> id;
-  Value<DateTime> createdAt;
-  Value<DateTime> updatedAt;
-  RAssistedMemory2FragmentsCompanion({
-    this.fatherId = const Value.absent(),
-    this.sonId = const Value.absent(),
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  RAssistedMemory2FragmentsCompanion.insert({
-    this.fatherId = const Value.absent(),
-    required String sonId,
-    required String id,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  })  : sonId = Value(sonId),
-        id = Value(id),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
-  static Insertable<RAssistedMemory2Fragment> custom({
-    Expression<String>? fatherId,
-    Expression<String>? sonId,
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (fatherId != null) 'father_id': fatherId,
-      if (sonId != null) 'son_id': sonId,
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  RAssistedMemory2FragmentsCompanion copyWith(
-      {Value<String?>? fatherId,
-      Value<String>? sonId,
-      Value<String>? id,
-      Value<DateTime>? createdAt,
-      Value<DateTime>? updatedAt}) {
-    return RAssistedMemory2FragmentsCompanion(
-      fatherId: fatherId ?? this.fatherId,
-      sonId: sonId ?? this.sonId,
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (fatherId.present) {
-      map['father_id'] = Variable<String>(fatherId.value);
-    }
-    if (sonId.present) {
-      map['son_id'] = Variable<String>(sonId.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RAssistedMemory2FragmentsCompanion(')
-          ..write('fatherId: $fatherId, ')
-          ..write('sonId: $sonId, ')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $RAssistedMemory2FragmentsTable extends RAssistedMemory2Fragments
-    with TableInfo<$RAssistedMemory2FragmentsTable, RAssistedMemory2Fragment> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RAssistedMemory2FragmentsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _fatherIdMeta = const VerificationMeta('fatherId');
-  @override
-  late final GeneratedColumn<String> fatherId = GeneratedColumn<String>(
-      'father_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  final VerificationMeta _sonIdMeta = const VerificationMeta('sonId');
-  @override
-  late final GeneratedColumn<String> sonId = GeneratedColumn<String>(
-      'son_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [fatherId, sonId, id, createdAt, updatedAt];
-  @override
-  String get aliasedName => _alias ?? 'r_assisted_memory2_fragments';
-  @override
-  String get actualTableName => 'r_assisted_memory2_fragments';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<RAssistedMemory2Fragment> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('father_id')) {
-      context.handle(_fatherIdMeta,
-          fatherId.isAcceptableOrUnknown(data['father_id']!, _fatherIdMeta));
-    }
-    if (data.containsKey('son_id')) {
-      context.handle(
-          _sonIdMeta, sonId.isAcceptableOrUnknown(data['son_id']!, _sonIdMeta));
-    } else if (isInserting) {
-      context.missing(_sonIdMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RAssistedMemory2Fragment map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RAssistedMemory2Fragment(
-      fatherId: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}father_id']),
-      sonId: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}son_id'])!,
-      id: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      createdAt: attachedDatabase.options.types
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.options.types
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $RAssistedMemory2FragmentsTable createAlias(String alias) {
-    return $RAssistedMemory2FragmentsTable(attachedDatabase, alias);
-  }
-}
-
 class AppInfo extends DataClass implements Insertable<AppInfo> {
   int id;
 
@@ -4636,8 +4333,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RFragment2FragmentGroupsTable(this);
   late final $RFragment2MemoryGroupsTable rFragment2MemoryGroups =
       $RFragment2MemoryGroupsTable(this);
-  late final $RAssistedMemory2FragmentsTable rAssistedMemory2Fragments =
-      $RAssistedMemory2FragmentsTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
   late final InsertDAO insertDAO = InsertDAO(this as DriftDb);
@@ -4657,7 +4352,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragmentMemoryInfos,
         rFragment2FragmentGroups,
         rFragment2MemoryGroups,
-        rAssistedMemory2Fragments,
         appInfos,
         syncs
       ];
@@ -4679,8 +4373,6 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
-  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
-      attachedDatabase.rAssistedMemory2Fragments;
 }
 mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
@@ -4694,8 +4386,6 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
-  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
-      attachedDatabase.rAssistedMemory2Fragments;
 }
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
@@ -4709,8 +4399,6 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
-  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
-      attachedDatabase.rAssistedMemory2Fragments;
 }
 mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
@@ -4724,6 +4412,4 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $RFragment2MemoryGroupsTable get rFragment2MemoryGroups =>
       attachedDatabase.rFragment2MemoryGroups;
-  $RAssistedMemory2FragmentsTable get rAssistedMemory2Fragments =>
-      attachedDatabase.rAssistedMemory2Fragments;
 }

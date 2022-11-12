@@ -20,6 +20,7 @@ class Users extends CloudTableBase {
   IntColumn get age => integer()();
 }
 
+
 @ReferenceTo([])
 class Fragments extends CloudTableBase {
   /// 父碎片（该碎片是由哪个碎片修改而来）

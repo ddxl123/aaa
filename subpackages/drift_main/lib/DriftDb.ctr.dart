@@ -145,16 +145,6 @@ class WithCrts {
     );
   }
 
-  static RAssistedMemory2FragmentsCompanion rAssistedMemory2FragmentsCompanion({
-    required Value<String?> fatherId,
-    required String sonId,
-  }) {
-    return RAssistedMemory2FragmentsCompanion(
-      fatherId: fatherId,
-      sonId: Value(sonId),
-    );
-  }
-
   static AppInfosCompanion appInfosCompanion({
     required String token,
     required bool hasDownloadedInitData,

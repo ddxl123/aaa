@@ -352,35 +352,6 @@ extension RFragment2MemoryGroupExt on RFragment2MemoryGroup {
   }
 }
 
-/// [RAssistedMemory2Fragments]
-extension RAssistedMemory2FragmentExt on RAssistedMemory2Fragment {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<RAssistedMemory2Fragment> reset({
-    required Value<String?> fatherId,
-    required Value<String> sonId,
-    required SyncTag? writeSyncTag,
-  }) async {
-    this.fatherId = fatherId.present ? fatherId.value : this.fatherId;
-    this.sonId = sonId.present ? sonId.value : this.sonId;
-    if (writeSyncTag != null) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rAssistedMemory2Fragments,
-          entity: toCompanion(false), syncTag: writeSyncTag);
-    }
-    return this;
-  }
-}
-
 /// [AppInfos]
 extension AppInfoExt on AppInfo {
   /// 将传入的新数据覆盖掉旧数据类实例。
