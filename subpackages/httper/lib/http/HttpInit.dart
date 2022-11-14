@@ -1,4 +1,3 @@
-
 part of httper;
 
 /// 全局 [dio]
@@ -12,4 +11,3 @@ class HttpInit {
     dio.options.receiveTimeout = 30000; // ms
   }
 }
-
