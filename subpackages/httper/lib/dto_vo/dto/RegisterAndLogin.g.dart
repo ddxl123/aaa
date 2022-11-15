@@ -8,12 +8,14 @@ part of 'RegisterAndLogin.dart';
 
 RegisterAndLogin _$RegisterAndLoginFromJson(Map<String, dynamic> json) =>
     RegisterAndLogin(
-      father_note_id: json['father_note_id'] as int,
-      id: json['id'] as int,
+      register_or_login: json['register_or_login'] as int,
+      id: json['id'] as int?,
+      username: json['username'] as String?,
     );
 
 Map<String, dynamic> _$RegisterAndLoginToJson(RegisterAndLogin instance) =>
     <String, dynamic>{
-      'father_note_id': instance.father_note_id,
+      'register_or_login': instance.register_or_login,
       'id': instance.id,
+      'username': instance.username,
     };
