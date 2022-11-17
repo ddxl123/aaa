@@ -8,3 +8,9 @@ final Dio dio = Dio(
     receiveTimeout: 30000, // ms
   ),
 );
+
+Future<void> request({
+  required String path,
+}) async {
+  await dio.post(path,);
+}

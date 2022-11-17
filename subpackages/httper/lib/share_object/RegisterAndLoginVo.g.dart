@@ -1,21 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'RegisterAndLogin.dart';
+part of 'RegisterAndLoginVo.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RegisterAndLogin _$RegisterAndLoginFromJson(Map<String, dynamic> json) =>
-    RegisterAndLogin(
+RegisterAndLoginVo _$RegisterAndLoginVoFromJson(Map<String, dynamic> json) =>
+    RegisterAndLoginVo(
       register_or_login: json['register_or_login'] as int,
       id: json['id'] as int?,
-      username: json['username'] as String?,
     );
 
-Map<String, dynamic> _$RegisterAndLoginToJson(RegisterAndLogin instance) =>
+Map<String, dynamic> _$RegisterAndLoginVoToJson(RegisterAndLoginVo instance) =>
     <String, dynamic>{
       'register_or_login': instance.register_or_login,
       'id': instance.id,
-      'username': instance.username,
     };
