@@ -9,8 +9,37 @@ final Dio dio = Dio(
   ),
 );
 
-Future<void> request({
+Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   required String path,
+  required RQ data,
+  required RP Function(dynamic responseData) parseResponseData,
 }) async {
-  await dio.post(path,);
+  try {
+    final result = await dio.post(path, data: data.toJson());
+    final parseCode = int.parse(result.data["code"]);
+    final parseMessage = result.data["message"].toString();
+    final parseVo = result.data["data"] == null ? null : parseResponseData(result.data["data"]);
+    return (data as dynamic)
+      ..code = parseCode
+      ..message = parseMessage
+      ..vo = parseVo;
+  } catch (e) {
+    return (data as dynamic)
+      ..code = null
+      ..message = "$e"
+      ..vo = null;
+  }
+}
+
+void a() async {
+  final result = await request(
+    path: "",
+    data: RegisterAndLoginWithUsernameDto(username: "username", password: "password"),
+    parseResponseData: (responseData) => RegisterAndLoginWithUsernameVo.fromJson(responseData),
+  );
+  result.handleCode(
+    localExceptionMessage: (String message) {},
+    code1: (String message, RegisterAndLoginWithUsernameVo vo) {},
+    code2: (String message) {},
+  );
 }

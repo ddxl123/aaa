@@ -1,19 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'RegisterAndLoginDto.dart';
+part of 'RegisterAndLoginWithUsernameDto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RegisterAndLoginDto _$RegisterAndLoginDtoFromJson(Map<String, dynamic> json) =>
-    RegisterAndLoginDto(
+RegisterAndLoginWithUsernameDto _$RegisterAndLoginWithUsernameDtoFromJson(
+        Map<String, dynamic> json) =>
+    RegisterAndLoginWithUsernameDto(
       username: json['username'] as String?,
       password: json['password'] as String?,
     );
 
-Map<String, dynamic> _$RegisterAndLoginDtoToJson(
-        RegisterAndLoginDto instance) =>
+Map<String, dynamic> _$RegisterAndLoginWithUsernameDtoToJson(
+        RegisterAndLoginWithUsernameDto instance) =>
     <String, dynamic>{
       'username': instance.username,
       'password': instance.password,
