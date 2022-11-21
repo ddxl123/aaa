@@ -3,7 +3,7 @@ part of drift_db;
 /// TODO: 所有curd函数体都要包裹上事务。
 @DriftAccessor(
   tables: [
-    ...cloudTableClass,
+    ...cloudTableClasses,
     ...rTableClass,
   ],
 )

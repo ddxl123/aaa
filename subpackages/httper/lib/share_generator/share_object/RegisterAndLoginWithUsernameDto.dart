@@ -42,11 +42,8 @@ RegisterAndLoginWithUsernameDto({
     required T Function(String message) localExceptionMessage,
     
 
-    // ccccccc
+    // 登录/注册成功！
     required T Function(String message, RegisterAndLoginWithUsernameVo vo) code1,
-    
-    // ccccccc
-    required T Function(String message) code2,
     
                 
     }) {
@@ -54,10 +51,6 @@ RegisterAndLoginWithUsernameDto({
 
     if (code == 1) {
         return code1(message, vo!);
-    }
-
-    if (code == 2) {
-        return code2(message);
     }
 
                 
