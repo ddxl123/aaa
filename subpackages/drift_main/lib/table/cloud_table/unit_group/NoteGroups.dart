@@ -4,6 +4,9 @@ part of drift_db_table_part;
 @ReferenceTo([])
 class NoteGroups extends Table {
 
+  @override
+  Set<Column>? get primaryKey => {id};
+
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 

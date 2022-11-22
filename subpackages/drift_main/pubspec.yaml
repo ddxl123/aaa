@@ -27,6 +27,10 @@ dev_dependencies:
   source_gen: ^1.2.5
   path_provider: ^2.0.11
 
+
+  dio: ^4.0.6
+  json_serializable: ^6.5.4
+
   drift_custom:
     path: ../drift_custom
   tools:

@@ -4,6 +4,9 @@ part of drift_db_table_part;
 @ReferenceTo([])
 class RFragment2FragmentGroups extends Table {
 
+  @override
+  Set<Column>? get primaryKey => {id};
+
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 

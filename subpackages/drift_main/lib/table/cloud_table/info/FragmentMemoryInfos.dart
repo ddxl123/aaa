@@ -4,6 +4,9 @@ part of drift_db_table_part;
 @ReferenceTo([])
 class FragmentMemoryInfos extends Table {
 
+  @override
+  Set<Column>? get primaryKey => {id};
+
   IntColumn get clickTime => integer()();
 
   RealColumn get clickValue => real()();

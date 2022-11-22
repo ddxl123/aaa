@@ -4,6 +4,9 @@ part of drift_db_table_part;
 @ReferenceTo([])
 class MemoryModels extends Table {
 
+  @override
+  Set<Column>? get primaryKey => {id};
+
   TextColumn get applicableFields => text().nullable()();
 
   TextColumn get applicableGroups => text().nullable()();

@@ -4,15 +4,18 @@ part of drift_db_table_part;
 @ReferenceTo([])
 class MemoryGroups extends Table {
 
+  @override
+  Set<Column>? get primaryKey => {id};
+
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([MemoryModels])
   IntColumn get memoryModelId => integer().nullable()();
 
-  IntColumn get newDisplayOrder => integer().nullable()();
+  IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>().nullable()();
 
-  IntColumn get newReviewDisplayOrder => integer().nullable()();
+  IntColumn get newReviewDisplayOrder => intEnum<NewReviewDisplayOrder>().nullable()();
 
   DateTimeColumn get reviewInterval => dateTime().nullable()();
 

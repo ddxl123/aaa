@@ -4,6 +4,9 @@ part of drift_db_table_part;
 @ReferenceTo([])
 class Fragments extends Table {
 
+  @override
+  Set<Column>? get primaryKey => {id};
+
   TextColumn get content => text().nullable()();
 
   @ReferenceTo([Users])
