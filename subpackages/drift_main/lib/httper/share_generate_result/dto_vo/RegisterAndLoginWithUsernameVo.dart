@@ -12,7 +12,7 @@ class RegisterAndLoginWithUsernameVo extends BaseObject{
     /// 0-注册，1-登录
     int register_or_login;
 
-    /// 
+    ///
     int? id;
 
     /// 
