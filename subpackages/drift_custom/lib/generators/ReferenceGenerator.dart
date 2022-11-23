@@ -22,10 +22,10 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
     try {
       await super.generate(library, buildStep);
     } catch (e, st) {
-      print('error start ----------------------------------');
+      print('》》》》》》》》 error start ----------------------------------');
       print(e);
       print(st);
-      print('error end ----------------------------------');
+      print('》》》》》》》》 error end ----------------------------------');
     }
     print('生成 reference 完成。');
     return _referenceContent();
@@ -52,7 +52,9 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
     for (var accessor in currentElement.accessors) {
       // 迭代 accessor 的全部注解。
       for (var annotationData in accessor.metadata) {
-        _referenceAdd(currentClassName, annotationData.computeConstantValue()!.getField('referenceTable')!.toListValue()!);
+        if (annotationData.computeConstantValue()?.type?.getDisplayString(withNullability: false) == const ReferenceTo([]).runtimeType.toString()) {
+          _referenceAdd(currentClassName, annotationData.computeConstantValue()!.getField('referenceTable')!.toListValue()!);
+        }
       }
     }
 

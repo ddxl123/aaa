@@ -1,20 +1,20 @@
 targets:
   $default:
-    sources:
-      exclude: [ 'test/*' ,'lib/tool/*' ]
-
+    # 禁用默认的生成器，这里只使用 non-shared 的 drift 生成器
+    auto_apply_builders: false
     builders:
-      # disables the SharedPartBuilder in favor of a PartBuilder from moor_generator
-      drift_dev:
-        enabled: false
       drift_dev|not_shared:
         enabled: true
         options:
           mutable_classes: true
           named_parameters: true
           named_parameters_always_required: true
+      # 这个 builder (构建器) 对于 drift 文件的预处理是必要的。
+      # 如果没有在 .drift 文件中使用类型转换器，可以禁用此项。
+      drift_dev|preparing_builder:
+        enabled: true
 
-      # Run xxx|xx when moor is done!
+      # 先禁用
       drift_custom|drift_reference:
         enabled: false
       drift_custom|drift_constructor:
@@ -24,14 +24,24 @@ targets:
 
   run_drift_main:
     dependencies: [ 'drift_main' ]
-    sources:
-      exclude: [ 'test/*' ,'lib/tool/*' ]
     builders:
-      # Disable all auto-applied builders from moor
+      # 禁用 drift 构建器。默认情况下，这些（构建器）会在每个目标上都运行。
       drift_dev:
         enabled: false
       drift_dev|preparing_builder:
         enabled: false
+      # 不需要禁用 drift|not_shared ，它是默认禁用的。
+
+      # 后启用
+      drift_custom|drift_reference:
+        enabled: true
+        generate_for: [ 'lib/drift/**' ]
+      drift_custom|drift_constructor:
+        enabled: true
+        generate_for: [ 'lib/drift/**' ]
+      drift_custom|drift_reset:
+        enabled: true
+        generate_for: [ 'lib/drift/**' ]
 
 
 

@@ -3,18 +3,18 @@ builders:
     import: "package:drift_custom/builders.dart"
     build_extensions: { ".dart": [ ".ref.dart" ] }
     builder_factories: [ "referenceBuilder" ]
-    auto_apply: dependents
+    auto_apply: none
     build_to: source
   drift_constructor:
     import: "package:drift_custom/builders.dart"
     build_extensions: { ".dart": [ ".ctr.dart" ] }
     builder_factories: [ "constructorBuilder" ]
-    auto_apply: dependents
+    auto_apply: none
     build_to: source
   drift_reset:
     import: "package:drift_custom/builders.dart"
     build_extensions: { ".dart": [ ".reset.dart" ] }
     builder_factories: [ "resetBuilder" ]
-    auto_apply: dependents
+    auto_apply: none
     build_to: source
 

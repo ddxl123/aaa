@@ -1,18 +1,13 @@
 
 // ignore_for_file: non_constant_identifier_names
-import 'package:drift_main/share_common/share_enum.dart';
-
-import '../../BaseObject.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'RegisterAndLoginWithUsernameVo.g.dart';
+part of httper;
 @JsonSerializable()
 class RegisterAndLoginWithUsernameVo extends BaseObject{
 
     /// 0-注册，1-登录
     int register_or_login;
 
-    ///
+    /// 
     int? id;
 
     /// 

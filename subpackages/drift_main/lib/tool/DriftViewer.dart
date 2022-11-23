@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:drift/drift.dart' as drift;
@@ -51,9 +51,8 @@ class _DriftViewerState extends State<DriftViewer> {
                         return;
                       }
                       for (int i = 0; i < tableInfos.length; i++) {
-                        final tableResult = await widget.database
-                            .customSelect("SELECT * FROM sqlite_master WHERE type = 'table' AND name = '${tableInfos[i].actualTableName}'")
-                            .get();
+                        final tableResult =
+                            await widget.database.customSelect("SELECT * FROM sqlite_master WHERE type = 'table' AND name = '${tableInfos[i].actualTableName}'").get();
                         _sqls.add(tableResult.first.data['sql']);
                       }
                       if (mounted) setState(() {});
@@ -68,9 +67,8 @@ class _DriftViewerState extends State<DriftViewer> {
                         return;
                       }
                       for (int i = 0; i < tableInfos.length; i++) {
-                        final triggerResult = await widget.database
-                            .customSelect("SELECT * FROM sqlite_master WHERE type = 'trigger' AND tbl_name = '${tableInfos[i].actualTableName}'")
-                            .get();
+                        final triggerResult =
+                            await widget.database.customSelect("SELECT * FROM sqlite_master WHERE type = 'trigger' AND tbl_name = '${tableInfos[i].actualTableName}'").get();
                         _triggers.add(
                           'trigger_name: ${triggerResult.isEmpty ? null : triggerResult.first.data['name'].toString()}'
                           '\n'
@@ -133,7 +131,7 @@ class _DriftViewerState extends State<DriftViewer> {
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
                         entity: UsersCompanion(
-                          id: '3'.toValue(),
+                          id: 3.toValue(),
                           username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
@@ -141,7 +139,7 @@ class _DriftViewerState extends State<DriftViewer> {
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
                         entity: UsersCompanion(
-                          id: '3'.toValue(),
+                          id: 3.toValue(),
                           username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
@@ -154,7 +152,7 @@ class _DriftViewerState extends State<DriftViewer> {
                     onPressed: () async {
                       await DriftDb.instance.deleteWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
-                        filter: (tbl) => tbl.id.equals('2'),
+                        filter: (tbl) => tbl.id.equals(2),
                         syncTag: await SyncTag.create(),
                       );
                       Navigator.pop(context);

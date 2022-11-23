@@ -29,6 +29,7 @@ dev_dependencies:
 
 
   dio: ^4.0.6
+  json_annotation: ^4.7.0
   json_serializable: ^6.5.4
 
   drift_custom:

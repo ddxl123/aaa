@@ -1,9 +1,6 @@
 
 // ignore_for_file: non_constant_identifier_names
-import '../../BaseObject.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'RegisterAndLoginWithUsernameVo.dart';
-part 'RegisterAndLoginWithUsernameDto.g.dart';
+part of httper;
 @JsonSerializable()
 class RegisterAndLoginWithUsernameDto extends BaseObject{
 
