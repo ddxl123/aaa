@@ -26,13 +26,13 @@ abstract class AbController {
     _removeRefreshFunctions.clear();
   }
 
-  /// 需要 [isEnableLoading] 为 true。
+  /// 需要 [isEnableLoading] 为 true 时才会被触发。
   Future<void> loadingFuture() async {}
 
-  /// 需要 [isEnableLoading] 为 true。
+  /// 需要 [isEnableLoading] 为 true 时才会被触发。
   Widget loadingWidget() => const Text('未配置 loading Widget！');
 
-  /// 需要 [isEnableLoading] 为 true。
+  /// 需要 [isEnableLoading] 为 true 时才可能会被触发。
   ///
   /// 会提供 [error] 和 [stackTrace]
   Widget loadingErrorWidget(ExceptionContent exceptionContent) => BuildExceptionWidget(

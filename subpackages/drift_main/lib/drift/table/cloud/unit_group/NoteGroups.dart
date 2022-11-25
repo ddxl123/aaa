@@ -11,13 +11,13 @@ class NoteGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([NoteGroups])
-  IntColumn get fatherNoteGroupsId => integer().nullable()();
+  TextColumn get fatherNoteGroupsId => text().nullable()();
 
-  TextColumn get title => text().nullable()();
+  TextColumn get title => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

@@ -11,13 +11,13 @@ class FragmentGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([FragmentGroups])
-  IntColumn get fatherFragmentGroupsId => integer().nullable()();
+  TextColumn get fatherFragmentGroupsId => text().nullable()();
 
-  TextColumn get title => text().nullable()();
+  TextColumn get title => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

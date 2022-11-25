@@ -8,10 +8,10 @@ class RegisterAndLoginWithUsernameVo extends BaseObject{
     int register_or_login;
 
     /// 
-    int? id;
+    int id;
 
     /// 
-    NewDisplayOrder? new_display_order;
+    NewDisplayOrder new_display_order;
 
 
 RegisterAndLoginWithUsernameVo({

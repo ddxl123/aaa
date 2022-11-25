@@ -11,14 +11,14 @@ class RMemoryModel2MemoryModelGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([MemoryModelGroups])
-  IntColumn get memoryModelGroupId => integer()();
+  TextColumn get memoryModelGroupId => text().nullable()();
 
   @ReferenceTo([MemoryModels])
-  IntColumn get memoryModelId => integer()();
+  TextColumn get memoryModelId => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

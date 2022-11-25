@@ -29,7 +29,10 @@ class _FragmentHomeState extends State<FragmentHome> {
                 text: '碎片',
               ),
               Tab(
-                text: '算法',
+                text: '笔记',
+              ),
+              Tab(
+                text: '文档',
               ),
             ],
           ),
@@ -40,7 +43,10 @@ class _FragmentHomeState extends State<FragmentHome> {
                 builder: (_) => const FragmentGroupListPage(listPageType: ListPageType.home),
               ),
               KeepStateWidget(
-                builder: (_) => const MemoryModeListPage(listPageType: ListPageType.home),
+                builder: (_) => const Text('笔记'),
+              ),
+              KeepStateWidget(
+                builder: (_) => const Text('文档'),
               ),
             ],
           ),

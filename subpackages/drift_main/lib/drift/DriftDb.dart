@@ -3,6 +3,7 @@ library drift_db;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -22,13 +23,9 @@ part 'dao/DeleteDAO.dart';
 
 part 'table/Base.dart';
 
-part 'table/local/Local.dart';
-
 part 'custom/sync_tag.dart';
 
 part 'custom/sync_curd.dart';
-
-part 'table/local/Sync.dart';
 
 part 'drift_db_init.dart';
 
@@ -42,36 +39,42 @@ part 'DriftDb.reset.dart';
 
 
 part 'table/cloud/Users.dart';
-            
+
 part 'table/cloud/info/FragmentMemoryInfos.dart';
-            
+
 part 'table/cloud/monolayer_group/MemoryGroups.dart';
-            
+
 part 'table/cloud/r/RDocument2DocumentGroups.dart';
-            
+
 part 'table/cloud/r/RFragment2FragmentGroups.dart';
-            
+
 part 'table/cloud/r/RMemoryModel2MemoryModelGroups.dart';
-            
+
 part 'table/cloud/r/RNote2NoteGroups.dart';
-            
+
 part 'table/cloud/unit/Documents.dart';
-            
+
 part 'table/cloud/unit/Fragments.dart';
-            
+
 part 'table/cloud/unit/MemoryModels.dart';
-            
+
 part 'table/cloud/unit/Notes.dart';
-            
+
 part 'table/cloud/unit_group/DocumentGroups.dart';
-            
+
 part 'table/cloud/unit_group/FragmentGroups.dart';
-            
+
 part 'table/cloud/unit_group/MemoryModelGroups.dart';
-            
+
 part 'table/cloud/unit_group/NoteGroups.dart';
-            
-const List<Type> cloudTableClasses = [
+
+part 'table/local/AppInfos.dart';
+
+part 'table/local/Selecteds.dart';
+
+part 'table/local/Syncs.dart';
+
+const List<Type> tableClasses = [
 
   Users,
 
@@ -102,6 +105,12 @@ const List<Type> cloudTableClasses = [
   MemoryModelGroups,
 
   NoteGroups,
+
+  AppInfos,
+
+  Selecteds,
+
+  Syncs,
 
 ];
         

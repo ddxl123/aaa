@@ -7,14 +7,14 @@ class Documents extends CloudTableBase {
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text().nullable()();
+  TextColumn get content => text()();
 
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

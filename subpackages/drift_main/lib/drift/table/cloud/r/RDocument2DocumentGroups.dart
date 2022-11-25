@@ -11,14 +11,14 @@ class RDocument2DocumentGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([DocumentGroups])
-  IntColumn get documentGroupId => integer().nullable()();
+  TextColumn get documentGroupId => text().nullable()();
 
   @ReferenceTo([Documents])
-  IntColumn get documentId => integer()();
+  TextColumn get documentId => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

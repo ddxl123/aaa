@@ -4,11 +4,9 @@ import 'package:aaa/page/gizmo/MemoryModelGizmoPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/ListPageType.dart';
 import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:tools/tools.dart';
 
 class MemoryModeListPage extends StatelessWidget {
   const MemoryModeListPage({Key? key, required this.listPageType}) : super(key: key);

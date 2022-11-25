@@ -30,20 +30,6 @@ abstract class Ref {
   Future<void> _run();
 }
 
-/// [AppInfos]
-class RefAppInfos extends Ref {
-  Future<void> Function($AppInfosTable table) self;
-
-  RefAppInfos({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.appInfos);
-  }
-}
-
 /// [Users]
 class RefUsers extends Ref {
   Future<void> Function($UsersTable table) self;
@@ -353,5 +339,33 @@ class RefRNote2NoteGroups extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.rNote2NoteGroups);
+  }
+}
+
+/// [AppInfos]
+class RefAppInfos extends Ref {
+  Future<void> Function($AppInfosTable table) self;
+
+  RefAppInfos({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.appInfos);
+  }
+}
+
+/// [Selecteds]
+class RefSelecteds extends Ref {
+  Future<void> Function($SelectedsTable table) self;
+
+  RefSelecteds({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.selecteds);
   }
 }

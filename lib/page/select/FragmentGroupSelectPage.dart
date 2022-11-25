@@ -1,5 +1,5 @@
 import 'package:aaa/page/list/ListPageType.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
 import 'package:tools/tools.dart';
@@ -31,14 +31,12 @@ class FragmentGroupSelectPage extends StatelessWidget {
         onPressed: () async {
           final c = Aber.find<FragmentGizmoEditPageAbController>();
           final clp = Aber.findLast<FragmentGroupListPageAbController>();
-          await clp.currentPart().addFragment(
-                willFragment: WithCrts.fragmentsCompanion(
-                  fatherFragmentId: (clp.currentPart().fatherFragmentGroup?.call().id).toValue(),
-                  title: c.title,
-                  // TODO: 关于优先级的配置
-                  priority: 0,
-                ),
-              );
+          // await clp.currentPart().addFragment(
+          //       willFragment: WithCrts.fragmentsCompanion(
+          //         fatherFragmentId: (clp.currentPart().fatherFragmentGroup?.call().id).toValue(),
+          //         content: c.title,
+          //       ),
+          //     );
           SmartDialog.showToast('创建成功', displayTime: const Duration(milliseconds: 1000));
           Navigator.pop(context);
           Navigator.pop(context);

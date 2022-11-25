@@ -1,4 +1,8 @@
-part of algorithm_parser;
+import 'dart:math';
+import 'package:drift/drift.dart';
+import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/share_enum.dart';
+import 'package:tools/tools.dart';
 
 class PerformerQuery {
   final DriftDb dft = DriftDb.instance;
@@ -27,7 +31,7 @@ class PerformerQuery {
     return filter(
       from: mg.newReviewDisplayOrder,
       targets: {
-        [NewReviewDisplayOrder.mix]: () => math.Random().nextInt(2) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
+        [NewReviewDisplayOrder.mix]: () => Random().nextInt(2) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
         [NewReviewDisplayOrder.newReview]: () => newFragmentOrNull ?? learnedFragmentOrNull,
         [NewReviewDisplayOrder.reviewNew]: () => learnedFragmentOrNull ?? newFragmentOrNull,
       },
@@ -39,72 +43,74 @@ class PerformerQuery {
   ///
   /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
   Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getOneLearnedFragment({required MemoryGroup mg}) async {
-    final lSelect = dft.select(dft.fragments);
-    final lJoin = [
-      innerJoin(dft.fragmentMemoryInfos, dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.fragments.id)),
-    ];
-
-    // 获取每个碎片的最近的一次碎片记忆信息
-    final lWhere = dft.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
-        dft.fragmentMemoryInfos.isLatestRecord.equals(true) &
-        dft.fragmentMemoryInfos.nextPlanShowTime.isSmallerOrEqualValue(timeDifference(target: mg.reviewInterval, start: mg.startTime!));
-
-    final doJoin = lSelect.join(lJoin);
-    doJoin.where(lWhere);
-    doJoin.orderBy([OrderingTerm.asc(dft.fragmentMemoryInfos.nextPlanShowTime)]);
-    doJoin.limit(1);
-
-    // 获取碎片
-    final fragmentsResult = await doJoin.getSingleOrNull();
-    if (fragmentsResult == null) return null;
-
-    // 获取碎片对应的碎片记忆信息。
-    final fragmentMemoryInfosSelect = dft.select(dft.fragmentMemoryInfos);
-    final recentInfo = fragmentsResult.readTable(dft.fragmentMemoryInfos);
-    fragmentMemoryInfosSelect.where((tbl) => tbl.memoryGroupId.equals(recentInfo.memoryGroupId) & tbl.fragmentId.equals(recentInfo.fragmentId));
-    fragmentMemoryInfosSelect.orderBy([(t) => OrderingTerm.asc(t.createdAt)]);
-    final fragmentMemoryInfosResult = await fragmentMemoryInfosSelect.get();
-
-    return Tuple2(t1: fragmentsResult.readTable(dft.fragments), t2: fragmentMemoryInfosResult);
+    // final lSelect = dft.select(dft.fragments);
+    // final lJoin = [
+    //   innerJoin(dft.fragmentMemoryInfos, dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.fragments.id)),
+    // ];
+    //
+    // // 获取每个碎片的最近的一次碎片记忆信息
+    // final lWhere = dft.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
+    //     dft.fragmentMemoryInfos.isLatestRecord.equals(true) &
+    //     dft.fragmentMemoryInfos.nextPlanShowTime.isSmallerOrEqualValue(timeDifference(target: mg.reviewInterval, start: mg.startTime!));
+    //
+    // final doJoin = lSelect.join(lJoin);
+    // doJoin.where(lWhere);
+    // doJoin.orderBy([OrderingTerm.asc(dft.fragmentMemoryInfos.nextPlanShowTime)]);
+    // doJoin.limit(1);
+    //
+    // // 获取碎片
+    // final fragmentsResult = await doJoin.getSingleOrNull();
+    // if (fragmentsResult == null) return null;
+    //
+    // // 获取碎片对应的碎片记忆信息。
+    // final fragmentMemoryInfosSelect = dft.select(dft.fragmentMemoryInfos);
+    // final recentInfo = fragmentsResult.readTable(dft.fragmentMemoryInfos);
+    // fragmentMemoryInfosSelect.where((tbl) => tbl.memoryGroupId.equals(recentInfo.memoryGroupId) & tbl.fragmentId.equals(recentInfo.fragmentId));
+    // fragmentMemoryInfosSelect.orderBy([(t) => OrderingTerm.asc(t.createdAt)]);
+    // final fragmentMemoryInfosResult = await fragmentMemoryInfosSelect.get();
+    //
+    // return Tuple2(t1: fragmentsResult.readTable(dft.fragments), t2: fragmentMemoryInfosResult);
+    return null;
   }
 
   /// 相似：[GeneralQueryDAO.getNewFragmentsCount]
   ///
   /// 获取新碎片。
   Future<Fragment?> getOneNewFragment({required MemoryGroup mg}) async {
-    if (mg.willNewLearnCount < 0) {
-      throw 'willNewLearnCount 不能小于 0！';
-    }
-    // 识别是否还需要学习新碎片。
-    if (mg.willNewLearnCount == 0) {
-      return null;
-    }
-
-    final lSelect = dft.select(dft.rFragment2MemoryGroups);
-    final lJoin = [
-      leftOuterJoin(
-        dft.fragmentMemoryInfos,
-        dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.rFragment2MemoryGroups.sonId) & dft.fragmentMemoryInfos.memoryGroupId.equalsExp(dft.rFragment2MemoryGroups.fatherId),
-      ),
-    ];
-
-    // 获取在当前记忆组内的没有创建过碎片记忆信息的碎片。（获取新碎片）
-    final lWhere = dft.rFragment2MemoryGroups.fatherId.equals(mg.id) & dft.fragmentMemoryInfos.id.isNull();
-
-    final doJoin = lSelect.join(lJoin);
-    doJoin.where(lWhere);
-    if (mg.newDisplayOrder == NewDisplayOrder.random) {
-      doJoin.orderBy([OrderingTerm.random()]);
-    } else {
-      throw '未处理 ${mg.newDisplayOrder}';
-    }
-    doJoin.limit(1);
-
-    final result = await doJoin.getSingleOrNull();
-    if (result == null) return null;
-
-    final fragmentSelect = dft.select(dft.fragments)..where((tbl) => tbl.id.equals(result.readTable(dft.rFragment2MemoryGroups).sonId));
-    return await fragmentSelect.getSingle();
+    // if (mg.willNewLearnCount < 0) {
+    //   throw 'willNewLearnCount 不能小于 0！';
+    // }
+    // // 识别是否还需要学习新碎片。
+    // if (mg.willNewLearnCount == 0) {
+    //   return null;
+    // }
+    //
+    // final lSelect = dft.select(dft.rFragment2MemoryGroups);
+    // final lJoin = [
+    //   leftOuterJoin(
+    //     dft.fragmentMemoryInfos,
+    //     dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.rFragment2MemoryGroups.sonId) & dft.fragmentMemoryInfos.memoryGroupId.equalsExp(dft.rFragment2MemoryGroups.fatherId),
+    //   ),
+    // ];
+    //
+    // // 获取在当前记忆组内的没有创建过碎片记忆信息的碎片。（获取新碎片）
+    // final lWhere = dft.rFragment2MemoryGroups.fatherId.equals(mg.id) & dft.fragmentMemoryInfos.id.isNull();
+    //
+    // final doJoin = lSelect.join(lJoin);
+    // doJoin.where(lWhere);
+    // if (mg.newDisplayOrder == NewDisplayOrder.random) {
+    //   doJoin.orderBy([OrderingTerm.random()]);
+    // } else {
+    //   throw '未处理 ${mg.newDisplayOrder}';
+    // }
+    // doJoin.limit(1);
+    //
+    // final result = await doJoin.getSingleOrNull();
+    // if (result == null) return null;
+    //
+    // final fragmentSelect = dft.select(dft.fragments)..where((tbl) => tbl.id.equals(result.readTable(dft.rFragment2MemoryGroups).sonId));
+    // return await fragmentSelect.getSingle();
+    return null;
   }
 
   /// ========================================================================================
@@ -128,26 +134,26 @@ class PerformerQuery {
         final st = await SyncTag.create();
         // 修改旧的
         if (lastFragmentMemoryInfo != null) {
-          await withRefs(
-            syncTag: st,
-            ref: (SyncTag syncTag) async {
-              return RefFragmentMemoryInfos(
-                self: ($FragmentMemoryInfosTable table) async {
-                  await lastFragmentMemoryInfo.reset(
-                    fragmentId: toAbsent(),
-                    memoryGroupId: toAbsent(),
-                    isLatestRecord: false.toValue(),
-                    nextPlanShowTime: toAbsent(),
-                    currentActualShowTime: toAbsent(),
-                    showFamiliarity: toAbsent(),
-                    clickTime: toAbsent(),
-                    clickValue: toAbsent(),
-                    writeSyncTag: syncTag,
-                  );
-                },
-              );
-            },
-          );
+          // await withRefs(
+          //   syncTag: st,
+          //   ref: (SyncTag syncTag) async {
+          //     return RefFragmentMemoryInfos(
+          //       self: ($FragmentMemoryInfosTable table) async {
+          //         await lastFragmentMemoryInfo.reset(
+          //           fragmentId: toAbsent(),
+          //           memoryGroupId: toAbsent(),
+          //           isLatestRecord: false.toValue(),
+          //           nextPlanShowTime: toAbsent(),
+          //           currentActualShowTime: toAbsent(),
+          //           showFamiliarity: toAbsent(),
+          //           clickTime: toAbsent(),
+          //           clickValue: toAbsent(),
+          //           writeSyncTag: syncTag,
+          //         );
+          //       },
+          //     );
+          //   },
+          // );
         }
         // 生成新的
         await withRefs(
@@ -166,27 +172,27 @@ class PerformerQuery {
         );
 
         if (isOldIsNew) {
-          await DriftDb.instance.updateDAO.resetMemoryGroup(
-            syncTag: st,
-            oldMemoryGroupReset: (SyncTag resetSyncTag) async {
-              await memoryGroupAb().reset(
-                memoryModelId: toAbsent(),
-                title: toAbsent(),
-                willNewLearnCount: (memoryGroupAb().willNewLearnCount - 1).toValue(),
-                reviewInterval: toAbsent(),
-                newReviewDisplayOrder: toAbsent(),
-                newDisplayOrder: toAbsent(),
-                startTime: toAbsent(),
-                isFilterOutAlgorithmFollowMemoryModel: toAbsent(),
-                isEnableFilterOutAlgorithm: toAbsent(),
-                filterOutAlgorithm: toAbsent(),
-                isFloatingAlgorithmFollowMemoryModel: toAbsent(),
-                isEnableFloatingAlgorithm: toAbsent(),
-                floatingAlgorithm: toAbsent(),
-                writeSyncTag: resetSyncTag,
-              );
-            },
-          );
+          // await DriftDb.instance.updateDAO.resetMemoryGroup(
+          //   syncTag: st,
+          //   oldMemoryGroupReset: (SyncTag resetSyncTag) async {
+          //     await memoryGroupAb().reset(
+          //       memoryModelId: toAbsent(),
+          //       title: toAbsent(),
+          //       willNewLearnCount: (memoryGroupAb().willNewLearnCount - 1).toValue(),
+          //       reviewInterval: toAbsent(),
+          //       newReviewDisplayOrder: toAbsent(),
+          //       newDisplayOrder: toAbsent(),
+          //       startTime: toAbsent(),
+          //       isFilterOutAlgorithmFollowMemoryModel: toAbsent(),
+          //       isEnableFilterOutAlgorithm: toAbsent(),
+          //       filterOutAlgorithm: toAbsent(),
+          //       isFloatingAlgorithmFollowMemoryModel: toAbsent(),
+          //       isEnableFloatingAlgorithm: toAbsent(),
+          //       floatingAlgorithm: toAbsent(),
+          //       writeSyncTag: resetSyncTag,
+          //     );
+          //   },
+          // );
         }
       },
     );
@@ -215,7 +221,8 @@ class PerformerQuery {
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required int currentShowTime,
   }) async {
-    return tuple.t2.map<int>((e) => e.currentActualShowTime).toList()..add(currentShowTime);
+    // return tuple.t2.map<int>((e) => e.currentActualShowTime).toList()..add(currentShowTime);
+    return [];
   }
 
   /// [InternalVariableConstant.nextPlanedShowTimeConst]
@@ -227,7 +234,8 @@ class PerformerQuery {
     required MemoryGroup mg,
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
   }) async {
-    return <int?>[null, ...tuple.t2.map((e) => e.nextPlanShowTime)];
+    // return <int?>[null, ...tuple.t2.map((e) => e.nextPlanShowTime)];
+    return [];
   }
 
   /// [InternalVariableConstant.showFamiliarConst]
@@ -243,7 +251,8 @@ class PerformerQuery {
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required bool isCreateNow,
   }) async {
-    return tuple.t2.map<int?>((e) => e.clickTime).toList()..add(isCreateNow ? timeDifference(target: DateTime.now(), start: mg.startTime!) : null);
+    // return tuple.t2.map<int?>((e) => e.clickTime).toList()..add(isCreateNow ? timeDifference(target: DateTime.now(), start: mg.startTime!) : null);
+    return [];
   }
 
   Future<List<double?>> getClickValue({

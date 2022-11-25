@@ -1,5 +1,5 @@
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
@@ -18,26 +18,26 @@ void showDialogForCreateMemoryGroup() {
         SmartDialog.showToast('名称不能为空！');
         return;
       }
-      await DriftDb.instance.insertDAO.insertMemoryGroupWithOtherWithRef(
-        willMemoryGroup: WithCrts.memoryGroupsCompanion(
-          startTime: null.toValue(),
-          memoryModelId: null.toValue(),
-          title: tec.text,
-          willNewLearnCount: 0,
-          reviewInterval: DateTime.now(),
-          newReviewDisplayOrder: NewReviewDisplayOrder.mix,
-          newDisplayOrder: NewDisplayOrder.random,
-          isEnableFilterOutAlgorithm: false,
-          isFilterOutAlgorithmFollowMemoryModel: false,
-          filterOutAlgorithm: '',
-          isEnableFloatingAlgorithm: false,
-          isFloatingAlgorithmFollowMemoryModel: false,
-          floatingAlgorithm: '',
-        ),
-        willFragments: await DriftDb.instance.generalQueryDAO.queryFragmentsByIds(
-          Aber.findOrNullLast<FragmentGroupListPageAbController>()?.selectedFragmentIds().toList() ?? [],
-        ),
-      );
+      // await DriftDb.instance.insertDAO.insertMemoryGroupWithOtherWithRef(
+      //   willMemoryGroup: WithCrts.memoryGroupsCompanion(
+      //     startTime: null.toValue(),
+      //     memoryModelId: null.toValue(),
+      //     title: tec.text,
+      //     willNewLearnCount: 0,
+      //     reviewInterval: DateTime.now(),
+      //     newReviewDisplayOrder: NewReviewDisplayOrder.mix,
+      //     newDisplayOrder: NewDisplayOrder.random,
+      //     isEnableFilterOutAlgorithm: false,
+      //     isFilterOutAlgorithmFollowMemoryModel: false,
+      //     filterOutAlgorithm: '',
+      //     isEnableFloatingAlgorithm: false,
+      //     isFloatingAlgorithmFollowMemoryModel: false,
+      //     floatingAlgorithm: '',
+      //   ),
+      //   willFragments: await DriftDb.instance.generalQueryDAO.queryFragmentsByIds(
+      //     Aber.findOrNullLast<FragmentGroupListPageAbController>()?.selectedFragmentIds().toList() ?? [],
+      //   ),
+      // );
 
       SmartDialog.dismiss();
       SmartDialog.showToast('创建成功！');

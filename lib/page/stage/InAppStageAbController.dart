@@ -1,7 +1,9 @@
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:tools/tools.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
+
+import 'PerformerDAO.dart';
 
 class InAppStageAbController extends AbController {
   InAppStageAbController({required this.memoryGroupGizmo});
@@ -72,21 +74,21 @@ class InAppStageAbController extends AbController {
     final nextShowTime = ButtonDataValue2NextShowTime(value: clickValue);
     await _parseNextShowTime(buttonDataValue2NextShowTime: nextShowTime);
 
-    await performerQuery.finishAndStartNextPerform(
-      lastFragmentMemoryInfo: latestRecordInfo,
-      newFragmentMemoryInfo: WithCrts.fragmentMemoryInfosCompanion(
-        fragmentId: currentFragmentAndMemoryInfos()!.t1.id,
-        memoryGroupId: memoryGroupGizmo().id,
-        isLatestRecord: true,
-        nextPlanShowTime: nextShowTime.nextShowTime!,
-        currentActualShowTime: currentActualShowTime,
-        showFamiliarity: currentShowFamiliar,
-        clickTime: timeDifference(target: DateTime.now(), start: memoryGroupGizmo().startTime!),
-        clickValue: clickValue,
-      ),
-      memoryGroupAb: memoryGroupGizmo,
-      isOldIsNew: currentFragmentAndMemoryInfos()!.t2.isEmpty,
-    );
+    // await performerQuery.finishAndStartNextPerform(
+    //   lastFragmentMemoryInfo: latestRecordInfo,
+    //   newFragmentMemoryInfo: WithCrts.fragmentMemoryInfosCompanion(
+    //     fragmentId: currentFragmentAndMemoryInfos()!.t1.id,
+    //     memoryGroupId: memoryGroupGizmo().id,
+    //     isLatestRecord: true,
+    //     nextPlanShowTime: nextShowTime.nextShowTime!,
+    //     currentActualShowTime: currentActualShowTime,
+    //     showFamiliarity: currentShowFamiliar,
+    //     clickTime: timeDifference(target: DateTime.now(), start: memoryGroupGizmo().startTime!),
+    //     clickValue: clickValue,
+    //   ),
+    //   memoryGroupAb: memoryGroupGizmo,
+    //   isOldIsNew: currentFragmentAndMemoryInfos()!.t2.isEmpty,
+    // );
 
     memoryGroupGizmo.refreshForce();
 

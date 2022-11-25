@@ -7,20 +7,20 @@ class Notes extends CloudTableBase {
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text().nullable()();
+  TextColumn get content => text()();
 
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([Documents])
-  IntColumn get documentId => integer().nullable()();
+  TextColumn get documentId => text().nullable()();
 
   @ReferenceTo([Notes])
-  IntColumn get fatherNoteId => integer().nullable()();
+  TextColumn get fatherNoteId => text().nullable()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

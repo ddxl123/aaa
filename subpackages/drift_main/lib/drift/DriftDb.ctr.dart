@@ -14,27 +14,27 @@ part of drift_db;
 /// 使用方式查看 [withRefs]。
 class WithCrts {
   static UsersCompanion usersCompanion({
-    required Value<int?> age,
+    required int age,
     required Value<String?> email,
     required Value<String?> password,
-    required Value<String?> username,
+    required String username,
   }) {
     return UsersCompanion(
-      age: age,
+      age: Value(age),
       email: email,
       password: password,
-      username: username,
+      username: Value(username),
     );
   }
 
   static FragmentMemoryInfosCompanion fragmentMemoryInfosCompanion({
-    required int clickTime,
+    required DateTime clickTime,
     required double clickValue,
     required int creatorUserId,
-    required int currentActualShowTime,
-    required int fragmentId,
+    required DateTime currentActualShowTime,
+    required String fragmentId,
     required bool isLatestRecord,
-    required int memoryGroupId,
+    required String memoryGroupId,
     required DateTime nextPlanShowTime,
     required double showFamiliarity,
   }) {
@@ -53,30 +53,30 @@ class WithCrts {
 
   static MemoryGroupsCompanion memoryGroupsCompanion({
     required int creatorUserId,
-    required Value<int?> memoryModelId,
-    required Value<NewDisplayOrder?> newDisplayOrder,
-    required Value<NewReviewDisplayOrder?> newReviewDisplayOrder,
-    required Value<DateTime?> reviewInterval,
+    required Value<String?> memoryModelId,
+    required NewDisplayOrder newDisplayOrder,
+    required NewReviewDisplayOrder newReviewDisplayOrder,
+    required DateTime reviewInterval,
     required Value<DateTime?> startTime,
-    required Value<String?> title,
-    required Value<int?> willNewLearnCount,
+    required String title,
+    required int willNewLearnCount,
   }) {
     return MemoryGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       memoryModelId: memoryModelId,
-      newDisplayOrder: newDisplayOrder,
-      newReviewDisplayOrder: newReviewDisplayOrder,
-      reviewInterval: reviewInterval,
+      newDisplayOrder: Value(newDisplayOrder),
+      newReviewDisplayOrder: Value(newReviewDisplayOrder),
+      reviewInterval: Value(reviewInterval),
       startTime: startTime,
-      title: title,
-      willNewLearnCount: willNewLearnCount,
+      title: Value(title),
+      willNewLearnCount: Value(willNewLearnCount),
     );
   }
 
   static RDocument2DocumentGroupsCompanion rDocument2DocumentGroupsCompanion({
     required int creatorUserId,
-    required Value<int?> documentGroupId,
-    required int documentId,
+    required Value<String?> documentGroupId,
+    required String documentId,
   }) {
     return RDocument2DocumentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
@@ -87,12 +87,12 @@ class WithCrts {
 
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
     required int creatorUserId,
-    required int fragmentGroupId,
-    required int fragmentId,
+    required Value<String?> fragmentGroupId,
+    required String fragmentId,
   }) {
     return RFragment2FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
-      fragmentGroupId: Value(fragmentGroupId),
+      fragmentGroupId: fragmentGroupId,
       fragmentId: Value(fragmentId),
     );
   }
@@ -100,46 +100,46 @@ class WithCrts {
   static RMemoryModel2MemoryModelGroupsCompanion
       rMemoryModel2MemoryModelGroupsCompanion({
     required int creatorUserId,
-    required int memoryModelGroupId,
-    required int memoryModelId,
+    required Value<String?> memoryModelGroupId,
+    required String memoryModelId,
   }) {
     return RMemoryModel2MemoryModelGroupsCompanion(
       creatorUserId: Value(creatorUserId),
-      memoryModelGroupId: Value(memoryModelGroupId),
+      memoryModelGroupId: memoryModelGroupId,
       memoryModelId: Value(memoryModelId),
     );
   }
 
   static RNote2NoteGroupsCompanion rNote2NoteGroupsCompanion({
     required int creatorUserId,
-    required int noteGroupId,
-    required int noteId,
+    required Value<String?> noteGroupId,
+    required String noteId,
   }) {
     return RNote2NoteGroupsCompanion(
       creatorUserId: Value(creatorUserId),
-      noteGroupId: Value(noteGroupId),
+      noteGroupId: noteGroupId,
       noteId: Value(noteId),
     );
   }
 
   static DocumentsCompanion documentsCompanion({
-    required Value<String?> content,
+    required String content,
     required int creatorUserId,
   }) {
     return DocumentsCompanion(
-      content: content,
+      content: Value(content),
       creatorUserId: Value(creatorUserId),
     );
   }
 
   static FragmentsCompanion fragmentsCompanion({
-    required Value<String?> content,
+    required String content,
     required int creatorUserId,
-    required Value<int?> fatherFragmentId,
-    required Value<int?> noteId,
+    required Value<String?> fatherFragmentId,
+    required Value<String?> noteId,
   }) {
     return FragmentsCompanion(
-      content: content,
+      content: Value(content),
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId,
       noteId: noteId,
@@ -147,37 +147,33 @@ class WithCrts {
   }
 
   static MemoryModelsCompanion memoryModelsCompanion({
-    required Value<String?> applicableFields,
-    required Value<String?> applicableGroups,
-    required Value<String?> buttonAlgorithm,
+    required String buttonAlgorithm,
     required int creatorUserId,
-    required Value<String?> familiarityAlgorithm,
-    required Value<int?> fatherFragmentId,
-    required Value<String?> nextTimeAlgorithm,
-    required Value<String?> stimulateAlgorithm,
-    required Value<String?> title,
+    required String familiarityAlgorithm,
+    required Value<String?> fatherMemoryModelId,
+    required String nextTimeAlgorithm,
+    required String stimulateAlgorithm,
+    required String title,
   }) {
     return MemoryModelsCompanion(
-      applicableFields: applicableFields,
-      applicableGroups: applicableGroups,
-      buttonAlgorithm: buttonAlgorithm,
+      buttonAlgorithm: Value(buttonAlgorithm),
       creatorUserId: Value(creatorUserId),
-      familiarityAlgorithm: familiarityAlgorithm,
-      fatherFragmentId: fatherFragmentId,
-      nextTimeAlgorithm: nextTimeAlgorithm,
-      stimulateAlgorithm: stimulateAlgorithm,
-      title: title,
+      familiarityAlgorithm: Value(familiarityAlgorithm),
+      fatherMemoryModelId: fatherMemoryModelId,
+      nextTimeAlgorithm: Value(nextTimeAlgorithm),
+      stimulateAlgorithm: Value(stimulateAlgorithm),
+      title: Value(title),
     );
   }
 
   static NotesCompanion notesCompanion({
-    required Value<String?> content,
+    required String content,
     required int creatorUserId,
-    required Value<int?> documentId,
-    required Value<int?> fatherNoteId,
+    required Value<String?> documentId,
+    required Value<String?> fatherNoteId,
   }) {
     return NotesCompanion(
-      content: content,
+      content: Value(content),
       creatorUserId: Value(creatorUserId),
       documentId: documentId,
       fatherNoteId: fatherNoteId,
@@ -186,49 +182,49 @@ class WithCrts {
 
   static DocumentGroupsCompanion documentGroupsCompanion({
     required int creatorUserId,
-    required Value<int?> fatherDocumentGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherDocumentGroupsId,
+    required String title,
   }) {
     return DocumentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherDocumentGroupsId: fatherDocumentGroupsId,
-      title: title,
+      title: Value(title),
     );
   }
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
     required int creatorUserId,
-    required Value<int?> fatherFragmentGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherFragmentGroupsId,
+    required String title,
   }) {
     return FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
-      title: title,
+      title: Value(title),
     );
   }
 
   static MemoryModelGroupsCompanion memoryModelGroupsCompanion({
     required int creatorUserId,
-    required Value<int?> fatherMemoryModelGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherMemoryModelGroupsId,
+    required String title,
   }) {
     return MemoryModelGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherMemoryModelGroupsId: fatherMemoryModelGroupsId,
-      title: title,
+      title: Value(title),
     );
   }
 
   static NoteGroupsCompanion noteGroupsCompanion({
     required int creatorUserId,
-    required Value<int?> fatherNoteGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherNoteGroupsId,
+    required String title,
   }) {
     return NoteGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherNoteGroupsId: fatherNoteGroupsId,
-      title: title,
+      title: Value(title),
     );
   }
 
@@ -239,6 +235,16 @@ class WithCrts {
     return AppInfosCompanion(
       token: Value(token),
       hasDownloadedInitData: Value(hasDownloadedInitData),
+    );
+  }
+
+  static SelectedsCompanion selectedsCompanion({
+    required int selectedType,
+    required String selectedId,
+  }) {
+    return SelectedsCompanion(
+      selectedType: Value(selectedType),
+      selectedId: Value(selectedId),
     );
   }
 

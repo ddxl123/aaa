@@ -1,4 +1,6 @@
 import 'package:aaa/home/memoryhome/MemoryHomeAbController.dart';
+import 'package:aaa/page/list/ListPageType.dart';
+import 'package:aaa/page/list/MemoryModeListPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryGroupListPage.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,7 @@ class _MemoryHomeState extends State<MemoryHome> {
             tabController: putController.tabController,
             tabs: const [
               Tab(text: '记忆组'),
+              Tab(text: '算法'),
               Tab(text: '统计'),
             ],
             otherWidgets: [
@@ -45,7 +48,12 @@ class _MemoryHomeState extends State<MemoryHome> {
               KeepStateWidget(
                 builder: (ctx) => const MemoryGroupListPage(),
               ),
-              const Tab(text: '111'),
+              KeepStateWidget(
+                builder: (_) => const MemoryModeListPage(listPageType: ListPageType.home),
+              ),
+              KeepStateWidget(
+                builder: (_) => const Text('统计'),
+              ),
             ],
           ),
         );

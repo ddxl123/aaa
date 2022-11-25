@@ -7,20 +7,20 @@ class Fragments extends CloudTableBase {
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text().nullable()();
+  TextColumn get content => text()();
 
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([Fragments])
-  IntColumn get fatherFragmentId => integer().nullable()();
+  TextColumn get fatherFragmentId => text().nullable()();
 
   @ReferenceTo([Notes])
-  IntColumn get noteId => integer().nullable()();
+  TextColumn get noteId => text().nullable()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

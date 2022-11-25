@@ -2,7 +2,7 @@ import 'package:aaa/page/gizmo/MemoryGroupGizmoPage.dart';
 import 'package:aaa/single_dialog/single_dialog.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

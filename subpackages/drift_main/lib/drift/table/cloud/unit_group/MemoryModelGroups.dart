@@ -11,13 +11,13 @@ class MemoryModelGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([MemoryModelGroups])
-  IntColumn get fatherMemoryModelGroupsId => integer().nullable()();
+  TextColumn get fatherMemoryModelGroupsId => text().nullable()();
 
-  TextColumn get title => text().nullable()();
+  TextColumn get title => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

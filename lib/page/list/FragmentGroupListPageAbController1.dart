@@ -1,16 +1,18 @@
-import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+
 /// TODO: 快速点击按钮时，可能会触发多次函数，可能会抛出 'setState() or markNeedsBuild() called during build.' 等异常。
-class PartListForFragmentHome {
-  PartListForFragmentHome({
-    required this.fatherFragmentGroup,
+class Parts {
+  Parts({
+    required this.fatherGroupEntity,
     required this.controller,
   });
 
-  final FragmentGroupListPageAbController controller;
+  final GroupListWidgetAbController controller;
 
   /// TODO: 调用 dispose 时，会抛出异常。
   final RefreshController refreshController = RefreshController(initialRefresh: true);
@@ -20,23 +22,23 @@ class PartListForFragmentHome {
   /// back 会上一个页面时，上一个页面的 position 会被重置，因此需要这个状态。
   double currentPosition = 0;
 
-  final Ab<FragmentGroup>? fatherFragmentGroup;
+  final Ab<FragmentGroup>? fatherGroupEntity;
 
-  final fragmentGroups = <Ab<FragmentGroup>>[].ab;
+  final groupEntities = <Ab<FragmentGroup>>[].ab;
 
-  final fragments = <Ab<Fragment>>[].ab;
+  final unitEntities = <Ab<Fragment>>[].ab;
 
   final fragmentCountForAllSubgroup = <Ab<FragmentGroup>, Ab<int>>{}.ab;
 
   final selectedFragmentCountForAllSubgroup = <Ab<FragmentGroup>, Ab<int>>{}.ab;
 
-  FragmentGroup indexFragmentGroup(int index, [Abw? abw]) => fragmentGroups()[index](abw);
+  FragmentGroup indexFragmentGroup(int index, [Abw? abw]) => groupEntities()[index](abw);
 
-  Ab<FragmentGroup> indexAbFragmentGroup(int index) => fragmentGroups()[index];
+  Ab<FragmentGroup> indexAbFragmentGroup(int index) => groupEntities()[index];
 
-  Fragment indexFragment(int index, [Abw? abw]) => fragments()[index](abw);
+  Fragment indexFragment(int index, [Abw? abw]) => unitEntities()[index](abw);
 
-  Ab<Fragment> indexAbFragment(int index) => fragments()[index];
+  Ab<Fragment> indexAbFragment(int index) => unitEntities()[index];
 
   int indexFragmentCountForAllSubgroup(int index, Abw abw) => fragmentCountForAllSubgroup()[indexAbFragmentGroup(index)]?.call(abw) ?? 0;
 
@@ -56,31 +58,31 @@ class PartListForFragmentHome {
   }
 
   bool isAllEmpty(Abw abw) {
-    return fragmentGroups(abw).isEmpty && fragments(abw).isEmpty;
+    return groupEntities(abw).isEmpty && unitEntities(abw).isEmpty;
   }
 
   Future<void> addFragmentGroup(FragmentGroupsCompanion entry) async {
     final newEntry = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(entry);
-    fragmentGroups.refreshInevitable((obj) => obj..add(newEntry.ab));
+    groupEntities.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 
   /// TODO: 未使用 [withRefs]。
   Future<void> addFragment({required FragmentsCompanion willFragment}) async {
     final newEntry = await DriftDb.instance.insertDAO.insertFragmentWithRef(willFragment: willFragment);
-    fragments.refreshInevitable((obj) => obj..add(newEntry.ab));
+    unitEntities.refreshInevitable((obj) => obj..add(newEntry.ab));
   }
 
   Future<void> _refreshPart() async {
-    final newFragmentGroups = (await DriftDb.instance.generalQueryDAO.queryFragmentGroups(fatherFragmentGroup?.call().id)).map((e) => e.ab);
-    final newFragments = (await DriftDb.instance.generalQueryDAO.queryFragmentsByFragmentGroupId(fatherFragmentGroup?.call().id)).map((e) => e.ab);
+    final newFragmentGroups = (await DriftDb.instance.generalQueryDAO.queryFragmentGroups(fatherGroupEntity?.call().id)).map((e) => e.ab);
+    final newFragments = (await DriftDb.instance.generalQueryDAO.queryFragmentsByFragmentGroupId(fatherGroupEntity?.call().id)).map((e) => e.ab);
     clean();
-    fragmentGroups.refreshInevitable((obj) => obj..addAll(newFragmentGroups));
-    fragments.refreshInevitable((obj) => obj..addAll(newFragments));
+    groupEntities.refreshInevitable((obj) => obj..addAll(newFragmentGroups));
+    unitEntities.refreshInevitable((obj) => obj..addAll(newFragments));
   }
 
   Future<void> querySelectedAndFragmentCountFromAllSubgroup() async {
     await Future.forEach<Ab<FragmentGroup>>(
-      fragmentGroups(),
+      groupEntities(),
       (element) async {
         final List<String> fs = await DriftDb.instance.generalQueryDAO.queryFragmentsForAllSubgroup(element().id, []);
 
@@ -127,39 +129,39 @@ class PartListForFragmentHome {
   }
 
   void clean() {
-    fragmentGroups.clear_(controller);
-    fragments.clear_(controller);
+    groupEntities.clear_(controller);
+    unitEntities.clear_(controller);
     fragmentCountForAllSubgroup.clear_(controller);
     selectedFragmentCountForAllSubgroup.clear_(controller);
   }
 
   void dispose() {
-    fragmentGroups.clearAndSelf_(controller);
-    fragments.clearAndSelf_(controller);
+    groupEntities.clearAndSelf_(controller);
+    unitEntities.clearAndSelf_(controller);
     fragmentCountForAllSubgroup.clearAndSelf_(controller);
     selectedFragmentCountForAllSubgroup.clearAndSelf_(controller);
   }
 }
 
-class FragmentGroupListPageAbController extends AbController {
+class GroupListWidgetAbController extends AbController {
   final groupChainController = ScrollController();
 
   /// 必须预留一个顶级的。
-  final parts = <Ab<PartListForFragmentHome>>[].ab;
+  final parts = <Ab<Parts>>[].ab;
 
   final Ab<Set<String>> selectedFragmentIds = <String>{}.ab;
 
-  PartListForFragmentHome currentPart([Abw? abw]) => parts().last(abw);
+  Parts currentPart([Abw? abw]) => parts().last(abw);
 
   @override
   void onInit() {
-    parts().add(PartListForFragmentHome(controller: this, fatherFragmentGroup: null).ab);
+    parts().add(Parts(controller: this, fatherGroupEntity: null).ab);
   }
 
   Future<void> enterPart(Ab<FragmentGroup>? fg) async {
     if (fg != null) {
       currentPart().currentPosition = currentPart().refreshController.position!.pixels;
-      final part = PartListForFragmentHome(fatherFragmentGroup: fg, controller: this).ab;
+      final part = Parts(fatherGroupEntity: fg, controller: this).ab;
       parts.refreshInevitable((obj) => obj..add(part));
     }
     await currentPart()._refreshPart();
@@ -190,7 +192,7 @@ class FragmentGroupListPageAbController extends AbController {
   }
 
   /// back 到指定 part。
-  Future<void> backPartJump(Ab<PartListForFragmentHome> p) async {
+  Future<void> backPartJump(Ab<Parts> p) async {
     final index = parts().indexOf(p);
     final removeCount = parts().length - 1 - index;
     for (int i = 0; i < removeCount; i++) {

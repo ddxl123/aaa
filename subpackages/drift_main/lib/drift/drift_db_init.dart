@@ -21,11 +21,7 @@ LazyDatabase _openConnection() {
 }
 
 @DriftDatabase(
-  tables: [
-    ...cloudTableClasses,
-    ...localTableClasses,
-    ...syncTableClass,
-  ],
+  tables: [...tableClasses],
   daos: [
     InsertDAO,
     UpdateDAO,

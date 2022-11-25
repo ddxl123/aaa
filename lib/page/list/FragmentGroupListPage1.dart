@@ -8,15 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class FragmentGroupListPage extends StatelessWidget {
-  const FragmentGroupListPage({Key? key, required this.listPageType}) : super(key: key);
+import 'FragmentGroupListPageAbController1.dart';
+
+class GroupListWidget extends StatelessWidget {
+  const GroupListWidget({Key? key, required this.listPageType}) : super(key: key);
 
   final ListPageType listPageType;
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<FragmentGroupListPageAbController>(
-      putController: FragmentGroupListPageAbController(),
+    return AbBuilder<GroupListWidgetAbController>(
+      putController: GroupListWidgetAbController(),
       tag: Aber.single,
       builder: (controller, abw) {
         return Scaffold(
@@ -29,7 +31,7 @@ class FragmentGroupListPage extends StatelessWidget {
   }
 
   Widget _body() {
-    return AbBuilder<FragmentGroupListPageAbController>(
+    return AbBuilder<GroupListWidgetAbController>(
       tag: Aber.single,
       builder: (c, abw) {
         return IndexedStack(
@@ -76,7 +78,7 @@ class FragmentGroupListPage extends StatelessWidget {
   }
 
   Widget _fragmentGroupsBuilder() {
-    return AbBuilder<FragmentGroupListPageAbController>(
+    return AbBuilder<GroupListWidgetAbController>(
       tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
@@ -140,7 +142,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 ],
               );
             },
-            childCount: c.currentPart().fragmentGroups(abw).length,
+            childCount: c.currentPart().groupEntities(abw).length,
           ),
         );
       },
@@ -148,7 +150,7 @@ class FragmentGroupListPage extends StatelessWidget {
   }
 
   Widget _fragmentsBuilder() {
-    return AbBuilder<FragmentGroupListPageAbController>(
+    return AbBuilder<GroupListWidgetAbController>(
       tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
@@ -168,7 +170,7 @@ class FragmentGroupListPage extends StatelessWidget {
                   AbBuilder<HomeAbController>(
                     builder: (hController, hAwb) {
                       if (hController.isFragmentSelecting(hAwb)) {
-                        return AbBuilder<FragmentGroupListPageAbController>(
+                        return AbBuilder<GroupListWidgetAbController>(
                           tag: Aber.single,
                           builder: (selectController, selectAbw) {
                             return IconButton(
@@ -190,7 +192,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 ],
               );
             },
-            childCount: c.currentPart().fragments(abw).length,
+            childCount: c.currentPart().unitEntities(abw).length,
           ),
         );
       },
@@ -211,7 +213,7 @@ class FragmentGroupListPage extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: AbBuilder<FragmentGroupListPageAbController>(
+              child: AbBuilder<GroupListWidgetAbController>(
                   tag: Aber.single,
                   builder: (c, abw) {
                     return SingleChildScrollView(
@@ -223,7 +225,7 @@ class FragmentGroupListPage extends StatelessWidget {
                           ...c.parts(abw).map(
                                 (e) => TextButton(
                                   child: Text(
-                                    e().fatherFragmentGroup?.call(abw) == null ? '~ >' : '${e().fatherFragmentGroup!(abw).title} >',
+                                    e().fatherGroupEntity?.call(abw) == null ? '~ >' : '${e().fatherGroupEntity!(abw).title} >',
                                   ),
                                   onPressed: () {
                                     c.backPartJump(e);
@@ -236,7 +238,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     );
                   }),
             ),
-            AbBuilder<FragmentGroupListPageAbController>(
+            AbBuilder<GroupListWidgetAbController>(
               tag: Aber.single,
               builder: (c, abw) {
                 return CustomDropdownBodyButton(

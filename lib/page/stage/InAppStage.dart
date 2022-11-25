@@ -1,6 +1,6 @@
 import 'package:aaa/page/stage/InAppStageAbController.dart';
 import 'package:tools/tools.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 
 class InAppStage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _InAppStageState extends State<InAppStage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(c.currentFragmentAndMemoryInfos(abw) == null ? '任务已全部完成！' : c.currentFragmentAndMemoryInfos()!.t1.title),
+                  Text(c.currentFragmentAndMemoryInfos(abw) == null ? '任务已全部完成！' : c.currentFragmentAndMemoryInfos()!.t1.content),
                 ],
               ),
             ),

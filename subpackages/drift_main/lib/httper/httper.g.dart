@@ -9,7 +9,7 @@ part of httper;
 RegisterAndLoginWithUsernameDto _$RegisterAndLoginWithUsernameDtoFromJson(
         Map<String, dynamic> json) =>
     RegisterAndLoginWithUsernameDto(
-      username: json['username'] as String?,
+      username: json['username'] as String,
       password: json['password'] as String?,
     );
 
@@ -24,9 +24,9 @@ RegisterAndLoginWithUsernameVo _$RegisterAndLoginWithUsernameVoFromJson(
         Map<String, dynamic> json) =>
     RegisterAndLoginWithUsernameVo(
       register_or_login: json['register_or_login'] as int,
-      id: json['id'] as int?,
-      new_display_order: $enumDecodeNullable(
-          _$NewDisplayOrderEnumMap, json['new_display_order']),
+      id: json['id'] as int,
+      new_display_order:
+          $enumDecode(_$NewDisplayOrderEnumMap, json['new_display_order']),
     );
 
 Map<String, dynamic> _$RegisterAndLoginWithUsernameVoToJson(
@@ -34,7 +34,8 @@ Map<String, dynamic> _$RegisterAndLoginWithUsernameVoToJson(
     <String, dynamic>{
       'register_or_login': instance.register_or_login,
       'id': instance.id,
-      'new_display_order': _$NewDisplayOrderEnumMap[instance.new_display_order],
+      'new_display_order':
+          _$NewDisplayOrderEnumMap[instance.new_display_order]!,
     };
 
 const _$NewDisplayOrderEnumMap = {

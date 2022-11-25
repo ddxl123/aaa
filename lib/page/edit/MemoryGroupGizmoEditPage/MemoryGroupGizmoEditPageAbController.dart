@@ -1,7 +1,8 @@
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/Storage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -50,31 +51,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// =========================================================================================
 
-  /// [MemoryGroups.isEnableFilterOutAlgorithm]
-  final cIsEnableFilterOutAlgorithm = Storage<bool>(abObj: false.ab, tempValue: false);
-
-  /// [MemoryGroups.isFilterOutAlgorithmFollowMemoryModel]
-  final cIsFilterOutAlgorithmFollowMemoryModel = Storage<bool>(abObj: false.ab, tempValue: false);
-
-  /// [MemoryGroups.filterOutAlgorithm]
-  /// TODO: 进行 [AbVerify]
-  final cFilterOutAlgorithm = Storage<String>(abObj: ''.ab, tempValue: '');
-  final ccFilterOutAlgorithmTextEditingController = TextEditingController();
-
-  /// =========================================================================================
-
-  /// [MemoryGroups.isEnableFloatingAlgorithm]
-  final cIsEnableFloatingAlgorithm = Storage<bool>(abObj: false.ab, tempValue: false);
-
-  /// [MemoryGroups.isFloatingAlgorithmFollowMemoryModel]
-  final cIsFloatingAlgorithmFollowMemoryModel = Storage<bool>(abObj: false.ab, tempValue: false);
-
-  /// [MemoryGroups.floatingAlgorithm]
-  final cFloatingAlgorithm = Storage<String>(abObj: ''.ab, tempValue: '');
-  final ccFloatingAlgorithmTextEditingController = TextEditingController();
-
-  /// =========================================================================================
-
   /// ========== 可操作-当前周期配置部分 ==========
 
   ///
@@ -99,8 +75,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   void onDispose() {
     super.onDispose();
     bcTitleTextEditingController.dispose();
-    ccFilterOutAlgorithmTextEditingController.dispose();
-    ccFloatingAlgorithmTextEditingController.dispose();
     ccReviewIntervalTextEditingController.dispose();
   }
 
@@ -216,29 +190,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     cNewReviewDisplayOrder
       ..tempValue = mgg.newReviewDisplayOrder
       ..abObj.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
-
-    cIsEnableFilterOutAlgorithm
-      ..tempValue = mgg.isEnableFilterOutAlgorithm
-      ..abObj.refreshEasy((oldValue) => mgg.isEnableFilterOutAlgorithm);
-    cIsFilterOutAlgorithmFollowMemoryModel
-      ..tempValue = mgg.isFilterOutAlgorithmFollowMemoryModel
-      ..abObj.refreshEasy((oldValue) => mgg.isFilterOutAlgorithmFollowMemoryModel);
-    cFilterOutAlgorithm
-      ..tempValue = mgg.filterOutAlgorithm
-      ..abObj.refreshEasy((oldValue) => mgg.filterOutAlgorithm);
-    ccFilterOutAlgorithmTextEditingController.text = mgg.filterOutAlgorithm;
-
-    cIsEnableFloatingAlgorithm
-      ..tempValue = mgg.isEnableFloatingAlgorithm
-      ..abObj.refreshEasy((oldValue) => mgg.isEnableFloatingAlgorithm);
-    cIsFloatingAlgorithmFollowMemoryModel
-      ..tempValue = mgg.isFloatingAlgorithmFollowMemoryModel
-      ..abObj.refreshEasy((oldValue) => mgg.isFloatingAlgorithmFollowMemoryModel);
-    cFloatingAlgorithm
-      ..tempValue = mgg.floatingAlgorithm
-      ..abObj.refreshEasy((oldValue) => mgg.floatingAlgorithm);
-    ccFloatingAlgorithmTextEditingController.text = mgg.floatingAlgorithm;
-
     cNewReviewDisplayOrder
       ..tempValue = mgg.newReviewDisplayOrder
       ..abObj.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
@@ -271,28 +222,22 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 返回的 [Tuple2]：是否成功-消息。
   Future<Tuple2<bool, String>> _save({required bool isApply}) async {
     if (await saveVerify) {
-      await DriftDb.instance.updateDAO.resetMemoryGroup(
-        syncTag: null,
-        oldMemoryGroupReset: (resetSyncTag) async {
-          await memoryGroupGizmo!().reset(
-            startTime: isApply ? DateTime.now().toValue() : toAbsent(),
-            memoryModelId: (bSelectedMemoryModel.abObj()?.id).toValue(),
-            title: bTitle.abObj().toValue(),
-            willNewLearnCount: cWillNewLearnCount.abObj().toValue(),
-            reviewInterval: cReviewInterval.abObj().toValue(),
-            newReviewDisplayOrder: cNewReviewDisplayOrder.abObj().toValue(),
-            newDisplayOrder: cNewDisplayOrder.abObj().toValue(),
-            isFilterOutAlgorithmFollowMemoryModel: cIsFilterOutAlgorithmFollowMemoryModel.abObj().toValue(),
-            isEnableFilterOutAlgorithm: cIsEnableFilterOutAlgorithm.abObj().toValue(),
-            filterOutAlgorithm: cFilterOutAlgorithm.abObj().toValue(),
-            isFloatingAlgorithmFollowMemoryModel: cIsFloatingAlgorithmFollowMemoryModel.abObj().toValue(),
-            isEnableFloatingAlgorithm: cIsEnableFloatingAlgorithm.abObj().toValue(),
-            floatingAlgorithm: cFloatingAlgorithm.abObj().toValue(),
-            writeSyncTag: resetSyncTag,
-          );
-        },
-      );
-      memoryGroupGizmo!.refreshForce();
+      // await DriftDb.instance.updateDAO.resetMemoryGroup(
+      //   syncTag: null,
+      //   oldMemoryGroupReset: (resetSyncTag) async {
+      //     await memoryGroupGizmo!().reset(
+      //       startTime: isApply ? DateTime.now().toValue() : toAbsent(),
+      //       memoryModelId: (bSelectedMemoryModel.abObj()?.id).toValue(),
+      //       title: bTitle.abObj().toValue(),
+      //       willNewLearnCount: cWillNewLearnCount.abObj().toValue(),
+      //       reviewInterval: cReviewInterval.abObj().toValue(),
+      //       newReviewDisplayOrder: cNewReviewDisplayOrder.abObj().toValue(),
+      //       newDisplayOrder: cNewDisplayOrder.abObj().toValue(),
+      //       writeSyncTag: resetSyncTag,
+      //     );
+      //   },
+      // );
+      // memoryGroupGizmo!.refreshForce();
       return Tuple2(t1: true, t2: '保存成功！');
     } else {
       return Tuple2(t1: false, t2: '保存失败！');

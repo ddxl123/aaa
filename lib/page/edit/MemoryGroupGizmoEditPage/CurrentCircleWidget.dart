@@ -1,4 +1,5 @@
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
@@ -30,69 +31,9 @@ class CurrentCircleWidget extends StatelessWidget {
                 _reviewIntervalWidget(),
                 _newReviewDisplayOrder(),
                 _newDisplayOrder(),
-                _filterOutWidget(),
-                _floatingWindowWidget(),
                 floatingRoundCornerButtonPlaceholderBox(),
               ],
             ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _floatingWindowWidget() {
-    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
-      builder: (c, abw) {
-        return CardCustom(
-          verifyAb: null,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const Text('是否启用悬浮窗：', style: TextStyle(fontSize: 16)),
-                  const Spacer(),
-                  Switch(
-                    value: c.cIsEnableFloatingAlgorithm.abObj(abw),
-                    onChanged: (v) {
-                      c.cIsEnableFloatingAlgorithm.abObj.refreshEasy((oldValue) => v);
-                    },
-                  ),
-                ],
-              ),
-              c.cIsEnableFloatingAlgorithm.abObj(abw)
-                  ? Row(
-                      children: [
-                        c.cIsFloatingAlgorithmFollowMemoryModel.abObj(abw) ? const Text('当前算法跟随记忆模型') : const Text('当前算法使用自定义'),
-                        const Spacer(),
-                        TextButton(
-                          child: c.cIsFloatingAlgorithmFollowMemoryModel.abObj(abw) ? const Text('跟随记忆模型') : const Text('切换为自定义'),
-                          onPressed: () {
-                            c.cIsFloatingAlgorithmFollowMemoryModel.abObj.refreshEasy((oldValue) => !oldValue);
-                          },
-                        ),
-                      ],
-                    )
-                  : Container(),
-              c.cIsEnableFloatingAlgorithm.abObj(abw) && c.cIsFloatingAlgorithmFollowMemoryModel.abObj(abw)
-                  ? Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: c.ccFloatingAlgorithmTextEditingController,
-                            keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            maxLines: 3,
-                            decoration: const InputDecoration(hintText: '请写入算法...'),
-                            onChanged: (v) {
-                              c.cFloatingAlgorithm.abObj.refreshEasy((oldValue) => v);
-                            },
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(),
-            ],
           ),
         );
       },
@@ -190,74 +131,6 @@ class CurrentCircleWidget extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _filterOutWidget() {
-    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
-      builder: (c, abw) {
-        return CardCustom(
-          verifyAb: null,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const Text('是否启用过滤碎片：  '),
-                  const Spacer(),
-                  Switch(
-                    value: c.cIsEnableFilterOutAlgorithm.abObj(abw),
-                    onChanged: (v) {
-                      c.cIsEnableFilterOutAlgorithm.abObj.refreshEasy((oldValue) => v);
-                    },
-                  ),
-                ],
-              ),
-              c.cIsEnableFilterOutAlgorithm.abObj(abw)
-                  ? Row(
-                      children: [
-                        c.cIsFilterOutAlgorithmFollowMemoryModel.abObj(abw) ? const Text('当前算法跟随记忆模型') : const Text('当前算法使用自定义'),
-                        const Spacer(),
-                        TextButton(
-                          child: c.cIsFilterOutAlgorithmFollowMemoryModel.abObj(abw) ? const Text('切换为自定义') : const Text('跟随记忆模型'),
-                          onPressed: () {
-                            c.cIsFilterOutAlgorithmFollowMemoryModel.abObj.refreshEasy((oldValue) => !oldValue);
-                          },
-                        ),
-                      ],
-                    )
-                  : Container(),
-              c.cIsEnableFilterOutAlgorithm.abObj(abw) && !c.cIsFilterOutAlgorithmFollowMemoryModel.abObj(abw)
-                  ? Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      keyboardType: TextInputType.multiline,
-                                      minLines: 1,
-                                      maxLines: 3,
-                                      controller: c.ccFilterOutAlgorithmTextEditingController,
-                                      decoration: const InputDecoration(hintText: '请写入算法...'),
-                                      onChanged: (v) {
-                                        c.cFilterOutAlgorithm.abObj.refreshEasy((oldValue) => v);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(),
             ],
           ),
         );

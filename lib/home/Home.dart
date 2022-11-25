@@ -1,4 +1,3 @@
-import 'package:aaa/global/Global.dart';
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';

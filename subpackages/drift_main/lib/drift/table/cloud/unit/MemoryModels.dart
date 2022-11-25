@@ -7,29 +7,25 @@ class MemoryModels extends CloudTableBase {
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get applicableFields => text().nullable()();
-
-  TextColumn get applicableGroups => text().nullable()();
-
-  TextColumn get buttonAlgorithm => text().nullable()();
+  TextColumn get buttonAlgorithm => text()();
 
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
-  TextColumn get familiarityAlgorithm => text().nullable()();
+  TextColumn get familiarityAlgorithm => text()();
 
   @ReferenceTo([Fragments])
-  IntColumn get fatherFragmentId => integer().nullable()();
+  TextColumn get fatherMemoryModelId => text().nullable()();
 
-  TextColumn get nextTimeAlgorithm => text().nullable()();
+  TextColumn get nextTimeAlgorithm => text()();
 
-  TextColumn get stimulateAlgorithm => text().nullable()();
+  TextColumn get stimulateAlgorithm => text()();
 
-  TextColumn get title => text().nullable()();
+  TextColumn get title => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

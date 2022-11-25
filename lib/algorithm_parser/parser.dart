@@ -3,8 +3,8 @@ library algorithm_parser;
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:drift/drift.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 
@@ -33,8 +33,6 @@ part 'state/ButtonDataState.dart';
 part 'state/FamiliarityState.dart';
 
 part 'state/NextShowTimeState.dart';
-
-part '../page/stage/PerformerDAO.dart';
 
 part 'DefaultAlgorithmContent.dart';
 

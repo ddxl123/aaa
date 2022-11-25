@@ -1,6 +1,6 @@
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -18,11 +18,11 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       return;
     }
 
-    await fragmentGroupModelAbController.currentPart().addFragmentGroup(FragmentGroupsCompanion()
-      ..title = title.toValue()
-      ..fatherFragmentGroupId = (fragmentGroupModelAbController.currentPart().fatherFragmentGroup?.call().id).toValue());
-    SmartDialog.showToast('创建成功');
-    Navigator.pop(context);
+    // await fragmentGroupModelAbController.currentPart().addFragmentGroup(FragmentGroupsCompanion()
+    //   ..title = title.toValue()
+    //   ..fatherFragmentGroupId = (fragmentGroupModelAbController.currentPart().fatherFragmentGroup?.call().id).toValue());
+    // SmartDialog.showToast('创建成功');
+    // Navigator.pop(context);
   }
 
   void cancel() {

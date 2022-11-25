@@ -11,14 +11,14 @@ class RNote2NoteGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([NoteGroups])
-  IntColumn get noteGroupId => integer()();
+  TextColumn get noteGroupId => text().nullable()();
 
   @ReferenceTo([Notes])
-  IntColumn get noteId => integer()();
+  TextColumn get noteId => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

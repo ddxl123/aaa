@@ -117,7 +117,7 @@ class BasicConfigWidget extends StatelessWidget {
                                                     children: [
                                                       SizedBox(
                                                         height: 200,
-                                                        child: Text(e(abw).title.toString()),
+                                                        child: Text(e(abw).content.toString()),
                                                       )
                                                     ],
                                                   ),

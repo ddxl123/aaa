@@ -1,9 +1,5 @@
 part of drift_db;
 
-const List<Type> syncTableClass = [
-  Syncs,
-];
-
 class Syncs extends LocalTableBase {
   TextColumn get syncTableName => text()();
 

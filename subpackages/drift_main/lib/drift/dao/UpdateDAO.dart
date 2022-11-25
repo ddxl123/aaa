@@ -7,10 +7,7 @@ typedef ResetFutureFunction = Future<void> Function(SyncTag resetSyncTag);
 ///
 ///
 @DriftAccessor(
-  tables: [
-    ...cloudTableClasses,
-    ...localTableClasses,
-  ],
+  tables: tableClasses,
 )
 class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   UpdateDAO(DriftDb attachedDatabase) : super(attachedDatabase);
@@ -20,37 +17,37 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required ResetFutureFunction oldMemoryGroupReset,
     required SyncTag? syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag ?? await SyncTag.create(),
-      ref: (syncTag) async {
-        return RefMemoryGroups(
-          self: (table) async {
-            await oldMemoryGroupReset(syncTag);
-          },
-          // TODO:
-          fragmentMemoryInfos: null,
-          // TODO:
-          rFragment2MemoryGroups: null,
-        );
-      },
-    );
+    // await withRefs(
+    //   syncTag: syncTag ?? await SyncTag.create(),
+    //   ref: (syncTag) async {
+    //     return RefMemoryGroups(
+    //       self: (table) async {
+    //         await oldMemoryGroupReset(syncTag);
+    //       },
+    //       // TODO:
+    //       fragmentMemoryInfos: null,
+    //       // TODO:
+    //       rFragment2MemoryGroups: null,
+    //     );
+    //   },
+    // );
   }
 
   Future<void> resetMemoryModel({
     required ResetFutureFunction oldMemoryModelReset,
     required SyncTag? syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag ?? await SyncTag.create(),
-      ref: (syncTag) async {
-        return RefMemoryModels(
-          self: (table) async {
-            await oldMemoryModelReset(syncTag);
-          },
-          // TODO: 需要检测。
-          memoryGroups: null,
-        );
-      },
-    );
+    // await withRefs(
+    //   syncTag: syncTag ?? await SyncTag.create(),
+    //   ref: (syncTag) async {
+    //     return RefMemoryModels(
+    //       self: (table) async {
+    //         await oldMemoryModelReset(syncTag);
+    //       },
+    //       // TODO: 需要检测。
+    //       memoryGroups: null,
+    //     );
+    //   },
+    // );
   }
 }

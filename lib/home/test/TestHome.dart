@@ -1,7 +1,7 @@
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/tool/DriftViewer.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
-import 'package:drift_main/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -44,9 +44,9 @@ class TestHome extends StatelessWidget {
                           ElevatedButton(
                             child: const Text('插入测试数据'),
                             onPressed: () async {
-                              SmartDialog.showToast('插入中...');
-                              await c.inserts();
-                              SmartDialog.showToast('插入成功');
+                              // SmartDialog.showToast('插入中...');
+                              // await c.inserts();
+                              // SmartDialog.showToast('插入成功');
                             },
                           ),
                           Row(

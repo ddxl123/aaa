@@ -1,7 +1,7 @@
 import 'package:aaa/page/edit/MemoryModelGizmoEditPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:tools/tools.dart';
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 
 class MemoryModelGizmoPage extends StatefulWidget {

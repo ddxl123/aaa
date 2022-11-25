@@ -1,4 +1,4 @@
-import 'package:drift_main/DriftDb.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/gizmo/MemoryGroupGizmoPageAbController.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +54,7 @@ class MemoryGroupGizmoPage extends StatelessWidget {
             (context, index) {
               return TextButton(
                 onPressed: () {},
-                child: Text(c.fragments()[index](abw).title.toString()),
+                child: Text(c.fragments()[index](abw).content.toString()),
               );
             },
             childCount: c.fragments(abw).length,

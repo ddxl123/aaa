@@ -41,10 +41,10 @@ extension UserExt on User {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<User> reset({
-    required Value<int?> age,
+    required Value<int> age,
     required Value<String?> email,
     required Value<String?> password,
-    required Value<String?> username,
+    required Value<String> username,
     required SyncTag? writeSyncTag,
   }) async {
     this.age = age.present ? age.value : this.age;
@@ -74,13 +74,13 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentMemoryInfo> reset({
-    required Value<int> clickTime,
+    required Value<DateTime> clickTime,
     required Value<double> clickValue,
     required Value<int> creatorUserId,
-    required Value<int> currentActualShowTime,
-    required Value<int> fragmentId,
+    required Value<DateTime> currentActualShowTime,
+    required Value<String> fragmentId,
     required Value<bool> isLatestRecord,
-    required Value<int> memoryGroupId,
+    required Value<String> memoryGroupId,
     required Value<DateTime> nextPlanShowTime,
     required Value<double> showFamiliarity,
     required SyncTag? writeSyncTag,
@@ -126,13 +126,13 @@ extension MemoryGroupExt on MemoryGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int?> memoryModelId,
-    required Value<NewDisplayOrder?> newDisplayOrder,
-    required Value<NewReviewDisplayOrder?> newReviewDisplayOrder,
-    required Value<DateTime?> reviewInterval,
+    required Value<String?> memoryModelId,
+    required Value<NewDisplayOrder> newDisplayOrder,
+    required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
+    required Value<DateTime> reviewInterval,
     required Value<DateTime?> startTime,
-    required Value<String?> title,
-    required Value<int?> willNewLearnCount,
+    required Value<String> title,
+    required Value<int> willNewLearnCount,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -175,8 +175,8 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<RDocument2DocumentGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int?> documentGroupId,
-    required Value<int> documentId,
+    required Value<String?> documentGroupId,
+    required Value<String> documentId,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -208,8 +208,8 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<RFragment2FragmentGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int> fragmentGroupId,
-    required Value<int> fragmentId,
+    required Value<String?> fragmentGroupId,
+    required Value<String> fragmentId,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -241,8 +241,8 @@ extension RMemoryModel2MemoryModelGroupExt on RMemoryModel2MemoryModelGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<RMemoryModel2MemoryModelGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int> memoryModelGroupId,
-    required Value<int> memoryModelId,
+    required Value<String?> memoryModelGroupId,
+    required Value<String> memoryModelId,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -276,8 +276,8 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<RNote2NoteGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int> noteGroupId,
-    required Value<int> noteId,
+    required Value<String?> noteGroupId,
+    required Value<String> noteId,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -308,7 +308,7 @@ extension DocumentExt on Document {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Document> reset({
-    required Value<String?> content,
+    required Value<String> content,
     required Value<int> creatorUserId,
     required SyncTag? writeSyncTag,
   }) async {
@@ -338,10 +338,10 @@ extension FragmentExt on Fragment {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
-    required Value<String?> content,
+    required Value<String> content,
     required Value<int> creatorUserId,
-    required Value<int?> fatherFragmentId,
-    required Value<int?> noteId,
+    required Value<String?> fatherFragmentId,
+    required Value<String?> noteId,
     required SyncTag? writeSyncTag,
   }) async {
     this.content = content.present ? content.value : this.content;
@@ -374,23 +374,15 @@ extension MemoryModelExt on MemoryModel {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModel> reset({
-    required Value<String?> applicableFields,
-    required Value<String?> applicableGroups,
-    required Value<String?> buttonAlgorithm,
+    required Value<String> buttonAlgorithm,
     required Value<int> creatorUserId,
-    required Value<String?> familiarityAlgorithm,
-    required Value<int?> fatherFragmentId,
-    required Value<String?> nextTimeAlgorithm,
-    required Value<String?> stimulateAlgorithm,
-    required Value<String?> title,
+    required Value<String> familiarityAlgorithm,
+    required Value<String?> fatherMemoryModelId,
+    required Value<String> nextTimeAlgorithm,
+    required Value<String> stimulateAlgorithm,
+    required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
-    this.applicableFields = applicableFields.present
-        ? applicableFields.value
-        : this.applicableFields;
-    this.applicableGroups = applicableGroups.present
-        ? applicableGroups.value
-        : this.applicableGroups;
     this.buttonAlgorithm =
         buttonAlgorithm.present ? buttonAlgorithm.value : this.buttonAlgorithm;
     this.creatorUserId =
@@ -398,9 +390,9 @@ extension MemoryModelExt on MemoryModel {
     this.familiarityAlgorithm = familiarityAlgorithm.present
         ? familiarityAlgorithm.value
         : this.familiarityAlgorithm;
-    this.fatherFragmentId = fatherFragmentId.present
-        ? fatherFragmentId.value
-        : this.fatherFragmentId;
+    this.fatherMemoryModelId = fatherMemoryModelId.present
+        ? fatherMemoryModelId.value
+        : this.fatherMemoryModelId;
     this.nextTimeAlgorithm = nextTimeAlgorithm.present
         ? nextTimeAlgorithm.value
         : this.nextTimeAlgorithm;
@@ -431,10 +423,10 @@ extension NoteExt on Note {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Note> reset({
-    required Value<String?> content,
+    required Value<String> content,
     required Value<int> creatorUserId,
-    required Value<int?> documentId,
-    required Value<int?> fatherNoteId,
+    required Value<String?> documentId,
+    required Value<String?> fatherNoteId,
     required SyncTag? writeSyncTag,
   }) async {
     this.content = content.present ? content.value : this.content;
@@ -467,8 +459,8 @@ extension DocumentGroupExt on DocumentGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<DocumentGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int?> fatherDocumentGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherDocumentGroupsId,
+    required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -501,8 +493,8 @@ extension FragmentGroupExt on FragmentGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int?> fatherFragmentGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherFragmentGroupsId,
+    required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -535,8 +527,8 @@ extension MemoryModelGroupExt on MemoryModelGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModelGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int?> fatherMemoryModelGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherMemoryModelGroupsId,
+    required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -569,8 +561,8 @@ extension NoteGroupExt on NoteGroup {
   /// 使用方式查看 [withRefs]。
   FutureOr<NoteGroup> reset({
     required Value<int> creatorUserId,
-    required Value<int?> fatherNoteGroupsId,
-    required Value<String?> title,
+    required Value<String?> fatherNoteGroupsId,
+    required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
     this.creatorUserId =
@@ -613,6 +605,36 @@ extension AppInfoExt on AppInfo {
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.appInfos,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
+    return this;
+  }
+}
+
+/// [Selecteds]
+extension SelectedExt on Selected {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<Selected> reset({
+    required Value<int> selectedType,
+    required Value<String> selectedId,
+    required SyncTag? writeSyncTag,
+  }) async {
+    this.selectedType =
+        selectedType.present ? selectedType.value : this.selectedType;
+    this.selectedId = selectedId.present ? selectedId.value : this.selectedId;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.selecteds,
           entity: toCompanion(false), syncTag: writeSyncTag);
     }
     return this;

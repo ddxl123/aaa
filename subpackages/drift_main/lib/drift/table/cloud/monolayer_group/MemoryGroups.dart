@@ -11,23 +11,23 @@ class MemoryGroups extends CloudTableBase {
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([MemoryModels])
-  IntColumn get memoryModelId => integer().nullable()();
+  TextColumn get memoryModelId => text().nullable()();
 
-  IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>().nullable()();
+  IntColumn get newDisplayOrder => intEnum<NewDisplayOrder>()();
 
-  IntColumn get newReviewDisplayOrder => intEnum<NewReviewDisplayOrder>().nullable()();
+  IntColumn get newReviewDisplayOrder => intEnum<NewReviewDisplayOrder>()();
 
-  DateTimeColumn get reviewInterval => dateTime().nullable()();
+  DateTimeColumn get reviewInterval => dateTime()();
 
   DateTimeColumn get startTime => dateTime().nullable()();
 
-  TextColumn get title => text().nullable()();
+  TextColumn get title => text()();
 
-  IntColumn get willNewLearnCount => integer().nullable()();
+  IntColumn get willNewLearnCount => integer()();
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer().nullable()();
+  TextColumn get id => text()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

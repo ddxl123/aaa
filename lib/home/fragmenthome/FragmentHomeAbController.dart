@@ -7,6 +7,6 @@ class FragmentHomeAbController extends AbController {
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 2, vsync: Navigator.of(context));
+    tabController = TabController(length: 3, vsync: Navigator.of(context));
   }
 }

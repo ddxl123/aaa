@@ -27,6 +27,33 @@ enum SyncCurdType {
 extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
+  /// 前 7 个字符
+  /// 1. 最大时间点：4453-04-05 23:21:35
+  /// 2. 最大 10 进制时间戳（单位s）：783 6416 4095
+  /// 3. 最大 36 进制时间戳：'zzz zzzz'
+  ///
+  /// 中间 7 字符：
+  /// 1. 用户 id(10进制) 转 36进制：
+  /// 2. 最大值 10 进制值：783 6416 4095
+  /// 3. 最大 36 进制值：'zzz zzzz'
+  ///
+  /// 最后 3 字符：
+  /// 1. 随机值
+  /// 2. 最大 10 进制值：46655
+  /// 3. 最大 36 进制值：'zzz'
+  ///
+  /// 整体：
+  /// 000 0000 - 000 0000 - 000
+  String createId({required int userId}) {
+    String prefix = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toRadixString(36);
+    String center = userId.toRadixString(36);
+    String suffix = Random().nextInt(46655).toRadixString(36);
+    prefix = '0' * (7 - prefix.length) + prefix;
+    center = '0' * (7 - center.length) + center;
+    suffix = '0' * (3 - suffix.length) + suffix;
+    return prefix + center + suffix;
+  }
+
   /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
   ///
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
@@ -76,7 +103,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
           if (mulUsers.length != 1) {
             throw 'users 行数不为1';
           }
-          entityDynamic.id = (mulUsers.first.id + uuidV4).toValue();
+
+          entityDynamic.id = createId(userId: mulUsers.first.id!).toValue();
         }
 
         // 插入

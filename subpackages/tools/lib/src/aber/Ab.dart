@@ -1,5 +1,9 @@
 part of aber;
 
+mixin AbBroken {
+  void broken(AbController c);
+}
+
 extension AbExt<V> on V {
   /// 若 value 初始值为 null时，则应该 Ab<?>(null) 这样进行初始化。
   Ab<V> get ab => Ab<V>(this);
@@ -125,6 +129,10 @@ class Ab<V> {
   ///
   /// 否则可能会造成内存泄露，因为置空或替换后， [_removeRefreshFunction] 还残留在 [controller] 中。
   void broken<C extends AbController>(C controller) {
+    if (value is AbBroken) {
+      // TODO: 检查是否真的被 broken。
+      (value as AbBroken).broken(controller);
+    }
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
   }
 

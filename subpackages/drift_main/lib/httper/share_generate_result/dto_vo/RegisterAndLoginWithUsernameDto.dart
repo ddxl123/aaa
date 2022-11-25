@@ -5,7 +5,7 @@ part of httper;
 class RegisterAndLoginWithUsernameDto extends BaseObject{
 
     /// 
-    String? username;
+    String username;
 
     /// 
     String? password;
