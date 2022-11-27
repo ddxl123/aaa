@@ -13,6 +13,7 @@ abstract class AbController {
 
   late final BuildContext context;
 
+  /// 刷新整个被当前 controller 修饰的 widget。
   late final void Function() thisRefresh;
 
   /// 如果启用，会有加载过渡。

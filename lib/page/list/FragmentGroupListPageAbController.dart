@@ -127,17 +127,17 @@ class PartListForFragmentHome {
   }
 
   void clean() {
-    fragmentGroups.clear_(controller);
-    fragments.clear_(controller);
-    fragmentCountForAllSubgroup.clear_(controller);
-    selectedFragmentCountForAllSubgroup.clear_(controller);
+    fragmentGroups.clearBroken(controller);
+    fragments.clearBroken(controller);
+    fragmentCountForAllSubgroup.clearBroken(controller);
+    selectedFragmentCountForAllSubgroup.clearBroken(controller);
   }
 
   void dispose() {
-    fragmentGroups.clearAndSelf_(controller);
-    fragments.clearAndSelf_(controller);
-    fragmentCountForAllSubgroup.clearAndSelf_(controller);
-    selectedFragmentCountForAllSubgroup.clearAndSelf_(controller);
+    fragmentGroups.clearAndSelfBroken(controller);
+    fragments.clearAndSelfBroken(controller);
+    fragmentCountForAllSubgroup.clearAndSelfBroken(controller);
+    selectedFragmentCountForAllSubgroup.clearAndSelfBroken(controller);
   }
 }
 
@@ -172,7 +172,7 @@ class FragmentGroupListPageAbController extends AbController {
   bool _backPart() {
     if (parts().length == 1) return false;
     parts().last().dispose();
-    parts().removeLast_(this);
+    parts().removeLastBroken(this);
     parts.refreshForce();
     currentPart().refreshController.position!.jumpTo(currentPart().currentPosition);
     return true;

@@ -25,7 +25,7 @@ class MemoryGroupGizmoPageAbController extends AbController {
 
   Future<void> refreshFragments() async {
     final mgs = (await DriftDb.instance.generalQueryDAO.queryAllFragmentsInMemoryGroup(memoryGroupGizmo().id)).map((e) => e.ab);
-    fragments().clear_(this);
+    fragments().clearBroken(this);
     fragments.refreshInevitable((obj) => obj..addAll(mgs));
   }
 }

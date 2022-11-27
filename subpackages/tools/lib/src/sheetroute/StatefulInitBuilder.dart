@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class StatefulInitBuilder extends StatefulWidget {
-  const StatefulInitBuilder({required this.init, required this.builder, Key? key}) : super(key: key);
+  const StatefulInitBuilder({required this.onInit, required this.builder, Key? key}) : super(key: key);
 
-  final void Function(StatefulInitBuilderState state) init;
+  final void Function(StatefulInitBuilderState state) onInit;
   final Widget Function(StatefulInitBuilderState state) builder;
 
   @override
@@ -14,7 +14,7 @@ class StatefulInitBuilderState extends State<StatefulInitBuilder> {
   @override
   void initState() {
     super.initState();
-    widget.init(this);
+    widget.onInit(this);
   }
 
   @override

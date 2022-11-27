@@ -177,7 +177,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       ..tempValue = mm
       ..abObj.refreshEasy((obj) => mm);
     bSelectedFragments.refreshInevitable((obj) => obj
-      ..clear_(this)
+      ..clearBroken(this)
       ..addAll(fs.map((e) => e.ab)));
 
     cWillNewLearnCount

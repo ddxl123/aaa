@@ -111,7 +111,7 @@ class _SheetRouteInnerWidgetState<T> extends State<SheetRouteInnerWidget<T>> wit
   /// [headerSliver] 位置的 widget
   Widget headerStateful() {
     return StatefulInitBuilder(
-      init: (StatefulInitBuilderState state) {
+      onInit: (StatefulInitBuilderState state) {
         sheetPageController.headerSetState = state.refresh;
       },
       builder: (State state) {
@@ -123,7 +123,7 @@ class _SheetRouteInnerWidgetState<T> extends State<SheetRouteInnerWidget<T>> wit
   /// [bodySliver] 位置的 widget
   Widget bodyStateful() {
     return StatefulInitBuilder(
-      init: (StatefulInitBuilderState state) {
+      onInit: (StatefulInitBuilderState state) {
         sheetPageController.bodySetState = state.refresh;
       },
       builder: (State state) {
@@ -135,7 +135,7 @@ class _SheetRouteInnerWidgetState<T> extends State<SheetRouteInnerWidget<T>> wit
   /// [loadArea] 位置的 widget
   Widget loadArea() {
     return StatefulInitBuilder(
-      init: (StatefulInitBuilderState state) {
+      onInit: (StatefulInitBuilderState state) {
         sheetPageController.loadAreaSetState = state.refresh;
       },
       builder: (State state) {

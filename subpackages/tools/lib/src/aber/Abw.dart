@@ -23,8 +23,8 @@ part of aber;
 /// ...
 /// ```
 class Abw {
-  Abw(this._refresh, this._removeRefreshFunctions);
+  Abw(this.refresh, this._removeRefreshFunctions);
 
-  final RefreshFunction _refresh;
+  final RefreshFunction refresh;
   final Set<RemoveRefreshFunction> _removeRefreshFunctions;
 }

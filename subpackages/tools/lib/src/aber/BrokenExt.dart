@@ -6,23 +6,23 @@ part of aber;
 ///
 /// 也可看 [AbListBrokenExt]。
 extension ListBrokenExt on List<Ab> {
-  void removeAt_<C extends AbController>(C controller, int index) {
+  void removeAtBroken<C extends AbController>(C controller, int index) {
     final element = this[index];
     element.broken(controller);
     removeAt(index);
   }
 
-  bool remove_<C extends AbController>(C controller, Ab? element) {
+  bool removeBroken<C extends AbController>(C controller, Ab? element) {
     element?.broken(controller);
     return remove(element);
   }
 
-  void removeLast_<C extends AbController>(C controller) {
+  void removeLastBroken<C extends AbController>(C controller) {
     last.broken(controller);
     removeLast();
   }
 
-  void removeRange_<C extends AbController>(C controller, int start, int end) {
+  void removeRangeBroken<C extends AbController>(C controller, int start, int end) {
     getRange(start, end).forEach((element) {
       element.broken(controller);
     });
@@ -30,7 +30,7 @@ extension ListBrokenExt on List<Ab> {
     removeRange(start, end);
   }
 
-  void clear_<C extends AbController>(C controller) {
+  void clearBroken<C extends AbController>(C controller) {
     forEach((element) {
       element.broken(controller);
     });
@@ -40,23 +40,23 @@ extension ListBrokenExt on List<Ab> {
 
 /// 也可看 [ListBrokenExt]。
 extension AbListBrokenExt on Ab<List<Ab>> {
-  void removeAt_<C extends AbController>(C controller, int index) {
+  void removeAtBroken<C extends AbController>(C controller, int index) {
     final element = this()[index];
     element.broken(controller);
     this().removeAt(index);
   }
 
-  bool remove_<C extends AbController>(C controller, Ab? element) {
+  bool removeBroken<C extends AbController>(C controller, Ab? element) {
     element?.broken(controller);
     return this().remove(element);
   }
 
-  void removeLast_<C extends AbController>(C controller) {
+  void removeLastBroken<C extends AbController>(C controller) {
     this().last.broken(controller);
     this().removeLast();
   }
 
-  void removeRange_<C extends AbController>(C controller, int start, int end) {
+  void removeRangeBroken<C extends AbController>(C controller, int start, int end) {
     this().getRange(start, end).forEach((element) {
       element.broken(controller);
     });
@@ -64,15 +64,15 @@ extension AbListBrokenExt on Ab<List<Ab>> {
     this().removeRange(start, end);
   }
 
-  void clear_<C extends AbController>(C controller) {
+  void clearBroken<C extends AbController>(C controller) {
     for (var element in this()) {
       element.broken(controller);
     }
     this().clear();
   }
 
-  void clearAndSelf_<C extends AbController>(C controller) {
-    clear_(controller);
+  void clearAndSelfBroken<C extends AbController>(C controller) {
+    clearBroken(controller);
     broken(controller);
   }
 }
@@ -81,43 +81,43 @@ extension AbListBrokenExt on Ab<List<Ab>> {
 ///
 /// 也可以看 [AbSetBrokenExt]。
 extension SetBrokenExt on Set<Ab> {
-  bool remove_<C extends AbController>(C controller, Ab? element) {
+  bool removeBroken<C extends AbController>(C controller, Ab? element) {
     element?.broken(controller);
     return remove(element);
   }
 
-  void removeAll_<C extends AbController>(C controller, Iterable<Ab> elements) {
+  void removeAllBroken<C extends AbController>(C controller, Iterable<Ab> elements) {
     for (var element in elements) {
       element.broken(controller);
     }
     removeAll(elements);
   }
 
-  void clear_<C extends AbController>(C controller) {
-    removeAll_(controller, this);
+  void clearBroken<C extends AbController>(C controller) {
+    removeAllBroken(controller, this);
   }
 }
 
 /// 也可以看 [SetBrokenExt]。
 extension AbSetBrokenExt on Ab<Set<Ab>> {
-  bool remove_<C extends AbController>(C controller, Ab? element) {
+  bool removeBroken<C extends AbController>(C controller, Ab? element) {
     element?.broken(controller);
     return this().remove(element);
   }
 
-  void removeAll_<C extends AbController>(C controller, Iterable<Ab> elements) {
+  void removeAllBroken<C extends AbController>(C controller, Iterable<Ab> elements) {
     for (var element in elements) {
       element.broken(controller);
     }
     this().removeAll(elements);
   }
 
-  void clear_<C extends AbController>(C controller) {
-    removeAll_(controller, this());
+  void clearBroken<C extends AbController>(C controller) {
+    removeAllBroken(controller, this());
   }
 
-  void clearAndSelf_<C extends AbController>(C controller) {
-    clear_(controller);
+  void clearAndSelfBroken<C extends AbController>(C controller) {
+    clearBroken(controller);
     broken(controller);
   }
 }
@@ -128,14 +128,14 @@ extension AbSetBrokenExt on Ab<Set<Ab>> {
 ///
 /// 也可看 [AbMapBrokenExt]。
 extension MapBrokenExt on Map {
-  bool remove_<C extends AbController>(C controller, Object? key) {
+  bool removeBroken<C extends AbController>(C controller, Object? key) {
     final value = this[key];
     if (key is Ab) key.broken(controller);
     if (value is Ab) value.broken(controller);
     return remove(key);
   }
 
-  void clear_<C extends AbController>(C controller) {
+  void clearBroken<C extends AbController>(C controller) {
     forEach((key, value) {
       if (key is Ab) key.broken(controller);
       if (value is Ab) value.broken(controller);
@@ -146,14 +146,14 @@ extension MapBrokenExt on Map {
 
 /// 也可看 [MapBrokenExt]。
 extension AbMapBrokenExt on Ab<Map> {
-  bool remove_<C extends AbController>(C controller, Object? key) {
+  bool removeBroken<C extends AbController>(C controller, Object? key) {
     final value = this()[key];
     if (key is Ab) key.broken(controller);
     if (value is Ab) value.broken(controller);
     return this().remove(key);
   }
 
-  void clear_<C extends AbController>(C controller) {
+  void clearBroken<C extends AbController>(C controller) {
     this().forEach((key, value) {
       if (key is Ab) key.broken(controller);
       if (value is Ab) value.broken(controller);
@@ -161,8 +161,8 @@ extension AbMapBrokenExt on Ab<Map> {
     this().clear();
   }
 
-  void clearAndSelf_<C extends AbController>(C controller) {
-    clear_(controller);
+  void clearAndSelfBroken<C extends AbController>(C controller) {
+    clearBroken(controller);
     broken(controller);
   }
 }

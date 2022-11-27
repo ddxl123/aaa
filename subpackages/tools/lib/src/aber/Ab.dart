@@ -54,7 +54,7 @@ class Ab<V> {
   /// 里面都是 Set 类型，所以不会重复被添加，即无论连续 xx.call(abw) 的多少次，最终只会存在一个。
   V call([Abw? abw]) {
     if (abw == null) return value;
-    _refreshFunctions.add(abw._refresh);
+    _refreshFunctions.add(abw.refresh);
     abw._removeRefreshFunctions.add(_removeRefreshFunction);
     return value;
   }
