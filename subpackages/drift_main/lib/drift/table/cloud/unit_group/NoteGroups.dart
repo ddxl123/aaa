@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class NoteGroups extends CloudTableBase {
+class NoteGroups extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};

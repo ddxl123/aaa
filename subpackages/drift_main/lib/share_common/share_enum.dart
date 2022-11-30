@@ -9,6 +9,22 @@ enum NewDisplayOrder {
 
 }
         
+enum SyncCurdType {
+  
+  c,
+
+  cing,
+
+  u,
+
+  uing,
+
+  d,
+
+  ding,
+
+}
+        
 enum NewReviewDisplayOrder {
   
   mix,

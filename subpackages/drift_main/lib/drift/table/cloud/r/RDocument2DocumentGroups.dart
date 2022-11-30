@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class RDocument2DocumentGroups extends CloudTableBase {
+class RDocument2DocumentGroups extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};

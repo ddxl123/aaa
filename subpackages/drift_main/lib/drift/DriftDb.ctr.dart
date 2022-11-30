@@ -51,6 +51,30 @@ class WithCrts {
     );
   }
 
+  static AppInfosCompanion appInfosCompanion({
+    required bool hasDownloadedInitData,
+    required String token,
+  }) {
+    return AppInfosCompanion(
+      hasDownloadedInitData: Value(hasDownloadedInitData),
+      token: Value(token),
+    );
+  }
+
+  static SyncsCompanion syncsCompanion({
+    required String rowId,
+    required SyncCurdType syncCurdType,
+    required String syncTableName,
+    required int tag,
+  }) {
+    return SyncsCompanion(
+      rowId: Value(rowId),
+      syncCurdType: Value(syncCurdType),
+      syncTableName: Value(syncTableName),
+      tag: Value(tag),
+    );
+  }
+
   static MemoryGroupsCompanion memoryGroupsCompanion({
     required int creatorUserId,
     required Value<String?> memoryModelId,
@@ -136,12 +160,14 @@ class WithCrts {
     required String content,
     required int creatorUserId,
     required Value<String?> fatherFragmentId,
+    required bool isSelected,
     required Value<String?> noteId,
   }) {
     return FragmentsCompanion(
       content: Value(content),
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId,
+      isSelected: Value(isSelected),
       noteId: noteId,
     );
   }
@@ -195,11 +221,13 @@ class WithCrts {
   static FragmentGroupsCompanion fragmentGroupsCompanion({
     required int creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
+    required bool isSelected,
     required String title,
   }) {
     return FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
+      isSelected: Value(isSelected),
       title: Value(title),
     );
   }
@@ -225,40 +253,6 @@ class WithCrts {
       creatorUserId: Value(creatorUserId),
       fatherNoteGroupsId: fatherNoteGroupsId,
       title: Value(title),
-    );
-  }
-
-  static AppInfosCompanion appInfosCompanion({
-    required String token,
-    required bool hasDownloadedInitData,
-  }) {
-    return AppInfosCompanion(
-      token: Value(token),
-      hasDownloadedInitData: Value(hasDownloadedInitData),
-    );
-  }
-
-  static SelectedsCompanion selectedsCompanion({
-    required int selectedType,
-    required String selectedId,
-  }) {
-    return SelectedsCompanion(
-      selectedType: Value(selectedType),
-      selectedId: Value(selectedId),
-    );
-  }
-
-  static SyncsCompanion syncsCompanion({
-    required String syncTableName,
-    required String rowId,
-    required Value<SyncCurdType?> syncCurdType,
-    required int tag,
-  }) {
-    return SyncsCompanion(
-      syncTableName: Value(syncTableName),
-      rowId: Value(rowId),
-      syncCurdType: syncCurdType,
-      tag: Value(tag),
     );
   }
 }

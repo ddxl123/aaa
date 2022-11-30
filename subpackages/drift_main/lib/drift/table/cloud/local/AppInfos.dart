@@ -2,15 +2,14 @@
 part of drift_db;
 
 @ReferenceTo([])
-class Documents extends CloudTableBase  {
+class AppInfos extends LocalTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text()();
+  BoolColumn get hasDownloadedInitData => boolean()();
 
-  @ReferenceTo([Users])
-  IntColumn get creatorUserId => integer()();
+  TextColumn get token => text()();
 
   DateTimeColumn get createdAt => dateTime()();
 

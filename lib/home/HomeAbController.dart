@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPageAbController111.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../page/list/FragmentGroupListPageController.dart';
 
 class HomeAbController extends AbController {
   final pageController = PageController();
@@ -31,6 +33,8 @@ class HomeAbController extends AbController {
   }
 
   /// 注意按照顺序。
+  ///
+  /// 返回 true 则拦截，否则不拦截，拦截意味着当前 route 不触发 pop。
   Future<bool> _homeBack(bool stopDefaultButtonEvent, RouteInfo routeInfo) async {
     void timerCancel() {
       timer?.cancel();
@@ -43,12 +47,10 @@ class HomeAbController extends AbController {
       return false;
     }
 
-    final groupChain = Aber.findOrNullLast<FragmentGroupListPageAbController>();
-    if (groupChain != null) {
-      final bp = groupChain.backPart();
-      if (bp) {
-        return true;
-      }
+    final groupChainC = Aber.findOrNullLast<FragmentGroupListPageController>();
+    if (groupChainC != null && groupChainC.groupChain().length > 1) {
+      await groupChainC.backGroup();
+      return true;
     }
 
     if (isFragmentSelecting() == true) {
@@ -67,8 +69,8 @@ class HomeAbController extends AbController {
   }
 
   // 0-30,00-40,000-50,0000-60,00000-70
-  double selectedCountDistance(FragmentGroupListPageAbController controller, [Abw? abw]) {
-    final count = controller.selectedFragmentIds(abw).length;
+  double selectedCountDistance(FragmentGroupListPageController controller, [Abw? abw]) {
+    final count = controller.selectedFragment(abw).length;
     if (count <= 9) return -30;
     if (count > 9 && count < 100) return -40;
     if (count > 99 && count < 1000) return -50;

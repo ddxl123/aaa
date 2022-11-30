@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class Users extends CloudTableBase {
+class Users extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};

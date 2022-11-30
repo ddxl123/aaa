@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class FragmentMemoryInfos extends CloudTableBase {
+class FragmentMemoryInfos extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};

@@ -56,6 +56,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       content: '',
+      isSelected: false,
     );
   }
 

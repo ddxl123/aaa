@@ -2,15 +2,18 @@
 part of drift_db;
 
 @ReferenceTo([])
-class Documents extends CloudTableBase  {
+class Syncs extends LocalTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text()();
+  TextColumn get rowId => text()();
 
-  @ReferenceTo([Users])
-  IntColumn get creatorUserId => integer()();
+  IntColumn get syncCurdType => intEnum<SyncCurdType>()();
+
+  TextColumn get syncTableName => text()();
+
+  IntColumn get tag => integer()();
 
   DateTimeColumn get createdAt => dateTime()();
 

@@ -3,10 +3,13 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPage.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPage111.dart';
+import 'package:aaa/page/list/FragmentGroupListPageAbController111.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
+import '../list/FragmentGroupListPage.dart';
+import '../list/FragmentGroupListPageController.dart';
 
 class FragmentGroupSelectPage extends StatelessWidget {
   const FragmentGroupSelectPage({Key? key}) : super(key: key);
@@ -25,12 +28,12 @@ class FragmentGroupSelectPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const FragmentGroupListPage(listPageType: ListPageType.selectPath),
+      body: const FragmentGroupListPage(),
       floatingActionButton: FloatingRoundCornerButton(
         text: const Text('确认选择'),
         onPressed: () async {
           final c = Aber.find<FragmentGizmoEditPageAbController>();
-          final clp = Aber.findLast<FragmentGroupListPageAbController>();
+          final clp = Aber.findLast<FragmentGroupListPageController>();
           // await clp.currentPart().addFragment(
           //       willFragment: WithCrts.fragmentsCompanion(
           //         fatherFragmentId: (clp.currentPart().fatherFragmentGroup?.call().id).toValue(),

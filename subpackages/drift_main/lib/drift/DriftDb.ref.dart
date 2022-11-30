@@ -143,6 +143,34 @@ class RefFragmentMemoryInfos extends Ref {
   }
 }
 
+/// [AppInfos]
+class RefAppInfos extends Ref {
+  Future<void> Function($AppInfosTable table) self;
+
+  RefAppInfos({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.appInfos);
+  }
+}
+
+/// [Syncs]
+class RefSyncs extends Ref {
+  Future<void> Function($SyncsTable table) self;
+
+  RefSyncs({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.syncs);
+  }
+}
+
 /// [MemoryModels]
 class RefMemoryModels extends Ref {
   Future<void> Function($MemoryModelsTable table) self;
@@ -339,33 +367,5 @@ class RefRNote2NoteGroups extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.rNote2NoteGroups);
-  }
-}
-
-/// [AppInfos]
-class RefAppInfos extends Ref {
-  Future<void> Function($AppInfosTable table) self;
-
-  RefAppInfos({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.appInfos);
-  }
-}
-
-/// [Selecteds]
-class RefSelecteds extends Ref {
-  Future<void> Function($SelectedsTable table) self;
-
-  RefSelecteds({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.selecteds);
   }
 }

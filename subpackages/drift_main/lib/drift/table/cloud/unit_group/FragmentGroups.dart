@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class FragmentGroups extends CloudTableBase {
+class FragmentGroups extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};
@@ -12,6 +12,8 @@ class FragmentGroups extends CloudTableBase {
 
   @ReferenceTo([FragmentGroups])
   TextColumn get fatherFragmentGroupsId => text().nullable()();
+
+  BoolColumn get isSelected => boolean()();
 
   TextColumn get title => text()();
 

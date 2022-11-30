@@ -1,16 +1,14 @@
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
-import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
+import '../list/FragmentGroupListPageController.dart';
 
 class FragmentGroupGizmoEditPageAbController extends AbController {
   String title = '';
 
   Future<void> commit() async {
-    final fragmentGroupModelAbController = Aber.findLast<FragmentGroupListPageAbController>();
-
     // 检查是否可提交
     if (title.trim() == '') {
       SmartDialog.showToast('已取消');

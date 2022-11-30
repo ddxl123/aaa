@@ -1,16 +1,23 @@
-part of aber;
+import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:tools/src/group_list_widget/GroupListWidgetController.dart';
+import 'package:tools/tools.dart';
 
 class GroupListWidget<G, U> extends StatelessWidget {
   const GroupListWidget({
     Key? key,
     required this.groupListWidgetController,
+    required this.groupChainStrings,
     required this.groupBuilder,
     required this.unitBuilder,
+    required this.oneActionBuilder,
   }) : super(key: key);
   final GroupListWidgetController<G, U> groupListWidgetController;
 
-  final Widget Function(Ab<Group<G, U>> group, Abw abw) groupBuilder;
-  final Widget Function(Ab<Unit<U>> unit, Abw abw) unitBuilder;
+  final String Function(Ab<Group<G, U>> group, Abw abw) groupChainStrings;
+  final Widget Function(GroupListWidgetController<G, U>, Ab<Group<G, U>> group, Abw abw) groupBuilder;
+  final Widget Function(GroupListWidgetController<G, U>, Ab<Unit<U>> unit, Abw abw) unitBuilder;
+  final Widget Function(GroupListWidgetController<G, U>, Abw abw) oneActionBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,8 @@ class GroupListWidget<G, U> extends StatelessWidget {
                   (e) => AbwBuilder(
                     builder: (abw) {
                       return SmartRefresher(
-                        onRefresh: () {
+                        onRefresh: () async {
+                          await c.refreshCurrentGroup();
                           e().refreshController.refreshCompleted();
                         },
                         controller: e(abw).refreshController,
@@ -81,9 +89,9 @@ class GroupListWidget<G, U> extends StatelessWidget {
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildListDelegate(
-            c.getCurrentGroup()(abw).groups(abw).map(
+            c.getCurrentGroupAb()(abw).groups(abw).map(
               (e) {
-                return AbwBuilder(builder: (abw) => groupBuilder(e, abw));
+                return AbwBuilder(builder: (abw) => groupBuilder(c, e, abw));
                 // return Row(
                 //   children: [
                 //     Expanded(
@@ -155,9 +163,9 @@ class GroupListWidget<G, U> extends StatelessWidget {
       builder: (c, abw) {
         return SliverList(
           delegate: SliverChildListDelegate(
-            c.getCurrentGroup()(abw).units(abw).map(
+            c.getCurrentGroupAb()(abw).units(abw).map(
               (e) {
-                return AbwBuilder(builder: (abw) => unitBuilder(e, abw));
+                return AbwBuilder(builder: (abw) => unitBuilder(c, e, abw));
                 // return Row(
                 //   children: [
                 // Expanded(
@@ -225,12 +233,16 @@ class GroupListWidget<G, U> extends StatelessWidget {
                       child: Row(
                         children: [
                           ...c.groupChain(abw).map(
-                                (e) => TextButton(
-                                  child: Text(
-                                    e().currentGroup(abw) == null ? '~ >' : '${e().currentGroupEntity(abw)} >',
-                                  ),
-                                  onPressed: () async {
-                                    await c.enterGroup(e);
+                                (e) => AbwBuilder(
+                                  builder: (innerAbw) {
+                                    return TextButton(
+                                      child: Text(
+                                        e(innerAbw).entity(innerAbw) == null ? '~ >' : '${groupChainStrings(e, innerAbw)} >',
+                                      ),
+                                      onPressed: () async {
+                                        await c.enterGroup(e);
+                                      },
+                                    );
                                   },
                                 ),
                               ),
@@ -243,22 +255,7 @@ class GroupListWidget<G, U> extends StatelessWidget {
             AbBuilder<GroupListWidgetController<G, U>>(
               tag: Aber.single,
               builder: (c, abw) {
-                return CustomDropdownBodyButton(
-                  initValue: 0,
-                  primaryButton: const Icon(Icons.more_horiz),
-                  itemAlignment: Alignment.centerLeft,
-                  items: [
-                    Item(value: 0, text: '添加碎片'),
-                    Item(value: 1, text: '添加碎片组'),
-                  ],
-                  onChanged: (v) {
-                    // if (v == 0) {
-                    //   Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
-                    // } else if (v == 1) {
-                    //   Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupGizmoEditPage()));
-                    // }
-                  },
-                );
+                return oneActionBuilder(c, abw);
               },
             ),
           ],

@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class RFragment2FragmentGroups extends CloudTableBase {
+class RFragment2FragmentGroups extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};

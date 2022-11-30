@@ -42,6 +42,10 @@ part 'table/cloud/Users.dart';
 
 part 'table/cloud/info/FragmentMemoryInfos.dart';
 
+part 'table/cloud/local/AppInfos.dart';
+
+part 'table/cloud/local/Syncs.dart';
+
 part 'table/cloud/monolayer_group/MemoryGroups.dart';
 
 part 'table/cloud/r/RDocument2DocumentGroups.dart';
@@ -68,17 +72,15 @@ part 'table/cloud/unit_group/MemoryModelGroups.dart';
 
 part 'table/cloud/unit_group/NoteGroups.dart';
 
-part 'table/local/AppInfos.dart';
-
-part 'table/local/Selecteds.dart';
-
-part 'table/local/Syncs.dart';
-
 const List<Type> tableClasses = [
 
   Users,
 
   FragmentMemoryInfos,
+
+  AppInfos,
+
+  Syncs,
 
   MemoryGroups,
 
@@ -105,12 +107,6 @@ const List<Type> tableClasses = [
   MemoryModelGroups,
 
   NoteGroups,
-
-  AppInfos,
-
-  Selecteds,
-
-  Syncs,
 
 ];
         

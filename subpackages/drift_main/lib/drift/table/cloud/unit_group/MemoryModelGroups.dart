@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class MemoryModelGroups extends CloudTableBase {
+class MemoryModelGroups extends CloudTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};

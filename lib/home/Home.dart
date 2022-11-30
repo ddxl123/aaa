@@ -4,11 +4,12 @@ import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/single_dialog/single_dialog.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController.dart';
+import 'package:aaa/page/list/FragmentGroupListPageAbController111.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../page/list/FragmentGroupListPageController.dart';
 import 'fragmenthome/FragmentHome.dart';
 
 class Home extends StatelessWidget {
@@ -44,7 +45,7 @@ class Home extends StatelessWidget {
                   showDialogForCreateMemoryGroup();
                 },
               ),
-              AbBuilder<FragmentGroupListPageAbController>(
+              AbBuilder<FragmentGroupListPageController>(
                 tag: Aber.single,
                 builder: (countController, countAbw) {
                   return Transform.translate(
@@ -52,7 +53,7 @@ class Home extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.amber),
-                      child: Text(countController.selectedFragmentIds(countAbw).length.toString()),
+                      child: Text(countController.selectedFragment(countAbw).length.toString()),
                     ),
                   );
                 },

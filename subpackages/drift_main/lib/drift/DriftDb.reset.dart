@@ -111,6 +111,72 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   }
 }
 
+/// [AppInfos]
+extension AppInfoExt on AppInfo {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<AppInfo> reset({
+    required Value<bool> hasDownloadedInitData,
+    required Value<String> token,
+    required SyncTag? writeSyncTag,
+  }) async {
+    this.hasDownloadedInitData = hasDownloadedInitData.present
+        ? hasDownloadedInitData.value
+        : this.hasDownloadedInitData;
+    this.token = token.present ? token.value : this.token;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.appInfos,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
+    return this;
+  }
+}
+
+/// [Syncs]
+extension SyncExt on Sync {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<Sync> reset({
+    required Value<String> rowId,
+    required Value<SyncCurdType> syncCurdType,
+    required Value<String> syncTableName,
+    required Value<int> tag,
+    required SyncTag? writeSyncTag,
+  }) async {
+    this.rowId = rowId.present ? rowId.value : this.rowId;
+    this.syncCurdType =
+        syncCurdType.present ? syncCurdType.value : this.syncCurdType;
+    this.syncTableName =
+        syncTableName.present ? syncTableName.value : this.syncTableName;
+    this.tag = tag.present ? tag.value : this.tag;
+    if (writeSyncTag != null) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.syncs,
+          entity: toCompanion(false), syncTag: writeSyncTag);
+    }
+    return this;
+  }
+}
+
 /// [MemoryGroups]
 extension MemoryGroupExt on MemoryGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -341,6 +407,7 @@ extension FragmentExt on Fragment {
     required Value<String> content,
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentId,
+    required Value<bool> isSelected,
     required Value<String?> noteId,
     required SyncTag? writeSyncTag,
   }) async {
@@ -350,6 +417,7 @@ extension FragmentExt on Fragment {
     this.fatherFragmentId = fatherFragmentId.present
         ? fatherFragmentId.value
         : this.fatherFragmentId;
+    this.isSelected = isSelected.present ? isSelected.value : this.isSelected;
     this.noteId = noteId.present ? noteId.value : this.noteId;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
@@ -494,6 +562,7 @@ extension FragmentGroupExt on FragmentGroup {
   FutureOr<FragmentGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
+    required Value<bool> isSelected,
     required Value<String> title,
     required SyncTag? writeSyncTag,
   }) async {
@@ -502,6 +571,7 @@ extension FragmentGroupExt on FragmentGroup {
     this.fatherFragmentGroupsId = fatherFragmentGroupsId.present
         ? fatherFragmentGroupsId.value
         : this.fatherFragmentGroupsId;
+    this.isSelected = isSelected.present ? isSelected.value : this.isSelected;
     this.title = title.present ? title.value : this.title;
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
@@ -574,102 +644,6 @@ extension NoteGroupExt on NoteGroup {
     if (writeSyncTag != null) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.noteGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
-    }
-    return this;
-  }
-}
-
-/// [AppInfos]
-extension AppInfoExt on AppInfo {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<AppInfo> reset({
-    required Value<String> token,
-    required Value<bool> hasDownloadedInitData,
-    required SyncTag? writeSyncTag,
-  }) async {
-    this.token = token.present ? token.value : this.token;
-    this.hasDownloadedInitData = hasDownloadedInitData.present
-        ? hasDownloadedInitData.value
-        : this.hasDownloadedInitData;
-    if (writeSyncTag != null) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.appInfos,
-          entity: toCompanion(false), syncTag: writeSyncTag);
-    }
-    return this;
-  }
-}
-
-/// [Selecteds]
-extension SelectedExt on Selected {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<Selected> reset({
-    required Value<int> selectedType,
-    required Value<String> selectedId,
-    required SyncTag? writeSyncTag,
-  }) async {
-    this.selectedType =
-        selectedType.present ? selectedType.value : this.selectedType;
-    this.selectedId = selectedId.present ? selectedId.value : this.selectedId;
-    if (writeSyncTag != null) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.selecteds,
-          entity: toCompanion(false), syncTag: writeSyncTag);
-    }
-    return this;
-  }
-}
-
-/// [Syncs]
-extension SyncExt on Sync {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<Sync> reset({
-    required Value<String> syncTableName,
-    required Value<String> rowId,
-    required Value<SyncCurdType?> syncCurdType,
-    required Value<int> tag,
-    required SyncTag? writeSyncTag,
-  }) async {
-    this.syncTableName =
-        syncTableName.present ? syncTableName.value : this.syncTableName;
-    this.rowId = rowId.present ? rowId.value : this.rowId;
-    this.syncCurdType =
-        syncCurdType.present ? syncCurdType.value : this.syncCurdType;
-    this.tag = tag.present ? tag.value : this.tag;
-    if (writeSyncTag != null) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.syncs,
           entity: toCompanion(false), syncTag: writeSyncTag);
     }
     return this;
