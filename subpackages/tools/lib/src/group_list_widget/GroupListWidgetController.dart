@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
@@ -28,10 +27,15 @@ class Group<G, U> with AbBroken {
 
   final Ab<G?> entity;
 
+  /// 在创建元素时，同时创建元素对应的 [selectedUnitCount] 和 [allUnitCount]。
   final groups = <Ab<Group<G, U>>>[].ab;
   final units = <Ab<Unit<U>>>[].ab;
 
   final RefreshController refreshController = RefreshController(initialRefresh: true);
+
+  final selectedUnitCount = 0.ab;
+
+  final allUnitCount = 0.ab;
 
   /// 保存当前 position。
   ///
@@ -68,6 +72,13 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   final groupChainScrollController = ScrollController();
   final group = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
   late final groupChain = <Ab<Group<G, U>>>[group].ab;
+  final isUnitSelecting = false.ab;
+
+  @override
+  void onDispose() {
+    refreshController.dispose();
+    groupChainScrollController.dispose();
+  }
 
   Ab<Group<G, U>> getCurrentGroupAb() {
     return groupChain().last;

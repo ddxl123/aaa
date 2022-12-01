@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:tools/src/group_list_widget/GroupListWidgetController.dart';
 import 'package:tools/tools.dart';
 
 class GroupListWidget<G, U> extends StatelessWidget {
@@ -29,7 +29,86 @@ class GroupListWidget<G, U> extends StatelessWidget {
           primary: false,
           appBar: _appBarBottom(context),
           body: _body(),
+          bottomNavigationBar: _bottomNavigationBar(),
+          floatingActionButton: c.isUnitSelecting(abw) ? _floatingActionButton() : null,
         );
+      },
+    );
+  }
+
+  Widget _floatingActionButton() {
+    return AbwBuilder(
+      builder: (abw) {
+        return Stack(
+          alignment: Alignment.topRight,
+          children: [
+            FloatingActionButton(
+              backgroundColor: Colors.amber,
+              child: const Text('记'),
+              onPressed: () async {
+                // showDialogForCreateMemoryGroup();
+              },
+            ),
+            groupListWidgetController.group(abw).selectedUnitCount(abw) == 0
+                ? const SizedBox()
+                : Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white, border: Border.all(color: Colors.amber)),
+                      child: Text(groupListWidgetController.group(abw).selectedUnitCount(abw).toString()),
+                    ),
+                  ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _bottomNavigationBar() {
+    return AbwBuilder(
+      builder: (hAbw) {
+        if (groupListWidgetController.isUnitSelecting(hAbw)) {
+          Widget button({
+            required IconData iconData,
+            required String label,
+            required Function() onPressed,
+            Color? color,
+          }) {
+            return MaterialButton(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              onPressed: onPressed,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FaIcon(iconData, size: 22, color: color),
+                  const SizedBox(height: 5),
+                  Text(label, style: TextStyle(fontSize: 12, color: color)),
+                ],
+              ),
+            );
+          }
+
+          return Container(
+            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            decoration: const BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.all(Radius.circular(10))),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  button(iconData: FontAwesomeIcons.penToSquare, label: '编辑', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.copy, label: '复制', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.paste, label: '粘贴', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.arrowRightFromBracket, label: '移动', onPressed: () {}),
+                  button(iconData: FontAwesomeIcons.trashCan, label: '删除', color: Colors.red, onPressed: () {}),
+                ],
+              ),
+            ),
+          );
+        }
+        return const SizedBox();
       },
     );
   }

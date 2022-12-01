@@ -23,6 +23,9 @@ dependencies:
 
   flutter_smart_dialog: 4.6.2+1
 
+  # 图标库
+  font_awesome_flutter: ^10.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

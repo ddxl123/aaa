@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 
 class TestHomeAbController extends AbController {
-  final user = Ab<User?>(null);
-
   final textEditingController = TextEditingController();
 
   final analysisResult = '无结果'.ab;
@@ -16,100 +15,77 @@ class TestHomeAbController extends AbController {
   bool get isEnableLoading => true;
 
   @override
-  Future<void> loadingFuture() async {
-    await getUser();
-  }
-
-  @override
   Widget loadingWidget() {
     return const Center(
       child: Text('加载中...'),
     );
   }
 
-  Future<void> getUser() async {
-    final result = await DriftDb.instance.generalQueryDAO.queryUserOrNull();
-    user.refreshInevitable((obj) => result);
-  }
+  Future<void> inserts() async {
+    final globalAbController = Aber.find<GlobalAbController>();
+    await globalAbController.getLoggedInUser();
+    if (globalAbController.loggedInUser() == null) {
+      final user = await DriftDb.instance.insertDAO.insertUser();
+      globalAbController.loggedInUser.refreshEasy((oldValue) => user);
+    }
 
-  // Future<void> inserts() async {
-  //   const count = 5;
-  //   for (int i = 0; i < count; i++) {
-  //     final fg = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
-  //       WithCrts.fragmentGroupsCompanion(
-  //         fatherFragmentGroupId: null.toValue(),
-  //         title: 'test ${Random().nextInt(999999)}',
-  //       ),
-  //     );
-  //     for (int i = 0; i < count; i++) {
-  //       await DriftDb.instance.insertDAO.insertFragmentWithRef(
-  //         willFragment: WithCrts.fragmentsCompanion(
-  //           fatherFragmentId: null.toValue(),
-  //           title: 'test ${Random().nextInt(999999)}',
-  //           priority: 0,
-  //         ),
-  //       );
-  //     }
-  //
-  //     for (int i = 0; i < count; i++) {
-  //       final fg1 = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
-  //         WithCrts.fragmentGroupsCompanion(
-  //           fatherFragmentGroupId: fg.id.toValue(),
-  //           title: 'test ${Random().nextInt(999999)}',
-  //         ),
-  //       );
-  //       for (int i = 0; i < count; i++) {
-  //         await DriftDb.instance.insertDAO.insertFragmentWithRef(
-  //           willFragment: WithCrts.fragmentsCompanion(
-  //             fatherFragmentId: fg.id.toValue(),
-  //             title: 'test ${Random().nextInt(999999)}',
-  //             priority: 0,
-  //           ),
-  //         );
-  //       }
-  //
-  //       for (int i = 0; i < count; i++) {
-  //         final fg2 = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
-  //           WithCrts.fragmentGroupsCompanion(
-  //             fatherFragmentGroupId: fg1.id.toValue(),
-  //             title: 'test ${Random().nextInt(999999)}',
-  //           ),
-  //         );
-  //         for (int i = 0; i < count; i++) {
-  //           await DriftDb.instance.insertDAO.insertFragmentWithRef(
-  //             willFragment: WithCrts.fragmentsCompanion(
-  //               fatherFragmentId: fg1.id.toValue(),
-  //               title: 'test ${Random().nextInt(999999)}',
-  //               priority: 0,
-  //             ),
-  //           );
-  //         }
-  //
-  //         for (int i = 0; i < count; i++) {
-  //           await DriftDb.instance.insertDAO.insertFragmentWithRef(
-  //             willFragment: WithCrts.fragmentsCompanion(
-  //               fatherFragmentId: fg2.id.toValue(),
-  //               title: 'test ${Random().nextInt(999999)}',
-  //               priority: 0,
-  //             ),
-  //           );
-  //         }
-  //       }
-  //     }
-  //   }
-  //
-  //   for (int i = 0; i < count; i++) {
-  //     await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
-  //       WithCrts.memoryModelsCompanion(
-  //         title: 'test ${Random().nextInt(999999)}',
-  //         familiarityAlgorithm: '',
-  //         nextTimeAlgorithm: '',
-  //         buttonAlgorithm: '',
-  //         applicableGroups: '',
-  //         applicableFields: '',
-  //         stimulateAlgorithm: '',
-  //       ),
-  //     );
-  //   }
-  // }
+    int times = 5;
+    const count = 5;
+    Future<void> foreach({required FragmentGroup? fatherFragmentGroup}) async {
+      for (int i = 0; i < count; i++) {
+        final fg = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
+          WithCrts.fragmentGroupsCompanion(
+            creatorUserId: globalAbController.loggedInUser()!.id,
+            title: 'test ${Random().nextInt(999999)}',
+            fatherFragmentGroupsId: (fatherFragmentGroup?.id).toValue(),
+            isSelected: false,
+          ),
+        );
+        for (int i = 0; i < count; i++) {
+          await DriftDb.instance.insertDAO.insertFragmentWithRef(
+            willFragment: WithCrts.fragmentsCompanion(
+              creatorUserId: globalAbController.loggedInUser()!.id,
+              fatherFragmentId: null.toValue(),
+              content: 'test ${Random().nextInt(999999)}',
+              isSelected: false,
+              noteId: null.toValue(),
+            ),
+            willFragmentGroup: null,
+          );
+        }
+        for (int i = 0; i < count; i++) {
+          await DriftDb.instance.insertDAO.insertFragmentWithRef(
+            willFragment: WithCrts.fragmentsCompanion(
+              creatorUserId: globalAbController.loggedInUser()!.id,
+              fatherFragmentId: null.toValue(),
+              content: 'test ${Random().nextInt(999999)}',
+              isSelected: false,
+              noteId: null.toValue(),
+            ),
+            willFragmentGroup: fg.toCompanion(false),
+          );
+        }
+        times -= 1;
+        if (times != 0) {
+          await foreach(fatherFragmentGroup: fg);
+        }
+      }
+    }
+
+    await foreach(fatherFragmentGroup: null);
+
+    // for (int i = 0; i < count; i++) {
+    //   await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
+    //     WithCrts.memoryModelsCompanion(
+    //       title: 'test ${Random().nextInt(999999)}',
+    //       familiarityAlgorithm: '',
+    //       nextTimeAlgorithm: '',
+    //       buttonAlgorithm: '',
+    //       applicableGroups: '',
+    //       applicableFields: '',
+    //       stimulateAlgorithm: '',
+    //     ),
+    //   );
+    // }
+  }
 }

@@ -1,10 +1,6 @@
-import 'package:aaa/page/list/ListPageType.dart';
-import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPage111.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController111.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -28,7 +24,7 @@ class FragmentGroupSelectPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const FragmentGroupListPage(),
+      body: FragmentGroupListPage(),
       floatingActionButton: FloatingRoundCornerButton(
         text: const Text('确认选择'),
         onPressed: () async {

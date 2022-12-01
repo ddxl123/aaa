@@ -80,11 +80,12 @@ extension DriftSyncExt on DatabaseConnectionUser {
             throw 'users 行数不为1';
           }
 
-          entityDynamic.id = createId(userId: mulUsers.first.id!).toValue();
+          entityDynamic.id = createId(userId: mulUsers.first.id).toValue();
         }
 
         // 插入
         final newInto = into(table);
+        print(entityDynamic);
         final dynamic returningEntityDynamic = await newInto.insertReturning(entityDynamic, mode: mode, onConflict: onConflict);
 
         // 增加一条 sync 记录 - 仅对 cloud

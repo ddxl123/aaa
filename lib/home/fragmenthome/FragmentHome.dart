@@ -1,12 +1,6 @@
 import 'package:aaa/home/fragmenthome/FragmentHomeAbController.dart';
-import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/page/list/FragmentGroupListPage.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPage111.dart';
-import 'package:aaa/page/list/ListPageType.dart';
-import 'package:aaa/page/list/MemoryModeListPage.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 class FragmentHome extends StatefulWidget {
@@ -41,7 +35,7 @@ class _FragmentHomeState extends State<FragmentHome> {
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (_) => const FragmentGroupListPage(),
+                builder: (_) => FragmentGroupListPage(),
               ),
               KeepStateWidget(
                 builder: (_) => const Text('笔记'),

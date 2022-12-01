@@ -1,5 +1,7 @@
+import 'package:aaa/home/HomeAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
 import 'FragmentGroupListPageController.dart';
@@ -13,17 +15,76 @@ class FragmentGroupListPage extends StatelessWidget {
       groupListWidgetController: FragmentGroupListPageController(),
       groupChainStrings: (group, abw) => group(abw).entity(abw)?.title ?? '不存在实体！',
       groupBuilder: (c, group, abw) {
-        return TextButton(
-          child: Text(group(abw).entity()!.title),
-          onPressed: () async {
-            await c.enterGroup(group);
-          },
+        return Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                child: Text(group(abw).entity()!.title),
+                onPressed: () async {
+                  await c.enterGroup(group);
+                },
+                onLongPress: () async {
+                  c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
+                  Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
+                },
+              ),
+            ),
+            c.isUnitSelecting(abw) ? Text('${group(abw).selectedUnitCount(abw)}/${group(abw).allUnitCount(abw)}') : Container(),
+            c.isUnitSelecting(abw)
+                ? IconButton(
+                    icon: () {
+                      if (group(abw).entity(abw)!.isSelected) {
+                        return const FaIcon(
+                          FontAwesomeIcons.solidCircle,
+                          color: Colors.amber,
+                          size: 14,
+                        );
+                      } else {
+                        if (group(abw).selectedUnitCount(abw) == 0) {
+                          return const FaIcon(
+                            FontAwesomeIcons.solidCircle,
+                            color: Colors.grey,
+                            size: 14,
+                          );
+                        } else {
+                          return const FaIcon(
+                            FontAwesomeIcons.circleHalfStroke,
+                            color: Colors.amber,
+                            size: 14,
+                          );
+                        }
+                      }
+                    }(),
+                    onPressed: () async {},
+                  )
+                : Container(),
+          ],
         );
       },
       unitBuilder: (c, unit, abw) {
-        return MaterialButton(
-          child: Text(unit(abw).unitEntity().content),
-          onPressed: () {},
+        return Row(
+          children: [
+            Expanded(
+              child: MaterialButton(
+                child: Text(unit(abw).unitEntity().content),
+                onPressed: () {},
+                onLongPress: () {
+                  c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
+                  Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
+                },
+              ),
+            ),
+            c.isUnitSelecting(abw)
+                ? IconButton(
+                    icon: FaIcon(
+                      FontAwesomeIcons.solidCircle,
+                      color: unit(abw).unitEntity().isSelected ? Colors.amber : Colors.grey,
+                      size: 14,
+                    ),
+                    onPressed: () async {},
+                  )
+                : Container(),
+          ],
         );
       },
       oneActionBuilder: (c, abw) {

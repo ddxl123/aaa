@@ -7,6 +7,24 @@ part of drift_db;
 class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   InsertDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  Future<User> insertUser() async {
+    final findUser = await select(users).getSingleOrNull();
+    late final User u;
+    if (findUser == null) {
+      u = await users.insertReturning(
+        WithCrts.usersCompanion(
+          age: 18,
+          email: '1033839760@qq.com'.toValue(),
+          password: 'password'.toValue(),
+          username: 'username',
+        ),
+      );
+    } else {
+      throw '已存在用户！';
+    }
+    return u;
+  }
+
   /// 向当前 [FragmentGroups] 表中插入一条数据, 返回新插入的 [FragmentGroup]。
   Future<FragmentGroup> insertFragmentGroupWithRef(FragmentGroupsCompanion willEntity) async {
     late FragmentGroup returnFragmentGroup;
@@ -24,40 +42,36 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }
 
   /// 向当前 [Fragments] 表中插入一条数据, 返回新插入的 [Fragment]。
-  Future<Fragment> insertFragmentWithRef({required FragmentsCompanion willFragment}) async {
-    // late Fragment newFragment;
-    // await withRefs(
-    //   syncTag: await SyncTag.create(),
-    //   ref: (syncTag) async => RefFragments(
-    //     self: (table) async {
-    //       newFragment = await insertReturningWith(table, entity: willFragment, syncTag: syncTag);
-    //     },
-    //     rFragment2FragmentGroups: RefRFragment2FragmentGroups(
-    //       self: (table) async {
-    //         await insertReturningWith(
-    //           table,
-    //           entity: WithCrts.rFragment2FragmentGroupsCompanion(
-    //             fatherId: willFragment.fatherFragmentId,
-    //             sonId: newFragment.id,
-    //           ),
-    //           syncTag: syncTag,
-    //         );
-    //       },
-    //     ),
-    //     child_fragments: null,
-    //     rFragment2MemoryGroups: null,
-    //     fragmentMemoryInfos: null,
-    //   ),
-    // );
-    // return newFragment;
-    return Fragment(
-      id: '',
-      creatorUserId: 1,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      content: '',
-      isSelected: false,
+  Future<Fragment> insertFragmentWithRef({
+    required FragmentsCompanion willFragment,
+    required FragmentGroupsCompanion? willFragmentGroup,
+  }) async {
+    late Fragment newFragment;
+    await withRefs(
+      syncTag: await SyncTag.create(),
+      ref: (syncTag) async => RefFragments(
+        self: (table) async {
+          newFragment = await insertReturningWith(table, entity: willFragment, syncTag: syncTag);
+        },
+        rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+          self: (table) async {
+            await insertReturningWith(
+              table,
+              entity: WithCrts.rFragment2FragmentGroupsCompanion(
+                creatorUserId: willFragment.creatorUserId.value,
+                fragmentGroupId: willFragmentGroup?.id ?? null.toValue(),
+                fragmentId: willFragment.id.value,
+              ),
+              syncTag: syncTag,
+            );
+          },
+        ),
+        child_fragments: null,
+        fragmentMemoryInfos: null,
+        memoryModels: null,
+      ),
     );
+    return newFragment;
   }
 
   /// 创建一个记忆

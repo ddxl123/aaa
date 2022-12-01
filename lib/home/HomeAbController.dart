@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:tools/tools.dart';
-import 'package:aaa/page/list/FragmentGroupListPageAbController111.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +14,7 @@ class HomeAbController extends AbController {
   final iconDatas = [Icons.home, FontAwesomeIcons.tencentWeibo, Icons.add, Icons.add];
   final labels = ['首页', '碎片', '记忆', '我的'];
 
-  final isFragmentSelecting = false.ab;
+  final isShowFloating = true.ab;
 
   // 双击返回键才会退出应用。
   Timer? timer;
@@ -53,11 +52,11 @@ class HomeAbController extends AbController {
       return true;
     }
 
-    if (isFragmentSelecting() == true) {
-      timerCancel();
-      isFragmentSelecting.refreshEasy((oldValue) => false);
-      return true;
-    }
+    // if (isFragmentSelecting() == true) {
+    //   timerCancel();
+    //   isFragmentSelecting.refreshEasy((oldValue) => false);
+    //   return true;
+    // }
     if (timer == null) {
       const time = Duration(milliseconds: 1000);
       SmartDialog.showToast('再按一次退出！', displayTime: time);

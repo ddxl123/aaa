@@ -9,14 +9,16 @@ enum Status {
 }
 
 class GlobalAbController extends AbController {
+  final loggedInUser = Ab<User?>(null);
   final status = Status.normal.ab;
 
-  Future<User?> getLoggedUser() async {
+  Future<void> getLoggedInUser() async {
     final result = await DriftDb.instance.generalQueryDAO.queryUserOrNull();
     if (result == null) {
+      loggedInUser.refreshEasy((oldValue) => null);
       SmartDialog.showToast("请先登录！");
-      return null;
+    } else {
+      loggedInUser.refreshEasy((oldValue) => result);
     }
-    return result;
   }
 }
