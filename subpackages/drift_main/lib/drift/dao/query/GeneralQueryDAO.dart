@@ -7,6 +7,27 @@ part of drift_db;
 class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMixin {
   GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  /// 查询 [targetFragmentGroup] 内的全部碎片。
+  Future<List<Fragment>> queryFragmentsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
+    if (targetFragmentGroup == null) {}
+    final sel = select(fragments).join(
+      [
+        innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragmentId.equalsExp(fragments.id)),
+      ],
+    )..where(
+        targetFragmentGroup == null ? rFragment2FragmentGroups.fragmentGroupId.isNull() : rFragment2FragmentGroups.fragmentGroupId.equals(targetFragmentGroup.id),
+      );
+    final result = await sel.get();
+    return result.map((e) => e.readTable(fragments)).toList();
+  }
+
+  /// 查询 [targetFragmentGroup] 内的全部碎片组。
+  Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
+    final sel = select(fragmentGroups)
+      ..where((tbl) => targetFragmentGroup == null ? tbl.fatherFragmentGroupsId.isNull() : tbl.fatherFragmentGroupsId.equals(targetFragmentGroup.id));
+    return await sel.get();
+  }
+
   Future<User?> queryUserOrNull() async {
     final manyUsers = await select(users).get();
     if (manyUsers.length > 1) {

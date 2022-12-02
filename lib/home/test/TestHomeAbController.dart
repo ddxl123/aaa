@@ -29,7 +29,6 @@ class TestHomeAbController extends AbController {
       globalAbController.loggedInUser.refreshEasy((oldValue) => user);
     }
 
-    int times = 5;
     const count = 5;
     Future<void> foreach({required FragmentGroup? fatherFragmentGroup}) async {
       for (int i = 0; i < count; i++) {
@@ -65,27 +64,23 @@ class TestHomeAbController extends AbController {
             willFragmentGroup: fg.toCompanion(false),
           );
         }
-        times -= 1;
-        if (times != 0) {
-          await foreach(fatherFragmentGroup: fg);
-        }
       }
     }
 
     await foreach(fatherFragmentGroup: null);
 
-    // for (int i = 0; i < count; i++) {
-    //   await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
-    //     WithCrts.memoryModelsCompanion(
-    //       title: 'test ${Random().nextInt(999999)}',
-    //       familiarityAlgorithm: '',
-    //       nextTimeAlgorithm: '',
-    //       buttonAlgorithm: '',
-    //       applicableGroups: '',
-    //       applicableFields: '',
-    //       stimulateAlgorithm: '',
-    //     ),
-    //   );
-    // }
+// for (int i = 0; i < count; i++) {
+//   await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
+//     WithCrts.memoryModelsCompanion(
+//       title: 'test ${Random().nextInt(999999)}',
+//       familiarityAlgorithm: '',
+//       nextTimeAlgorithm: '',
+//       buttonAlgorithm: '',
+//       applicableGroups: '',
+//       applicableFields: '',
+//       stimulateAlgorithm: '',
+//     ),
+//   );
+// }
   }
 }

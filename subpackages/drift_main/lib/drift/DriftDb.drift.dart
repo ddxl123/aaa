@@ -947,7 +947,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
   bool hasDownloadedInitData;
   String token;
   DateTime createdAt;
-  String id;
+  int id;
   DateTime updatedAt;
   AppInfo(
       {required this.hasDownloadedInitData,
@@ -961,7 +961,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
     map['has_downloaded_init_data'] = Variable<bool>(hasDownloadedInitData);
     map['token'] = Variable<String>(token);
     map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
@@ -984,7 +984,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
           serializer.fromJson<bool>(json['hasDownloadedInitData']),
       token: serializer.fromJson<String>(json['token']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
@@ -995,7 +995,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
       'hasDownloadedInitData': serializer.toJson<bool>(hasDownloadedInitData),
       'token': serializer.toJson<String>(token),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
@@ -1004,7 +1004,7 @@ class AppInfo extends DataClass implements Insertable<AppInfo> {
           {bool? hasDownloadedInitData,
           String? token,
           DateTime? createdAt,
-          String? id,
+          int? id,
           DateTime? updatedAt}) =>
       AppInfo(
         hasDownloadedInitData:
@@ -1044,7 +1044,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
   Value<bool> hasDownloadedInitData;
   Value<String> token;
   Value<DateTime> createdAt;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updatedAt;
   AppInfosCompanion({
     this.hasDownloadedInitData = const Value.absent(),
@@ -1057,18 +1057,17 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
     required bool hasDownloadedInitData,
     required String token,
     required DateTime createdAt,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updatedAt,
   })  : hasDownloadedInitData = Value(hasDownloadedInitData),
         token = Value(token),
         createdAt = Value(createdAt),
-        id = Value(id),
         updatedAt = Value(updatedAt);
   static Insertable<AppInfo> custom({
     Expression<bool>? hasDownloadedInitData,
     Expression<String>? token,
     Expression<DateTime>? createdAt,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
@@ -1085,7 +1084,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
       {Value<bool>? hasDownloadedInitData,
       Value<String>? token,
       Value<DateTime>? createdAt,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updatedAt}) {
     return AppInfosCompanion(
       hasDownloadedInitData:
@@ -1111,7 +1110,7 @@ class AppInfosCompanion extends UpdateCompanion<AppInfo> {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
@@ -1157,9 +1156,11 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
@@ -1199,8 +1200,6 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
@@ -1225,7 +1224,7 @@ class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
       createdAt: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updatedAt: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -1243,7 +1242,7 @@ class Sync extends DataClass implements Insertable<Sync> {
   String syncTableName;
   int tag;
   DateTime createdAt;
-  String id;
+  int id;
   DateTime updatedAt;
   Sync(
       {required this.rowId,
@@ -1264,7 +1263,7 @@ class Sync extends DataClass implements Insertable<Sync> {
     map['sync_table_name'] = Variable<String>(syncTableName);
     map['tag'] = Variable<int>(tag);
     map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
@@ -1290,7 +1289,7 @@ class Sync extends DataClass implements Insertable<Sync> {
       syncTableName: serializer.fromJson<String>(json['syncTableName']),
       tag: serializer.fromJson<int>(json['tag']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
@@ -1303,7 +1302,7 @@ class Sync extends DataClass implements Insertable<Sync> {
       'syncTableName': serializer.toJson<String>(syncTableName),
       'tag': serializer.toJson<int>(tag),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
@@ -1314,7 +1313,7 @@ class Sync extends DataClass implements Insertable<Sync> {
           String? syncTableName,
           int? tag,
           DateTime? createdAt,
-          String? id,
+          int? id,
           DateTime? updatedAt}) =>
       Sync(
         rowId: rowId ?? this.rowId,
@@ -1361,7 +1360,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   Value<String> syncTableName;
   Value<int> tag;
   Value<DateTime> createdAt;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updatedAt;
   SyncsCompanion({
     this.rowId = const Value.absent(),
@@ -1378,14 +1377,13 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     required String syncTableName,
     required int tag,
     required DateTime createdAt,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updatedAt,
   })  : rowId = Value(rowId),
         syncCurdType = Value(syncCurdType),
         syncTableName = Value(syncTableName),
         tag = Value(tag),
         createdAt = Value(createdAt),
-        id = Value(id),
         updatedAt = Value(updatedAt);
   static Insertable<Sync> custom({
     Expression<String>? rowId,
@@ -1393,7 +1391,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     Expression<String>? syncTableName,
     Expression<int>? tag,
     Expression<DateTime>? createdAt,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
@@ -1413,7 +1411,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       Value<String>? syncTableName,
       Value<int>? tag,
       Value<DateTime>? createdAt,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updatedAt}) {
     return SyncsCompanion(
       rowId: rowId ?? this.rowId,
@@ -1447,7 +1445,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
@@ -1505,9 +1503,11 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
@@ -1554,8 +1554,6 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
@@ -1584,7 +1582,7 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       createdAt: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updatedAt: attachedDatabase.options.types
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );

@@ -69,12 +69,12 @@ class HomeAbController extends AbController {
 
   // 0-30,00-40,000-50,0000-60,00000-70
   double selectedCountDistance(FragmentGroupListPageController controller, [Abw? abw]) {
-    final count = controller.selectedFragment(abw).length;
-    if (count <= 9) return -30;
-    if (count > 9 && count < 100) return -40;
-    if (count > 99 && count < 1000) return -50;
-    if (count > 999 && count < 10000) return -60;
-    if (count > 9999 && count < 100000) return -70;
+    // final count = controller.selectedFragment(abw).length;
+    // if (count <= 9) return -30;
+    // if (count > 9 && count < 100) return -40;
+    // if (count > 99 && count < 1000) return -50;
+    // if (count > 999 && count < 10000) return -60;
+    // if (count > 9999 && count < 100000) return -70;
     return -80;
   }
 }

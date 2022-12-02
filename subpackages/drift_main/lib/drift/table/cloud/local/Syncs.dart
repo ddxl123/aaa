@@ -17,7 +17,7 @@ class Syncs extends LocalTableBase  {
 
   DateTimeColumn get createdAt => dateTime()();
 
-  TextColumn get id => text()();
+  IntColumn get id => integer()();
 
   DateTimeColumn get updatedAt => dateTime()();
 
