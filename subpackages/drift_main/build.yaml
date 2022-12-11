@@ -17,7 +17,7 @@ targets:
       # 先禁用
       drift_custom|drift_reference:
         enabled: false
-      drift_custom|drift_constructor:
+      drift_custom|drift_crt:
         enabled: false
       drift_custom|drift_reset:
         enabled: false
@@ -36,7 +36,7 @@ targets:
       drift_custom|drift_reference:
         enabled: true
         generate_for: [ 'lib/drift/**' ]
-      drift_custom|drift_constructor:
+      drift_custom|drift_crt:
         enabled: true
         generate_for: [ 'lib/drift/**' ]
       drift_custom|drift_reset:

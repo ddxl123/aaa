@@ -9,7 +9,7 @@ part of drift_db;
 
 /// 增删改时，必须用这个函数。
 ///
-/// 增：[withRefs] + [DriftSyncExt.insertReturningWith] + [WithCrts]
+/// 增：[withRefs] + [Crt] 和 [UsersCompanionExt]
 /// 删：[withRefs] + [DriftSyncExt.deleteWith]
 /// 改：[withRefs] + [UserExt.reset]
 ///
@@ -20,8 +20,7 @@ Future<void> withRefs({
 }) async {
   await DriftDb.instance.transaction(
     () async {
-      final internalSyncTag = await SyncTag.create();
-      await (await ref(syncTag ?? internalSyncTag))._run();
+      await (await ref(syncTag ?? await SyncTag.create()))._run();
     },
   );
 }

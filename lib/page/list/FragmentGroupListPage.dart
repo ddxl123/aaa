@@ -33,7 +33,7 @@ class FragmentGroupListPage extends StatelessWidget {
             c.isUnitSelecting(abw)
                 ? IconButton(
                     icon: () {
-                      if (group(abw).entity(abw)!.isSelected) {
+                      if (group(abw).entity(abw)!.local_isSelected) {
                         return const FaIcon(
                           FontAwesomeIcons.solidCircle,
                           color: Colors.amber,
@@ -67,7 +67,9 @@ class FragmentGroupListPage extends StatelessWidget {
             Expanded(
               child: MaterialButton(
                 child: Text(unit(abw).unitEntity().content),
-                onPressed: () {},
+                onPressed: () {
+                  // unit.refreshEasy((oldValue) => oldValue..)
+                },
                 onLongPress: () {
                   c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
                   Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
@@ -78,7 +80,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 ? IconButton(
                     icon: FaIcon(
                       FontAwesomeIcons.solidCircle,
-                      color: unit(abw).unitEntity().isSelected ? Colors.amber : Colors.grey,
+                      color: unit(abw).unitEntity().local_isSelected ? Colors.amber : Colors.grey,
                       size: 14,
                     ),
                     onPressed: () async {},

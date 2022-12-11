@@ -14,6 +14,9 @@ class Tuple2<T1, T2> {
   final T2 t2;
 
   Tuple2({required this.t1, required this.t2});
+
+  @override
+  String toString() => '($t1, $t2)';
 }
 
 /// ===
@@ -80,7 +83,7 @@ class ExceptionContent {
 
 extension PrintSuffixExt<T> on T {
   T print() {
-    logger.d(this,null,StackTrace.current);
+    logger.d(this, null, StackTrace.current);
     return this;
   }
 }

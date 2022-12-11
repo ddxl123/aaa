@@ -1,5 +1,13 @@
 part of drift_db;
 
+enum QueryFragmentWhereType {
+  /// 查询全部碎片。
+  all,
+
+  /// 查询 [Fragment.isSelected] 为 true 的碎片。
+  selected,
+}
+
 /// TODO: 所有curd函数体都要包裹上事务。
 @DriftAccessor(
   tables: tableClasses,
@@ -7,9 +15,35 @@ part of drift_db;
 class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMixin {
   GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
-  /// 查询 [targetFragmentGroup] 内的全部碎片。
+  /// 查询 [targetFragmentGroup] 内的碎片数量，不包含子碎片。
+  Future<int> queryFragmentsCountInFragmentGroup({
+    required FragmentGroup? targetFragmentGroup,
+    required QueryFragmentWhereType queryFragmentWhereType,
+  }) async {
+    final count = fragments.id.count();
+    final baseWhereEpr = targetFragmentGroup == null ? rFragment2FragmentGroups.fragmentGroupId.isNull() : rFragment2FragmentGroups.fragmentGroupId.equals(targetFragmentGroup.id);
+    final filterWhere = filter<QueryFragmentWhereType, Expression<bool>?>(
+      from: queryFragmentWhereType,
+      targets: {
+        [QueryFragmentWhereType.all]: () => null,
+        [QueryFragmentWhereType.selected]: () => fragments.local_isSelected.equals(true),
+      },
+      orElse: null,
+    );
+    final sel = selectOnly(fragments).join(
+      [
+        innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragmentId.equalsExp(fragments.id), useColumns: false),
+      ],
+    )
+      ..addColumns([count])
+      ..where(filterWhere == null ? baseWhereEpr : baseWhereEpr & filterWhere);
+    final result = await sel.getSingle();
+
+    return result.read(count)!;
+  }
+
+  /// 查询 [targetFragmentGroup] 内的全部碎片，不包含子碎片。
   Future<List<Fragment>> queryFragmentsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
-    if (targetFragmentGroup == null) {}
     final sel = select(fragments).join(
       [
         innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragmentId.equalsExp(fragments.id)),
@@ -21,11 +55,70 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部碎片组。
+  /// 查询 [targetFragmentGroup] 内的全部碎片组，不包含子碎片组。
   Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
     final sel = select(fragmentGroups)
       ..where((tbl) => targetFragmentGroup == null ? tbl.fatherFragmentGroupsId.isNull() : tbl.fatherFragmentGroupsId.equals(targetFragmentGroup.id));
     return await sel.get();
+  }
+
+  /// 查询 [targetFragmentGroup] 内的全部子碎片组。
+  Future<List<FragmentGroup>> querySubFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
+    Future<List<FragmentGroup>> loop({required List<FragmentGroup> list}) async {
+      final returnList = <FragmentGroup>[...list];
+      await Future.forEach<FragmentGroup>(
+        list,
+        (element) async {
+          final resultList = await queryFragmentGroupsInFragmentGroup(targetFragmentGroup: element);
+          if (resultList.isNotEmpty) {
+            returnList.addAll(await loop(list: resultList));
+          }
+        },
+      );
+      return returnList;
+    }
+
+    final targetFragmentGroups = await queryFragmentGroupsInFragmentGroup(targetFragmentGroup: targetFragmentGroup);
+    return await loop(list: targetFragmentGroups);
+  }
+
+  /// 查询 [targetFragmentGroup] 内的全部子碎片。
+  Future<List<Fragment>> querySubFragmentsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
+    final subFragmentGroups = await querySubFragmentGroupsInFragmentGroup(targetFragmentGroup: targetFragmentGroup);
+    // 查询 targetFragmentGroup 内的碎片。
+    final fs = await queryFragmentsInFragmentGroup(targetFragmentGroup: targetFragmentGroup);
+    // 查询子碎片组内的碎片。
+    await Future.forEach<FragmentGroup>(
+      subFragmentGroups,
+      (element) async {
+        fs.addAll(await queryFragmentsInFragmentGroup(targetFragmentGroup: element));
+      },
+    );
+    return fs;
+  }
+
+  /// 查询 [targetFragmentGroup] 内的全部子碎片的数量。
+  Future<int> querySubFragmentsCountInFragmentGroup({
+    required FragmentGroup? targetFragmentGroup,
+    required QueryFragmentWhereType queryFragmentWhereType,
+  }) async {
+    final subFragmentGroups = await querySubFragmentGroupsInFragmentGroup(targetFragmentGroup: targetFragmentGroup);
+    // 查询 targetFragmentGroup 内的碎片数量。
+    var count = await queryFragmentsCountInFragmentGroup(
+      targetFragmentGroup: targetFragmentGroup,
+      queryFragmentWhereType: queryFragmentWhereType,
+    );
+    // 查询子碎片组内的碎片数量。
+    await Future.forEach<FragmentGroup>(
+      subFragmentGroups,
+      (element) async {
+        count += await queryFragmentsCountInFragmentGroup(
+          targetFragmentGroup: element,
+          queryFragmentWhereType: queryFragmentWhereType,
+        );
+      },
+    );
+    return count;
   }
 
   Future<User?> queryUserOrNull() async {

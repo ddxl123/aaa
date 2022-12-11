@@ -33,7 +33,7 @@ part 'DriftDb.drift.dart';
 
 part 'DriftDb.ref.dart';
 
-part 'DriftDb.ctr.dart';
+part 'DriftDb.crt.dart';
 
 part 'DriftDb.reset.dart';
 

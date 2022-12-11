@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// ConstructorGenerator
+// CrtGenerator
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names
@@ -12,7 +12,8 @@ part of drift_db;
 /// id createdAt updatedAt 已经在 [DriftSyncExt.insertReturningWith] 中自动更新了。
 ///
 /// 使用方式查看 [withRefs]。
-class WithCrts {
+class Crt {
+  Crt._();
   static UsersCompanion usersCompanion({
     required int age,
     required Value<String?> email,
@@ -160,14 +161,14 @@ class WithCrts {
     required String content,
     required int creatorUserId,
     required Value<String?> fatherFragmentId,
-    required bool isSelected,
+    required bool local_isSelected,
     required Value<String?> noteId,
   }) {
     return FragmentsCompanion(
       content: Value(content),
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId,
-      isSelected: Value(isSelected),
+      local_isSelected: Value(local_isSelected),
       noteId: noteId,
     );
   }
@@ -221,13 +222,13 @@ class WithCrts {
   static FragmentGroupsCompanion fragmentGroupsCompanion({
     required int creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
-    required bool isSelected,
+    required bool local_isSelected,
     required String title,
   }) {
     return FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
-      isSelected: Value(isSelected),
+      local_isSelected: Value(local_isSelected),
       title: Value(title),
     );
   }
@@ -253,6 +254,197 @@ class WithCrts {
       creatorUserId: Value(creatorUserId),
       fatherNoteGroupsId: fatherNoteGroupsId,
       title: Value(title),
+    );
+  }
+}
+
+extension UsersCompanionExt on UsersCompanion {
+  Future<User> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.users,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
+  Future<FragmentMemoryInfo> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.fragmentMemoryInfos,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension AppInfosCompanionExt on AppInfosCompanion {
+  Future<AppInfo> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.appInfos,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension SyncsCompanionExt on SyncsCompanion {
+  Future<Sync> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.syncs,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
+  Future<MemoryGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.memoryGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension RDocument2DocumentGroupsCompanionExt
+    on RDocument2DocumentGroupsCompanion {
+  Future<RDocument2DocumentGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.rDocument2DocumentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension RFragment2FragmentGroupsCompanionExt
+    on RFragment2FragmentGroupsCompanion {
+  Future<RFragment2FragmentGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.rFragment2FragmentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension RMemoryModel2MemoryModelGroupsCompanionExt
+    on RMemoryModel2MemoryModelGroupsCompanion {
+  Future<RMemoryModel2MemoryModelGroup> insert(
+      {required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.rMemoryModel2MemoryModelGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
+  Future<RNote2NoteGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.rNote2NoteGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension DocumentsCompanionExt on DocumentsCompanion {
+  Future<Document> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.documents,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension FragmentsCompanionExt on FragmentsCompanion {
+  Future<Fragment> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.fragments,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension MemoryModelsCompanionExt on MemoryModelsCompanion {
+  Future<MemoryModel> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.memoryModels,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension NotesCompanionExt on NotesCompanion {
+  Future<Note> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.notes,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension DocumentGroupsCompanionExt on DocumentGroupsCompanion {
+  Future<DocumentGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.documentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
+  Future<FragmentGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.fragmentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension MemoryModelGroupsCompanionExt on MemoryModelGroupsCompanion {
+  Future<MemoryModelGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.memoryModelGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension NoteGroupsCompanionExt on NoteGroupsCompanion {
+  Future<NoteGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.noteGroups,
+      entity: this,
+      syncTag: syncTag,
     );
   }
 }

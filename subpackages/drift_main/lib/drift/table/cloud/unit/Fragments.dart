@@ -15,7 +15,7 @@ class Fragments extends CloudTableBase  {
   @ReferenceTo([Fragments])
   TextColumn get fatherFragmentId => text().nullable()();
 
-  BoolColumn get isSelected => boolean()();
+  BoolColumn get local_isSelected => boolean()();
 
   @ReferenceTo([Notes])
   TextColumn get noteId => text().nullable()();

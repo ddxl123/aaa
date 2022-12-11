@@ -135,6 +135,7 @@ class _DriftViewerState extends State<DriftViewer> {
                           username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
+                        isSync: true,
                       );
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
@@ -143,6 +144,7 @@ class _DriftViewerState extends State<DriftViewer> {
                           username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
+                        isSync: true,
                       );
                       Navigator.pop(context);
                     },

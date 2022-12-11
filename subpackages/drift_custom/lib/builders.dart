@@ -1,4 +1,4 @@
-import 'package:drift_custom/generators/ConstructorGenerator.dart';
+import 'package:drift_custom/generators/CrtGenerator.dart';
 import 'package:drift_custom/generators/ReferenceGenerator.dart';
 import 'package:drift_custom/generators/ResetGenerator.dart';
 import 'package:source_gen/source_gen.dart';
@@ -8,8 +8,8 @@ Builder referenceBuilder(BuilderOptions options) {
   return LibraryBuilder(ReferenceGenerator(), generatedExtension: '.ref.dart');
 }
 
-Builder constructorBuilder(BuilderOptions options) {
-  return LibraryBuilder(ConstructorGenerator(), generatedExtension: '.ctr.dart');
+Builder crtBuilder(BuilderOptions options) {
+  return LibraryBuilder(CrtGenerator(), generatedExtension: '.crt.dart');
 }
 
 

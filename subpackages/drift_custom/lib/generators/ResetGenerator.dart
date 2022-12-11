@@ -8,9 +8,17 @@ class ResetGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) {
     final allContent = StringBuffer();
+    // 不带 s
+    final localTableClasses = <String>[];
     try {
+      for (var value in library.classes) {
+        if (value.allSupertypes.first.getDisplayString(withNullability: false).contains('LocalTableBase')) {
+          localTableClasses.add(value.displayName.substring(0, value.displayName.length - 1));
+        }
+      }
       for (var cls in library.classes) {
         if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('DataClass')) {
+          // 不带s
           final className = cls.displayName;
           final camelClassName = className.toCamelCase;
           final params = cls.unnamedConstructor!.parameters;
@@ -25,7 +33,7 @@ class ResetGenerator extends Generator {
           /// 
           /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
           /// 
-          /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+          /// 若 [syncTag] 为空，内部会自动创建。
           /// 
           /// 使用方式查看 [withRefs]。
           FutureOr<$className> reset({
@@ -37,19 +45,28 @@ class ResetGenerator extends Generator {
                   ).where(
                     (element) => element != '',
                   ).join(',')}, 
-            required SyncTag? writeSyncTag,
+            required SyncTag? syncTag,
             }) async {
+           bool isCloudModify = false;
+           bool isLocalModify = false;
             ${params.map(
                     (e) {
                       final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
-                      return isWriteBlank ? '' : 'this.${e.name} = ${e.name}.present ? ${e.name}.value : this.${e.name}';
+                      return isWriteBlank
+                          ? ''
+                          : """
+                      if (this.${e.name} != ${e.name}.value && ${e.name}.present) {
+                        ${e.name.contains(RegExp(r'^(local_)')) || localTableClasses.contains(className) ? 'isLocalModify' : 'isCloudModify'} = true;
+                        this.${e.name} = ${e.name}.value;
+                      }
+                      """;
                     },
                   ).where(
                     (element) => element != '',
-                  ).join(';\n')};   
-          if(writeSyncTag!=null){
+                  ).join('\n')}
+          if (isCloudModify || isLocalModify) {
             final ins = DriftDb.instance;
-            await ins.updateReturningWith(ins.${camelClassName}s, entity: toCompanion(false), syncTag: writeSyncTag);
+            await ins.updateReturningWith(ins.${camelClassName}s, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
           }
             return this;
           }

@@ -9,20 +9,13 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
 
   Future<User> insertUser() async {
     final findUser = await select(users).getSingleOrNull();
-    late final User u;
-    if (findUser == null) {
-      u = await users.insertReturning(
-        WithCrts.usersCompanion(
-          age: 18,
-          email: '1033839760@qq.com'.toValue(),
-          password: 'password'.toValue(),
-          username: 'username',
-        ),
-      );
-    } else {
-      throw '已存在用户！';
-    }
-    return u;
+    if (findUser != null) throw '已存在用户！';
+    return await Crt.usersCompanion(
+      age: 18,
+      email: '1033839760@qq.com'.toValue(),
+      password: 'password'.toValue(),
+      username: 'username',
+    ).insert(syncTag: null);
   }
 
   /// 向当前 [FragmentGroups] 表中插入一条数据, 返回新插入的 [FragmentGroup]。
@@ -51,19 +44,15 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       syncTag: await SyncTag.create(),
       ref: (syncTag) async => RefFragments(
         self: (table) async {
-          newFragment = await insertReturningWith(table, entity: willFragment, syncTag: syncTag);
+          newFragment = await willFragment.insert(syncTag: syncTag);
         },
         rFragment2FragmentGroups: RefRFragment2FragmentGroups(
           self: (table) async {
-            await insertReturningWith(
-              table,
-              entity: WithCrts.rFragment2FragmentGroupsCompanion(
-                creatorUserId: willFragment.creatorUserId.value,
-                fragmentGroupId: willFragmentGroup?.id ?? null.toValue(),
-                fragmentId: willFragment.id.value,
-              ),
-              syncTag: syncTag,
-            );
+            await Crt.rFragment2FragmentGroupsCompanion(
+              creatorUserId: willFragment.creatorUserId.value,
+              fragmentGroupId: willFragmentGroup?.id ?? null.toValue(),
+              fragmentId: willFragment.id.value,
+            ).insert(syncTag: syncTag);
           },
         ),
         child_fragments: null,

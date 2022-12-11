@@ -5,10 +5,10 @@ builders:
     builder_factories: [ "referenceBuilder" ]
     auto_apply: none
     build_to: source
-  drift_constructor:
+  drift_crt:
     import: "package:drift_custom/builders.dart"
-    build_extensions: { ".dart": [ ".ctr.dart" ] }
-    builder_factories: [ "constructorBuilder" ]
+    build_extensions: { ".dart": [ ".crt.dart" ] }
+    builder_factories: [ "crtBuilder" ]
     auto_apply: none
     build_to: source
   drift_reset:

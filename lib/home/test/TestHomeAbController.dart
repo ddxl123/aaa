@@ -30,23 +30,26 @@ class TestHomeAbController extends AbController {
     }
 
     const count = 5;
-    Future<void> foreach({required FragmentGroup? fatherFragmentGroup}) async {
+    Future<List<FragmentGroup>> foreach({required FragmentGroup? fatherFragmentGroup}) async {
+      await Future.delayed(const Duration(seconds: 1));
+      final subGroup = <FragmentGroup>[];
       for (int i = 0; i < count; i++) {
         final fg = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
-          WithCrts.fragmentGroupsCompanion(
+          Crt.fragmentGroupsCompanion(
             creatorUserId: globalAbController.loggedInUser()!.id,
             title: 'test ${Random().nextInt(999999)}',
             fatherFragmentGroupsId: (fatherFragmentGroup?.id).toValue(),
-            isSelected: false,
+            local_isSelected: false,
           ),
         );
+        subGroup.add(fg);
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragmentWithRef(
-            willFragment: WithCrts.fragmentsCompanion(
+            willFragment: Crt.fragmentsCompanion(
               creatorUserId: globalAbController.loggedInUser()!.id,
               fatherFragmentId: null.toValue(),
               content: 'test ${Random().nextInt(999999)}',
-              isSelected: false,
+              local_isSelected: false,
               noteId: null.toValue(),
             ),
             willFragmentGroup: null,
@@ -54,20 +57,29 @@ class TestHomeAbController extends AbController {
         }
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragmentWithRef(
-            willFragment: WithCrts.fragmentsCompanion(
+            willFragment: Crt.fragmentsCompanion(
               creatorUserId: globalAbController.loggedInUser()!.id,
               fatherFragmentId: null.toValue(),
               content: 'test ${Random().nextInt(999999)}',
-              isSelected: false,
+              local_isSelected: false,
               noteId: null.toValue(),
             ),
             willFragmentGroup: fg.toCompanion(false),
           );
         }
       }
+      return subGroup;
     }
 
-    await foreach(fatherFragmentGroup: null);
+    final ones = await foreach(fatherFragmentGroup: null);
+
+    final twos = <FragmentGroup>[];
+    await Future.forEach<FragmentGroup>(
+      ones,
+      (element) async {
+        twos.addAll(await foreach(fatherFragmentGroup: element));
+      },
+    );
 
 // for (int i = 0; i < count; i++) {
 //   await DriftDb.instance.insertDAO.insertMemoryModelWithRef(

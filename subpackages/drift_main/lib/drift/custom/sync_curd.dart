@@ -13,32 +13,32 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// 2. 最大值 10 进制值：783 6416 4095
   /// 3. 最大 36 进制值：'zzz zzzz'
   ///
-  /// 最后 3 字符：
+  /// 最后 4 字符：
   /// 1. 随机值
-  /// 2. 最大 10 进制值：46655
-  /// 3. 最大 36 进制值：'zzz'
+  /// 2. 最大 10 进制值：1679615
+  /// 3. 最大 36 进制值：'zzzz'
   ///
   /// 整体：
-  /// 000 0000 - 000 0000 - 000
+  /// 000 0000 - 000 0000 - 0000
   String createId({required int userId}) {
     String prefix = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toRadixString(36);
     String center = userId.toRadixString(36);
-    String suffix = Random().nextInt(46655).toRadixString(36);
+    String suffix = Random().nextInt(1679615).toRadixString(36);
     prefix = '0' * (7 - prefix.length) + prefix;
     center = '0' * (7 - center.length) + center;
-    suffix = '0' * (3 - suffix.length) + suffix;
+    suffix = '0' * (4 - suffix.length) + suffix;
     return prefix + center + suffix;
   }
 
   /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
   ///
-  /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
+  /// 1. 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
-  /// 对 [Users] 的插入不能使用该函数，但可以使用 [updateReturningWith] 函数对 user 进行更新。
+  /// 2. 对 [Users] 的插入是直接调用 into。
   ///
-  /// 返回插入的行(带有插入的id)，与传入的 [entity] 不是一个对象。
+  /// 3. 返回插入的行(带有插入的id)，与传入的 [entity] 不是一个对象。
   ///
-  /// 如果外部没有事务，内部会自动创建事务。
+  /// 4. 如果外部没有事务，内部会自动创建事务。
   ///
   /// [T] - 表类型 [Table]，如 [Users]
   ///
@@ -50,30 +50,28 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [entity] - 要插入的 [UsersCompanion] 的实体，不能使用 [User]
   ///
-  /// [syncTag] - 见 [SyncTag] 的注释
+  /// [syncTag] - 若为空，则内部将自动创建一个。
   ///
-  /// [mode] 和 [onConflict] - [InsertStatement.insertReturning] 的参数。
-  ///
-  /// 必须搭配 [withRefs] 与 []使用。
+  /// 必须搭配 [withRefs] 使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
-    required SyncTag syncTag,
-    InsertMode? mode,
-    UpsertClause<T, DC>? onConflict,
+    required SyncTag? syncTag,
   }) async {
     return await transaction(
       () async {
         if (table is Users) {
-          throw '对 [Users] 的插入不能使用该函数';
+          if (syncTag != null) throw '插入 User 实体无需进行 sync！';
+          return await into(table).insertReturning(entity);
         }
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         entityDynamic.createdAt = DateTime.now().toValue();
         entityDynamic.updatedAt = DateTime.now().toValue();
 
-        // 仅对 CloudTableBase 类型表生成 id，
-        // LocalTableBase 类型表全部都是自增主键。
+        // CloudTableBase 类型表生成 String 类型 id，需要手动配置。
+        //
+        // LocalTableBase 类型表全部都是自增主键，不需要手动配置。
         if (table is CloudTableBase) {
           final mulUsers = await select(DriftDb.instance.users).get();
           if (mulUsers.length != 1) {
@@ -81,24 +79,26 @@ extension DriftSyncExt on DatabaseConnectionUser {
           }
 
           entityDynamic.id = createId(userId: mulUsers.first.id).toValue();
-          print(entityDynamic.id.value);
         }
 
         // 插入
         final newInto = into(table);
-        final dynamic returningEntityDynamic = await newInto.insertReturning(entityDynamic, mode: mode, onConflict: onConflict);
+        final dynamic returningEntityDynamic = await newInto.insertReturning(entityDynamic);
 
-        // 增加一条 sync 记录 - 仅对 cloud
+        // CloudTableBase 类型表需要添加一条 sync 记录。
+        //
+        // LocalTableBase 类型表不需要添加 sync。
         if (table is CloudTableBase) {
+          final st = syncTag ?? await SyncTag.create();
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toValue(),
               rowId: (returningEntityDynamic.id as String).toValue(),
               syncCurdType: SyncCurdType.c.toValue(),
-              tag: syncTag.tag.toValue(),
+              tag: st.tag.toValue(),
             ),
-            syncTag: syncTag,
+            syncTag: st,
           );
         }
 
@@ -109,24 +109,37 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
   /// 根据 [entity] 的 id，修改一条数据，并自动修改 updatedAt。
   ///
-  /// 必须搭配 [withRefs] 与 [UserExt.reset] 使用。
-  ///
-  /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
+  /// 如果 [T] 是 [CloudTableBase] 且 [isSync] 为 true 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// TODO: 测试：返回已被更新的行，返回 null 表示将更新的行不存在，或新旧值相同未发生更新。
   ///
   /// 如果外部没有事务，内部会自动创建事务。
   ///
-  /// [entity] - 要替换的 [UsersCompanion] 的实体，不能为 [User]。
+  /// 对 [Users] 的更新是直接调用 update.replace。
   ///
   /// 注意：该函数不能修改 id。
+  ///
+  /// [entity] - 要替换的 [UsersCompanion] 的实体，不能为 [User]。
+  ///
+  /// [syncTag] - 若为空，则内部将自动创建一个。
+  ///
+  /// [isSync] - 是否进行同步。当新旧实体只有本地字段被修改时，应设为 false，当新旧实体存在同步字段被修改，因设为 true。
+  ///
+  /// 必须搭配 [withRefs] 与 [UserExt.reset] 使用。
   Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
-    required SyncTag syncTag,
+    required bool isSync,
+    required SyncTag? syncTag,
   }) async {
     return await transaction(
       () async {
+        if (table is Users) {
+          if (syncTag != null) throw '更新 User 实体无需进行 sync！';
+          await update(table).replace(entity);
+          return await (select(table)..where((tbl) => (tbl as dynamic).id.equals((entity as dynamic).id.value))).getSingle();
+        }
+
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         // TODO: 如果之后执行失败的话，下面所修改的时间需要恢复。
@@ -142,16 +155,17 @@ extension DriftSyncExt on DatabaseConnectionUser {
         final DC returningEntity = await (select(table)..where((tbl) => (tbl as dynamic).id.equals(entityDynamic.id.value))).getSingle();
 
         // 增加一条 sync 记录 - 仅对 cloud
-        if (table is CloudTableBase) {
+        if ((table is CloudTableBase) && isSync == true) {
+          final st = syncTag ?? await SyncTag.create();
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toValue(),
-              rowId: ((returningEntity as dynamic).id as String).toValue(),
+              rowId: (returningEntity as dynamic).id.toValue(),
               syncCurdType: SyncCurdType.u.toValue(),
-              tag: syncTag.tag.toValue(),
+              tag: st.tag.toValue(),
             ),
-            syncTag: syncTag,
+            syncTag: st,
           );
         }
 
@@ -160,7 +174,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
     );
   }
 
-  /// 删除一条数据。
+  /// TODO: 删除一条数据。
   ///
   /// 必须搭配 [withRefs] 与 [DriftSyncExt.deleteWith] 使用。
   ///

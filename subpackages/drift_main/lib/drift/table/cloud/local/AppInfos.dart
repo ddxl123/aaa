@@ -13,7 +13,7 @@ class AppInfos extends LocalTableBase  {
 
   DateTimeColumn get createdAt => dateTime()();
 
-  IntColumn get id => integer()();
+  IntColumn get id => integer().autoIncrement()();
 
   DateTimeColumn get updatedAt => dateTime()();
 

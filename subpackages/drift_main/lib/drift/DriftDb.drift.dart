@@ -3781,7 +3781,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   String content;
   int creatorUserId;
   String? fatherFragmentId;
-  bool isSelected;
+  bool local_isSelected;
   String? noteId;
   DateTime createdAt;
   String id;
@@ -3790,7 +3790,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       {required this.content,
       required this.creatorUserId,
       this.fatherFragmentId,
-      required this.isSelected,
+      required this.local_isSelected,
       this.noteId,
       required this.createdAt,
       required this.id,
@@ -3803,7 +3803,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     if (!nullToAbsent || fatherFragmentId != null) {
       map['father_fragment_id'] = Variable<String>(fatherFragmentId);
     }
-    map['is_selected'] = Variable<bool>(isSelected);
+    map['local_is_selected'] = Variable<bool>(local_isSelected);
     if (!nullToAbsent || noteId != null) {
       map['note_id'] = Variable<String>(noteId);
     }
@@ -3820,7 +3820,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       fatherFragmentId: fatherFragmentId == null && nullToAbsent
           ? const Value.absent()
           : Value(fatherFragmentId),
-      isSelected: Value(isSelected),
+      local_isSelected: Value(local_isSelected),
       noteId:
           noteId == null && nullToAbsent ? const Value.absent() : Value(noteId),
       createdAt: Value(createdAt),
@@ -3836,7 +3836,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       content: serializer.fromJson<String>(json['content']),
       creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
       fatherFragmentId: serializer.fromJson<String?>(json['fatherFragmentId']),
-      isSelected: serializer.fromJson<bool>(json['isSelected']),
+      local_isSelected: serializer.fromJson<bool>(json['local_isSelected']),
       noteId: serializer.fromJson<String?>(json['noteId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<String>(json['id']),
@@ -3850,7 +3850,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       'content': serializer.toJson<String>(content),
       'creatorUserId': serializer.toJson<int>(creatorUserId),
       'fatherFragmentId': serializer.toJson<String?>(fatherFragmentId),
-      'isSelected': serializer.toJson<bool>(isSelected),
+      'local_isSelected': serializer.toJson<bool>(local_isSelected),
       'noteId': serializer.toJson<String?>(noteId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<String>(id),
@@ -3862,7 +3862,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           {String? content,
           int? creatorUserId,
           Value<String?> fatherFragmentId = const Value.absent(),
-          bool? isSelected,
+          bool? local_isSelected,
           Value<String?> noteId = const Value.absent(),
           DateTime? createdAt,
           String? id,
@@ -3873,7 +3873,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
         fatherFragmentId: fatherFragmentId.present
             ? fatherFragmentId.value
             : this.fatherFragmentId,
-        isSelected: isSelected ?? this.isSelected,
+        local_isSelected: local_isSelected ?? this.local_isSelected,
         noteId: noteId.present ? noteId.value : this.noteId,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
@@ -3885,7 +3885,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           ..write('content: $content, ')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentId: $fatherFragmentId, ')
-          ..write('isSelected: $isSelected, ')
+          ..write('local_isSelected: $local_isSelected, ')
           ..write('noteId: $noteId, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -3896,7 +3896,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   @override
   int get hashCode => Object.hash(content, creatorUserId, fatherFragmentId,
-      isSelected, noteId, createdAt, id, updatedAt);
+      local_isSelected, noteId, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3904,7 +3904,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           other.content == this.content &&
           other.creatorUserId == this.creatorUserId &&
           other.fatherFragmentId == this.fatherFragmentId &&
-          other.isSelected == this.isSelected &&
+          other.local_isSelected == this.local_isSelected &&
           other.noteId == this.noteId &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
@@ -3915,7 +3915,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<String> content;
   Value<int> creatorUserId;
   Value<String?> fatherFragmentId;
-  Value<bool> isSelected;
+  Value<bool> local_isSelected;
   Value<String?> noteId;
   Value<DateTime> createdAt;
   Value<String> id;
@@ -3924,7 +3924,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.content = const Value.absent(),
     this.creatorUserId = const Value.absent(),
     this.fatherFragmentId = const Value.absent(),
-    this.isSelected = const Value.absent(),
+    this.local_isSelected = const Value.absent(),
     this.noteId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
@@ -3934,14 +3934,14 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     required String content,
     required int creatorUserId,
     this.fatherFragmentId = const Value.absent(),
-    required bool isSelected,
+    required bool local_isSelected,
     this.noteId = const Value.absent(),
     required DateTime createdAt,
     required String id,
     required DateTime updatedAt,
   })  : content = Value(content),
         creatorUserId = Value(creatorUserId),
-        isSelected = Value(isSelected),
+        local_isSelected = Value(local_isSelected),
         createdAt = Value(createdAt),
         id = Value(id),
         updatedAt = Value(updatedAt);
@@ -3949,7 +3949,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<String>? content,
     Expression<int>? creatorUserId,
     Expression<String>? fatherFragmentId,
-    Expression<bool>? isSelected,
+    Expression<bool>? local_isSelected,
     Expression<String>? noteId,
     Expression<DateTime>? createdAt,
     Expression<String>? id,
@@ -3959,7 +3959,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       if (content != null) 'content': content,
       if (creatorUserId != null) 'creator_user_id': creatorUserId,
       if (fatherFragmentId != null) 'father_fragment_id': fatherFragmentId,
-      if (isSelected != null) 'is_selected': isSelected,
+      if (local_isSelected != null) 'local_is_selected': local_isSelected,
       if (noteId != null) 'note_id': noteId,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
@@ -3971,7 +3971,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       {Value<String>? content,
       Value<int>? creatorUserId,
       Value<String?>? fatherFragmentId,
-      Value<bool>? isSelected,
+      Value<bool>? local_isSelected,
       Value<String?>? noteId,
       Value<DateTime>? createdAt,
       Value<String>? id,
@@ -3980,7 +3980,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       content: content ?? this.content,
       creatorUserId: creatorUserId ?? this.creatorUserId,
       fatherFragmentId: fatherFragmentId ?? this.fatherFragmentId,
-      isSelected: isSelected ?? this.isSelected,
+      local_isSelected: local_isSelected ?? this.local_isSelected,
       noteId: noteId ?? this.noteId,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
@@ -4000,8 +4000,8 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     if (fatherFragmentId.present) {
       map['father_fragment_id'] = Variable<String>(fatherFragmentId.value);
     }
-    if (isSelected.present) {
-      map['is_selected'] = Variable<bool>(isSelected.value);
+    if (local_isSelected.present) {
+      map['local_is_selected'] = Variable<bool>(local_isSelected.value);
     }
     if (noteId.present) {
       map['note_id'] = Variable<String>(noteId.value);
@@ -4024,7 +4024,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
           ..write('content: $content, ')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentId: $fatherFragmentId, ')
-          ..write('isSelected: $isSelected, ')
+          ..write('local_isSelected: $local_isSelected, ')
           ..write('noteId: $noteId, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -4057,13 +4057,14 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> fatherFragmentId = GeneratedColumn<String>(
       'father_fragment_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  final VerificationMeta _isSelectedMeta = const VerificationMeta('isSelected');
+  final VerificationMeta _local_isSelectedMeta =
+      const VerificationMeta('local_isSelected');
   @override
-  late final GeneratedColumn<bool> isSelected = GeneratedColumn<bool>(
-      'is_selected', aliasedName, false,
+  late final GeneratedColumn<bool> local_isSelected = GeneratedColumn<bool>(
+      'local_is_selected', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
-      defaultConstraints: 'CHECK (is_selected IN (0, 1))');
+      defaultConstraints: 'CHECK (local_is_selected IN (0, 1))');
   final VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
   @override
   late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
@@ -4089,7 +4090,7 @@ class $FragmentsTable extends Fragments
         content,
         creatorUserId,
         fatherFragmentId,
-        isSelected,
+        local_isSelected,
         noteId,
         createdAt,
         id,
@@ -4124,13 +4125,13 @@ class $FragmentsTable extends Fragments
           fatherFragmentId.isAcceptableOrUnknown(
               data['father_fragment_id']!, _fatherFragmentIdMeta));
     }
-    if (data.containsKey('is_selected')) {
+    if (data.containsKey('local_is_selected')) {
       context.handle(
-          _isSelectedMeta,
-          isSelected.isAcceptableOrUnknown(
-              data['is_selected']!, _isSelectedMeta));
+          _local_isSelectedMeta,
+          local_isSelected.isAcceptableOrUnknown(
+              data['local_is_selected']!, _local_isSelectedMeta));
     } else if (isInserting) {
-      context.missing(_isSelectedMeta);
+      context.missing(_local_isSelectedMeta);
     }
     if (data.containsKey('note_id')) {
       context.handle(_noteIdMeta,
@@ -4168,8 +4169,8 @@ class $FragmentsTable extends Fragments
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       fatherFragmentId: attachedDatabase.options.types.read(
           DriftSqlType.string, data['${effectivePrefix}father_fragment_id']),
-      isSelected: attachedDatabase.options.types
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_selected'])!,
+      local_isSelected: attachedDatabase.options.types.read(
+          DriftSqlType.bool, data['${effectivePrefix}local_is_selected'])!,
       noteId: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}note_id']),
       createdAt: attachedDatabase.options.types
@@ -5404,7 +5405,7 @@ class $DocumentGroupsTable extends DocumentGroups
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   int creatorUserId;
   String? fatherFragmentGroupsId;
-  bool isSelected;
+  bool local_isSelected;
   String title;
   DateTime createdAt;
   String id;
@@ -5412,7 +5413,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   FragmentGroup(
       {required this.creatorUserId,
       this.fatherFragmentGroupsId,
-      required this.isSelected,
+      required this.local_isSelected,
       required this.title,
       required this.createdAt,
       required this.id,
@@ -5425,7 +5426,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       map['father_fragment_groups_id'] =
           Variable<String>(fatherFragmentGroupsId);
     }
-    map['is_selected'] = Variable<bool>(isSelected);
+    map['local_is_selected'] = Variable<bool>(local_isSelected);
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['id'] = Variable<String>(id);
@@ -5439,7 +5440,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       fatherFragmentGroupsId: fatherFragmentGroupsId == null && nullToAbsent
           ? const Value.absent()
           : Value(fatherFragmentGroupsId),
-      isSelected: Value(isSelected),
+      local_isSelected: Value(local_isSelected),
       title: Value(title),
       createdAt: Value(createdAt),
       id: Value(id),
@@ -5454,7 +5455,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
       fatherFragmentGroupsId:
           serializer.fromJson<String?>(json['fatherFragmentGroupsId']),
-      isSelected: serializer.fromJson<bool>(json['isSelected']),
+      local_isSelected: serializer.fromJson<bool>(json['local_isSelected']),
       title: serializer.fromJson<String>(json['title']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<String>(json['id']),
@@ -5468,7 +5469,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       'creatorUserId': serializer.toJson<int>(creatorUserId),
       'fatherFragmentGroupsId':
           serializer.toJson<String?>(fatherFragmentGroupsId),
-      'isSelected': serializer.toJson<bool>(isSelected),
+      'local_isSelected': serializer.toJson<bool>(local_isSelected),
       'title': serializer.toJson<String>(title),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<String>(id),
@@ -5479,7 +5480,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   FragmentGroup copyWith(
           {int? creatorUserId,
           Value<String?> fatherFragmentGroupsId = const Value.absent(),
-          bool? isSelected,
+          bool? local_isSelected,
           String? title,
           DateTime? createdAt,
           String? id,
@@ -5489,7 +5490,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
         fatherFragmentGroupsId: fatherFragmentGroupsId.present
             ? fatherFragmentGroupsId.value
             : this.fatherFragmentGroupsId,
-        isSelected: isSelected ?? this.isSelected,
+        local_isSelected: local_isSelected ?? this.local_isSelected,
         title: title ?? this.title,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
@@ -5500,7 +5501,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     return (StringBuffer('FragmentGroup(')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentGroupsId: $fatherFragmentGroupsId, ')
-          ..write('isSelected: $isSelected, ')
+          ..write('local_isSelected: $local_isSelected, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -5511,14 +5512,14 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 
   @override
   int get hashCode => Object.hash(creatorUserId, fatherFragmentGroupsId,
-      isSelected, title, createdAt, id, updatedAt);
+      local_isSelected, title, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentGroup &&
           other.creatorUserId == this.creatorUserId &&
           other.fatherFragmentGroupsId == this.fatherFragmentGroupsId &&
-          other.isSelected == this.isSelected &&
+          other.local_isSelected == this.local_isSelected &&
           other.title == this.title &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
@@ -5528,7 +5529,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<int> creatorUserId;
   Value<String?> fatherFragmentGroupsId;
-  Value<bool> isSelected;
+  Value<bool> local_isSelected;
   Value<String> title;
   Value<DateTime> createdAt;
   Value<String> id;
@@ -5536,7 +5537,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   FragmentGroupsCompanion({
     this.creatorUserId = const Value.absent(),
     this.fatherFragmentGroupsId = const Value.absent(),
-    this.isSelected = const Value.absent(),
+    this.local_isSelected = const Value.absent(),
     this.title = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
@@ -5545,13 +5546,13 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   FragmentGroupsCompanion.insert({
     required int creatorUserId,
     this.fatherFragmentGroupsId = const Value.absent(),
-    required bool isSelected,
+    required bool local_isSelected,
     required String title,
     required DateTime createdAt,
     required String id,
     required DateTime updatedAt,
   })  : creatorUserId = Value(creatorUserId),
-        isSelected = Value(isSelected),
+        local_isSelected = Value(local_isSelected),
         title = Value(title),
         createdAt = Value(createdAt),
         id = Value(id),
@@ -5559,7 +5560,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   static Insertable<FragmentGroup> custom({
     Expression<int>? creatorUserId,
     Expression<String>? fatherFragmentGroupsId,
-    Expression<bool>? isSelected,
+    Expression<bool>? local_isSelected,
     Expression<String>? title,
     Expression<DateTime>? createdAt,
     Expression<String>? id,
@@ -5569,7 +5570,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       if (creatorUserId != null) 'creator_user_id': creatorUserId,
       if (fatherFragmentGroupsId != null)
         'father_fragment_groups_id': fatherFragmentGroupsId,
-      if (isSelected != null) 'is_selected': isSelected,
+      if (local_isSelected != null) 'local_is_selected': local_isSelected,
       if (title != null) 'title': title,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
@@ -5580,7 +5581,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   FragmentGroupsCompanion copyWith(
       {Value<int>? creatorUserId,
       Value<String?>? fatherFragmentGroupsId,
-      Value<bool>? isSelected,
+      Value<bool>? local_isSelected,
       Value<String>? title,
       Value<DateTime>? createdAt,
       Value<String>? id,
@@ -5589,7 +5590,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       creatorUserId: creatorUserId ?? this.creatorUserId,
       fatherFragmentGroupsId:
           fatherFragmentGroupsId ?? this.fatherFragmentGroupsId,
-      isSelected: isSelected ?? this.isSelected,
+      local_isSelected: local_isSelected ?? this.local_isSelected,
       title: title ?? this.title,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
@@ -5607,8 +5608,8 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       map['father_fragment_groups_id'] =
           Variable<String>(fatherFragmentGroupsId.value);
     }
-    if (isSelected.present) {
-      map['is_selected'] = Variable<bool>(isSelected.value);
+    if (local_isSelected.present) {
+      map['local_is_selected'] = Variable<bool>(local_isSelected.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -5630,7 +5631,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     return (StringBuffer('FragmentGroupsCompanion(')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentGroupsId: $fatherFragmentGroupsId, ')
-          ..write('isSelected: $isSelected, ')
+          ..write('local_isSelected: $local_isSelected, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -5658,13 +5659,14 @@ class $FragmentGroupsTable extends FragmentGroups
   late final GeneratedColumn<String> fatherFragmentGroupsId =
       GeneratedColumn<String>('father_fragment_groups_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  final VerificationMeta _isSelectedMeta = const VerificationMeta('isSelected');
+  final VerificationMeta _local_isSelectedMeta =
+      const VerificationMeta('local_isSelected');
   @override
-  late final GeneratedColumn<bool> isSelected = GeneratedColumn<bool>(
-      'is_selected', aliasedName, false,
+  late final GeneratedColumn<bool> local_isSelected = GeneratedColumn<bool>(
+      'local_is_selected', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
-      defaultConstraints: 'CHECK (is_selected IN (0, 1))');
+      defaultConstraints: 'CHECK (local_is_selected IN (0, 1))');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -5689,7 +5691,7 @@ class $FragmentGroupsTable extends FragmentGroups
   List<GeneratedColumn> get $columns => [
         creatorUserId,
         fatherFragmentGroupsId,
-        isSelected,
+        local_isSelected,
         title,
         createdAt,
         id,
@@ -5718,13 +5720,13 @@ class $FragmentGroupsTable extends FragmentGroups
           fatherFragmentGroupsId.isAcceptableOrUnknown(
               data['father_fragment_groups_id']!, _fatherFragmentGroupsIdMeta));
     }
-    if (data.containsKey('is_selected')) {
+    if (data.containsKey('local_is_selected')) {
       context.handle(
-          _isSelectedMeta,
-          isSelected.isAcceptableOrUnknown(
-              data['is_selected']!, _isSelectedMeta));
+          _local_isSelectedMeta,
+          local_isSelected.isAcceptableOrUnknown(
+              data['local_is_selected']!, _local_isSelectedMeta));
     } else if (isInserting) {
-      context.missing(_isSelectedMeta);
+      context.missing(_local_isSelectedMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -5763,8 +5765,8 @@ class $FragmentGroupsTable extends FragmentGroups
       fatherFragmentGroupsId: attachedDatabase.options.types.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_fragment_groups_id']),
-      isSelected: attachedDatabase.options.types
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_selected'])!,
+      local_isSelected: attachedDatabase.options.types.read(
+          DriftSqlType.bool, data['${effectivePrefix}local_is_selected'])!,
       title: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       createdAt: attachedDatabase.options.types

@@ -3,26 +3,29 @@ import 'package:drift_custom/tools.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:build/build.dart';
 
-class ConstructorGenerator extends Generator {
+class CrtGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) {
     final allContent = StringBuffer();
+    final allExtContent = StringBuffer();
     try {
       for (var cls in library.classes) {
         if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('UpdateCompanion')) {
-          final className = cls.displayName;
-          final camelClassName = className.toCamelCase;
+          final companionName = cls.displayName;
+          final classNoSName = companionName.replaceAll(RegExp(r'(sCompanion)$'), '');
+          final classWithSName = '${classNoSName}s';
           final params = cls.getNamedConstructor('insert')!.parameters;
+
           final singleContent = '''
-        static $className $camelClassName({${params.map(
+          static $companionName ${companionName.toCamelCase}({${params.map(
                     (e) {
                       final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
                       return isWriteBlank ? '' : 'required ${e.type} ${e.name}';
                     },
                   ).where(
                     (element) => element != '',
-                  ).join(',')},}){
-           return $className(${params.map(
+                  ).join(',')},}) {
+            return $companionName(${params.map(
                     (e) {
                       final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
                       return isWriteBlank ? '' : '${e.name}: ${e.isRequired ? 'Value(${e.name})' : e.name}';
@@ -30,10 +33,25 @@ class ConstructorGenerator extends Generator {
                   ).where(
                     (element) => element != '',
                   ).join(',')},);
-        }
-        ''';
+          }
+          ''';
 
           allContent.writeln(singleContent);
+
+          final singleExtContent = '''
+          extension ${companionName}Ext on $companionName {
+            Future<$classNoSName> insert({required SyncTag? syncTag}) async {
+              final ins = DriftDb.instance;
+              return await ins.insertReturningWith(
+                ins.${classWithSName.toCamelCase},
+                entity: this,
+                syncTag: syncTag,
+              );
+            }
+          }
+          ''';
+
+          allExtContent.writeln(singleExtContent);
         }
       }
     } catch (e, st) {
@@ -61,9 +79,12 @@ part of drift_db;
 /// id createdAt updatedAt 已经在 [DriftSyncExt.insertReturningWith] 中自动更新了。
 ///
 /// 使用方式查看 [withRefs]。
-class WithCrts {
+class Crt {
+  Crt._();
   $allContent
 }
+
+$allExtContent
     ''';
   }
 }

@@ -37,7 +37,7 @@ extension UserExt on User {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<User> reset({
@@ -45,16 +45,34 @@ extension UserExt on User {
     required Value<String?> email,
     required Value<String?> password,
     required Value<String> username,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.age = age.present ? age.value : this.age;
-    this.email = email.present ? email.value : this.email;
-    this.password = password.present ? password.value : this.password;
-    this.username = username.present ? username.value : this.username;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.age != age.value && age.present) {
+      isCloudModify = true;
+      this.age = age.value;
+    }
+
+    if (this.email != email.value && email.present) {
+      isCloudModify = true;
+      this.email = email.value;
+    }
+
+    if (this.password != password.value && password.present) {
+      isCloudModify = true;
+      this.password = password.value;
+    }
+
+    if (this.username != username.value && username.present) {
+      isCloudModify = true;
+      this.username = username.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.users,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -70,7 +88,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentMemoryInfo> reset({
@@ -83,29 +101,62 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> memoryGroupId,
     required Value<DateTime> nextPlanShowTime,
     required Value<double> showFamiliarity,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.clickTime = clickTime.present ? clickTime.value : this.clickTime;
-    this.clickValue = clickValue.present ? clickValue.value : this.clickValue;
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.currentActualShowTime = currentActualShowTime.present
-        ? currentActualShowTime.value
-        : this.currentActualShowTime;
-    this.fragmentId = fragmentId.present ? fragmentId.value : this.fragmentId;
-    this.isLatestRecord =
-        isLatestRecord.present ? isLatestRecord.value : this.isLatestRecord;
-    this.memoryGroupId =
-        memoryGroupId.present ? memoryGroupId.value : this.memoryGroupId;
-    this.nextPlanShowTime = nextPlanShowTime.present
-        ? nextPlanShowTime.value
-        : this.nextPlanShowTime;
-    this.showFamiliarity =
-        showFamiliarity.present ? showFamiliarity.value : this.showFamiliarity;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.clickTime != clickTime.value && clickTime.present) {
+      isCloudModify = true;
+      this.clickTime = clickTime.value;
+    }
+
+    if (this.clickValue != clickValue.value && clickValue.present) {
+      isCloudModify = true;
+      this.clickValue = clickValue.value;
+    }
+
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.currentActualShowTime != currentActualShowTime.value &&
+        currentActualShowTime.present) {
+      isCloudModify = true;
+      this.currentActualShowTime = currentActualShowTime.value;
+    }
+
+    if (this.fragmentId != fragmentId.value && fragmentId.present) {
+      isCloudModify = true;
+      this.fragmentId = fragmentId.value;
+    }
+
+    if (this.isLatestRecord != isLatestRecord.value && isLatestRecord.present) {
+      isCloudModify = true;
+      this.isLatestRecord = isLatestRecord.value;
+    }
+
+    if (this.memoryGroupId != memoryGroupId.value && memoryGroupId.present) {
+      isCloudModify = true;
+      this.memoryGroupId = memoryGroupId.value;
+    }
+
+    if (this.nextPlanShowTime != nextPlanShowTime.value &&
+        nextPlanShowTime.present) {
+      isCloudModify = true;
+      this.nextPlanShowTime = nextPlanShowTime.value;
+    }
+
+    if (this.showFamiliarity != showFamiliarity.value &&
+        showFamiliarity.present) {
+      isCloudModify = true;
+      this.showFamiliarity = showFamiliarity.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentMemoryInfos,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -121,22 +172,31 @@ extension AppInfoExt on AppInfo {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<AppInfo> reset({
     required Value<bool> hasDownloadedInitData,
     required Value<String> token,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.hasDownloadedInitData = hasDownloadedInitData.present
-        ? hasDownloadedInitData.value
-        : this.hasDownloadedInitData;
-    this.token = token.present ? token.value : this.token;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.hasDownloadedInitData != hasDownloadedInitData.value &&
+        hasDownloadedInitData.present) {
+      isLocalModify = true;
+      this.hasDownloadedInitData = hasDownloadedInitData.value;
+    }
+
+    if (this.token != token.value && token.present) {
+      isLocalModify = true;
+      this.token = token.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.appInfos,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -152,7 +212,7 @@ extension SyncExt on Sync {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Sync> reset({
@@ -160,18 +220,34 @@ extension SyncExt on Sync {
     required Value<SyncCurdType> syncCurdType,
     required Value<String> syncTableName,
     required Value<int> tag,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.rowId = rowId.present ? rowId.value : this.rowId;
-    this.syncCurdType =
-        syncCurdType.present ? syncCurdType.value : this.syncCurdType;
-    this.syncTableName =
-        syncTableName.present ? syncTableName.value : this.syncTableName;
-    this.tag = tag.present ? tag.value : this.tag;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.rowId != rowId.value && rowId.present) {
+      isLocalModify = true;
+      this.rowId = rowId.value;
+    }
+
+    if (this.syncCurdType != syncCurdType.value && syncCurdType.present) {
+      isLocalModify = true;
+      this.syncCurdType = syncCurdType.value;
+    }
+
+    if (this.syncTableName != syncTableName.value && syncTableName.present) {
+      isLocalModify = true;
+      this.syncTableName = syncTableName.value;
+    }
+
+    if (this.tag != tag.value && tag.present) {
+      isLocalModify = true;
+      this.tag = tag.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.syncs,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -187,7 +263,7 @@ extension MemoryGroupExt on MemoryGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryGroup> reset({
@@ -199,28 +275,57 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<DateTime?> startTime,
     required Value<String> title,
     required Value<int> willNewLearnCount,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.memoryModelId =
-        memoryModelId.present ? memoryModelId.value : this.memoryModelId;
-    this.newDisplayOrder =
-        newDisplayOrder.present ? newDisplayOrder.value : this.newDisplayOrder;
-    this.newReviewDisplayOrder = newReviewDisplayOrder.present
-        ? newReviewDisplayOrder.value
-        : this.newReviewDisplayOrder;
-    this.reviewInterval =
-        reviewInterval.present ? reviewInterval.value : this.reviewInterval;
-    this.startTime = startTime.present ? startTime.value : this.startTime;
-    this.title = title.present ? title.value : this.title;
-    this.willNewLearnCount = willNewLearnCount.present
-        ? willNewLearnCount.value
-        : this.willNewLearnCount;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.memoryModelId != memoryModelId.value && memoryModelId.present) {
+      isCloudModify = true;
+      this.memoryModelId = memoryModelId.value;
+    }
+
+    if (this.newDisplayOrder != newDisplayOrder.value &&
+        newDisplayOrder.present) {
+      isCloudModify = true;
+      this.newDisplayOrder = newDisplayOrder.value;
+    }
+
+    if (this.newReviewDisplayOrder != newReviewDisplayOrder.value &&
+        newReviewDisplayOrder.present) {
+      isCloudModify = true;
+      this.newReviewDisplayOrder = newReviewDisplayOrder.value;
+    }
+
+    if (this.reviewInterval != reviewInterval.value && reviewInterval.present) {
+      isCloudModify = true;
+      this.reviewInterval = reviewInterval.value;
+    }
+
+    if (this.startTime != startTime.value && startTime.present) {
+      isCloudModify = true;
+      this.startTime = startTime.value;
+    }
+
+    if (this.title != title.value && title.present) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (this.willNewLearnCount != willNewLearnCount.value &&
+        willNewLearnCount.present) {
+      isCloudModify = true;
+      this.willNewLearnCount = willNewLearnCount.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -236,24 +341,37 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RDocument2DocumentGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> documentGroupId,
     required Value<String> documentId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.documentGroupId =
-        documentGroupId.present ? documentGroupId.value : this.documentGroupId;
-    this.documentId = documentId.present ? documentId.value : this.documentId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.documentGroupId != documentGroupId.value &&
+        documentGroupId.present) {
+      isCloudModify = true;
+      this.documentGroupId = documentGroupId.value;
+    }
+
+    if (this.documentId != documentId.value && documentId.present) {
+      isCloudModify = true;
+      this.documentId = documentId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rDocument2DocumentGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -269,24 +387,37 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RFragment2FragmentGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fragmentGroupId,
     required Value<String> fragmentId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.fragmentGroupId =
-        fragmentGroupId.present ? fragmentGroupId.value : this.fragmentGroupId;
-    this.fragmentId = fragmentId.present ? fragmentId.value : this.fragmentId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.fragmentGroupId != fragmentGroupId.value &&
+        fragmentGroupId.present) {
+      isCloudModify = true;
+      this.fragmentGroupId = fragmentGroupId.value;
+    }
+
+    if (this.fragmentId != fragmentId.value && fragmentId.present) {
+      isCloudModify = true;
+      this.fragmentId = fragmentId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rFragment2FragmentGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -302,26 +433,37 @@ extension RMemoryModel2MemoryModelGroupExt on RMemoryModel2MemoryModelGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RMemoryModel2MemoryModelGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> memoryModelGroupId,
     required Value<String> memoryModelId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.memoryModelGroupId = memoryModelGroupId.present
-        ? memoryModelGroupId.value
-        : this.memoryModelGroupId;
-    this.memoryModelId =
-        memoryModelId.present ? memoryModelId.value : this.memoryModelId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.memoryModelGroupId != memoryModelGroupId.value &&
+        memoryModelGroupId.present) {
+      isCloudModify = true;
+      this.memoryModelGroupId = memoryModelGroupId.value;
+    }
+
+    if (this.memoryModelId != memoryModelId.value && memoryModelId.present) {
+      isCloudModify = true;
+      this.memoryModelId = memoryModelId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rMemoryModel2MemoryModelGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -337,24 +479,36 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RNote2NoteGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> noteGroupId,
     required Value<String> noteId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.noteGroupId =
-        noteGroupId.present ? noteGroupId.value : this.noteGroupId;
-    this.noteId = noteId.present ? noteId.value : this.noteId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.noteGroupId != noteGroupId.value && noteGroupId.present) {
+      isCloudModify = true;
+      this.noteGroupId = noteGroupId.value;
+    }
+
+    if (this.noteId != noteId.value && noteId.present) {
+      isCloudModify = true;
+      this.noteId = noteId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rNote2NoteGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -370,21 +524,30 @@ extension DocumentExt on Document {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Document> reset({
     required Value<String> content,
     required Value<int> creatorUserId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.content = content.present ? content.value : this.content;
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.content != content.value && content.present) {
+      isCloudModify = true;
+      this.content = content.value;
+    }
+
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.documents,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -400,29 +563,50 @@ extension FragmentExt on Fragment {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
     required Value<String> content,
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentId,
-    required Value<bool> isSelected,
+    required Value<bool> local_isSelected,
     required Value<String?> noteId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.content = content.present ? content.value : this.content;
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.fatherFragmentId = fatherFragmentId.present
-        ? fatherFragmentId.value
-        : this.fatherFragmentId;
-    this.isSelected = isSelected.present ? isSelected.value : this.isSelected;
-    this.noteId = noteId.present ? noteId.value : this.noteId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.content != content.value && content.present) {
+      isCloudModify = true;
+      this.content = content.value;
+    }
+
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.fatherFragmentId != fatherFragmentId.value &&
+        fatherFragmentId.present) {
+      isCloudModify = true;
+      this.fatherFragmentId = fatherFragmentId.value;
+    }
+
+    if (this.local_isSelected != local_isSelected.value &&
+        local_isSelected.present) {
+      isLocalModify = true;
+      this.local_isSelected = local_isSelected.value;
+    }
+
+    if (this.noteId != noteId.value && noteId.present) {
+      isCloudModify = true;
+      this.noteId = noteId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragments,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -438,7 +622,7 @@ extension MemoryModelExt on MemoryModel {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModel> reset({
@@ -449,29 +633,54 @@ extension MemoryModelExt on MemoryModel {
     required Value<String> nextTimeAlgorithm,
     required Value<String> stimulateAlgorithm,
     required Value<String> title,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.buttonAlgorithm =
-        buttonAlgorithm.present ? buttonAlgorithm.value : this.buttonAlgorithm;
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.familiarityAlgorithm = familiarityAlgorithm.present
-        ? familiarityAlgorithm.value
-        : this.familiarityAlgorithm;
-    this.fatherMemoryModelId = fatherMemoryModelId.present
-        ? fatherMemoryModelId.value
-        : this.fatherMemoryModelId;
-    this.nextTimeAlgorithm = nextTimeAlgorithm.present
-        ? nextTimeAlgorithm.value
-        : this.nextTimeAlgorithm;
-    this.stimulateAlgorithm = stimulateAlgorithm.present
-        ? stimulateAlgorithm.value
-        : this.stimulateAlgorithm;
-    this.title = title.present ? title.value : this.title;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.buttonAlgorithm != buttonAlgorithm.value &&
+        buttonAlgorithm.present) {
+      isCloudModify = true;
+      this.buttonAlgorithm = buttonAlgorithm.value;
+    }
+
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.familiarityAlgorithm != familiarityAlgorithm.value &&
+        familiarityAlgorithm.present) {
+      isCloudModify = true;
+      this.familiarityAlgorithm = familiarityAlgorithm.value;
+    }
+
+    if (this.fatherMemoryModelId != fatherMemoryModelId.value &&
+        fatherMemoryModelId.present) {
+      isCloudModify = true;
+      this.fatherMemoryModelId = fatherMemoryModelId.value;
+    }
+
+    if (this.nextTimeAlgorithm != nextTimeAlgorithm.value &&
+        nextTimeAlgorithm.present) {
+      isCloudModify = true;
+      this.nextTimeAlgorithm = nextTimeAlgorithm.value;
+    }
+
+    if (this.stimulateAlgorithm != stimulateAlgorithm.value &&
+        stimulateAlgorithm.present) {
+      isCloudModify = true;
+      this.stimulateAlgorithm = stimulateAlgorithm.value;
+    }
+
+    if (this.title != title.value && title.present) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryModels,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -487,7 +696,7 @@ extension NoteExt on Note {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Note> reset({
@@ -495,18 +704,34 @@ extension NoteExt on Note {
     required Value<int> creatorUserId,
     required Value<String?> documentId,
     required Value<String?> fatherNoteId,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.content = content.present ? content.value : this.content;
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.documentId = documentId.present ? documentId.value : this.documentId;
-    this.fatherNoteId =
-        fatherNoteId.present ? fatherNoteId.value : this.fatherNoteId;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.content != content.value && content.present) {
+      isCloudModify = true;
+      this.content = content.value;
+    }
+
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.documentId != documentId.value && documentId.present) {
+      isCloudModify = true;
+      this.documentId = documentId.value;
+    }
+
+    if (this.fatherNoteId != fatherNoteId.value && fatherNoteId.present) {
+      isCloudModify = true;
+      this.fatherNoteId = fatherNoteId.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.notes,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -522,25 +747,37 @@ extension DocumentGroupExt on DocumentGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<DocumentGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fatherDocumentGroupsId,
     required Value<String> title,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.fatherDocumentGroupsId = fatherDocumentGroupsId.present
-        ? fatherDocumentGroupsId.value
-        : this.fatherDocumentGroupsId;
-    this.title = title.present ? title.value : this.title;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.fatherDocumentGroupsId != fatherDocumentGroupsId.value &&
+        fatherDocumentGroupsId.present) {
+      isCloudModify = true;
+      this.fatherDocumentGroupsId = fatherDocumentGroupsId.value;
+    }
+
+    if (this.title != title.value && title.present) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.documentGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -556,27 +793,44 @@ extension FragmentGroupExt on FragmentGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
-    required Value<bool> isSelected,
+    required Value<bool> local_isSelected,
     required Value<String> title,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.fatherFragmentGroupsId = fatherFragmentGroupsId.present
-        ? fatherFragmentGroupsId.value
-        : this.fatherFragmentGroupsId;
-    this.isSelected = isSelected.present ? isSelected.value : this.isSelected;
-    this.title = title.present ? title.value : this.title;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.fatherFragmentGroupsId != fatherFragmentGroupsId.value &&
+        fatherFragmentGroupsId.present) {
+      isCloudModify = true;
+      this.fatherFragmentGroupsId = fatherFragmentGroupsId.value;
+    }
+
+    if (this.local_isSelected != local_isSelected.value &&
+        local_isSelected.present) {
+      isLocalModify = true;
+      this.local_isSelected = local_isSelected.value;
+    }
+
+    if (this.title != title.value && title.present) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -592,25 +846,37 @@ extension MemoryModelGroupExt on MemoryModelGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModelGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fatherMemoryModelGroupsId,
     required Value<String> title,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.fatherMemoryModelGroupsId = fatherMemoryModelGroupsId.present
-        ? fatherMemoryModelGroupsId.value
-        : this.fatherMemoryModelGroupsId;
-    this.title = title.present ? title.value : this.title;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.fatherMemoryModelGroupsId != fatherMemoryModelGroupsId.value &&
+        fatherMemoryModelGroupsId.present) {
+      isCloudModify = true;
+      this.fatherMemoryModelGroupsId = fatherMemoryModelGroupsId.value;
+    }
+
+    if (this.title != title.value && title.present) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryModelGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -626,25 +892,37 @@ extension NoteGroupExt on NoteGroup {
   ///
   /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
-  /// 若 [writeSyncTag] == null，则不执行写入，否则执行写入。
+  /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<NoteGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fatherNoteGroupsId,
     required Value<String> title,
-    required SyncTag? writeSyncTag,
+    required SyncTag? syncTag,
   }) async {
-    this.creatorUserId =
-        creatorUserId.present ? creatorUserId.value : this.creatorUserId;
-    this.fatherNoteGroupsId = fatherNoteGroupsId.present
-        ? fatherNoteGroupsId.value
-        : this.fatherNoteGroupsId;
-    this.title = title.present ? title.value : this.title;
-    if (writeSyncTag != null) {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (this.fatherNoteGroupsId != fatherNoteGroupsId.value &&
+        fatherNoteGroupsId.present) {
+      isCloudModify = true;
+      this.fatherNoteGroupsId = fatherNoteGroupsId.value;
+    }
+
+    if (this.title != title.value && title.present) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.noteGroups,
-          entity: toCompanion(false), syncTag: writeSyncTag);
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
