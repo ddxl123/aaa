@@ -55,7 +55,7 @@ class ResetGenerator extends Generator {
                       return isWriteBlank
                           ? ''
                           : """
-                      if (this.${e.name} != ${e.name}.value && ${e.name}.present) {
+                      if (${e.name}.present && this.${e.name} != ${e.name}.value) {
                         ${e.name.contains(RegExp(r'^(local_)')) || localTableClasses.contains(className) ? 'isLocalModify' : 'isCloudModify'} = true;
                         this.${e.name} = ${e.name}.value;
                       }

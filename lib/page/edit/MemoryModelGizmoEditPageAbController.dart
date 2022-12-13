@@ -260,29 +260,31 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   }
 
   void cancel() {
-    showOkAndCancel(
-      title: '是否要丢弃？',
-      okText: '丢弃',
-      cancelText: '继续编辑',
-      text: null,
-      onOk: () => filter(
-        from: editPageType(),
-        targets: {
-          [MemoryModelGizmoEditPageType.create]: () {
-            SmartDialog.dismiss();
-            Navigator.pop(context);
+    showCustomDialog(
+      builder: () => OkAndCancelDialogWidget(
+        title: '是否要丢弃？',
+        okText: '丢弃',
+        cancelText: '继续编辑',
+        text: null,
+        onOk: () => filter(
+          from: editPageType(),
+          targets: {
+            [MemoryModelGizmoEditPageType.create]: () {
+              SmartDialog.dismiss();
+              Navigator.pop(context);
+            },
+            [MemoryModelGizmoEditPageType.modify]: () {
+              recovery();
+              SmartDialog.dismiss();
+              changeTo(type: MemoryModelGizmoEditPageType.look);
+            },
           },
-          [MemoryModelGizmoEditPageType.modify]: () {
-            recovery();
-            SmartDialog.dismiss();
-            changeTo(type: MemoryModelGizmoEditPageType.look);
-          },
+          orElse: null,
+        ),
+        onCancel: () {
+          SmartDialog.dismiss();
         },
-        orElse: null,
       ),
-      onCancel: () {
-        SmartDialog.dismiss();
-      },
     );
   }
 

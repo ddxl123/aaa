@@ -56,6 +56,8 @@ part 'table/cloud/r/RMemoryModel2MemoryModelGroups.dart';
 
 part 'table/cloud/r/RNote2NoteGroups.dart';
 
+part 'table/cloud/test/Tests.dart';
+
 part 'table/cloud/unit/Documents.dart';
 
 part 'table/cloud/unit/Fragments.dart';
@@ -91,6 +93,8 @@ const List<Type> tableClasses = [
   RMemoryModel2MemoryModelGroups,
 
   RNote2NoteGroups,
+
+  Tests,
 
   Documents,
 

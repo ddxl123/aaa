@@ -165,7 +165,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     final mgg = memoryGroupGizmo!();
-    final fs = await DriftDb.instance.generalQueryDAO.queryAllFragmentsInMemoryGroup(mgg.id);
+    final fs = await DriftDb.instance.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: mgg);
     final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
     // 保存初始值
@@ -302,18 +302,20 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   }
 
   void cancel() {
-    showOkAndCancel(
-      title: '是否要丢弃？',
-      okText: '丢弃',
-      cancelText: '继续编辑',
-      onOk: () {
-        SmartDialog.dismiss();
-        Navigator.pop(context);
-      },
-      text: null,
-      onCancel: () {
-        SmartDialog.dismiss();
-      },
+    showCustomDialog(
+      builder: () => OkAndCancelDialogWidget(
+        title: '是否要丢弃？',
+        okText: '丢弃',
+        cancelText: '继续编辑',
+        onOk: () {
+          SmartDialog.dismiss();
+          Navigator.pop(context);
+        },
+        text: null,
+        onCancel: () {
+          SmartDialog.dismiss();
+        },
+      ),
     );
   }
 }

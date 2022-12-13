@@ -15,6 +15,22 @@ enum QueryFragmentWhereType {
 class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMixin {
   GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  Future<User?> queryUserOrNull() async {
+    final manyUsers = await select(users).get();
+    if (manyUsers.length > 1) {
+      throw '暂时不能登录多个用户！';
+    }
+    return manyUsers.isEmpty ? null : manyUsers.first;
+  }
+
+  Future<User> queryUser() async {
+    final manyUsers = await select(users).get();
+    if (manyUsers.length > 1) {
+      throw '暂时不能登录多个用户！';
+    }
+    return manyUsers.first;
+  }
+
   /// 查询 [targetFragmentGroup] 内的碎片数量，不包含子碎片。
   Future<int> queryFragmentsCountInFragmentGroup({
     required FragmentGroup? targetFragmentGroup,
@@ -121,12 +137,35 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return count;
   }
 
-  Future<User?> queryUserOrNull() async {
-    final manyUsers = await select(users).get();
-    if (manyUsers.length > 1) {
-      throw '暂时不能登录多个用户！';
-    }
-    return manyUsers.isEmpty ? null : manyUsers.first;
+  /// 查询全部已选的碎片。
+  Future<List<Fragment>> querySelectedFragments() async {
+    final sel = select(fragments);
+    sel.where((tbl) => tbl.local_isSelected.equals(true));
+    final result = await sel.get();
+    return result;
+  }
+
+  /// 查询全部已选的碎片数量。
+  Future<int> querySelectedFragmentCount() async {
+    final count = fragments.id.count();
+    final sel = selectOnly(fragments)
+      ..where(fragments.local_isSelected.equals(true))
+      ..addColumns([count]);
+    final result = await sel.getSingle();
+    return result.read(count)!;
+  }
+
+  /// 查询已选碎片在 [memoryGroup] 中重复的数量，根据 [FragmentMemoryInfo.fragmentId] 判断。
+  Future<int> querySelectedFragmentsRepeatCount({required MemoryGroup memoryGroup}) async {
+    final count = fragmentMemoryInfos.id.count();
+    final fs = await querySelectedFragments();
+    final selOnly = selectOnly(fragmentMemoryInfos)
+      ..where(
+        fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id) & fragmentMemoryInfos.fragmentId.isIn(fs.map((e) => e.id)),
+      )
+      ..addColumns([count]);
+    final result = await selOnly.getSingle();
+    return result.read(count)!;
   }
 
   /// 查询已同步的、查询未同步的、查询未下载的
@@ -165,23 +204,30 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return [];
   }
 
-  Future<List<MemoryGroup>> queryAllMemoryGroups() async {
+  Future<List<MemoryGroup>> queryMemoryGroups() async {
     return await select(memoryGroups).get();
   }
 
-  Future<List<MemoryModel>> queryAllMemoryModels() async {
+  Future<List<MemoryModel>> queryMemoryModels() async {
     return await select(memoryModels).get();
   }
 
-  Future<List<Fragment>> queryAllFragmentsInMemoryGroup(String memoryGroupId) async {
-    // final j = select(fragments).join(
-    //   [
-    //     innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id)),
-    //   ],
-    // )..where(rFragment2MemoryGroups.fatherId.equals(memoryGroupId));
-    // final result = await j.get();
-    // return result.map((e) => e.readTable(fragments)).toList();
-    return [];
+  /// 查询 [memoryGroup] 中的全部碎片。
+  Future<List<Fragment>> queryFragmentsInMemoryGroup({required MemoryGroup memoryGroup}) async {
+    final selJoin = select(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId))])
+      ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id));
+    final result = await selJoin.get();
+    return result.map((e) => e.readTable(fragments)).toList();
+  }
+
+  /// 查询 中的全部碎片数量。
+  Future<int> queryFragmentsCountInMemoryGroup({required MemoryGroup memoryGroup}) async {
+    final count = fragments.id.count();
+    final selJoin = selectOnly(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId), useColumns: false)])
+      ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id))
+      ..addColumns([count]);
+    final result = await selJoin.getSingle();
+    return result.read(count)!;
   }
 
   Future<MemoryModel?> queryMemoryModelById({required String? memoryModelId}) async {

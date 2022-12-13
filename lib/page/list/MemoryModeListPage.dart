@@ -20,34 +20,30 @@ class MemoryModeListPage extends StatelessWidget {
       tag: Aber.single,
       builder: (putController, putAbw) {
         return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kMinInteractiveDimension),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomDropdownBodyButton(
-                  primaryButton: const Icon(Icons.more_horiz),
-                  initValue: 0,
-                  itemAlignment: Alignment.centerLeft,
-                  items: [
-                    Item(value: 0, text: '添加记忆算法'),
-                  ],
-                  onChanged: (value) {
-                    if (value == 0) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => MemoryModelGizmoEditPage(
-                            memoryModelGizmo: Ab(null),
-                            editPageType: MemoryModelGizmoEditPageType.create.ab,
-                          ),
+          appBar: CustomNarrowAppBar(
+            actions: [
+              CustomDropdownBodyButton(
+                initValue: 0,
+                primaryButton: const Icon(Icons.more_horiz),
+                itemAlignment: Alignment.centerLeft,
+                items: [
+                  Item(value: 0, text: '添加记忆算法'),
+                ],
+                onChanged: (v) {
+                  if (v == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (ctx) => MemoryModelGizmoEditPage(
+                          memoryModelGizmo: Ab(null),
+                          editPageType: MemoryModelGizmoEditPageType.create.ab,
                         ),
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
           ),
           body: AbBuilder<MemoryModeListPageAbController>(
             tag: Aber.single,

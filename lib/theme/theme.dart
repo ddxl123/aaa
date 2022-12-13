@@ -26,5 +26,6 @@ ThemeData themeLight(BuildContext context) {
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50), side: const BorderSide(color: Colors.black)),
     ),
+    iconTheme: const IconThemeData(color: Colors.blue),
   );
 }

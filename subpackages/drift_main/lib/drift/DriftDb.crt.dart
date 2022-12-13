@@ -29,26 +29,24 @@ class Crt {
   }
 
   static FragmentMemoryInfosCompanion fragmentMemoryInfosCompanion({
-    required DateTime clickTime,
-    required double clickValue,
+    required Value<String?> clickTime,
+    required Value<String?> clickValue,
     required int creatorUserId,
-    required DateTime currentActualShowTime,
+    required Value<String?> currentActualShowTime,
     required String fragmentId,
-    required bool isLatestRecord,
     required String memoryGroupId,
-    required DateTime nextPlanShowTime,
-    required double showFamiliarity,
+    required Value<String?> nextPlanShowTime,
+    required Value<String?> showFamiliarity,
   }) {
     return FragmentMemoryInfosCompanion(
-      clickTime: Value(clickTime),
-      clickValue: Value(clickValue),
+      clickTime: clickTime,
+      clickValue: clickValue,
       creatorUserId: Value(creatorUserId),
-      currentActualShowTime: Value(currentActualShowTime),
+      currentActualShowTime: currentActualShowTime,
       fragmentId: Value(fragmentId),
-      isLatestRecord: Value(isLatestRecord),
       memoryGroupId: Value(memoryGroupId),
-      nextPlanShowTime: Value(nextPlanShowTime),
-      showFamiliarity: Value(showFamiliarity),
+      nextPlanShowTime: nextPlanShowTime,
+      showFamiliarity: showFamiliarity,
     );
   }
 
@@ -144,6 +142,14 @@ class Crt {
       creatorUserId: Value(creatorUserId),
       noteGroupId: noteGroupId,
       noteId: Value(noteId),
+    );
+  }
+
+  static TestsCompanion testsCompanion({
+    required String local_content,
+  }) {
+    return TestsCompanion(
+      local_content: Value(local_content),
     );
   }
 
@@ -355,6 +361,17 @@ extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.rNote2NoteGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension TestsCompanionExt on TestsCompanion {
+  Future<Test> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.tests,
       entity: this,
       syncTag: syncTag,
     );

@@ -368,3 +368,17 @@ class RefRNote2NoteGroups extends Ref {
     await self(DriftDb.instance.rNote2NoteGroups);
   }
 }
+
+/// [Tests]
+class RefTests extends Ref {
+  Future<void> Function($TestsTable table) self;
+
+  RefTests({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.tests);
+  }
+}

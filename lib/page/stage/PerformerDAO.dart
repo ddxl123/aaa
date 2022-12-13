@@ -243,7 +243,8 @@ class PerformerQuery {
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required double? currentShowFamiliar,
   }) async {
-    return tuple.t2.map<double?>((e) => e.showFamiliarity).toList()..add(currentShowFamiliar);
+    // return tuple.t2.map<double?>((e) => e.showFamiliarity).toList()..add(currentShowFamiliar);
+    return [];
   }
 
   Future<List<int?>> getClickTime({
@@ -259,7 +260,8 @@ class PerformerQuery {
     required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
     required double? clickValue,
   }) async {
-    final f = tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
-    return f;
+    // final f = tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
+    // return f;
+    return [];
   }
 }

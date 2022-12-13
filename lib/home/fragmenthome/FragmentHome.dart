@@ -17,7 +17,7 @@ class _FragmentHomeState extends State<FragmentHome> {
       putController: FragmentHomeAbController(),
       builder: (putController, putAbw) {
         return Scaffold(
-          appBar: CustomAppBar(
+          appBar: CustomTabAppBar(
             tabController: putController.tabController,
             tabs: const [
               Tab(
@@ -35,7 +35,7 @@ class _FragmentHomeState extends State<FragmentHome> {
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (_) => FragmentGroupListPage(),
+                builder: (_) => const FragmentGroupListPage(),
               ),
               KeepStateWidget(
                 builder: (_) => const Text('笔记'),

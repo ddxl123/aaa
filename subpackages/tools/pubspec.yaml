@@ -11,25 +11,25 @@ dependencies:
   flutter:
     sdk: flutter
 
-  uuid: ^3.0.6
+  uuid: any
 
-  logger: ^1.1.0
+  logger: any
 
   # 下拉列表 - 其他 flutter_speed_dial
-  dropdown_button2: ^1.8.2
+  dropdown_button2: any
 
   # 上拉、下拉刷新 - 已选最佳
-  pull_to_refresh: ^2.0.0
+  pull_to_refresh: any
 
-  flutter_smart_dialog: 4.6.2+1
+  flutter_smart_dialog: any
 
   # 图标库
-  font_awesome_flutter: ^10.2.1
+  font_awesome_flutter: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1
+  flutter_lints: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

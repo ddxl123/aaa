@@ -73,7 +73,17 @@ class TestHome extends StatelessWidget {
                                   child: Text(c.analysisResult(abw)),
                                 ),
                               ],
-                            )
+                            ),
+                            Row(
+                              children: [
+                                TextButton(
+                                  child: Text('data'),
+                                  onPressed: () {
+                                    showDialog(context: Aber.find<GlobalAbController>().context, builder: (_) => IconButton(onPressed: () {}, icon: Icon(Icons.add)));
+                                  },
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ],

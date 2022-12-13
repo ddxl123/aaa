@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:aaa/global/GlobalAbController.dart';
+import 'package:drift/drift.dart';
+import 'package:drift/extensions/json1.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,27 @@ class TestHomeAbController extends AbController {
   }
 
   Future<void> inserts() async {
+    // await insertTests();
+    await insertsOther();
+  }
+
+  Future<void> insertTests() async {
+    for (int i = 0; i < 10; i++) {
+      final t = await db.into(db.tests).insertReturning(
+            TestsCompanion.insert(local_content: '["ddd",${Random().nextInt(100)},333]', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          );
+      print(t);
+    }
+    print('-------------');
+    final secondValue = db.tests.local_content.jsonExtract<int>(r'$[1]');
+    final selOnly = db.selectOnly(db.tests)
+      ..addColumns([secondValue])
+      ..where(secondValue.isSmallerOrEqualValue(50));
+    final result = await selOnly.get();
+    logger.d(result.map((e) => e.read(secondValue)));
+  }
+
+  Future<void> insertsOther() async {
     final globalAbController = Aber.find<GlobalAbController>();
     await globalAbController.getLoggedInUser();
     if (globalAbController.loggedInUser() == null) {
@@ -78,6 +101,14 @@ class TestHomeAbController extends AbController {
       ones,
       (element) async {
         twos.addAll(await foreach(fatherFragmentGroup: element));
+      },
+    );
+
+    final threes = <FragmentGroup>[];
+    await Future.forEach<FragmentGroup>(
+      twos,
+      (element) async {
+        threes.addAll(await foreach(fatherFragmentGroup: element));
       },
     );
 

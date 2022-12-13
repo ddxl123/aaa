@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({Key? key, required this.tabController, required this.tabs, this.otherWidgets}) : super(key: key);
+class CustomTabAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomTabAppBar({Key? key, required this.tabController, required this.tabs, this.otherWidgets}) : super(key: key);
   final TabController tabController;
   final List<Tab> tabs;
   final List<Widget>? otherWidgets;
@@ -11,7 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Row(
       children: [
         Expanded(
-          flex: 2,
+          // flex: 2,
           child: TabBar(
             isScrollable: true,
             indicatorWeight: 5,
@@ -23,6 +23,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         const Spacer(),
         ...(otherWidgets ?? []),
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kMinInteractiveDimension);
+}
+
+class CustomNarrowAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomNarrowAppBar({
+    Key? key,
+    this.actions,
+  }) : super(key: key);
+  final List<Widget>? actions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Spacer(),
+        ...(actions ?? []),
       ],
     );
   }

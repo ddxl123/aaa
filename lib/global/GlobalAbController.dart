@@ -21,4 +21,10 @@ class GlobalAbController extends AbController {
       loggedInUser.refreshEasy((oldValue) => result);
     }
   }
+
+  @override
+  void onInit() {
+    super.onInit();
+    getLoggedInUser();
+  }
 }

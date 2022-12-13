@@ -7,26 +7,24 @@ class FragmentMemoryInfos extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  DateTimeColumn get clickTime => dateTime()();
+  TextColumn get clickTime => text().nullable()();
 
-  RealColumn get clickValue => real()();
+  TextColumn get clickValue => text().nullable()();
 
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
-  DateTimeColumn get currentActualShowTime => dateTime()();
+  TextColumn get currentActualShowTime => text().nullable()();
 
   @ReferenceTo([Fragments])
   TextColumn get fragmentId => text()();
 
-  BoolColumn get isLatestRecord => boolean()();
-
   @ReferenceTo([MemoryGroups])
   TextColumn get memoryGroupId => text()();
 
-  DateTimeColumn get nextPlanShowTime => dateTime()();
+  TextColumn get nextPlanShowTime => text().nullable()();
 
-  RealColumn get showFamiliarity => real()();
+  TextColumn get showFamiliarity => text().nullable()();
 
   DateTimeColumn get createdAt => dateTime()();
 

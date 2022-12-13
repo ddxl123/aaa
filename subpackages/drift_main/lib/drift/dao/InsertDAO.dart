@@ -63,35 +63,51 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return newFragment;
   }
 
-  /// 创建一个记忆
-  Future<void> insertMemoryGroupWithOtherWithRef({required MemoryGroupsCompanion willMemoryGroup, required List<Fragment> willFragments}) async {
-    // late MemoryGroup newMemoryGroup;
-    // await withRefs(
-    //   syncTag: await SyncTag.create(),
-    //   ref: (syncTag) async => RefMemoryGroups(
-    //     self: (table) async {
-    //       newMemoryGroup = await insertReturningWith(table, entity: willMemoryGroup, syncTag: syncTag);
-    //     },
-    //     rFragment2MemoryGroups: RefRFragment2MemoryGroups(
-    //       self: (table) async {
-    //         await Future.forEach<Fragment>(
-    //           willFragments,
-    //           (element) async {
-    //             await insertReturningWith(
-    //               table,
-    //               entity: WithCrts.rFragment2MemoryGroupsCompanion(
-    //                 fatherId: newMemoryGroup.id.toValue(),
-    //                 sonId: element.id,
-    //               ),
-    //               syncTag: syncTag,
-    //             );
-    //           },
-    //         );
-    //       },
-    //     ),
-    //     fragmentMemoryInfos: null,
-    //   ),
-    // );
+  /// 仅创建一个记忆组。
+  Future<MemoryGroup> insertMemoryGroup({required MemoryGroupsCompanion newMemoryGroup}) async {
+    late final MemoryGroup newMg;
+    await withRefs(
+      syncTag: null,
+      ref: (syncTag) async => RefMemoryGroups(
+        self: (table) async {
+          newMg = await newMemoryGroup.insert(syncTag: syncTag);
+        },
+        fragmentMemoryInfos: null,
+      ),
+    );
+    return newMg;
+  }
+
+  /// 将 [fragments] 添加到 [memoryGroup] 中，实际创建了 [FragmentMemoryInfo]s。
+  Future<void> insertFragmentToMemoryGroup({
+    required MemoryGroup memoryGroup,
+    required List<Fragment> fragments,
+  }) async {
+    await withRefs(
+      syncTag: null,
+      ref: (st) async {
+        return RefFragmentMemoryInfos(
+          self: (_) async {
+            final user = await db.generalQueryDAO.queryUser();
+            await Future.forEach<Fragment>(
+              fragments,
+              (e) async {
+                await Crt.fragmentMemoryInfosCompanion(
+                  creatorUserId: user.id,
+                  memoryGroupId: memoryGroup.id,
+                  fragmentId: e.id,
+                  clickTime: null.toValue(),
+                  clickValue: null.toValue(),
+                  currentActualShowTime: null.toValue(),
+                  nextPlanShowTime: null.toValue(),
+                  showFamiliarity: null.toValue(),
+                ).insert(syncTag: st);
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<MemoryModel> insertMemoryModelWithRef(MemoryModelsCompanion willEntry) async {

@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
-class GroupListWidget<G, U> extends StatelessWidget {
+class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatelessWidget {
   const GroupListWidget({
     Key? key,
     required this.groupListWidgetController,
@@ -11,13 +11,15 @@ class GroupListWidget<G, U> extends StatelessWidget {
     required this.groupBuilder,
     required this.unitBuilder,
     required this.oneActionBuilder,
+    required this.floatingButtonOnPressed,
   }) : super(key: key);
-  final GroupListWidgetController<G, U> groupListWidgetController;
+  final C groupListWidgetController;
 
   final String Function(Ab<Group<G, U>> group, Abw abw) groupChainStrings;
-  final Widget Function(GroupListWidgetController<G, U>, Ab<Group<G, U>> group, Abw abw) groupBuilder;
-  final Widget Function(GroupListWidgetController<G, U>, Ab<Unit<U>> unit, Abw abw) unitBuilder;
-  final Widget Function(GroupListWidgetController<G, U>, Abw abw) oneActionBuilder;
+  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw) groupBuilder;
+  final Widget Function(C c, Ab<Unit<U>> unit, Abw abw) unitBuilder;
+  final Widget Function(C c, Abw abw) oneActionBuilder;
+  final void Function(C c) floatingButtonOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +47,18 @@ class GroupListWidget<G, U> extends StatelessWidget {
             FloatingActionButton(
               backgroundColor: Colors.amber,
               child: const Text('记'),
-              onPressed: () async {
-                // showDialogForCreateMemoryGroup();
+              onPressed: () {
+                floatingButtonOnPressed(groupListWidgetController);
               },
             ),
-            groupListWidgetController.group(abw).selectedUnitCount(abw) == 0
+            groupListWidgetController.groupChain(abw).first(abw).selectedUnitCount(abw) == 0
                 ? const SizedBox()
                 : Transform.translate(
                     offset: const Offset(0, -10),
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white, border: Border.all(color: Colors.amber)),
-                      child: Text(groupListWidgetController.group(abw).selectedUnitCount(abw).toString()),
+                      child: Text(groupListWidgetController.groupChain(abw).first(abw).selectedUnitCount(abw).toString()),
                     ),
                   ),
           ],
@@ -163,7 +165,7 @@ class GroupListWidget<G, U> extends StatelessWidget {
   }
 
   Widget _fragmentGroupsBuilder() {
-    return AbBuilder<GroupListWidgetController<G, U>>(
+    return AbBuilder<C>(
       tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
@@ -237,7 +239,7 @@ class GroupListWidget<G, U> extends StatelessWidget {
   }
 
   Widget _fragmentsBuilder() {
-    return AbBuilder<GroupListWidgetController<G, U>>(
+    return AbBuilder<C>(
       tag: Aber.single,
       builder: (c, abw) {
         return SliverList(
@@ -302,7 +304,7 @@ class GroupListWidget<G, U> extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: AbBuilder<GroupListWidgetController<G, U>>(
+              child: AbBuilder<C>(
                   tag: Aber.single,
                   builder: (c, abw) {
                     return SingleChildScrollView(
@@ -331,7 +333,7 @@ class GroupListWidget<G, U> extends StatelessWidget {
                     );
                   }),
             ),
-            AbBuilder<GroupListWidgetController<G, U>>(
+            AbBuilder<C>(
               tag: Aber.single,
               builder: (c, abw) {
                 return oneActionBuilder(c, abw);

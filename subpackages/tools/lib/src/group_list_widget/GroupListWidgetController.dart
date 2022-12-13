@@ -90,28 +90,31 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   /// [Tuple2.t2] 为 [Group.allUnitCount]
   ///
   /// 可以不用等待异步。
-  Future<Tuple2<int, int>> refreshCount(G? whichGroupEntity);
+  Future<Tuple2<int, int>> needRefreshCount(G? whichGroupEntity);
 
-  Future<void> _refreshCount({required Ab<Group<G, U>> whichGroup}) async {
-    final count = await refreshCount(whichGroup().entity());
+  Future<void> refreshCount({required Ab<Group<G, U>> whichGroup, bool isRootRefreshCount = true}) async {
+    final count = await needRefreshCount(whichGroup().entity());
     whichGroup().selectedUnitCount.refreshEasy((oldValue) => count.t1);
     whichGroup().allUnitCount.refreshEasy((oldValue) => count.t2);
 
     await Future.forEach<Ab<Group<G, U>>>(
       whichGroup().groups(),
       (element) async {
-        final eCount = await refreshCount(element().entity());
+        final eCount = await needRefreshCount(element().entity());
         element().selectedUnitCount.refreshEasy((oldValue) => eCount.t1);
         element().allUnitCount.refreshEasy((oldValue) => eCount.t2);
       },
     );
+    if (isRootRefreshCount) {
+      await refreshCount(whichGroup: groupChain().first, isRootRefreshCount: false);
+    }
   }
 
   Future<void> refreshCurrentGroup() async {
     final g = getCurrentGroupAb()();
     final newEntities = await findEntities(g.entity());
     g.refreshGroupsAndUnits(c: this, groupsAndUnitEntities: newEntities);
-    _refreshCount(whichGroup: getCurrentGroupAb());
+    refreshCount(whichGroup: getCurrentGroupAb());
     groupChain.refreshForce();
 
     groupChainScrollController.animateTo(
@@ -135,7 +138,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
       groupChain().add(whichGroup);
     }
 
-    _refreshCount(whichGroup: whichGroup);
+    refreshCount(whichGroup: whichGroup);
 
     group.refreshForce();
     groupChain.refreshForce();

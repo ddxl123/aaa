@@ -1,5 +1,5 @@
 import 'package:aaa/page/gizmo/MemoryGroupGizmoPage.dart';
-import 'package:aaa/single_dialog/single_dialog.dart';
+import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
@@ -7,30 +7,49 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../single_dialog/showCreateMemoryGroupDialog.dart';
+
 class MemoryGroupListPage extends StatelessWidget {
   const MemoryGroupListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<MemoryGroupListPageAbController>(
-      putController: MemoryGroupListPageAbController(),
-      tag: Aber.single,
-      builder: (c, putAbw) {
-        return SmartRefresher(
-          controller: c.refreshController,
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-          child: CustomScrollView(
-            slivers: [
-              _memoryGroupGizmoList(c.context),
+    return Scaffold(
+      appBar: CustomNarrowAppBar(
+        actions: [
+          CustomDropdownBodyButton(
+            initValue: 0,
+            primaryButton: const Icon(Icons.more_horiz),
+            itemAlignment: Alignment.centerLeft,
+            items: [
+              Item(value: 0, text: '创建记忆组'),
             ],
+            onChanged: (v) {
+              showCreateMemoryGroupDialog();
+            },
           ),
-          onRefresh: () async {
-            await Future.delayed(const Duration(milliseconds: 200));
-            await c.refreshPage();
-            c.refreshController.refreshCompleted();
-          },
-        );
-      },
+        ],
+      ),
+      body: AbBuilder<MemoryGroupListPageAbController>(
+        putController: MemoryGroupListPageAbController(),
+        tag: Aber.single,
+        builder: (c, putAbw) {
+          return SmartRefresher(
+            controller: c.refreshController,
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            child: CustomScrollView(
+              slivers: [
+                _memoryGroupGizmoList(c.context),
+              ],
+            ),
+            onRefresh: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              await c.refreshPage();
+              c.refreshController.refreshCompleted();
+            },
+          );
+        },
+      ),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GroupListWidget<FragmentGroup, Fragment>(
+    return GroupListWidget<FragmentGroup, Fragment, FragmentGroupListPageController>(
       groupListWidgetController: FragmentGroupListPageController(),
       groupChainStrings: (group, abw) => group(abw).entity(abw)?.title ?? '不存在实体！',
       groupBuilder: (c, group, abw) {
@@ -34,28 +35,21 @@ class FragmentGroupListPage extends StatelessWidget {
                 ? IconButton(
                     icon: () {
                       if (group(abw).entity(abw)!.local_isSelected) {
-                        return const FaIcon(
-                          FontAwesomeIcons.solidCircle,
-                          color: Colors.amber,
-                          size: 14,
-                        );
+                        return const SolidCircleIcon();
                       } else {
                         if (group(abw).selectedUnitCount(abw) == 0) {
-                          return const FaIcon(
-                            FontAwesomeIcons.solidCircle,
-                            color: Colors.grey,
-                            size: 14,
-                          );
+                          return const SolidCircleGreyIcon();
                         } else {
-                          return const FaIcon(
-                            FontAwesomeIcons.circleHalfStroke,
-                            color: Colors.amber,
-                            size: 14,
-                          );
+                          return const CircleHalfStrokeIcon();
                         }
                       }
                     }(),
-                    onPressed: () async {},
+                    onPressed: () async {
+                      await c.resetFragmentGroupIsSelected(
+                        fragmentGroupAb: group().entity,
+                        isSelected: !group().entity()!.local_isSelected,
+                      );
+                    },
                   )
                 : Container(),
           ],
@@ -67,9 +61,7 @@ class FragmentGroupListPage extends StatelessWidget {
             Expanded(
               child: MaterialButton(
                 child: Text(unit(abw).unitEntity().content),
-                onPressed: () {
-                  // unit.refreshEasy((oldValue) => oldValue..)
-                },
+                onPressed: () {},
                 onLongPress: () {
                   c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
                   Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
@@ -80,10 +72,15 @@ class FragmentGroupListPage extends StatelessWidget {
                 ? IconButton(
                     icon: FaIcon(
                       FontAwesomeIcons.solidCircle,
-                      color: unit(abw).unitEntity().local_isSelected ? Colors.amber : Colors.grey,
+                      color: unit(abw).unitEntity(abw).local_isSelected ? Colors.amber : Colors.grey,
                       size: 14,
                     ),
-                    onPressed: () async {},
+                    onPressed: () async {
+                      await c.resetFragmentIsSelected(
+                        fragmentAb: unit().unitEntity,
+                        isSelected: !unit().unitEntity().local_isSelected,
+                      );
+                    },
                   )
                 : Container(),
           ],
@@ -106,6 +103,9 @@ class FragmentGroupListPage extends StatelessWidget {
             // }
           },
         );
+      },
+      floatingButtonOnPressed: (c) {
+        showAddFragmentToMemoryGroupDialog();
       },
     );
   }

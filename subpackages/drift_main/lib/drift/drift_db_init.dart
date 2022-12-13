@@ -98,3 +98,5 @@ class DriftDb extends _$DriftDb {
     return tableInfo ?? (throw 'TableInfo not found.');
   }
 }
+
+DriftDb get db => DriftDb.instance;

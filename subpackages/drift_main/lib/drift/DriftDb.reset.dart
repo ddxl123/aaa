@@ -49,22 +49,22 @@ extension UserExt on User {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.age != age.value && age.present) {
+    if (age.present && this.age != age.value) {
       isCloudModify = true;
       this.age = age.value;
     }
 
-    if (this.email != email.value && email.present) {
+    if (email.present && this.email != email.value) {
       isCloudModify = true;
       this.email = email.value;
     }
 
-    if (this.password != password.value && password.present) {
+    if (password.present && this.password != password.value) {
       isCloudModify = true;
       this.password = password.value;
     }
 
-    if (this.username != username.value && username.present) {
+    if (username.present && this.username != username.value) {
       isCloudModify = true;
       this.username = username.value;
     }
@@ -92,63 +92,57 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentMemoryInfo> reset({
-    required Value<DateTime> clickTime,
-    required Value<double> clickValue,
+    required Value<String?> clickTime,
+    required Value<String?> clickValue,
     required Value<int> creatorUserId,
-    required Value<DateTime> currentActualShowTime,
+    required Value<String?> currentActualShowTime,
     required Value<String> fragmentId,
-    required Value<bool> isLatestRecord,
     required Value<String> memoryGroupId,
-    required Value<DateTime> nextPlanShowTime,
-    required Value<double> showFamiliarity,
+    required Value<String?> nextPlanShowTime,
+    required Value<String?> showFamiliarity,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.clickTime != clickTime.value && clickTime.present) {
+    if (clickTime.present && this.clickTime != clickTime.value) {
       isCloudModify = true;
       this.clickTime = clickTime.value;
     }
 
-    if (this.clickValue != clickValue.value && clickValue.present) {
+    if (clickValue.present && this.clickValue != clickValue.value) {
       isCloudModify = true;
       this.clickValue = clickValue.value;
     }
 
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.currentActualShowTime != currentActualShowTime.value &&
-        currentActualShowTime.present) {
+    if (currentActualShowTime.present &&
+        this.currentActualShowTime != currentActualShowTime.value) {
       isCloudModify = true;
       this.currentActualShowTime = currentActualShowTime.value;
     }
 
-    if (this.fragmentId != fragmentId.value && fragmentId.present) {
+    if (fragmentId.present && this.fragmentId != fragmentId.value) {
       isCloudModify = true;
       this.fragmentId = fragmentId.value;
     }
 
-    if (this.isLatestRecord != isLatestRecord.value && isLatestRecord.present) {
-      isCloudModify = true;
-      this.isLatestRecord = isLatestRecord.value;
-    }
-
-    if (this.memoryGroupId != memoryGroupId.value && memoryGroupId.present) {
+    if (memoryGroupId.present && this.memoryGroupId != memoryGroupId.value) {
       isCloudModify = true;
       this.memoryGroupId = memoryGroupId.value;
     }
 
-    if (this.nextPlanShowTime != nextPlanShowTime.value &&
-        nextPlanShowTime.present) {
+    if (nextPlanShowTime.present &&
+        this.nextPlanShowTime != nextPlanShowTime.value) {
       isCloudModify = true;
       this.nextPlanShowTime = nextPlanShowTime.value;
     }
 
-    if (this.showFamiliarity != showFamiliarity.value &&
-        showFamiliarity.present) {
+    if (showFamiliarity.present &&
+        this.showFamiliarity != showFamiliarity.value) {
       isCloudModify = true;
       this.showFamiliarity = showFamiliarity.value;
     }
@@ -182,13 +176,13 @@ extension AppInfoExt on AppInfo {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.hasDownloadedInitData != hasDownloadedInitData.value &&
-        hasDownloadedInitData.present) {
+    if (hasDownloadedInitData.present &&
+        this.hasDownloadedInitData != hasDownloadedInitData.value) {
       isLocalModify = true;
       this.hasDownloadedInitData = hasDownloadedInitData.value;
     }
 
-    if (this.token != token.value && token.present) {
+    if (token.present && this.token != token.value) {
       isLocalModify = true;
       this.token = token.value;
     }
@@ -224,22 +218,22 @@ extension SyncExt on Sync {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.rowId != rowId.value && rowId.present) {
+    if (rowId.present && this.rowId != rowId.value) {
       isLocalModify = true;
       this.rowId = rowId.value;
     }
 
-    if (this.syncCurdType != syncCurdType.value && syncCurdType.present) {
+    if (syncCurdType.present && this.syncCurdType != syncCurdType.value) {
       isLocalModify = true;
       this.syncCurdType = syncCurdType.value;
     }
 
-    if (this.syncTableName != syncTableName.value && syncTableName.present) {
+    if (syncTableName.present && this.syncTableName != syncTableName.value) {
       isLocalModify = true;
       this.syncTableName = syncTableName.value;
     }
 
-    if (this.tag != tag.value && tag.present) {
+    if (tag.present && this.tag != tag.value) {
       isLocalModify = true;
       this.tag = tag.value;
     }
@@ -279,45 +273,45 @@ extension MemoryGroupExt on MemoryGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.memoryModelId != memoryModelId.value && memoryModelId.present) {
+    if (memoryModelId.present && this.memoryModelId != memoryModelId.value) {
       isCloudModify = true;
       this.memoryModelId = memoryModelId.value;
     }
 
-    if (this.newDisplayOrder != newDisplayOrder.value &&
-        newDisplayOrder.present) {
+    if (newDisplayOrder.present &&
+        this.newDisplayOrder != newDisplayOrder.value) {
       isCloudModify = true;
       this.newDisplayOrder = newDisplayOrder.value;
     }
 
-    if (this.newReviewDisplayOrder != newReviewDisplayOrder.value &&
-        newReviewDisplayOrder.present) {
+    if (newReviewDisplayOrder.present &&
+        this.newReviewDisplayOrder != newReviewDisplayOrder.value) {
       isCloudModify = true;
       this.newReviewDisplayOrder = newReviewDisplayOrder.value;
     }
 
-    if (this.reviewInterval != reviewInterval.value && reviewInterval.present) {
+    if (reviewInterval.present && this.reviewInterval != reviewInterval.value) {
       isCloudModify = true;
       this.reviewInterval = reviewInterval.value;
     }
 
-    if (this.startTime != startTime.value && startTime.present) {
+    if (startTime.present && this.startTime != startTime.value) {
       isCloudModify = true;
       this.startTime = startTime.value;
     }
 
-    if (this.title != title.value && title.present) {
+    if (title.present && this.title != title.value) {
       isCloudModify = true;
       this.title = title.value;
     }
 
-    if (this.willNewLearnCount != willNewLearnCount.value &&
-        willNewLearnCount.present) {
+    if (willNewLearnCount.present &&
+        this.willNewLearnCount != willNewLearnCount.value) {
       isCloudModify = true;
       this.willNewLearnCount = willNewLearnCount.value;
     }
@@ -352,18 +346,18 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.documentGroupId != documentGroupId.value &&
-        documentGroupId.present) {
+    if (documentGroupId.present &&
+        this.documentGroupId != documentGroupId.value) {
       isCloudModify = true;
       this.documentGroupId = documentGroupId.value;
     }
 
-    if (this.documentId != documentId.value && documentId.present) {
+    if (documentId.present && this.documentId != documentId.value) {
       isCloudModify = true;
       this.documentId = documentId.value;
     }
@@ -398,18 +392,18 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.fragmentGroupId != fragmentGroupId.value &&
-        fragmentGroupId.present) {
+    if (fragmentGroupId.present &&
+        this.fragmentGroupId != fragmentGroupId.value) {
       isCloudModify = true;
       this.fragmentGroupId = fragmentGroupId.value;
     }
 
-    if (this.fragmentId != fragmentId.value && fragmentId.present) {
+    if (fragmentId.present && this.fragmentId != fragmentId.value) {
       isCloudModify = true;
       this.fragmentId = fragmentId.value;
     }
@@ -444,18 +438,18 @@ extension RMemoryModel2MemoryModelGroupExt on RMemoryModel2MemoryModelGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.memoryModelGroupId != memoryModelGroupId.value &&
-        memoryModelGroupId.present) {
+    if (memoryModelGroupId.present &&
+        this.memoryModelGroupId != memoryModelGroupId.value) {
       isCloudModify = true;
       this.memoryModelGroupId = memoryModelGroupId.value;
     }
 
-    if (this.memoryModelId != memoryModelId.value && memoryModelId.present) {
+    if (memoryModelId.present && this.memoryModelId != memoryModelId.value) {
       isCloudModify = true;
       this.memoryModelId = memoryModelId.value;
     }
@@ -490,17 +484,17 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.noteGroupId != noteGroupId.value && noteGroupId.present) {
+    if (noteGroupId.present && this.noteGroupId != noteGroupId.value) {
       isCloudModify = true;
       this.noteGroupId = noteGroupId.value;
     }
 
-    if (this.noteId != noteId.value && noteId.present) {
+    if (noteId.present && this.noteId != noteId.value) {
       isCloudModify = true;
       this.noteId = noteId.value;
     }
@@ -508,6 +502,39 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rNote2NoteGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [Tests]
+extension TestExt on Test {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<Test> reset({
+    required Value<String> local_content,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (local_content.present && this.local_content != local_content.value) {
+      isLocalModify = true;
+      this.local_content = local_content.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.tests,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -534,12 +561,12 @@ extension DocumentExt on Document {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.content != content.value && content.present) {
+    if (content.present && this.content != content.value) {
       isCloudModify = true;
       this.content = content.value;
     }
 
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
@@ -576,29 +603,29 @@ extension FragmentExt on Fragment {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.content != content.value && content.present) {
+    if (content.present && this.content != content.value) {
       isCloudModify = true;
       this.content = content.value;
     }
 
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.fatherFragmentId != fatherFragmentId.value &&
-        fatherFragmentId.present) {
+    if (fatherFragmentId.present &&
+        this.fatherFragmentId != fatherFragmentId.value) {
       isCloudModify = true;
       this.fatherFragmentId = fatherFragmentId.value;
     }
 
-    if (this.local_isSelected != local_isSelected.value &&
-        local_isSelected.present) {
+    if (local_isSelected.present &&
+        this.local_isSelected != local_isSelected.value) {
       isLocalModify = true;
       this.local_isSelected = local_isSelected.value;
     }
 
-    if (this.noteId != noteId.value && noteId.present) {
+    if (noteId.present && this.noteId != noteId.value) {
       isCloudModify = true;
       this.noteId = noteId.value;
     }
@@ -637,42 +664,42 @@ extension MemoryModelExt on MemoryModel {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.buttonAlgorithm != buttonAlgorithm.value &&
-        buttonAlgorithm.present) {
+    if (buttonAlgorithm.present &&
+        this.buttonAlgorithm != buttonAlgorithm.value) {
       isCloudModify = true;
       this.buttonAlgorithm = buttonAlgorithm.value;
     }
 
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.familiarityAlgorithm != familiarityAlgorithm.value &&
-        familiarityAlgorithm.present) {
+    if (familiarityAlgorithm.present &&
+        this.familiarityAlgorithm != familiarityAlgorithm.value) {
       isCloudModify = true;
       this.familiarityAlgorithm = familiarityAlgorithm.value;
     }
 
-    if (this.fatherMemoryModelId != fatherMemoryModelId.value &&
-        fatherMemoryModelId.present) {
+    if (fatherMemoryModelId.present &&
+        this.fatherMemoryModelId != fatherMemoryModelId.value) {
       isCloudModify = true;
       this.fatherMemoryModelId = fatherMemoryModelId.value;
     }
 
-    if (this.nextTimeAlgorithm != nextTimeAlgorithm.value &&
-        nextTimeAlgorithm.present) {
+    if (nextTimeAlgorithm.present &&
+        this.nextTimeAlgorithm != nextTimeAlgorithm.value) {
       isCloudModify = true;
       this.nextTimeAlgorithm = nextTimeAlgorithm.value;
     }
 
-    if (this.stimulateAlgorithm != stimulateAlgorithm.value &&
-        stimulateAlgorithm.present) {
+    if (stimulateAlgorithm.present &&
+        this.stimulateAlgorithm != stimulateAlgorithm.value) {
       isCloudModify = true;
       this.stimulateAlgorithm = stimulateAlgorithm.value;
     }
 
-    if (this.title != title.value && title.present) {
+    if (title.present && this.title != title.value) {
       isCloudModify = true;
       this.title = title.value;
     }
@@ -708,22 +735,22 @@ extension NoteExt on Note {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.content != content.value && content.present) {
+    if (content.present && this.content != content.value) {
       isCloudModify = true;
       this.content = content.value;
     }
 
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.documentId != documentId.value && documentId.present) {
+    if (documentId.present && this.documentId != documentId.value) {
       isCloudModify = true;
       this.documentId = documentId.value;
     }
 
-    if (this.fatherNoteId != fatherNoteId.value && fatherNoteId.present) {
+    if (fatherNoteId.present && this.fatherNoteId != fatherNoteId.value) {
       isCloudModify = true;
       this.fatherNoteId = fatherNoteId.value;
     }
@@ -758,18 +785,18 @@ extension DocumentGroupExt on DocumentGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.fatherDocumentGroupsId != fatherDocumentGroupsId.value &&
-        fatherDocumentGroupsId.present) {
+    if (fatherDocumentGroupsId.present &&
+        this.fatherDocumentGroupsId != fatherDocumentGroupsId.value) {
       isCloudModify = true;
       this.fatherDocumentGroupsId = fatherDocumentGroupsId.value;
     }
 
-    if (this.title != title.value && title.present) {
+    if (title.present && this.title != title.value) {
       isCloudModify = true;
       this.title = title.value;
     }
@@ -805,24 +832,24 @@ extension FragmentGroupExt on FragmentGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.fatherFragmentGroupsId != fatherFragmentGroupsId.value &&
-        fatherFragmentGroupsId.present) {
+    if (fatherFragmentGroupsId.present &&
+        this.fatherFragmentGroupsId != fatherFragmentGroupsId.value) {
       isCloudModify = true;
       this.fatherFragmentGroupsId = fatherFragmentGroupsId.value;
     }
 
-    if (this.local_isSelected != local_isSelected.value &&
-        local_isSelected.present) {
+    if (local_isSelected.present &&
+        this.local_isSelected != local_isSelected.value) {
       isLocalModify = true;
       this.local_isSelected = local_isSelected.value;
     }
 
-    if (this.title != title.value && title.present) {
+    if (title.present && this.title != title.value) {
       isCloudModify = true;
       this.title = title.value;
     }
@@ -857,18 +884,18 @@ extension MemoryModelGroupExt on MemoryModelGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.fatherMemoryModelGroupsId != fatherMemoryModelGroupsId.value &&
-        fatherMemoryModelGroupsId.present) {
+    if (fatherMemoryModelGroupsId.present &&
+        this.fatherMemoryModelGroupsId != fatherMemoryModelGroupsId.value) {
       isCloudModify = true;
       this.fatherMemoryModelGroupsId = fatherMemoryModelGroupsId.value;
     }
 
-    if (this.title != title.value && title.present) {
+    if (title.present && this.title != title.value) {
       isCloudModify = true;
       this.title = title.value;
     }
@@ -903,18 +930,18 @@ extension NoteGroupExt on NoteGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (this.creatorUserId != creatorUserId.value && creatorUserId.present) {
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (this.fatherNoteGroupsId != fatherNoteGroupsId.value &&
-        fatherNoteGroupsId.present) {
+    if (fatherNoteGroupsId.present &&
+        this.fatherNoteGroupsId != fatherNoteGroupsId.value) {
       isCloudModify = true;
       this.fatherNoteGroupsId = fatherNoteGroupsId.value;
     }
 
-    if (this.title != title.value && title.present) {
+    if (title.present && this.title != title.value) {
       isCloudModify = true;
       this.title = title.value;
     }
