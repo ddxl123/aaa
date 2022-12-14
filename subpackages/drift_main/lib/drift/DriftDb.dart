@@ -46,21 +46,21 @@ part 'table/cloud/local/AppInfos.dart';
 
 part 'table/cloud/local/Syncs.dart';
 
-part 'table/cloud/monolayer_group/MemoryGroups.dart';
-
 part 'table/cloud/r/RDocument2DocumentGroups.dart';
 
 part 'table/cloud/r/RFragment2FragmentGroups.dart';
 
-part 'table/cloud/r/RMemoryModel2MemoryModelGroups.dart';
-
 part 'table/cloud/r/RNote2NoteGroups.dart';
+
+part 'table/cloud/test/Test2s.dart';
 
 part 'table/cloud/test/Tests.dart';
 
 part 'table/cloud/unit/Documents.dart';
 
 part 'table/cloud/unit/Fragments.dart';
+
+part 'table/cloud/unit/MemoryGroups.dart';
 
 part 'table/cloud/unit/MemoryModels.dart';
 
@@ -69,8 +69,6 @@ part 'table/cloud/unit/Notes.dart';
 part 'table/cloud/unit_group/DocumentGroups.dart';
 
 part 'table/cloud/unit_group/FragmentGroups.dart';
-
-part 'table/cloud/unit_group/MemoryModelGroups.dart';
 
 part 'table/cloud/unit_group/NoteGroups.dart';
 
@@ -84,21 +82,21 @@ const List<Type> tableClasses = [
 
   Syncs,
 
-  MemoryGroups,
-
   RDocument2DocumentGroups,
 
   RFragment2FragmentGroups,
 
-  RMemoryModel2MemoryModelGroups,
-
   RNote2NoteGroups,
+
+  Test2s,
 
   Tests,
 
   Documents,
 
   Fragments,
+
+  MemoryGroups,
 
   MemoryModels,
 
@@ -107,8 +105,6 @@ const List<Type> tableClasses = [
   DocumentGroups,
 
   FragmentGroups,
-
-  MemoryModelGroups,
 
   NoteGroups,
 

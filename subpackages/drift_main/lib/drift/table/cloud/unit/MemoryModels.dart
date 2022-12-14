@@ -19,8 +19,6 @@ class MemoryModels extends CloudTableBase  {
 
   TextColumn get nextTimeAlgorithm => text()();
 
-  TextColumn get stimulateAlgorithm => text()();
-
   TextColumn get title => text()();
 
   DateTimeColumn get createdAt => dateTime()();

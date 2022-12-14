@@ -4,7 +4,6 @@ import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:tools/tools.dart';
 
 class MemoryGroupListPageAbController extends AbController {
   final RefreshController refreshController = RefreshController(initialRefresh: true);
@@ -18,12 +17,13 @@ class MemoryGroupListPageAbController extends AbController {
   }
 
   void onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) {
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => MemoryGroupGizmoEditPage(
           editPageType: MemoryGroupGizmoEditPageType.modify,
-          memoryGroupGizmo: memoryGroupGizmo,
+          memoryGroupAb: memoryGroupGizmo,
         ),
       ),
     );

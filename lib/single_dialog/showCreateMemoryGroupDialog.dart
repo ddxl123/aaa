@@ -1,3 +1,4 @@
+import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
@@ -23,7 +24,7 @@ Future<void> showCreateMemoryGroupDialog() async {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
-          final mg = await db.insertDAO.insertMemoryGroup(
+          await db.insertDAO.insertMemoryGroup(
             newMemoryGroup: Crt.memoryGroupsCompanion(
               startTime: null.toValue(),
               memoryModelId: null.toValue(),
@@ -35,6 +36,8 @@ Future<void> showCreateMemoryGroupDialog() async {
               creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
             ),
           );
+
+          Aber.findLast<MemoryGroupListPageAbController>().refreshPage();
 
           SmartDialog.dismiss();
           SmartDialog.showToast('创建成功！');

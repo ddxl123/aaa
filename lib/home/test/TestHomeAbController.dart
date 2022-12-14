@@ -29,19 +29,25 @@ class TestHomeAbController extends AbController {
   }
 
   Future<void> insertTests() async {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       final t = await db.into(db.tests).insertReturning(
-            TestsCompanion.insert(local_content: '["ddd",${Random().nextInt(100)},333]', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+            TestsCompanion.insert(local_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
           );
+      await Future.delayed(const Duration(milliseconds: 1000));
+      print(t);
+    }
+    for (int i = 0; i < 5; i++) {
+      final t = await db.into(db.test2s).insertReturning(
+            Test2sCompanion.insert(local_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          );
+      await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
     }
     print('-------------');
-    final secondValue = db.tests.local_content.jsonExtract<int>(r'$[1]');
-    final selOnly = db.selectOnly(db.tests)
-      ..addColumns([secondValue])
-      ..where(secondValue.isSmallerOrEqualValue(50));
-    final result = await selOnly.get();
-    logger.d(result.map((e) => e.read(secondValue)));
+    // final selOnly = db.select(db.tests)
+    //   ..groupBy([db.tests.local_content]);
+    // final result = await selOnly.get();
+    // logger.d(result.map((e) => e.rawData.data).toList().length);
   }
 
   Future<void> insertsOther() async {
@@ -53,17 +59,19 @@ class TestHomeAbController extends AbController {
     }
 
     const count = 5;
+    final st = await SyncTag.create();
     Future<List<FragmentGroup>> foreach({required FragmentGroup? fatherFragmentGroup}) async {
       await Future.delayed(const Duration(seconds: 1));
       final subGroup = <FragmentGroup>[];
       for (int i = 0; i < count; i++) {
         final fg = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
-          Crt.fragmentGroupsCompanion(
+          willEntity: Crt.fragmentGroupsCompanion(
             creatorUserId: globalAbController.loggedInUser()!.id,
             title: 'test ${Random().nextInt(999999)}',
             fatherFragmentGroupsId: (fatherFragmentGroup?.id).toValue(),
             local_isSelected: false,
           ),
+          syncTag: st,
         );
         subGroup.add(fg);
         for (int i = 0; i < count; i++) {
@@ -76,6 +84,7 @@ class TestHomeAbController extends AbController {
               noteId: null.toValue(),
             ),
             willFragmentGroup: null,
+            syncTag: st,
           );
         }
         for (int i = 0; i < count; i++) {
@@ -88,6 +97,7 @@ class TestHomeAbController extends AbController {
               noteId: null.toValue(),
             ),
             willFragmentGroup: fg.toCompanion(false),
+            syncTag: st,
           );
         }
       }

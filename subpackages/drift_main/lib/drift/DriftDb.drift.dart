@@ -7,24 +7,21 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentMemoryInfos;
   $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
-  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RMemoryModel2MemoryModelGroupsTable get rMemoryModel2MemoryModelGroups =>
-      attachedDatabase.rMemoryModel2MemoryModelGroups;
   $RNote2NoteGroupsTable get rNote2NoteGroups =>
       attachedDatabase.rNote2NoteGroups;
+  $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentsTable get fragments => attachedDatabase.fragments;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $MemoryModelGroupsTable get memoryModelGroups =>
-      attachedDatabase.memoryModelGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
@@ -33,24 +30,21 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentMemoryInfos;
   $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
-  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RMemoryModel2MemoryModelGroupsTable get rMemoryModel2MemoryModelGroups =>
-      attachedDatabase.rMemoryModel2MemoryModelGroups;
   $RNote2NoteGroupsTable get rNote2NoteGroups =>
       attachedDatabase.rNote2NoteGroups;
+  $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentsTable get fragments => attachedDatabase.fragments;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $MemoryModelGroupsTable get memoryModelGroups =>
-      attachedDatabase.memoryModelGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
@@ -59,24 +53,21 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentMemoryInfos;
   $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
-  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RMemoryModel2MemoryModelGroupsTable get rMemoryModel2MemoryModelGroups =>
-      attachedDatabase.rMemoryModel2MemoryModelGroups;
   $RNote2NoteGroupsTable get rNote2NoteGroups =>
       attachedDatabase.rNote2NoteGroups;
+  $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentsTable get fragments => attachedDatabase.fragments;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $MemoryModelGroupsTable get memoryModelGroups =>
-      attachedDatabase.memoryModelGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
@@ -85,24 +76,21 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentMemoryInfos;
   $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
-  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RMemoryModel2MemoryModelGroupsTable get rMemoryModel2MemoryModelGroups =>
-      attachedDatabase.rMemoryModel2MemoryModelGroups;
   $RNote2NoteGroupsTable get rNote2NoteGroups =>
       attachedDatabase.rNote2NoteGroups;
+  $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentsTable get fragments => attachedDatabase.fragments;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $MemoryModelGroupsTable get memoryModelGroups =>
-      attachedDatabase.memoryModelGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 
@@ -1684,565 +1672,6 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
 }
 
-class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
-  int creatorUserId;
-  String? memoryModelId;
-  NewDisplayOrder newDisplayOrder;
-  NewReviewDisplayOrder newReviewDisplayOrder;
-  DateTime reviewInterval;
-  DateTime? startTime;
-  String title;
-  int willNewLearnCount;
-  DateTime createdAt;
-  String id;
-  DateTime updatedAt;
-  MemoryGroup(
-      {required this.creatorUserId,
-      this.memoryModelId,
-      required this.newDisplayOrder,
-      required this.newReviewDisplayOrder,
-      required this.reviewInterval,
-      this.startTime,
-      required this.title,
-      required this.willNewLearnCount,
-      required this.createdAt,
-      required this.id,
-      required this.updatedAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || memoryModelId != null) {
-      map['memory_model_id'] = Variable<String>(memoryModelId);
-    }
-    {
-      final converter = $MemoryGroupsTable.$converternewDisplayOrder;
-      map['new_display_order'] =
-          Variable<int>(converter.toSql(newDisplayOrder));
-    }
-    {
-      final converter = $MemoryGroupsTable.$converternewReviewDisplayOrder;
-      map['new_review_display_order'] =
-          Variable<int>(converter.toSql(newReviewDisplayOrder));
-    }
-    map['review_interval'] = Variable<DateTime>(reviewInterval);
-    if (!nullToAbsent || startTime != null) {
-      map['start_time'] = Variable<DateTime>(startTime);
-    }
-    map['title'] = Variable<String>(title);
-    map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
-    return MemoryGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      memoryModelId: memoryModelId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(memoryModelId),
-      newDisplayOrder: Value(newDisplayOrder),
-      newReviewDisplayOrder: Value(newReviewDisplayOrder),
-      reviewInterval: Value(reviewInterval),
-      startTime: startTime == null && nullToAbsent
-          ? const Value.absent()
-          : Value(startTime),
-      title: Value(title),
-      willNewLearnCount: Value(willNewLearnCount),
-      createdAt: Value(createdAt),
-      id: Value(id),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory MemoryGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MemoryGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
-      newDisplayOrder:
-          serializer.fromJson<NewDisplayOrder>(json['newDisplayOrder']),
-      newReviewDisplayOrder: serializer
-          .fromJson<NewReviewDisplayOrder>(json['newReviewDisplayOrder']),
-      reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
-      startTime: serializer.fromJson<DateTime?>(json['startTime']),
-      title: serializer.fromJson<String>(json['title']),
-      willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'memoryModelId': serializer.toJson<String?>(memoryModelId),
-      'newDisplayOrder': serializer.toJson<NewDisplayOrder>(newDisplayOrder),
-      'newReviewDisplayOrder':
-          serializer.toJson<NewReviewDisplayOrder>(newReviewDisplayOrder),
-      'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
-      'startTime': serializer.toJson<DateTime?>(startTime),
-      'title': serializer.toJson<String>(title),
-      'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  MemoryGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> memoryModelId = const Value.absent(),
-          NewDisplayOrder? newDisplayOrder,
-          NewReviewDisplayOrder? newReviewDisplayOrder,
-          DateTime? reviewInterval,
-          Value<DateTime?> startTime = const Value.absent(),
-          String? title,
-          int? willNewLearnCount,
-          DateTime? createdAt,
-          String? id,
-          DateTime? updatedAt}) =>
-      MemoryGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        memoryModelId:
-            memoryModelId.present ? memoryModelId.value : this.memoryModelId,
-        newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
-        newReviewDisplayOrder:
-            newReviewDisplayOrder ?? this.newReviewDisplayOrder,
-        reviewInterval: reviewInterval ?? this.reviewInterval,
-        startTime: startTime.present ? startTime.value : this.startTime,
-        title: title ?? this.title,
-        willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
-        createdAt: createdAt ?? this.createdAt,
-        id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('MemoryGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('memoryModelId: $memoryModelId, ')
-          ..write('newDisplayOrder: $newDisplayOrder, ')
-          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
-          ..write('reviewInterval: $reviewInterval, ')
-          ..write('startTime: $startTime, ')
-          ..write('title: $title, ')
-          ..write('willNewLearnCount: $willNewLearnCount, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      creatorUserId,
-      memoryModelId,
-      newDisplayOrder,
-      newReviewDisplayOrder,
-      reviewInterval,
-      startTime,
-      title,
-      willNewLearnCount,
-      createdAt,
-      id,
-      updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MemoryGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.memoryModelId == this.memoryModelId &&
-          other.newDisplayOrder == this.newDisplayOrder &&
-          other.newReviewDisplayOrder == this.newReviewDisplayOrder &&
-          other.reviewInterval == this.reviewInterval &&
-          other.startTime == this.startTime &&
-          other.title == this.title &&
-          other.willNewLearnCount == this.willNewLearnCount &&
-          other.createdAt == this.createdAt &&
-          other.id == this.id &&
-          other.updatedAt == this.updatedAt);
-}
-
-class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
-  Value<int> creatorUserId;
-  Value<String?> memoryModelId;
-  Value<NewDisplayOrder> newDisplayOrder;
-  Value<NewReviewDisplayOrder> newReviewDisplayOrder;
-  Value<DateTime> reviewInterval;
-  Value<DateTime?> startTime;
-  Value<String> title;
-  Value<int> willNewLearnCount;
-  Value<DateTime> createdAt;
-  Value<String> id;
-  Value<DateTime> updatedAt;
-  MemoryGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.memoryModelId = const Value.absent(),
-    this.newDisplayOrder = const Value.absent(),
-    this.newReviewDisplayOrder = const Value.absent(),
-    this.reviewInterval = const Value.absent(),
-    this.startTime = const Value.absent(),
-    this.title = const Value.absent(),
-    this.willNewLearnCount = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  MemoryGroupsCompanion.insert({
-    required int creatorUserId,
-    this.memoryModelId = const Value.absent(),
-    required NewDisplayOrder newDisplayOrder,
-    required NewReviewDisplayOrder newReviewDisplayOrder,
-    required DateTime reviewInterval,
-    this.startTime = const Value.absent(),
-    required String title,
-    required int willNewLearnCount,
-    required DateTime createdAt,
-    required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        newDisplayOrder = Value(newDisplayOrder),
-        newReviewDisplayOrder = Value(newReviewDisplayOrder),
-        reviewInterval = Value(reviewInterval),
-        title = Value(title),
-        willNewLearnCount = Value(willNewLearnCount),
-        createdAt = Value(createdAt),
-        id = Value(id),
-        updatedAt = Value(updatedAt);
-  static Insertable<MemoryGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? memoryModelId,
-    Expression<int>? newDisplayOrder,
-    Expression<int>? newReviewDisplayOrder,
-    Expression<DateTime>? reviewInterval,
-    Expression<DateTime>? startTime,
-    Expression<String>? title,
-    Expression<int>? willNewLearnCount,
-    Expression<DateTime>? createdAt,
-    Expression<String>? id,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (memoryModelId != null) 'memory_model_id': memoryModelId,
-      if (newDisplayOrder != null) 'new_display_order': newDisplayOrder,
-      if (newReviewDisplayOrder != null)
-        'new_review_display_order': newReviewDisplayOrder,
-      if (reviewInterval != null) 'review_interval': reviewInterval,
-      if (startTime != null) 'start_time': startTime,
-      if (title != null) 'title': title,
-      if (willNewLearnCount != null) 'will_new_learn_count': willNewLearnCount,
-      if (createdAt != null) 'created_at': createdAt,
-      if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  MemoryGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? memoryModelId,
-      Value<NewDisplayOrder>? newDisplayOrder,
-      Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
-      Value<DateTime>? reviewInterval,
-      Value<DateTime?>? startTime,
-      Value<String>? title,
-      Value<int>? willNewLearnCount,
-      Value<DateTime>? createdAt,
-      Value<String>? id,
-      Value<DateTime>? updatedAt}) {
-    return MemoryGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      memoryModelId: memoryModelId ?? this.memoryModelId,
-      newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
-      newReviewDisplayOrder:
-          newReviewDisplayOrder ?? this.newReviewDisplayOrder,
-      reviewInterval: reviewInterval ?? this.reviewInterval,
-      startTime: startTime ?? this.startTime,
-      title: title ?? this.title,
-      willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
-      createdAt: createdAt ?? this.createdAt,
-      id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
-    }
-    if (memoryModelId.present) {
-      map['memory_model_id'] = Variable<String>(memoryModelId.value);
-    }
-    if (newDisplayOrder.present) {
-      final converter = $MemoryGroupsTable.$converternewDisplayOrder;
-      map['new_display_order'] =
-          Variable<int>(converter.toSql(newDisplayOrder.value));
-    }
-    if (newReviewDisplayOrder.present) {
-      final converter = $MemoryGroupsTable.$converternewReviewDisplayOrder;
-      map['new_review_display_order'] =
-          Variable<int>(converter.toSql(newReviewDisplayOrder.value));
-    }
-    if (reviewInterval.present) {
-      map['review_interval'] = Variable<DateTime>(reviewInterval.value);
-    }
-    if (startTime.present) {
-      map['start_time'] = Variable<DateTime>(startTime.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (willNewLearnCount.present) {
-      map['will_new_learn_count'] = Variable<int>(willNewLearnCount.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MemoryGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('memoryModelId: $memoryModelId, ')
-          ..write('newDisplayOrder: $newDisplayOrder, ')
-          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
-          ..write('reviewInterval: $reviewInterval, ')
-          ..write('startTime: $startTime, ')
-          ..write('title: $title, ')
-          ..write('willNewLearnCount: $willNewLearnCount, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $MemoryGroupsTable extends MemoryGroups
-    with TableInfo<$MemoryGroupsTable, MemoryGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MemoryGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
-  @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _memoryModelIdMeta =
-      const VerificationMeta('memoryModelId');
-  @override
-  late final GeneratedColumn<String> memoryModelId = GeneratedColumn<String>(
-      'memory_model_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _newDisplayOrderMeta =
-      const VerificationMeta('newDisplayOrder');
-  @override
-  late final GeneratedColumnWithTypeConverter<NewDisplayOrder, int>
-      newDisplayOrder = GeneratedColumn<int>(
-              'new_display_order', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<NewDisplayOrder>(
-              $MemoryGroupsTable.$converternewDisplayOrder);
-  static const VerificationMeta _newReviewDisplayOrderMeta =
-      const VerificationMeta('newReviewDisplayOrder');
-  @override
-  late final GeneratedColumnWithTypeConverter<NewReviewDisplayOrder, int>
-      newReviewDisplayOrder = GeneratedColumn<int>(
-              'new_review_display_order', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<NewReviewDisplayOrder>(
-              $MemoryGroupsTable.$converternewReviewDisplayOrder);
-  static const VerificationMeta _reviewIntervalMeta =
-      const VerificationMeta('reviewInterval');
-  @override
-  late final GeneratedColumn<DateTime> reviewInterval =
-      GeneratedColumn<DateTime>('review_interval', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _startTimeMeta =
-      const VerificationMeta('startTime');
-  @override
-  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
-      'start_time', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _willNewLearnCountMeta =
-      const VerificationMeta('willNewLearnCount');
-  @override
-  late final GeneratedColumn<int> willNewLearnCount = GeneratedColumn<int>(
-      'will_new_learn_count', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        creatorUserId,
-        memoryModelId,
-        newDisplayOrder,
-        newReviewDisplayOrder,
-        reviewInterval,
-        startTime,
-        title,
-        willNewLearnCount,
-        createdAt,
-        id,
-        updatedAt
-      ];
-  @override
-  String get aliasedName => _alias ?? 'memory_groups';
-  @override
-  String get actualTableName => 'memory_groups';
-  @override
-  VerificationContext validateIntegrity(Insertable<MemoryGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
-    } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
-    }
-    if (data.containsKey('memory_model_id')) {
-      context.handle(
-          _memoryModelIdMeta,
-          memoryModelId.isAcceptableOrUnknown(
-              data['memory_model_id']!, _memoryModelIdMeta));
-    }
-    context.handle(_newDisplayOrderMeta, const VerificationResult.success());
-    context.handle(
-        _newReviewDisplayOrderMeta, const VerificationResult.success());
-    if (data.containsKey('review_interval')) {
-      context.handle(
-          _reviewIntervalMeta,
-          reviewInterval.isAcceptableOrUnknown(
-              data['review_interval']!, _reviewIntervalMeta));
-    } else if (isInserting) {
-      context.missing(_reviewIntervalMeta);
-    }
-    if (data.containsKey('start_time')) {
-      context.handle(_startTimeMeta,
-          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('will_new_learn_count')) {
-      context.handle(
-          _willNewLearnCountMeta,
-          willNewLearnCount.isAcceptableOrUnknown(
-              data['will_new_learn_count']!, _willNewLearnCountMeta));
-    } else if (isInserting) {
-      context.missing(_willNewLearnCountMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  MemoryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MemoryGroup(
-      creatorUserId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      memoryModelId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}memory_model_id']),
-      newDisplayOrder: $MemoryGroupsTable.$converternewDisplayOrder.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
-      newReviewDisplayOrder: $MemoryGroupsTable.$converternewReviewDisplayOrder
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
-              data['${effectivePrefix}new_review_display_order'])!),
-      reviewInterval: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
-      startTime: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_time']),
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      willNewLearnCount: attachedDatabase.typeMapping.read(
-          DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $MemoryGroupsTable createAlias(String alias) {
-    return $MemoryGroupsTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<NewDisplayOrder, int> $converternewDisplayOrder =
-      const EnumIndexConverter<NewDisplayOrder>(NewDisplayOrder.values);
-  static TypeConverter<NewReviewDisplayOrder, int>
-      $converternewReviewDisplayOrder =
-      const EnumIndexConverter<NewReviewDisplayOrder>(
-          NewReviewDisplayOrder.values);
-}
-
 class RDocument2DocumentGroup extends DataClass
     implements Insertable<RDocument2DocumentGroup> {
   int creatorUserId;
@@ -2917,354 +2346,6 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   }
 }
 
-class RMemoryModel2MemoryModelGroup extends DataClass
-    implements Insertable<RMemoryModel2MemoryModelGroup> {
-  int creatorUserId;
-  String? memoryModelGroupId;
-  String memoryModelId;
-  DateTime createdAt;
-  String id;
-  DateTime updatedAt;
-  RMemoryModel2MemoryModelGroup(
-      {required this.creatorUserId,
-      this.memoryModelGroupId,
-      required this.memoryModelId,
-      required this.createdAt,
-      required this.id,
-      required this.updatedAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || memoryModelGroupId != null) {
-      map['memory_model_group_id'] = Variable<String>(memoryModelGroupId);
-    }
-    map['memory_model_id'] = Variable<String>(memoryModelId);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  RMemoryModel2MemoryModelGroupsCompanion toCompanion(bool nullToAbsent) {
-    return RMemoryModel2MemoryModelGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      memoryModelGroupId: memoryModelGroupId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(memoryModelGroupId),
-      memoryModelId: Value(memoryModelId),
-      createdAt: Value(createdAt),
-      id: Value(id),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory RMemoryModel2MemoryModelGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RMemoryModel2MemoryModelGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      memoryModelGroupId:
-          serializer.fromJson<String?>(json['memoryModelGroupId']),
-      memoryModelId: serializer.fromJson<String>(json['memoryModelId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'memoryModelGroupId': serializer.toJson<String?>(memoryModelGroupId),
-      'memoryModelId': serializer.toJson<String>(memoryModelId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  RMemoryModel2MemoryModelGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> memoryModelGroupId = const Value.absent(),
-          String? memoryModelId,
-          DateTime? createdAt,
-          String? id,
-          DateTime? updatedAt}) =>
-      RMemoryModel2MemoryModelGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        memoryModelGroupId: memoryModelGroupId.present
-            ? memoryModelGroupId.value
-            : this.memoryModelGroupId,
-        memoryModelId: memoryModelId ?? this.memoryModelId,
-        createdAt: createdAt ?? this.createdAt,
-        id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RMemoryModel2MemoryModelGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('memoryModelGroupId: $memoryModelGroupId, ')
-          ..write('memoryModelId: $memoryModelId, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(creatorUserId, memoryModelGroupId,
-      memoryModelId, createdAt, id, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RMemoryModel2MemoryModelGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.memoryModelGroupId == this.memoryModelGroupId &&
-          other.memoryModelId == this.memoryModelId &&
-          other.createdAt == this.createdAt &&
-          other.id == this.id &&
-          other.updatedAt == this.updatedAt);
-}
-
-class RMemoryModel2MemoryModelGroupsCompanion
-    extends UpdateCompanion<RMemoryModel2MemoryModelGroup> {
-  Value<int> creatorUserId;
-  Value<String?> memoryModelGroupId;
-  Value<String> memoryModelId;
-  Value<DateTime> createdAt;
-  Value<String> id;
-  Value<DateTime> updatedAt;
-  RMemoryModel2MemoryModelGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.memoryModelGroupId = const Value.absent(),
-    this.memoryModelId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  RMemoryModel2MemoryModelGroupsCompanion.insert({
-    required int creatorUserId,
-    this.memoryModelGroupId = const Value.absent(),
-    required String memoryModelId,
-    required DateTime createdAt,
-    required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        memoryModelId = Value(memoryModelId),
-        createdAt = Value(createdAt),
-        id = Value(id),
-        updatedAt = Value(updatedAt);
-  static Insertable<RMemoryModel2MemoryModelGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? memoryModelGroupId,
-    Expression<String>? memoryModelId,
-    Expression<DateTime>? createdAt,
-    Expression<String>? id,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (memoryModelGroupId != null)
-        'memory_model_group_id': memoryModelGroupId,
-      if (memoryModelId != null) 'memory_model_id': memoryModelId,
-      if (createdAt != null) 'created_at': createdAt,
-      if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  RMemoryModel2MemoryModelGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? memoryModelGroupId,
-      Value<String>? memoryModelId,
-      Value<DateTime>? createdAt,
-      Value<String>? id,
-      Value<DateTime>? updatedAt}) {
-    return RMemoryModel2MemoryModelGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      memoryModelGroupId: memoryModelGroupId ?? this.memoryModelGroupId,
-      memoryModelId: memoryModelId ?? this.memoryModelId,
-      createdAt: createdAt ?? this.createdAt,
-      id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
-    }
-    if (memoryModelGroupId.present) {
-      map['memory_model_group_id'] = Variable<String>(memoryModelGroupId.value);
-    }
-    if (memoryModelId.present) {
-      map['memory_model_id'] = Variable<String>(memoryModelId.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RMemoryModel2MemoryModelGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('memoryModelGroupId: $memoryModelGroupId, ')
-          ..write('memoryModelId: $memoryModelId, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $RMemoryModel2MemoryModelGroupsTable
-    extends RMemoryModel2MemoryModelGroups
-    with
-        TableInfo<$RMemoryModel2MemoryModelGroupsTable,
-            RMemoryModel2MemoryModelGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RMemoryModel2MemoryModelGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
-  @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _memoryModelGroupIdMeta =
-      const VerificationMeta('memoryModelGroupId');
-  @override
-  late final GeneratedColumn<String> memoryModelGroupId =
-      GeneratedColumn<String>('memory_model_group_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _memoryModelIdMeta =
-      const VerificationMeta('memoryModelId');
-  @override
-  late final GeneratedColumn<String> memoryModelId = GeneratedColumn<String>(
-      'memory_model_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        creatorUserId,
-        memoryModelGroupId,
-        memoryModelId,
-        createdAt,
-        id,
-        updatedAt
-      ];
-  @override
-  String get aliasedName => _alias ?? 'r_memory_model2_memory_model_groups';
-  @override
-  String get actualTableName => 'r_memory_model2_memory_model_groups';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<RMemoryModel2MemoryModelGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
-    } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
-    }
-    if (data.containsKey('memory_model_group_id')) {
-      context.handle(
-          _memoryModelGroupIdMeta,
-          memoryModelGroupId.isAcceptableOrUnknown(
-              data['memory_model_group_id']!, _memoryModelGroupIdMeta));
-    }
-    if (data.containsKey('memory_model_id')) {
-      context.handle(
-          _memoryModelIdMeta,
-          memoryModelId.isAcceptableOrUnknown(
-              data['memory_model_id']!, _memoryModelIdMeta));
-    } else if (isInserting) {
-      context.missing(_memoryModelIdMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RMemoryModel2MemoryModelGroup map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RMemoryModel2MemoryModelGroup(
-      creatorUserId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      memoryModelGroupId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}memory_model_group_id']),
-      memoryModelId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}memory_model_id'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $RMemoryModel2MemoryModelGroupsTable createAlias(String alias) {
-    return $RMemoryModel2MemoryModelGroupsTable(attachedDatabase, alias);
-  }
-}
-
 class RNote2NoteGroup extends DataClass implements Insertable<RNote2NoteGroup> {
   int creatorUserId;
   String? noteGroupId;
@@ -3590,6 +2671,255 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
   @override
   $RNote2NoteGroupsTable createAlias(String alias) {
     return $RNote2NoteGroupsTable(attachedDatabase, alias);
+  }
+}
+
+class Test2 extends DataClass implements Insertable<Test2> {
+  String local_content;
+  DateTime createdAt;
+  int id;
+  DateTime updatedAt;
+  Test2(
+      {required this.local_content,
+      required this.createdAt,
+      required this.id,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_content'] = Variable<String>(local_content);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['id'] = Variable<int>(id);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  Test2sCompanion toCompanion(bool nullToAbsent) {
+    return Test2sCompanion(
+      local_content: Value(local_content),
+      createdAt: Value(createdAt),
+      id: Value(id),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Test2.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Test2(
+      local_content: serializer.fromJson<String>(json['local_content']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      id: serializer.fromJson<int>(json['id']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'local_content': serializer.toJson<String>(local_content),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'id': serializer.toJson<int>(id),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Test2 copyWith(
+          {String? local_content,
+          DateTime? createdAt,
+          int? id,
+          DateTime? updatedAt}) =>
+      Test2(
+        local_content: local_content ?? this.local_content,
+        createdAt: createdAt ?? this.createdAt,
+        id: id ?? this.id,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Test2(')
+          ..write('local_content: $local_content, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(local_content, createdAt, id, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Test2 &&
+          other.local_content == this.local_content &&
+          other.createdAt == this.createdAt &&
+          other.id == this.id &&
+          other.updatedAt == this.updatedAt);
+}
+
+class Test2sCompanion extends UpdateCompanion<Test2> {
+  Value<String> local_content;
+  Value<DateTime> createdAt;
+  Value<int> id;
+  Value<DateTime> updatedAt;
+  Test2sCompanion({
+    this.local_content = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  Test2sCompanion.insert({
+    required String local_content,
+    required DateTime createdAt,
+    this.id = const Value.absent(),
+    required DateTime updatedAt,
+  })  : local_content = Value(local_content),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
+  static Insertable<Test2> custom({
+    Expression<String>? local_content,
+    Expression<DateTime>? createdAt,
+    Expression<int>? id,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (local_content != null) 'local_content': local_content,
+      if (createdAt != null) 'created_at': createdAt,
+      if (id != null) 'id': id,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  Test2sCompanion copyWith(
+      {Value<String>? local_content,
+      Value<DateTime>? createdAt,
+      Value<int>? id,
+      Value<DateTime>? updatedAt}) {
+    return Test2sCompanion(
+      local_content: local_content ?? this.local_content,
+      createdAt: createdAt ?? this.createdAt,
+      id: id ?? this.id,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (local_content.present) {
+      map['local_content'] = Variable<String>(local_content.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Test2sCompanion(')
+          ..write('local_content: $local_content, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $Test2sTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _local_contentMeta =
+      const VerificationMeta('local_content');
+  @override
+  late final GeneratedColumn<String> local_content = GeneratedColumn<String>(
+      'local_content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [local_content, createdAt, id, updatedAt];
+  @override
+  String get aliasedName => _alias ?? 'test2s';
+  @override
+  String get actualTableName => 'test2s';
+  @override
+  VerificationContext validateIntegrity(Insertable<Test2> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_content')) {
+      context.handle(
+          _local_contentMeta,
+          local_content.isAcceptableOrUnknown(
+              data['local_content']!, _local_contentMeta));
+    } else if (isInserting) {
+      context.missing(_local_contentMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Test2 map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Test2(
+      local_content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_content'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $Test2sTable createAlias(String alias) {
+    return $Test2sTable(attachedDatabase, alias);
   }
 }
 
@@ -4550,13 +3880,571 @@ class $FragmentsTable extends Fragments
   }
 }
 
+class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
+  int creatorUserId;
+  String? memoryModelId;
+  NewDisplayOrder newDisplayOrder;
+  NewReviewDisplayOrder newReviewDisplayOrder;
+  DateTime reviewInterval;
+  DateTime? startTime;
+  String title;
+  int willNewLearnCount;
+  DateTime createdAt;
+  String id;
+  DateTime updatedAt;
+  MemoryGroup(
+      {required this.creatorUserId,
+      this.memoryModelId,
+      required this.newDisplayOrder,
+      required this.newReviewDisplayOrder,
+      required this.reviewInterval,
+      this.startTime,
+      required this.title,
+      required this.willNewLearnCount,
+      required this.createdAt,
+      required this.id,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['creator_user_id'] = Variable<int>(creatorUserId);
+    if (!nullToAbsent || memoryModelId != null) {
+      map['memory_model_id'] = Variable<String>(memoryModelId);
+    }
+    {
+      final converter = $MemoryGroupsTable.$converternewDisplayOrder;
+      map['new_display_order'] =
+          Variable<int>(converter.toSql(newDisplayOrder));
+    }
+    {
+      final converter = $MemoryGroupsTable.$converternewReviewDisplayOrder;
+      map['new_review_display_order'] =
+          Variable<int>(converter.toSql(newReviewDisplayOrder));
+    }
+    map['review_interval'] = Variable<DateTime>(reviewInterval);
+    if (!nullToAbsent || startTime != null) {
+      map['start_time'] = Variable<DateTime>(startTime);
+    }
+    map['title'] = Variable<String>(title);
+    map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['id'] = Variable<String>(id);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
+    return MemoryGroupsCompanion(
+      creatorUserId: Value(creatorUserId),
+      memoryModelId: memoryModelId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(memoryModelId),
+      newDisplayOrder: Value(newDisplayOrder),
+      newReviewDisplayOrder: Value(newReviewDisplayOrder),
+      reviewInterval: Value(reviewInterval),
+      startTime: startTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startTime),
+      title: Value(title),
+      willNewLearnCount: Value(willNewLearnCount),
+      createdAt: Value(createdAt),
+      id: Value(id),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory MemoryGroup.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MemoryGroup(
+      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
+      memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
+      newDisplayOrder:
+          serializer.fromJson<NewDisplayOrder>(json['newDisplayOrder']),
+      newReviewDisplayOrder: serializer
+          .fromJson<NewReviewDisplayOrder>(json['newReviewDisplayOrder']),
+      reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
+      startTime: serializer.fromJson<DateTime?>(json['startTime']),
+      title: serializer.fromJson<String>(json['title']),
+      willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      id: serializer.fromJson<String>(json['id']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'creatorUserId': serializer.toJson<int>(creatorUserId),
+      'memoryModelId': serializer.toJson<String?>(memoryModelId),
+      'newDisplayOrder': serializer.toJson<NewDisplayOrder>(newDisplayOrder),
+      'newReviewDisplayOrder':
+          serializer.toJson<NewReviewDisplayOrder>(newReviewDisplayOrder),
+      'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
+      'startTime': serializer.toJson<DateTime?>(startTime),
+      'title': serializer.toJson<String>(title),
+      'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'id': serializer.toJson<String>(id),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  MemoryGroup copyWith(
+          {int? creatorUserId,
+          Value<String?> memoryModelId = const Value.absent(),
+          NewDisplayOrder? newDisplayOrder,
+          NewReviewDisplayOrder? newReviewDisplayOrder,
+          DateTime? reviewInterval,
+          Value<DateTime?> startTime = const Value.absent(),
+          String? title,
+          int? willNewLearnCount,
+          DateTime? createdAt,
+          String? id,
+          DateTime? updatedAt}) =>
+      MemoryGroup(
+        creatorUserId: creatorUserId ?? this.creatorUserId,
+        memoryModelId:
+            memoryModelId.present ? memoryModelId.value : this.memoryModelId,
+        newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
+        newReviewDisplayOrder:
+            newReviewDisplayOrder ?? this.newReviewDisplayOrder,
+        reviewInterval: reviewInterval ?? this.reviewInterval,
+        startTime: startTime.present ? startTime.value : this.startTime,
+        title: title ?? this.title,
+        willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
+        createdAt: createdAt ?? this.createdAt,
+        id: id ?? this.id,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MemoryGroup(')
+          ..write('creatorUserId: $creatorUserId, ')
+          ..write('memoryModelId: $memoryModelId, ')
+          ..write('newDisplayOrder: $newDisplayOrder, ')
+          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
+          ..write('reviewInterval: $reviewInterval, ')
+          ..write('startTime: $startTime, ')
+          ..write('title: $title, ')
+          ..write('willNewLearnCount: $willNewLearnCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      creatorUserId,
+      memoryModelId,
+      newDisplayOrder,
+      newReviewDisplayOrder,
+      reviewInterval,
+      startTime,
+      title,
+      willNewLearnCount,
+      createdAt,
+      id,
+      updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MemoryGroup &&
+          other.creatorUserId == this.creatorUserId &&
+          other.memoryModelId == this.memoryModelId &&
+          other.newDisplayOrder == this.newDisplayOrder &&
+          other.newReviewDisplayOrder == this.newReviewDisplayOrder &&
+          other.reviewInterval == this.reviewInterval &&
+          other.startTime == this.startTime &&
+          other.title == this.title &&
+          other.willNewLearnCount == this.willNewLearnCount &&
+          other.createdAt == this.createdAt &&
+          other.id == this.id &&
+          other.updatedAt == this.updatedAt);
+}
+
+class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
+  Value<int> creatorUserId;
+  Value<String?> memoryModelId;
+  Value<NewDisplayOrder> newDisplayOrder;
+  Value<NewReviewDisplayOrder> newReviewDisplayOrder;
+  Value<DateTime> reviewInterval;
+  Value<DateTime?> startTime;
+  Value<String> title;
+  Value<int> willNewLearnCount;
+  Value<DateTime> createdAt;
+  Value<String> id;
+  Value<DateTime> updatedAt;
+  MemoryGroupsCompanion({
+    this.creatorUserId = const Value.absent(),
+    this.memoryModelId = const Value.absent(),
+    this.newDisplayOrder = const Value.absent(),
+    this.newReviewDisplayOrder = const Value.absent(),
+    this.reviewInterval = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.title = const Value.absent(),
+    this.willNewLearnCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  MemoryGroupsCompanion.insert({
+    required int creatorUserId,
+    this.memoryModelId = const Value.absent(),
+    required NewDisplayOrder newDisplayOrder,
+    required NewReviewDisplayOrder newReviewDisplayOrder,
+    required DateTime reviewInterval,
+    this.startTime = const Value.absent(),
+    required String title,
+    required int willNewLearnCount,
+    required DateTime createdAt,
+    required String id,
+    required DateTime updatedAt,
+  })  : creatorUserId = Value(creatorUserId),
+        newDisplayOrder = Value(newDisplayOrder),
+        newReviewDisplayOrder = Value(newReviewDisplayOrder),
+        reviewInterval = Value(reviewInterval),
+        title = Value(title),
+        willNewLearnCount = Value(willNewLearnCount),
+        createdAt = Value(createdAt),
+        id = Value(id),
+        updatedAt = Value(updatedAt);
+  static Insertable<MemoryGroup> custom({
+    Expression<int>? creatorUserId,
+    Expression<String>? memoryModelId,
+    Expression<int>? newDisplayOrder,
+    Expression<int>? newReviewDisplayOrder,
+    Expression<DateTime>? reviewInterval,
+    Expression<DateTime>? startTime,
+    Expression<String>? title,
+    Expression<int>? willNewLearnCount,
+    Expression<DateTime>? createdAt,
+    Expression<String>? id,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (creatorUserId != null) 'creator_user_id': creatorUserId,
+      if (memoryModelId != null) 'memory_model_id': memoryModelId,
+      if (newDisplayOrder != null) 'new_display_order': newDisplayOrder,
+      if (newReviewDisplayOrder != null)
+        'new_review_display_order': newReviewDisplayOrder,
+      if (reviewInterval != null) 'review_interval': reviewInterval,
+      if (startTime != null) 'start_time': startTime,
+      if (title != null) 'title': title,
+      if (willNewLearnCount != null) 'will_new_learn_count': willNewLearnCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (id != null) 'id': id,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  MemoryGroupsCompanion copyWith(
+      {Value<int>? creatorUserId,
+      Value<String?>? memoryModelId,
+      Value<NewDisplayOrder>? newDisplayOrder,
+      Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
+      Value<DateTime>? reviewInterval,
+      Value<DateTime?>? startTime,
+      Value<String>? title,
+      Value<int>? willNewLearnCount,
+      Value<DateTime>? createdAt,
+      Value<String>? id,
+      Value<DateTime>? updatedAt}) {
+    return MemoryGroupsCompanion(
+      creatorUserId: creatorUserId ?? this.creatorUserId,
+      memoryModelId: memoryModelId ?? this.memoryModelId,
+      newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
+      newReviewDisplayOrder:
+          newReviewDisplayOrder ?? this.newReviewDisplayOrder,
+      reviewInterval: reviewInterval ?? this.reviewInterval,
+      startTime: startTime ?? this.startTime,
+      title: title ?? this.title,
+      willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
+      createdAt: createdAt ?? this.createdAt,
+      id: id ?? this.id,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (creatorUserId.present) {
+      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    }
+    if (memoryModelId.present) {
+      map['memory_model_id'] = Variable<String>(memoryModelId.value);
+    }
+    if (newDisplayOrder.present) {
+      final converter = $MemoryGroupsTable.$converternewDisplayOrder;
+      map['new_display_order'] =
+          Variable<int>(converter.toSql(newDisplayOrder.value));
+    }
+    if (newReviewDisplayOrder.present) {
+      final converter = $MemoryGroupsTable.$converternewReviewDisplayOrder;
+      map['new_review_display_order'] =
+          Variable<int>(converter.toSql(newReviewDisplayOrder.value));
+    }
+    if (reviewInterval.present) {
+      map['review_interval'] = Variable<DateTime>(reviewInterval.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (willNewLearnCount.present) {
+      map['will_new_learn_count'] = Variable<int>(willNewLearnCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MemoryGroupsCompanion(')
+          ..write('creatorUserId: $creatorUserId, ')
+          ..write('memoryModelId: $memoryModelId, ')
+          ..write('newDisplayOrder: $newDisplayOrder, ')
+          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
+          ..write('reviewInterval: $reviewInterval, ')
+          ..write('startTime: $startTime, ')
+          ..write('title: $title, ')
+          ..write('willNewLearnCount: $willNewLearnCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MemoryGroupsTable extends MemoryGroups
+    with TableInfo<$MemoryGroupsTable, MemoryGroup> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MemoryGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _creatorUserIdMeta =
+      const VerificationMeta('creatorUserId');
+  @override
+  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+      'creator_user_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _memoryModelIdMeta =
+      const VerificationMeta('memoryModelId');
+  @override
+  late final GeneratedColumn<String> memoryModelId = GeneratedColumn<String>(
+      'memory_model_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _newDisplayOrderMeta =
+      const VerificationMeta('newDisplayOrder');
+  @override
+  late final GeneratedColumnWithTypeConverter<NewDisplayOrder, int>
+      newDisplayOrder = GeneratedColumn<int>(
+              'new_display_order', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<NewDisplayOrder>(
+              $MemoryGroupsTable.$converternewDisplayOrder);
+  static const VerificationMeta _newReviewDisplayOrderMeta =
+      const VerificationMeta('newReviewDisplayOrder');
+  @override
+  late final GeneratedColumnWithTypeConverter<NewReviewDisplayOrder, int>
+      newReviewDisplayOrder = GeneratedColumn<int>(
+              'new_review_display_order', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<NewReviewDisplayOrder>(
+              $MemoryGroupsTable.$converternewReviewDisplayOrder);
+  static const VerificationMeta _reviewIntervalMeta =
+      const VerificationMeta('reviewInterval');
+  @override
+  late final GeneratedColumn<DateTime> reviewInterval =
+      GeneratedColumn<DateTime>('review_interval', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _startTimeMeta =
+      const VerificationMeta('startTime');
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+      'start_time', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _willNewLearnCountMeta =
+      const VerificationMeta('willNewLearnCount');
+  @override
+  late final GeneratedColumn<int> willNewLearnCount = GeneratedColumn<int>(
+      'will_new_learn_count', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        creatorUserId,
+        memoryModelId,
+        newDisplayOrder,
+        newReviewDisplayOrder,
+        reviewInterval,
+        startTime,
+        title,
+        willNewLearnCount,
+        createdAt,
+        id,
+        updatedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? 'memory_groups';
+  @override
+  String get actualTableName => 'memory_groups';
+  @override
+  VerificationContext validateIntegrity(Insertable<MemoryGroup> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('creator_user_id')) {
+      context.handle(
+          _creatorUserIdMeta,
+          creatorUserId.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creatorUserIdMeta));
+    } else if (isInserting) {
+      context.missing(_creatorUserIdMeta);
+    }
+    if (data.containsKey('memory_model_id')) {
+      context.handle(
+          _memoryModelIdMeta,
+          memoryModelId.isAcceptableOrUnknown(
+              data['memory_model_id']!, _memoryModelIdMeta));
+    }
+    context.handle(_newDisplayOrderMeta, const VerificationResult.success());
+    context.handle(
+        _newReviewDisplayOrderMeta, const VerificationResult.success());
+    if (data.containsKey('review_interval')) {
+      context.handle(
+          _reviewIntervalMeta,
+          reviewInterval.isAcceptableOrUnknown(
+              data['review_interval']!, _reviewIntervalMeta));
+    } else if (isInserting) {
+      context.missing(_reviewIntervalMeta);
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(_startTimeMeta,
+          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('will_new_learn_count')) {
+      context.handle(
+          _willNewLearnCountMeta,
+          willNewLearnCount.isAcceptableOrUnknown(
+              data['will_new_learn_count']!, _willNewLearnCountMeta));
+    } else if (isInserting) {
+      context.missing(_willNewLearnCountMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MemoryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MemoryGroup(
+      creatorUserId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
+      memoryModelId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}memory_model_id']),
+      newDisplayOrder: $MemoryGroupsTable.$converternewDisplayOrder.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
+      newReviewDisplayOrder: $MemoryGroupsTable.$converternewReviewDisplayOrder
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+              data['${effectivePrefix}new_review_display_order'])!),
+      reviewInterval: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
+      startTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_time']),
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      willNewLearnCount: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $MemoryGroupsTable createAlias(String alias) {
+    return $MemoryGroupsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<NewDisplayOrder, int> $converternewDisplayOrder =
+      const EnumIndexConverter<NewDisplayOrder>(NewDisplayOrder.values);
+  static TypeConverter<NewReviewDisplayOrder, int>
+      $converternewReviewDisplayOrder =
+      const EnumIndexConverter<NewReviewDisplayOrder>(
+          NewReviewDisplayOrder.values);
+}
+
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   String buttonAlgorithm;
   int creatorUserId;
   String familiarityAlgorithm;
   String? fatherMemoryModelId;
   String nextTimeAlgorithm;
-  String stimulateAlgorithm;
   String title;
   DateTime createdAt;
   String id;
@@ -4567,7 +4455,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       required this.familiarityAlgorithm,
       this.fatherMemoryModelId,
       required this.nextTimeAlgorithm,
-      required this.stimulateAlgorithm,
       required this.title,
       required this.createdAt,
       required this.id,
@@ -4582,7 +4469,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       map['father_memory_model_id'] = Variable<String>(fatherMemoryModelId);
     }
     map['next_time_algorithm'] = Variable<String>(nextTimeAlgorithm);
-    map['stimulate_algorithm'] = Variable<String>(stimulateAlgorithm);
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['id'] = Variable<String>(id);
@@ -4599,7 +4485,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           ? const Value.absent()
           : Value(fatherMemoryModelId),
       nextTimeAlgorithm: Value(nextTimeAlgorithm),
-      stimulateAlgorithm: Value(stimulateAlgorithm),
       title: Value(title),
       createdAt: Value(createdAt),
       id: Value(id),
@@ -4618,8 +4503,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       fatherMemoryModelId:
           serializer.fromJson<String?>(json['fatherMemoryModelId']),
       nextTimeAlgorithm: serializer.fromJson<String>(json['nextTimeAlgorithm']),
-      stimulateAlgorithm:
-          serializer.fromJson<String>(json['stimulateAlgorithm']),
       title: serializer.fromJson<String>(json['title']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<String>(json['id']),
@@ -4635,7 +4518,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       'familiarityAlgorithm': serializer.toJson<String>(familiarityAlgorithm),
       'fatherMemoryModelId': serializer.toJson<String?>(fatherMemoryModelId),
       'nextTimeAlgorithm': serializer.toJson<String>(nextTimeAlgorithm),
-      'stimulateAlgorithm': serializer.toJson<String>(stimulateAlgorithm),
       'title': serializer.toJson<String>(title),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<String>(id),
@@ -4649,7 +4531,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           String? familiarityAlgorithm,
           Value<String?> fatherMemoryModelId = const Value.absent(),
           String? nextTimeAlgorithm,
-          String? stimulateAlgorithm,
           String? title,
           DateTime? createdAt,
           String? id,
@@ -4662,7 +4543,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
             ? fatherMemoryModelId.value
             : this.fatherMemoryModelId,
         nextTimeAlgorithm: nextTimeAlgorithm ?? this.nextTimeAlgorithm,
-        stimulateAlgorithm: stimulateAlgorithm ?? this.stimulateAlgorithm,
         title: title ?? this.title,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
@@ -4676,7 +4556,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           ..write('familiarityAlgorithm: $familiarityAlgorithm, ')
           ..write('fatherMemoryModelId: $fatherMemoryModelId, ')
           ..write('nextTimeAlgorithm: $nextTimeAlgorithm, ')
-          ..write('stimulateAlgorithm: $stimulateAlgorithm, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -4692,7 +4571,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       familiarityAlgorithm,
       fatherMemoryModelId,
       nextTimeAlgorithm,
-      stimulateAlgorithm,
       title,
       createdAt,
       id,
@@ -4706,7 +4584,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           other.familiarityAlgorithm == this.familiarityAlgorithm &&
           other.fatherMemoryModelId == this.fatherMemoryModelId &&
           other.nextTimeAlgorithm == this.nextTimeAlgorithm &&
-          other.stimulateAlgorithm == this.stimulateAlgorithm &&
           other.title == this.title &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
@@ -4719,7 +4596,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   Value<String> familiarityAlgorithm;
   Value<String?> fatherMemoryModelId;
   Value<String> nextTimeAlgorithm;
-  Value<String> stimulateAlgorithm;
   Value<String> title;
   Value<DateTime> createdAt;
   Value<String> id;
@@ -4730,7 +4606,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     this.familiarityAlgorithm = const Value.absent(),
     this.fatherMemoryModelId = const Value.absent(),
     this.nextTimeAlgorithm = const Value.absent(),
-    this.stimulateAlgorithm = const Value.absent(),
     this.title = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
@@ -4742,7 +4617,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     required String familiarityAlgorithm,
     this.fatherMemoryModelId = const Value.absent(),
     required String nextTimeAlgorithm,
-    required String stimulateAlgorithm,
     required String title,
     required DateTime createdAt,
     required String id,
@@ -4751,7 +4625,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
         creatorUserId = Value(creatorUserId),
         familiarityAlgorithm = Value(familiarityAlgorithm),
         nextTimeAlgorithm = Value(nextTimeAlgorithm),
-        stimulateAlgorithm = Value(stimulateAlgorithm),
         title = Value(title),
         createdAt = Value(createdAt),
         id = Value(id),
@@ -4762,7 +4635,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     Expression<String>? familiarityAlgorithm,
     Expression<String>? fatherMemoryModelId,
     Expression<String>? nextTimeAlgorithm,
-    Expression<String>? stimulateAlgorithm,
     Expression<String>? title,
     Expression<DateTime>? createdAt,
     Expression<String>? id,
@@ -4776,7 +4648,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       if (fatherMemoryModelId != null)
         'father_memory_model_id': fatherMemoryModelId,
       if (nextTimeAlgorithm != null) 'next_time_algorithm': nextTimeAlgorithm,
-      if (stimulateAlgorithm != null) 'stimulate_algorithm': stimulateAlgorithm,
       if (title != null) 'title': title,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
@@ -4790,7 +4661,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       Value<String>? familiarityAlgorithm,
       Value<String?>? fatherMemoryModelId,
       Value<String>? nextTimeAlgorithm,
-      Value<String>? stimulateAlgorithm,
       Value<String>? title,
       Value<DateTime>? createdAt,
       Value<String>? id,
@@ -4801,7 +4671,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       familiarityAlgorithm: familiarityAlgorithm ?? this.familiarityAlgorithm,
       fatherMemoryModelId: fatherMemoryModelId ?? this.fatherMemoryModelId,
       nextTimeAlgorithm: nextTimeAlgorithm ?? this.nextTimeAlgorithm,
-      stimulateAlgorithm: stimulateAlgorithm ?? this.stimulateAlgorithm,
       title: title ?? this.title,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
@@ -4829,9 +4698,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     if (nextTimeAlgorithm.present) {
       map['next_time_algorithm'] = Variable<String>(nextTimeAlgorithm.value);
     }
-    if (stimulateAlgorithm.present) {
-      map['stimulate_algorithm'] = Variable<String>(stimulateAlgorithm.value);
-    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
@@ -4855,7 +4721,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
           ..write('familiarityAlgorithm: $familiarityAlgorithm, ')
           ..write('fatherMemoryModelId: $fatherMemoryModelId, ')
           ..write('nextTimeAlgorithm: $nextTimeAlgorithm, ')
-          ..write('stimulateAlgorithm: $stimulateAlgorithm, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -4901,12 +4766,6 @@ class $MemoryModelsTable extends MemoryModels
   late final GeneratedColumn<String> nextTimeAlgorithm =
       GeneratedColumn<String>('next_time_algorithm', aliasedName, false,
           type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _stimulateAlgorithmMeta =
-      const VerificationMeta('stimulateAlgorithm');
-  @override
-  late final GeneratedColumn<String> stimulateAlgorithm =
-      GeneratedColumn<String>('stimulate_algorithm', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -4936,7 +4795,6 @@ class $MemoryModelsTable extends MemoryModels
         familiarityAlgorithm,
         fatherMemoryModelId,
         nextTimeAlgorithm,
-        stimulateAlgorithm,
         title,
         createdAt,
         id,
@@ -4989,14 +4847,6 @@ class $MemoryModelsTable extends MemoryModels
     } else if (isInserting) {
       context.missing(_nextTimeAlgorithmMeta);
     }
-    if (data.containsKey('stimulate_algorithm')) {
-      context.handle(
-          _stimulateAlgorithmMeta,
-          stimulateAlgorithm.isAcceptableOrUnknown(
-              data['stimulate_algorithm']!, _stimulateAlgorithmMeta));
-    } else if (isInserting) {
-      context.missing(_stimulateAlgorithmMeta);
-    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
@@ -5041,8 +4891,6 @@ class $MemoryModelsTable extends MemoryModels
           data['${effectivePrefix}father_memory_model_id']),
       nextTimeAlgorithm: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}next_time_algorithm'])!,
-      stimulateAlgorithm: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}stimulate_algorithm'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       createdAt: attachedDatabase.typeMapping
@@ -6160,353 +6008,6 @@ class $FragmentGroupsTable extends FragmentGroups
   }
 }
 
-class MemoryModelGroup extends DataClass
-    implements Insertable<MemoryModelGroup> {
-  int creatorUserId;
-  String? fatherMemoryModelGroupsId;
-  String title;
-  DateTime createdAt;
-  String id;
-  DateTime updatedAt;
-  MemoryModelGroup(
-      {required this.creatorUserId,
-      this.fatherMemoryModelGroupsId,
-      required this.title,
-      required this.createdAt,
-      required this.id,
-      required this.updatedAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || fatherMemoryModelGroupsId != null) {
-      map['father_memory_model_groups_id'] =
-          Variable<String>(fatherMemoryModelGroupsId);
-    }
-    map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  MemoryModelGroupsCompanion toCompanion(bool nullToAbsent) {
-    return MemoryModelGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fatherMemoryModelGroupsId:
-          fatherMemoryModelGroupsId == null && nullToAbsent
-              ? const Value.absent()
-              : Value(fatherMemoryModelGroupsId),
-      title: Value(title),
-      createdAt: Value(createdAt),
-      id: Value(id),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory MemoryModelGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MemoryModelGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      fatherMemoryModelGroupsId:
-          serializer.fromJson<String?>(json['fatherMemoryModelGroupsId']),
-      title: serializer.fromJson<String>(json['title']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'fatherMemoryModelGroupsId':
-          serializer.toJson<String?>(fatherMemoryModelGroupsId),
-      'title': serializer.toJson<String>(title),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  MemoryModelGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> fatherMemoryModelGroupsId = const Value.absent(),
-          String? title,
-          DateTime? createdAt,
-          String? id,
-          DateTime? updatedAt}) =>
-      MemoryModelGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        fatherMemoryModelGroupsId: fatherMemoryModelGroupsId.present
-            ? fatherMemoryModelGroupsId.value
-            : this.fatherMemoryModelGroupsId,
-        title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
-        id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('MemoryModelGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherMemoryModelGroupsId: $fatherMemoryModelGroupsId, ')
-          ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(creatorUserId, fatherMemoryModelGroupsId,
-      title, createdAt, id, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MemoryModelGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.fatherMemoryModelGroupsId == this.fatherMemoryModelGroupsId &&
-          other.title == this.title &&
-          other.createdAt == this.createdAt &&
-          other.id == this.id &&
-          other.updatedAt == this.updatedAt);
-}
-
-class MemoryModelGroupsCompanion extends UpdateCompanion<MemoryModelGroup> {
-  Value<int> creatorUserId;
-  Value<String?> fatherMemoryModelGroupsId;
-  Value<String> title;
-  Value<DateTime> createdAt;
-  Value<String> id;
-  Value<DateTime> updatedAt;
-  MemoryModelGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.fatherMemoryModelGroupsId = const Value.absent(),
-    this.title = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  MemoryModelGroupsCompanion.insert({
-    required int creatorUserId,
-    this.fatherMemoryModelGroupsId = const Value.absent(),
-    required String title,
-    required DateTime createdAt,
-    required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        title = Value(title),
-        createdAt = Value(createdAt),
-        id = Value(id),
-        updatedAt = Value(updatedAt);
-  static Insertable<MemoryModelGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? fatherMemoryModelGroupsId,
-    Expression<String>? title,
-    Expression<DateTime>? createdAt,
-    Expression<String>? id,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (fatherMemoryModelGroupsId != null)
-        'father_memory_model_groups_id': fatherMemoryModelGroupsId,
-      if (title != null) 'title': title,
-      if (createdAt != null) 'created_at': createdAt,
-      if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  MemoryModelGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? fatherMemoryModelGroupsId,
-      Value<String>? title,
-      Value<DateTime>? createdAt,
-      Value<String>? id,
-      Value<DateTime>? updatedAt}) {
-    return MemoryModelGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      fatherMemoryModelGroupsId:
-          fatherMemoryModelGroupsId ?? this.fatherMemoryModelGroupsId,
-      title: title ?? this.title,
-      createdAt: createdAt ?? this.createdAt,
-      id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
-    }
-    if (fatherMemoryModelGroupsId.present) {
-      map['father_memory_model_groups_id'] =
-          Variable<String>(fatherMemoryModelGroupsId.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MemoryModelGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherMemoryModelGroupsId: $fatherMemoryModelGroupsId, ')
-          ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $MemoryModelGroupsTable extends MemoryModelGroups
-    with TableInfo<$MemoryModelGroupsTable, MemoryModelGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MemoryModelGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
-  @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fatherMemoryModelGroupsIdMeta =
-      const VerificationMeta('fatherMemoryModelGroupsId');
-  @override
-  late final GeneratedColumn<String> fatherMemoryModelGroupsId =
-      GeneratedColumn<String>(
-          'father_memory_model_groups_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        creatorUserId,
-        fatherMemoryModelGroupsId,
-        title,
-        createdAt,
-        id,
-        updatedAt
-      ];
-  @override
-  String get aliasedName => _alias ?? 'memory_model_groups';
-  @override
-  String get actualTableName => 'memory_model_groups';
-  @override
-  VerificationContext validateIntegrity(Insertable<MemoryModelGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
-    } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
-    }
-    if (data.containsKey('father_memory_model_groups_id')) {
-      context.handle(
-          _fatherMemoryModelGroupsIdMeta,
-          fatherMemoryModelGroupsId.isAcceptableOrUnknown(
-              data['father_memory_model_groups_id']!,
-              _fatherMemoryModelGroupsIdMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  MemoryModelGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MemoryModelGroup(
-      creatorUserId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fatherMemoryModelGroupsId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}father_memory_model_groups_id']),
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $MemoryModelGroupsTable createAlias(String alias) {
-    return $MemoryModelGroupsTable(attachedDatabase, alias);
-  }
-}
-
 class NoteGroup extends DataClass implements Insertable<NoteGroup> {
   int creatorUserId;
   String? fatherNoteGroupsId;
@@ -6846,25 +6347,21 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $FragmentMemoryInfosTable(this);
   late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
-  late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $RDocument2DocumentGroupsTable rDocument2DocumentGroups =
       $RDocument2DocumentGroupsTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
-  late final $RMemoryModel2MemoryModelGroupsTable
-      rMemoryModel2MemoryModelGroups =
-      $RMemoryModel2MemoryModelGroupsTable(this);
   late final $RNote2NoteGroupsTable rNote2NoteGroups =
       $RNote2NoteGroupsTable(this);
+  late final $Test2sTable test2s = $Test2sTable(this);
   late final $TestsTable tests = $TestsTable(this);
   late final $DocumentsTable documents = $DocumentsTable(this);
   late final $FragmentsTable fragments = $FragmentsTable(this);
+  late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
   late final $NotesTable notes = $NotesTable(this);
   late final $DocumentGroupsTable documentGroups = $DocumentGroupsTable(this);
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
-  late final $MemoryModelGroupsTable memoryModelGroups =
-      $MemoryModelGroupsTable(this);
   late final $NoteGroupsTable noteGroups = $NoteGroupsTable(this);
   late final InsertDAO insertDAO = InsertDAO(this as DriftDb);
   late final UpdateDAO updateDAO = UpdateDAO(this as DriftDb);
@@ -6879,19 +6376,18 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragmentMemoryInfos,
         appInfos,
         syncs,
-        memoryGroups,
         rDocument2DocumentGroups,
         rFragment2FragmentGroups,
-        rMemoryModel2MemoryModelGroups,
         rNote2NoteGroups,
+        test2s,
         tests,
         documents,
         fragments,
+        memoryGroups,
         memoryModels,
         notes,
         documentGroups,
         fragmentGroups,
-        memoryModelGroups,
         noteGroups
       ];
 }

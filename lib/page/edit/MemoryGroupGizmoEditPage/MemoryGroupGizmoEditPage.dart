@@ -1,5 +1,6 @@
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/BasicConfigWidget.dart';
-import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/CurrentCircleWidget.dart';import 'package:drift_main/drift/DriftDb.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/CurrentCircleWidget.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +9,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'MemoryGroupGizmoEditPageAbController.dart';
 
 class MemoryGroupGizmoEditPage extends StatelessWidget {
-  const MemoryGroupGizmoEditPage({Key? key, required this.editPageType, required this.memoryGroupGizmo}) : super(key: key);
+  const MemoryGroupGizmoEditPage({Key? key, required this.editPageType, required this.memoryGroupAb}) : super(key: key);
 
-  final Ab<MemoryGroup>? memoryGroupGizmo;
+  final Ab<MemoryGroup> memoryGroupAb;
   final MemoryGroupGizmoEditPageType editPageType;
 
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
-      putController: MemoryGroupGizmoEditPageAbController(editPageType: editPageType, memoryGroupGizmo: memoryGroupGizmo),
+      putController: MemoryGroupGizmoEditPageAbController(editPageType: editPageType, memoryGroupAb: memoryGroupAb),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: _appBar(),
@@ -54,7 +55,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return c.memoryGroupGizmo!().startTime == null
+        return c.memoryGroupAb!().startTime == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
                 text: const Text('保存并执行', style: TextStyle(color: Colors.white)),

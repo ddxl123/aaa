@@ -3,33 +3,6 @@ part of drift_db;
 extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
-  /// 前 7 个字符
-  /// 1. 最大时间点：4453-04-05 23:21:35
-  /// 2. 最大 10 进制时间戳（单位s）：783 6416 4095
-  /// 3. 最大 36 进制时间戳：'zzz zzzz'
-  ///
-  /// 中间 7 字符：
-  /// 1. 用户 id(10进制) 转 36进制：
-  /// 2. 最大值 10 进制值：783 6416 4095
-  /// 3. 最大 36 进制值：'zzz zzzz'
-  ///
-  /// 最后 4 字符：
-  /// 1. 随机值
-  /// 2. 最大 10 进制值：1679615
-  /// 3. 最大 36 进制值：'zzzz'
-  ///
-  /// 整体：
-  /// 000 0000 - 000 0000 - 0000
-  String createId({required int userId}) {
-    String prefix = (DateTime.now().millisecondsSinceEpoch ~/ 1000).toRadixString(36);
-    String center = userId.toRadixString(36);
-    String suffix = Random().nextInt(1679615).toRadixString(36);
-    prefix = '0' * (7 - prefix.length) + prefix;
-    center = '0' * (7 - center.length) + center;
-    suffix = '0' * (4 - suffix.length) + suffix;
-    return prefix + center + suffix;
-  }
-
   /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
   ///
   /// 1. 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
@@ -50,7 +23,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [entity] - 要插入的 [UsersCompanion] 的实体，不能使用 [User]
   ///
-  /// [syncTag] - 若为空，则内部将自动创建一个。
+  /// [syncTag] - 只有 [table] 为 [CloudTableBase] 类型时才会生效，否则将其置为 null（意味着为 local类型）。
+  ///   - [Users] 表无需进行 sync，因此也应该让 [syncTag] 设为 null。
   ///
   /// 必须搭配 [withRefs] 使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
@@ -60,8 +34,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
   }) async {
     return await transaction(
       () async {
+        SyncTag? innerSyncTag = syncTag;
+
         if (table is Users) {
-          if (syncTag != null) throw '插入 User 实体无需进行 sync！';
+          if (innerSyncTag != null) throw '插入 User 实体无需进行 sync！';
           return await into(table).insertReturning(entity);
         }
         // 设置时间 - 每个插入语句都要设置（local/cloud）
@@ -73,12 +49,14 @@ extension DriftSyncExt on DatabaseConnectionUser {
         //
         // LocalTableBase 类型表全部都是自增主键，不需要手动配置。
         if (table is CloudTableBase) {
+          innerSyncTag = innerSyncTag ?? await SyncTag.create();
+          // TODO: 可以使用全局获取 user。
           final mulUsers = await select(DriftDb.instance.users).get();
           if (mulUsers.length != 1) {
             throw 'users 行数不为1';
           }
 
-          entityDynamic.id = createId(userId: mulUsers.first.id).toValue();
+          entityDynamic.id = innerSyncTag.createCloudId(userId: mulUsers.first.id).toValue();
         }
 
         // 插入
@@ -89,16 +67,15 @@ extension DriftSyncExt on DatabaseConnectionUser {
         //
         // LocalTableBase 类型表不需要添加 sync。
         if (table is CloudTableBase) {
-          final st = syncTag ?? await SyncTag.create();
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toValue(),
               rowId: (returningEntityDynamic.id as String).toValue(),
               syncCurdType: SyncCurdType.c.toValue(),
-              tag: st.tag.toValue(),
+              tag: innerSyncTag!.tag.toValue(),
             ),
-            syncTag: st,
+            syncTag: innerSyncTag,
           );
         }
 

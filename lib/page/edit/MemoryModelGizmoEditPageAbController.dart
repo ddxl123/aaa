@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
+import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
+import 'package:tools/tools.dart';
 
 class MemoryModelGizmoEditPageAbController extends AbController {
   MemoryModelGizmoEditPageAbController({required this.memoryModelGizmo, required this.editPageType});
@@ -211,18 +213,18 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       targets: {
         [MemoryModelGizmoEditPageType.create]: () async {
           if (await commitVerify) {
-            // await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
-            //   WithCrts.memoryModelsCompanion(
-            //     title: title(),
-            //     familiarityAlgorithm: familiarityAlgorithm(),
-            //     nextTimeAlgorithm: nextTimeAlgorithm(),
-            //     buttonAlgorithm: buttonDataAlgorithm(),
-            //     // TODO
-            //     applicableGroups: '',
-            //     applicableFields: '',
-            //     stimulateAlgorithm: '',
-            //   ),
-            // );
+            await DriftDb.instance.insertDAO.insertMemoryModel(
+              memoryModelsCompanion: Crt.memoryModelsCompanion(
+                creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
+                fatherMemoryModelId: null.toValue(),
+                title: title(),
+                familiarityAlgorithm: familiarityAlgorithm(),
+                nextTimeAlgorithm: nextTimeAlgorithm(),
+                buttonAlgorithm: buttonDataAlgorithm(),
+              ),
+            );
+
+            await Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshMemoryModels();
 
             return Tuple2(t1: true, t2: '创建成功！');
           } else {

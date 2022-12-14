@@ -74,28 +74,6 @@ class Crt {
     );
   }
 
-  static MemoryGroupsCompanion memoryGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> memoryModelId,
-    required NewDisplayOrder newDisplayOrder,
-    required NewReviewDisplayOrder newReviewDisplayOrder,
-    required DateTime reviewInterval,
-    required Value<DateTime?> startTime,
-    required String title,
-    required int willNewLearnCount,
-  }) {
-    return MemoryGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      memoryModelId: memoryModelId,
-      newDisplayOrder: Value(newDisplayOrder),
-      newReviewDisplayOrder: Value(newReviewDisplayOrder),
-      reviewInterval: Value(reviewInterval),
-      startTime: startTime,
-      title: Value(title),
-      willNewLearnCount: Value(willNewLearnCount),
-    );
-  }
-
   static RDocument2DocumentGroupsCompanion rDocument2DocumentGroupsCompanion({
     required int creatorUserId,
     required Value<String?> documentGroupId,
@@ -120,19 +98,6 @@ class Crt {
     );
   }
 
-  static RMemoryModel2MemoryModelGroupsCompanion
-      rMemoryModel2MemoryModelGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> memoryModelGroupId,
-    required String memoryModelId,
-  }) {
-    return RMemoryModel2MemoryModelGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      memoryModelGroupId: memoryModelGroupId,
-      memoryModelId: Value(memoryModelId),
-    );
-  }
-
   static RNote2NoteGroupsCompanion rNote2NoteGroupsCompanion({
     required int creatorUserId,
     required Value<String?> noteGroupId,
@@ -142,6 +107,14 @@ class Crt {
       creatorUserId: Value(creatorUserId),
       noteGroupId: noteGroupId,
       noteId: Value(noteId),
+    );
+  }
+
+  static Test2sCompanion test2sCompanion({
+    required String local_content,
+  }) {
+    return Test2sCompanion(
+      local_content: Value(local_content),
     );
   }
 
@@ -179,13 +152,34 @@ class Crt {
     );
   }
 
+  static MemoryGroupsCompanion memoryGroupsCompanion({
+    required int creatorUserId,
+    required Value<String?> memoryModelId,
+    required NewDisplayOrder newDisplayOrder,
+    required NewReviewDisplayOrder newReviewDisplayOrder,
+    required DateTime reviewInterval,
+    required Value<DateTime?> startTime,
+    required String title,
+    required int willNewLearnCount,
+  }) {
+    return MemoryGroupsCompanion(
+      creatorUserId: Value(creatorUserId),
+      memoryModelId: memoryModelId,
+      newDisplayOrder: Value(newDisplayOrder),
+      newReviewDisplayOrder: Value(newReviewDisplayOrder),
+      reviewInterval: Value(reviewInterval),
+      startTime: startTime,
+      title: Value(title),
+      willNewLearnCount: Value(willNewLearnCount),
+    );
+  }
+
   static MemoryModelsCompanion memoryModelsCompanion({
     required String buttonAlgorithm,
     required int creatorUserId,
     required String familiarityAlgorithm,
     required Value<String?> fatherMemoryModelId,
     required String nextTimeAlgorithm,
-    required String stimulateAlgorithm,
     required String title,
   }) {
     return MemoryModelsCompanion(
@@ -194,7 +188,6 @@ class Crt {
       familiarityAlgorithm: Value(familiarityAlgorithm),
       fatherMemoryModelId: fatherMemoryModelId,
       nextTimeAlgorithm: Value(nextTimeAlgorithm),
-      stimulateAlgorithm: Value(stimulateAlgorithm),
       title: Value(title),
     );
   }
@@ -235,18 +228,6 @@ class Crt {
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
       local_isSelected: Value(local_isSelected),
-      title: Value(title),
-    );
-  }
-
-  static MemoryModelGroupsCompanion memoryModelGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> fatherMemoryModelGroupsId,
-    required String title,
-  }) {
-    return MemoryModelGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fatherMemoryModelGroupsId: fatherMemoryModelGroupsId,
       title: Value(title),
     );
   }
@@ -308,17 +289,6 @@ extension SyncsCompanionExt on SyncsCompanion {
   }
 }
 
-extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
-  Future<MemoryGroup> insert({required SyncTag? syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.memoryGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
 extension RDocument2DocumentGroupsCompanionExt
     on RDocument2DocumentGroupsCompanion {
   Future<RDocument2DocumentGroup> insert({required SyncTag? syncTag}) async {
@@ -343,24 +313,22 @@ extension RFragment2FragmentGroupsCompanionExt
   }
 }
 
-extension RMemoryModel2MemoryModelGroupsCompanionExt
-    on RMemoryModel2MemoryModelGroupsCompanion {
-  Future<RMemoryModel2MemoryModelGroup> insert(
-      {required SyncTag? syncTag}) async {
+extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
+  Future<RNote2NoteGroup> insert({required SyncTag? syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.rMemoryModel2MemoryModelGroups,
+      ins.rNote2NoteGroups,
       entity: this,
       syncTag: syncTag,
     );
   }
 }
 
-extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
-  Future<RNote2NoteGroup> insert({required SyncTag? syncTag}) async {
+extension Test2sCompanionExt on Test2sCompanion {
+  Future<Test2> insert({required SyncTag? syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.rNote2NoteGroups,
+      ins.test2s,
       entity: this,
       syncTag: syncTag,
     );
@@ -394,6 +362,17 @@ extension FragmentsCompanionExt on FragmentsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragments,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
+  Future<MemoryGroup> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.memoryGroups,
       entity: this,
       syncTag: syncTag,
     );
@@ -438,17 +417,6 @@ extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension MemoryModelGroupsCompanionExt on MemoryModelGroupsCompanion {
-  Future<MemoryModelGroup> insert({required SyncTag? syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.memoryModelGroups,
       entity: this,
       syncTag: syncTag,
     );

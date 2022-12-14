@@ -11,12 +11,12 @@ import '../edit_page_type.dart';
 
 class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 把 gizmo 内所以信息打包成一个对象进行传入。
-  /// 如果只传入 [memoryGroupGizmo] 的话，会缺少 [bSelectedMemoryModel]、[bSelectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
-  MemoryGroupGizmoEditPageAbController({required this.editPageType, required this.memoryGroupGizmo});
+  /// 如果只传入 [memoryGroupAb] 的话，会缺少 [bSelectedMemoryModel]、[bSelectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
+  MemoryGroupGizmoEditPageAbController({required this.editPageType, required this.memoryGroupAb});
 
   final MemoryGroupGizmoEditPageType editPageType;
 
-  final Ab<MemoryGroup>? memoryGroupGizmo;
+  final Ab<MemoryGroup> memoryGroupAb;
 
   /// ========== 可操作-基础配置部分 ==========
 
@@ -164,7 +164,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   @override
   Future<void> loadingFuture() async {
-    final mgg = memoryGroupGizmo!();
+    final mgg = memoryGroupAb();
     final fs = await DriftDb.instance.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: mgg);
     final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
 
@@ -278,7 +278,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         if (value.t1) {
           SmartDialog.showToast(value.t2);
           Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupGizmo!)));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupAb)));
         } else {
           SmartDialog.showToast(value.t2);
         }

@@ -1,11 +1,8 @@
 import 'package:aaa/home/memoryhome/MemoryHomeAbController.dart';
-import 'package:aaa/page/list/ListPageType.dart';
 import 'package:aaa/page/list/MemoryModeListPage.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryGroupListPage.dart';
 import 'package:flutter/material.dart';
-
-import '../../single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 
 class MemoryHome extends StatefulWidget {
   const MemoryHome({Key? key}) : super(key: key);
@@ -36,7 +33,7 @@ class _MemoryHomeState extends State<MemoryHome> {
                 builder: (ctx) => const MemoryGroupListPage(),
               ),
               KeepStateWidget(
-                builder: (_) => const MemoryModeListPage(listPageType: ListPageType.home),
+                builder: (_) => const MemoryModeListPage(),
               ),
               KeepStateWidget(
                 builder: (_) => const Text('统计'),

@@ -25,7 +25,7 @@ class DialogWidget extends StatelessWidget {
       duration: const Duration(milliseconds: 100),
       child: Container(
         padding: const EdgeInsets.fromLTRB(30, 20, 30, 5),
-        constraints: const BoxConstraints(maxHeight: 800, maxWidth: 300),
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8, maxWidth: MediaQuery.of(context).size.width * 0.8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),

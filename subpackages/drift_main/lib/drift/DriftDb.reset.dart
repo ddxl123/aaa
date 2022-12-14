@@ -247,84 +247,6 @@ extension SyncExt on Sync {
   }
 }
 
-/// [MemoryGroups]
-extension MemoryGroupExt on MemoryGroup {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<MemoryGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> memoryModelId,
-    required Value<NewDisplayOrder> newDisplayOrder,
-    required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
-    required Value<DateTime> reviewInterval,
-    required Value<DateTime?> startTime,
-    required Value<String> title,
-    required Value<int> willNewLearnCount,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
-      isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
-    }
-
-    if (memoryModelId.present && this.memoryModelId != memoryModelId.value) {
-      isCloudModify = true;
-      this.memoryModelId = memoryModelId.value;
-    }
-
-    if (newDisplayOrder.present &&
-        this.newDisplayOrder != newDisplayOrder.value) {
-      isCloudModify = true;
-      this.newDisplayOrder = newDisplayOrder.value;
-    }
-
-    if (newReviewDisplayOrder.present &&
-        this.newReviewDisplayOrder != newReviewDisplayOrder.value) {
-      isCloudModify = true;
-      this.newReviewDisplayOrder = newReviewDisplayOrder.value;
-    }
-
-    if (reviewInterval.present && this.reviewInterval != reviewInterval.value) {
-      isCloudModify = true;
-      this.reviewInterval = reviewInterval.value;
-    }
-
-    if (startTime.present && this.startTime != startTime.value) {
-      isCloudModify = true;
-      this.startTime = startTime.value;
-    }
-
-    if (title.present && this.title != title.value) {
-      isCloudModify = true;
-      this.title = title.value;
-    }
-
-    if (willNewLearnCount.present &&
-        this.willNewLearnCount != willNewLearnCount.value) {
-      isCloudModify = true;
-      this.willNewLearnCount = willNewLearnCount.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.memoryGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [RDocument2DocumentGroups]
 extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -417,52 +339,6 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   }
 }
 
-/// [RMemoryModel2MemoryModelGroups]
-extension RMemoryModel2MemoryModelGroupExt on RMemoryModel2MemoryModelGroup {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<RMemoryModel2MemoryModelGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> memoryModelGroupId,
-    required Value<String> memoryModelId,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
-      isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
-    }
-
-    if (memoryModelGroupId.present &&
-        this.memoryModelGroupId != memoryModelGroupId.value) {
-      isCloudModify = true;
-      this.memoryModelGroupId = memoryModelGroupId.value;
-    }
-
-    if (memoryModelId.present && this.memoryModelId != memoryModelId.value) {
-      isCloudModify = true;
-      this.memoryModelId = memoryModelId.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rMemoryModel2MemoryModelGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [RNote2NoteGroups]
 extension RNote2NoteGroupExt on RNote2NoteGroup {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -502,6 +378,39 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rNote2NoteGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [Test2s]
+extension Test2Ext on Test2 {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<Test2> reset({
+    required Value<String> local_content,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (local_content.present && this.local_content != local_content.value) {
+      isLocalModify = true;
+      this.local_content = local_content.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.test2s,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -639,6 +548,84 @@ extension FragmentExt on Fragment {
   }
 }
 
+/// [MemoryGroups]
+extension MemoryGroupExt on MemoryGroup {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<MemoryGroup> reset({
+    required Value<int> creatorUserId,
+    required Value<String?> memoryModelId,
+    required Value<NewDisplayOrder> newDisplayOrder,
+    required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
+    required Value<DateTime> reviewInterval,
+    required Value<DateTime?> startTime,
+    required Value<String> title,
+    required Value<int> willNewLearnCount,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+      isCloudModify = true;
+      this.creatorUserId = creatorUserId.value;
+    }
+
+    if (memoryModelId.present && this.memoryModelId != memoryModelId.value) {
+      isCloudModify = true;
+      this.memoryModelId = memoryModelId.value;
+    }
+
+    if (newDisplayOrder.present &&
+        this.newDisplayOrder != newDisplayOrder.value) {
+      isCloudModify = true;
+      this.newDisplayOrder = newDisplayOrder.value;
+    }
+
+    if (newReviewDisplayOrder.present &&
+        this.newReviewDisplayOrder != newReviewDisplayOrder.value) {
+      isCloudModify = true;
+      this.newReviewDisplayOrder = newReviewDisplayOrder.value;
+    }
+
+    if (reviewInterval.present && this.reviewInterval != reviewInterval.value) {
+      isCloudModify = true;
+      this.reviewInterval = reviewInterval.value;
+    }
+
+    if (startTime.present && this.startTime != startTime.value) {
+      isCloudModify = true;
+      this.startTime = startTime.value;
+    }
+
+    if (title.present && this.title != title.value) {
+      isCloudModify = true;
+      this.title = title.value;
+    }
+
+    if (willNewLearnCount.present &&
+        this.willNewLearnCount != willNewLearnCount.value) {
+      isCloudModify = true;
+      this.willNewLearnCount = willNewLearnCount.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.memoryGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
 /// [MemoryModels]
 extension MemoryModelExt on MemoryModel {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -658,7 +645,6 @@ extension MemoryModelExt on MemoryModel {
     required Value<String> familiarityAlgorithm,
     required Value<String?> fatherMemoryModelId,
     required Value<String> nextTimeAlgorithm,
-    required Value<String> stimulateAlgorithm,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
@@ -691,12 +677,6 @@ extension MemoryModelExt on MemoryModel {
         this.nextTimeAlgorithm != nextTimeAlgorithm.value) {
       isCloudModify = true;
       this.nextTimeAlgorithm = nextTimeAlgorithm.value;
-    }
-
-    if (stimulateAlgorithm.present &&
-        this.stimulateAlgorithm != stimulateAlgorithm.value) {
-      isCloudModify = true;
-      this.stimulateAlgorithm = stimulateAlgorithm.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -857,52 +837,6 @@ extension FragmentGroupExt on FragmentGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [MemoryModelGroups]
-extension MemoryModelGroupExt on MemoryModelGroup {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<MemoryModelGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> fatherMemoryModelGroupsId,
-    required Value<String> title,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
-      isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
-    }
-
-    if (fatherMemoryModelGroupsId.present &&
-        this.fatherMemoryModelGroupsId != fatherMemoryModelGroupsId.value) {
-      isCloudModify = true;
-      this.fatherMemoryModelGroupsId = fatherMemoryModelGroupsId.value;
-    }
-
-    if (title.present && this.title != title.value) {
-      isCloudModify = true;
-      this.title = title.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.memoryModelGroups,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;

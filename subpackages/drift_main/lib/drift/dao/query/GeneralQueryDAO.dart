@@ -158,14 +158,12 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 查询已选碎片在 [memoryGroup] 中重复的数量，根据 [FragmentMemoryInfo.fragmentId] 判断。
   Future<int> querySelectedFragmentsRepeatCount({required MemoryGroup memoryGroup}) async {
     final count = fragmentMemoryInfos.id.count();
-    final fs = await querySelectedFragments();
-    final selOnly = selectOnly(fragmentMemoryInfos)
-      ..where(
-        fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id) & fragmentMemoryInfos.fragmentId.isIn(fs.map((e) => e.id)),
-      )
+    final selOnly = selectOnly(fragmentMemoryInfos).join([innerJoin(fragments, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId), useColumns: false)])
+      ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id))
+      ..groupBy([fragmentMemoryInfos.fragmentId])
       ..addColumns([count]);
-    final result = await selOnly.getSingle();
-    return result.read(count)!;
+    final result = await selOnly.get();
+    return result.length;
   }
 
   /// 查询已同步的、查询未同步的、查询未下载的
@@ -204,10 +202,12 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return [];
   }
 
+  /// 获取全部记忆组。
   Future<List<MemoryGroup>> queryMemoryGroups() async {
     return await select(memoryGroups).get();
   }
 
+  /// 获取全部记忆模型。
   Future<List<MemoryModel>> queryMemoryModels() async {
     return await select(memoryModels).get();
   }
@@ -216,8 +216,22 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<List<Fragment>> queryFragmentsInMemoryGroup({required MemoryGroup memoryGroup}) async {
     final selJoin = select(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId))])
       ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id));
+    final start = DateTime.now().millisecondsSinceEpoch;
     final result = await selJoin.get();
     return result.map((e) => e.readTable(fragments)).toList();
+  }
+
+  /// 查询 [fragment] 是否存在于 [memoryGroup] 中。
+  Future<bool> queryIsExistFragmentInMemoryGroup({
+    required Fragment fragment,
+    required MemoryGroup memoryGroup,
+  }) async {
+    final selOnly = select(fragmentMemoryInfos)
+      ..where(
+        (tbl) => tbl.fragmentId.equals(fragment.id) & tbl.memoryGroupId.equals(memoryGroup.id),
+      );
+    final result = await selOnly.get();
+    return result.isEmpty ? false : true;
   }
 
   /// 查询 中的全部碎片数量。

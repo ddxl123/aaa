@@ -10,17 +10,16 @@ class MemoryModeListPageAbController extends AbController {
 
   final memoryModels = <Ab<MemoryModel>>[].ab;
 
-  final selected = Ab<MemoryModel?>(null);
-
   @override
-  void onInit() {
-    selected.refreshEasy((oldValue) => Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.bSelectedMemoryModel.abObj() ?? oldValue);
+  void onDispose() {
+    refreshController.dispose();
+    super.onDispose();
   }
 
-  Future<void> addMemoryModel(MemoryModelsCompanion willEntity) async {
-    final newEntity = await DriftDb.instance.insertDAO.insertMemoryModelWithRef(willEntity);
-    memoryModels.refreshInevitable((obj) => obj..add(newEntity.ab));
-  }
+  // Future<void> addMemoryModel({required MemoryModelsCompanion memoryModelsCompanion}) async {
+  //   final newEntity = await DriftDb.instance.insertDAO.insertMemoryModel(memoryModelsCompanion: memoryModelsCompanion);
+  //   memoryModels.refreshInevitable((obj) => obj..add(newEntity.ab));
+  // }
 
   Future<void> refreshMemoryModels() async {
     final mgs = (await DriftDb.instance.generalQueryDAO.queryMemoryModels()).map((e) => e.ab);
@@ -28,16 +27,8 @@ class MemoryModeListPageAbController extends AbController {
     memoryModels.refreshInevitable((obj) => obj..addAll(mgs));
   }
 
-  void selectMemoryModel(MemoryModel memoryModel) {
-    if (selected() == memoryModel) {
-      selected.refreshInevitable((obj) => null);
-    } else {
-      selected.refreshInevitable((obj) => memoryModel);
-    }
-  }
-
   void confirmSelect() {
-    Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.bSelectedMemoryModel.abObj.refreshInevitable((obj) => selected());
+    // Aber.findOrNullLast<MemoryGroupGizmoEditPageAbController>()?.bSelectedMemoryModel.abObj.refreshInevitable((obj) => selected());
     Navigator.pop(context);
   }
 }

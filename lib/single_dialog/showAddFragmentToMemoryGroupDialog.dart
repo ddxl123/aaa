@@ -100,8 +100,10 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
     if (selectedMg == null) {
       SmartDialog.showToast('未选择！');
     } else {
-      final fs = await db.generalQueryDAO.querySelectedFragments();
-      await db.insertDAO.insertFragmentToMemoryGroup(memoryGroup: selectedMg!, fragments: fs);
+      await db.insertDAO.insertSelectedFragmentToMemoryGroup(
+        memoryGroup: selectedMg!,
+        isRemoveRepeat: isRemoveDuplication,
+      );
       SmartDialog.dismiss();
       SmartDialog.showToast('添加成功！');
     }
@@ -115,7 +117,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
       columnChildren: mgsMap.isEmpty ? const [Text('未创建记忆组', style: TextStyle(color: Colors.grey))] : _columnChildren(),
       cancelText: '再选选(${widget.selectFragmentCount})',
       okText: '添加',
-      onCancel: () {
+      onCancel: () async {
         SmartDialog.dismiss();
       },
       onOk: _onOk,

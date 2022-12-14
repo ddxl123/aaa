@@ -127,4 +127,8 @@ class Aber {
     debug('AberInfo: == findOrNullLast ==》 type:${C.toString()} hash_code:${last?.hashCode}');
     return last;
   }
+
+  static Map<String, AbController> findAllAny() {
+    return _controllers;
+  }
 }

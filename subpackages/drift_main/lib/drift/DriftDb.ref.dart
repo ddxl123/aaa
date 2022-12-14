@@ -33,35 +33,31 @@ abstract class Ref {
 class RefUsers extends Ref {
   Future<void> Function($UsersTable table) self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
-  RefMemoryGroups? memoryGroups;
   RefRDocument2DocumentGroups? rDocument2DocumentGroups;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefRMemoryModel2MemoryModelGroups? rMemoryModel2MemoryModelGroups;
   RefRNote2NoteGroups? rNote2NoteGroups;
   RefDocuments? documents;
   RefFragments? fragments;
+  RefMemoryGroups? memoryGroups;
   RefMemoryModels? memoryModels;
   RefNotes? notes;
   RefDocumentGroups? documentGroups;
   RefFragmentGroups? fragmentGroups;
-  RefMemoryModelGroups? memoryModelGroups;
   RefNoteGroups? noteGroups;
 
   RefUsers({
     required this.self,
     required this.fragmentMemoryInfos,
-    required this.memoryGroups,
     required this.rDocument2DocumentGroups,
     required this.rFragment2FragmentGroups,
-    required this.rMemoryModel2MemoryModelGroups,
     required this.rNote2NoteGroups,
     required this.documents,
     required this.fragments,
+    required this.memoryGroups,
     required this.memoryModels,
     required this.notes,
     required this.documentGroups,
     required this.fragmentGroups,
-    required this.memoryModelGroups,
     required this.noteGroups,
   });
 
@@ -69,18 +65,16 @@ class RefUsers extends Ref {
   Future<void> _run() async {
     await self(DriftDb.instance.users);
     await fragmentMemoryInfos?._run();
-    await memoryGroups?._run();
     await rDocument2DocumentGroups?._run();
     await rFragment2FragmentGroups?._run();
-    await rMemoryModel2MemoryModelGroups?._run();
     await rNote2NoteGroups?._run();
     await documents?._run();
     await fragments?._run();
+    await memoryGroups?._run();
     await memoryModels?._run();
     await notes?._run();
     await documentGroups?._run();
     await fragmentGroups?._run();
-    await memoryModelGroups?._run();
     await noteGroups?._run();
   }
 }
@@ -167,26 +161,6 @@ class RefSyncs extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.syncs);
-  }
-}
-
-/// [MemoryModels]
-class RefMemoryModels extends Ref {
-  Future<void> Function($MemoryModelsTable table) self;
-  RefMemoryGroups? memoryGroups;
-  RefRMemoryModel2MemoryModelGroups? rMemoryModel2MemoryModelGroups;
-
-  RefMemoryModels({
-    required this.self,
-    required this.memoryGroups,
-    required this.rMemoryModel2MemoryModelGroups,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.memoryModels);
-    await memoryGroups?._run();
-    await rMemoryModel2MemoryModelGroups?._run();
   }
 }
 
@@ -278,40 +252,6 @@ class RefRFragment2FragmentGroups extends Ref {
   }
 }
 
-/// [MemoryModelGroups]
-class RefMemoryModelGroups extends Ref {
-  Future<void> Function($MemoryModelGroupsTable table) self;
-  RefRMemoryModel2MemoryModelGroups? rMemoryModel2MemoryModelGroups;
-  RefMemoryModelGroups? child_memoryModelGroups;
-
-  RefMemoryModelGroups({
-    required this.self,
-    required this.rMemoryModel2MemoryModelGroups,
-    required this.child_memoryModelGroups,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.memoryModelGroups);
-    await rMemoryModel2MemoryModelGroups?._run();
-    await child_memoryModelGroups?._run();
-  }
-}
-
-/// [RMemoryModel2MemoryModelGroups]
-class RefRMemoryModel2MemoryModelGroups extends Ref {
-  Future<void> Function($RMemoryModel2MemoryModelGroupsTable table) self;
-
-  RefRMemoryModel2MemoryModelGroups({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.rMemoryModel2MemoryModelGroups);
-  }
-}
-
 /// [NoteGroups]
 class RefNoteGroups extends Ref {
   Future<void> Function($NoteGroupsTable table) self;
@@ -369,6 +309,20 @@ class RefRNote2NoteGroups extends Ref {
   }
 }
 
+/// [Test2s]
+class RefTest2s extends Ref {
+  Future<void> Function($Test2sTable table) self;
+
+  RefTest2s({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.test2s);
+  }
+}
+
 /// [Tests]
 class RefTests extends Ref {
   Future<void> Function($TestsTable table) self;
@@ -380,5 +334,22 @@ class RefTests extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.tests);
+  }
+}
+
+/// [MemoryModels]
+class RefMemoryModels extends Ref {
+  Future<void> Function($MemoryModelsTable table) self;
+  RefMemoryGroups? memoryGroups;
+
+  RefMemoryModels({
+    required this.self,
+    required this.memoryGroups,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.memoryModels);
+    await memoryGroups?._run();
   }
 }

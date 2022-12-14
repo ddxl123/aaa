@@ -1,7 +1,7 @@
+import 'package:aaa/single_dialog/showSelectMemoryModelInMemoryGroupDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
-import '../../select/MemoryModelSelectPage.dart';
 import 'MemoryGroupGizmoEditPageAbController.dart';
 
 class BasicConfigWidget extends StatelessWidget {
@@ -75,7 +75,7 @@ class BasicConfigWidget extends StatelessWidget {
                   },
                 ),
                 onPressed: () {
-                  Navigator.push(c.context, MaterialPageRoute(builder: (_) => const MemoryModelSelectPage()));
+                  showSelectMemoryModelInMemoryGroupDialog(selectedMemoryModelAb: c.bSelectedMemoryModel.abObj);
                 },
               ),
             ],
