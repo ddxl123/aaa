@@ -52,7 +52,7 @@ class InAppStageAbController extends AbController {
   }
 
   Future<void> _init() async {
-    final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryGroupGizmo().memoryModelId);
+    final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupGizmo());
     memoryModelGizmo = mm!.ab;
 
     await _perform();

@@ -3,9 +3,6 @@ enum MemoryGroupGizmoEditPageType {
 }
 
 enum MemoryModelGizmoEditPageType {
-  /// 仅创建，不检查
-  create,
-
   /// 仅修改，不检查
   modify,
 

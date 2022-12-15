@@ -138,7 +138,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               syncTableName: table.actualTableName.toValue(),
-              rowId: (returningEntity as dynamic).id.toValue(),
+              // 无法识别到 dynamic.toValue() 这个扩展，因此直接使用 Value()。
+              rowId: Value((returningEntity as dynamic).id),
               syncCurdType: SyncCurdType.u.toValue(),
               tag: st.tag.toValue(),
             ),

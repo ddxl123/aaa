@@ -216,7 +216,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<List<Fragment>> queryFragmentsInMemoryGroup({required MemoryGroup memoryGroup}) async {
     final selJoin = select(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId))])
       ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id));
-    final start = DateTime.now().millisecondsSinceEpoch;
     final result = await selJoin.get();
     return result.map((e) => e.readTable(fragments)).toList();
   }
@@ -234,7 +233,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.isEmpty ? false : true;
   }
 
-  /// 查询 中的全部碎片数量。
+  /// 查询 [memoryGroup] 中的全部碎片数量。
   Future<int> queryFragmentsCountInMemoryGroup({required MemoryGroup memoryGroup}) async {
     final count = fragments.id.count();
     final selJoin = selectOnly(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId), useColumns: false)])
@@ -244,9 +243,15 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.read(count)!;
   }
 
-  Future<MemoryModel?> queryMemoryModelById({required String? memoryModelId}) async {
-    if (memoryModelId == null) return null;
-    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingleOrNull();
+  /// 查询 [memoryGroup] 中的 [MemoryModel]。
+  Future<MemoryModel?> queryMemoryModelInMemoryGroup({required MemoryGroup memoryGroup}) async {
+    if (memoryGroup.memoryModelId == null) return null;
+    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroup.memoryModelId!))).getSingle();
+  }
+
+  /// 根据 [MemoryModel.id] 查询 [MemoryModel]。
+  Future<MemoryModel> queryMemoryModelById({required String memoryModelId}) async {
+    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingle();
   }
 
   /// 获取 [mg] 内全部碎片数量。

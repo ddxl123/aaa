@@ -87,3 +87,23 @@ extension PrintSuffixExt<T> on T {
     return this;
   }
 }
+
+/// 若 [bs] 全为 true，则返回 true。
+bool boolAllTrue(List<bool> bs) {
+  return !bs.contains(false);
+}
+
+/// 若 [bs] 全为 false，则返回 false。
+bool boolAllFalse(List<bool> bs) {
+  return !bs.contains(true);
+}
+
+/// 若 [bs] 存在 true，则返回 true。
+bool boolExistTrue(List<bool> bs) {
+  return bs.contains(true);
+}
+
+/// 若 [bs] 存在 false，则返回 false。
+bool boolExistFalse(List<bool> bs) {
+  return bs.contains(false);
+}

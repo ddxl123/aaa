@@ -17,7 +17,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
-      putController: MemoryGroupGizmoEditPageAbController(editPageType: editPageType, memoryGroupAb: memoryGroupAb),
+      putController: MemoryGroupGizmoEditPageAbController(memoryGroupAb: memoryGroupAb),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: _appBar(),
@@ -55,20 +55,18 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return c.memoryGroupAb!().startTime == null
+        return c.memoryGroupAb().startTime == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
                 text: const Text('保存并执行', style: TextStyle(color: Colors.white)),
                 onPressed: () {
-                  c.applyAndStart();
+                  c.start();
                 },
               )
             : FloatingRoundCornerButton(
                 color: Colors.greenAccent,
-                text: const Text('继续', style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  c.applyAndStart();
-                },
+                text: const Text(' 继续 ', style: TextStyle(color: Colors.white)),
+                onPressed: () {},
               );
       },
     );
@@ -77,7 +75,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return Text(c.bTitle.abObj(abw));
+        return Text(c.bTitleStorage.abValue(abw));
       },
     );
   }
@@ -105,13 +103,13 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             TextButton(
               child: const Text('分析'),
               onPressed: () async {
-                await c.analyze();
+                await c.onlyAnalyze();
               },
             ),
             TextButton(
               child: const Text('保存'),
               onPressed: () async {
-                await c.save();
+                await c.onlySave();
               },
             ),
           ],

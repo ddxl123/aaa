@@ -1,5 +1,4 @@
 import 'package:aaa/algorithm_parser/parser.dart';
-import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/Storage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
@@ -7,25 +6,21 @@ import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-import '../edit_page_type.dart';
-
 class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 把 gizmo 内所以信息打包成一个对象进行传入。
-  /// 如果只传入 [memoryGroupAb] 的话，会缺少 [bSelectedMemoryModel]、[bSelectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
-  MemoryGroupGizmoEditPageAbController({required this.editPageType, required this.memoryGroupAb});
-
-  final MemoryGroupGizmoEditPageType editPageType;
+  /// 如果只传入 [memoryGroupAb] 的话，会缺少 [bSelectedMemoryModelStorage]、[bSelectedFragments] 等，修改它们后， gizmo 外的数据并没有被刷新。
+  MemoryGroupGizmoEditPageAbController({required this.memoryGroupAb});
 
   final Ab<MemoryGroup> memoryGroupAb;
 
   /// ========== 可操作-基础配置部分 ==========
 
   /// [MemoryGroups.title]
-  final bTitle = Storage<String>(abObj: ''.ab, tempValue: '');
+  final bTitleStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
   final bcTitleTextEditingController = TextEditingController();
 
   /// [MemoryGroups.memoryModelId]
-  final bSelectedMemoryModel = Storage<MemoryModel?>(abObj: Ab<MemoryModel?>(null), tempValue: null);
+  final bSelectedMemoryModelStorage = AbStorage<MemoryModel?>(abValue: Ab<MemoryModel?>(null), tempValue: null);
 
   final bSelectedFragments = <Ab<Fragment>>[].ab;
 
@@ -36,18 +31,18 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// ========== 可操作-当前周期配置部分 ==========
 
   /// [MemoryGroups.willNewLearnCount]
-  final cWillNewLearnCount = Storage<int>(abObj: 0.ab, tempValue: 0);
+  final cWillNewLearnCountStorage = AbStorage<int>(abValue: 0.ab, tempValue: 0);
 
   /// [MemoryGroups.reviewInterval]
   /// TODO: 进行 [AbVerify]
-  final cReviewInterval = Storage<DateTime>(abObj: DateTime.now().ab, tempValue: DateTime.now());
+  final cReviewIntervalStorage = AbStorage<DateTime>(abValue: DateTime.now().ab, tempValue: DateTime.now());
   final ccReviewIntervalTextEditingController = TextEditingController();
 
   /// [MemoryGroups.newReviewDisplayOrder]
-  final cNewReviewDisplayOrder = Storage<NewReviewDisplayOrder>(abObj: NewReviewDisplayOrder.mix.ab, tempValue: NewReviewDisplayOrder.mix);
+  final cNewReviewDisplayOrderStorage = AbStorage<NewReviewDisplayOrder>(abValue: NewReviewDisplayOrder.mix.ab, tempValue: NewReviewDisplayOrder.mix);
 
   /// [MemoryGroups.newDisplayOrder]
-  final cNewDisplayOrder = Storage<NewDisplayOrder>(abObj: NewDisplayOrder.random.ab, tempValue: NewDisplayOrder.random);
+  final cNewDisplayOrderStorage = AbStorage<NewDisplayOrder>(abValue: NewDisplayOrder.random.ab, tempValue: NewDisplayOrder.random);
 
   /// =========================================================================================
 
@@ -78,20 +73,19 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     ccReviewIntervalTextEditingController.dispose();
   }
 
-  @override
-  void initComplexVerifies() {
-    bTitle.abObj.initVerify(
-      (abV) async {
-        if (abV().trim() == '') return VerifyResult(isOk: false, message: '标题不能为空！');
+  Future<void> initVerifies() async {
+    bTitleStorage.initVerify(
+      verifyCallback: (v) async {
+        if (v.trim() == '') return '标题不能为空！';
         return null;
       },
     );
 
-    bSelectedMemoryModel.abObj.initVerify(
-      (abV) async {
-        if (abV() == null) return VerifyResult(isOk: false, message: '记忆模型不能为空！');
-        final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: abV()!.id);
-        if (mm == null) return VerifyResult(isOk: false, message: '未查询到对应的记忆模型！');
+    bSelectedMemoryModelStorage.initVerify(
+      verifyCallback: (v) async {
+        final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
+
+        if (mm == null) return '记忆模型不能为空！';
 
         // TODO: 模拟校验
         final fa = await AlgorithmParser().parse(
@@ -115,46 +109,17 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
             externalResultHandler: null,
           ),
         );
-        return (fa.exceptionContent != null || ff.exceptionContent != null || bd.exceptionContent != null)
-            ? VerifyResult(isOk: false, message: '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！')
-            : null;
+        return (fa.exceptionContent != null || ff.exceptionContent != null || bd.exceptionContent != null) ? '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！' : null;
       },
     );
 
-    cReviewInterval.abObj.initVerify(
-      (abV) async {
-        if (abV().difference(DateTime.now()).inSeconds < 600) return VerifyResult(isOk: false, message: '复习区间至少10分钟(600秒)以上哦~');
+    cReviewIntervalStorage.initVerify(
+      verifyCallback: (v) async {
+        if (v.difference(DateTime.now()).inSeconds < 600) return '复习区间至少10分钟(600秒)以上哦~';
         return null;
       },
     );
   }
-
-  Future<bool> get basicConfigRedErrVerify async => await AbVerify.checkMany(
-        [
-          bTitle.abObj.verify,
-          bSelectedMemoryModel.abObj.verify,
-        ],
-      );
-
-  Future<bool> get currentCycleConfigRedErrVerify async => await AbVerify.checkMany(
-        [
-          cReviewInterval.abObj.verify,
-        ],
-      );
-
-  Future<bool> get saveVerify async => await AbVerify.checkMany(
-        [
-          bTitle.abObj.verify,
-        ],
-      );
-
-  Future<bool> get analyzeVerify async => await AbVerify.checkMany(
-        [
-          bTitle.abObj.verify,
-          bSelectedMemoryModel.abObj.verify,
-          cReviewInterval.abObj.verify,
-        ],
-      );
 
   @override
   bool get isEnableLoading => true;
@@ -164,141 +129,116 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   @override
   Future<void> loadingFuture() async {
-    final mgg = memoryGroupAb();
-    final fs = await DriftDb.instance.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: mgg);
-    final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: mgg.memoryModelId);
+    final fs = await db.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: memoryGroupAb());
+    final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
 
     // 保存初始值
-    bTitle
-      ..tempValue = mgg.title
-      ..abObj.refreshEasy((oldValue) => mgg.title);
-    bcTitleTextEditingController.text = mgg.title;
-    bSelectedMemoryModel
+    bTitleStorage
+      ..tempValue = memoryGroupAb().title
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().title);
+    bcTitleTextEditingController.text = memoryGroupAb().title;
+    bSelectedMemoryModelStorage
       ..tempValue = mm
-      ..abObj.refreshEasy((obj) => mm);
+      ..abValue.refreshEasy((obj) => mm);
     bSelectedFragments.refreshInevitable((obj) => obj
       ..clearBroken(this)
       ..addAll(fs.map((e) => e.ab)));
 
-    cWillNewLearnCount
-      ..tempValue = mgg.willNewLearnCount
-      ..abObj.refreshEasy((obj) => mgg.willNewLearnCount);
-    cReviewInterval
-      ..tempValue = mgg.reviewInterval
-      ..abObj.refreshEasy((oldValue) => mgg.reviewInterval);
-    ccReviewIntervalTextEditingController.text = timeDifference(target: mgg.reviewInterval, start: DateTime.now()).toString();
-    cNewReviewDisplayOrder
-      ..tempValue = mgg.newReviewDisplayOrder
-      ..abObj.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
-    cNewReviewDisplayOrder
-      ..tempValue = mgg.newReviewDisplayOrder
-      ..abObj.refreshEasy((oldValue) => mgg.newReviewDisplayOrder);
-    cNewDisplayOrder
-      ..tempValue = mgg.newDisplayOrder
-      ..abObj.refreshEasy((oldValue) => mgg.newDisplayOrder);
+    cWillNewLearnCountStorage
+      ..tempValue = memoryGroupAb().willNewLearnCount
+      ..abValue.refreshEasy((obj) => memoryGroupAb().willNewLearnCount);
+    cReviewIntervalStorage
+      ..tempValue = memoryGroupAb().reviewInterval
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().reviewInterval);
+    ccReviewIntervalTextEditingController.text = timeDifference(target: memoryGroupAb().reviewInterval, start: DateTime.now()).toString();
+    cNewReviewDisplayOrderStorage
+      ..tempValue = memoryGroupAb().newReviewDisplayOrder
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().newReviewDisplayOrder);
+    cNewDisplayOrderStorage
+      ..tempValue = memoryGroupAb().newDisplayOrder
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().newDisplayOrder);
 
-    final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mgg);
+    final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: memoryGroupAb());
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
+
+    initVerifies();
+  }
+
+  /// 返回是否验证成功。
+  Future<bool> _saveVerify() async {
+    return await bTitleStorage.verify();
+  }
+
+  /// 返回是否验证成功。
+  ///
+  /// 包括了 [_saveVerify]。
+  Future<bool> _analyzeVerify() async {
+    return boolAllTrue([
+      await bTitleStorage.verify(),
+      await bSelectedMemoryModelStorage.verify(),
+      await cWillNewLearnCountStorage.verify(),
+      await cReviewIntervalStorage.verify(),
+      await cNewDisplayOrderStorage.verify(),
+      await cNewReviewDisplayOrderStorage.verify(),
+    ]);
+  }
+
+  /// 仅保存数据。
+  ///
+  /// 若 [isStart] 为 true，则会将启动时间设置为当前时间，否则不变。
+  Future<void> _saveMemoryGroup({required bool isStart}) async {
+    await db.updateDAO.resetMemoryGroupForOnlySave(
+      originalMemoryGroupReset: (st) async {
+        return await memoryGroupAb().reset(
+          creatorUserId: toAbsent(),
+          startTime: isStart ? DateTime.now().toValue() : toAbsent(),
+          memoryModelId: (bSelectedMemoryModelStorage.abValue()?.id).toValue(),
+          title: bTitleStorage.abValue().toValue(),
+          willNewLearnCount: cWillNewLearnCountStorage.abValue().toValue(),
+          reviewInterval: cReviewIntervalStorage.abValue().toValue(),
+          newReviewDisplayOrder: cNewReviewDisplayOrderStorage.abValue().toValue(),
+          newDisplayOrder: cNewDisplayOrderStorage.abValue().toValue(),
+          syncTag: st,
+        );
+      },
+      syncTag: null,
+    );
+    memoryGroupAb.refreshForce();
   }
 
   /// 仅保存。
-  Future<void> save() async {
-    await _save(isApply: false).then(
-      (value) async {
-        await bTitle.abObj.verify.check();
-        isBasicConfigRedErr.refreshEasy((oldValue) => !bTitle.abObj.verify.isOk);
-        if (value.t1) {
-          SmartDialog.showToast('保存成功！');
-          Navigator.pop(context);
-        } else {
-          SmartDialog.showToast(value.t2);
-        }
-      },
-    );
-  }
-
-  /// 仅保存。
-  ///
-  /// 返回的 [Tuple2]：是否成功-消息。
-  Future<Tuple2<bool, String>> _save({required bool isApply}) async {
-    if (await saveVerify) {
-      // await DriftDb.instance.updateDAO.resetMemoryGroup(
-      //   syncTag: null,
-      //   oldMemoryGroupReset: (resetSyncTag) async {
-      //     await memoryGroupGizmo!().reset(
-      //       startTime: isApply ? DateTime.now().toValue() : toAbsent(),
-      //       memoryModelId: (bSelectedMemoryModel.abObj()?.id).toValue(),
-      //       title: bTitle.abObj().toValue(),
-      //       willNewLearnCount: cWillNewLearnCount.abObj().toValue(),
-      //       reviewInterval: cReviewInterval.abObj().toValue(),
-      //       newReviewDisplayOrder: cNewReviewDisplayOrder.abObj().toValue(),
-      //       newDisplayOrder: cNewDisplayOrder.abObj().toValue(),
-      //       writeSyncTag: resetSyncTag,
-      //     );
-      //   },
-      // );
-      // memoryGroupGizmo!.refreshForce();
-      return Tuple2(t1: true, t2: '保存成功！');
+  Future<void> onlySave() async {
+    final result = await _saveVerify();
+    if (result) {
+      await _saveMemoryGroup(isStart: false);
+      SmartDialog.showToast('保存成功！');
+      Navigator.pop(context);
     } else {
-      return Tuple2(t1: false, t2: '保存失败！');
+      SmartDialog.showToast('保存失败！');
     }
   }
 
-  Future<void> analyze() async {
-    await _analyze().then(
-      (value) async {
-        final ibcre = !await basicConfigRedErrVerify;
-        final iccre = !await currentCycleConfigRedErrVerify;
-        isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);
-        isCurrentCycleRedErr.refreshEasy((oldValue) => iccre);
-        SmartDialog.showToast(value.t2);
-      },
-    );
-  }
-
-  /// 返回的 [Tuple2]：是否成功-消息。
-  ///
-  /// TODO: 要注意修改前与修改后的兼容提示。
-  Future<Tuple2<bool, String>> _analyze() async {
-    if (await analyzeVerify) {
-      return Tuple2(t1: true, t2: '分析成功！');
+  /// 仅分析
+  Future<void> onlyAnalyze() async {
+    final result = await _analyzeVerify();
+    if (result) {
+      SmartDialog.showToast('分析成功！');
     } else {
-      return Tuple2(t1: false, t2: '分析失败！');
+      SmartDialog.showToast('分析失败！');
     }
   }
 
-  /// 保存并开始。
-  Future<void> applyAndStart() async {
-    await _applyAndStart().then(
-      (value) async {
-        final ibcre = !await basicConfigRedErrVerify;
-        final iccre = !await currentCycleConfigRedErrVerify;
-        isBasicConfigRedErr.refreshEasy((oldValue) => ibcre);
-        isCurrentCycleRedErr.refreshEasy((oldValue) => iccre);
-        if (value.t1) {
-          SmartDialog.showToast(value.t2);
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupAb)));
-        } else {
-          SmartDialog.showToast(value.t2);
-        }
-      },
-    );
-  }
-
-  /// 保存并开始。
-  ///
-  /// 返回的 [Tuple2]：是否成功-消息。
-  Future<Tuple2<bool, String>> _applyAndStart() async {
-    final analyzeResult = await _analyze();
-    if (!analyzeResult.t1) {
-      return analyzeResult;
+  /// 启动
+  Future<void> start() async {
+    final result = await _analyzeVerify();
+    if (result) {
+      await _saveMemoryGroup(isStart: true);
+      SmartDialog.showToast('分析通过，启动成功！');
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: memoryGroupAb)));
+    } else {
+      SmartDialog.showToast('分析失败！');
     }
-    final saveResult = await _save(isApply: true);
-    if (!saveResult.t1) {
-      return saveResult;
-    }
-    return Tuple2(t1: true, t2: '应用并开始成功！');
   }
 
   void cancel() {

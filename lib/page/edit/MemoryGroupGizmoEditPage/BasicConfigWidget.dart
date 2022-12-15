@@ -39,8 +39,7 @@ class BasicConfigWidget extends StatelessWidget {
   Widget _titleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.bTitle.abObj,
+        return CustomCard(
           child: Row(
             children: [
               const Text('名称：', style: TextStyle(fontSize: 16)),
@@ -49,7 +48,7 @@ class BasicConfigWidget extends StatelessWidget {
                   controller: c.bcTitleTextEditingController,
                   decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
                   onChanged: (v) {
-                    c.bTitle.abObj.refreshEasy((oldValue) => v);
+                    c.bTitleStorage.abValue.refreshEasy((oldValue) => v);
                   },
                 ),
               ),
@@ -63,19 +62,18 @@ class BasicConfigWidget extends StatelessWidget {
   Widget _memoryModelWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.bSelectedMemoryModel.abObj,
+        return CustomCard(
           child: Row(
             children: [
               const Text('记忆模型：', style: TextStyle(fontSize: 16)),
               TextButton(
                 child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
                   builder: (gzC, gzAbw) {
-                    return Text(gzC.bSelectedMemoryModel.abObj(gzAbw)?.title ?? '点击选择');
+                    return Text(gzC.bSelectedMemoryModelStorage.abValue(gzAbw)?.title ?? '点击选择');
                   },
                 ),
                 onPressed: () {
-                  showSelectMemoryModelInMemoryGroupDialog(selectedMemoryModelAb: c.bSelectedMemoryModel.abObj);
+                  showSelectMemoryModelInMemoryGroupDialog(selectedMemoryModelAb: c.bSelectedMemoryModelStorage.abValue);
                 },
               ),
             ],
@@ -88,8 +86,7 @@ class BasicConfigWidget extends StatelessWidget {
   Widget _selectFragmentWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: null,
+        return CustomCard(
           child: Row(
             children: [
               const Text('已选碎片：', style: TextStyle(fontSize: 16)),

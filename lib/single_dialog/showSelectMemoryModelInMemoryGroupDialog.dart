@@ -1,9 +1,8 @@
+import 'package:aaa/single_dialog/showCreateMemoryModelDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
-
-import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPageAbController.dart';
 import '../push_page/push_page.dart';
 
 Future<void> showSelectMemoryModelInMemoryGroupDialog({required Ab<MemoryModel?> selectedMemoryModelAb}) async {
@@ -43,7 +42,7 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
       icon: const Icon(Icons.add),
       style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
       onPressed: () async {
-        await pushToMemoryModelGizmoEditPageOfCreate(context: context);
+        await showCreateMemoryModelDialog();
         await getMms();
       },
     );
@@ -52,23 +51,37 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
   List<Widget> _columnChildren() {
     return memoryModels.map(
       (e) {
-        return TextButton(
-          style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
-          child: Row(
-            children: [
-              Expanded(child: Text(e.title)),
-              const SizedBox(width: 10),
-              if (_selectedMm == e) const SolidCircleIcon() else const SolidCircleGreyIcon(),
-            ],
-          ),
-          onPressed: () async {
-            if (_selectedMm == e) {
-              _selectedMm = null;
-            } else {
-              _selectedMm = e;
-            }
-            setState(() {});
-          },
+        return Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                style: const ButtonStyle(alignment: Alignment.centerLeft),
+                child: Text(e.title),
+                onPressed: () async {
+                  await pushToMemoryModelGizmoEditPage(context: context, memoryModelAb: e.ab);
+                  if (mounted) setState(() {});
+                },
+              ),
+            ),
+            IconButton(
+              padding: const EdgeInsets.all(0),
+              icon: () {
+                if (_selectedMm == e) {
+                  return const SolidCircleIcon();
+                } else {
+                  return const SolidCircleGreyIcon();
+                }
+              }(),
+              onPressed: () {
+                if (_selectedMm == e) {
+                  _selectedMm = null;
+                } else {
+                  _selectedMm = e;
+                }
+                setState(() {});
+              },
+            ),
+          ],
         );
       },
     ).toList();

@@ -20,9 +20,6 @@ class PerformerQuery {
   Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getNewPerformer({required MemoryGroup mg}) async {
     final newFragment = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
-    logger.d('newFragment:$newFragment');
-
-    logger.d('learnedFragment:$learnedFragment');
     if (newFragment == null && learnedFragment == null) return null;
 
     final newFragmentOrNull = newFragment == null ? null : Tuple2(t1: newFragment, t2: <FragmentMemoryInfo>[]);

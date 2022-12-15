@@ -9,14 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MemoryModelGizmoEditPage extends StatelessWidget {
-  const MemoryModelGizmoEditPage({Key? key, required this.memoryModelGizmo, required this.editPageType}) : super(key: key);
-  final Ab<MemoryModel?> memoryModelGizmo;
-  final Ab<MemoryModelGizmoEditPageType> editPageType;
+  const MemoryModelGizmoEditPage({Key? key, required this.memoryModelAb}) : super(key: key);
+  final Ab<MemoryModel> memoryModelAb;
 
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      putController: MemoryModelGizmoEditPageAbController(memoryModelGizmo: memoryModelGizmo, editPageType: editPageType),
+      putController: MemoryModelGizmoEditPageAbController(memoryModelAb: memoryModelAb),
       tag: Aber.single,
       builder: (c, abw) {
         return KeyboardRootWidget(
@@ -42,7 +41,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                     onPressed: () {
                       final content = DefaultAlgorithmContent();
                       c.familiarityAlgorithmEditingController.text = content.defaultFamiliarContent;
-                      c.buttonDataAlgorithmEditingController.text = content.defaultButtonDataContent;
+                      c.buttonAlgorithmEditingController.text = content.defaultButtonDataContent;
                       c.nextTimeAlgorithmEditingController.text = content.defaultNextShowTimeContent;
                     },
                   ),
@@ -80,12 +79,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         return filter(
           from: c.editPageType(abw),
           targets: {
-            [MemoryModelGizmoEditPageType.create]: () => IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
-                  onPressed: () {
-                    c.cancel();
-                  },
-                ),
             [MemoryModelGizmoEditPageType.look]: () => IconButton(
                   icon: const FaIcon(FontAwesomeIcons.angleLeft, color: Colors.red),
                   onPressed: () {
@@ -112,8 +105,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         return filter(
           from: c.editPageType(abw),
           targets: {
-            [MemoryModelGizmoEditPageType.create]: () => const Text('创建记忆模型'),
-            [MemoryModelGizmoEditPageType.look, MemoryModelGizmoEditPageType.modify]: () => Text(c.title(abw)),
+            [MemoryModelGizmoEditPageType.look, MemoryModelGizmoEditPageType.modify]: () => Text(c.titleStorage.abValue(abw)),
           },
           orElse: null,
         );
@@ -128,7 +120,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         return TextButton(
           child: const Text('分析'),
           onPressed: () {
-            c.analyzeWithHandle();
+            c.completeAnalyze();
           },
         );
       },
@@ -142,12 +134,6 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         return filter(
           from: c.editPageType(abw),
           targets: {
-            [MemoryModelGizmoEditPageType.create]: () => IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.check, color: Colors.green),
-                  onPressed: () {
-                    c.commit();
-                  },
-                ),
             [MemoryModelGizmoEditPageType.look]: () => TextButton(
                   child: const Text('修改'),
                   onPressed: () {
@@ -171,8 +157,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.title,
+        return CustomCard(
           child: TextField(
             minLines: 1,
             maxLines: 3,
@@ -180,14 +165,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
-                [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () => true,
+                [MemoryModelGizmoEditPageType.modify]: () => true,
                 [MemoryModelGizmoEditPageType.look]: () => false,
               },
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '名称：'),
             onChanged: (v) {
-              c.title.refreshEasy((oldValue) => v);
+              c.titleStorage.abValue.refreshEasy((oldValue) => v);
             },
           ),
         );
@@ -199,8 +184,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.familiarityAlgorithm,
+        return CustomCard(
           child: TextField(
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
@@ -210,14 +194,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
-                [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () => true,
+                [MemoryModelGizmoEditPageType.modify]: () => true,
                 [MemoryModelGizmoEditPageType.look]: () => false,
               },
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '熟悉度算法：'),
             onChanged: (v) {
-              c.familiarityAlgorithm.refreshEasy((oldValue) => v);
+              c.familiarityAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
             },
           ),
         );
@@ -229,8 +213,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.nextTimeAlgorithm,
+        return CustomCard(
           child: TextField(
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
@@ -239,14 +222,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
-                [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () => true,
+                [MemoryModelGizmoEditPageType.modify]: () => true,
                 [MemoryModelGizmoEditPageType.look]: () => false,
               },
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '下次展示时间点算法：'),
             onChanged: (v) {
-              c.nextTimeAlgorithm.refreshEasy((oldValue) => v);
+              c.nextTimeAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
             },
           ),
         );
@@ -258,24 +241,23 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.buttonDataAlgorithm,
+        return CustomCard(
           child: TextField(
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
             maxLines: 3,
-            controller: c.buttonDataAlgorithmEditingController,
+            controller: c.buttonAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
-                [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () => true,
+                [MemoryModelGizmoEditPageType.modify]: () => true,
                 [MemoryModelGizmoEditPageType.look]: () => false,
               },
               orElse: null,
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '按钮数值分配算法：'),
             onChanged: (v) {
-              c.buttonDataAlgorithm.refreshEasy((oldValue) => v);
+              c.buttonAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
             },
           ),
         );

@@ -9,22 +9,22 @@ class MemoryGroupGizmoPageAbController extends AbController {
 
   final RefreshController refreshController = RefreshController(initialRefresh: true);
 
-  final Ab<MemoryModel?> memoryRule = Ab(null);
+  final Ab<MemoryModel?> memoryModel = Ab(null);
 
   final fragments = <Ab<Fragment>>[].ab;
 
   Future<void> refreshPage() async {
     await refreshFragments();
-    await refreshMemoryRule();
+    await refreshMemoryModels();
   }
 
-  Future<void> refreshMemoryRule() async {
-    final mg = (await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryGroupGizmo().memoryModelId));
-    memoryRule.refreshEasy((oldValue) => mg);
+  Future<void> refreshMemoryModels() async {
+    final mg = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupGizmo());
+    memoryModel.refreshEasy((oldValue) => mg);
   }
 
   Future<void> refreshFragments() async {
-    final mgs = (await DriftDb.instance.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: memoryGroupGizmo())).map((e) => e.ab);
+    final mgs = (await db.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: memoryGroupGizmo())).map((e) => e.ab);
     fragments().clearBroken(this);
     fragments.refreshInevitable((obj) => obj..addAll(mgs));
   }

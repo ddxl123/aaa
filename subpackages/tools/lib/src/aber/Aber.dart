@@ -12,6 +12,8 @@ part 'AbBuilder.dart';
 
 part 'AbController.dart';
 
+part 'AbStorage.dart';
+
 part 'Abw.dart';
 
 part 'AbwBuilder.dart';

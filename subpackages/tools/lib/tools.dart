@@ -1,7 +1,5 @@
 library tools;
 
-export 'src/aber/AbVerify.dart';
-
 export 'src/dialog/custom_dialog.dart';
 export 'src/dialog/DialogWidget.dart';
 export 'src/dialog/TextField1DialogWidget.dart';

@@ -45,7 +45,7 @@ class FragmentGroupListPage extends StatelessWidget {
                       }
                     }(),
                     onPressed: () async {
-                      await c.resetFragmentGroupIsSelected(
+                      await c.resetFragmentGroupAndSubIsSelected(
                         fragmentGroupAb: group().entity,
                         isSelected: !group().entity()!.local_isSelected,
                       );

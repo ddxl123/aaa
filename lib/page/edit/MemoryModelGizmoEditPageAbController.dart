@@ -1,63 +1,52 @@
 import 'dart:async';
 
 import 'package:aaa/algorithm_parser/parser.dart';
-import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
-import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 class MemoryModelGizmoEditPageAbController extends AbController {
-  MemoryModelGizmoEditPageAbController({required this.memoryModelGizmo, required this.editPageType});
+  MemoryModelGizmoEditPageAbController({required this.memoryModelAb});
 
-  final Ab<MemoryModelGizmoEditPageType> editPageType;
+  final Ab<MemoryModelGizmoEditPageType> editPageType = MemoryModelGizmoEditPageType.look.ab;
 
-  final Ab<MemoryModel?> memoryModelGizmo;
+  final Ab<MemoryModel> memoryModelAb;
 
   /// [MemoryModels.title]
-  final title = ''.ab;
-  String _title = '';
+  final titleStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
   final titleEditingController = TextEditingController();
 
   /// [MemoryModels.familiarityAlgorithm]
-  final familiarityAlgorithm = ''.ab;
-  String _familiarityAlgorithm = '';
+  final familiarityAlgorithmStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
   final familiarityAlgorithmEditingController = TextEditingController();
   final familiarityAlgorithmFocusNode = FocusNode();
 
-  String get hint => '';
-
   /// [MemoryModels.nextTimeAlgorithm]
-  final nextTimeAlgorithm = ''.ab;
-  String _nextTimeAlgorithm = '';
+  final nextTimeAlgorithmStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
   final nextTimeAlgorithmEditingController = TextEditingController();
 
   /// [MemoryModels.buttonAlgorithm]
-  final buttonDataAlgorithm = ''.ab;
-  String _buttonDataAlgorithm = '';
-  final buttonDataAlgorithmEditingController = TextEditingController();
-
-  final allCheck = Ab(null);
+  final buttonAlgorithmStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
+  final buttonAlgorithmEditingController = TextEditingController();
 
   final isAlgorithmKeyboard = false.ab;
 
-  @override
-  void initComplexVerifies() {
-    title.initVerify(
-      (abV) async {
-        if (abV().trim() == '') {
-          return VerifyResult(isOk: false, message: '标题不能为空！');
+  void initVerifies() {
+    titleStorage.initVerify(
+      verifyCallback: (v) async {
+        if (v.trim() == '') {
+          return '标题不能为空！';
         }
         return null;
       },
     );
-    familiarityAlgorithm.initVerify(
-      (abV) async {
+    familiarityAlgorithmStorage.initVerify(
+      verifyCallback: (v) async {
         final result = await AlgorithmParser<FamiliarityState>().parse(
           state: FamiliarityState(
-            useContent: familiarityAlgorithm(),
+            useContent: v,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -65,16 +54,16 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         return await result.handle(
           onSuccess: (FamiliarityState state) async => null,
           onError: (ExceptionContent ec) async {
-            return VerifyResult(isOk: false, message: ec.error.toString());
+            return ec.error.toString();
           },
         );
       },
     );
-    nextTimeAlgorithm.initVerify(
-      (abV) async {
+    nextTimeAlgorithmStorage.initVerify(
+      verifyCallback: (v) async {
         final result = await AlgorithmParser<NextShowTimeState>().parse(
           state: NextShowTimeState(
-            useContent: nextTimeAlgorithm(),
+            useContent: v,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -82,16 +71,16 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         return await result.handle(
           onSuccess: (NextShowTimeState state) async => null,
           onError: (ExceptionContent ec) async {
-            return VerifyResult(isOk: false, message: ec.error.toString());
+            return ec.error.toString();
           },
         );
       },
     );
-    buttonDataAlgorithm.initVerify(
-      (abV) async {
+    buttonAlgorithmStorage.initVerify(
+      verifyCallback: (v) async {
         final result = await AlgorithmParser<ButtonDataState>().parse(
           state: ButtonDataState(
-            useContent: buttonDataAlgorithm(),
+            useContent: v,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -99,40 +88,12 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         return await result.handle(
           onSuccess: (ButtonDataState state) async => null,
           onError: (ExceptionContent ec) async {
-            return VerifyResult(isOk: false, message: ec.error.toString());
+            return ec.error.toString();
           },
         );
       },
     );
-    allCheck.initVerify(
-      (abV) async {
-        // TODO:
-      },
-    );
   }
-
-  Future<bool> get commitVerify {
-    return filterFuture(
-      from: editPageType(),
-      targets: {
-        [MemoryModelGizmoEditPageType.create, MemoryModelGizmoEditPageType.modify]: () async => await AbVerify.checkMany(
-              [
-                title.verify,
-              ],
-            ),
-      },
-      orElse: null,
-    );
-  }
-
-  Future<bool> get analyzeVerify async => await AbVerify.checkMany(
-        [
-          title.verify,
-          familiarityAlgorithm.verify,
-          nextTimeAlgorithm.verify,
-          buttonDataAlgorithm.verify,
-        ],
-      );
 
   @override
   bool get isEnableLoading => true;
@@ -140,22 +101,31 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     await Future.delayed(const Duration(milliseconds: 200));
-    final mm = await DriftDb.instance.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryModelGizmo()?.id);
+    // 再次查询。
+    final mm = await db.generalQueryDAO.queryMemoryModelById(memoryModelId: memoryModelAb().id);
 
-    _title = mm?.title ?? '';
-    _familiarityAlgorithm = mm?.familiarityAlgorithm ?? '';
-    _nextTimeAlgorithm = mm?.nextTimeAlgorithm ?? '';
-    _buttonDataAlgorithm = mm?.buttonAlgorithm ?? '';
+    titleStorage
+      ..tempValue = mm.title
+      ..abValue.refreshEasy((oldValue) => mm.title);
 
-    title.refreshEasy((oldValue) => _title);
-    familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
-    nextTimeAlgorithm.refreshEasy((oldValue) => _nextTimeAlgorithm);
-    buttonDataAlgorithm.refreshEasy((oldValue) => _buttonDataAlgorithm);
+    familiarityAlgorithmStorage
+      ..tempValue = mm.familiarityAlgorithm
+      ..abValue.refreshEasy((oldValue) => mm.familiarityAlgorithm);
 
-    titleEditingController.text = _title;
-    familiarityAlgorithmEditingController.text = _familiarityAlgorithm;
-    nextTimeAlgorithmEditingController.text = _nextTimeAlgorithm;
-    buttonDataAlgorithmEditingController.text = _buttonDataAlgorithm;
+    nextTimeAlgorithmStorage
+      ..tempValue = mm.nextTimeAlgorithm
+      ..abValue.refreshEasy((oldValue) => mm.nextTimeAlgorithm);
+
+    buttonAlgorithmStorage
+      ..tempValue = mm.buttonAlgorithm
+      ..abValue.refreshEasy((oldValue) => mm.buttonAlgorithm);
+
+    titleEditingController.text = titleStorage.abValue();
+    familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.abValue();
+    nextTimeAlgorithmEditingController.text = nextTimeAlgorithmStorage.abValue();
+    buttonAlgorithmEditingController.text = buttonAlgorithmStorage.abValue();
+
+    initVerifies();
   }
 
   @override
@@ -167,14 +137,19 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     );
   }
 
-  Future<bool> onlyAnalyze() async => await analyzeVerify;
+  /// 返回是否验证成功。
+  Future<bool> saveAnalyze() async {
+    return await titleStorage.verify();
+  }
 
-  Future<void> analyzeWithHandle() async {
-    if (await analyzeVerify) {
-      SmartDialog.showToast('分析成功！');
-    } else {
-      SmartDialog.showToast('分析失败！');
-    }
+  /// 返回是否验证成功。
+  Future<bool> completeAnalyze() async {
+    return boolAllTrue([
+      await titleStorage.verify(),
+      await familiarityAlgorithmStorage.verify(),
+      await nextTimeAlgorithmStorage.verify(),
+      await buttonAlgorithmStorage.verify(),
+    ]);
   }
 
   void commit() {
@@ -183,14 +158,6 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         filter(
           from: editPageType(),
           targets: {
-            [MemoryModelGizmoEditPageType.create]: () {
-              if (value.t1) {
-                SmartDialog.showToast(value.t2);
-                Navigator.pop(context);
-              } else {
-                SmartDialog.showToast(value.t2);
-              }
-            },
             [MemoryModelGizmoEditPageType.modify]: () {
               if (value.t1) {
                 SmartDialog.showToast(value.t2);
@@ -211,49 +178,26 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     return await filterFuture<MemoryModelGizmoEditPageType, Tuple2<bool, String>>(
       from: editPageType(),
       targets: {
-        [MemoryModelGizmoEditPageType.create]: () async {
-          if (await commitVerify) {
-            await DriftDb.instance.insertDAO.insertMemoryModel(
-              memoryModelsCompanion: Crt.memoryModelsCompanion(
-                creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
-                fatherMemoryModelId: null.toValue(),
-                title: title(),
-                familiarityAlgorithm: familiarityAlgorithm(),
-                nextTimeAlgorithm: nextTimeAlgorithm(),
-                buttonAlgorithm: buttonDataAlgorithm(),
-              ),
-            );
-
-            await Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshMemoryModels();
-
-            return Tuple2(t1: true, t2: '创建成功！');
-          } else {
-            return Tuple2(t1: false, t2: '创建失败！');
-          }
-        },
         [MemoryModelGizmoEditPageType.modify]: () async {
-          if (await commitVerify) {
-            // await DriftDb.instance.updateDAO.resetMemoryModel(
-            //   syncTag: null,
-            //   oldMemoryModelReset: (SyncTag resetSyncTag) async {
-            //     await memoryModelGizmo()!.reset(
-            //       title: title().toValue(),
-            //       familiarityAlgorithm: familiarityAlgorithm().toValue(),
-            //       nextTimeAlgorithm: nextTimeAlgorithm().toValue(),
-            //       buttonAlgorithm: buttonDataAlgorithm().toValue(),
-            //       writeSyncTag: await SyncTag.create(),
-            //       // TODO
-            //       applicableGroups: ''.toValue(),
-            //       applicableFields: ''.toValue(),
-            //       stimulateAlgorithm: ''.toValue(),
-            //     );
-            //   },
-            // );
-            // memoryModelGizmo.refreshForce();
-
+          if (await saveAnalyze()) {
+            await db.updateDAO.resetMemoryModelOnlySave(
+              originalMemoryModelReset: (st) async {
+                return await memoryModelAb().reset(
+                  creatorUserId: toAbsent(),
+                  fatherMemoryModelId: toAbsent(),
+                  title: titleStorage.abValue().toValue(),
+                  familiarityAlgorithm: familiarityAlgorithmStorage.abValue().toValue(),
+                  nextTimeAlgorithm: nextTimeAlgorithmStorage.abValue().toValue(),
+                  buttonAlgorithm: buttonAlgorithmStorage.abValue().toValue(),
+                  syncTag: st,
+                );
+              },
+              syncTag: null,
+            );
+            memoryModelAb.refreshForce();
             return Tuple2(t1: true, t2: '修改成功！');
           } else {
-            return Tuple2(t1: false, t2: '修改失败');
+            return Tuple2(t1: false, t2: '修改失败！');
           }
         },
       },
@@ -271,10 +215,6 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         onOk: () => filter(
           from: editPageType(),
           targets: {
-            [MemoryModelGizmoEditPageType.create]: () {
-              SmartDialog.dismiss();
-              Navigator.pop(context);
-            },
             [MemoryModelGizmoEditPageType.modify]: () {
               recovery();
               SmartDialog.dismiss();
@@ -291,15 +231,15 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   }
 
   void recovery() {
-    title.refreshEasy((oldValue) => _title);
-    familiarityAlgorithm.refreshEasy((oldValue) => _familiarityAlgorithm);
-    nextTimeAlgorithm.refreshEasy((oldValue) => _nextTimeAlgorithm);
-    buttonDataAlgorithm.refreshEasy((oldValue) => _buttonDataAlgorithm);
+    titleStorage.recovery();
+    familiarityAlgorithmStorage.recovery();
+    nextTimeAlgorithmStorage.recovery();
+    buttonAlgorithmStorage.recovery();
 
-    titleEditingController.text = _title;
-    familiarityAlgorithmEditingController.text = _familiarityAlgorithm;
-    nextTimeAlgorithmEditingController.text = _nextTimeAlgorithm;
-    buttonDataAlgorithmEditingController.text = _buttonDataAlgorithm;
+    titleEditingController.text = titleStorage.tempValue;
+    familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.tempValue;
+    nextTimeAlgorithmEditingController.text = nextTimeAlgorithmStorage.tempValue;
+    buttonAlgorithmEditingController.text = buttonAlgorithmStorage.tempValue;
   }
 
   void changeTo({required MemoryModelGizmoEditPageType type}) {

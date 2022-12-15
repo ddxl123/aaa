@@ -29,11 +29,6 @@ class Ab<V> {
   /// 存储每个引用该对象的 [AbBuilder] 的 [_AbBuilderState.refresh]。
   final Set<RefreshFunction> _refreshFunctions = {};
 
-  /// 使用前使用 [initVerify] 进行初始化。
-  AbVerify? _verify;
-
-  AbVerify get verify => _verify ?? AbVerify(abV: Ab(null), verifyCallBack: (v) async => VerifyResult(isOk: false, message: '未进行 initVerify！'));
-
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
 
@@ -134,14 +129,5 @@ class Ab<V> {
       (value as AbBroken).broken(controller);
     }
     controller._removeRefreshFunctions.remove(_removeRefreshFunction);
-  }
-
-  /// 当直接在 Ab 对象上使用 [initVerify] 无法引用其他成员时，可以使用 [AbController.initComplexVerifies]。
-  void initVerify(Future<VerifyResult?> Function(Ab<V> abV) verifyCallBack) {
-    if (_verify != null) {
-      _verify = AbVerify(abV: Ab(null), verifyCallBack: (v) async => VerifyResult(isOk: false, message: '进行了多次 initVerify！'));
-      return;
-    }
-    _verify = AbVerify<V>(abV: this, verifyCallBack: verifyCallBack);
   }
 }

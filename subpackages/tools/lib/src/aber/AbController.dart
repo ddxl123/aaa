@@ -2,9 +2,6 @@ part of aber;
 
 /// [Aber]、[AbBuilder]
 abstract class AbController {
-  AbController() {
-    initComplexVerifies();
-  }
 
   /// 存储当前 Controller 对象中所有被 .ab 标记的对象所对应的 [Ab._removeRefreshFunction]。
   ///
@@ -51,13 +48,4 @@ abstract class AbController {
           logger.e(title, ec.error, ec.stackTrace);
         },
       );
-
-  /// 复杂验证的初始化函数。
-  ///
-  /// 当直接在 Ab 对象上使用 [Ab.initVerify] 无法引用其他成员时，可以在 [initComplexVerifies] 函数内进行 [Ab.initVerify]。
-  ///
-  /// 同时在 [initComplexVerifies] 内使用 [Ab.initVerify] ，在 Ab 对象上的使用 [Ab.initVerify]，前者将变得无效，因此只能选择一个地方使用。
-  ///
-  /// 由 [AbController] 的构造函数调用。
-  void initComplexVerifies() {}
 }

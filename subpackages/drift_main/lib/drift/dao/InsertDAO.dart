@@ -67,14 +67,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return newFragment;
   }
 
-  /// 仅创建一个记忆组。
-  Future<MemoryGroup> insertMemoryGroup({required MemoryGroupsCompanion newMemoryGroup}) async {
+  /// 创建一个记忆组。
+  Future<MemoryGroup> insertMemoryGroup({required MemoryGroupsCompanion newMemoryGroupsCompanion, required SyncTag? syncTag}) async {
     late final MemoryGroup newMg;
     await withRefs(
-      syncTag: null,
-      ref: (syncTag) async => RefMemoryGroups(
+      syncTag: syncTag,
+      ref: (st) async => RefMemoryGroups(
         self: (table) async {
-          newMg = await newMemoryGroup.insert(syncTag: syncTag);
+          newMg = await newMemoryGroupsCompanion.insert(syncTag: st);
         },
         fragmentMemoryInfos: null,
       ),
@@ -123,13 +123,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     );
   }
 
-  Future<MemoryModel> insertMemoryModel({required MemoryModelsCompanion memoryModelsCompanion}) async {
+  /// 创建一个新的记忆模型。
+  Future<MemoryModel> insertMemoryModel({required MemoryModelsCompanion memoryModelsCompanion, required SyncTag? syncTag}) async {
     late final MemoryModel newMemoryModel;
     await withRefs(
-      syncTag: await SyncTag.create(),
-      ref: (syncTag) async => RefMemoryModels(
+      syncTag: syncTag,
+      ref: (st) async => RefMemoryModels(
         self: (table) async {
-          newMemoryModel = await memoryModelsCompanion.insert(syncTag: syncTag);
+          newMemoryModel = await memoryModelsCompanion.insert(syncTag: st);
         },
         memoryGroups: null,
       ),

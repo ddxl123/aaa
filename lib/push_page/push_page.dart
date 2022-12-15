@@ -6,13 +6,15 @@ import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import '../page/edit/MemoryModelGizmoEditPage.dart';
 import '../page/edit/edit_page_type.dart';
 
-Future<void> pushToMemoryModelGizmoEditPageOfCreate({required BuildContext context}) async {
+Future<void> pushToMemoryModelGizmoEditPage({
+  required BuildContext context,
+  required Ab<MemoryModel> memoryModelAb,
+}) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (ctx) => MemoryModelGizmoEditPage(
-        memoryModelGizmo: Ab(null),
-        editPageType: MemoryModelGizmoEditPageType.create.ab,
+        memoryModelAb: memoryModelAb,
       ),
     ),
   );

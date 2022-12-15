@@ -1,4 +1,3 @@
-import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -43,15 +42,14 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _newLearnCountWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: null,
+        return CustomCard(
           child: Row(
             children: [
               const Text('新学数量：'),
               Expanded(
                 child: StfBuilder1<int>(
                   // 保留上一次的设置
-                  initValue: c.cWillNewLearnCount.abObj(abw),
+                  initValue: c.cWillNewLearnCountStorage.abValue(abw),
                   builder: (int value, BuildContext context, ResetValue<int> resetValue) {
                     int finallyValue = value;
                     // 不能超过最大值
@@ -75,7 +73,7 @@ class CurrentCircleWidget extends StatelessWidget {
                               resetValue(n.toInt(), true);
                             },
                             onChangeEnd: (n) {
-                              c.cWillNewLearnCount.abObj.refreshEasy((oldValue) => n.floor());
+                              c.cWillNewLearnCountStorage.abValue.refreshEasy((oldValue) => n.floor());
                             },
                           ),
                         ),
@@ -95,8 +93,7 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _reviewIntervalWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: c.cReviewInterval.abObj,
+        return CustomCard(
           child: Row(
             children: [
               const Text('复习区间：  '),
@@ -112,7 +109,7 @@ class CurrentCircleWidget extends StatelessWidget {
                             maxLength: 9,
                             keyboardType: TextInputType.number,
                             onChanged: (v) {
-                              c.cReviewInterval.abObj.refreshEasy((oldValue) => DateTime.now().add(Duration(seconds: int.tryParse(v) ?? 0)));
+                              c.cReviewIntervalStorage.abValue.refreshEasy((oldValue) => DateTime.now().add(Duration(seconds: int.tryParse(v) ?? 0)));
                             },
                           ),
                         ),
@@ -123,7 +120,7 @@ class CurrentCircleWidget extends StatelessWidget {
                       children: [
                         AbwBuilder(
                           builder: (abwT) {
-                            return Text('${c.cReviewInterval.abObj(abwT)}前');
+                            return Text('${c.cReviewIntervalStorage.abValue(abwT)}前');
                           },
                         ),
                       ],
@@ -141,20 +138,19 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _newReviewDisplayOrder() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: null,
+        return CustomCard(
           child: Row(
             children: [
               const Text('新 | 复习 碎片展示顺序：'),
               CustomDropdownBodyButton<NewReviewDisplayOrder>(
-                initValue: c.cNewReviewDisplayOrder.abObj(abw),
+                initValue: c.cNewReviewDisplayOrderStorage.abValue(abw),
                 items: [
                   Item(value: NewReviewDisplayOrder.mix, text: '混合'),
                   Item(value: NewReviewDisplayOrder.newReview, text: '优先新碎片'),
                   Item(value: NewReviewDisplayOrder.reviewNew, text: '优先复习碎片'),
                 ],
                 onChanged: (v) {
-                  c.cNewReviewDisplayOrder.abObj.refreshEasy((oldValue) => v!);
+                  c.cNewReviewDisplayOrderStorage.abValue.refreshEasy((oldValue) => v!);
                 },
               ),
             ],
@@ -167,20 +163,19 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _newDisplayOrder() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CardCustom(
-          verifyAb: null,
+        return CustomCard(
           child: Row(
             children: [
               const Text('新碎片 展示顺序：'),
               CustomDropdownBodyButton<NewDisplayOrder>(
-                initValue: c.cNewDisplayOrder.abObj(abw),
+                initValue: c.cNewDisplayOrderStorage.abValue(abw),
                 items: [
                   Item(value: NewDisplayOrder.random, text: '随机'),
                   Item(value: NewDisplayOrder.titleA2Z, text: '标题首字母A~Z顺序'),
                   Item(value: NewDisplayOrder.createEarly2Late, text: '创建时间'),
                 ],
                 onChanged: (v) {
-                  c.cNewDisplayOrder.abObj.refreshEasy((oldValue) => v!);
+                  c.cNewDisplayOrderStorage.abValue.refreshEasy((oldValue) => v!);
                 },
               ),
             ],

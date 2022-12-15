@@ -1,7 +1,5 @@
-import 'package:aaa/page/edit/MemoryModelGizmoEditPage.dart';
-import 'package:aaa/page/edit/edit_page_type.dart';
-import 'package:aaa/page/gizmo/MemoryModelGizmoPage.dart';
 import 'package:aaa/push_page/push_page.dart';
+import 'package:aaa/single_dialog/showCreateMemoryModelDialog.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +34,7 @@ class MemoryModeListPage extends StatelessWidget {
           ],
           onChanged: (v) {
             if (v == 0) {
-              pushToMemoryModelGizmoEditPageOfCreate(context: context);
+              showCreateMemoryModelDialog();
             }
           },
         ),
@@ -81,10 +79,7 @@ class MemoryModeListPage extends StatelessWidget {
                     child: TextButton(
                       child: Text(c.memoryModels()[index](abw).title.toString()),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => MemoryModelGizmoPage(memoryModelGizmo: c.memoryModels()[index])),
-                        );
+                        pushToMemoryModelGizmoEditPage(context: context, memoryModelAb: c.memoryModels()[index]);
                       },
                     ),
                   ),
