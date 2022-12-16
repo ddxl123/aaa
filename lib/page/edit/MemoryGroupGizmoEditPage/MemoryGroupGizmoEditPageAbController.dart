@@ -83,7 +83,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
     bSelectedMemoryModelStorage.initVerify(
       verifyCallback: (v) async {
-        final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
+        final mm = bSelectedMemoryModelStorage.abValue();
 
         if (mm == null) return '记忆模型不能为空！';
 
@@ -158,7 +158,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       ..tempValue = memoryGroupAb().newDisplayOrder
       ..abValue.refreshEasy((oldValue) => memoryGroupAb().newDisplayOrder);
 
-    final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: memoryGroupAb());
+    final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroupAb());
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
 
     initVerifies();
@@ -166,21 +166,25 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   /// 返回是否验证成功。
   Future<bool> _saveVerify() async {
-    return await bTitleStorage.verify();
+    final result = await bTitleStorage.verify();
+    isBasicConfigRedErr.refreshEasy((oldValue) => !result);
+    return result;
   }
 
   /// 返回是否验证成功。
   ///
   /// 包括了 [_saveVerify]。
   Future<bool> _analyzeVerify() async {
-    return boolAllTrue([
+    final basic = boolAllTrue([
       await bTitleStorage.verify(),
       await bSelectedMemoryModelStorage.verify(),
-      await cWillNewLearnCountStorage.verify(),
-      await cReviewIntervalStorage.verify(),
-      await cNewDisplayOrderStorage.verify(),
-      await cNewReviewDisplayOrderStorage.verify(),
     ]);
+    final current = boolAllTrue([
+      await cReviewIntervalStorage.verify(),
+    ]);
+    isBasicConfigRedErr.refreshEasy((oldValue) => !basic);
+    isCurrentCycleRedErr.refreshEasy((oldValue) => !current);
+    return boolAllTrue([basic, current]);
   }
 
   /// 仅保存数据。

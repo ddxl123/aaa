@@ -118,6 +118,28 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               },
             );
           },
+          memoryGroups: RefMemoryGroups(
+            self: (_) async {
+              // 需要将 willNewLearnCount +1。
+              await db.updateDAO.resetMemoryGroupForOnlySave(
+                originalMemoryGroupReset: (SyncTag resetSyncTag) async {
+                  return memoryGroup.reset(
+                    creatorUserId: toAbsent(),
+                    memoryModelId: toAbsent(),
+                    newDisplayOrder: toAbsent(),
+                    newReviewDisplayOrder: toAbsent(),
+                    reviewInterval: toAbsent(),
+                    startTime: toAbsent(),
+                    title: toAbsent(),
+                    willNewLearnCount: (memoryGroup.willNewLearnCount + 1).toValue(),
+                    syncTag: resetSyncTag,
+                  );
+                },
+                syncTag: st,
+              );
+            },
+            fragmentMemoryInfos: null,
+          ),
         );
       },
     );

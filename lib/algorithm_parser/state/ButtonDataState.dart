@@ -8,9 +8,13 @@ class ButtonDataValue2NextShowTime {
   ButtonDataValue2NextShowTime({required this.value});
 
   /// 从 [ButtonDataState] 获取到的 use 中的单个数值。
+  ///
+  /// 只是按钮的数值而已，并非直接涉及时间。
   final double value;
 
   /// 从 [NextShowTimeState] 解析结果中获取。
+  ///
+  /// 真正的下次展示时间。
   int? nextShowTime;
 
   /// 将 [nextShowTime] 转换为以 天、时、分、秒 为单位的结果。
@@ -86,7 +90,7 @@ class ButtonDataState extends ClassificationState {
       countNewIF: IvFilter(ivf: () async => [countCapping ~/ 2], isReGet: true),
       timesIF: IvFilter(ivf: () async => [math.Random().nextInt(9) + 1], isReGet: true),
       currentActualShowTimeIF: IvFilter(ivf: () async => [actualShowTime], isReGet: true),
-      currentPlanedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
+      nextPlanedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
       showFamiliarIF: IvFilter(ivf: () async => [math.Random().nextDouble() * 200], isReGet: true),
       clickTimeIF: IvFilter(ivf: () async => [null], isReGet: true),
       clickValueIF: IvFilter(ivf: () async => [null], isReGet: true),

@@ -13,7 +13,7 @@ class IvFilter<T extends num?> {
   /// [T] 为返回的数值类型。
   final Future<List<T>> Function() ivf;
 
-  /// 是否要重新获取。
+  /// 如果在同一个 [InternalVariableStorage] 对象中，重复出现相同变量多次，是否要重新获取。
   final bool isReGet;
 
   IvFilter({required this.ivf, required this.isReGet});
@@ -125,7 +125,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required IvFilter<int?> countNewIF,
     required IvFilter<int?> timesIF,
     required IvFilter<int?> currentActualShowTimeIF,
-    required IvFilter<int?> currentPlanedShowTimeIF,
+    required IvFilter<int?> nextPlanedShowTimeIF,
     required IvFilter<double?> showFamiliarIF,
     required IvFilter<int?> clickTimeIF,
     required IvFilter<double?> clickValueIF,
@@ -143,7 +143,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
       return await save(storage: storage, ivFilter: currentActualShowTimeIF);
     }
     if (internalVariableConst == InternalVariableConstant.nextPlanedShowTimeConst) {
-      return await save(storage: storage, ivFilter: currentPlanedShowTimeIF);
+      return await save(storage: storage, ivFilter: nextPlanedShowTimeIF);
     }
     if (internalVariableConst == InternalVariableConstant.showFamiliarConst) {
       return await save(storage: storage, ivFilter: showFamiliarIF);

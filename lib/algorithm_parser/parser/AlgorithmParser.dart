@@ -48,10 +48,15 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     required Future<T> Function(CS state) onSuccess,
     required Future<T> Function(ExceptionContent ec) onError,
   }) async {
-    if (exceptionContent == null) {
-      return await onSuccess(_state);
+    try {
+      if (exceptionContent == null) {
+        return await onSuccess(_state);
+      } else {
+        return await onError(exceptionContent!);
+      }
+    } catch (e, st) {
+      return await onError(ExceptionContent(error: e, stackTrace: st));
     }
-    return await onError(exceptionContent!);
   }
 
   /// 使用 [handle] 来处理结果。

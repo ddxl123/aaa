@@ -16,7 +16,7 @@ class _InAppStageState extends State<InAppStage> {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<InAppStageAbController>(
-      putController: InAppStageAbController(memoryGroupGizmo: widget.memoryGroupGizmo),
+      putController: InAppStageAbController(memoryGroupAb: widget.memoryGroupGizmo),
       builder: (c, abw) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -35,7 +35,7 @@ class _InAppStageState extends State<InAppStage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(c.currentFragmentAndMemoryInfos(abw) == null ? '任务已全部完成！' : c.currentFragmentAndMemoryInfos()!.t1.content),
+                  Text(c.currentPerformer(abw) == null ? '任务已全部完成！' : c.currentPerformer()!.t1.content),
                 ],
               ),
             ),
@@ -66,7 +66,7 @@ class _InAppStageState extends State<InAppStage> {
   Widget _bottomWidget() {
     return AbBuilder<InAppStageAbController>(
       builder: (c, abw) {
-        if (c.currentFragmentAndMemoryInfos(abw) == null) return const SizedBox(height: 0);
+        if (c.currentPerformer(abw) == null) return const SizedBox(height: 0);
         if (c.currentButtonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
         if (!c.currentButtonDataState(abw)!.isSlidable) {
           // 不可滑动
@@ -83,7 +83,7 @@ class _InAppStageState extends State<InAppStage> {
                       return TextButton(
                         child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
                         onPressed: () async {
-                          await c.finishAndStartNextPerform(clickValue: e.value);
+                          await c.finishAndNext(clickValue: e.value);
                         },
                       );
                     },
@@ -109,7 +109,7 @@ class _InAppStageState extends State<InAppStage> {
                       },
                     ),
                     onPressed: () async {
-                      await c.finishAndStartNextPerform(clickValue: e.value);
+                      await c.finishAndNext(clickValue: e.value);
                     },
                   ),
                 );

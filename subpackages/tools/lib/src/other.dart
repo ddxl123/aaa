@@ -107,3 +107,20 @@ bool boolExistTrue(List<bool> bs) {
 bool boolExistFalse(List<bool> bs) {
   return bs.contains(false);
 }
+
+/// 将 '[1,2,3]' 解析成 [1,2,3]。
+List<int> parseArrayStrToInt({required String from}) {
+  return from.replaceAll(RegExp(r'([)|(])'), '').split(',').map((e) => int.parse(e)).toList();
+}
+
+/// 将 '[1.1,2.2,3.3]' 解析成 [1.1,2.2,3.3]。
+List<double> parseArrayStrToDouble({required String from}) {
+  return from.replaceAll(RegExp(r'([)|(])'), '').split(',').map((e) => double.parse(e)).toList();
+}
+
+extension ArrayStringInsert on String {
+  /// 添加 [newValue] 到 '[1,2,3]' 中。
+  String arrayAdd<T>(T newValue) {
+    return '${split(']').first},$newValue]';
+  }
+}

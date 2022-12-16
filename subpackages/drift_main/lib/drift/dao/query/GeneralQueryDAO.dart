@@ -254,57 +254,39 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingle();
   }
 
-  /// 获取 [mg] 内全部碎片数量。
-  Future<int> getFragmentsCount({required MemoryGroup mg}) async {
-    // final countExpr = fragments.id.count();
-    // final lJoin = selectOnly(fragments).join([innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id))]);
-    // lJoin.where(rFragment2MemoryGroups.fatherId.equals(mg.id));
-    // final result = await lJoin.getSingle();
-    // return result.read(countExpr)!;
-    return 0;
-  }
-
-  /// 获取 [mg] 内已经学习过至少一次的碎片数量。
-  Future<int> getLearnedFragmentsCount({required MemoryGroup mg}) async {
-    // final countExpr = fragments.id.count();
-    // final lSelect = selectOnly(fragments);
-    // final lJoin = [
-    //   innerJoin(fragmentMemoryInfos, fragmentMemoryInfos.fragmentId.equalsExp(fragments.id), useColumns: false),
-    // ];
-    // final lWhere = fragmentMemoryInfos.memoryGroupId.equals(mg.id) & fragmentMemoryInfos.isLatestRecord.equals(true);
-    //
-    // final doJoin = lSelect.join(lJoin);
-    // doJoin.addColumns([countExpr]);
-    // doJoin.where(lWhere);
-    //
-    // final result = await doJoin.getSingle();
-    // return result.read(countExpr)!;
-    return 0;
-  }
-
-  /// 获取 [mg] 内从未学习过的碎片数量。
+  /// 获取 [memoryGroup] 内全部碎片数量。
   ///
-  /// 用 [mg] 内全部碎片数量，减去已学习过的碎片数量。
-  Future<int> getNewFragmentsCount({required MemoryGroup mg}) async {
-    // final allCountExpr = fragments.id.count();
-    // final allCountSelect = selectOnly(fragments).join([
-    //   innerJoin(rFragment2MemoryGroups, rFragment2MemoryGroups.sonId.equalsExp(fragments.id), useColumns: false),
-    // ])
-    //   ..where(rFragment2MemoryGroups.fatherId.equals(mg.id))
-    //   ..addColumns([allCountExpr]);
-    // final allCountResult = (await allCountSelect.getSingle()).read(allCountExpr)!;
-    //
-    // final learnedCountExpr = fragmentMemoryInfos.isLatestRecord.count();
-    // final learnedCountSelect = selectOnly(fragmentMemoryInfos)
-    //   ..where(fragmentMemoryInfos.memoryGroupId.equals(mg.id) & fragmentMemoryInfos.isLatestRecord.equals(true))
-    //   ..addColumns([learnedCountExpr]);
-    // final learnedCountResult = (await learnedCountSelect.getSingle()).read(learnedCountExpr)!;
-    //
-    // final diff = allCountResult - learnedCountResult;
-    // if (diff < 0) {
-    //   throw '查找出的数量小于0！';
-    // }
-    // return diff;
-    return 0;
+  /// 实际上是查询 [FragmentMemoryInfo] 数量。
+  Future<int> getFragmentsCount({required MemoryGroup memoryGroup}) async {
+    final count = fragmentMemoryInfos.id.count();
+    final sel = selectOnly(fragmentMemoryInfos);
+    sel.addColumns([count]);
+    sel.where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id));
+    final result = await sel.getSingle();
+    return result.read(count)!;
+  }
+
+  /// 获取 [memoryGroup] 内暂未学习过的碎片数量。
+  ///
+  /// 实际上是查询 [FragmentMemoryInfo] 数量。
+  Future<int> getNewFragmentsCount({required MemoryGroup memoryGroup}) async {
+    final count = fragmentMemoryInfos.id.count();
+    final sel = selectOnly(fragmentMemoryInfos);
+    sel.addColumns([count]);
+    sel.where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id) & fragmentMemoryInfos.nextPlanShowTime.isNull());
+    final result = await sel.getSingle();
+    return result.read(count)!;
+  }
+
+  /// 获取 [memoryGroup] 内已经学习过至少一次的碎片数量。
+  ///
+  /// 实际上是查询 [FragmentMemoryInfo] 数量。
+  Future<int> getLearnedFragmentsCount({required MemoryGroup memoryGroup}) async {
+    final count = fragmentMemoryInfos.id.count();
+    final sel = selectOnly(fragmentMemoryInfos);
+    sel.addColumns([count]);
+    sel.where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id) & fragmentMemoryInfos.nextPlanShowTime.isNotNull());
+    final result = await sel.getSingle();
+    return result.read(count)!;
   }
 }

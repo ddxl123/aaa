@@ -69,7 +69,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst countNewConst = InternalVariableConst(
     name: 'count_new',
-    explain: '本次展示前，当前记忆组剩余的新碎片数量。',
+    explain: '展示碎片时会获取：当前记忆组中全部未学习过的碎片的数量。',
     numericTypeExplain: '自然数：0，1，2，3...',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
@@ -80,7 +80,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst timesConst = InternalVariableConst(
     name: 'times',
-    explain: '本次是当前碎片的第几次展示。',
+    explain: '展示碎片时会获取：该碎片在当前记忆组中学习过的次数。',
     numericTypeExplain: '正整数（1，2，3...）。',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
@@ -91,7 +91,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst currentActualShowTimeConst = InternalVariableConst(
     name: 'current_actual_show_time',
-    explain: '本次实际展示的时间点。',
+    explain: '展示碎片时会获取：当前实际展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
@@ -102,7 +102,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst nextPlanedShowTimeConst = InternalVariableConst(
     name: 'next_planed_show_time',
-    explain: '本次计划下次展示的时间点。',
+    explain: '点击按钮时会计算：下次计划展示的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
@@ -114,7 +114,7 @@ class InternalVariableConstant {
 
   static const InternalVariableConst showFamiliarConst = InternalVariableConst(
     name: 'show_familiar',
-    explain: '本次展示时的熟悉度。会根据熟悉度算法对值进行计算并获取。',
+    explain: '展示碎片时会获取：展示时的记忆强度。',
     numericTypeExplain: '任意数。',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
@@ -125,7 +125,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst clickTimeConst = InternalVariableConst(
     name: 'click_time',
-    explain: '本次点击按钮时的时间点。',
+    explain: '点击按钮时会获取：点击按钮时的时间点。',
     numericTypeExplain: '距离记忆组开始的时间间隔秒数(s)。',
     whenAvailable: WhenAvailable.whenClick,
     usableStates: {
@@ -136,7 +136,7 @@ class InternalVariableConstant {
   );
   static const InternalVariableConst clickValueConst = InternalVariableConst(
     name: 'click_value',
-    explain: '本次点击按钮的按钮数值。',
+    explain: '点击按钮时会获取：点击按钮时的按钮数值。',
     numericTypeExplain: '任意数。',
     whenAvailable: WhenAvailable.whenClick,
     usableStates: {

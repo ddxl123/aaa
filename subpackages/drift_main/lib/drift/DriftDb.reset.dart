@@ -71,7 +71,8 @@ extension UserExt on User {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.users, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.users,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -118,7 +119,8 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (currentActualShowTime.present && this.currentActualShowTime != currentActualShowTime.value) {
+    if (currentActualShowTime.present &&
+        this.currentActualShowTime != currentActualShowTime.value) {
       isCloudModify = true;
       this.currentActualShowTime = currentActualShowTime.value;
     }
@@ -133,19 +135,22 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
       this.memoryGroupId = memoryGroupId.value;
     }
 
-    if (nextPlanShowTime.present && this.nextPlanShowTime != nextPlanShowTime.value) {
+    if (nextPlanShowTime.present &&
+        this.nextPlanShowTime != nextPlanShowTime.value) {
       isCloudModify = true;
       this.nextPlanShowTime = nextPlanShowTime.value;
     }
 
-    if (showFamiliarity.present && this.showFamiliarity != showFamiliarity.value) {
+    if (showFamiliarity.present &&
+        this.showFamiliarity != showFamiliarity.value) {
       isCloudModify = true;
       this.showFamiliarity = showFamiliarity.value;
     }
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.fragmentMemoryInfos, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.fragmentMemoryInfos,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -171,7 +176,8 @@ extension AppInfoExt on AppInfo {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (hasDownloadedInitData.present && this.hasDownloadedInitData != hasDownloadedInitData.value) {
+    if (hasDownloadedInitData.present &&
+        this.hasDownloadedInitData != hasDownloadedInitData.value) {
       isLocalModify = true;
       this.hasDownloadedInitData = hasDownloadedInitData.value;
     }
@@ -183,7 +189,8 @@ extension AppInfoExt on AppInfo {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.appInfos, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.appInfos,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -233,7 +240,8 @@ extension SyncExt on Sync {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.syncs, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.syncs,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -265,7 +273,8 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (documentGroupId.present && this.documentGroupId != documentGroupId.value) {
+    if (documentGroupId.present &&
+        this.documentGroupId != documentGroupId.value) {
       isCloudModify = true;
       this.documentGroupId = documentGroupId.value;
     }
@@ -277,7 +286,8 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rDocument2DocumentGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.rDocument2DocumentGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -309,7 +319,8 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (fragmentGroupId.present && this.fragmentGroupId != fragmentGroupId.value) {
+    if (fragmentGroupId.present &&
+        this.fragmentGroupId != fragmentGroupId.value) {
       isCloudModify = true;
       this.fragmentGroupId = fragmentGroupId.value;
     }
@@ -321,7 +332,8 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rFragment2FragmentGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.rFragment2FragmentGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -365,7 +377,8 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rNote2NoteGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.rNote2NoteGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -397,7 +410,8 @@ extension Test2Ext on Test2 {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.test2s, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.test2s,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -429,7 +443,8 @@ extension TestExt on Test {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.tests, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.tests,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -467,7 +482,8 @@ extension DocumentExt on Document {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.documents, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.documents,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -506,12 +522,14 @@ extension FragmentExt on Fragment {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (fatherFragmentId.present && this.fatherFragmentId != fatherFragmentId.value) {
+    if (fatherFragmentId.present &&
+        this.fatherFragmentId != fatherFragmentId.value) {
       isCloudModify = true;
       this.fatherFragmentId = fatherFragmentId.value;
     }
 
-    if (local_isSelected.present && this.local_isSelected != local_isSelected.value) {
+    if (local_isSelected.present &&
+        this.local_isSelected != local_isSelected.value) {
       isLocalModify = true;
       this.local_isSelected = local_isSelected.value;
     }
@@ -523,7 +541,8 @@ extension FragmentExt on Fragment {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.fragments, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.fragments,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -565,12 +584,14 @@ extension MemoryGroupExt on MemoryGroup {
       this.memoryModelId = memoryModelId.value;
     }
 
-    if (newDisplayOrder.present && this.newDisplayOrder != newDisplayOrder.value) {
+    if (newDisplayOrder.present &&
+        this.newDisplayOrder != newDisplayOrder.value) {
       isCloudModify = true;
       this.newDisplayOrder = newDisplayOrder.value;
     }
 
-    if (newReviewDisplayOrder.present && this.newReviewDisplayOrder != newReviewDisplayOrder.value) {
+    if (newReviewDisplayOrder.present &&
+        this.newReviewDisplayOrder != newReviewDisplayOrder.value) {
       isCloudModify = true;
       this.newReviewDisplayOrder = newReviewDisplayOrder.value;
     }
@@ -590,14 +611,16 @@ extension MemoryGroupExt on MemoryGroup {
       this.title = title.value;
     }
 
-    if (willNewLearnCount.present && this.willNewLearnCount != willNewLearnCount.value) {
+    if (willNewLearnCount.present &&
+        this.willNewLearnCount != willNewLearnCount.value) {
       isCloudModify = true;
       this.willNewLearnCount = willNewLearnCount.value;
     }
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.memoryGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.memoryGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -627,7 +650,8 @@ extension MemoryModelExt on MemoryModel {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (buttonAlgorithm.present && this.buttonAlgorithm != buttonAlgorithm.value) {
+    if (buttonAlgorithm.present &&
+        this.buttonAlgorithm != buttonAlgorithm.value) {
       isCloudModify = true;
       this.buttonAlgorithm = buttonAlgorithm.value;
     }
@@ -637,17 +661,20 @@ extension MemoryModelExt on MemoryModel {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (familiarityAlgorithm.present && this.familiarityAlgorithm != familiarityAlgorithm.value) {
+    if (familiarityAlgorithm.present &&
+        this.familiarityAlgorithm != familiarityAlgorithm.value) {
       isCloudModify = true;
       this.familiarityAlgorithm = familiarityAlgorithm.value;
     }
 
-    if (fatherMemoryModelId.present && this.fatherMemoryModelId != fatherMemoryModelId.value) {
+    if (fatherMemoryModelId.present &&
+        this.fatherMemoryModelId != fatherMemoryModelId.value) {
       isCloudModify = true;
       this.fatherMemoryModelId = fatherMemoryModelId.value;
     }
 
-    if (nextTimeAlgorithm.present && this.nextTimeAlgorithm != nextTimeAlgorithm.value) {
+    if (nextTimeAlgorithm.present &&
+        this.nextTimeAlgorithm != nextTimeAlgorithm.value) {
       isCloudModify = true;
       this.nextTimeAlgorithm = nextTimeAlgorithm.value;
     }
@@ -659,7 +686,8 @@ extension MemoryModelExt on MemoryModel {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.memoryModels, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.memoryModels,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -709,7 +737,8 @@ extension NoteExt on Note {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.notes, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.notes,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -741,7 +770,8 @@ extension DocumentGroupExt on DocumentGroup {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (fatherDocumentGroupsId.present && this.fatherDocumentGroupsId != fatherDocumentGroupsId.value) {
+    if (fatherDocumentGroupsId.present &&
+        this.fatherDocumentGroupsId != fatherDocumentGroupsId.value) {
       isCloudModify = true;
       this.fatherDocumentGroupsId = fatherDocumentGroupsId.value;
     }
@@ -753,7 +783,8 @@ extension DocumentGroupExt on DocumentGroup {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.documentGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.documentGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -786,12 +817,14 @@ extension FragmentGroupExt on FragmentGroup {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (fatherFragmentGroupsId.present && this.fatherFragmentGroupsId != fatherFragmentGroupsId.value) {
+    if (fatherFragmentGroupsId.present &&
+        this.fatherFragmentGroupsId != fatherFragmentGroupsId.value) {
       isCloudModify = true;
       this.fatherFragmentGroupsId = fatherFragmentGroupsId.value;
     }
 
-    if (local_isSelected.present && this.local_isSelected != local_isSelected.value) {
+    if (local_isSelected.present &&
+        this.local_isSelected != local_isSelected.value) {
       isLocalModify = true;
       this.local_isSelected = local_isSelected.value;
     }
@@ -803,7 +836,8 @@ extension FragmentGroupExt on FragmentGroup {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.fragmentGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.fragmentGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }
@@ -835,7 +869,8 @@ extension NoteGroupExt on NoteGroup {
       this.creatorUserId = creatorUserId.value;
     }
 
-    if (fatherNoteGroupsId.present && this.fatherNoteGroupsId != fatherNoteGroupsId.value) {
+    if (fatherNoteGroupsId.present &&
+        this.fatherNoteGroupsId != fatherNoteGroupsId.value) {
       isCloudModify = true;
       this.fatherNoteGroupsId = fatherNoteGroupsId.value;
     }
@@ -847,7 +882,8 @@ extension NoteGroupExt on NoteGroup {
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.noteGroups, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+      await ins.updateReturningWith(ins.noteGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
   }

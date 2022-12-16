@@ -157,7 +157,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: TextField(
             minLines: 1,
             maxLines: 3,
@@ -184,7 +184,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: TextField(
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
@@ -213,7 +213,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: TextField(
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
@@ -241,7 +241,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: TextField(
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,

@@ -39,7 +39,8 @@ class BasicConfigWidget extends StatelessWidget {
   Widget _titleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
+          abWrong: c.bTitleStorage.verifyErrorMessage,
           child: Row(
             children: [
               const Text('名称：', style: TextStyle(fontSize: 16)),
@@ -62,7 +63,8 @@ class BasicConfigWidget extends StatelessWidget {
   Widget _memoryModelWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
+          abWrong: c.bSelectedMemoryModelStorage.verifyErrorMessage,
           child: Row(
             children: [
               const Text('记忆模型：', style: TextStyle(fontSize: 16)),
@@ -86,7 +88,7 @@ class BasicConfigWidget extends StatelessWidget {
   Widget _selectFragmentWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: Row(
             children: [
               const Text('已选碎片：', style: TextStyle(fontSize: 16)),

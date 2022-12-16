@@ -125,14 +125,17 @@ class RefMemoryGroups extends Ref {
 /// [FragmentMemoryInfos]
 class RefFragmentMemoryInfos extends Ref {
   Future<void> Function($FragmentMemoryInfosTable table) self;
+  RefMemoryGroups? memoryGroups;
 
   RefFragmentMemoryInfos({
     required this.self,
+    required this.memoryGroups,
   });
 
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.fragmentMemoryInfos);
+    await memoryGroups?._run();
   }
 }
 

@@ -1,13 +1,14 @@
 import 'dart:math';
+import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/page/stage/InAppStageAbController.dart';
 import 'package:drift/drift.dart';
+import 'package:drift/extensions/json1.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
 
 class PerformerQuery {
-  final DriftDb dft = DriftDb.instance;
-
-  /// 获取新的表演者。
+  /// 获取新的表演者，获取到的碎片信息是该碎片的最后一次记录。
   ///
   /// [Fragment] 表示当前新展示的碎片。
   ///
@@ -17,248 +18,145 @@ class PerformerQuery {
   /// 若 [FragmentMemoryInfo]s 数组为空，则当前碎片是新碎片。
   ///
   /// 为 null 时表示没有下一个了，即已完成学习。
-  Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getNewPerformer({required MemoryGroup mg}) async {
-    final newFragment = await getOneNewFragment(mg: mg);
+  Future<Performer?> getNewPerformer({required MemoryGroup mg}) async {
+    final newPerformer = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
-    if (newFragment == null && learnedFragment == null) return null;
+    if (newPerformer == null && learnedFragment == null) return null;
 
-    final newFragmentOrNull = newFragment == null ? null : Tuple2(t1: newFragment, t2: <FragmentMemoryInfo>[]);
-    final learnedFragmentOrNull = learnedFragment == null ? null : Tuple2(t1: learnedFragment.t1, t2: learnedFragment.t2);
+    if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.mix) {
+      return Random().nextBool() == true ? (newPerformer ?? learnedFragment) : (learnedFragment ?? newPerformer);
+    } else if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.reviewNew) {
+      return learnedFragment ?? newPerformer;
+    } else if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.newReview) {
+      return newPerformer ?? learnedFragment;
+    } else {
+      throw '未处理 ${mg.newReviewDisplayOrder}';
+    }
+  }
 
-    return filter(
-      from: mg.newReviewDisplayOrder,
-      targets: {
-        [NewReviewDisplayOrder.mix]: () => Random().nextInt(2) == 0 ? (newFragmentOrNull ?? learnedFragmentOrNull) : (learnedFragmentOrNull ?? newFragmentOrNull),
-        [NewReviewDisplayOrder.newReview]: () => newFragmentOrNull ?? learnedFragmentOrNull,
-        [NewReviewDisplayOrder.reviewNew]: () => learnedFragmentOrNull ?? newFragmentOrNull,
-      },
-      orElse: null,
-    );
+  /// 获取新碎片。
+  Future<Performer?> getOneNewFragment({required MemoryGroup mg}) async {
+    // 识别是否还需要学习新碎片。
+    if (mg.willNewLearnCount == 0) {
+      return null;
+    }
+    final selInfo = db.select(db.fragmentMemoryInfos);
+    selInfo.where((tbl) => tbl.memoryGroupId.equals(mg.id) & tbl.nextPlanShowTime.isNull());
+    if (mg.newDisplayOrder == NewDisplayOrder.random) {
+      selInfo.orderBy([(_) => OrderingTerm.random()]);
+    } else {
+      throw '未处理 ${mg.newDisplayOrder}';
+    }
+    selInfo.limit(1);
+
+    final infoResult = await selInfo.getSingleOrNull();
+    if (infoResult == null) return null;
+
+    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragmentId));
+    final fResult = await selF.getSingleOrNull();
+    if (fResult == null) throw '碎片已经被删除，但是仍然残留了记忆信息！';
+
+    return Performer(fragment: fResult, fragmentMemoryInfo: infoResult);
   }
 
   /// 获取要复习的碎片。
-  ///
-  /// 相似：[GeneralQueryDAO.getLearnedFragmentsCount]
-  Future<Tuple2<Fragment, List<FragmentMemoryInfo>>?> getOneLearnedFragment({required MemoryGroup mg}) async {
-    // final lSelect = dft.select(dft.fragments);
-    // final lJoin = [
-    //   innerJoin(dft.fragmentMemoryInfos, dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.fragments.id)),
-    // ];
-    //
-    // // 获取每个碎片的最近的一次碎片记忆信息
-    // final lWhere = dft.fragmentMemoryInfos.memoryGroupId.equals(mg.id) &
-    //     dft.fragmentMemoryInfos.isLatestRecord.equals(true) &
-    //     dft.fragmentMemoryInfos.nextPlanShowTime.isSmallerOrEqualValue(timeDifference(target: mg.reviewInterval, start: mg.startTime!));
-    //
-    // final doJoin = lSelect.join(lJoin);
-    // doJoin.where(lWhere);
-    // doJoin.orderBy([OrderingTerm.asc(dft.fragmentMemoryInfos.nextPlanShowTime)]);
-    // doJoin.limit(1);
-    //
-    // // 获取碎片
-    // final fragmentsResult = await doJoin.getSingleOrNull();
-    // if (fragmentsResult == null) return null;
-    //
-    // // 获取碎片对应的碎片记忆信息。
-    // final fragmentMemoryInfosSelect = dft.select(dft.fragmentMemoryInfos);
-    // final recentInfo = fragmentsResult.readTable(dft.fragmentMemoryInfos);
-    // fragmentMemoryInfosSelect.where((tbl) => tbl.memoryGroupId.equals(recentInfo.memoryGroupId) & tbl.fragmentId.equals(recentInfo.fragmentId));
-    // fragmentMemoryInfosSelect.orderBy([(t) => OrderingTerm.asc(t.createdAt)]);
-    // final fragmentMemoryInfosResult = await fragmentMemoryInfosSelect.get();
-    //
-    // return Tuple2(t1: fragmentsResult.readTable(dft.fragments), t2: fragmentMemoryInfosResult);
-    return null;
-  }
+  Future<Performer?> getOneLearnedFragment({required MemoryGroup mg}) async {
+    final lastNextShowTime = db.fragmentMemoryInfos.nextPlanShowTime.jsonExtract<int>(r'$[#-1]');
+    final selInfo = db.select(db.fragmentMemoryInfos);
+    selInfo.addColumns([lastNextShowTime]);
+    selInfo.where((tbl) => tbl.memoryGroupId.equals(mg.id));
+    selInfo.orderBy([(o) => OrderingTerm(expression: lastNextShowTime, mode: OrderingMode.asc)]);
+    selInfo.limit(1);
 
-  /// 相似：[GeneralQueryDAO.getNewFragmentsCount]
-  ///
-  /// 获取新碎片。
-  Future<Fragment?> getOneNewFragment({required MemoryGroup mg}) async {
-    // if (mg.willNewLearnCount < 0) {
-    //   throw 'willNewLearnCount 不能小于 0！';
-    // }
-    // // 识别是否还需要学习新碎片。
-    // if (mg.willNewLearnCount == 0) {
-    //   return null;
-    // }
-    //
-    // final lSelect = dft.select(dft.rFragment2MemoryGroups);
-    // final lJoin = [
-    //   leftOuterJoin(
-    //     dft.fragmentMemoryInfos,
-    //     dft.fragmentMemoryInfos.fragmentId.equalsExp(dft.rFragment2MemoryGroups.sonId) & dft.fragmentMemoryInfos.memoryGroupId.equalsExp(dft.rFragment2MemoryGroups.fatherId),
-    //   ),
-    // ];
-    //
-    // // 获取在当前记忆组内的没有创建过碎片记忆信息的碎片。（获取新碎片）
-    // final lWhere = dft.rFragment2MemoryGroups.fatherId.equals(mg.id) & dft.fragmentMemoryInfos.id.isNull();
-    //
-    // final doJoin = lSelect.join(lJoin);
-    // doJoin.where(lWhere);
-    // if (mg.newDisplayOrder == NewDisplayOrder.random) {
-    //   doJoin.orderBy([OrderingTerm.random()]);
-    // } else {
-    //   throw '未处理 ${mg.newDisplayOrder}';
-    // }
-    // doJoin.limit(1);
-    //
-    // final result = await doJoin.getSingleOrNull();
-    // if (result == null) return null;
-    //
-    // final fragmentSelect = dft.select(dft.fragments)..where((tbl) => tbl.id.equals(result.readTable(dft.rFragment2MemoryGroups).sonId));
-    // return await fragmentSelect.getSingle();
-    return null;
+    final infoResult = await selInfo.getSingleOrNull();
+    if (infoResult == null) return null;
+
+    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragmentId));
+    final fResult = await selF.getSingleOrNull();
+    if (fResult == null) throw '碎片已经被删除，但是仍然残留了记忆信息！';
+
+    return Performer(fragment: fResult, fragmentMemoryInfo: infoResult);
   }
 
   /// ========================================================================================
 
-  /// 结束当前表演，并开始下一个表演。
+  /// 仅结束当前表演。
   ///
-  /// [lastFragmentMemoryInfo] - 点击按钮前的最近一个碎片信息，即当前 [FragmentMemoryInfo.isLatestRecord] 为 true 的碎片信息。
-  ///
-  /// [newFragmentMemoryInfo] - 点击按钮后产生的新碎片信息。
-  ///
-  /// [isOldIsNew] - 将产生碎片信息的碎片是否为 新碎片（非复习碎片），
+  /// [isNew] - 将产生碎片信息的碎片是否为 新碎片（非复习碎片），
   /// 若为新的，则需要将 [MemoryGroup.willNewLearnCount] 减去 1。
-  Future<void> finishAndStartNextPerform({
-    required FragmentMemoryInfo? lastFragmentMemoryInfo,
-    required FragmentMemoryInfosCompanion newFragmentMemoryInfo,
-    required Ab<MemoryGroup> memoryGroupAb,
-    required bool isOldIsNew,
+  Future<void> finish({
+    required ResetFutureFunction<FragmentMemoryInfo> originalFragmentMemoryInfoReset,
+    required MemoryGroup originalMemoryGroup,
+    required bool isNew,
+    required SyncTag? syncTag,
   }) async {
-    await dft.transaction(
-      () async {
-        final st = await SyncTag.create();
-        // 修改旧的
-        if (lastFragmentMemoryInfo != null) {
-          // await withRefs(
-          //   syncTag: st,
-          //   ref: (SyncTag syncTag) async {
-          //     return RefFragmentMemoryInfos(
-          //       self: ($FragmentMemoryInfosTable table) async {
-          //         await lastFragmentMemoryInfo.reset(
-          //           fragmentId: toAbsent(),
-          //           memoryGroupId: toAbsent(),
-          //           isLatestRecord: false.toValue(),
-          //           nextPlanShowTime: toAbsent(),
-          //           currentActualShowTime: toAbsent(),
-          //           showFamiliarity: toAbsent(),
-          //           clickTime: toAbsent(),
-          //           clickValue: toAbsent(),
-          //           writeSyncTag: syncTag,
-          //         );
-          //       },
-          //     );
-          //   },
-          // );
-        }
-        // 生成新的
-        await withRefs(
-          syncTag: st,
-          ref: (SyncTag syncTag) async {
-            return RefFragmentMemoryInfos(
-              self: ($FragmentMemoryInfosTable table) async {
-                await dft.insertReturningWith(
-                  dft.fragmentMemoryInfos,
-                  entity: newFragmentMemoryInfo,
-                  syncTag: syncTag,
-                );
-              },
-            );
-          },
-        );
-
-        if (isOldIsNew) {
-          // await DriftDb.instance.updateDAO.resetMemoryGroup(
-          //   syncTag: st,
-          //   oldMemoryGroupReset: (SyncTag resetSyncTag) async {
-          //     await memoryGroupAb().reset(
-          //       memoryModelId: toAbsent(),
-          //       title: toAbsent(),
-          //       willNewLearnCount: (memoryGroupAb().willNewLearnCount - 1).toValue(),
-          //       reviewInterval: toAbsent(),
-          //       newReviewDisplayOrder: toAbsent(),
-          //       newDisplayOrder: toAbsent(),
-          //       startTime: toAbsent(),
-          //       isFilterOutAlgorithmFollowMemoryModel: toAbsent(),
-          //       isEnableFilterOutAlgorithm: toAbsent(),
-          //       filterOutAlgorithm: toAbsent(),
-          //       isFloatingAlgorithmFollowMemoryModel: toAbsent(),
-          //       isEnableFloatingAlgorithm: toAbsent(),
-          //       floatingAlgorithm: toAbsent(),
-          //       writeSyncTag: resetSyncTag,
-          //     );
-          //   },
-          // );
-        }
-      },
+    await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
+      originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
+      originalMemoryGroup: originalMemoryGroup,
+      isNew: isNew,
+      syncTag: syncTag,
     );
   }
 
   /// ========================================================================================
 
   /// [InternalVariableConstant.countAllConst]
-  Future<List<int>> getCountAll({required MemoryGroup mg}) async {
-    return [await DriftDb.instance.generalQueryDAO.getFragmentsCount(mg: mg)];
+  Future<List<int>> getCountAll({required MemoryGroup memoryGroup}) async {
+    return [await db.generalQueryDAO.getFragmentsCount(memoryGroup: memoryGroup)];
   }
 
   /// [InternalVariableConstant.countNewConst]
-  Future<List<int>> getCountNew({required MemoryGroup mg}) async {
-    return [await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(mg: mg)];
+  Future<List<int>> getCountNew({required MemoryGroup memoryGroup}) async {
+    return [await db.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroup)];
   }
 
+  /// TODO:
+  // Future<List<int>> getCountLearned({required MemoryGroup memoryGroup}) async {
+  //   return [await db.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroup)];
+  // }
+
   /// [InternalVariableConstant.timesConst]
-  Future<List<int>> getTimes({required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple}) async {
-    return tuple.t2.isEmpty ? [1] : [tuple.t2.length];
+  Future<List<int>> getTimes({required Performer performer}) async {
+    return [performer.fragmentMemoryInfo.clickTime!.split(',').length];
   }
 
   /// [InternalVariableConstant.currentActualShowTimeConst]
-  Future<List<int>> getCurrentActualShowTime({
-    required MemoryGroup mg,
-    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+  Future<List<int>> getCurrentActualShowTimes({
+    required Performer performer,
     required int currentShowTime,
   }) async {
-    // return tuple.t2.map<int>((e) => e.currentActualShowTime).toList()..add(currentShowTime);
-    return [];
+    // 最后一个是当前未写入的数据。
+    return [...parseArrayStrToInt(from: performer.fragmentMemoryInfo.currentActualShowTime!), currentShowTime];
   }
 
   /// [InternalVariableConstant.nextPlanedShowTimeConst]
-  ///
-  /// 这里与其他的不同，实际上的 [FragmentMemoryInfos.nextPlanShowTime] 是从上一次展示信息中获取的，
-  /// 但是该函数将会获取本次原本计划展示时间，即上一次的 [nextPlanShowTime] 来充当当前的原本计划展示时间。
-  /// 也就是说，返回值的 first 必然为 null。
-  Future<List<int?>> getCurrentPlanedShowTime({
-    required MemoryGroup mg,
-    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+  Future<List<int?>> getNextPlanedShowTime({
+    required Performer performer,
+    required int? currentNextPlanedShowTime,
   }) async {
-    // return <int?>[null, ...tuple.t2.map((e) => e.nextPlanShowTime)];
-    return [];
+    return [...parseArrayStrToInt(from: performer.fragmentMemoryInfo.nextPlanShowTime!), currentNextPlanedShowTime];
   }
 
   /// [InternalVariableConstant.showFamiliarConst]
   Future<List<double?>> getShowFamiliar({
-    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
+    required Performer performer,
     required double? currentShowFamiliar,
   }) async {
-    // return tuple.t2.map<double?>((e) => e.showFamiliarity).toList()..add(currentShowFamiliar);
-    return [];
+    return [...parseArrayStrToDouble(from: performer.fragmentMemoryInfo.showFamiliarity!), currentShowFamiliar];
   }
 
   Future<List<int?>> getClickTime({
-    required MemoryGroup mg,
-    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
-    required bool isCreateNow,
+    required Performer performer,
+    required int? currentClickTime,
   }) async {
-    // return tuple.t2.map<int?>((e) => e.clickTime).toList()..add(isCreateNow ? timeDifference(target: DateTime.now(), start: mg.startTime!) : null);
-    return [];
+    return [...parseArrayStrToInt(from: performer.fragmentMemoryInfo.clickTime!), currentClickTime];
   }
 
   Future<List<double?>> getClickValue({
-    required Tuple2<Fragment, List<FragmentMemoryInfo>> tuple,
-    required double? clickValue,
+    required Performer performer,
+    required double? currentClickValue,
   }) async {
-    // final f = tuple.t2.map<double?>((e) => e.clickValue).toList()..add(clickValue);
-    // return f;
-    return [];
+    return [...parseArrayStrToDouble(from: performer.fragmentMemoryInfo.clickValue!), currentClickValue];
   }
+
 }

@@ -42,7 +42,7 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _newLearnCountWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: Row(
             children: [
               const Text('新学数量：'),
@@ -93,7 +93,8 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _reviewIntervalWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
+          abWrong: c.cReviewIntervalStorage.verifyErrorMessage,
           child: Row(
             children: [
               const Text('复习区间：  '),
@@ -138,7 +139,7 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _newReviewDisplayOrder() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: Row(
             children: [
               const Text('新 | 复习 碎片展示顺序：'),
@@ -163,7 +164,7 @@ class CurrentCircleWidget extends StatelessWidget {
   Widget _newDisplayOrder() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return CustomCard(
+        return CustomAbWrongCard(
           child: Row(
             children: [
               const Text('新碎片 展示顺序：'),

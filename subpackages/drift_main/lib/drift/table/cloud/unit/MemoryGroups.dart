@@ -23,6 +23,7 @@ class MemoryGroups extends CloudTableBase  {
 
   TextColumn get title => text()();
 
+  @ReferenceTo([FragmentMemoryInfos])
   IntColumn get willNewLearnCount => integer()();
 
   DateTimeColumn get createdAt => dateTime()();

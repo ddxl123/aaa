@@ -36,7 +36,7 @@ class FamiliarityState extends ClassificationState {
       countNewIF: IvFilter(ivf: () async => [countCapping ~/ 2], isReGet: true),
       timesIF: IvFilter(ivf: () async => [math.Random().nextInt(9) + 1], isReGet: true),
       currentActualShowTimeIF: IvFilter(ivf: () async => [actualShowTime], isReGet: true),
-      currentPlanedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
+      nextPlanedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
       showFamiliarIF: IvFilter(ivf: () async => [math.Random().nextDouble() * 200], isReGet: true),
       clickTimeIF: IvFilter(ivf: () async => [actualShowTime + math.Random().nextInt(600)], isReGet: true),
       clickValueIF: IvFilter(ivf: () async => [math.Random().nextDouble() * 200], isReGet: true),

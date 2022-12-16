@@ -151,4 +151,44 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       },
     );
   }
+
+  /// performer 完成后，对其记忆信息进行修改。
+  ///
+  /// 会将 [MemoryGroup.willNewLearnCount] 减去 1。
+  Future<void> resetFragmentMemoryInfoForFinishPerform({
+    required ResetFutureFunction<FragmentMemoryInfo> originalFragmentMemoryInfoReset,
+    required MemoryGroup originalMemoryGroup,
+    required bool isNew,
+    required SyncTag? syncTag,
+  }) async {
+    await withRefs(
+      syncTag: syncTag,
+      ref: (st) async {
+        return RefFragmentMemoryInfos(
+          self: (_) async {
+            await originalFragmentMemoryInfoReset(st);
+          },
+          memoryGroups: RefMemoryGroups(
+            self: (_) async {
+              if (isNew) {
+                // 需要 willNewLearnCount -1。
+                await originalMemoryGroup.reset(
+                  creatorUserId: toAbsent(),
+                  memoryModelId: toAbsent(),
+                  newDisplayOrder: toAbsent(),
+                  newReviewDisplayOrder: toAbsent(),
+                  reviewInterval: toAbsent(),
+                  startTime: toAbsent(),
+                  title: toAbsent(),
+                  willNewLearnCount: (originalMemoryGroup.willNewLearnCount - 1).toValue(),
+                  syncTag: st,
+                );
+              }
+            },
+            fragmentMemoryInfos: null,
+          ),
+        );
+      },
+    );
+  }
 }
