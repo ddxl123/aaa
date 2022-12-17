@@ -66,7 +66,9 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             : FloatingRoundCornerButton(
                 color: Colors.greenAccent,
                 text: const Text(' 继续 ', style: TextStyle(color: Colors.white)),
-                onPressed: () {},
+                onPressed: () {
+                  c.start();
+                },
               );
       },
     );

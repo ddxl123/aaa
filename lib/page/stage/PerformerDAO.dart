@@ -21,17 +21,28 @@ class PerformerQuery {
   Future<Performer?> getNewPerformer({required MemoryGroup mg}) async {
     final newPerformer = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
+
+    logger.d('获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}');
+    logger.d('获取到的复习碎片：\n${learnedFragment?.fragmentMemoryInfo}\n${learnedFragment?.fragment}');
+
     if (newPerformer == null && learnedFragment == null) return null;
 
+    late final Performer? performer;
     if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.mix) {
-      return Random().nextBool() == true ? (newPerformer ?? learnedFragment) : (learnedFragment ?? newPerformer);
+      performer = Random().nextBool() == true ? (newPerformer ?? learnedFragment) : (learnedFragment ?? newPerformer);
     } else if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.reviewNew) {
-      return learnedFragment ?? newPerformer;
+      performer = learnedFragment ?? newPerformer;
     } else if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.newReview) {
-      return newPerformer ?? learnedFragment;
+      performer = newPerformer ?? learnedFragment;
     } else {
       throw '未处理 ${mg.newReviewDisplayOrder}';
     }
+    if (performer!.fragmentMemoryInfo.nextPlanShowTime == null) {
+      logger.d('最终展示了新碎片！');
+    } else {
+      logger.d('最终展示了复习碎片！');
+    }
+    return performer;
   }
 
   /// 获取新碎片。
@@ -64,7 +75,7 @@ class PerformerQuery {
     final lastNextShowTime = db.fragmentMemoryInfos.nextPlanShowTime.jsonExtract<int>(r'$[#-1]');
     final selInfo = db.select(db.fragmentMemoryInfos);
     selInfo.addColumns([lastNextShowTime]);
-    selInfo.where((tbl) => tbl.memoryGroupId.equals(mg.id));
+    selInfo.where((tbl) => tbl.memoryGroupId.equals(mg.id) & tbl.nextPlanShowTime.isNotNull());
     selInfo.orderBy([(o) => OrderingTerm(expression: lastNextShowTime, mode: OrderingMode.asc)]);
     selInfo.limit(1);
 
@@ -117,7 +128,7 @@ class PerformerQuery {
 
   /// [InternalVariableConstant.timesConst]
   Future<List<int>> getTimes({required Performer performer}) async {
-    return [performer.fragmentMemoryInfo.clickTime!.split(',').length];
+    return [performer.fragmentMemoryInfo.clickTime?.split(',').length ?? 0];
   }
 
   /// [InternalVariableConstant.currentActualShowTimeConst]
@@ -126,7 +137,10 @@ class PerformerQuery {
     required int currentShowTime,
   }) async {
     // 最后一个是当前未写入的数据。
-    return [...parseArrayStrToInt(from: performer.fragmentMemoryInfo.currentActualShowTime!), currentShowTime];
+    return [
+      ...performer.fragmentMemoryInfo.currentActualShowTime == null ? [] : performer.fragmentMemoryInfo.currentActualShowTime!.toIntArray(),
+      currentShowTime,
+    ];
   }
 
   /// [InternalVariableConstant.nextPlanedShowTimeConst]
@@ -134,7 +148,10 @@ class PerformerQuery {
     required Performer performer,
     required int? currentNextPlanedShowTime,
   }) async {
-    return [...parseArrayStrToInt(from: performer.fragmentMemoryInfo.nextPlanShowTime!), currentNextPlanedShowTime];
+    return [
+      ...performer.fragmentMemoryInfo.nextPlanShowTime == null ? [] : performer.fragmentMemoryInfo.nextPlanShowTime!.toIntArray(),
+      currentNextPlanedShowTime,
+    ];
   }
 
   /// [InternalVariableConstant.showFamiliarConst]
@@ -142,21 +159,29 @@ class PerformerQuery {
     required Performer performer,
     required double? currentShowFamiliar,
   }) async {
-    return [...parseArrayStrToDouble(from: performer.fragmentMemoryInfo.showFamiliarity!), currentShowFamiliar];
+    return [
+      ...performer.fragmentMemoryInfo.showFamiliarity == null ? [] : performer.fragmentMemoryInfo.showFamiliarity!.toDoubleArray(),
+      currentShowFamiliar,
+    ];
   }
 
   Future<List<int?>> getClickTime({
     required Performer performer,
     required int? currentClickTime,
   }) async {
-    return [...parseArrayStrToInt(from: performer.fragmentMemoryInfo.clickTime!), currentClickTime];
+    return [
+      ...performer.fragmentMemoryInfo.clickTime == null ? [] : performer.fragmentMemoryInfo.clickTime!.toIntArray(),
+      currentClickTime,
+    ];
   }
 
   Future<List<double?>> getClickValue({
     required Performer performer,
     required double? currentClickValue,
   }) async {
-    return [...parseArrayStrToDouble(from: performer.fragmentMemoryInfo.clickValue!), currentClickValue];
+    return [
+      ...performer.fragmentMemoryInfo.clickValue == null ? [] : performer.fragmentMemoryInfo.clickValue!.toDoubleArray(),
+      currentClickValue,
+    ];
   }
-
 }

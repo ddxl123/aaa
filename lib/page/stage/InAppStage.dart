@@ -35,7 +35,7 @@ class _InAppStageState extends State<InAppStage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(c.currentPerformer(abw) == null ? '任务已全部完成！' : c.currentPerformer()!.t1.content),
+                  Text(c.currentPerformer(abw) == null ? '任务已全部完成！' : c.currentPerformer()!.fragment.content),
                 ],
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +34,10 @@ class InAppStageAbController extends AbController {
   final currentPerformer = Ab<Performer?>(null);
 
   /// 每展示碎片时都会被重置。
-  late int currentActualShowTime;
+  int? currentActualShowTime;
 
   /// 每展示碎片时都会被重置。
-  late double currentShowFamiliar;
+  double? currentShowFamiliar;
 
   /// 每展示碎片时都会被重置。
   final currentButtonDataState = Ab<ButtonDataState?>(null);
@@ -95,10 +96,16 @@ class InAppStageAbController extends AbController {
   ///
   /// 点击数值按钮后进行调用。
   Future<void> _finish({required double clickValue}) async {
+    if (currentPerformer() == null) {
+      throw '没有下一个碎片了，却仍然请求了下一个碎片！';
+    }
+
     final buttonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue);
-    final nextPlanShowTime = await _parseNextShowTime(buttonDataValue2NextShowTime: buttonDataValue2NextShowTime);
+    await _parseNextShowTime(buttonDataValue2NextShowTime: buttonDataValue2NextShowTime);
 
     final info = currentPerformer()!.fragmentMemoryInfo;
+
+    final isNew = info.nextPlanShowTime == null ? true : false;
     await performerQuery.finish(
       originalFragmentMemoryInfoReset: (SyncTag resetSyncTag) async {
         return currentPerformer()!.fragmentMemoryInfo.reset(
@@ -108,27 +115,28 @@ class InAppStageAbController extends AbController {
               clickTime: (info.clickTime ?? '[]').arrayAdd(timeDifference(target: DateTime.now(), start: memoryGroupAb().startTime!)).toValue(),
               clickValue: (info.clickValue ?? '[]').arrayAdd(clickValue).toValue(),
               currentActualShowTime: (info.currentActualShowTime ?? '[]').arrayAdd(currentActualShowTime).toValue(),
-              nextPlanShowTime: (info.nextPlanShowTime ?? '[]').arrayAdd(nextPlanShowTime).toValue(),
+              nextPlanShowTime: (info.nextPlanShowTime ?? '[]').arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
               showFamiliarity: (info.showFamiliarity ?? '[]').arrayAdd(currentShowFamiliar).toValue(),
               syncTag: resetSyncTag,
             );
       },
       originalMemoryGroup: memoryGroupAb(),
-      isNew: info.nextPlanShowTime == null ? true : false,
+      isNew: isNew,
       syncTag: null,
     );
+    currentShowFamiliar = null;
+    currentActualShowTime = null;
+    currentButtonDataState.refreshEasy((oldValue) => null);
     currentPerformer.refreshEasy((oldValue) => null);
+    if (isNew) {
+      Aber.findOrNull<MemoryGroupGizmoEditPageAbController>()?.cWillNewLearnCountStorage.abValue.refreshEasy((oldValue) => oldValue - 1);
+    }
     memoryGroupAb.refreshForce();
   }
 
   /// 完成当前表演，并进行下一次表演。
-  Future<void> finishAndNext({
-    required double clickValue,
-  }) async {
-    if (currentPerformer() == null) {
-      throw '没有下一个碎片了，却仍然请求了下一个碎片！';
-    }
-
+  Future<void> finishAndNext({required double clickValue}) async {
+    await _finish(clickValue: clickValue);
     await _next();
   }
 
@@ -154,7 +162,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime),
+              ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime!),
               isReGet: false,
             ),
             nextPlanedShowTimeIF: IvFilter(
@@ -209,7 +217,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime),
+              ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime!),
               isReGet: false,
             ),
             nextPlanedShowTimeIF: IvFilter(
@@ -243,7 +251,9 @@ class InAppStageAbController extends AbController {
   }
 
   /// 解析每个按钮的下一次展示时间。
-  Future<int> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
+  ///
+  /// 解析出的值存放到 [buttonDataValue2NextShowTime] 中。
+  Future<void> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     final parseResult = await AlgorithmParser<NextShowTimeState>().parse(
       state: NextShowTimeState(
         useContent: memoryModelAb().nextTimeAlgorithm,
@@ -264,7 +274,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             currentActualShowTimeIF: IvFilter(
-              ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime),
+              ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime!),
               isReGet: false,
             ),
             nextPlanedShowTimeIF: IvFilter(
@@ -290,7 +300,7 @@ class InAppStageAbController extends AbController {
     );
     return await parseResult.handle(
       onSuccess: (NextShowTimeState state) async {
-        return state.result;
+        buttonDataValue2NextShowTime.nextShowTime = state.result;
       },
       onError: (ExceptionContent ec) async {
         throw ec;
