@@ -1,28 +1,41 @@
-import 'package:aaa/page/select/FragmentGroupSelectPage.dart';
+import 'dart:convert';
+
+import 'package:drift_main/drift/DriftDb.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class FragmentGizmoEditPageAbController extends AbController {
-  String title = '';
+  FragmentGizmoEditPageAbController({required this.fragmentAb});
 
-  String content = '';
+  /// 若为 null，则表示创建，否则为修改。
+  final Ab<Fragment>? fragmentAb;
+  late final q.QuillController quillController;
 
-  void commit() {
-    if (title.trim() == '' && content.trim() == '') {
-      SmartDialog.showToast('没有内容');
-      Navigator.pop(context);
+  @override
+  void onInit() {
+    super.onInit();
+    if (fragmentAb == null) {
+      _createInit();
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (ctx) => const FragmentGroupSelectPage()));
+      _updateInit();
     }
   }
 
-  void cancel() {
-    if (title.trim() == '' && content.trim() == '') {
-      Navigator.pop(context);
-    } else {
-      // 编辑内容未保存。是否要 丢弃、存草稿、继续编辑？
-      SmartDialog.showToast('有编辑内容');
-    }
+  void _createInit() {
+    quillController = q.QuillController.basic();
+  }
+
+  void _updateInit() {
+    quillController = q.QuillController(
+      document: q.Document.fromJson(jsonDecode(fragmentAb!().content)),
+      selection: const TextSelection.collapsed(offset: 0),
+    );
+  }
+
+  String richToJson() => jsonEncode(quillController.document.toDelta().toJson());
+
+  Future<void> create() async {
+    // await db.insertDAO.insertFragmentWithRef(willFragment: willFragment, willFragmentGroup: willFragmentGroup, syncTag: syncTag)
   }
 }

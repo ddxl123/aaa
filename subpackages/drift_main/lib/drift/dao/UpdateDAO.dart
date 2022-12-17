@@ -50,6 +50,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         return RefFragments(
           self: (_) async {
             await originalFragment.reset(
+              title: toAbsent(),
               content: toAbsent(),
               creatorUserId: toAbsent(),
               fatherFragmentId: toAbsent(),
@@ -87,6 +88,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               fs,
               (element) async {
                 await element.reset(
+                  title: toAbsent(),
                   content: toAbsent(),
                   creatorUserId: toAbsent(),
                   fatherFragmentId: toAbsent(),

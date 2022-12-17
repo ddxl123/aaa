@@ -142,6 +142,7 @@ class Crt {
     required Value<String?> fatherFragmentId,
     required bool local_isSelected,
     required Value<String?> noteId,
+    required String title,
   }) {
     return FragmentsCompanion(
       content: Value(content),
@@ -149,6 +150,7 @@ class Crt {
       fatherFragmentId: fatherFragmentId,
       local_isSelected: Value(local_isSelected),
       noteId: noteId,
+      title: Value(title),
     );
   }
 

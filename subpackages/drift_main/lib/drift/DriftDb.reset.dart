@@ -508,6 +508,7 @@ extension FragmentExt on Fragment {
     required Value<String?> fatherFragmentId,
     required Value<bool> local_isSelected,
     required Value<String?> noteId,
+    required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
@@ -537,6 +538,11 @@ extension FragmentExt on Fragment {
     if (noteId.present && this.noteId != noteId.value) {
       isCloudModify = true;
       this.noteId = noteId.value;
+    }
+
+    if (title.present && this.title != title.value) {
+      isCloudModify = true;
+      this.title = title.value;
     }
 
     if (isCloudModify || isLocalModify) {

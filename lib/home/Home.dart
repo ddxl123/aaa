@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
         return FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
-            Navigator.push(putController.context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage()));
+            Navigator.push(putController.context, MaterialPageRoute(builder: (ctx) => const FragmentGizmoEditPage(fragmentAb: null)));
           },
         );
       },

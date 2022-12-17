@@ -77,9 +77,10 @@ class TestHomeAbController extends AbController {
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragmentWithRef(
             willFragment: Crt.fragmentsCompanion(
+              title: '标题 ${Random().nextInt(999999)}',
+              content: '内容 ${Random().nextInt(999999)}',
               creatorUserId: globalAbController.loggedInUser()!.id,
               fatherFragmentId: null.toValue(),
-              content: 'test ${Random().nextInt(999999)}',
               local_isSelected: false,
               noteId: null.toValue(),
             ),
@@ -90,9 +91,10 @@ class TestHomeAbController extends AbController {
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragmentWithRef(
             willFragment: Crt.fragmentsCompanion(
+              title: '标题 ${Random().nextInt(999999)}',
+              content: '内容 ${Random().nextInt(999999)}',
               creatorUserId: globalAbController.loggedInUser()!.id,
               fatherFragmentId: null.toValue(),
-              content: 'test ${Random().nextInt(999999)}',
               local_isSelected: false,
               noteId: null.toValue(),
             ),
