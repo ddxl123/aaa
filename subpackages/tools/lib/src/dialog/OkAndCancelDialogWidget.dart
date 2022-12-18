@@ -19,7 +19,9 @@ class OkAndCancelDialogWidget extends StatelessWidget {
     required this.okText,
     this.onCancel,
     this.onOk,
+    this.topKeepWidget,
     this.bottomKeepWidget,
+    this.crossAxisAlignment,
   }) : super(key: key);
 
   final String? title;
@@ -31,7 +33,9 @@ class OkAndCancelDialogWidget extends StatelessWidget {
   final String okText;
   final FutureOr<void> Function()? onCancel;
   final FutureOr<void> Function()? onOk;
+  final Widget? topKeepWidget;
   final Widget? bottomKeepWidget;
+  final CrossAxisAlignment? crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +69,9 @@ class OkAndCancelDialogWidget extends StatelessWidget {
           },
         ),
       ],
+      topKeepWidget: topKeepWidget,
       bottomKeepWidget: bottomKeepWidget,
+      crossAxisAlignment: crossAxisAlignment,
     );
   }
 }

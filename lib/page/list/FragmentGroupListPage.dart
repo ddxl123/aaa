@@ -60,7 +60,7 @@ class FragmentGroupListPage extends StatelessWidget {
           children: [
             Expanded(
               child: MaterialButton(
-                child: Text(unit(abw).unitEntity().content),
+                child: Text(unit(abw).unitEntity().title),
                 onPressed: () {},
                 onLongPress: () {
                   c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);

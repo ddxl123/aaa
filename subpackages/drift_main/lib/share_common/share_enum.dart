@@ -25,6 +25,12 @@ enum SyncCurdType {
 
 }
         
+enum FragmentTemplateType {
+  
+  richAny,
+
+}
+        
 enum NewReviewDisplayOrder {
   
   mix,

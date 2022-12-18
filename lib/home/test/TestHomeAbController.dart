@@ -64,8 +64,8 @@ class TestHomeAbController extends AbController {
       await Future.delayed(const Duration(seconds: 1));
       final subGroup = <FragmentGroup>[];
       for (int i = 0; i < count; i++) {
-        final fg = await DriftDb.instance.insertDAO.insertFragmentGroupWithRef(
-          willEntity: Crt.fragmentGroupsCompanion(
+        final fg = await DriftDb.instance.insertDAO.insertFragmentGroup(
+          willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
             creatorUserId: globalAbController.loggedInUser()!.id,
             title: 'test ${Random().nextInt(999999)}',
             fatherFragmentGroupsId: (fatherFragmentGroup?.id).toValue(),
@@ -75,30 +75,32 @@ class TestHomeAbController extends AbController {
         );
         subGroup.add(fg);
         for (int i = 0; i < count; i++) {
-          await DriftDb.instance.insertDAO.insertFragmentWithRef(
-            willFragment: Crt.fragmentsCompanion(
-              title: '标题 ${Random().nextInt(999999)}',
-              content: '内容 ${Random().nextInt(999999)}',
+          await DriftDb.instance.insertDAO.insertFragment(
+            willFragmentsCompanion: Crt.fragmentsCompanion(
               creatorUserId: globalAbController.loggedInUser()!.id,
               fatherFragmentId: null.toValue(),
+              fragmentTemplateId: null.toValue(),
+              title: '标题 ${Random().nextInt(999999)}',
+              content: '内容 ${Random().nextInt(999999)}',
               local_isSelected: false,
               noteId: null.toValue(),
             ),
-            willFragmentGroup: null,
+            whichFragmentGroup: null,
             syncTag: st,
           );
         }
         for (int i = 0; i < count; i++) {
-          await DriftDb.instance.insertDAO.insertFragmentWithRef(
-            willFragment: Crt.fragmentsCompanion(
-              title: '标题 ${Random().nextInt(999999)}',
-              content: '内容 ${Random().nextInt(999999)}',
+          await DriftDb.instance.insertDAO.insertFragment(
+            willFragmentsCompanion: Crt.fragmentsCompanion(
               creatorUserId: globalAbController.loggedInUser()!.id,
               fatherFragmentId: null.toValue(),
+              fragmentTemplateId: null.toValue(),
+              title: '标题 ${Random().nextInt(999999)}',
+              content: '内容 ${Random().nextInt(999999)}',
               local_isSelected: false,
               noteId: null.toValue(),
             ),
-            willFragmentGroup: fg.toCompanion(false),
+            whichFragmentGroup: fg,
             syncTag: st,
           );
         }

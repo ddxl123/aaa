@@ -9,14 +9,18 @@ class DialogWidget extends StatelessWidget {
     this.bottomLiftAction,
     required this.mainVerticalWidgets,
     required this.bottomHorizontalButtonWidgets,
+    this.topKeepWidget,
     this.bottomKeepWidget,
+    this.crossAxisAlignment,
   }) : super(key: key);
   final String? title;
   final Widget? topRightAction;
   final Widget? bottomLiftAction;
   final List<Widget> mainVerticalWidgets;
   final List<Widget> bottomHorizontalButtonWidgets;
+  final Widget? topKeepWidget;
   final Widget? bottomKeepWidget;
+  final CrossAxisAlignment? crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,7 @@ class DialogWidget extends StatelessWidget {
           child: IntrinsicWidth(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
               children: [
                 title == null
                     ? Container()
@@ -54,6 +59,8 @@ class DialogWidget extends StatelessWidget {
                           topRightAction == null ? Container() : topRightAction!,
                         ],
                       ),
+                topKeepWidget == null ? Container() : const SizedBox(height: 5),
+                topKeepWidget == null ? Container() : topKeepWidget!,
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),

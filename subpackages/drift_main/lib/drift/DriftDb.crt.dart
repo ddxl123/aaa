@@ -136,10 +136,23 @@ class Crt {
     );
   }
 
+  static FragmentTemplatesCompanion fragmentTemplatesCompanion({
+    required String content,
+    required int ownerUserId,
+    required FragmentTemplateType type,
+  }) {
+    return FragmentTemplatesCompanion(
+      content: Value(content),
+      ownerUserId: Value(ownerUserId),
+      type: Value(type),
+    );
+  }
+
   static FragmentsCompanion fragmentsCompanion({
     required String content,
     required int creatorUserId,
     required Value<String?> fatherFragmentId,
+    required Value<String?> fragmentTemplateId,
     required bool local_isSelected,
     required Value<String?> noteId,
     required String title,
@@ -148,6 +161,7 @@ class Crt {
       content: Value(content),
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId,
+      fragmentTemplateId: fragmentTemplateId,
       local_isSelected: Value(local_isSelected),
       noteId: noteId,
       title: Value(title),
@@ -353,6 +367,17 @@ extension DocumentsCompanionExt on DocumentsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.documents,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension FragmentTemplatesCompanionExt on FragmentTemplatesCompanion {
+  Future<FragmentTemplate> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.fragmentTemplates,
       entity: this,
       syncTag: syncTag,
     );

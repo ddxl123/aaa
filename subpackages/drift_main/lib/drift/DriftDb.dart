@@ -58,6 +58,8 @@ part 'table/cloud/test/Tests.dart';
 
 part 'table/cloud/unit/Documents.dart';
 
+part 'table/cloud/unit/FragmentTemplates.dart';
+
 part 'table/cloud/unit/Fragments.dart';
 
 part 'table/cloud/unit/MemoryGroups.dart';
@@ -93,6 +95,8 @@ const List<Type> tableClasses = [
   Tests,
 
   Documents,
+
+  FragmentTemplates,
 
   Fragments,
 

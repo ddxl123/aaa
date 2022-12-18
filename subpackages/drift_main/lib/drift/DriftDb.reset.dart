@@ -489,6 +489,51 @@ extension DocumentExt on Document {
   }
 }
 
+/// [FragmentTemplates]
+extension FragmentTemplateExt on FragmentTemplate {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<FragmentTemplate> reset({
+    required Value<String> content,
+    required Value<int> ownerUserId,
+    required Value<FragmentTemplateType> type,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (content.present && this.content != content.value) {
+      isCloudModify = true;
+      this.content = content.value;
+    }
+
+    if (ownerUserId.present && this.ownerUserId != ownerUserId.value) {
+      isCloudModify = true;
+      this.ownerUserId = ownerUserId.value;
+    }
+
+    if (type.present && this.type != type.value) {
+      isCloudModify = true;
+      this.type = type.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.fragmentTemplates,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
 /// [Fragments]
 extension FragmentExt on Fragment {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -506,6 +551,7 @@ extension FragmentExt on Fragment {
     required Value<String> content,
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentId,
+    required Value<String?> fragmentTemplateId,
     required Value<bool> local_isSelected,
     required Value<String?> noteId,
     required Value<String> title,
@@ -527,6 +573,12 @@ extension FragmentExt on Fragment {
         this.fatherFragmentId != fatherFragmentId.value) {
       isCloudModify = true;
       this.fatherFragmentId = fatherFragmentId.value;
+    }
+
+    if (fragmentTemplateId.present &&
+        this.fragmentTemplateId != fragmentTemplateId.value) {
+      isCloudModify = true;
+      this.fragmentTemplateId = fragmentTemplateId.value;
     }
 
     if (local_isSelected.present &&

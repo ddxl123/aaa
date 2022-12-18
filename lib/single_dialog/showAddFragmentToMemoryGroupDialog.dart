@@ -1,5 +1,4 @@
 import 'package:aaa/single_dialog/showCreateMemoryGroupDialog.dart';
-import 'package:drift/drift.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';

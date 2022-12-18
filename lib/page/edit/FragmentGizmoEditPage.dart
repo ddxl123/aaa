@@ -13,7 +13,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGizmoEditPageAbController>(
-      putController: FragmentGizmoEditPageAbController(fragmentAb: fragmentAb),
+      putController: FragmentGizmoEditPageAbController(currentFragmentAb: fragmentAb),
       builder: (controller, abw) {
         return Scaffold(
           appBar: _appBar(),
@@ -56,20 +56,46 @@ class FragmentGizmoEditPage extends StatelessWidget {
             Row(
               children: [
                 const SizedBox(width: 10),
-                IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.folder, color: Colors.blue),
-                  onPressed: () {},
+                // 存放位置
+                AbwBuilder(
+                  builder: (abwSingle) {
+                    return IconButton(
+                      style: c.selectedFragmentGroupChainAb(abwSingle) == null
+                          ? const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
+                            )
+                          : null,
+                      icon: const FaIcon(FontAwesomeIcons.folder, color: Colors.blue),
+                      onPressed: () {
+                        c.showSaveGroup();
+                      },
+                    );
+                  },
+                ),
+                AbwBuilder(
+                  builder: (abwSingle) {
+                    if (c.selectedFragmentGroupChainAb(abwSingle) == null) {
+                      return Container();
+                    }
+                    if (c.selectedFragmentGroupChainAb(abwSingle)!.isEmpty) {
+                      return const Text('~');
+                    }
+                    return Text(c.selectedFragmentGroupChainAb(abwSingle)!.last.title);
+                  },
                 ),
                 const SizedBox(width: 10),
+                // 使用模板
                 IconButton(
                   icon: const FaIcon(FontAwesomeIcons.codepen, color: Colors.blue),
                   onPressed: () {},
                 ),
                 const Spacer(),
+                // 上一个
                 IconButton(
                   icon: const FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.blue),
                   onPressed: () {},
                 ),
+                // 下一个
                 IconButton(
                   icon: const FaIcon(FontAwesomeIcons.chevronRight, color: Colors.blue),
                   onPressed: () {},
@@ -80,7 +106,9 @@ class FragmentGizmoEditPage extends StatelessWidget {
                     backgroundColor: MaterialStatePropertyAll(Colors.tealAccent),
                   ),
                   child: const Text('保存'),
-                  onPressed: () {},
+                  onPressed: () {
+                    c.create();
+                  },
                 ),
                 const SizedBox(width: 10),
               ],

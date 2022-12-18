@@ -37,6 +37,7 @@ class RefUsers extends Ref {
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
   RefRNote2NoteGroups? rNote2NoteGroups;
   RefDocuments? documents;
+  RefFragmentTemplates? fragmentTemplates;
   RefFragments? fragments;
   RefMemoryGroups? memoryGroups;
   RefMemoryModels? memoryModels;
@@ -52,6 +53,7 @@ class RefUsers extends Ref {
     required this.rFragment2FragmentGroups,
     required this.rNote2NoteGroups,
     required this.documents,
+    required this.fragmentTemplates,
     required this.fragments,
     required this.memoryGroups,
     required this.memoryModels,
@@ -69,6 +71,7 @@ class RefUsers extends Ref {
     await rFragment2FragmentGroups?._run();
     await rNote2NoteGroups?._run();
     await documents?._run();
+    await fragmentTemplates?._run();
     await fragments?._run();
     await memoryGroups?._run();
     await memoryModels?._run();
@@ -337,6 +340,23 @@ class RefTests extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.tests);
+  }
+}
+
+/// [FragmentTemplates]
+class RefFragmentTemplates extends Ref {
+  Future<void> Function($FragmentTemplatesTable table) self;
+  RefFragments? fragments;
+
+  RefFragmentTemplates({
+    required this.self,
+    required this.fragments,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragmentTemplates);
+    await fragments?._run();
   }
 }
 

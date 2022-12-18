@@ -137,6 +137,40 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return count;
   }
 
+  /// 查询碎片处在哪个碎片组链上。
+  ///
+  /// 一个相同碎片可能存储在不同的碎片组链上，因此使用 [rFragment2FragmentGroup] 进行查询。
+  ///
+  /// 如果返回值为空数组，则表示 root 组。
+  /// root 组不算在返回值内。
+  Future<List<FragmentGroup>> queryFragmentInWhichFragmentGroupChain({required Fragment fragment,required FragmentGroup fragmentGroup}) async {
+    final rSel = select(rFragment2FragmentGroups);
+    rSel.where((tbl) => tbl.fragmentId.eq)
+
+    final fgSel = select(fragmentGroups);
+    if (rFragment2FragmentGroup.fragmentGroupId == null) {
+      return [];
+    }
+    fgSel.where((tbl) => tbl.id.equals(rFragment2FragmentGroup.fragmentGroupId!));
+    final fgResult = await fgSel.getSingle();
+
+    final fgChain = <FragmentGroup>[];
+    // 开始循环
+    Future<void> foreachQuery(FragmentGroup fg) async {
+      if (fg.fatherFragmentGroupsId == null) {
+        return;
+      }
+      final foreachSel = select(fragmentGroups);
+      foreachSel.where((tbl) => tbl.id.equals(fg.fatherFragmentGroupsId!));
+      final foreachResult = await foreachSel.getSingle();
+      fgChain.add(foreachResult);
+      await foreachQuery(foreachResult);
+    }
+
+    await foreachQuery(fgResult);
+    return fgChain.reversed.toList();
+  }
+
   /// 查询全部已选的碎片。
   Future<List<Fragment>> querySelectedFragments() async {
     final sel = select(fragments);

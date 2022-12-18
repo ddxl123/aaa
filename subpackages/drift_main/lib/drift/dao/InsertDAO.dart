@@ -18,17 +18,17 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     ).insert(syncTag: null);
   }
 
-  /// 向当前 [FragmentGroups] 表中插入一条数据, 返回新插入的 [FragmentGroup]。
-  Future<FragmentGroup> insertFragmentGroupWithRef({
-    required FragmentGroupsCompanion willEntity,
+  /// 插入一个碎片组。
+  Future<FragmentGroup> insertFragmentGroup({
+    required FragmentGroupsCompanion willFragmentGroupsCompanion,
     required SyncTag? syncTag,
   }) async {
     late FragmentGroup returnFragmentGroup;
     await withRefs(
       syncTag: syncTag,
-      ref: (syncTag) async => RefFragmentGroups(
+      ref: (st) async => RefFragmentGroups(
         self: (table) async {
-          returnFragmentGroup = await insertReturningWith(table, entity: willEntity, syncTag: syncTag);
+          returnFragmentGroup = await willFragmentGroupsCompanion.insert(syncTag: st);
         },
         child_fragmentGroups: null,
         rFragment2FragmentGroups: null,
@@ -37,10 +37,10 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return returnFragmentGroup;
   }
 
-  /// 向当前 [Fragments] 表中插入一条数据, 返回新插入的 [Fragment]。
-  Future<Fragment> insertFragmentWithRef({
-    required FragmentsCompanion willFragment,
-    required FragmentGroupsCompanion? willFragmentGroup,
+  /// 向 [whichFragmentGroup] 中插入一条 [willFragmentsCompanion]。
+  Future<Fragment> insertFragment({
+    required FragmentsCompanion willFragmentsCompanion,
+    required FragmentGroup? whichFragmentGroup,
     required SyncTag? syncTag,
   }) async {
     late Fragment newFragment;
@@ -48,14 +48,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       syncTag: syncTag,
       ref: (syncTag) async => RefFragments(
         self: (table) async {
-          newFragment = await willFragment.insert(syncTag: syncTag);
+          newFragment = await willFragmentsCompanion.insert(syncTag: syncTag);
         },
         rFragment2FragmentGroups: RefRFragment2FragmentGroups(
           self: (table) async {
             await Crt.rFragment2FragmentGroupsCompanion(
-              creatorUserId: willFragment.creatorUserId.value,
-              fragmentGroupId: willFragmentGroup?.id ?? null.toValue(),
-              fragmentId: willFragment.id.value,
+              creatorUserId: willFragmentsCompanion.creatorUserId.value,
+              fragmentGroupId: (whichFragmentGroup?.id).toValue(),
+              fragmentId: willFragmentsCompanion.id.value,
             ).insert(syncTag: syncTag);
           },
         ),
