@@ -50,7 +50,8 @@ class CurrentPerformerStorage {
   );
 
   /// 初始化。
-  Future<void> init({required Ab<Fragment>? fragmentAb, required Ab<FragmentGroup>? fragmentGroupAb}) async {
+  Future<void> init(
+      {required Ab<Fragment>? fragmentAb, required Ab<FragmentGroup>? fragmentGroupAb, required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,}) async {
     current = fragmentAb;
     if (current == null) {
       contentStorage
@@ -92,17 +93,21 @@ class CurrentPerformerStorage {
         ..createValue.clear()
         ..saveValue.clear()
         ..saveValue.addAll(chains)
-        ..currentValueAb.refreshEasy((oldValue) => oldValue
+        ..currentValueAb.refreshEasy((oldValue) =>
+        oldValue
           ..clear()
           ..addAll(chains));
     }
+    fragmentGizmoEditPageAbController.quillController.document = q.Document.fromJson(jsonDecod???e(contentStorage.currentValueAb() ?? ''));
   }
 
   /// 检查 [非创建] 的碎片是否被修改。
   ///
   /// 若检查成功，则返回 null，否则返回失败消息。
   String? isDataModified() {
-    if (current != null) {
+    if (current == null) {
+      ??
+    } else {
       if (contentStorage.currentValueAb() != contentStorage.saveValue) {
         return '内容发生修改，请先保存！';
       }
@@ -116,10 +121,11 @@ class CurrentPerformerStorage {
     return null;
   }
 
-  /// 改变到已有的碎片。
+  /// 跳转到已有的碎片。
   ///
   /// 返回值见 [isDataModified]。
   Future<String?> to({required Ab<Fragment>? fragmentAb}) async {
+    /// 跳转前的检查。
     final isDataModifiedMessage = isDataModified();
     if (isDataModifiedMessage != null) return isDataModifiedMessage;
 
@@ -130,7 +136,8 @@ class CurrentPerformerStorage {
 
       selectedFragmentTemplateStorage.currentValueAb.refreshEasy((oldValue) => selectedFragmentTemplateStorage.createValue);
 
-      selectedFragmentGroupChainsStorage.currentValueAb.refreshEasy((oldValue) => oldValue
+      selectedFragmentGroupChainsStorage.currentValueAb.refreshEasy((oldValue) =>
+      oldValue
         ..clear()
         ..addAll(selectedFragmentGroupChainsStorage.createValue));
     } else {
@@ -150,7 +157,8 @@ class CurrentPerformerStorage {
       selectedFragmentGroupChainsStorage
         ..saveValue.clear()
         ..saveValue.addAll(chains)
-        ..currentValueAb.refreshEasy((oldValue) => oldValue
+        ..currentValueAb.refreshEasy((oldValue) =>
+        oldValue
           ..clear()
           ..addAll(chains));
     }
@@ -163,7 +171,7 @@ class CurrentPerformerStorage {
   /// 保存创建时，会跳到下一个创建。
   ///
   /// 保存修改时，不会跳到下一个。
-  Future<void> saveOrNext({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
+  Future<void> save({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
     if (current == null) {
       final newFragment = await db.insertDAO.insertFragment(
         willFragmentsCompanion: Crt.fragmentsCompanion(
@@ -179,7 +187,7 @@ class CurrentPerformerStorage {
         syncTag: null,
       );
       fragmentGizmoEditPageAbController.records.refreshEasy(
-        (oldValue) {
+            (oldValue) {
           final index = oldValue.indexOf(null);
           oldValue.replaceRange(index, index + 1, [newFragment.ab]);
           oldValue.add(null);
@@ -187,7 +195,17 @@ class CurrentPerformerStorage {
         },
       );
       current = null;
-
+      contentStorage
+        ..saveValue = null
+        ..createValue = null
+        ..currentValueAb.refreshEasy((oldValue) => null);
+      selectedFragmentTemplateStorage
+        ..saveValue = null
+        ..createValue = selectedFragmentTemplateStorage.currentValueAb();
+      selectedFragmentGroupChainsStorage
+        ..saveValue.clear()
+        ..createValue.clear()
+        ..createValue.addAll(selectedFragmentGroupChainsStorage.currentValueAb());
     } else {
       final isDataModifiedMessage = isDataModified();
       if (isDataModifiedMessage == null) {
@@ -246,29 +264,27 @@ class FragmentGizmoEditPageAbController extends AbController {
   /// 而相同的 [Fragment] 并不是同一个 [FragmentAbAndFragmentGroupAb] 对象，所有不需要关心对象是否相同。
   final records = <Ab<Fragment>?>[].ab;
 
-  /// 当前 [records] 的数据仓库。
+  /// 当前碎片的数据仓库。
+  ///
+  /// 根据 [records] 跳动。
   final CurrentPerformerStorage currentPerformer = CurrentPerformerStorage();
 
-  late final q.QuillController quillController;
+  final q.QuillController quillController = q.QuillController.basic();
 
   @override
   bool get isEnableLoading => true;
 
   @override
   Future<void> loadingFuture() async {
-    await _init();
-  }
-
-  Future<void> _init() async {
     records().addAll(initSomeBefore);
     records().add(initFragment);
     records().addAll(initSomeAfter);
     records.refreshForce();
-    await currentPerformer.changeTo(performer: initFragment);
+    await currentPerformer.init(fragmentAb: initFragment, fragmentGroupAb: initFragmentGroup);
   }
 
   void _createInit() {
-    quillController = q.QuillController.basic();
+    quillController =
   }
 
   void _updateInit() {
