@@ -1,4 +1,3 @@
-
 void main() async {
-  print(3 + 3 % 5);
+  print(<String?>['n', null, 'ddd', null].indexOf(null));
 }

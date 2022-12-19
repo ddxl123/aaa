@@ -60,7 +60,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                 AbwBuilder(
                   builder: (abwSingle) {
                     return IconButton(
-                      style: c.selectedFragmentGroupChainAb(abwSingle) == null
+                      style: c.selectedFragmentGroupChainsStorage(abwSingle) == null
                           ? const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
                             )
@@ -74,13 +74,13 @@ class FragmentGizmoEditPage extends StatelessWidget {
                 ),
                 AbwBuilder(
                   builder: (abwSingle) {
-                    if (c.selectedFragmentGroupChainAb(abwSingle) == null) {
+                    if (c.selectedFragmentGroupChainsStorage(abwSingle) == null) {
                       return Container();
                     }
-                    if (c.selectedFragmentGroupChainAb(abwSingle)!.isEmpty) {
+                    if (c.selectedFragmentGroupChainsStorage(abwSingle)!.isEmpty) {
                       return const Text('~');
                     }
-                    return Text(c.selectedFragmentGroupChainAb(abwSingle)!.last.title);
+                    return Text(c.selectedFragmentGroupChainsStorage(abwSingle)!.last.title);
                   },
                 ),
                 const SizedBox(width: 10),

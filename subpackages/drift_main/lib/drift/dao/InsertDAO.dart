@@ -37,10 +37,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return returnFragmentGroup;
   }
 
-  /// 向 [whichFragmentGroup] 中插入一条 [willFragmentsCompanion]。
+  /// 向多个 [whichFragmentGroups] 中，插入相同的 [willFragmentsCompanion]。
+  ///
+  /// 当元素为 null 时，表示插入到 root 组内。
+  ///
+  /// [whichFragmentGroups] 为空数组时，会抛出异常。
   Future<Fragment> insertFragment({
     required FragmentsCompanion willFragmentsCompanion,
-    required FragmentGroup? whichFragmentGroup,
+    required List<FragmentGroup?> whichFragmentGroups,
     required SyncTag? syncTag,
   }) async {
     late Fragment newFragment;
@@ -52,11 +56,16 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         },
         rFragment2FragmentGroups: RefRFragment2FragmentGroups(
           self: (table) async {
-            await Crt.rFragment2FragmentGroupsCompanion(
-              creatorUserId: willFragmentsCompanion.creatorUserId.value,
-              fragmentGroupId: (whichFragmentGroup?.id).toValue(),
-              fragmentId: willFragmentsCompanion.id.value,
-            ).insert(syncTag: syncTag);
+            await Future.forEach<FragmentGroup?>(
+              whichFragmentGroups,
+              (whichFragmentGroup) async {
+                await Crt.rFragment2FragmentGroupsCompanion(
+                  creatorUserId: willFragmentsCompanion.creatorUserId.value,
+                  fragmentGroupId: (whichFragmentGroup?.id).toValue(),
+                  fragmentId: willFragmentsCompanion.id.value,
+                ).insert(syncTag: syncTag);
+              },
+            );
           },
         ),
         child_fragments: null,
@@ -72,12 +81,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     late final MemoryGroup newMg;
     await withRefs(
       syncTag: syncTag,
-      ref: (st) async => RefMemoryGroups(
-        self: (table) async {
-          newMg = await newMemoryGroupsCompanion.insert(syncTag: st);
-        },
-        fragmentMemoryInfos: null,
-      ),
+      ref: (st) async {
+        return RefMemoryGroups(
+          self: (table) async {
+            newMg = await newMemoryGroupsCompanion.insert(syncTag: st);
+          },
+          fragmentMemoryInfos: null,
+        );
+      },
     );
     return newMg;
   }

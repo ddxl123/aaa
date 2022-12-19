@@ -158,7 +158,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       ..tempValue = memoryGroupAb().newDisplayOrder
       ..abValue.refreshEasy((oldValue) => memoryGroupAb().newDisplayOrder);
 
-    final count = await DriftDb.instance.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroupAb());
+    final count = await DriftDb.instance.generalQueryDAO.queryNewFragmentsCount(memoryGroup: memoryGroupAb());
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
 
     initVerifies();

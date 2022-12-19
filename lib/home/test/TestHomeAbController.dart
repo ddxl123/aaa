@@ -85,7 +85,7 @@ class TestHomeAbController extends AbController {
               local_isSelected: false,
               noteId: null.toValue(),
             ),
-            whichFragmentGroup: null,
+            whichFragmentGroups: [null],
             syncTag: st,
           );
         }
@@ -100,7 +100,7 @@ class TestHomeAbController extends AbController {
               local_isSelected: false,
               noteId: null.toValue(),
             ),
-            whichFragmentGroup: fg,
+            whichFragmentGroups: [fg],
             syncTag: st,
           );
         }

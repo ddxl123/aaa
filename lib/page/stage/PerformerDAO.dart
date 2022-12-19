@@ -113,12 +113,12 @@ class PerformerQuery {
 
   /// [InternalVariableConstant.countAllConst]
   Future<List<int>> getCountAll({required MemoryGroup memoryGroup}) async {
-    return [await db.generalQueryDAO.getFragmentsCount(memoryGroup: memoryGroup)];
+    return [await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup)];
   }
 
   /// [InternalVariableConstant.countNewConst]
   Future<List<int>> getCountNew({required MemoryGroup memoryGroup}) async {
-    return [await db.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroup)];
+    return [await db.generalQueryDAO.queryNewFragmentsCount(memoryGroup: memoryGroup)];
   }
 
   /// TODO:
