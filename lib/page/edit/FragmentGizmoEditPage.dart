@@ -4,16 +4,35 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 /// 创建或编辑。
 class FragmentGizmoEditPage extends StatelessWidget {
-  const FragmentGizmoEditPage({Key? key, required this.fragmentAb}) : super(key: key);
-  final Ab<Fragment>? fragmentAb;
+  const FragmentGizmoEditPage({
+    Key? key,
+    required this.initSomeBefore,
+    required this.initSomeAfter,
+    required this.initFragmentAb,
+    required this.initFragmentGroup,
+  }) : super(key: key);
+
+  final List<Ab<Fragment>> initSomeBefore;
+
+  final List<Ab<Fragment>> initSomeAfter;
+
+  final Ab<Fragment>? initFragmentAb;
+
+  final Ab<FragmentGroup>? initFragmentGroup;
 
   @override
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGizmoEditPageAbController>(
-      putController: FragmentGizmoEditPageAbController(currentFragmentAb: fragmentAb),
+      putController: FragmentGizmoEditPageAbController(
+        initFragmentAb: initFragmentAb,
+        initFragmentGroup: initFragmentGroup,
+        initSomeBefore: initSomeBefore,
+        initSomeAfter: initSomeAfter,
+      ),
       builder: (controller, abw) {
         return Scaffold(
           appBar: _appBar(),
@@ -28,7 +47,14 @@ class FragmentGizmoEditPage extends StatelessWidget {
     return AppBar(
       leading: IconButton(
         icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
-        onPressed: () {},
+        onPressed: () {
+          final result = c.currentPerformer.isDataModified();
+          if (result != null) {
+            SmartDialog.showToast(result);
+          } else {
+            Navigator.pop(c.context);
+          }
+        },
       ),
       actions: [
         UnconstrainedBox(
@@ -60,11 +86,11 @@ class FragmentGizmoEditPage extends StatelessWidget {
                 AbwBuilder(
                   builder: (abwSingle) {
                     return IconButton(
-                      style: c.selectedFragmentGroupChainsStorage(abwSingle) == null
-                          ? const ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
-                            )
-                          : null,
+                      // style: c.selectedFragmentGroupChainsStorage(abwSingle) == null
+                      //     ? const ButtonStyle(
+                      //         backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
+                      //       )
+                      //     : null,
                       icon: const FaIcon(FontAwesomeIcons.folder, color: Colors.blue),
                       onPressed: () {
                         c.showSaveGroup();
@@ -72,17 +98,17 @@ class FragmentGizmoEditPage extends StatelessWidget {
                     );
                   },
                 ),
-                AbwBuilder(
-                  builder: (abwSingle) {
-                    if (c.selectedFragmentGroupChainsStorage(abwSingle) == null) {
-                      return Container();
-                    }
-                    if (c.selectedFragmentGroupChainsStorage(abwSingle)!.isEmpty) {
-                      return const Text('~');
-                    }
-                    return Text(c.selectedFragmentGroupChainsStorage(abwSingle)!.last.title);
-                  },
-                ),
+                // AbwBuilder(
+                //   builder: (abwSingle) {
+                //     if (c.selectedFragmentGroupChainsStorage(abwSingle) == null) {
+                //       return Container();
+                //     }
+                //     if (c.selectedFragmentGroupChainsStorage(abwSingle)!.isEmpty) {
+                //       return const Text('~');
+                //     }
+                //     return Text(c.selectedFragmentGroupChainsStorage(abwSingle)!.last.title);
+                //   },
+                // ),
                 const SizedBox(width: 10),
                 // 使用模板
                 IconButton(
@@ -107,7 +133,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                   ),
                   child: const Text('保存'),
                   onPressed: () {
-                    c.create();
+                    // c.create();
                   },
                 ),
                 const SizedBox(width: 10),

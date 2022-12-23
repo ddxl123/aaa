@@ -26,6 +26,7 @@ class ThreeStorageAb<V> {
 ///
 /// currentValue 保存着当前数据，可能为 initValue、saveValue，以及修改后但未保存的数据。
 class CurrentPerformerStorage {
+  late final FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController;
   Ab<Fragment>? current;
 
   /// 当前操作碎片的内容。
@@ -49,9 +50,46 @@ class CurrentPerformerStorage {
     saveValue: null,
   );
 
+  bool isEqualContent({
+    required String? one,
+    required String? two,
+  }) {
+    final oneT = one ?? '[{"insert":"\\n"}]';
+    final twoT = two ?? '[{"insert":"\\n"}]';
+    return oneT == twoT;
+  }
+
+  bool isEqualFragmentTemplate({
+    required FragmentTemplate? one,
+    required FragmentTemplate? two,
+  }) {
+    return one?.id == two?.id;
+  }
+
+  bool isEqualFragmentGroupChains({
+    required List<List<FragmentGroup>> one,
+    required List<List<FragmentGroup>> two,
+  }) {
+    if (one.isEmpty && two.isEmpty) {
+      return true;
+    }
+    if (one.length != two.length) {
+      return false;
+    }
+    for (int i = 0; i < one.length; i++) {
+      final oneResult = one[i].map((e) => e.id).join('');
+      final twoResult = two[i].map((e) => e.id).join('');
+      if (oneResult != twoResult) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /// 初始化。
-  Future<void> init(
-      {required Ab<Fragment>? fragmentAb, required Ab<FragmentGroup>? fragmentGroupAb, required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,}) async {
+  /// 若 [fragmentGroupAb] 为 null，且 [isRoot] 为 true，则为 root 组。
+  /// 若 [fragmentGroupAb] 为 null，且 [isRoot] 为 false，则传递为空。
+  Future<void> init({required Ab<Fragment>? fragmentAb, required Ab<FragmentGroup>? fragmentGroupAb, bool isRoot = true}) async {
     current = fragmentAb;
     if (current == null) {
       contentStorage
@@ -93,28 +131,42 @@ class CurrentPerformerStorage {
         ..createValue.clear()
         ..saveValue.clear()
         ..saveValue.addAll(chains)
-        ..currentValueAb.refreshEasy((oldValue) =>
-        oldValue
+        ..currentValueAb.refreshEasy((oldValue) => oldValue
           ..clear()
           ..addAll(chains));
+
+      if (contentStorage.currentValueAb() != null) {
+        fragmentGizmoEditPageAbController.quillController.document = q.Document.fromJson(jsonDecode(contentStorage.currentValueAb()!));
+      }
     }
-    fragmentGizmoEditPageAbController.quillController.document = q.Document.fromJson(jsonDecod???e(contentStorage.currentValueAb() ?? ''));
   }
 
-  /// 检查 [非创建] 的碎片是否被修改。
+  /// 检查的碎片是否被修改。
   ///
   /// 若检查成功，则返回 null，否则返回失败消息。
   String? isDataModified() {
     if (current == null) {
-      ??
+      // 先保存
+      contentStorage.currentValueAb.refreshEasy((oldValue) => jsonEncode(fragmentGizmoEditPageAbController.quillController.document.toDelta().toJson()));
+      if (!isEqualContent(one: contentStorage.currentValueAb(), two: contentStorage.createValue)) {
+        logger.d(contentStorage.currentValueAb());
+        logger.d(contentStorage.createValue);
+        return '存在修改内容';
+      }
+      if (!isEqualFragmentTemplate(one: selectedFragmentTemplateStorage.currentValueAb(), two: selectedFragmentTemplateStorage.createValue)) {
+        return '存在修改内容：模板';
+      }
+      if (!isEqualFragmentGroupChains(one: selectedFragmentGroupChainsStorage.currentValueAb(), two: selectedFragmentGroupChainsStorage.createValue)) {
+        return '存在修改内容：碎片组';
+      }
     } else {
-      if (contentStorage.currentValueAb() != contentStorage.saveValue) {
+      if (!isEqualContent(one: contentStorage.currentValueAb(), two: contentStorage.saveValue)) {
         return '内容发生修改，请先保存！';
       }
-      if (selectedFragmentTemplateStorage.currentValueAb() != selectedFragmentTemplateStorage.saveValue) {
+      if (!isEqualFragmentTemplate(one: selectedFragmentTemplateStorage.currentValueAb(), two: selectedFragmentTemplateStorage.saveValue)) {
         return '模板发生了改变，请先保存！';
       }
-      if (selectedFragmentGroupChainsStorage.currentValueAb() != selectedFragmentGroupChainsStorage.saveValue) {
+      if (!isEqualFragmentGroupChains(one: selectedFragmentGroupChainsStorage.currentValueAb(), two: selectedFragmentGroupChainsStorage.saveValue)) {
         return '存放位置发生了改变，请先保存！';
       }
     }
@@ -125,9 +177,10 @@ class CurrentPerformerStorage {
   ///
   /// 返回值见 [isDataModified]。
   Future<String?> to({required Ab<Fragment>? fragmentAb}) async {
-    /// 跳转前的检查。
-    final isDataModifiedMessage = isDataModified();
-    if (isDataModifiedMessage != null) return isDataModifiedMessage;
+    final isDataModifiedResult = isDataModified();
+    if (current != null) {
+      if (isDataModifiedResult != null) return isDataModifiedResult;
+    }
 
     current = fragmentAb;
 
@@ -136,8 +189,7 @@ class CurrentPerformerStorage {
 
       selectedFragmentTemplateStorage.currentValueAb.refreshEasy((oldValue) => selectedFragmentTemplateStorage.createValue);
 
-      selectedFragmentGroupChainsStorage.currentValueAb.refreshEasy((oldValue) =>
-      oldValue
+      selectedFragmentGroupChainsStorage.currentValueAb.refreshEasy((oldValue) => oldValue
         ..clear()
         ..addAll(selectedFragmentGroupChainsStorage.createValue));
     } else {
@@ -157,8 +209,7 @@ class CurrentPerformerStorage {
       selectedFragmentGroupChainsStorage
         ..saveValue.clear()
         ..saveValue.addAll(chains)
-        ..currentValueAb.refreshEasy((oldValue) =>
-        oldValue
+        ..currentValueAb.refreshEasy((oldValue) => oldValue
           ..clear()
           ..addAll(chains));
     }
@@ -171,7 +222,7 @@ class CurrentPerformerStorage {
   /// 保存创建时，会跳到下一个创建。
   ///
   /// 保存修改时，不会跳到下一个。
-  Future<void> save({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
+  Future<void> save() async {
     if (current == null) {
       final newFragment = await db.insertDAO.insertFragment(
         willFragmentsCompanion: Crt.fragmentsCompanion(
@@ -187,7 +238,7 @@ class CurrentPerformerStorage {
         syncTag: null,
       );
       fragmentGizmoEditPageAbController.records.refreshEasy(
-            (oldValue) {
+        (oldValue) {
           final index = oldValue.indexOf(null);
           oldValue.replaceRange(index, index + 1, [newFragment.ab]);
           oldValue.add(null);
@@ -233,12 +284,12 @@ class CurrentPerformerStorage {
 
 class FragmentGizmoEditPageAbController extends AbController {
   FragmentGizmoEditPageAbController({
-    required this.initFragment,
+    required this.initFragmentAb,
     required this.initFragmentGroup,
     required this.initSomeBefore,
     required this.initSomeAfter,
   }) {
-    if (initFragment != null && initFragmentGroup != null) {
+    if (initFragmentAb != null && initFragmentGroup != null) {
       throw '请看 initFragmentGroup 注释！';
     }
   }
@@ -250,15 +301,15 @@ class FragmentGizmoEditPageAbController extends AbController {
   final List<Ab<Fragment>> initSomeAfter;
 
   /// 仅用来初始化赋值，若为 null，则初始化时为创建。
-  final Ab<Fragment>? initFragment;
+  final Ab<Fragment>? initFragmentAb;
 
   /// 仅用来初始化赋值。
   ///
-  /// 当 [initFragment] 为 null 时，在某个组内进行创建组时，需要传递这个。
-  /// 当 [initFragment] 不为 null 时，内部会自行获取 [initFragmentGroup]，因此无需赋初始化值。
+  /// 当 [initFragmentAb] 为 null 时，在某个组内进行创建组时，需要传递这个。
+  /// 当 [initFragmentAb] 不为 null 时，内部会自行获取 [initFragmentGroup]，因此无需赋初始化值。
   final Ab<FragmentGroup>? initFragmentGroup;
 
-  /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragment]、[initSomeAfter] 的对象。
+  /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragmentAb]、[initSomeAfter] 的对象。
   ///
   /// 只允许存在一个元素为 null，否则检索 index 时只会检索到第一个 null。
   /// 而相同的 [Fragment] 并不是同一个 [FragmentAbAndFragmentGroupAb] 对象，所有不需要关心对象是否相同。
@@ -272,26 +323,21 @@ class FragmentGizmoEditPageAbController extends AbController {
   final q.QuillController quillController = q.QuillController.basic();
 
   @override
+  void onInit() {
+    super.onInit();
+    currentPerformer.fragmentGizmoEditPageAbController = this;
+  }
+
+  @override
   bool get isEnableLoading => true;
 
   @override
   Future<void> loadingFuture() async {
     records().addAll(initSomeBefore);
-    records().add(initFragment);
+    records().add(initFragmentAb);
     records().addAll(initSomeAfter);
     records.refreshForce();
-    await currentPerformer.init(fragmentAb: initFragment, fragmentGroupAb: initFragmentGroup);
-  }
-
-  void _createInit() {
-    quillController =
-  }
-
-  void _updateInit() {
-    quillController = q.QuillController(
-      document: q.Document.fromJson(jsonDecode(currentFragmentAb!().content)),
-      selection: const TextSelection.collapsed(offset: 0),
-    );
+    await currentPerformer.init(fragmentAb: initFragmentAb, fragmentGroupAb: initFragmentGroup);
   }
 
   String richToJson() => jsonEncode(quillController.document.toDelta().toJson());
@@ -302,31 +348,6 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   Future<void> showSaveGroup() async {
-    await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: selectedFragmentGroupChainsStorage);
-  }
-
-  Future<void> create() async {
-    if (currentFragmentAb != null) {
-      throw '碎片已存在，但却调用了创建函数！';
-    }
-    if (selectedFragmentGroupChainsStorage() == null) {
-      SmartDialog.showToast('请选择存放位置！');
-      return;
-    }
-    await db.insertDAO.insertFragment(
-      willFragmentsCompanion: Crt.fragmentsCompanion(
-        content: richToJson(),
-        creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
-        fatherFragmentId: null.toValue(),
-        fragmentTemplateId: (selectedFragmentTemplateStorage()?.id).toValue(),
-        local_isSelected: false,
-        noteId: null.toValue(),
-        title: parseTitle(),
-      ),
-      whichFragmentGroups: selectedFragmentGroupChainsStorage()!.last,
-      syncTag: null,
-    );
-
-    SmartDialog.showToast('保存成功！');
+    // await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: currentPerformer.selectedFragmentGroupChainsStorage.currentValueAb);
   }
 }
