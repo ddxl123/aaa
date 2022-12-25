@@ -47,8 +47,8 @@ class FragmentGizmoEditPage extends StatelessWidget {
     return AppBar(
       leading: IconButton(
         icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
-        onPressed: () {
-          final result = c.currentPerformer.isDataModified();
+        onPressed: () async {
+          final result = await c.currentPerformer()!.isExistModified(fragmentGizmoEditPageAbController: c);
           if (result != null) {
             SmartDialog.showToast(result);
           } else {
@@ -117,14 +117,26 @@ class FragmentGizmoEditPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 // 上一个
-                IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.blue),
-                  onPressed: () {},
+                AbwBuilder(
+                  builder: (abw) {
+                    return IconButton(
+                      icon: c.isExistLast(abw) ? const FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.blue) : const FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.grey),
+                      onPressed: () {
+                        c.goTo(lastOrNext: 0);
+                      },
+                    );
+                  },
                 ),
                 // 下一个
-                IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.chevronRight, color: Colors.blue),
-                  onPressed: () {},
+                AbwBuilder(
+                  builder: (abw) {
+                    return IconButton(
+                      icon: c.isExistNext(abw) ? const FaIcon(FontAwesomeIcons.chevronRight, color: Colors.blue) : const FaIcon(FontAwesomeIcons.chevronRight, color: Colors.grey),
+                      onPressed: () {
+                        c.goTo(lastOrNext: 1);
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(width: 5),
                 TextButton(
@@ -133,7 +145,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                   ),
                   child: const Text('保存'),
                   onPressed: () {
-                    // c.create();
+                    c.saveAndNext();
                   },
                 ),
                 const SizedBox(width: 10),
