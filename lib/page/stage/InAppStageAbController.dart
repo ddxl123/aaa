@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPageAbController.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +27,8 @@ class InAppStageAbController extends AbController {
   late final Ab<MemoryModel> memoryModelAb;
 
   final performerQuery = PerformerQuery();
+
+  final quillController = q.QuillController.basic();
 
   /// 若为 true，则展示按钮数据值；
   /// 若为 false，则表示按钮天数值。
@@ -89,6 +94,7 @@ class InAppStageAbController extends AbController {
       await _parseNextShowTime(buttonDataValue2NextShowTime: element);
     }
 
+    quillController.document = q.Document.fromJson(jsonDecode(currentPerformer()!.fragment.content));
     currentButtonDataState.refreshEasy((oldValue) => pbd);
   }
 

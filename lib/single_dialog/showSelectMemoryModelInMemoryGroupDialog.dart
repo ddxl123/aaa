@@ -6,7 +6,7 @@ import 'package:tools/tools.dart';
 import '../push_page/push_page.dart';
 
 Future<void> showSelectMemoryModelInMemoryGroupDialog({required Ab<MemoryModel?> selectedMemoryModelAb}) async {
-  showCustomDialog(builder: () => SelectMemoryModelInMemoryGroupDialogWidget(selectedMemoryModelAb: selectedMemoryModelAb));
+  await showCustomDialog(builder: () => SelectMemoryModelInMemoryGroupDialogWidget(selectedMemoryModelAb: selectedMemoryModelAb));
 }
 
 class SelectMemoryModelInMemoryGroupDialogWidget extends StatefulWidget {

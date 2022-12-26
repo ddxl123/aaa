@@ -1,4 +1,5 @@
 import 'package:aaa/page/stage/InAppStageAbController.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -29,17 +30,7 @@ class _InAppStageState extends State<InAppStage> {
             ),
             actions: [_moreButtonWidget()],
           ),
-          body: Container(
-            color: Colors.blue,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(c.currentPerformer(abw) == null ? '任务已全部完成！' : c.currentPerformer()!.fragment.content),
-                ],
-              ),
-            ),
-          ),
+          body: _body(),
           bottomSheet: _bottomWidget(),
         );
       },
@@ -117,6 +108,24 @@ class _InAppStageState extends State<InAppStage> {
             ).toList(),
           );
         }
+      },
+    );
+  }
+
+  Widget _body() {
+    return AbBuilder<InAppStageAbController>(
+      builder: (c, abw) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          child: c.currentPerformer(abw) == null
+              ? const Center(
+                  child: Text('任务已全部完成！'),
+                )
+              : q.QuillEditor.basic(
+                  controller: c.quillController,
+                  readOnly: true,
+                ),
+        );
       },
     );
   }

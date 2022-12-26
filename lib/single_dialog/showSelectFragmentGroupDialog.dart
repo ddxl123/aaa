@@ -6,7 +6,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
 Future<void> showSelectFragmentGroupDialog({required Ab<List<FragmentGroup>?> selectedFragmentGroupChainAb}) async {
-  showCustomDialog(builder: () => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb));
+  await showCustomDialog(builder: () => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb));
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {
@@ -174,7 +174,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
 
   Future<void> _onOk() async {
     widget.selectedFragmentGroupChainAb()?.clear();
-    widget.selectedFragmentGroupChainAb.refreshEasy((oldValue) => groupChain.map((e) => e.copyWith()).toList());
+    widget.selectedFragmentGroupChainAb.refreshEasy((oldValue) => (oldValue ?? [])..addAll(groupChain.map((e) => e.copyWith()).toList()));
     widget.selectedFragmentGroupChainAb.refreshForce();
     SmartDialog.showToast('选择成功！');
     SmartDialog.dismiss();
@@ -183,7 +183,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
-      title: '存放位置：',
+      title: '选择位置：',
       topRightAction: _topRightAction(),
       columnChildren: _columnChildren(),
       cancelText: '取消',

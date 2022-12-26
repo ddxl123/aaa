@@ -2,6 +2,7 @@ import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
+import 'package:aaa/push_page/push_page.dart';
 import 'package:tools/tools.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -29,20 +30,15 @@ class Home extends StatelessWidget {
 
   Widget _floatingActionButton() {
     return AbBuilder<HomeAbController>(
-      builder: (putController, putAbw) {
+      builder: (c, abw) {
         return FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
-            Navigator.push(
-              putController.context,
-              MaterialPageRoute(
-                builder: (ctx) => const FragmentGizmoEditPage(
-                  initSomeBefore: [],
-                  initSomeAfter: [],
-                  initFragmentAb: null,
-                  initFragmentGroup: null,
-                ),
-              ),
+            await pushToFragmentEditPage(
+              context: c.context,
+              initSomeBefore: [],
+              initSomeAfter: [],
+              initFragmentAb: null,
             );
           },
         );

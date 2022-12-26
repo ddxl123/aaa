@@ -13,7 +13,6 @@ class FragmentGizmoEditPage extends StatelessWidget {
     required this.initSomeBefore,
     required this.initSomeAfter,
     required this.initFragmentAb,
-    required this.initFragmentGroup,
   }) : super(key: key);
 
   final List<Ab<Fragment>> initSomeBefore;
@@ -22,14 +21,11 @@ class FragmentGizmoEditPage extends StatelessWidget {
 
   final Ab<Fragment>? initFragmentAb;
 
-  final Ab<FragmentGroup>? initFragmentGroup;
-
   @override
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGizmoEditPageAbController>(
       putController: FragmentGizmoEditPageAbController(
         initFragmentAb: initFragmentAb,
-        initFragmentGroup: initFragmentGroup,
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
       ),
@@ -57,26 +53,30 @@ class FragmentGizmoEditPage extends StatelessWidget {
         },
       ),
       actions: [
-        UnconstrainedBox(
-          child: TextButton(onPressed: () {}, child: const Text('存草稿')),
-        ),
-        const SizedBox(width: 10),
+        // UnconstrainedBox(
+        //   child: TextButton(onPressed: () {}, child: const Text('存草稿')),
+        // ),
+        // const SizedBox(width: 10),
       ],
     );
   }
 
   Widget _body() {
     return AbBuilder<FragmentGizmoEditPageAbController>(
-      builder: (c, abw) {
+      builder: (c, cAbw) {
         return Column(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: q.QuillEditor.basic(
-                  controller: c.quillController,
-                  readOnly: false, // true for view only mode
-                ),
+              child: AbwBuilder(
+                builder: (abw) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: q.QuillEditor.basic(
+                      controller: c.quillController,
+                      readOnly: !c.isEditable(abw), // true for view only mode
+                    ),
+                  );
+                },
               ),
             ),
             Row(
@@ -86,11 +86,11 @@ class FragmentGizmoEditPage extends StatelessWidget {
                 AbwBuilder(
                   builder: (abwSingle) {
                     return IconButton(
-                      // style: c.selectedFragmentGroupChainsStorage(abwSingle) == null
-                      //     ? const ButtonStyle(
-                      //         backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
-                      //       )
-                      //     : null,
+                      style: c.currentPerformer(abwSingle)!.fragmentGroupChains.isEmpty
+                          ? const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
+                            )
+                          : null,
                       icon: const FaIcon(FontAwesomeIcons.folder, color: Colors.blue),
                       onPressed: () {
                         c.showSaveGroup();
@@ -139,21 +139,42 @@ class FragmentGizmoEditPage extends StatelessWidget {
                   },
                 ),
                 const SizedBox(width: 5),
-                TextButton(
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.tealAccent),
-                  ),
-                  child: const Text('保存'),
-                  onPressed: () {
-                    c.saveAndNext();
+                AbwBuilder(
+                  builder: (abw) {
+                    if (c.isEditable(abw)) {
+                      return TextButton(
+                        style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(Colors.amber),
+                        ),
+                        child: const Text('保存', style: TextStyle(color: Colors.white)),
+                        onPressed: () {
+                          c.saveOrNext();
+                        },
+                      );
+                    }
+                    return TextButton(
+                      style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.tealAccent),
+                      ),
+                      child: const Text('修改'),
+                      onPressed: () {
+                        c.isEditable.refreshEasy((oldValue) => true);
+                      },
+                    );
                   },
                 ),
                 const SizedBox(width: 10),
               ],
             ),
-            q.QuillToolbar.basic(
-              multiRowsDisplay: false,
-              controller: c.quillController,
+            AbwBuilder(
+              builder: (abw) {
+                return c.isEditable(abw)
+                    ? q.QuillToolbar.basic(
+                        multiRowsDisplay: false,
+                        controller: c.quillController,
+                      )
+                    : Container();
+              },
             ),
           ],
         );

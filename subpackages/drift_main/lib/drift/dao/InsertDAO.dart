@@ -47,6 +47,9 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     required List<FragmentGroup?> whichFragmentGroups,
     required SyncTag? syncTag,
   }) async {
+    if (whichFragmentGroups.isEmpty) {
+      throw '要插入的碎片组不能为空！';
+    }
     late Fragment newFragment;
     await withRefs(
       syncTag: syncTag,

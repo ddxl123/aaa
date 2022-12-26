@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
+import '../../push_page/push_page.dart';
 import 'FragmentGroupListPageController.dart';
 
 class FragmentGroupListPage extends StatelessWidget {
@@ -61,10 +62,12 @@ class FragmentGroupListPage extends StatelessWidget {
             Expanded(
               child: MaterialButton(
                 child: Text(unit(abw).unitEntity().title),
-                onPressed: () {},
                 onLongPress: () {
                   c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
                   Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
+                },
+                onPressed: () async {
+                  await pushToFragmentEditPage(context: c.context, initSomeBefore: [], initSomeAfter: [], initFragmentAb: unit().unitEntity);
                 },
               ),
             ),
