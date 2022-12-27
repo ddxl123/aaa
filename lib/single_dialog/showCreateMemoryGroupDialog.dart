@@ -9,7 +9,7 @@ import '../global/GlobalAbController.dart';
 /// 创建记忆组的 dialog。
 Future<void> showCreateMemoryGroupDialog() async {
   await showCustomDialog(
-    builder: () {
+    builder: (_) {
       return TextField1DialogWidget(
         title: '创建记忆组：',
         okText: '创建',

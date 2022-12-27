@@ -23,4 +23,5 @@ export 'src/FloatingRoundCornerButton.dart';
 export 'src/KeepStateWidget.dart';
 export 'src/dialog/custom_dialog.dart';
 export 'src/aber/Aber.dart';
+export 'src/regexp_string.dart';
 export 'src/StfBuilder.dart';

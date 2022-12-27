@@ -8,7 +8,7 @@ Future<void> showAddFragmentToMemoryGroupDialog() async {
   // 检测是否存在已选碎片。
   final fCount = await db.generalQueryDAO.querySelectedFragmentCount();
   if (fCount != 0) {
-    await showCustomDialog(builder: () => AddFragmentToMemoryGroupDialogWidget(selectFragmentCount: fCount));
+    await showCustomDialog(builder: (_) => AddFragmentToMemoryGroupDialogWidget(selectFragmentCount: fCount));
   } else {
     SmartDialog.showToast('没有碎片被选择！');
   }

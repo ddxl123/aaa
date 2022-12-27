@@ -21,7 +21,6 @@ class CustomTabAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
         ),
-        const Spacer(),
         ...(otherWidgets ?? []),
       ],
     );

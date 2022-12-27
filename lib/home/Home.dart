@@ -1,4 +1,5 @@
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/home/findhome/FindHome.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
@@ -52,9 +53,9 @@ class Home extends StatelessWidget {
         return PageView(
           controller: controller.pageController,
           children: [
-            const Text('data1'),
-            KeepStateWidget(builder: (ctx) => const FragmentHome()),
+            KeepStateWidget(builder: (ctx) => const FindHome()),
             KeepStateWidget(builder: (ctx) => const MemoryHome()),
+            KeepStateWidget(builder: (ctx) => const FragmentHome()),
             const MineHome(),
           ],
           onPageChanged: (int toIndex) {

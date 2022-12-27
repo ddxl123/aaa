@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
 Future<void> showSelectFragmentGroupsDialog({required Ab<List<List<FragmentGroup>>> selectedFragmentGroupChainsAb}) async {
-  await showCustomDialog(builder: () => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainsAb: selectedFragmentGroupChainsAb));
+  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainsAb: selectedFragmentGroupChainsAb));
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {

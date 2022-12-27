@@ -136,6 +136,7 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
       );
       _isPutter = true;
       _controller!.context = context; // 必须放在 onInit 前面
+      _controller!.state = this;
       _controller!.thisRefresh = () {
         if (mounted) setState(() {});
       };

@@ -7,7 +7,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 /// 创建记忆模型的 dialog。
 Future<void> showCreateMemoryModelDialog() async {
   await showCustomDialog(
-    builder: () {
+    builder: (_) {
       return TextField1DialogWidget(
         title: '创建记忆模型：',
         okText: '创建',

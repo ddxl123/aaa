@@ -11,8 +11,8 @@ import '../page/list/FragmentGroupListPageController.dart';
 class HomeAbController extends AbController {
   final pageController = PageController();
   final currentPageIndex = 0.ab;
-  final iconDatas = [Icons.home, FontAwesomeIcons.tencentWeibo, Icons.add, Icons.add];
-  final labels = ['首页', '碎片', '记忆', '我的'];
+  final iconDatas = [Icons.home, Icons.add, FontAwesomeIcons.tencentWeibo, Icons.add];
+  final labels = ['首页', '记忆', '碎片', '我的'];
 
   final isShowFloating = true.ab;
 

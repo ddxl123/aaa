@@ -207,7 +207,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   void cancel() {
     showCustomDialog(
-      builder: () => OkAndCancelDialogWidget(
+      builder: (_) => OkAndCancelDialogWidget(
         title: '是否要丢弃？',
         okText: '丢弃',
         cancelText: '继续编辑',

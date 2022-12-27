@@ -10,7 +10,7 @@ import '../global/GlobalAbController.dart';
 /// 向 [fragmentGroupAb] 中添加新的碎片组。
 Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGroupAb}) async {
   await showCustomDialog(
-    builder: () {
+    builder: (_) {
       return TextField1DialogWidget(
         title: '创建碎片组：',
         okText: '创建',

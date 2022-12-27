@@ -6,7 +6,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
 Future<void> showSelectFragmentGroupDialog({required Ab<List<FragmentGroup>?> selectedFragmentGroupChainAb}) async {
-  await showCustomDialog(builder: () => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb));
+  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb));
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {

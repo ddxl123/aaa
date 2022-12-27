@@ -1,4 +1,5 @@
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/tool/DriftViewer.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -83,6 +84,12 @@ class TestHome extends StatelessWidget {
                                   },
                                 ),
                               ],
+                            ),
+                            TextButton(
+                              child: const Text('登录'),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginPage()));
+                              },
                             ),
                           ],
                         ),

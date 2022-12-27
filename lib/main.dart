@@ -3,6 +3,7 @@ import 'package:aaa/home/Home.dart';
 import 'package:aaa/theme/theme.dart';
 import 'package:cool_ui/cool_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -35,10 +36,10 @@ class MyApp extends StatelessWidget {
           // 默认使用哪种语言
           locale: const Locale('zh', 'CN'),
           theme: themeLight(context),
-          // flutter_smart_dialog 相关
+          // flutter_easyloading、flutter_smart_dialog 相关
           navigatorObservers: [FlutterSmartDialog.observer],
           // flutter_smart_dialog 相关
-          builder: FlutterSmartDialog.init(),
+          builder: EasyLoading.init(builder: FlutterSmartDialog.init()),
           // pull_to_refresh 相关
           home: RefreshConfiguration(
             footerBuilder: () => const ClassicFooter(loadStyle: LoadStyle.ShowAlways),
