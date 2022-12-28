@@ -2,14 +2,12 @@
 part of drift_db;
 
 @ReferenceTo([])
-class AppInfos extends LocalTableBase  {
+class ClientSyncInfos extends LocalTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};
 
-  BoolColumn get hasDownloadedInitData => boolean()();
-
-  TextColumn get token => text()();
+  DateTimeColumn get recentSyncTime => dateTime()();
 
   DateTimeColumn get createdAt => dateTime()();
 

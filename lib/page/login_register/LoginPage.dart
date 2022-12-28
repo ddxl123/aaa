@@ -37,8 +37,8 @@ class LoginPage extends StatelessWidget {
   Widget _body({required BuildContext context}) {
     return AbBuilder<LoginPageAbController>(
       builder: (c, abw) {
-        return Padding(
-          padding: const EdgeInsets.all(30),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -105,14 +105,14 @@ class LoginPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(width: 10),
-                  const Text('我已阅读并同意', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                  const Text('我已阅读并同意', style: TextStyle(color: Colors.grey, fontSize: 12)),
                   TextButton(
                     style: const ButtonStyle(
                       visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity),
                       padding: MaterialStatePropertyAll(EdgeInsets.zero),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('《XXX协议》'),
+                    child: const Text('《XXX协议》', style: TextStyle(fontSize: 12)),
                     onPressed: () {},
                   ),
                   TextButton(
@@ -121,7 +121,7 @@ class LoginPage extends StatelessWidget {
                       padding: MaterialStatePropertyAll(EdgeInsets.zero),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('《个人信息保护指引》'),
+                    child: const Text('《个人信息保护指引》', style: TextStyle(fontSize: 12)),
                     onPressed: () {},
                   ),
                 ],
@@ -175,7 +175,7 @@ class LoginPage extends StatelessWidget {
                   }
                 },
               ),
-              const Spacer(),
+              const SizedBox(height: 50),
               const Center(child: Text('其他登录方式', style: TextStyle(color: Colors.grey))),
               const SizedBox(height: 10),
               Row(

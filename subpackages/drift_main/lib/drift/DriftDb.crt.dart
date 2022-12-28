@@ -18,12 +18,14 @@ class Crt {
     required int age,
     required Value<String?> email,
     required Value<String?> password,
+    required String token,
     required String username,
   }) {
     return UsersCompanion(
       age: Value(age),
       email: email,
       password: password,
+      token: Value(token),
       username: Value(username),
     );
   }
@@ -47,16 +49,6 @@ class Crt {
       memoryGroupId: Value(memoryGroupId),
       nextPlanShowTime: nextPlanShowTime,
       showFamiliarity: showFamiliarity,
-    );
-  }
-
-  static AppInfosCompanion appInfosCompanion({
-    required bool hasDownloadedInitData,
-    required String token,
-  }) {
-    return AppInfosCompanion(
-      hasDownloadedInitData: Value(hasDownloadedInitData),
-      token: Value(token),
     );
   }
 
@@ -123,6 +115,14 @@ class Crt {
   }) {
     return TestsCompanion(
       local_content: Value(local_content),
+    );
+  }
+
+  static ClientSyncInfosCompanion clientSyncInfosCompanion({
+    required DateTime recentSyncTime,
+  }) {
+    return ClientSyncInfosCompanion(
+      recentSyncTime: Value(recentSyncTime),
     );
   }
 
@@ -283,17 +283,6 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
   }
 }
 
-extension AppInfosCompanionExt on AppInfosCompanion {
-  Future<AppInfo> insert({required SyncTag? syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.appInfos,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
 extension SyncsCompanionExt on SyncsCompanion {
   Future<Sync> insert({required SyncTag? syncTag}) async {
     final ins = DriftDb.instance;
@@ -356,6 +345,17 @@ extension TestsCompanionExt on TestsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.tests,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
+  Future<ClientSyncInfo> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.clientSyncInfos,
       entity: this,
       syncTag: syncTag,
     );

@@ -25,6 +25,6 @@ class GlobalAbController extends AbController {
   @override
   void onInit() {
     super.onInit();
-    getLoggedInUser();
+    // getLoggedInUser();
   }
 }

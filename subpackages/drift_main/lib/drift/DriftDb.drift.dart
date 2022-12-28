@@ -5,7 +5,6 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
@@ -15,6 +14,7 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
+  $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
@@ -30,7 +30,6 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
@@ -40,6 +39,7 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
+  $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
@@ -55,7 +55,6 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
@@ -65,6 +64,7 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
+  $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
@@ -80,7 +80,6 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $AppInfosTable get appInfos => attachedDatabase.appInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
@@ -90,6 +89,7 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
+  $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
@@ -106,6 +106,7 @@ class User extends DataClass implements Insertable<User> {
   int age;
   String? email;
   String? password;
+  String token;
   String username;
   DateTime createdAt;
   int id;
@@ -114,6 +115,7 @@ class User extends DataClass implements Insertable<User> {
       {required this.age,
       this.email,
       this.password,
+      required this.token,
       required this.username,
       required this.createdAt,
       required this.id,
@@ -128,6 +130,7 @@ class User extends DataClass implements Insertable<User> {
     if (!nullToAbsent || password != null) {
       map['password'] = Variable<String>(password);
     }
+    map['token'] = Variable<String>(token);
     map['username'] = Variable<String>(username);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['id'] = Variable<int>(id);
@@ -143,6 +146,7 @@ class User extends DataClass implements Insertable<User> {
       password: password == null && nullToAbsent
           ? const Value.absent()
           : Value(password),
+      token: Value(token),
       username: Value(username),
       createdAt: Value(createdAt),
       id: Value(id),
@@ -157,6 +161,7 @@ class User extends DataClass implements Insertable<User> {
       age: serializer.fromJson<int>(json['age']),
       email: serializer.fromJson<String?>(json['email']),
       password: serializer.fromJson<String?>(json['password']),
+      token: serializer.fromJson<String>(json['token']),
       username: serializer.fromJson<String>(json['username']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<int>(json['id']),
@@ -170,6 +175,7 @@ class User extends DataClass implements Insertable<User> {
       'age': serializer.toJson<int>(age),
       'email': serializer.toJson<String?>(email),
       'password': serializer.toJson<String?>(password),
+      'token': serializer.toJson<String>(token),
       'username': serializer.toJson<String>(username),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<int>(id),
@@ -181,6 +187,7 @@ class User extends DataClass implements Insertable<User> {
           {int? age,
           Value<String?> email = const Value.absent(),
           Value<String?> password = const Value.absent(),
+          String? token,
           String? username,
           DateTime? createdAt,
           int? id,
@@ -189,6 +196,7 @@ class User extends DataClass implements Insertable<User> {
         age: age ?? this.age,
         email: email.present ? email.value : this.email,
         password: password.present ? password.value : this.password,
+        token: token ?? this.token,
         username: username ?? this.username,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
@@ -200,6 +208,7 @@ class User extends DataClass implements Insertable<User> {
           ..write('age: $age, ')
           ..write('email: $email, ')
           ..write('password: $password, ')
+          ..write('token: $token, ')
           ..write('username: $username, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -209,8 +218,8 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(age, email, password, username, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(
+      age, email, password, token, username, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -218,6 +227,7 @@ class User extends DataClass implements Insertable<User> {
           other.age == this.age &&
           other.email == this.email &&
           other.password == this.password &&
+          other.token == this.token &&
           other.username == this.username &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
@@ -228,6 +238,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   Value<int> age;
   Value<String?> email;
   Value<String?> password;
+  Value<String> token;
   Value<String> username;
   Value<DateTime> createdAt;
   Value<int> id;
@@ -236,6 +247,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.age = const Value.absent(),
     this.email = const Value.absent(),
     this.password = const Value.absent(),
+    this.token = const Value.absent(),
     this.username = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
@@ -245,11 +257,13 @@ class UsersCompanion extends UpdateCompanion<User> {
     required int age,
     this.email = const Value.absent(),
     this.password = const Value.absent(),
+    required String token,
     required String username,
     required DateTime createdAt,
     this.id = const Value.absent(),
     required DateTime updatedAt,
   })  : age = Value(age),
+        token = Value(token),
         username = Value(username),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
@@ -257,6 +271,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<int>? age,
     Expression<String>? email,
     Expression<String>? password,
+    Expression<String>? token,
     Expression<String>? username,
     Expression<DateTime>? createdAt,
     Expression<int>? id,
@@ -266,6 +281,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (age != null) 'age': age,
       if (email != null) 'email': email,
       if (password != null) 'password': password,
+      if (token != null) 'token': token,
       if (username != null) 'username': username,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
@@ -277,6 +293,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       {Value<int>? age,
       Value<String?>? email,
       Value<String?>? password,
+      Value<String>? token,
       Value<String>? username,
       Value<DateTime>? createdAt,
       Value<int>? id,
@@ -285,6 +302,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       age: age ?? this.age,
       email: email ?? this.email,
       password: password ?? this.password,
+      token: token ?? this.token,
       username: username ?? this.username,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
@@ -303,6 +321,9 @@ class UsersCompanion extends UpdateCompanion<User> {
     }
     if (password.present) {
       map['password'] = Variable<String>(password.value);
+    }
+    if (token.present) {
+      map['token'] = Variable<String>(token.value);
     }
     if (username.present) {
       map['username'] = Variable<String>(username.value);
@@ -325,6 +346,7 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('age: $age, ')
           ..write('email: $email, ')
           ..write('password: $password, ')
+          ..write('token: $token, ')
           ..write('username: $username, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -355,6 +377,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<String> password = GeneratedColumn<String>(
       'password', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _tokenMeta = const VerificationMeta('token');
+  @override
+  late final GeneratedColumn<String> token = GeneratedColumn<String>(
+      'token', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _usernameMeta =
       const VerificationMeta('username');
   @override
@@ -380,7 +407,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [age, email, password, username, createdAt, id, updatedAt];
+      [age, email, password, token, username, createdAt, id, updatedAt];
   @override
   String get aliasedName => _alias ?? 'users';
   @override
@@ -403,6 +430,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('password')) {
       context.handle(_passwordMeta,
           password.isAcceptableOrUnknown(data['password']!, _passwordMeta));
+    }
+    if (data.containsKey('token')) {
+      context.handle(
+          _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
+    } else if (isInserting) {
+      context.missing(_tokenMeta);
     }
     if (data.containsKey('username')) {
       context.handle(_usernameMeta,
@@ -440,6 +473,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           .read(DriftSqlType.string, data['${effectivePrefix}email']),
       password: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}password']),
+      token: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}token'])!,
       username: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}username'])!,
       createdAt: attachedDatabase.typeMapping
@@ -1011,307 +1046,6 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   @override
   $FragmentMemoryInfosTable createAlias(String alias) {
     return $FragmentMemoryInfosTable(attachedDatabase, alias);
-  }
-}
-
-class AppInfo extends DataClass implements Insertable<AppInfo> {
-  bool hasDownloadedInitData;
-  String token;
-  DateTime createdAt;
-  int id;
-  DateTime updatedAt;
-  AppInfo(
-      {required this.hasDownloadedInitData,
-      required this.token,
-      required this.createdAt,
-      required this.id,
-      required this.updatedAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['has_downloaded_init_data'] = Variable<bool>(hasDownloadedInitData);
-    map['token'] = Variable<String>(token);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  AppInfosCompanion toCompanion(bool nullToAbsent) {
-    return AppInfosCompanion(
-      hasDownloadedInitData: Value(hasDownloadedInitData),
-      token: Value(token),
-      createdAt: Value(createdAt),
-      id: Value(id),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory AppInfo.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AppInfo(
-      hasDownloadedInitData:
-          serializer.fromJson<bool>(json['hasDownloadedInitData']),
-      token: serializer.fromJson<String>(json['token']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'hasDownloadedInitData': serializer.toJson<bool>(hasDownloadedInitData),
-      'token': serializer.toJson<String>(token),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  AppInfo copyWith(
-          {bool? hasDownloadedInitData,
-          String? token,
-          DateTime? createdAt,
-          int? id,
-          DateTime? updatedAt}) =>
-      AppInfo(
-        hasDownloadedInitData:
-            hasDownloadedInitData ?? this.hasDownloadedInitData,
-        token: token ?? this.token,
-        createdAt: createdAt ?? this.createdAt,
-        id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('AppInfo(')
-          ..write('hasDownloadedInitData: $hasDownloadedInitData, ')
-          ..write('token: $token, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(hasDownloadedInitData, token, createdAt, id, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is AppInfo &&
-          other.hasDownloadedInitData == this.hasDownloadedInitData &&
-          other.token == this.token &&
-          other.createdAt == this.createdAt &&
-          other.id == this.id &&
-          other.updatedAt == this.updatedAt);
-}
-
-class AppInfosCompanion extends UpdateCompanion<AppInfo> {
-  Value<bool> hasDownloadedInitData;
-  Value<String> token;
-  Value<DateTime> createdAt;
-  Value<int> id;
-  Value<DateTime> updatedAt;
-  AppInfosCompanion({
-    this.hasDownloadedInitData = const Value.absent(),
-    this.token = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  AppInfosCompanion.insert({
-    required bool hasDownloadedInitData,
-    required String token,
-    required DateTime createdAt,
-    this.id = const Value.absent(),
-    required DateTime updatedAt,
-  })  : hasDownloadedInitData = Value(hasDownloadedInitData),
-        token = Value(token),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
-  static Insertable<AppInfo> custom({
-    Expression<bool>? hasDownloadedInitData,
-    Expression<String>? token,
-    Expression<DateTime>? createdAt,
-    Expression<int>? id,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (hasDownloadedInitData != null)
-        'has_downloaded_init_data': hasDownloadedInitData,
-      if (token != null) 'token': token,
-      if (createdAt != null) 'created_at': createdAt,
-      if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  AppInfosCompanion copyWith(
-      {Value<bool>? hasDownloadedInitData,
-      Value<String>? token,
-      Value<DateTime>? createdAt,
-      Value<int>? id,
-      Value<DateTime>? updatedAt}) {
-    return AppInfosCompanion(
-      hasDownloadedInitData:
-          hasDownloadedInitData ?? this.hasDownloadedInitData,
-      token: token ?? this.token,
-      createdAt: createdAt ?? this.createdAt,
-      id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (hasDownloadedInitData.present) {
-      map['has_downloaded_init_data'] =
-          Variable<bool>(hasDownloadedInitData.value);
-    }
-    if (token.present) {
-      map['token'] = Variable<String>(token.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AppInfosCompanion(')
-          ..write('hasDownloadedInitData: $hasDownloadedInitData, ')
-          ..write('token: $token, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $AppInfosTable extends AppInfos with TableInfo<$AppInfosTable, AppInfo> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $AppInfosTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _hasDownloadedInitDataMeta =
-      const VerificationMeta('hasDownloadedInitData');
-  @override
-  late final GeneratedColumn<bool> hasDownloadedInitData =
-      GeneratedColumn<bool>('has_downloaded_init_data', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("has_downloaded_init_data" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
-  static const VerificationMeta _tokenMeta = const VerificationMeta('token');
-  @override
-  late final GeneratedColumn<String> token = GeneratedColumn<String>(
-      'token', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [hasDownloadedInitData, token, createdAt, id, updatedAt];
-  @override
-  String get aliasedName => _alias ?? 'app_infos';
-  @override
-  String get actualTableName => 'app_infos';
-  @override
-  VerificationContext validateIntegrity(Insertable<AppInfo> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('has_downloaded_init_data')) {
-      context.handle(
-          _hasDownloadedInitDataMeta,
-          hasDownloadedInitData.isAcceptableOrUnknown(
-              data['has_downloaded_init_data']!, _hasDownloadedInitDataMeta));
-    } else if (isInserting) {
-      context.missing(_hasDownloadedInitDataMeta);
-    }
-    if (data.containsKey('token')) {
-      context.handle(
-          _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
-    } else if (isInserting) {
-      context.missing(_tokenMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  AppInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AppInfo(
-      hasDownloadedInitData: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}has_downloaded_init_data'])!,
-      token: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}token'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $AppInfosTable createAlias(String alias) {
-    return $AppInfosTable(attachedDatabase, alias);
   }
 }
 
@@ -3177,6 +2911,260 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   @override
   $TestsTable createAlias(String alias) {
     return $TestsTable(attachedDatabase, alias);
+  }
+}
+
+class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
+  DateTime recentSyncTime;
+  DateTime createdAt;
+  int id;
+  DateTime updatedAt;
+  ClientSyncInfo(
+      {required this.recentSyncTime,
+      required this.createdAt,
+      required this.id,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['recent_sync_time'] = Variable<DateTime>(recentSyncTime);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['id'] = Variable<int>(id);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ClientSyncInfosCompanion toCompanion(bool nullToAbsent) {
+    return ClientSyncInfosCompanion(
+      recentSyncTime: Value(recentSyncTime),
+      createdAt: Value(createdAt),
+      id: Value(id),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ClientSyncInfo.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ClientSyncInfo(
+      recentSyncTime: serializer.fromJson<DateTime>(json['recentSyncTime']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      id: serializer.fromJson<int>(json['id']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'recentSyncTime': serializer.toJson<DateTime>(recentSyncTime),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'id': serializer.toJson<int>(id),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ClientSyncInfo copyWith(
+          {DateTime? recentSyncTime,
+          DateTime? createdAt,
+          int? id,
+          DateTime? updatedAt}) =>
+      ClientSyncInfo(
+        recentSyncTime: recentSyncTime ?? this.recentSyncTime,
+        createdAt: createdAt ?? this.createdAt,
+        id: id ?? this.id,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ClientSyncInfo(')
+          ..write('recentSyncTime: $recentSyncTime, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(recentSyncTime, createdAt, id, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ClientSyncInfo &&
+          other.recentSyncTime == this.recentSyncTime &&
+          other.createdAt == this.createdAt &&
+          other.id == this.id &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
+  Value<DateTime> recentSyncTime;
+  Value<DateTime> createdAt;
+  Value<int> id;
+  Value<DateTime> updatedAt;
+  ClientSyncInfosCompanion({
+    this.recentSyncTime = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  ClientSyncInfosCompanion.insert({
+    required DateTime recentSyncTime,
+    required DateTime createdAt,
+    this.id = const Value.absent(),
+    required DateTime updatedAt,
+  })  : recentSyncTime = Value(recentSyncTime),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
+  static Insertable<ClientSyncInfo> custom({
+    Expression<DateTime>? recentSyncTime,
+    Expression<DateTime>? createdAt,
+    Expression<int>? id,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (recentSyncTime != null) 'recent_sync_time': recentSyncTime,
+      if (createdAt != null) 'created_at': createdAt,
+      if (id != null) 'id': id,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  ClientSyncInfosCompanion copyWith(
+      {Value<DateTime>? recentSyncTime,
+      Value<DateTime>? createdAt,
+      Value<int>? id,
+      Value<DateTime>? updatedAt}) {
+    return ClientSyncInfosCompanion(
+      recentSyncTime: recentSyncTime ?? this.recentSyncTime,
+      createdAt: createdAt ?? this.createdAt,
+      id: id ?? this.id,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (recentSyncTime.present) {
+      map['recent_sync_time'] = Variable<DateTime>(recentSyncTime.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ClientSyncInfosCompanion(')
+          ..write('recentSyncTime: $recentSyncTime, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ClientSyncInfosTable extends ClientSyncInfos
+    with TableInfo<$ClientSyncInfosTable, ClientSyncInfo> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ClientSyncInfosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _recentSyncTimeMeta =
+      const VerificationMeta('recentSyncTime');
+  @override
+  late final GeneratedColumn<DateTime> recentSyncTime =
+      GeneratedColumn<DateTime>('recent_sync_time', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [recentSyncTime, createdAt, id, updatedAt];
+  @override
+  String get aliasedName => _alias ?? 'client_sync_infos';
+  @override
+  String get actualTableName => 'client_sync_infos';
+  @override
+  VerificationContext validateIntegrity(Insertable<ClientSyncInfo> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('recent_sync_time')) {
+      context.handle(
+          _recentSyncTimeMeta,
+          recentSyncTime.isAcceptableOrUnknown(
+              data['recent_sync_time']!, _recentSyncTimeMeta));
+    } else if (isInserting) {
+      context.missing(_recentSyncTimeMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ClientSyncInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ClientSyncInfo(
+      recentSyncTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}recent_sync_time'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $ClientSyncInfosTable createAlias(String alias) {
+    return $ClientSyncInfosTable(attachedDatabase, alias);
   }
 }
 
@@ -6774,7 +6762,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $UsersTable users = $UsersTable(this);
   late final $FragmentMemoryInfosTable fragmentMemoryInfos =
       $FragmentMemoryInfosTable(this);
-  late final $AppInfosTable appInfos = $AppInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
   late final $RDocument2DocumentGroupsTable rDocument2DocumentGroups =
       $RDocument2DocumentGroupsTable(this);
@@ -6784,6 +6771,8 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RNote2NoteGroupsTable(this);
   late final $Test2sTable test2s = $Test2sTable(this);
   late final $TestsTable tests = $TestsTable(this);
+  late final $ClientSyncInfosTable clientSyncInfos =
+      $ClientSyncInfosTable(this);
   late final $DocumentsTable documents = $DocumentsTable(this);
   late final $FragmentTemplatesTable fragmentTemplates =
       $FragmentTemplatesTable(this);
@@ -6805,13 +6794,13 @@ abstract class _$DriftDb extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         users,
         fragmentMemoryInfos,
-        appInfos,
         syncs,
         rDocument2DocumentGroups,
         rFragment2FragmentGroups,
         rNote2NoteGroups,
         test2s,
         tests,
+        clientSyncInfos,
         documents,
         fragmentTemplates,
         fragments,

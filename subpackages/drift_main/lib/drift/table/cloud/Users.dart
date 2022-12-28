@@ -13,6 +13,8 @@ class Users extends CloudTableBase  {
 
   TextColumn get password => text().nullable()();
 
+  TextColumn get token => text()();
+
   TextColumn get username => text()();
 
   DateTimeColumn get createdAt => dateTime()();

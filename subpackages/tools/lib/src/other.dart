@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
@@ -131,3 +132,5 @@ extension ArrayStringInsert on String {
     return replaceAll(RegExp(r'(\[)|(\])'), '').split(',').map((e) => double.parse(e)).toList();
   }
 }
+
+VisualDensity get kMinVisualDensity => const VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity);

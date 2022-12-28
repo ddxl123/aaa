@@ -142,20 +142,6 @@ class RefFragmentMemoryInfos extends Ref {
   }
 }
 
-/// [AppInfos]
-class RefAppInfos extends Ref {
-  Future<void> Function($AppInfosTable table) self;
-
-  RefAppInfos({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.appInfos);
-  }
-}
-
 /// [Syncs]
 class RefSyncs extends Ref {
   Future<void> Function($SyncsTable table) self;
@@ -340,6 +326,20 @@ class RefTests extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.tests);
+  }
+}
+
+/// [ClientSyncInfos]
+class RefClientSyncInfos extends Ref {
+  Future<void> Function($ClientSyncInfosTable table) self;
+
+  RefClientSyncInfos({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.clientSyncInfos);
   }
 }
 

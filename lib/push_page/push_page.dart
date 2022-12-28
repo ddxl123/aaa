@@ -1,3 +1,4 @@
+import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -50,6 +51,15 @@ Future<void> pushToFragmentEditPage({
         initSomeAfter: initSomeAfter,
         initFragmentAb: initFragmentAb,
       ),
+    ),
+  );
+}
+
+Future<void> pushToLoginPage({required BuildContext context}) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const LoginPage(),
     ),
   );
 }
