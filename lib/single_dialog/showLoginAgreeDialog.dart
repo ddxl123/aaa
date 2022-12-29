@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-/// 返回是否同意。
 Future<void> showLoginAgreeDialog({required Ab<bool> isAgree}) async {
   await showCustomDialog(
     builder: (_) {

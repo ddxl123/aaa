@@ -14,9 +14,9 @@ part 'HttpPath.dart';
 part 'httper.g.dart';
 
 
-part 'share_generate_result/dto_vo/RegisterAndLoginWithUsernameDto.dart';
+part 'share_generate_result/dto_vo/RegisterAndLoginDto.dart';
 
 
-part 'share_generate_result/dto_vo/RegisterAndLoginWithUsernameVo.dart';
+part 'share_generate_result/dto_vo/RegisterAndLoginVo.dart';
 
 

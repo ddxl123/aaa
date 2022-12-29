@@ -15,6 +15,7 @@ class LoginPage extends StatelessWidget {
       builder: (c, abw) {
         return Scaffold(
           appBar: AppBar(
+            title: const Text('游客模式', style: TextStyle(color: Colors.grey, fontSize: 16)),
             leading: IconButton(
               icon: const FaIcon(FontAwesomeIcons.chevronLeft),
               onPressed: () {

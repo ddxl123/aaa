@@ -61,19 +61,20 @@ class DriftDb extends _$DriftDb {
 
   /// 插入初始化测试数据。
   Future<void> _insertInitTestData() async {
-    if ((await select(users).getSingleOrNull()) == null) {
-      await into(users).insert(
-        UsersCompanion(
-          id: 1.toValue(),
-          createdAt: DateTime.now().toValue(),
-          updatedAt: DateTime.now().toValue(),
-          username: '测试username'.toValue(),
-          password: '测试password'.toValue(),
-          email: '测试email'.toValue(),
-          age: 999.toValue(),
-        ),
-      );
-    }
+    // if ((await select(users).getSingleOrNull()) == null) {
+    //   Crt.usersCompanion(age: 999, email: email, password: password, token: token, username: username).insert(syncTag: syncTag)
+    //   await into(users).insert(
+    //     UsersCompanion(
+    //       id: 1.toValue(),
+    //       createdAt: DateTime.now().toValue(),
+    //       updatedAt: DateTime.now().toValue(),
+    //       username: '测试username'.toValue(),
+    //       password: '测试password'.toValue(),
+    //       email: '测试email'.toValue(),
+    //       age: 999.toValue(),
+    //     ),
+    //   );
+    // }
   }
 
   /// Convert to [TableInfo] using [entity] or type [E].

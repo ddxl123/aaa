@@ -29,6 +29,8 @@ class Ab<V> {
   /// 存储每个引用该对象的 [AbBuilder] 的 [_AbBuilderState.refresh]。
   final Set<RefreshFunction> _refreshFunctions = {};
 
+  bool isEmpty([Abw? abw]) => call(abw) == null ? true : false;
+
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
 

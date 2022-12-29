@@ -1,11 +1,13 @@
 
-enum NewDisplayOrder {
+enum RegisterAndLoginType {
   
-  random,
+  email_send,
 
-  titleA2Z,
+  email_verify,
 
-  createEarly2Late,
+  phone_send,
+
+  phone_verify,
 
 }
         
@@ -28,6 +30,16 @@ enum SyncCurdType {
 enum FragmentTemplateType {
   
   richAny,
+
+}
+        
+enum NewDisplayOrder {
+  
+  random,
+
+  titleA2Z,
+
+  createEarly2Late,
 
 }
         
