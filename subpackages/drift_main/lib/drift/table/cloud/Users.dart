@@ -11,11 +11,11 @@ class Users extends CloudTableBase  {
 
   TextColumn get email => text().nullable()();
 
+  TextColumn get local_token => text()();
+
   TextColumn get password => text().nullable()();
 
   TextColumn get phone => text().nullable()();
-
-  TextColumn get token => text()();
 
   TextColumn get username => text()();
 

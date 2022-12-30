@@ -52,8 +52,11 @@ RegisterAndLoginDto({
     // 验证码发送成功！
     required T Function(String message) code100,
     
+    // 验证码不正确！
+    required T Function(String message) code101,
+    
     // 登录/注册成功！
-    required T Function(String message, RegisterAndLoginVo vo) code101,
+    required T Function(String message, RegisterAndLoginVo vo) code102,
     
                 
     }) {
@@ -64,7 +67,11 @@ RegisterAndLoginDto({
     }
 
     if (code == 101) {
-        return code101(message, vo!);
+        return code101(message);
+    }
+
+    if (code == 102) {
+        return code102(message, vo!);
     }
 
                 

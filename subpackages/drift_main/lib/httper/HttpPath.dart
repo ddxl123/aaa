@@ -9,7 +9,7 @@ class HttpPath {
   
   static const String REGISTER_AND_LOGIN_DO_LOGIN = '/register_and_login/do_login';
 
-  static const String REGISTER_AND_LOGIN_EMAIL = '/register_and_login/email';
+  static const String REGISTER_AND_LOGIN_SEND_OR_VERIFY = '/register_and_login/send_or_verify';
 
   static const String TEST_GET = '/test/get';
 
