@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:aaa/page/login_register/LoginVerifyPage.dart';
 import 'package:aaa/single_dialog/showLoginAgreeDialog.dart';
+import 'package:drift_main/httper/httper.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
@@ -73,7 +75,34 @@ class LoginPageAbController extends AbController {
       return;
     }
     isSending.refreshEasy((oldValue) => true);
-    await Future.delayed(const Duration(seconds: 1));
+    if (loginType() == LoginType.email) {
+      final result = await request(
+        path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
+        data: RegisterAndLoginDto(
+          register_and_login_type: RegisterAndLoginType.email_send,
+          email: getEmail(),
+          phone: null,
+          verify_code: null,
+        ),
+        parseResponseData: (responseData) => RegisterAndLoginDto.fromJson(responseData),
+      );
+      await result.handleCode(
+        otherException: (code, msg, st) async {
+          logger.d("异常 $code", msg, st);
+        },
+        code100: (String message) async {
+          SmartDialog.showToast(message);
+        },
+        code101: (String message) async {
+          SmartDialog.showToast(message);
+        },
+        code102: (String message, RegisterAndLoginVo vo) async {
+          SmartDialog.showToast(message);
+        },
+      );
+    } else {
+      logger.d("未处理 ${loginType()}");
+    }
     isSending.refreshEasy((oldValue) => false);
 
     verifyCountdown.refreshEasy((oldValue) => 5);

@@ -5,7 +5,7 @@ part of httper;
 
 class HttpPath {
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://127.0.0.1:2814';
+  static const String BASE_PATH_LOCAL = 'http://192.168.101.15:2814';
   
   static const String REGISTER_OR_LOGIN_SEND_OR_VERIFY = '/register_or_login/send_or_verify';
 

@@ -16,8 +16,8 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
 }) async {
   try {
     final result = await dio.post(path, data: data.toJson());
-    final parseCode = int.parse(result.data["code"]);
-    final parseMessage = result.data["message"].toString();
+    final parseCode = result.data["code"];
+    final parseMessage = result.data["message"];
     final parseVo = result.data["data"] == null ? null : parseResponseData(result.data["data"]);
     final otherCodeResult = await otherCodeHandle(code: parseCode);
     if (otherCodeResult != null) {
@@ -27,11 +27,12 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       ..code = parseCode
       ..message = parseMessage
       ..vo = parseVo;
-  } catch (e) {
+  } catch (e, st) {
     return (data as dynamic)
       ..code = null
       ..message = "$e"
-      ..vo = null;
+      ..vo = null
+      ..st = st;
   }
 }
 
