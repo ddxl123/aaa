@@ -13,6 +13,8 @@ part 'HttpPath.dart';
 
 part 'httper.g.dart';
 
+part 'OtherResponseCode.dart';
+
 
 part 'share_generate_result/dto_vo/RegisterAndLoginDto.dart';
 

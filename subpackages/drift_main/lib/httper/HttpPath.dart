@@ -7,13 +7,11 @@ class HttpPath {
   /// 基础 path
   static const String BASE_PATH_LOCAL = 'http://127.0.0.1:2814';
   
-  static const String REGISTER_AND_LOGIN_DO_LOGIN = '/register_and_login/do_login';
+  static const String REGISTER_OR_LOGIN_SEND_OR_VERIFY = '/register_or_login/send_or_verify';
 
-  static const String REGISTER_AND_LOGIN_SEND_OR_VERIFY = '/register_and_login/send_or_verify';
+  static const String NEED_LOGIN_TEST_GET = '/need_login/test/get';
 
-  static const String TEST_GET = '/test/get';
-
-  static const String TEST_POST = '/test/post';
+  static const String NEED_LOGIN_TEST_POST = '/need_login/test/post';
 
 }
 

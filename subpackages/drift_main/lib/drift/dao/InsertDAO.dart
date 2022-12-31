@@ -11,11 +11,12 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     final findUser = await select(users).getSingleOrNull();
     if (findUser != null) throw '已存在用户！';
     return await Crt.usersCompanion(
-      token: '',
       age: 18,
       email: '1033839760@qq.com'.toValue(),
       password: 'password'.toValue(),
       username: 'username',
+      local_token: '',
+      phone: null.toValue(),
     ).insert(syncTag: null);
   }
 

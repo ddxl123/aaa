@@ -17,15 +17,17 @@ class Crt {
   static UsersCompanion usersCompanion({
     required int age,
     required Value<String?> email,
+    required String local_token,
     required Value<String?> password,
-    required String token,
+    required Value<String?> phone,
     required String username,
   }) {
     return UsersCompanion(
       age: Value(age),
       email: email,
+      local_token: Value(local_token),
       password: password,
-      token: Value(token),
+      phone: phone,
       username: Value(username),
     );
   }

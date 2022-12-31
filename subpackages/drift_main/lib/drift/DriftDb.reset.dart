@@ -43,8 +43,9 @@ extension UserExt on User {
   FutureOr<User> reset({
     required Value<int> age,
     required Value<String?> email,
+    required Value<String> local_token,
     required Value<String?> password,
-    required Value<String> token,
+    required Value<String?> phone,
     required Value<String> username,
     required SyncTag? syncTag,
   }) async {
@@ -60,14 +61,19 @@ extension UserExt on User {
       this.email = email.value;
     }
 
+    if (local_token.present && this.local_token != local_token.value) {
+      isLocalModify = true;
+      this.local_token = local_token.value;
+    }
+
     if (password.present && this.password != password.value) {
       isCloudModify = true;
       this.password = password.value;
     }
 
-    if (token.present && this.token != token.value) {
+    if (phone.present && this.phone != phone.value) {
       isCloudModify = true;
-      this.token = token.value;
+      this.phone = phone.value;
     }
 
     if (username.present && this.username != username.value) {

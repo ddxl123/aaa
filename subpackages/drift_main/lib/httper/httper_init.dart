@@ -19,6 +19,10 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
     final parseCode = int.parse(result.data["code"]);
     final parseMessage = result.data["message"].toString();
     final parseVo = result.data["data"] == null ? null : parseResponseData(result.data["data"]);
+    final otherCodeResult = await otherCodeHandle(code: parseCode);
+    if (otherCodeResult != null) {
+      throw otherCodeResult;
+    }
     return (data as dynamic)
       ..code = parseCode
       ..message = parseMessage
@@ -29,4 +33,32 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       ..message = "$e"
       ..vo = null;
   }
+}
+
+/// 返回值如果为 null，则未被拦截，否则被拦截。
+Future<String?> otherCodeHandle({required int code}) async {
+  return await OtherResponseCode.handleCode<String?>(
+    inputCode: code,
+    code10000: (String message) async {
+      return message;
+    },
+    code10001: (String message) async {
+      return message;
+    },
+    code10011: (String message) async {
+      return message;
+    },
+    code10012: (String message) async {
+      return message;
+    },
+    code10013: (String message) async {
+      return message;
+    },
+    code10014: (String message) async {
+      return message;
+    },
+    code10015: (String message) async {
+      return message;
+    },
+  );
 }

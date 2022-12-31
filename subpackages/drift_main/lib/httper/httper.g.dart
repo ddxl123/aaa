@@ -6,40 +6,46 @@ part of httper;
 // JsonSerializableGenerator
 // **************************************************************************
 
-RegisterAndLoginWithUsernameDto _$RegisterAndLoginWithUsernameDtoFromJson(
-        Map<String, dynamic> json) =>
-    RegisterAndLoginWithUsernameDto(
-      username: json['username'] as String,
-      password: json['password'] as String?,
+RegisterAndLoginDto _$RegisterAndLoginDtoFromJson(Map<String, dynamic> json) =>
+    RegisterAndLoginDto(
+      register_and_login_type: $enumDecode(
+          _$RegisterAndLoginTypeEnumMap, json['register_and_login_type']),
+      email: json['email'] as String?,
+      phone: json['phone'] as String?,
+      verify_code: json['verify_code'] as int?,
     );
 
-Map<String, dynamic> _$RegisterAndLoginWithUsernameDtoToJson(
-        RegisterAndLoginWithUsernameDto instance) =>
+Map<String, dynamic> _$RegisterAndLoginDtoToJson(
+        RegisterAndLoginDto instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'password': instance.password,
+      'register_and_login_type':
+          _$RegisterAndLoginTypeEnumMap[instance.register_and_login_type]!,
+      'email': instance.email,
+      'phone': instance.phone,
+      'verify_code': instance.verify_code,
     };
 
-RegisterAndLoginWithUsernameVo _$RegisterAndLoginWithUsernameVoFromJson(
-        Map<String, dynamic> json) =>
-    RegisterAndLoginWithUsernameVo(
-      register_or_login: json['register_or_login'] as int,
-      id: json['id'] as int,
-      new_display_order:
-          $enumDecode(_$NewDisplayOrderEnumMap, json['new_display_order']),
-    );
-
-Map<String, dynamic> _$RegisterAndLoginWithUsernameVoToJson(
-        RegisterAndLoginWithUsernameVo instance) =>
-    <String, dynamic>{
-      'register_or_login': instance.register_or_login,
-      'id': instance.id,
-      'new_display_order':
-          _$NewDisplayOrderEnumMap[instance.new_display_order]!,
-    };
-
-const _$NewDisplayOrderEnumMap = {
-  NewDisplayOrder.random: 'random',
-  NewDisplayOrder.titleA2Z: 'titleA2Z',
-  NewDisplayOrder.createEarly2Late: 'createEarly2Late',
+const _$RegisterAndLoginTypeEnumMap = {
+  RegisterAndLoginType.email_send: 'email_send',
+  RegisterAndLoginType.email_verify: 'email_verify',
+  RegisterAndLoginType.phone_send: 'phone_send',
+  RegisterAndLoginType.phone_verify: 'phone_verify',
 };
+
+RegisterAndLoginVo _$RegisterAndLoginVoFromJson(Map<String, dynamic> json) =>
+    RegisterAndLoginVo(
+      register_and_login_type: $enumDecode(
+          _$RegisterAndLoginTypeEnumMap, json['register_and_login_type']),
+      is_registered: json['is_registered'] as bool,
+      id: json['id'] as int?,
+      token: json['token'] as String?,
+    );
+
+Map<String, dynamic> _$RegisterAndLoginVoToJson(RegisterAndLoginVo instance) =>
+    <String, dynamic>{
+      'register_and_login_type':
+          _$RegisterAndLoginTypeEnumMap[instance.register_and_login_type]!,
+      'is_registered': instance.is_registered,
+      'id': instance.id,
+      'token': instance.token,
+    };

@@ -44,38 +44,27 @@ RegisterAndLoginDto({
   @JsonKey(ignore: true)
   RegisterAndLoginVo? vo;
 
-  T handleCode<T>({
-    // 前端 request 内部异常，统一只需消息。
-    required T Function(String message) localExceptionMessage,
-    
+  Future<T> handleCode<T>({
+    // code 为 null 时的异常（request 函数内部捕获到的异常）
+    required Future<T> Function(int? code, String message) otherException,
 
     // 验证码发送成功！
-    required T Function(String message) code100,
+    required Future<T> Function(String message) code100,
     
     // 验证码不正确！
-    required T Function(String message) code101,
+    required Future<T> Function(String message) code101,
     
     // 登录/注册成功！
-    required T Function(String message, RegisterAndLoginVo vo) code102,
+    required Future<T> Function(String message, RegisterAndLoginVo vo) code102,
     
-                
-    }) {
-    
+    }) async {
 
-    if (code == 100) {
-        return code100(message);
-    }
+    if (code == 100) return await code100(message);
 
-    if (code == 101) {
-        return code101(message);
-    }
+    if (code == 101) return await code101(message);
 
-    if (code == 102) {
-        return code102(message, vo!);
-    }
+    if (code == 102) return await code102(message, vo!);
 
-                
-    throw "未处理 code:$code";
+    return await otherException(code, message);
   }
-      
 }

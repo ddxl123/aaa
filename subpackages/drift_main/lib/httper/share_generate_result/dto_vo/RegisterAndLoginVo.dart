@@ -13,6 +13,9 @@ class RegisterAndLoginVo extends BaseObject{
     /// 
     int? id;
 
+    /// 
+    String? token;
+
 
 RegisterAndLoginVo({
 
@@ -21,6 +24,8 @@ RegisterAndLoginVo({
     required this.is_registered,
 
     required this.id,
+
+    required this.token,
 
 });
   factory RegisterAndLoginVo.fromJson(Map<String, dynamic> json) => _$RegisterAndLoginVoFromJson(json);
