@@ -557,7 +557,7 @@ extension FragmentExt on Fragment {
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentId,
     required Value<String?> fragmentTemplateId,
-    required Value<bool> local_isSelected,
+    required Value<bool> local_be_Selected,
     required Value<String?> noteId,
     required Value<String> title,
     required SyncTag? syncTag,
@@ -586,10 +586,10 @@ extension FragmentExt on Fragment {
       this.fragmentTemplateId = fragmentTemplateId.value;
     }
 
-    if (local_isSelected.present &&
-        this.local_isSelected != local_isSelected.value) {
+    if (local_be_Selected.present &&
+        this.local_be_Selected != local_be_Selected.value) {
       isLocalModify = true;
-      this.local_isSelected = local_isSelected.value;
+      this.local_be_Selected = local_be_Selected.value;
     }
 
     if (noteId.present && this.noteId != noteId.value) {
@@ -869,7 +869,7 @@ extension FragmentGroupExt on FragmentGroup {
   FutureOr<FragmentGroup> reset({
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
-    required Value<bool> local_isSelected,
+    required Value<bool> local_be_Selected,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
@@ -886,10 +886,10 @@ extension FragmentGroupExt on FragmentGroup {
       this.fatherFragmentGroupsId = fatherFragmentGroupsId.value;
     }
 
-    if (local_isSelected.present &&
-        this.local_isSelected != local_isSelected.value) {
+    if (local_be_Selected.present &&
+        this.local_be_Selected != local_be_Selected.value) {
       isLocalModify = true;
-      this.local_isSelected = local_isSelected.value;
+      this.local_be_Selected = local_be_Selected.value;
     }
 
     if (title.present && this.title != title.value) {

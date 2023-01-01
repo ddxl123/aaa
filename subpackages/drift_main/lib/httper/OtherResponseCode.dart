@@ -4,13 +4,13 @@ class OtherResponseCode {
     /// 返回是否被拦截处理。
     static Future<T?> handleCode<T>({
         required int inputCode,
-        required Future<T> Function(String message) code10000,
-        required Future<T> Function(String message) code10001,
-        required Future<T> Function(String message) code10011,
-        required Future<T> Function(String message) code10012,
-        required Future<T> Function(String message) code10013,
-        required Future<T> Function(String message) code10014,
-        required Future<T> Function(String message) code10015,
+        required Future<T> Function(String showMessage) code10000,
+        required Future<T> Function(String showMessage) code10001,
+        required Future<T> Function(String showMessage) code10011,
+        required Future<T> Function(String showMessage) code10012,
+        required Future<T> Function(String showMessage) code10013,
+        required Future<T> Function(String showMessage) code10014,
+        required Future<T> Function(String showMessage) code10015,
     }) async {
         if (inputCode == 10000) {
             return await code10000("服务器出现未知异常！10000");

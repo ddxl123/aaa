@@ -6,46 +6,45 @@ part of httper;
 // JsonSerializableGenerator
 // **************************************************************************
 
-RegisterAndLoginDto _$RegisterAndLoginDtoFromJson(Map<String, dynamic> json) =>
-    RegisterAndLoginDto(
-      register_and_login_type: $enumDecode(
-          _$RegisterAndLoginTypeEnumMap, json['register_and_login_type']),
+RegisterOrLoginDto _$RegisterOrLoginDtoFromJson(Map<String, dynamic> json) =>
+    RegisterOrLoginDto(
+      register_or_login_type: $enumDecode(
+          _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       verify_code: json['verify_code'] as int?,
     );
 
-Map<String, dynamic> _$RegisterAndLoginDtoToJson(
-        RegisterAndLoginDto instance) =>
+Map<String, dynamic> _$RegisterOrLoginDtoToJson(RegisterOrLoginDto instance) =>
     <String, dynamic>{
-      'register_and_login_type':
-          _$RegisterAndLoginTypeEnumMap[instance.register_and_login_type]!,
+      'register_or_login_type':
+          _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
       'email': instance.email,
       'phone': instance.phone,
       'verify_code': instance.verify_code,
     };
 
-const _$RegisterAndLoginTypeEnumMap = {
-  RegisterAndLoginType.email_send: 'email_send',
-  RegisterAndLoginType.email_verify: 'email_verify',
-  RegisterAndLoginType.phone_send: 'phone_send',
-  RegisterAndLoginType.phone_verify: 'phone_verify',
+const _$RegisterOrLoginTypeEnumMap = {
+  RegisterOrLoginType.email_send: 'email_send',
+  RegisterOrLoginType.email_verify: 'email_verify',
+  RegisterOrLoginType.phone_send: 'phone_send',
+  RegisterOrLoginType.phone_verify: 'phone_verify',
 };
 
-RegisterAndLoginVo _$RegisterAndLoginVoFromJson(Map<String, dynamic> json) =>
-    RegisterAndLoginVo(
-      register_and_login_type: $enumDecode(
-          _$RegisterAndLoginTypeEnumMap, json['register_and_login_type']),
-      is_registered: json['is_registered'] as bool,
+RegisterOrLoginVo _$RegisterOrLoginVoFromJson(Map<String, dynamic> json) =>
+    RegisterOrLoginVo(
+      register_or_login_type: $enumDecode(
+          _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
+      be_registered: json['be_registered'] as bool,
       id: json['id'] as int?,
       token: json['token'] as String?,
     );
 
-Map<String, dynamic> _$RegisterAndLoginVoToJson(RegisterAndLoginVo instance) =>
+Map<String, dynamic> _$RegisterOrLoginVoToJson(RegisterOrLoginVo instance) =>
     <String, dynamic>{
-      'register_and_login_type':
-          _$RegisterAndLoginTypeEnumMap[instance.register_and_login_type]!,
-      'is_registered': instance.is_registered,
+      'register_or_login_type':
+          _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
+      'be_registered': instance.be_registered,
       'id': instance.id,
       'token': instance.token,
     };

@@ -155,7 +155,7 @@ class Crt {
     required int creatorUserId,
     required Value<String?> fatherFragmentId,
     required Value<String?> fragmentTemplateId,
-    required bool local_isSelected,
+    required bool local_be_Selected,
     required Value<String?> noteId,
     required String title,
   }) {
@@ -164,7 +164,7 @@ class Crt {
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId,
       fragmentTemplateId: fragmentTemplateId,
-      local_isSelected: Value(local_isSelected),
+      local_be_Selected: Value(local_be_Selected),
       noteId: noteId,
       title: Value(title),
     );
@@ -239,13 +239,13 @@ class Crt {
   static FragmentGroupsCompanion fragmentGroupsCompanion({
     required int creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
-    required bool local_isSelected,
+    required bool local_be_Selected,
     required String title,
   }) {
     return FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
-      local_isSelected: Value(local_isSelected),
+      local_be_Selected: Value(local_be_Selected),
       title: Value(title),
     );
   }

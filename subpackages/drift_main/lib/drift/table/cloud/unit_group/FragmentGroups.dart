@@ -13,7 +13,7 @@ class FragmentGroups extends CloudTableBase  {
   @ReferenceTo([FragmentGroups])
   TextColumn get fatherFragmentGroupsId => text().nullable()();
 
-  BoolColumn get local_isSelected => boolean()();
+  BoolColumn get local_be_Selected => boolean()();
 
   TextColumn get title => text()();
 

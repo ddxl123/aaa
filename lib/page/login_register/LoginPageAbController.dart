@@ -18,6 +18,7 @@ class LoginPageAbController extends AbController {
   final loginType = LoginType.phone.ab;
   final isAgree = false.ab;
   final isSending = false.ab;
+  final isVerifying = false.ab;
   final phoneTextEditingController = TextEditingController();
   final emailTextEditingController = TextEditingController();
   final verifyCodeTextEditingController = TextEditingController();
@@ -64,57 +65,107 @@ class LoginPageAbController extends AbController {
       }
     }
 
-    await reSend();
-
-    if (!state.mounted) return;
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginVerifyPage()));
+    final result = await reSend();
+    if (result) {
+      if (!state.mounted) return;
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginVerifyPage()));
+    }
   }
 
-  Future<void> reSend() async {
+  /// 返回是否发送成功。
+  Future<bool> reSend() async {
     if (isSending()) {
-      return;
+      return false;
     }
     isSending.refreshEasy((oldValue) => true);
     if (loginType() == LoginType.email) {
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
-        data: RegisterAndLoginDto(
-          register_and_login_type: RegisterAndLoginType.email_send,
+        data: RegisterOrLoginDto(
+          register_or_login_type: RegisterOrLoginType.email_send,
           email: getEmail(),
           phone: null,
           verify_code: null,
         ),
-        parseResponseData: (responseData) => RegisterAndLoginDto.fromJson(responseData),
+        parseResponseData: (responseData) => RegisterOrLoginVo.fromJson(responseData),
       );
-      await result.handleCode(
+      return await result.handleCode<bool>(
         otherException: (code, msg, st) async {
-          logger.d("异常 $code", msg, st);
+          logger.e(msg.showMessage, msg.debugMessage, st);
+          isSending.refreshEasy((oldValue) => false);
+          return false;
         },
         code100: (String message) async {
-          SmartDialog.showToast(message);
+          verifyCountdown.refreshEasy((oldValue) => 5);
+          Timer.periodic(
+            const Duration(seconds: 1),
+            (timer) {
+              verifyCountdown.refreshEasy((oldValue) => oldValue - 1);
+              if (verifyCountdown() == 0) {
+                timer.cancel();
+              }
+            },
+          );
+          SmartDialog.showToast('验证码已发送，请注意查收！');
+          isSending.refreshEasy((oldValue) => false);
+          return true;
         },
         code101: (String message) async {
-          SmartDialog.showToast(message);
+          throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
         },
-        code102: (String message, RegisterAndLoginVo vo) async {
-          SmartDialog.showToast(message);
+        code102: (String message, RegisterOrLoginVo vo) async {
+          throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
         },
       );
     } else {
-      logger.d("未处理 ${loginType()}");
+      logger.e('未处理 ${loginType()}');
+      isSending.refreshEasy((oldValue) => false);
+      return false;
     }
-    isSending.refreshEasy((oldValue) => false);
+  }
 
-    verifyCountdown.refreshEasy((oldValue) => 5);
-    Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        verifyCountdown.refreshEasy((oldValue) => oldValue - 1);
-        if (verifyCountdown() == 0) {
-          timer.cancel();
-        }
-      },
-    );
-    SmartDialog.showToast('验证码已发送，请注意查收！');
+  Future<void> verify() async {
+    if (isVerifying()) {
+      return;
+    }
+    if (loginType() == LoginType.email) {
+      int? verifyCode = int.tryParse(verifyCodeTextEditingController.text);
+      if (verifyCode == null) {
+        logger.d('验证码输入格式不正确！');
+        return;
+      }
+      final result = await request(
+        path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
+        data: RegisterOrLoginDto(
+          register_or_login_type: RegisterOrLoginType.email_verify,
+          email: getEmail(),
+          phone: null,
+          verify_code: verifyCode,
+        ),
+        parseResponseData: (responseData) => RegisterOrLoginVo.fromJson(responseData),
+      );
+      await result.handleCode(
+        otherException: (int? code, HttperMessage httperException, StackTrace st) async {
+          logger.e(httperException.showMessage, httperException.debugMessage, st);
+        },
+        code100: (String showMessage) async {
+          throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
+        },
+        code101: (String showMessage) async {
+          logger.i(showMessage);
+        },
+        code102: (String showMessage, RegisterOrLoginVo vo) async {
+          if (vo.be_registered) {
+            logger.i('注册并登录成功！');
+          } else {
+            logger.i('登录成功！');
+          }
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      logger.e("未处理 ${loginType()}");
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
@@ -8,7 +9,26 @@ const Uuid _uuid = Uuid();
 
 String get uuidV4 => _uuid.v4();
 
-Logger logger = Logger(printer: PrettyPrinter(methodCount: 1));
+CustomLogger logger = CustomLogger();
+
+class CustomLogger {
+  final logger = Logger(printer: PrettyPrinter(methodCount: 1));
+
+  void d(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    SmartDialog.showToast(message);
+    logger.d(message, error, stackTrace);
+  }
+
+  void i(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    SmartDialog.showToast(message);
+    logger.i(message, error, stackTrace);
+  }
+
+  void e(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    SmartDialog.showToast(message);
+    logger.e(message, error, stackTrace);
+  }
+}
 
 class Tuple2<T1, T2> {
   final T1 t1;

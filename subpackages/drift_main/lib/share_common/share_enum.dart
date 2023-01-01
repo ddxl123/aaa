@@ -1,5 +1,5 @@
 
-enum RegisterAndLoginType {
+enum RegisterOrLoginType {
   
   email_send,
 

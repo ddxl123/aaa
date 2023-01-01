@@ -1,5 +1,6 @@
 import 'package:aaa/page/login_register/LoginPageAbController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
@@ -65,8 +66,14 @@ class LoginVerifyPage extends StatelessWidget {
                       backgroundColor: MaterialStatePropertyAll(Colors.tealAccent),
                       padding: MaterialStatePropertyAll(EdgeInsets.fromLTRB(0, 15, 0, 15)),
                     ),
-                    child: const Text('登录/注册'),
-                    onPressed: () {},
+                    child: AbwBuilder(
+                      builder: (abw) {
+                        return c.isVerifying(abw) ? const SpinKitThreeBounce(color: Colors.white, size: 22) : const Text('登录/注册');
+                      },
+                    ),
+                    onPressed: () {
+                      c.verify();
+                    },
                   ),
                 )
               ],

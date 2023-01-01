@@ -18,7 +18,7 @@ class Fragments extends CloudTableBase  {
   @ReferenceTo([FragmentTemplates])
   TextColumn get fragmentTemplateId => text().nullable()();
 
-  BoolColumn get local_isSelected => boolean()();
+  BoolColumn get local_be_Selected => boolean()();
 
   @ReferenceTo([Notes])
   TextColumn get noteId => text().nullable()();
