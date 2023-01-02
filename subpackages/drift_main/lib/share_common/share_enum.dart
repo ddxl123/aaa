@@ -13,6 +13,8 @@ enum RegisterOrLoginType {
         
 enum SyncCurdType {
   
+  none,
+
   c,
 
   cing,
@@ -29,12 +31,16 @@ enum SyncCurdType {
         
 enum FragmentTemplateType {
   
+  none,
+
   richAny,
 
 }
         
 enum NewDisplayOrder {
   
+  none,
+
   random,
 
   titleA2Z,
@@ -45,6 +51,8 @@ enum NewDisplayOrder {
         
 enum NewReviewDisplayOrder {
   
+  none,
+
   mix,
 
   newReview,

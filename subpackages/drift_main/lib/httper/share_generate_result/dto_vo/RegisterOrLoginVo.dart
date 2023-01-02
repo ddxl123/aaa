@@ -7,8 +7,14 @@ class RegisterOrLoginVo extends BaseObject{
     /// 
     RegisterOrLoginType register_or_login_type;
 
-    /// 是否为新注册用户
+    /// 该用户是否已注册过
     bool be_registered;
+
+    /// 是否用户状态是否已登录
+    bool? be_logged_in;
+
+    /// 
+    DateTime? recent_sync_time;
 
     /// 
     int? id;
@@ -22,6 +28,10 @@ RegisterOrLoginVo({
     required this.register_or_login_type,
 
     required this.be_registered,
+
+    required this.be_logged_in,
+
+    required this.recent_sync_time,
 
     required this.id,
 
