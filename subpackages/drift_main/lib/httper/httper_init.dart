@@ -12,7 +12,7 @@ final Dio dio = Dio(
 Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   required String path,
   required RQ data,
-  required RP Function(dynamic responseData) parseResponseData,
+  required RP Function(Map<String, dynamic> responseData) parseResponseData,
 }) async {
   dynamic responseData;
   try {

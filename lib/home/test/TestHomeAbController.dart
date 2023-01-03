@@ -24,8 +24,8 @@ class TestHomeAbController extends AbController {
   }
 
   Future<void> inserts() async {
-    // await insertTests();
-    await insertsOther();
+    await insertTests();
+    // await insertsOther();
   }
 
   Future<void> insertTests() async {
@@ -33,14 +33,14 @@ class TestHomeAbController extends AbController {
       final t = await db.into(db.tests).insertReturning(
             TestsCompanion.insert(local_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
           );
-      await Future.delayed(const Duration(milliseconds: 1000));
+      // await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
     }
     for (int i = 0; i < 5; i++) {
       final t = await db.into(db.test2s).insertReturning(
             Test2sCompanion.insert(local_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
           );
-      await Future.delayed(const Duration(milliseconds: 1000));
+      // await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
     }
     print('-------------');

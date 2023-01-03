@@ -2,7 +2,6 @@ part of aber;
 
 /// [Aber]、[AbBuilder]
 abstract class AbController {
-
   /// 存储当前 Controller 对象中所有被 .ab 标记的对象所对应的 [Ab._removeRefreshFunction]。
   ///
   /// 在每个 .ab 属性第一次被引用时，才会把它添加到这里（并不是在初始化时被添加）。
@@ -39,7 +38,7 @@ abstract class AbController {
         title: '加载出现异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {
-          logger.e(title, ec.error, ec.stackTrace);
+          logger.out(show: title, print: title, level: LogLevel.error, error: ec.error, stackTrace: ec.stackTrace);
         },
       );
 
@@ -47,7 +46,7 @@ abstract class AbController {
         title: '内部构建异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {
-          logger.e(title, ec.error, ec.stackTrace);
+          logger.out(show: title, print: title, level: LogLevel.error, error: ec.error, stackTrace: ec.stackTrace);
         },
       );
 }

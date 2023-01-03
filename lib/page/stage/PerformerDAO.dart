@@ -22,8 +22,8 @@ class PerformerQuery {
     final newPerformer = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
 
-    logger.d('获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}');
-    logger.d('获取到的复习碎片：\n${learnedFragment?.fragmentMemoryInfo}\n${learnedFragment?.fragment}');
+    logger.out(print: '获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}');
+    logger.out(print: '获取到的复习碎片：\n${learnedFragment?.fragmentMemoryInfo}\n${learnedFragment?.fragment}');
 
     if (newPerformer == null && learnedFragment == null) return null;
 
@@ -38,9 +38,9 @@ class PerformerQuery {
       throw '未处理 ${mg.newReviewDisplayOrder}';
     }
     if (performer!.fragmentMemoryInfo.nextPlanShowTime == null) {
-      logger.d('最终展示了新碎片！');
+      logger.out(print: '最终展示了新碎片！');
     } else {
-      logger.d('最终展示了复习碎片！');
+      logger.out(print: '最终展示了复习碎片！');
     }
     return performer;
   }

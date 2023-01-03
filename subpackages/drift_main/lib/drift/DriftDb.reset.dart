@@ -41,7 +41,7 @@ extension UserExt on User {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<User> reset({
-    required Value<int> age,
+    required Value<int?> age,
     required Value<String?> email,
     required Value<String> local_token,
     required Value<String?> password,

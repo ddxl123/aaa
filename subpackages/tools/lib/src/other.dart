@@ -11,22 +11,45 @@ String get uuidV4 => _uuid.v4();
 
 CustomLogger logger = CustomLogger();
 
+enum LogLevel {
+  normal,
+  error,
+}
+
 class CustomLogger {
   final logger = Logger(printer: PrettyPrinter(methodCount: 1));
 
-  void d(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    SmartDialog.showToast(message);
-    logger.d(message, error, stackTrace);
+  /// [show] - toast 内容。
+  ///
+  /// [print] - 控制台打印内容。
+  void out({
+    dynamic show,
+    dynamic print,
+    // required String? record,
+    LogLevel level = LogLevel.normal,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) {
+    if (show != null) SmartDialog.showToast(show.toString());
+    if (print != null) {
+      if (level == LogLevel.normal) {
+        logger.d('show - $show\nprint - $print', error, stackTrace);
+      } else if (level == LogLevel.error) {
+        logger.e('show - $show\nprint - $print', error, stackTrace);
+      } else {
+        logger.e('未处理 logger.level: $level');
+      }
+    }
   }
+}
 
-  void i(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    SmartDialog.showToast(message);
-    logger.i(message, error, stackTrace);
-  }
-
-  void e(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    SmartDialog.showToast(message);
-    logger.e(message, error, stackTrace);
+extension QuickLog<T> on T {
+  T quickPrint({
+    dynamic error,
+    StackTrace? stackTrace,
+  }) {
+    logger.out(print: this, error: error, stackTrace: stackTrace);
+    return this;
   }
 }
 
@@ -100,13 +123,6 @@ class ExceptionContent {
 
   @override
   String toString() => '($hashCode=====>>>>>start:\nExceptionContent:\nerror:\n$error\nstackTrace:\n$stackTrace\n:end<<<<<=====$hashCode)\n';
-}
-
-extension PrintSuffixExt<T> on T {
-  T print() {
-    logger.d(this, null, StackTrace.current);
-    return this;
-  }
 }
 
 /// 若 [bs] 全为 true，则返回 true。

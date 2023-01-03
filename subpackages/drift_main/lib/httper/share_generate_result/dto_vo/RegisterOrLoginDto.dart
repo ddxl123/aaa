@@ -58,7 +58,7 @@ RegisterOrLoginDto({
     // 验证码不正确！
     required Future<T> Function(String showMessage) code101,
     
-    // 登录/注册成功！
+    // 验证成功！
     required Future<T> Function(String showMessage, RegisterOrLoginVo vo) code102,
     
     }) async {

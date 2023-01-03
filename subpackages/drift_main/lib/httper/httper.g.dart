@@ -35,7 +35,11 @@ RegisterOrLoginVo _$RegisterOrLoginVoFromJson(Map<String, dynamic> json) =>
     RegisterOrLoginVo(
       register_or_login_type: $enumDecode(
           _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
-      be_registered: json['be_registered'] as bool,
+      be_new_user: json['be_new_user'] as bool,
+      be_logged_in: json['be_logged_in'] as bool?,
+      recent_sync_time: json['recent_sync_time'] == null
+          ? null
+          : DateTime.parse(json['recent_sync_time'] as String),
       id: json['id'] as int?,
       token: json['token'] as String?,
     );
@@ -44,7 +48,9 @@ Map<String, dynamic> _$RegisterOrLoginVoToJson(RegisterOrLoginVo instance) =>
     <String, dynamic>{
       'register_or_login_type':
           _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
-      'be_registered': instance.be_registered,
+      'be_new_user': instance.be_new_user,
+      'be_logged_in': instance.be_logged_in,
+      'recent_sync_time': instance.recent_sync_time?.toIso8601String(),
       'id': instance.id,
       'token': instance.token,
     };

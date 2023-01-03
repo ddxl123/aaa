@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:aaa/page/login_register/LoginVerifyPage.dart';
+import 'package:aaa/single_dialog/showExistUserHandleDialog.dart';
 import 'package:aaa/single_dialog/showLoginAgreeDialog.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,7 @@ class LoginPageAbController extends AbController {
 
   String getEmail() => emailTextEditingController.text;
 
+  /// 发送验证码。
   Future<void> send() async {
     if (isSending()) {
       return;
@@ -72,12 +75,25 @@ class LoginPageAbController extends AbController {
     }
   }
 
-  /// 返回是否发送成功。
+  /// 重新发送验证码。
+  ///
+  /// 返回是否成功发送。
   Future<bool> reSend() async {
     if (isSending()) {
       return false;
     }
+    final isContinue = await checkCurrentLogin();
+    if (!isContinue) return false;
     isSending.refreshEasy((oldValue) => true);
+    final isSuccess = await doSend();
+    isSending.refreshEasy((oldValue) => false);
+    return isSuccess;
+  }
+
+  /// 执行发送验证码。
+  ///
+  /// 返回是否发送成功。
+  Future<bool> doSend() async {
     if (loginType() == LoginType.email) {
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
@@ -91,8 +107,7 @@ class LoginPageAbController extends AbController {
       );
       return await result.handleCode<bool>(
         otherException: (code, msg, st) async {
-          logger.e(msg.showMessage, msg.debugMessage, st);
-          isSending.refreshEasy((oldValue) => false);
+          logger.out(show: msg.showMessage, print: msg.debugMessage, stackTrace: st);
           return false;
         },
         code100: (String message) async {
@@ -107,7 +122,6 @@ class LoginPageAbController extends AbController {
             },
           );
           SmartDialog.showToast('验证码已发送，请注意查收！');
-          isSending.refreshEasy((oldValue) => false);
           return true;
         },
         code101: (String message) async {
@@ -118,20 +132,38 @@ class LoginPageAbController extends AbController {
         },
       );
     } else {
-      logger.e('未处理 ${loginType()}');
-      isSending.refreshEasy((oldValue) => false);
+      logger.out(show: "存在未处理类型！", print: loginType());
       return false;
     }
   }
 
+  /// 检查本地是否已存在登录用户，并弹出操作模块。
+  ///
+  /// 返回当前是否继续执行发送验证码任务。
+  Future<bool> checkCurrentLogin() async {
+    final result = await db.generalQueryDAO.queryUserOrNull();
+    if (result == null || getEmail() == result.email || getPhone() == result.phone) {
+      return true;
+    }
+    return await showExistUserHandleDialog();
+  }
+
+  /// 对验证码进行验证。
   Future<void> verify() async {
     if (isVerifying()) {
       return;
     }
+    isVerifying.refreshEasy((oldValue) => true);
+    await doVerify();
+    isVerifying.refreshEasy((oldValue) => false);
+  }
+
+  /// 执行验证。
+  Future<void> doVerify() async {
     if (loginType() == LoginType.email) {
       int? verifyCode = int.tryParse(verifyCodeTextEditingController.text);
       if (verifyCode == null) {
-        logger.d('验证码输入格式不正确！');
+        logger.out(show: '验证码输入格式不正确！');
         return;
       }
       final result = await request(
@@ -142,30 +174,30 @@ class LoginPageAbController extends AbController {
           phone: null,
           verify_code: verifyCode,
         ),
-        parseResponseData: (responseData) => RegisterOrLoginVo.fromJson(responseData),
+        parseResponseData: RegisterOrLoginVo.fromJson,
       );
       await result.handleCode(
         otherException: (int? code, HttperMessage httperException, StackTrace st) async {
-          logger.e(httperException.showMessage, httperException.debugMessage, st);
+          logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
         },
         code100: (String showMessage) async {
           throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
         },
         code101: (String showMessage) async {
-          logger.i(showMessage);
+          logger.out(show: showMessage);
         },
         code102: (String showMessage, RegisterOrLoginVo vo) async {
-          if (vo.be_registered) {
-            logger.i('注册并登录成功！');
+          if (vo.be_new_user) {
+            logger.out(show: "注册成功！");
+            // TODO: 直接弹出下载界面。
           } else {
-            logger.i('登录成功！');
+            // TODO: 先检测是否已经在其他地方登录。
+            logger.out(show: "登录成功！");
           }
-          Navigator.pop(context);
-          Navigator.pop(context);
         },
       );
     } else {
-      logger.e("未处理 ${loginType()}");
+      logger.out(show: "未处理登录类型", print: loginType());
     }
   }
 }

@@ -31,7 +31,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// 最终展示日志。
   void showLog() {
     if (_isRecordLog) {
-      logger.i(_logStringBuffer);
+      logger.out(print: _logStringBuffer);
     }
   }
 

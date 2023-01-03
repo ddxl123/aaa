@@ -7,8 +7,8 @@ class RegisterOrLoginVo extends BaseObject{
     /// 
     RegisterOrLoginType register_or_login_type;
 
-    /// 该用户是否已注册过
-    bool be_registered;
+    /// 当前用户是否为新用户
+    bool be_new_user;
 
     /// 是否用户状态是否已登录
     bool? be_logged_in;
@@ -19,7 +19,7 @@ class RegisterOrLoginVo extends BaseObject{
     /// 
     int? id;
 
-    /// 
+    /// 已在其他地方登录则为空，否则进行登录并带上token
     String? token;
 
 
@@ -27,7 +27,7 @@ RegisterOrLoginVo({
 
     required this.register_or_login_type,
 
-    required this.be_registered,
+    required this.be_new_user,
 
     required this.be_logged_in,
 

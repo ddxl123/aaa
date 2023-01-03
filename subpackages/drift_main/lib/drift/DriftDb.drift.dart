@@ -103,7 +103,7 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
 }
 
 class User extends DataClass implements Insertable<User> {
-  int age;
+  int? age;
   String? email;
   String local_token;
   String? password;
@@ -113,7 +113,7 @@ class User extends DataClass implements Insertable<User> {
   int id;
   DateTime updatedAt;
   User(
-      {required this.age,
+      {this.age,
       this.email,
       required this.local_token,
       this.password,
@@ -125,7 +125,9 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['age'] = Variable<int>(age);
+    if (!nullToAbsent || age != null) {
+      map['age'] = Variable<int>(age);
+    }
     if (!nullToAbsent || email != null) {
       map['email'] = Variable<String>(email);
     }
@@ -145,7 +147,7 @@ class User extends DataClass implements Insertable<User> {
 
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
-      age: Value(age),
+      age: age == null && nullToAbsent ? const Value.absent() : Value(age),
       email:
           email == null && nullToAbsent ? const Value.absent() : Value(email),
       local_token: Value(local_token),
@@ -165,7 +167,7 @@ class User extends DataClass implements Insertable<User> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
-      age: serializer.fromJson<int>(json['age']),
+      age: serializer.fromJson<int?>(json['age']),
       email: serializer.fromJson<String?>(json['email']),
       local_token: serializer.fromJson<String>(json['local_token']),
       password: serializer.fromJson<String?>(json['password']),
@@ -180,7 +182,7 @@ class User extends DataClass implements Insertable<User> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'age': serializer.toJson<int>(age),
+      'age': serializer.toJson<int?>(age),
       'email': serializer.toJson<String?>(email),
       'local_token': serializer.toJson<String>(local_token),
       'password': serializer.toJson<String?>(password),
@@ -193,7 +195,7 @@ class User extends DataClass implements Insertable<User> {
   }
 
   User copyWith(
-          {int? age,
+          {Value<int?> age = const Value.absent(),
           Value<String?> email = const Value.absent(),
           String? local_token,
           Value<String?> password = const Value.absent(),
@@ -203,7 +205,7 @@ class User extends DataClass implements Insertable<User> {
           int? id,
           DateTime? updatedAt}) =>
       User(
-        age: age ?? this.age,
+        age: age.present ? age.value : this.age,
         email: email.present ? email.value : this.email,
         local_token: local_token ?? this.local_token,
         password: password.present ? password.value : this.password,
@@ -248,7 +250,7 @@ class User extends DataClass implements Insertable<User> {
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
-  Value<int> age;
+  Value<int?> age;
   Value<String?> email;
   Value<String> local_token;
   Value<String?> password;
@@ -269,7 +271,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.updatedAt = const Value.absent(),
   });
   UsersCompanion.insert({
-    required int age,
+    this.age = const Value.absent(),
     this.email = const Value.absent(),
     required String local_token,
     this.password = const Value.absent(),
@@ -278,8 +280,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     required DateTime createdAt,
     this.id = const Value.absent(),
     required DateTime updatedAt,
-  })  : age = Value(age),
-        local_token = Value(local_token),
+  })  : local_token = Value(local_token),
         username = Value(username),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
@@ -308,7 +309,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 
   UsersCompanion copyWith(
-      {Value<int>? age,
+      {Value<int?>? age,
       Value<String?>? email,
       Value<String>? local_token,
       Value<String?>? password,
@@ -388,8 +389,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   static const VerificationMeta _ageMeta = const VerificationMeta('age');
   @override
   late final GeneratedColumn<int> age = GeneratedColumn<int>(
-      'age', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      'age', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
@@ -459,8 +460,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('age')) {
       context.handle(
           _ageMeta, age.isAcceptableOrUnknown(data['age']!, _ageMeta));
-    } else if (isInserting) {
-      context.missing(_ageMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
@@ -513,7 +512,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return User(
       age: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}age'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}age']),
       email: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}email']),
       local_token: attachedDatabase.typeMapping

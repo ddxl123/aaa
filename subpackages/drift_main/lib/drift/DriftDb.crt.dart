@@ -15,7 +15,7 @@ part of drift_db;
 class Crt {
   Crt._();
   static UsersCompanion usersCompanion({
-    required int age,
+    required Value<int?> age,
     required Value<String?> email,
     required String local_token,
     required Value<String?> password,
@@ -23,7 +23,7 @@ class Crt {
     required String username,
   }) {
     return UsersCompanion(
-      age: Value(age),
+      age: age,
       email: email,
       local_token: Value(local_token),
       password: password,

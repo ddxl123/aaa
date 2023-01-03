@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift_main/drift/DriftDb.dart';
@@ -15,6 +16,7 @@ class DriftViewer extends StatefulWidget {
 
 class _DriftViewerState extends State<DriftViewer> {
   final List<drift.TableInfo> tableInfos = [];
+  String sqliteSequenceResult = "";
   final List<String> _triggers = [];
   final List<String> _sqls = [];
   bool hasDeleteDb = false;
@@ -22,10 +24,16 @@ class _DriftViewerState extends State<DriftViewer> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  Future<void> init() async {
     tableInfos.addAll(DriftDb.instance.allTables);
     tableInfos.sort((a, b) => a.actualTableName.compareTo(b.actualTableName));
-    // 对 Drift 进行初始化
-    DriftDb.instance.select(DriftDb.instance.users).get();
+    // 随便执行一句查询执行懒加载，对 Drift 进行初始化。
+    await DriftDb.instance.select(DriftDb.instance.users).get();
+
+    setState(() {});
   }
 
   @override
@@ -85,6 +93,13 @@ class _DriftViewerState extends State<DriftViewer> {
                     },
                     textStyle: const TextStyle(color: Colors.red),
                     child: const Text('删除数据库'),
+                  ),
+                  PopupMenuItem(
+                    onTap: () async {
+                      await db.deleteDAO.clearDb();
+                    },
+                    textStyle: const TextStyle(color: Colors.red),
+                    child: const Text('清除全部数据（自增列归零）'),
                   ),
                 ],
               );
@@ -179,12 +194,13 @@ class _DriftViewerState extends State<DriftViewer> {
             Row(
               children: [
                 Expanded(
-                    child: TextButton(
-                  child: Text(tableInfos[i].actualTableName),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (ctx) => ColumnRow(tableInfo: tableInfos[i], database: widget.database)));
-                  },
-                )),
+                  child: TextButton(
+                    child: Text(tableInfos[i].actualTableName),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx) => ColumnRow(tableInfo: tableInfos[i], database: widget.database)));
+                    },
+                  ),
+                ),
               ],
             ),
             _sqls.isEmpty ? Container() : Text(_sqls[i]),
@@ -195,6 +211,34 @@ class _DriftViewerState extends State<DriftViewer> {
         ),
       );
     }
+    children.add(
+      Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  child: const Text("sqlite_sequence"),
+                  onPressed: () async {
+                    final result = await db.customSelect("select * from sqlite_sequence").get();
+                    sqliteSequenceResult = const JsonEncoder.withIndent(" ").convert(result.map((e) => e.data).toList());
+                    print(result);
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(sqliteSequenceResult),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
     return children;
   }
 }

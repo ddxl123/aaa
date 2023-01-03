@@ -6,4 +6,19 @@ part of drift_db;
 )
 class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
   DeleteDAO(DriftDb attachedDatabase) : super(attachedDatabase);
+
+  /// 清空数据库，自增列归零。
+  Future<void> clearDb() async {
+    await transaction(
+      () async {
+        await Future.forEach<TableInfo>(
+          db.allTables,
+          (element) async {
+            await delete(element).go();
+            db.customStatement("DELETE FROM sqlite_sequence");
+          },
+        );
+      },
+    );
+  }
 }
