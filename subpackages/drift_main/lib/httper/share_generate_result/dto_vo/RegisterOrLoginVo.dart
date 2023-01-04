@@ -17,10 +17,7 @@ class RegisterOrLoginVo extends BaseObject{
     DateTime? recent_sync_time;
 
     /// 
-    int? id;
-
-    /// 已在其他地方登录则为空，否则进行登录并带上token
-    String? token;
+    User? user_entity;
 
 
 RegisterOrLoginVo({
@@ -33,9 +30,7 @@ RegisterOrLoginVo({
 
     required this.recent_sync_time,
 
-    required this.id,
-
-    required this.token,
+    required this.user_entity,
 
 });
   factory RegisterOrLoginVo.fromJson(Map<String, dynamic> json) => _$RegisterOrLoginVoFromJson(json);

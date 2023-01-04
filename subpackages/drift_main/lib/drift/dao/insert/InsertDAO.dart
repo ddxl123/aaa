@@ -1,24 +1,10 @@
 part of drift_db;
 
-/// TODO: 所有curd函数体都要包裹上事务。
 @DriftAccessor(
   tables: tableClasses,
 )
 class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   InsertDAO(DriftDb attachedDatabase) : super(attachedDatabase);
-
-  Future<User> insertUser() async {
-    final findUser = await select(users).getSingleOrNull();
-    if (findUser != null) throw '已存在用户！';
-    return await Crt.usersCompanion(
-      age: null.toValue(),
-      email: '1033839760@qq.com'.toValue(),
-      password: 'password'.toValue(),
-      username: 'username',
-      local_token: '',
-      phone: null.toValue(),
-    ).insert(syncTag: null);
-  }
 
   /// 插入一个碎片组。
   Future<FragmentGroup> insertFragmentGroup({
@@ -108,7 +94,8 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       ref: (st) async {
         return RefFragmentMemoryInfos(
           self: (_) async {
-            final user = await db.generalQueryDAO.queryUser();
+            // TODO: user 为 null 时的处理。
+            final user = (await db.generalQueryDAO.queryUserOrNull())!;
             final fs = await db.generalQueryDAO.querySelectedFragments();
             await Future.forEach<Fragment>(
               fs,

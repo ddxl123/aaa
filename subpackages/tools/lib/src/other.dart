@@ -17,7 +17,7 @@ enum LogLevel {
 }
 
 class CustomLogger {
-  final logger = Logger(printer: PrettyPrinter(methodCount: 1));
+  final logger = Logger(printer: PrettyPrinter(methodCount: 1, errorMethodCount: 50));
 
   /// [show] - toast 内容。
   ///
@@ -32,10 +32,11 @@ class CustomLogger {
   }) {
     if (show != null) SmartDialog.showToast(show.toString());
     if (print != null) {
+      final outStackTrace = RegExp(r"#1[\s\S]*(?=(\n#2))").stringMatch(StackTrace.current.toString());
       if (level == LogLevel.normal) {
-        logger.d('show - $show\nprint - $print', error, stackTrace);
+        logger.d('show - $show\nprint - $print\nfromStackStrace:\n$outStackTrace', error, stackTrace);
       } else if (level == LogLevel.error) {
-        logger.e('show - $show\nprint - $print', error, stackTrace);
+        logger.e('show - $show\nprint - $print\nfromStackStrace:\n$outStackTrace', error, stackTrace);
       } else {
         logger.e('未处理 logger.level: $level');
       }

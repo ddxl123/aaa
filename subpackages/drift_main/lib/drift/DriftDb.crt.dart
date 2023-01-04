@@ -21,6 +21,9 @@ class Crt {
     required Value<String?> password,
     required Value<String?> phone,
     required String username,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
   }) {
     return UsersCompanion(
       age: age,
@@ -29,6 +32,9 @@ class Crt {
       password: password,
       phone: phone,
       username: Value(username),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -41,6 +47,9 @@ class Crt {
     required String memoryGroupId,
     required Value<String?> nextPlanShowTime,
     required Value<String?> showFamiliarity,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return FragmentMemoryInfosCompanion(
       clickTime: clickTime,
@@ -51,6 +60,9 @@ class Crt {
       memoryGroupId: Value(memoryGroupId),
       nextPlanShowTime: nextPlanShowTime,
       showFamiliarity: showFamiliarity,
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -59,12 +71,18 @@ class Crt {
     required SyncCurdType syncCurdType,
     required String syncTableName,
     required int tag,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
   }) {
     return SyncsCompanion(
       rowId: Value(rowId),
       syncCurdType: Value(syncCurdType),
       syncTableName: Value(syncTableName),
       tag: Value(tag),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -72,11 +90,17 @@ class Crt {
     required int creatorUserId,
     required Value<String?> documentGroupId,
     required String documentId,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return RDocument2DocumentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       documentGroupId: documentGroupId,
       documentId: Value(documentId),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -84,11 +108,17 @@ class Crt {
     required int creatorUserId,
     required Value<String?> fragmentGroupId,
     required String fragmentId,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return RFragment2FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fragmentGroupId: fragmentGroupId,
       fragmentId: Value(fragmentId),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -96,45 +126,75 @@ class Crt {
     required int creatorUserId,
     required Value<String?> noteGroupId,
     required String noteId,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return RNote2NoteGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       noteGroupId: noteGroupId,
       noteId: Value(noteId),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
   static Test2sCompanion test2sCompanion({
     required String local_content,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
   }) {
     return Test2sCompanion(
       local_content: Value(local_content),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
   static TestsCompanion testsCompanion({
     required String local_content,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
   }) {
     return TestsCompanion(
       local_content: Value(local_content),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
   static ClientSyncInfosCompanion clientSyncInfosCompanion({
     required DateTime recentSyncTime,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
   }) {
     return ClientSyncInfosCompanion(
       recentSyncTime: Value(recentSyncTime),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
   static DocumentsCompanion documentsCompanion({
     required String content,
     required int creatorUserId,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return DocumentsCompanion(
       content: Value(content),
       creatorUserId: Value(creatorUserId),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -142,11 +202,17 @@ class Crt {
     required String content,
     required int ownerUserId,
     required FragmentTemplateType type,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return FragmentTemplatesCompanion(
       content: Value(content),
       ownerUserId: Value(ownerUserId),
       type: Value(type),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -158,6 +224,9 @@ class Crt {
     required bool local_be_Selected,
     required Value<String?> noteId,
     required String title,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return FragmentsCompanion(
       content: Value(content),
@@ -167,6 +236,9 @@ class Crt {
       local_be_Selected: Value(local_be_Selected),
       noteId: noteId,
       title: Value(title),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -179,6 +251,9 @@ class Crt {
     required Value<DateTime?> startTime,
     required String title,
     required int willNewLearnCount,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return MemoryGroupsCompanion(
       creatorUserId: Value(creatorUserId),
@@ -189,6 +264,9 @@ class Crt {
       startTime: startTime,
       title: Value(title),
       willNewLearnCount: Value(willNewLearnCount),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -199,6 +277,9 @@ class Crt {
     required Value<String?> fatherMemoryModelId,
     required String nextTimeAlgorithm,
     required String title,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return MemoryModelsCompanion(
       buttonAlgorithm: Value(buttonAlgorithm),
@@ -207,6 +288,9 @@ class Crt {
       fatherMemoryModelId: fatherMemoryModelId,
       nextTimeAlgorithm: Value(nextTimeAlgorithm),
       title: Value(title),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -215,12 +299,18 @@ class Crt {
     required int creatorUserId,
     required Value<String?> documentId,
     required Value<String?> fatherNoteId,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return NotesCompanion(
       content: Value(content),
       creatorUserId: Value(creatorUserId),
       documentId: documentId,
       fatherNoteId: fatherNoteId,
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -228,11 +318,17 @@ class Crt {
     required int creatorUserId,
     required Value<String?> fatherDocumentGroupsId,
     required String title,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return DocumentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherDocumentGroupsId: fatherDocumentGroupsId,
       title: Value(title),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -241,12 +337,18 @@ class Crt {
     required Value<String?> fatherFragmentGroupsId,
     required bool local_be_Selected,
     required String title,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return FragmentGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
       local_be_Selected: Value(local_be_Selected),
       title: Value(title),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 
@@ -254,11 +356,17 @@ class Crt {
     required int creatorUserId,
     required Value<String?> fatherNoteGroupsId,
     required String title,
+    DateTime? createdAt,
+    String? id,
+    DateTime? updatedAt,
   }) {
     return NoteGroupsCompanion(
       creatorUserId: Value(creatorUserId),
       fatherNoteGroupsId: fatherNoteGroupsId,
       title: Value(title),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : Value(id),
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
 }

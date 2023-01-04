@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:aaa/page/login_register/LoginVerifyPage.dart';
+import 'package:aaa/single_dialog/showDownloadInitDataDialog.dart';
+import 'package:aaa/single_dialog/showExistOtherPlaceLoggedInDialog.dart';
 import 'package:aaa/single_dialog/showExistUserHandleDialog.dart';
 import 'package:aaa/single_dialog/showLoginAgreeDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
@@ -178,7 +180,7 @@ class LoginPageAbController extends AbController {
       );
       await result.handleCode(
         otherException: (int? code, HttperMessage httperException, StackTrace st) async {
-          logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
+          logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
         },
         code100: (String showMessage) async {
           throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
@@ -189,10 +191,19 @@ class LoginPageAbController extends AbController {
         code102: (String showMessage, RegisterOrLoginVo vo) async {
           if (vo.be_new_user) {
             logger.out(show: "注册成功！");
-            // TODO: 直接弹出下载界面。
+            await doLogin(context: context, vo: vo);
           } else {
             // TODO: 先检测是否已经在其他地方登录。
+            if (vo.be_logged_in!) {
+              logger.out(show: "用户已在其他地方登录！");
+              final isContinue = await showExistOtherPlaceLoggedInDialog();
+              if (!isContinue) {
+                Navigator.pop(context);
+                return;
+              }
+            }
             logger.out(show: "登录成功！");
+            await doLogin(context: context, vo: vo);
           }
         },
       );
@@ -200,4 +211,12 @@ class LoginPageAbController extends AbController {
       logger.out(show: "未处理登录类型", print: loginType());
     }
   }
+}
+
+/// 存储用户和token。
+Future<void> doLogin({required BuildContext context, required RegisterOrLoginVo vo}) async {
+  await db.rawInsertDAO.rawInsertUser(newUser: vo.user_entity!.toCompanion(false));
+  Navigator.pop(context);
+  Navigator.pop(context);
+  await showDownloadInitDataDialog();
 }

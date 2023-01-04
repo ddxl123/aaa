@@ -51,6 +51,31 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
+mixin _$RawInsertDAOMixin on DatabaseAccessor<DriftDb> {
+  $UsersTable get users => attachedDatabase.users;
+  $FragmentMemoryInfosTable get fragmentMemoryInfos =>
+      attachedDatabase.fragmentMemoryInfos;
+  $SyncsTable get syncs => attachedDatabase.syncs;
+  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
+      attachedDatabase.rDocument2DocumentGroups;
+  $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
+      attachedDatabase.rFragment2FragmentGroups;
+  $RNote2NoteGroupsTable get rNote2NoteGroups =>
+      attachedDatabase.rNote2NoteGroups;
+  $Test2sTable get test2s => attachedDatabase.test2s;
+  $TestsTable get tests => attachedDatabase.tests;
+  $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
+  $DocumentsTable get documents => attachedDatabase.documents;
+  $FragmentTemplatesTable get fragmentTemplates =>
+      attachedDatabase.fragmentTemplates;
+  $FragmentsTable get fragments => attachedDatabase.fragments;
+  $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
+  $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
+  $NotesTable get notes => attachedDatabase.notes;
+  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
+  $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
+  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
+}
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -6837,6 +6862,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $NoteGroupsTable noteGroups = $NoteGroupsTable(this);
   late final InsertDAO insertDAO = InsertDAO(this as DriftDb);
+  late final RawInsertDAO rawInsertDAO = RawInsertDAO(this as DriftDb);
   late final UpdateDAO updateDAO = UpdateDAO(this as DriftDb);
   late final DeleteDAO deleteDAO = DeleteDAO(this as DriftDb);
   late final GeneralQueryDAO generalQueryDAO = GeneralQueryDAO(this as DriftDb);

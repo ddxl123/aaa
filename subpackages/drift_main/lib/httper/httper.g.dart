@@ -40,8 +40,9 @@ RegisterOrLoginVo _$RegisterOrLoginVoFromJson(Map<String, dynamic> json) =>
       recent_sync_time: json['recent_sync_time'] == null
           ? null
           : DateTime.parse(json['recent_sync_time'] as String),
-      id: json['id'] as int?,
-      token: json['token'] as String?,
+      user_entity: json['user_entity'] == null
+          ? null
+          : User.fromJson(json['user_entity'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RegisterOrLoginVoToJson(RegisterOrLoginVo instance) =>
@@ -51,6 +52,5 @@ Map<String, dynamic> _$RegisterOrLoginVoToJson(RegisterOrLoginVo instance) =>
       'be_new_user': instance.be_new_user,
       'be_logged_in': instance.be_logged_in,
       'recent_sync_time': instance.recent_sync_time?.toIso8601String(),
-      'id': instance.id,
-      'token': instance.token,
+      'user_entity': instance.user_entity,
     };

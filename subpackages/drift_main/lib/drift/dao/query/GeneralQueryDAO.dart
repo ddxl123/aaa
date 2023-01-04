@@ -18,17 +18,9 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<User?> queryUserOrNull() async {
     final manyUsers = await select(users).get();
     if (manyUsers.length > 1) {
-      throw '暂时不能登录多个用户！';
+      throw '本地存在多个用户！';
     }
     return manyUsers.isEmpty ? null : manyUsers.first;
-  }
-
-  Future<User> queryUser() async {
-    final manyUsers = await select(users).get();
-    if (manyUsers.length > 1) {
-      throw '暂时不能登录多个用户！';
-    }
-    return manyUsers.first;
   }
 
   /// 查询 [targetFragmentGroup] 内的碎片数量，不包含子碎片。

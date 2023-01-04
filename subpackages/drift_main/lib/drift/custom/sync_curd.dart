@@ -5,6 +5,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
   /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
   ///
+  /// 初始化插入不能使用该函数。
+  ///
   /// 1. 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// 2. 对 [Users] 的插入是直接调用 into。
@@ -24,7 +26,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [entity] - 要插入的 [UsersCompanion] 的实体，不能使用 [User]
   ///
   /// [syncTag] - 只有 [table] 为 [CloudTableBase] 类型时才会生效，否则将其置为 null（意味着为 local类型）。
-  ///   - [Users] 表无需进行 sync，因此也应该让 [syncTag] 设为 null。
   ///
   /// 必须搭配 [withRefs] 使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
@@ -37,8 +38,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         SyncTag? innerSyncTag = syncTag;
 
         if (table is Users) {
-          if (innerSyncTag != null) throw '插入 User 实体无需进行 sync！';
-          return await into(table).insertReturning(entity);
+          throw '对 User 的插入不能使用 insertReturningWith 函数，请使用 insertUser 函数进行插入！';
         }
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
@@ -112,9 +112,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
     return await transaction(
       () async {
         if (table is Users) {
-          if (syncTag != null) throw '更新 User 实体无需进行 sync！';
-          await update(table).replace(entity);
-          return await (select(table)..where((tbl) => (tbl as dynamic).id.equals((entity as dynamic).id.value))).getSingle();
+          throw '对 User 的更新不能使用 updateReturningWith 函数，请使用';
         }
 
         // 设置时间 - 每个更新语句都要设置（local/cloud）
