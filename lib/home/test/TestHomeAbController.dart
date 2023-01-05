@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:aaa/global/GlobalAbController.dart';
-import 'package:drift/drift.dart';
-import 'package:drift/extensions/json1.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -31,34 +29,34 @@ class TestHomeAbController extends AbController {
   Future<void> insertTests() async {
     for (int i = 0; i < 5; i++) {
       final t = await db.into(db.tests).insertReturning(
-            TestsCompanion.insert(local_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
+            TestsCompanion.insert(client_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
           );
       // await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
     }
     for (int i = 0; i < 5; i++) {
       final t = await db.into(db.test2s).insertReturning(
-            Test2sCompanion.insert(local_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
+            Test2sCompanion.insert(client_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
           );
       // await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
     }
     print('-------------');
     // final selOnly = db.select(db.tests)
-    //   ..groupBy([db.tests.local_content]);
+    //   ..groupBy([db.tests.client_content]);
     // final result = await selOnly.get();
     // logger.d(result.map((e) => e.rawData.data).toList().length);
   }
 
   Future<void> insertsOther() async {
     final globalAbController = Aber.find<GlobalAbController>();
-    await globalAbController.getLoggedInUser();
+    await globalAbController.checkIsLoggedIn();
     if (globalAbController.loggedInUser() == null) {
       final user = await DriftDb.instance.rawInsertDAO.rawInsertUser(
         newUser: Crt.usersCompanion(
           age: null.toValue(),
           email: null.toValue(),
-          local_token: "",
+          client_token: "",
           password: null.toValue(),
           phone: null.toValue(),
           username: "username",
@@ -78,7 +76,7 @@ class TestHomeAbController extends AbController {
             creatorUserId: globalAbController.loggedInUser()!.id,
             title: 'test ${Random().nextInt(999999)}',
             fatherFragmentGroupsId: (fatherFragmentGroup?.id).toValue(),
-            local_be_Selected: false,
+            client_be_Selected: false,
           ),
           syncTag: st,
         );
@@ -91,7 +89,7 @@ class TestHomeAbController extends AbController {
               fragmentTemplateId: null.toValue(),
               title: '标题 ${Random().nextInt(999999)}',
               content: '内容 ${Random().nextInt(999999)}',
-              local_be_Selected: false,
+              client_be_Selected: false,
               noteId: null.toValue(),
             ),
             whichFragmentGroups: [null],
@@ -106,7 +104,7 @@ class TestHomeAbController extends AbController {
               fragmentTemplateId: null.toValue(),
               title: '标题 ${Random().nextInt(999999)}',
               content: '内容 ${Random().nextInt(999999)}',
-              local_be_Selected: false,
+              client_be_Selected: false,
               noteId: null.toValue(),
             ),
             whichFragmentGroups: [fg],

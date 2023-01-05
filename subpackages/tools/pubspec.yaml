@@ -26,6 +26,12 @@ dependencies:
   # 图标库
   font_awesome_flutter: any
 
+  # 设备信息
+  device_info_plus: ^7.0.0
+
+  # 包信息
+  package_info_plus: ^3.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

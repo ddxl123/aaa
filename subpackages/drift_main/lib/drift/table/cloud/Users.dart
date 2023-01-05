@@ -9,9 +9,9 @@ class Users extends CloudTableBase  {
 
   IntColumn get age => integer().nullable()();
 
-  TextColumn get email => text().nullable()();
+  TextColumn get client_token => text()();
 
-  TextColumn get local_token => text()();
+  TextColumn get email => text().nullable()();
 
   TextColumn get password => text().nullable()();
 

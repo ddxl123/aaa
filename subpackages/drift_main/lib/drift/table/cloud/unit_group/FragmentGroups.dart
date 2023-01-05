@@ -7,13 +7,13 @@ class FragmentGroups extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  BoolColumn get client_be_Selected => boolean()();
+
   @ReferenceTo([Users])
   IntColumn get creatorUserId => integer()();
 
   @ReferenceTo([FragmentGroups])
   TextColumn get fatherFragmentGroupsId => text().nullable()();
-
-  BoolColumn get local_be_Selected => boolean()();
 
   TextColumn get title => text()();
 

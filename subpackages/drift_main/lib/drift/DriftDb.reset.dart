@@ -42,8 +42,8 @@ extension UserExt on User {
   /// 使用方式查看 [withRefs]。
   FutureOr<User> reset({
     required Value<int?> age,
+    required Value<String> client_token,
     required Value<String?> email,
-    required Value<String> local_token,
     required Value<String?> password,
     required Value<String?> phone,
     required Value<String> username,
@@ -56,14 +56,14 @@ extension UserExt on User {
       this.age = age.value;
     }
 
+    if (client_token.present && this.client_token != client_token.value) {
+      isCloudModify = true;
+      this.client_token = client_token.value;
+    }
+
     if (email.present && this.email != email.value) {
       isCloudModify = true;
       this.email = email.value;
-    }
-
-    if (local_token.present && this.local_token != local_token.value) {
-      isLocalModify = true;
-      this.local_token = local_token.value;
     }
 
     if (password.present && this.password != password.value) {
@@ -84,6 +84,57 @@ extension UserExt on User {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.users,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [Syncs]
+extension SyncExt on Sync {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<Sync> reset({
+    required Value<String> rowId,
+    required Value<SyncCurdType> syncCurdType,
+    required Value<String> syncTableName,
+    required Value<int> tag,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (rowId.present && this.rowId != rowId.value) {
+      isCloudModify = true;
+      this.rowId = rowId.value;
+    }
+
+    if (syncCurdType.present && this.syncCurdType != syncCurdType.value) {
+      isCloudModify = true;
+      this.syncCurdType = syncCurdType.value;
+    }
+
+    if (syncTableName.present && this.syncTableName != syncTableName.value) {
+      isCloudModify = true;
+      this.syncTableName = syncTableName.value;
+    }
+
+    if (tag.present && this.tag != tag.value) {
+      isCloudModify = true;
+      this.tag = tag.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.syncs,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -162,57 +213,6 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentMemoryInfos,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [Syncs]
-extension SyncExt on Sync {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<Sync> reset({
-    required Value<String> rowId,
-    required Value<SyncCurdType> syncCurdType,
-    required Value<String> syncTableName,
-    required Value<int> tag,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (rowId.present && this.rowId != rowId.value) {
-      isLocalModify = true;
-      this.rowId = rowId.value;
-    }
-
-    if (syncCurdType.present && this.syncCurdType != syncCurdType.value) {
-      isLocalModify = true;
-      this.syncCurdType = syncCurdType.value;
-    }
-
-    if (syncTableName.present && this.syncTableName != syncTableName.value) {
-      isLocalModify = true;
-      this.syncTableName = syncTableName.value;
-    }
-
-    if (tag.present && this.tag != tag.value) {
-      isLocalModify = true;
-      this.tag = tag.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.syncs,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -370,14 +370,14 @@ extension Test2Ext on Test2 {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Test2> reset({
-    required Value<String> local_content,
+    required Value<String> client_content,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (local_content.present && this.local_content != local_content.value) {
-      isLocalModify = true;
-      this.local_content = local_content.value;
+    if (client_content.present && this.client_content != client_content.value) {
+      isCloudModify = true;
+      this.client_content = client_content.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -403,14 +403,14 @@ extension TestExt on Test {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Test> reset({
-    required Value<String> local_content,
+    required Value<String> client_content,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (local_content.present && this.local_content != local_content.value) {
-      isLocalModify = true;
-      this.local_content = local_content.value;
+    if (client_content.present && this.client_content != client_content.value) {
+      isCloudModify = true;
+      this.client_content = client_content.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -442,7 +442,7 @@ extension ClientSyncInfoExt on ClientSyncInfo {
     bool isCloudModify = false;
     bool isLocalModify = false;
     if (recentSyncTime.present && this.recentSyncTime != recentSyncTime.value) {
-      isLocalModify = true;
+      isCloudModify = true;
       this.recentSyncTime = recentSyncTime.value;
     }
 
@@ -553,17 +553,23 @@ extension FragmentExt on Fragment {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
+    required Value<bool> client_be_Selected,
     required Value<String> content,
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentId,
     required Value<String?> fragmentTemplateId,
-    required Value<bool> local_be_Selected,
     required Value<String?> noteId,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (client_be_Selected.present &&
+        this.client_be_Selected != client_be_Selected.value) {
+      isCloudModify = true;
+      this.client_be_Selected = client_be_Selected.value;
+    }
+
     if (content.present && this.content != content.value) {
       isCloudModify = true;
       this.content = content.value;
@@ -584,12 +590,6 @@ extension FragmentExt on Fragment {
         this.fragmentTemplateId != fragmentTemplateId.value) {
       isCloudModify = true;
       this.fragmentTemplateId = fragmentTemplateId.value;
-    }
-
-    if (local_be_Selected.present &&
-        this.local_be_Selected != local_be_Selected.value) {
-      isLocalModify = true;
-      this.local_be_Selected = local_be_Selected.value;
     }
 
     if (noteId.present && this.noteId != noteId.value) {
@@ -867,14 +867,20 @@ extension FragmentGroupExt on FragmentGroup {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentGroup> reset({
+    required Value<bool> client_be_Selected,
     required Value<int> creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
-    required Value<bool> local_be_Selected,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (client_be_Selected.present &&
+        this.client_be_Selected != client_be_Selected.value) {
+      isCloudModify = true;
+      this.client_be_Selected = client_be_Selected.value;
+    }
+
     if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
       isCloudModify = true;
       this.creatorUserId = creatorUserId.value;
@@ -884,12 +890,6 @@ extension FragmentGroupExt on FragmentGroup {
         this.fatherFragmentGroupsId != fatherFragmentGroupsId.value) {
       isCloudModify = true;
       this.fatherFragmentGroupsId = fatherFragmentGroupsId.value;
-    }
-
-    if (local_be_Selected.present &&
-        this.local_be_Selected != local_be_Selected.value) {
-      isLocalModify = true;
-      this.local_be_Selected = local_be_Selected.value;
     }
 
     if (title.present && this.title != title.value) {

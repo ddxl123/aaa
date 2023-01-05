@@ -29,6 +29,11 @@ class Ab<V> {
   /// 存储每个引用该对象的 [AbBuilder] 的 [_AbBuilderState.refresh]。
   final Set<RefreshFunction> _refreshFunctions = {};
 
+  /// 对 [V] 为可空类型时的判断的快捷方法。
+  ///
+  /// [V] 为可空类型时，也可以使用 [call] == null 进行判断。
+  ///
+  /// 若 [V] 为不可空类型，则始终返回 true。
   bool isEmpty([Abw? abw]) => call(abw) == null ? true : false;
 
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。

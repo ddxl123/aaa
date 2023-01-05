@@ -35,7 +35,7 @@ class FragmentGroupListPage extends StatelessWidget {
             c.isUnitSelecting(abw)
                 ? IconButton(
                     icon: () {
-                      if (group(abw).entity(abw)!.local_be_Selected) {
+                      if (group(abw).entity(abw)!.client_be_Selected) {
                         return const SolidCircleIcon();
                       } else {
                         if (group(abw).selectedUnitCount(abw) == 0) {
@@ -48,7 +48,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     onPressed: () async {
                       await c.resetFragmentGroupAndSubIsSelected(
                         fragmentGroupAb: group().entity,
-                        isSelected: !group().entity()!.local_be_Selected,
+                        isSelected: !group().entity()!.client_be_Selected,
                       );
                     },
                   )
@@ -75,13 +75,13 @@ class FragmentGroupListPage extends StatelessWidget {
                 ? IconButton(
                     icon: FaIcon(
                       FontAwesomeIcons.solidCircle,
-                      color: unit(abw).unitEntity(abw).local_be_Selected ? Colors.amber : Colors.grey,
+                      color: unit(abw).unitEntity(abw).client_be_Selected ? Colors.amber : Colors.grey,
                       size: 14,
                     ),
                     onPressed: () async {
                       await c.resetFragmentIsSelected(
                         fragmentAb: unit().unitEntity,
-                        isSelected: !unit().unitEntity().local_be_Selected,
+                        isSelected: !unit().unitEntity().client_be_Selected,
                       );
                     },
                   )

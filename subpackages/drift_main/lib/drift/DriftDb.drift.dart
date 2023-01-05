@@ -3,9 +3,9 @@ part of 'DriftDb.dart';
 
 mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
+  $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
@@ -28,9 +28,9 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
 }
 mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
+  $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
@@ -53,9 +53,9 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
 }
 mixin _$RawInsertDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
+  $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
@@ -78,9 +78,9 @@ mixin _$RawInsertDAOMixin on DatabaseAccessor<DriftDb> {
 }
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
+  $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
@@ -103,9 +103,9 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
 }
 mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
+  $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $SyncsTable get syncs => attachedDatabase.syncs;
   $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
       attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
@@ -129,8 +129,8 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
 
 class User extends DataClass implements Insertable<User> {
   int? age;
+  String client_token;
   String? email;
-  String local_token;
   String? password;
   String? phone;
   String username;
@@ -139,8 +139,8 @@ class User extends DataClass implements Insertable<User> {
   DateTime updatedAt;
   User(
       {this.age,
+      required this.client_token,
       this.email,
-      required this.local_token,
       this.password,
       this.phone,
       required this.username,
@@ -153,10 +153,10 @@ class User extends DataClass implements Insertable<User> {
     if (!nullToAbsent || age != null) {
       map['age'] = Variable<int>(age);
     }
+    map['client_token'] = Variable<String>(client_token);
     if (!nullToAbsent || email != null) {
       map['email'] = Variable<String>(email);
     }
-    map['local_token'] = Variable<String>(local_token);
     if (!nullToAbsent || password != null) {
       map['password'] = Variable<String>(password);
     }
@@ -173,9 +173,9 @@ class User extends DataClass implements Insertable<User> {
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
       age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      client_token: Value(client_token),
       email:
           email == null && nullToAbsent ? const Value.absent() : Value(email),
-      local_token: Value(local_token),
       password: password == null && nullToAbsent
           ? const Value.absent()
           : Value(password),
@@ -193,8 +193,8 @@ class User extends DataClass implements Insertable<User> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
       age: serializer.fromJson<int?>(json['age']),
+      client_token: serializer.fromJson<String>(json['client_token']),
       email: serializer.fromJson<String?>(json['email']),
-      local_token: serializer.fromJson<String>(json['local_token']),
       password: serializer.fromJson<String?>(json['password']),
       phone: serializer.fromJson<String?>(json['phone']),
       username: serializer.fromJson<String>(json['username']),
@@ -208,8 +208,8 @@ class User extends DataClass implements Insertable<User> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'age': serializer.toJson<int?>(age),
+      'client_token': serializer.toJson<String>(client_token),
       'email': serializer.toJson<String?>(email),
-      'local_token': serializer.toJson<String>(local_token),
       'password': serializer.toJson<String?>(password),
       'phone': serializer.toJson<String?>(phone),
       'username': serializer.toJson<String>(username),
@@ -221,8 +221,8 @@ class User extends DataClass implements Insertable<User> {
 
   User copyWith(
           {Value<int?> age = const Value.absent(),
+          String? client_token,
           Value<String?> email = const Value.absent(),
-          String? local_token,
           Value<String?> password = const Value.absent(),
           Value<String?> phone = const Value.absent(),
           String? username,
@@ -231,8 +231,8 @@ class User extends DataClass implements Insertable<User> {
           DateTime? updatedAt}) =>
       User(
         age: age.present ? age.value : this.age,
+        client_token: client_token ?? this.client_token,
         email: email.present ? email.value : this.email,
-        local_token: local_token ?? this.local_token,
         password: password.present ? password.value : this.password,
         phone: phone.present ? phone.value : this.phone,
         username: username ?? this.username,
@@ -244,8 +244,8 @@ class User extends DataClass implements Insertable<User> {
   String toString() {
     return (StringBuffer('User(')
           ..write('age: $age, ')
+          ..write('client_token: $client_token, ')
           ..write('email: $email, ')
-          ..write('local_token: $local_token, ')
           ..write('password: $password, ')
           ..write('phone: $phone, ')
           ..write('username: $username, ')
@@ -257,15 +257,15 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  int get hashCode => Object.hash(age, email, local_token, password, phone,
+  int get hashCode => Object.hash(age, client_token, email, password, phone,
       username, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is User &&
           other.age == this.age &&
+          other.client_token == this.client_token &&
           other.email == this.email &&
-          other.local_token == this.local_token &&
           other.password == this.password &&
           other.phone == this.phone &&
           other.username == this.username &&
@@ -276,8 +276,8 @@ class User extends DataClass implements Insertable<User> {
 
 class UsersCompanion extends UpdateCompanion<User> {
   Value<int?> age;
+  Value<String> client_token;
   Value<String?> email;
-  Value<String> local_token;
   Value<String?> password;
   Value<String?> phone;
   Value<String> username;
@@ -286,8 +286,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   Value<DateTime> updatedAt;
   UsersCompanion({
     this.age = const Value.absent(),
+    this.client_token = const Value.absent(),
     this.email = const Value.absent(),
-    this.local_token = const Value.absent(),
     this.password = const Value.absent(),
     this.phone = const Value.absent(),
     this.username = const Value.absent(),
@@ -297,22 +297,22 @@ class UsersCompanion extends UpdateCompanion<User> {
   });
   UsersCompanion.insert({
     this.age = const Value.absent(),
+    required String client_token,
     this.email = const Value.absent(),
-    required String local_token,
     this.password = const Value.absent(),
     this.phone = const Value.absent(),
     required String username,
     required DateTime createdAt,
     this.id = const Value.absent(),
     required DateTime updatedAt,
-  })  : local_token = Value(local_token),
+  })  : client_token = Value(client_token),
         username = Value(username),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
   static Insertable<User> custom({
     Expression<int>? age,
+    Expression<String>? client_token,
     Expression<String>? email,
-    Expression<String>? local_token,
     Expression<String>? password,
     Expression<String>? phone,
     Expression<String>? username,
@@ -322,8 +322,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   }) {
     return RawValuesInsertable({
       if (age != null) 'age': age,
+      if (client_token != null) 'client_token': client_token,
       if (email != null) 'email': email,
-      if (local_token != null) 'local_token': local_token,
       if (password != null) 'password': password,
       if (phone != null) 'phone': phone,
       if (username != null) 'username': username,
@@ -335,8 +335,8 @@ class UsersCompanion extends UpdateCompanion<User> {
 
   UsersCompanion copyWith(
       {Value<int?>? age,
+      Value<String>? client_token,
       Value<String?>? email,
-      Value<String>? local_token,
       Value<String?>? password,
       Value<String?>? phone,
       Value<String>? username,
@@ -345,8 +345,8 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<DateTime>? updatedAt}) {
     return UsersCompanion(
       age: age ?? this.age,
+      client_token: client_token ?? this.client_token,
       email: email ?? this.email,
-      local_token: local_token ?? this.local_token,
       password: password ?? this.password,
       phone: phone ?? this.phone,
       username: username ?? this.username,
@@ -362,11 +362,11 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (age.present) {
       map['age'] = Variable<int>(age.value);
     }
+    if (client_token.present) {
+      map['client_token'] = Variable<String>(client_token.value);
+    }
     if (email.present) {
       map['email'] = Variable<String>(email.value);
-    }
-    if (local_token.present) {
-      map['local_token'] = Variable<String>(local_token.value);
     }
     if (password.present) {
       map['password'] = Variable<String>(password.value);
@@ -393,8 +393,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   String toString() {
     return (StringBuffer('UsersCompanion(')
           ..write('age: $age, ')
+          ..write('client_token: $client_token, ')
           ..write('email: $email, ')
-          ..write('local_token: $local_token, ')
           ..write('password: $password, ')
           ..write('phone: $phone, ')
           ..write('username: $username, ')
@@ -416,17 +416,17 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<int> age = GeneratedColumn<int>(
       'age', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _client_tokenMeta =
+      const VerificationMeta('client_token');
+  @override
+  late final GeneratedColumn<String> client_token = GeneratedColumn<String>(
+      'client_token', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
       'email', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _local_tokenMeta =
-      const VerificationMeta('local_token');
-  @override
-  late final GeneratedColumn<String> local_token = GeneratedColumn<String>(
-      'local_token', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _passwordMeta =
       const VerificationMeta('password');
   @override
@@ -464,8 +464,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   List<GeneratedColumn> get $columns => [
         age,
+        client_token,
         email,
-        local_token,
         password,
         phone,
         username,
@@ -486,17 +486,17 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       context.handle(
           _ageMeta, age.isAcceptableOrUnknown(data['age']!, _ageMeta));
     }
+    if (data.containsKey('client_token')) {
+      context.handle(
+          _client_tokenMeta,
+          client_token.isAcceptableOrUnknown(
+              data['client_token']!, _client_tokenMeta));
+    } else if (isInserting) {
+      context.missing(_client_tokenMeta);
+    }
     if (data.containsKey('email')) {
       context.handle(
           _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
-    }
-    if (data.containsKey('local_token')) {
-      context.handle(
-          _local_tokenMeta,
-          local_token.isAcceptableOrUnknown(
-              data['local_token']!, _local_tokenMeta));
-    } else if (isInserting) {
-      context.missing(_local_tokenMeta);
     }
     if (data.containsKey('password')) {
       context.handle(_passwordMeta,
@@ -538,10 +538,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     return User(
       age: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}age']),
+      client_token: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}client_token'])!,
       email: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}email']),
-      local_token: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}local_token'])!,
       password: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}password']),
       phone: attachedDatabase.typeMapping
@@ -561,6 +561,373 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   $UsersTable createAlias(String alias) {
     return $UsersTable(attachedDatabase, alias);
   }
+}
+
+class Sync extends DataClass implements Insertable<Sync> {
+  String rowId;
+  SyncCurdType syncCurdType;
+  String syncTableName;
+  int tag;
+  DateTime createdAt;
+  int id;
+  DateTime updatedAt;
+  Sync(
+      {required this.rowId,
+      required this.syncCurdType,
+      required this.syncTableName,
+      required this.tag,
+      required this.createdAt,
+      required this.id,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<String>(rowId);
+    {
+      final converter = $SyncsTable.$convertersyncCurdType;
+      map['sync_curd_type'] = Variable<int>(converter.toSql(syncCurdType));
+    }
+    map['sync_table_name'] = Variable<String>(syncTableName);
+    map['tag'] = Variable<int>(tag);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['id'] = Variable<int>(id);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SyncsCompanion toCompanion(bool nullToAbsent) {
+    return SyncsCompanion(
+      rowId: Value(rowId),
+      syncCurdType: Value(syncCurdType),
+      syncTableName: Value(syncTableName),
+      tag: Value(tag),
+      createdAt: Value(createdAt),
+      id: Value(id),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Sync.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Sync(
+      rowId: serializer.fromJson<String>(json['rowId']),
+      syncCurdType: $SyncsTable.$convertersyncCurdType
+          .fromJson(serializer.fromJson<int>(json['syncCurdType'])),
+      syncTableName: serializer.fromJson<String>(json['syncTableName']),
+      tag: serializer.fromJson<int>(json['tag']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      id: serializer.fromJson<int>(json['id']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<String>(rowId),
+      'syncCurdType': serializer
+          .toJson<int>($SyncsTable.$convertersyncCurdType.toJson(syncCurdType)),
+      'syncTableName': serializer.toJson<String>(syncTableName),
+      'tag': serializer.toJson<int>(tag),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'id': serializer.toJson<int>(id),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Sync copyWith(
+          {String? rowId,
+          SyncCurdType? syncCurdType,
+          String? syncTableName,
+          int? tag,
+          DateTime? createdAt,
+          int? id,
+          DateTime? updatedAt}) =>
+      Sync(
+        rowId: rowId ?? this.rowId,
+        syncCurdType: syncCurdType ?? this.syncCurdType,
+        syncTableName: syncTableName ?? this.syncTableName,
+        tag: tag ?? this.tag,
+        createdAt: createdAt ?? this.createdAt,
+        id: id ?? this.id,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Sync(')
+          ..write('rowId: $rowId, ')
+          ..write('syncCurdType: $syncCurdType, ')
+          ..write('syncTableName: $syncTableName, ')
+          ..write('tag: $tag, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      rowId, syncCurdType, syncTableName, tag, createdAt, id, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Sync &&
+          other.rowId == this.rowId &&
+          other.syncCurdType == this.syncCurdType &&
+          other.syncTableName == this.syncTableName &&
+          other.tag == this.tag &&
+          other.createdAt == this.createdAt &&
+          other.id == this.id &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SyncsCompanion extends UpdateCompanion<Sync> {
+  Value<String> rowId;
+  Value<SyncCurdType> syncCurdType;
+  Value<String> syncTableName;
+  Value<int> tag;
+  Value<DateTime> createdAt;
+  Value<int> id;
+  Value<DateTime> updatedAt;
+  SyncsCompanion({
+    this.rowId = const Value.absent(),
+    this.syncCurdType = const Value.absent(),
+    this.syncTableName = const Value.absent(),
+    this.tag = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  SyncsCompanion.insert({
+    required String rowId,
+    required SyncCurdType syncCurdType,
+    required String syncTableName,
+    required int tag,
+    required DateTime createdAt,
+    this.id = const Value.absent(),
+    required DateTime updatedAt,
+  })  : rowId = Value(rowId),
+        syncCurdType = Value(syncCurdType),
+        syncTableName = Value(syncTableName),
+        tag = Value(tag),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
+  static Insertable<Sync> custom({
+    Expression<String>? rowId,
+    Expression<int>? syncCurdType,
+    Expression<String>? syncTableName,
+    Expression<int>? tag,
+    Expression<DateTime>? createdAt,
+    Expression<int>? id,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (syncCurdType != null) 'sync_curd_type': syncCurdType,
+      if (syncTableName != null) 'sync_table_name': syncTableName,
+      if (tag != null) 'tag': tag,
+      if (createdAt != null) 'created_at': createdAt,
+      if (id != null) 'id': id,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  SyncsCompanion copyWith(
+      {Value<String>? rowId,
+      Value<SyncCurdType>? syncCurdType,
+      Value<String>? syncTableName,
+      Value<int>? tag,
+      Value<DateTime>? createdAt,
+      Value<int>? id,
+      Value<DateTime>? updatedAt}) {
+    return SyncsCompanion(
+      rowId: rowId ?? this.rowId,
+      syncCurdType: syncCurdType ?? this.syncCurdType,
+      syncTableName: syncTableName ?? this.syncTableName,
+      tag: tag ?? this.tag,
+      createdAt: createdAt ?? this.createdAt,
+      id: id ?? this.id,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<String>(rowId.value);
+    }
+    if (syncCurdType.present) {
+      final converter = $SyncsTable.$convertersyncCurdType;
+      map['sync_curd_type'] =
+          Variable<int>(converter.toSql(syncCurdType.value));
+    }
+    if (syncTableName.present) {
+      map['sync_table_name'] = Variable<String>(syncTableName.value);
+    }
+    if (tag.present) {
+      map['tag'] = Variable<int>(tag.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('syncCurdType: $syncCurdType, ')
+          ..write('syncTableName: $syncTableName, ')
+          ..write('tag: $tag, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('id: $id, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
+      'row_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _syncCurdTypeMeta =
+      const VerificationMeta('syncCurdType');
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncCurdType, int> syncCurdType =
+      GeneratedColumn<int>('sync_curd_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<SyncCurdType>($SyncsTable.$convertersyncCurdType);
+  static const VerificationMeta _syncTableNameMeta =
+      const VerificationMeta('syncTableName');
+  @override
+  late final GeneratedColumn<String> syncTableName = GeneratedColumn<String>(
+      'sync_table_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tagMeta = const VerificationMeta('tag');
+  @override
+  late final GeneratedColumn<int> tag = GeneratedColumn<int>(
+      'tag', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [rowId, syncCurdType, syncTableName, tag, createdAt, id, updatedAt];
+  @override
+  String get aliasedName => _alias ?? 'syncs';
+  @override
+  String get actualTableName => 'syncs';
+  @override
+  VerificationContext validateIntegrity(Insertable<Sync> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    } else if (isInserting) {
+      context.missing(_rowIdMeta);
+    }
+    context.handle(_syncCurdTypeMeta, const VerificationResult.success());
+    if (data.containsKey('sync_table_name')) {
+      context.handle(
+          _syncTableNameMeta,
+          syncTableName.isAcceptableOrUnknown(
+              data['sync_table_name']!, _syncTableNameMeta));
+    } else if (isInserting) {
+      context.missing(_syncTableNameMeta);
+    }
+    if (data.containsKey('tag')) {
+      context.handle(
+          _tagMeta, tag.isAcceptableOrUnknown(data['tag']!, _tagMeta));
+    } else if (isInserting) {
+      context.missing(_tagMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Sync map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Sync(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}row_id'])!,
+      syncCurdType: $SyncsTable.$convertersyncCurdType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_curd_type'])!),
+      syncTableName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}sync_table_name'])!,
+      tag: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}tag'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $SyncsTable createAlias(String alias) {
+    return $SyncsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncCurdType, int, int> $convertersyncCurdType =
+      const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
 }
 
 class FragmentMemoryInfo extends DataClass
@@ -1118,373 +1485,6 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   $FragmentMemoryInfosTable createAlias(String alias) {
     return $FragmentMemoryInfosTable(attachedDatabase, alias);
   }
-}
-
-class Sync extends DataClass implements Insertable<Sync> {
-  String rowId;
-  SyncCurdType syncCurdType;
-  String syncTableName;
-  int tag;
-  DateTime createdAt;
-  int id;
-  DateTime updatedAt;
-  Sync(
-      {required this.rowId,
-      required this.syncCurdType,
-      required this.syncTableName,
-      required this.tag,
-      required this.createdAt,
-      required this.id,
-      required this.updatedAt});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['row_id'] = Variable<String>(rowId);
-    {
-      final converter = $SyncsTable.$convertersyncCurdType;
-      map['sync_curd_type'] = Variable<int>(converter.toSql(syncCurdType));
-    }
-    map['sync_table_name'] = Variable<String>(syncTableName);
-    map['tag'] = Variable<int>(tag);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  SyncsCompanion toCompanion(bool nullToAbsent) {
-    return SyncsCompanion(
-      rowId: Value(rowId),
-      syncCurdType: Value(syncCurdType),
-      syncTableName: Value(syncTableName),
-      tag: Value(tag),
-      createdAt: Value(createdAt),
-      id: Value(id),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory Sync.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Sync(
-      rowId: serializer.fromJson<String>(json['rowId']),
-      syncCurdType: $SyncsTable.$convertersyncCurdType
-          .fromJson(serializer.fromJson<int>(json['syncCurdType'])),
-      syncTableName: serializer.fromJson<String>(json['syncTableName']),
-      tag: serializer.fromJson<int>(json['tag']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'rowId': serializer.toJson<String>(rowId),
-      'syncCurdType': serializer
-          .toJson<int>($SyncsTable.$convertersyncCurdType.toJson(syncCurdType)),
-      'syncTableName': serializer.toJson<String>(syncTableName),
-      'tag': serializer.toJson<int>(tag),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  Sync copyWith(
-          {String? rowId,
-          SyncCurdType? syncCurdType,
-          String? syncTableName,
-          int? tag,
-          DateTime? createdAt,
-          int? id,
-          DateTime? updatedAt}) =>
-      Sync(
-        rowId: rowId ?? this.rowId,
-        syncCurdType: syncCurdType ?? this.syncCurdType,
-        syncTableName: syncTableName ?? this.syncTableName,
-        tag: tag ?? this.tag,
-        createdAt: createdAt ?? this.createdAt,
-        id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Sync(')
-          ..write('rowId: $rowId, ')
-          ..write('syncCurdType: $syncCurdType, ')
-          ..write('syncTableName: $syncTableName, ')
-          ..write('tag: $tag, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      rowId, syncCurdType, syncTableName, tag, createdAt, id, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Sync &&
-          other.rowId == this.rowId &&
-          other.syncCurdType == this.syncCurdType &&
-          other.syncTableName == this.syncTableName &&
-          other.tag == this.tag &&
-          other.createdAt == this.createdAt &&
-          other.id == this.id &&
-          other.updatedAt == this.updatedAt);
-}
-
-class SyncsCompanion extends UpdateCompanion<Sync> {
-  Value<String> rowId;
-  Value<SyncCurdType> syncCurdType;
-  Value<String> syncTableName;
-  Value<int> tag;
-  Value<DateTime> createdAt;
-  Value<int> id;
-  Value<DateTime> updatedAt;
-  SyncsCompanion({
-    this.rowId = const Value.absent(),
-    this.syncCurdType = const Value.absent(),
-    this.syncTableName = const Value.absent(),
-    this.tag = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  SyncsCompanion.insert({
-    required String rowId,
-    required SyncCurdType syncCurdType,
-    required String syncTableName,
-    required int tag,
-    required DateTime createdAt,
-    this.id = const Value.absent(),
-    required DateTime updatedAt,
-  })  : rowId = Value(rowId),
-        syncCurdType = Value(syncCurdType),
-        syncTableName = Value(syncTableName),
-        tag = Value(tag),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
-  static Insertable<Sync> custom({
-    Expression<String>? rowId,
-    Expression<int>? syncCurdType,
-    Expression<String>? syncTableName,
-    Expression<int>? tag,
-    Expression<DateTime>? createdAt,
-    Expression<int>? id,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (rowId != null) 'row_id': rowId,
-      if (syncCurdType != null) 'sync_curd_type': syncCurdType,
-      if (syncTableName != null) 'sync_table_name': syncTableName,
-      if (tag != null) 'tag': tag,
-      if (createdAt != null) 'created_at': createdAt,
-      if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  SyncsCompanion copyWith(
-      {Value<String>? rowId,
-      Value<SyncCurdType>? syncCurdType,
-      Value<String>? syncTableName,
-      Value<int>? tag,
-      Value<DateTime>? createdAt,
-      Value<int>? id,
-      Value<DateTime>? updatedAt}) {
-    return SyncsCompanion(
-      rowId: rowId ?? this.rowId,
-      syncCurdType: syncCurdType ?? this.syncCurdType,
-      syncTableName: syncTableName ?? this.syncTableName,
-      tag: tag ?? this.tag,
-      createdAt: createdAt ?? this.createdAt,
-      id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (rowId.present) {
-      map['row_id'] = Variable<String>(rowId.value);
-    }
-    if (syncCurdType.present) {
-      final converter = $SyncsTable.$convertersyncCurdType;
-      map['sync_curd_type'] =
-          Variable<int>(converter.toSql(syncCurdType.value));
-    }
-    if (syncTableName.present) {
-      map['sync_table_name'] = Variable<String>(syncTableName.value);
-    }
-    if (tag.present) {
-      map['tag'] = Variable<int>(tag.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SyncsCompanion(')
-          ..write('rowId: $rowId, ')
-          ..write('syncCurdType: $syncCurdType, ')
-          ..write('syncTableName: $syncTableName, ')
-          ..write('tag: $tag, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $SyncsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
-  @override
-  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
-      'row_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _syncCurdTypeMeta =
-      const VerificationMeta('syncCurdType');
-  @override
-  late final GeneratedColumnWithTypeConverter<SyncCurdType, int> syncCurdType =
-      GeneratedColumn<int>('sync_curd_type', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<SyncCurdType>($SyncsTable.$convertersyncCurdType);
-  static const VerificationMeta _syncTableNameMeta =
-      const VerificationMeta('syncTableName');
-  @override
-  late final GeneratedColumn<String> syncTableName = GeneratedColumn<String>(
-      'sync_table_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _tagMeta = const VerificationMeta('tag');
-  @override
-  late final GeneratedColumn<int> tag = GeneratedColumn<int>(
-      'tag', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [rowId, syncCurdType, syncTableName, tag, createdAt, id, updatedAt];
-  @override
-  String get aliasedName => _alias ?? 'syncs';
-  @override
-  String get actualTableName => 'syncs';
-  @override
-  VerificationContext validateIntegrity(Insertable<Sync> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('row_id')) {
-      context.handle(
-          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
-    } else if (isInserting) {
-      context.missing(_rowIdMeta);
-    }
-    context.handle(_syncCurdTypeMeta, const VerificationResult.success());
-    if (data.containsKey('sync_table_name')) {
-      context.handle(
-          _syncTableNameMeta,
-          syncTableName.isAcceptableOrUnknown(
-              data['sync_table_name']!, _syncTableNameMeta));
-    } else if (isInserting) {
-      context.missing(_syncTableNameMeta);
-    }
-    if (data.containsKey('tag')) {
-      context.handle(
-          _tagMeta, tag.isAcceptableOrUnknown(data['tag']!, _tagMeta));
-    } else if (isInserting) {
-      context.missing(_tagMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Sync map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Sync(
-      rowId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}row_id'])!,
-      syncCurdType: $SyncsTable.$convertersyncCurdType.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}sync_curd_type'])!),
-      syncTableName: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}sync_table_name'])!,
-      tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}tag'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $SyncsTable createAlias(String alias) {
-    return $SyncsTable(attachedDatabase, alias);
-  }
-
-  static JsonTypeConverter2<SyncCurdType, int, int> $convertersyncCurdType =
-      const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
 }
 
 class RDocument2DocumentGroup extends DataClass
@@ -2490,19 +2490,19 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
 }
 
 class Test2 extends DataClass implements Insertable<Test2> {
-  String local_content;
+  String client_content;
   DateTime createdAt;
   int id;
   DateTime updatedAt;
   Test2(
-      {required this.local_content,
+      {required this.client_content,
       required this.createdAt,
       required this.id,
       required this.updatedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['local_content'] = Variable<String>(local_content);
+    map['client_content'] = Variable<String>(client_content);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -2511,7 +2511,7 @@ class Test2 extends DataClass implements Insertable<Test2> {
 
   Test2sCompanion toCompanion(bool nullToAbsent) {
     return Test2sCompanion(
-      local_content: Value(local_content),
+      client_content: Value(client_content),
       createdAt: Value(createdAt),
       id: Value(id),
       updatedAt: Value(updatedAt),
@@ -2522,7 +2522,7 @@ class Test2 extends DataClass implements Insertable<Test2> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Test2(
-      local_content: serializer.fromJson<String>(json['local_content']),
+      client_content: serializer.fromJson<String>(json['client_content']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<int>(json['id']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -2532,7 +2532,7 @@ class Test2 extends DataClass implements Insertable<Test2> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'local_content': serializer.toJson<String>(local_content),
+      'client_content': serializer.toJson<String>(client_content),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<int>(id),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -2540,12 +2540,12 @@ class Test2 extends DataClass implements Insertable<Test2> {
   }
 
   Test2 copyWith(
-          {String? local_content,
+          {String? client_content,
           DateTime? createdAt,
           int? id,
           DateTime? updatedAt}) =>
       Test2(
-        local_content: local_content ?? this.local_content,
+        client_content: client_content ?? this.client_content,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -2553,7 +2553,7 @@ class Test2 extends DataClass implements Insertable<Test2> {
   @override
   String toString() {
     return (StringBuffer('Test2(')
-          ..write('local_content: $local_content, ')
+          ..write('client_content: $client_content, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
           ..write('updatedAt: $updatedAt')
@@ -2562,44 +2562,44 @@ class Test2 extends DataClass implements Insertable<Test2> {
   }
 
   @override
-  int get hashCode => Object.hash(local_content, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(client_content, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Test2 &&
-          other.local_content == this.local_content &&
+          other.client_content == this.client_content &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
           other.updatedAt == this.updatedAt);
 }
 
 class Test2sCompanion extends UpdateCompanion<Test2> {
-  Value<String> local_content;
+  Value<String> client_content;
   Value<DateTime> createdAt;
   Value<int> id;
   Value<DateTime> updatedAt;
   Test2sCompanion({
-    this.local_content = const Value.absent(),
+    this.client_content = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   Test2sCompanion.insert({
-    required String local_content,
+    required String client_content,
     required DateTime createdAt,
     this.id = const Value.absent(),
     required DateTime updatedAt,
-  })  : local_content = Value(local_content),
+  })  : client_content = Value(client_content),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
   static Insertable<Test2> custom({
-    Expression<String>? local_content,
+    Expression<String>? client_content,
     Expression<DateTime>? createdAt,
     Expression<int>? id,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
-      if (local_content != null) 'local_content': local_content,
+      if (client_content != null) 'client_content': client_content,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -2607,12 +2607,12 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
   }
 
   Test2sCompanion copyWith(
-      {Value<String>? local_content,
+      {Value<String>? client_content,
       Value<DateTime>? createdAt,
       Value<int>? id,
       Value<DateTime>? updatedAt}) {
     return Test2sCompanion(
-      local_content: local_content ?? this.local_content,
+      client_content: client_content ?? this.client_content,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -2622,8 +2622,8 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (local_content.present) {
-      map['local_content'] = Variable<String>(local_content.value);
+    if (client_content.present) {
+      map['client_content'] = Variable<String>(client_content.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -2640,7 +2640,7 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
   @override
   String toString() {
     return (StringBuffer('Test2sCompanion(')
-          ..write('local_content: $local_content, ')
+          ..write('client_content: $client_content, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
           ..write('updatedAt: $updatedAt')
@@ -2654,11 +2654,11 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $Test2sTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _local_contentMeta =
-      const VerificationMeta('local_content');
+  static const VerificationMeta _client_contentMeta =
+      const VerificationMeta('client_content');
   @override
-  late final GeneratedColumn<String> local_content = GeneratedColumn<String>(
-      'local_content', aliasedName, false,
+  late final GeneratedColumn<String> client_content = GeneratedColumn<String>(
+      'client_content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
@@ -2679,7 +2679,7 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [local_content, createdAt, id, updatedAt];
+      [client_content, createdAt, id, updatedAt];
   @override
   String get aliasedName => _alias ?? 'test2s';
   @override
@@ -2689,13 +2689,13 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('local_content')) {
+    if (data.containsKey('client_content')) {
       context.handle(
-          _local_contentMeta,
-          local_content.isAcceptableOrUnknown(
-              data['local_content']!, _local_contentMeta));
+          _client_contentMeta,
+          client_content.isAcceptableOrUnknown(
+              data['client_content']!, _client_contentMeta));
     } else if (isInserting) {
-      context.missing(_local_contentMeta);
+      context.missing(_client_contentMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -2721,8 +2721,8 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   Test2 map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Test2(
-      local_content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}local_content'])!,
+      client_content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}client_content'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
@@ -2739,19 +2739,19 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
 }
 
 class Test extends DataClass implements Insertable<Test> {
-  String local_content;
+  String client_content;
   DateTime createdAt;
   int id;
   DateTime updatedAt;
   Test(
-      {required this.local_content,
+      {required this.client_content,
       required this.createdAt,
       required this.id,
       required this.updatedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['local_content'] = Variable<String>(local_content);
+    map['client_content'] = Variable<String>(client_content);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -2760,7 +2760,7 @@ class Test extends DataClass implements Insertable<Test> {
 
   TestsCompanion toCompanion(bool nullToAbsent) {
     return TestsCompanion(
-      local_content: Value(local_content),
+      client_content: Value(client_content),
       createdAt: Value(createdAt),
       id: Value(id),
       updatedAt: Value(updatedAt),
@@ -2771,7 +2771,7 @@ class Test extends DataClass implements Insertable<Test> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Test(
-      local_content: serializer.fromJson<String>(json['local_content']),
+      client_content: serializer.fromJson<String>(json['client_content']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<int>(json['id']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -2781,7 +2781,7 @@ class Test extends DataClass implements Insertable<Test> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'local_content': serializer.toJson<String>(local_content),
+      'client_content': serializer.toJson<String>(client_content),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<int>(id),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -2789,12 +2789,12 @@ class Test extends DataClass implements Insertable<Test> {
   }
 
   Test copyWith(
-          {String? local_content,
+          {String? client_content,
           DateTime? createdAt,
           int? id,
           DateTime? updatedAt}) =>
       Test(
-        local_content: local_content ?? this.local_content,
+        client_content: client_content ?? this.client_content,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -2802,7 +2802,7 @@ class Test extends DataClass implements Insertable<Test> {
   @override
   String toString() {
     return (StringBuffer('Test(')
-          ..write('local_content: $local_content, ')
+          ..write('client_content: $client_content, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
           ..write('updatedAt: $updatedAt')
@@ -2811,44 +2811,44 @@ class Test extends DataClass implements Insertable<Test> {
   }
 
   @override
-  int get hashCode => Object.hash(local_content, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(client_content, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Test &&
-          other.local_content == this.local_content &&
+          other.client_content == this.client_content &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
           other.updatedAt == this.updatedAt);
 }
 
 class TestsCompanion extends UpdateCompanion<Test> {
-  Value<String> local_content;
+  Value<String> client_content;
   Value<DateTime> createdAt;
   Value<int> id;
   Value<DateTime> updatedAt;
   TestsCompanion({
-    this.local_content = const Value.absent(),
+    this.client_content = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   TestsCompanion.insert({
-    required String local_content,
+    required String client_content,
     required DateTime createdAt,
     this.id = const Value.absent(),
     required DateTime updatedAt,
-  })  : local_content = Value(local_content),
+  })  : client_content = Value(client_content),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
   static Insertable<Test> custom({
-    Expression<String>? local_content,
+    Expression<String>? client_content,
     Expression<DateTime>? createdAt,
     Expression<int>? id,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
-      if (local_content != null) 'local_content': local_content,
+      if (client_content != null) 'client_content': client_content,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -2856,12 +2856,12 @@ class TestsCompanion extends UpdateCompanion<Test> {
   }
 
   TestsCompanion copyWith(
-      {Value<String>? local_content,
+      {Value<String>? client_content,
       Value<DateTime>? createdAt,
       Value<int>? id,
       Value<DateTime>? updatedAt}) {
     return TestsCompanion(
-      local_content: local_content ?? this.local_content,
+      client_content: client_content ?? this.client_content,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -2871,8 +2871,8 @@ class TestsCompanion extends UpdateCompanion<Test> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (local_content.present) {
-      map['local_content'] = Variable<String>(local_content.value);
+    if (client_content.present) {
+      map['client_content'] = Variable<String>(client_content.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -2889,7 +2889,7 @@ class TestsCompanion extends UpdateCompanion<Test> {
   @override
   String toString() {
     return (StringBuffer('TestsCompanion(')
-          ..write('local_content: $local_content, ')
+          ..write('client_content: $client_content, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
           ..write('updatedAt: $updatedAt')
@@ -2903,11 +2903,11 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TestsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _local_contentMeta =
-      const VerificationMeta('local_content');
+  static const VerificationMeta _client_contentMeta =
+      const VerificationMeta('client_content');
   @override
-  late final GeneratedColumn<String> local_content = GeneratedColumn<String>(
-      'local_content', aliasedName, false,
+  late final GeneratedColumn<String> client_content = GeneratedColumn<String>(
+      'client_content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
@@ -2928,7 +2928,7 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [local_content, createdAt, id, updatedAt];
+      [client_content, createdAt, id, updatedAt];
   @override
   String get aliasedName => _alias ?? 'tests';
   @override
@@ -2938,13 +2938,13 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('local_content')) {
+    if (data.containsKey('client_content')) {
       context.handle(
-          _local_contentMeta,
-          local_content.isAcceptableOrUnknown(
-              data['local_content']!, _local_contentMeta));
+          _client_contentMeta,
+          client_content.isAcceptableOrUnknown(
+              data['client_content']!, _client_contentMeta));
     } else if (isInserting) {
-      context.missing(_local_contentMeta);
+      context.missing(_client_contentMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -2970,8 +2970,8 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   Test map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Test(
-      local_content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}local_content'])!,
+      client_content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}client_content'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
@@ -3866,22 +3866,22 @@ class $FragmentTemplatesTable extends FragmentTemplates
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
+  bool client_be_Selected;
   String content;
   int creatorUserId;
   String? fatherFragmentId;
   String? fragmentTemplateId;
-  bool local_be_Selected;
   String? noteId;
   String title;
   DateTime createdAt;
   String id;
   DateTime updatedAt;
   Fragment(
-      {required this.content,
+      {required this.client_be_Selected,
+      required this.content,
       required this.creatorUserId,
       this.fatherFragmentId,
       this.fragmentTemplateId,
-      required this.local_be_Selected,
       this.noteId,
       required this.title,
       required this.createdAt,
@@ -3890,6 +3890,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['client_be_selected'] = Variable<bool>(client_be_Selected);
     map['content'] = Variable<String>(content);
     map['creator_user_id'] = Variable<int>(creatorUserId);
     if (!nullToAbsent || fatherFragmentId != null) {
@@ -3898,7 +3899,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     if (!nullToAbsent || fragmentTemplateId != null) {
       map['fragment_template_id'] = Variable<String>(fragmentTemplateId);
     }
-    map['local_be_selected'] = Variable<bool>(local_be_Selected);
     if (!nullToAbsent || noteId != null) {
       map['note_id'] = Variable<String>(noteId);
     }
@@ -3911,6 +3911,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   FragmentsCompanion toCompanion(bool nullToAbsent) {
     return FragmentsCompanion(
+      client_be_Selected: Value(client_be_Selected),
       content: Value(content),
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId == null && nullToAbsent
@@ -3919,7 +3920,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       fragmentTemplateId: fragmentTemplateId == null && nullToAbsent
           ? const Value.absent()
           : Value(fragmentTemplateId),
-      local_be_Selected: Value(local_be_Selected),
       noteId:
           noteId == null && nullToAbsent ? const Value.absent() : Value(noteId),
       title: Value(title),
@@ -3933,12 +3933,12 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Fragment(
+      client_be_Selected: serializer.fromJson<bool>(json['client_be_Selected']),
       content: serializer.fromJson<String>(json['content']),
       creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
       fatherFragmentId: serializer.fromJson<String?>(json['fatherFragmentId']),
       fragmentTemplateId:
           serializer.fromJson<String?>(json['fragmentTemplateId']),
-      local_be_Selected: serializer.fromJson<bool>(json['local_be_Selected']),
       noteId: serializer.fromJson<String?>(json['noteId']),
       title: serializer.fromJson<String>(json['title']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -3950,11 +3950,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'client_be_Selected': serializer.toJson<bool>(client_be_Selected),
       'content': serializer.toJson<String>(content),
       'creatorUserId': serializer.toJson<int>(creatorUserId),
       'fatherFragmentId': serializer.toJson<String?>(fatherFragmentId),
       'fragmentTemplateId': serializer.toJson<String?>(fragmentTemplateId),
-      'local_be_Selected': serializer.toJson<bool>(local_be_Selected),
       'noteId': serializer.toJson<String?>(noteId),
       'title': serializer.toJson<String>(title),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -3964,17 +3964,18 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   }
 
   Fragment copyWith(
-          {String? content,
+          {bool? client_be_Selected,
+          String? content,
           int? creatorUserId,
           Value<String?> fatherFragmentId = const Value.absent(),
           Value<String?> fragmentTemplateId = const Value.absent(),
-          bool? local_be_Selected,
           Value<String?> noteId = const Value.absent(),
           String? title,
           DateTime? createdAt,
           String? id,
           DateTime? updatedAt}) =>
       Fragment(
+        client_be_Selected: client_be_Selected ?? this.client_be_Selected,
         content: content ?? this.content,
         creatorUserId: creatorUserId ?? this.creatorUserId,
         fatherFragmentId: fatherFragmentId.present
@@ -3983,7 +3984,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
         fragmentTemplateId: fragmentTemplateId.present
             ? fragmentTemplateId.value
             : this.fragmentTemplateId,
-        local_be_Selected: local_be_Selected ?? this.local_be_Selected,
         noteId: noteId.present ? noteId.value : this.noteId,
         title: title ?? this.title,
         createdAt: createdAt ?? this.createdAt,
@@ -3993,11 +3993,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   @override
   String toString() {
     return (StringBuffer('Fragment(')
+          ..write('client_be_Selected: $client_be_Selected, ')
           ..write('content: $content, ')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentId: $fatherFragmentId, ')
           ..write('fragmentTemplateId: $fragmentTemplateId, ')
-          ..write('local_be_Selected: $local_be_Selected, ')
           ..write('noteId: $noteId, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
@@ -4009,11 +4009,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   @override
   int get hashCode => Object.hash(
+      client_be_Selected,
       content,
       creatorUserId,
       fatherFragmentId,
       fragmentTemplateId,
-      local_be_Selected,
       noteId,
       title,
       createdAt,
@@ -4023,11 +4023,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Fragment &&
+          other.client_be_Selected == this.client_be_Selected &&
           other.content == this.content &&
           other.creatorUserId == this.creatorUserId &&
           other.fatherFragmentId == this.fatherFragmentId &&
           other.fragmentTemplateId == this.fragmentTemplateId &&
-          other.local_be_Selected == this.local_be_Selected &&
           other.noteId == this.noteId &&
           other.title == this.title &&
           other.createdAt == this.createdAt &&
@@ -4036,22 +4036,22 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 }
 
 class FragmentsCompanion extends UpdateCompanion<Fragment> {
+  Value<bool> client_be_Selected;
   Value<String> content;
   Value<int> creatorUserId;
   Value<String?> fatherFragmentId;
   Value<String?> fragmentTemplateId;
-  Value<bool> local_be_Selected;
   Value<String?> noteId;
   Value<String> title;
   Value<DateTime> createdAt;
   Value<String> id;
   Value<DateTime> updatedAt;
   FragmentsCompanion({
+    this.client_be_Selected = const Value.absent(),
     this.content = const Value.absent(),
     this.creatorUserId = const Value.absent(),
     this.fatherFragmentId = const Value.absent(),
     this.fragmentTemplateId = const Value.absent(),
-    this.local_be_Selected = const Value.absent(),
     this.noteId = const Value.absent(),
     this.title = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -4059,29 +4059,29 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.updatedAt = const Value.absent(),
   });
   FragmentsCompanion.insert({
+    required bool client_be_Selected,
     required String content,
     required int creatorUserId,
     this.fatherFragmentId = const Value.absent(),
     this.fragmentTemplateId = const Value.absent(),
-    required bool local_be_Selected,
     this.noteId = const Value.absent(),
     required String title,
     required DateTime createdAt,
     required String id,
     required DateTime updatedAt,
-  })  : content = Value(content),
+  })  : client_be_Selected = Value(client_be_Selected),
+        content = Value(content),
         creatorUserId = Value(creatorUserId),
-        local_be_Selected = Value(local_be_Selected),
         title = Value(title),
         createdAt = Value(createdAt),
         id = Value(id),
         updatedAt = Value(updatedAt);
   static Insertable<Fragment> custom({
+    Expression<bool>? client_be_Selected,
     Expression<String>? content,
     Expression<int>? creatorUserId,
     Expression<String>? fatherFragmentId,
     Expression<String>? fragmentTemplateId,
-    Expression<bool>? local_be_Selected,
     Expression<String>? noteId,
     Expression<String>? title,
     Expression<DateTime>? createdAt,
@@ -4089,12 +4089,12 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
+      if (client_be_Selected != null) 'client_be_selected': client_be_Selected,
       if (content != null) 'content': content,
       if (creatorUserId != null) 'creator_user_id': creatorUserId,
       if (fatherFragmentId != null) 'father_fragment_id': fatherFragmentId,
       if (fragmentTemplateId != null)
         'fragment_template_id': fragmentTemplateId,
-      if (local_be_Selected != null) 'local_be_selected': local_be_Selected,
       if (noteId != null) 'note_id': noteId,
       if (title != null) 'title': title,
       if (createdAt != null) 'created_at': createdAt,
@@ -4104,22 +4104,22 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   }
 
   FragmentsCompanion copyWith(
-      {Value<String>? content,
+      {Value<bool>? client_be_Selected,
+      Value<String>? content,
       Value<int>? creatorUserId,
       Value<String?>? fatherFragmentId,
       Value<String?>? fragmentTemplateId,
-      Value<bool>? local_be_Selected,
       Value<String?>? noteId,
       Value<String>? title,
       Value<DateTime>? createdAt,
       Value<String>? id,
       Value<DateTime>? updatedAt}) {
     return FragmentsCompanion(
+      client_be_Selected: client_be_Selected ?? this.client_be_Selected,
       content: content ?? this.content,
       creatorUserId: creatorUserId ?? this.creatorUserId,
       fatherFragmentId: fatherFragmentId ?? this.fatherFragmentId,
       fragmentTemplateId: fragmentTemplateId ?? this.fragmentTemplateId,
-      local_be_Selected: local_be_Selected ?? this.local_be_Selected,
       noteId: noteId ?? this.noteId,
       title: title ?? this.title,
       createdAt: createdAt ?? this.createdAt,
@@ -4131,6 +4131,9 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (client_be_Selected.present) {
+      map['client_be_selected'] = Variable<bool>(client_be_Selected.value);
+    }
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
@@ -4142,9 +4145,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     }
     if (fragmentTemplateId.present) {
       map['fragment_template_id'] = Variable<String>(fragmentTemplateId.value);
-    }
-    if (local_be_Selected.present) {
-      map['local_be_selected'] = Variable<bool>(local_be_Selected.value);
     }
     if (noteId.present) {
       map['note_id'] = Variable<String>(noteId.value);
@@ -4167,11 +4167,11 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   String toString() {
     return (StringBuffer('FragmentsCompanion(')
+          ..write('client_be_Selected: $client_be_Selected, ')
           ..write('content: $content, ')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentId: $fatherFragmentId, ')
           ..write('fragmentTemplateId: $fragmentTemplateId, ')
-          ..write('local_be_Selected: $local_be_Selected, ')
           ..write('noteId: $noteId, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
@@ -4188,6 +4188,18 @@ class $FragmentsTable extends Fragments
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _client_be_SelectedMeta =
+      const VerificationMeta('client_be_Selected');
+  @override
+  late final GeneratedColumn<bool> client_be_Selected =
+      GeneratedColumn<bool>('client_be_selected', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("client_be_selected" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _contentMeta =
       const VerificationMeta('content');
   @override
@@ -4212,18 +4224,6 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> fragmentTemplateId =
       GeneratedColumn<String>('fragment_template_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _local_be_SelectedMeta =
-      const VerificationMeta('local_be_Selected');
-  @override
-  late final GeneratedColumn<bool> local_be_Selected =
-      GeneratedColumn<bool>('local_be_selected', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("local_be_selected" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
   static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
   @override
   late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
@@ -4253,11 +4253,11 @@ class $FragmentsTable extends Fragments
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
+        client_be_Selected,
         content,
         creatorUserId,
         fatherFragmentId,
         fragmentTemplateId,
-        local_be_Selected,
         noteId,
         title,
         createdAt,
@@ -4273,6 +4273,14 @@ class $FragmentsTable extends Fragments
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('client_be_selected')) {
+      context.handle(
+          _client_be_SelectedMeta,
+          client_be_Selected.isAcceptableOrUnknown(
+              data['client_be_selected']!, _client_be_SelectedMeta));
+    } else if (isInserting) {
+      context.missing(_client_be_SelectedMeta);
+    }
     if (data.containsKey('content')) {
       context.handle(_contentMeta,
           content.isAcceptableOrUnknown(data['content']!, _contentMeta));
@@ -4298,14 +4306,6 @@ class $FragmentsTable extends Fragments
           _fragmentTemplateIdMeta,
           fragmentTemplateId.isAcceptableOrUnknown(
               data['fragment_template_id']!, _fragmentTemplateIdMeta));
-    }
-    if (data.containsKey('local_be_selected')) {
-      context.handle(
-          _local_be_SelectedMeta,
-          local_be_Selected.isAcceptableOrUnknown(
-              data['local_be_selected']!, _local_be_SelectedMeta));
-    } else if (isInserting) {
-      context.missing(_local_be_SelectedMeta);
     }
     if (data.containsKey('note_id')) {
       context.handle(_noteIdMeta,
@@ -4343,6 +4343,8 @@ class $FragmentsTable extends Fragments
   Fragment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Fragment(
+      client_be_Selected: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
       creatorUserId: attachedDatabase.typeMapping
@@ -4351,8 +4353,6 @@ class $FragmentsTable extends Fragments
           DriftSqlType.string, data['${effectivePrefix}father_fragment_id']),
       fragmentTemplateId: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}fragment_template_id']),
-      local_be_Selected: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool, data['${effectivePrefix}local_be_selected'])!,
       noteId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note_id']),
       title: attachedDatabase.typeMapping
@@ -6116,17 +6116,17 @@ class $DocumentGroupsTable extends DocumentGroups
 }
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
+  bool client_be_Selected;
   int creatorUserId;
   String? fatherFragmentGroupsId;
-  bool local_be_Selected;
   String title;
   DateTime createdAt;
   String id;
   DateTime updatedAt;
   FragmentGroup(
-      {required this.creatorUserId,
+      {required this.client_be_Selected,
+      required this.creatorUserId,
       this.fatherFragmentGroupsId,
-      required this.local_be_Selected,
       required this.title,
       required this.createdAt,
       required this.id,
@@ -6134,12 +6134,12 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['client_be_selected'] = Variable<bool>(client_be_Selected);
     map['creator_user_id'] = Variable<int>(creatorUserId);
     if (!nullToAbsent || fatherFragmentGroupsId != null) {
       map['father_fragment_groups_id'] =
           Variable<String>(fatherFragmentGroupsId);
     }
-    map['local_be_selected'] = Variable<bool>(local_be_Selected);
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['id'] = Variable<String>(id);
@@ -6149,11 +6149,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 
   FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return FragmentGroupsCompanion(
+      client_be_Selected: Value(client_be_Selected),
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId == null && nullToAbsent
           ? const Value.absent()
           : Value(fatherFragmentGroupsId),
-      local_be_Selected: Value(local_be_Selected),
       title: Value(title),
       createdAt: Value(createdAt),
       id: Value(id),
@@ -6165,10 +6165,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentGroup(
+      client_be_Selected: serializer.fromJson<bool>(json['client_be_Selected']),
       creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
       fatherFragmentGroupsId:
           serializer.fromJson<String?>(json['fatherFragmentGroupsId']),
-      local_be_Selected: serializer.fromJson<bool>(json['local_be_Selected']),
       title: serializer.fromJson<String>(json['title']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       id: serializer.fromJson<String>(json['id']),
@@ -6179,10 +6179,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'client_be_Selected': serializer.toJson<bool>(client_be_Selected),
       'creatorUserId': serializer.toJson<int>(creatorUserId),
       'fatherFragmentGroupsId':
           serializer.toJson<String?>(fatherFragmentGroupsId),
-      'local_be_Selected': serializer.toJson<bool>(local_be_Selected),
       'title': serializer.toJson<String>(title),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'id': serializer.toJson<String>(id),
@@ -6191,19 +6191,19 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   }
 
   FragmentGroup copyWith(
-          {int? creatorUserId,
+          {bool? client_be_Selected,
+          int? creatorUserId,
           Value<String?> fatherFragmentGroupsId = const Value.absent(),
-          bool? local_be_Selected,
           String? title,
           DateTime? createdAt,
           String? id,
           DateTime? updatedAt}) =>
       FragmentGroup(
+        client_be_Selected: client_be_Selected ?? this.client_be_Selected,
         creatorUserId: creatorUserId ?? this.creatorUserId,
         fatherFragmentGroupsId: fatherFragmentGroupsId.present
             ? fatherFragmentGroupsId.value
             : this.fatherFragmentGroupsId,
-        local_be_Selected: local_be_Selected ?? this.local_be_Selected,
         title: title ?? this.title,
         createdAt: createdAt ?? this.createdAt,
         id: id ?? this.id,
@@ -6212,9 +6212,9 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   @override
   String toString() {
     return (StringBuffer('FragmentGroup(')
+          ..write('client_be_Selected: $client_be_Selected, ')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentGroupsId: $fatherFragmentGroupsId, ')
-          ..write('local_be_Selected: $local_be_Selected, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -6224,15 +6224,15 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   }
 
   @override
-  int get hashCode => Object.hash(creatorUserId, fatherFragmentGroupsId,
-      local_be_Selected, title, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(client_be_Selected, creatorUserId,
+      fatherFragmentGroupsId, title, createdAt, id, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentGroup &&
+          other.client_be_Selected == this.client_be_Selected &&
           other.creatorUserId == this.creatorUserId &&
           other.fatherFragmentGroupsId == this.fatherFragmentGroupsId &&
-          other.local_be_Selected == this.local_be_Selected &&
           other.title == this.title &&
           other.createdAt == this.createdAt &&
           other.id == this.id &&
@@ -6240,50 +6240,50 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 }
 
 class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
+  Value<bool> client_be_Selected;
   Value<int> creatorUserId;
   Value<String?> fatherFragmentGroupsId;
-  Value<bool> local_be_Selected;
   Value<String> title;
   Value<DateTime> createdAt;
   Value<String> id;
   Value<DateTime> updatedAt;
   FragmentGroupsCompanion({
+    this.client_be_Selected = const Value.absent(),
     this.creatorUserId = const Value.absent(),
     this.fatherFragmentGroupsId = const Value.absent(),
-    this.local_be_Selected = const Value.absent(),
     this.title = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.id = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   FragmentGroupsCompanion.insert({
+    required bool client_be_Selected,
     required int creatorUserId,
     this.fatherFragmentGroupsId = const Value.absent(),
-    required bool local_be_Selected,
     required String title,
     required DateTime createdAt,
     required String id,
     required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        local_be_Selected = Value(local_be_Selected),
+  })  : client_be_Selected = Value(client_be_Selected),
+        creatorUserId = Value(creatorUserId),
         title = Value(title),
         createdAt = Value(createdAt),
         id = Value(id),
         updatedAt = Value(updatedAt);
   static Insertable<FragmentGroup> custom({
+    Expression<bool>? client_be_Selected,
     Expression<int>? creatorUserId,
     Expression<String>? fatherFragmentGroupsId,
-    Expression<bool>? local_be_Selected,
     Expression<String>? title,
     Expression<DateTime>? createdAt,
     Expression<String>? id,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
+      if (client_be_Selected != null) 'client_be_selected': client_be_Selected,
       if (creatorUserId != null) 'creator_user_id': creatorUserId,
       if (fatherFragmentGroupsId != null)
         'father_fragment_groups_id': fatherFragmentGroupsId,
-      if (local_be_Selected != null) 'local_be_selected': local_be_Selected,
       if (title != null) 'title': title,
       if (createdAt != null) 'created_at': createdAt,
       if (id != null) 'id': id,
@@ -6292,18 +6292,18 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   }
 
   FragmentGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
+      {Value<bool>? client_be_Selected,
+      Value<int>? creatorUserId,
       Value<String?>? fatherFragmentGroupsId,
-      Value<bool>? local_be_Selected,
       Value<String>? title,
       Value<DateTime>? createdAt,
       Value<String>? id,
       Value<DateTime>? updatedAt}) {
     return FragmentGroupsCompanion(
+      client_be_Selected: client_be_Selected ?? this.client_be_Selected,
       creatorUserId: creatorUserId ?? this.creatorUserId,
       fatherFragmentGroupsId:
           fatherFragmentGroupsId ?? this.fatherFragmentGroupsId,
-      local_be_Selected: local_be_Selected ?? this.local_be_Selected,
       title: title ?? this.title,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
@@ -6314,15 +6314,15 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (client_be_Selected.present) {
+      map['client_be_selected'] = Variable<bool>(client_be_Selected.value);
+    }
     if (creatorUserId.present) {
       map['creator_user_id'] = Variable<int>(creatorUserId.value);
     }
     if (fatherFragmentGroupsId.present) {
       map['father_fragment_groups_id'] =
           Variable<String>(fatherFragmentGroupsId.value);
-    }
-    if (local_be_Selected.present) {
-      map['local_be_selected'] = Variable<bool>(local_be_Selected.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -6342,9 +6342,9 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   @override
   String toString() {
     return (StringBuffer('FragmentGroupsCompanion(')
+          ..write('client_be_Selected: $client_be_Selected, ')
           ..write('creatorUserId: $creatorUserId, ')
           ..write('fatherFragmentGroupsId: $fatherFragmentGroupsId, ')
-          ..write('local_be_Selected: $local_be_Selected, ')
           ..write('title: $title, ')
           ..write('createdAt: $createdAt, ')
           ..write('id: $id, ')
@@ -6360,6 +6360,18 @@ class $FragmentGroupsTable extends FragmentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _client_be_SelectedMeta =
+      const VerificationMeta('client_be_Selected');
+  @override
+  late final GeneratedColumn<bool> client_be_Selected =
+      GeneratedColumn<bool>('client_be_selected', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("client_be_selected" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _creatorUserIdMeta =
       const VerificationMeta('creatorUserId');
   @override
@@ -6372,18 +6384,6 @@ class $FragmentGroupsTable extends FragmentGroups
   late final GeneratedColumn<String> fatherFragmentGroupsId =
       GeneratedColumn<String>('father_fragment_groups_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _local_be_SelectedMeta =
-      const VerificationMeta('local_be_Selected');
-  @override
-  late final GeneratedColumn<bool> local_be_Selected =
-      GeneratedColumn<bool>('local_be_selected', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("local_be_selected" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -6408,9 +6408,9 @@ class $FragmentGroupsTable extends FragmentGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
+        client_be_Selected,
         creatorUserId,
         fatherFragmentGroupsId,
-        local_be_Selected,
         title,
         createdAt,
         id,
@@ -6425,6 +6425,14 @@ class $FragmentGroupsTable extends FragmentGroups
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('client_be_selected')) {
+      context.handle(
+          _client_be_SelectedMeta,
+          client_be_Selected.isAcceptableOrUnknown(
+              data['client_be_selected']!, _client_be_SelectedMeta));
+    } else if (isInserting) {
+      context.missing(_client_be_SelectedMeta);
+    }
     if (data.containsKey('creator_user_id')) {
       context.handle(
           _creatorUserIdMeta,
@@ -6438,14 +6446,6 @@ class $FragmentGroupsTable extends FragmentGroups
           _fatherFragmentGroupsIdMeta,
           fatherFragmentGroupsId.isAcceptableOrUnknown(
               data['father_fragment_groups_id']!, _fatherFragmentGroupsIdMeta));
-    }
-    if (data.containsKey('local_be_selected')) {
-      context.handle(
-          _local_be_SelectedMeta,
-          local_be_Selected.isAcceptableOrUnknown(
-              data['local_be_selected']!, _local_be_SelectedMeta));
-    } else if (isInserting) {
-      context.missing(_local_be_SelectedMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -6479,13 +6479,13 @@ class $FragmentGroupsTable extends FragmentGroups
   FragmentGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentGroup(
+      client_be_Selected: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       creatorUserId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       fatherFragmentGroupsId: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_fragment_groups_id']),
-      local_be_Selected: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool, data['${effectivePrefix}local_be_selected'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       createdAt: attachedDatabase.typeMapping
@@ -6838,9 +6838,9 @@ class $NoteGroupsTable extends NoteGroups
 abstract class _$DriftDb extends GeneratedDatabase {
   _$DriftDb(QueryExecutor e) : super(e);
   late final $UsersTable users = $UsersTable(this);
+  late final $SyncsTable syncs = $SyncsTable(this);
   late final $FragmentMemoryInfosTable fragmentMemoryInfos =
       $FragmentMemoryInfosTable(this);
-  late final $SyncsTable syncs = $SyncsTable(this);
   late final $RDocument2DocumentGroupsTable rDocument2DocumentGroups =
       $RDocument2DocumentGroupsTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
@@ -6872,8 +6872,8 @@ abstract class _$DriftDb extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         users,
-        fragmentMemoryInfos,
         syncs,
+        fragmentMemoryInfos,
         rDocument2DocumentGroups,
         rFragment2FragmentGroups,
         rNote2NoteGroups,

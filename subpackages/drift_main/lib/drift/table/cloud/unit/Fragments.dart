@@ -7,6 +7,8 @@ class Fragments extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  BoolColumn get client_be_Selected => boolean()();
+
   TextColumn get content => text()();
 
   @ReferenceTo([Users])
@@ -17,8 +19,6 @@ class Fragments extends CloudTableBase  {
 
   @ReferenceTo([FragmentTemplates])
   TextColumn get fragmentTemplateId => text().nullable()();
-
-  BoolColumn get local_be_Selected => boolean()();
 
   @ReferenceTo([Notes])
   TextColumn get noteId => text().nullable()();

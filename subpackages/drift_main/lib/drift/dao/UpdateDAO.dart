@@ -47,7 +47,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             await originalFragmentGroup?.reset(
               creatorUserId: toAbsent(),
               fatherFragmentGroupsId: toAbsent(),
-              local_be_Selected: isSelected.toValue(),
+              client_be_Selected: isSelected.toValue(),
               title: toAbsent(),
               syncTag: st,
             );
@@ -76,7 +76,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               fragmentTemplateId: toAbsent(),
               title: toAbsent(),
               content: toAbsent(),
-              local_be_Selected: isSelected.toValue(),
+              client_be_Selected: isSelected.toValue(),
               noteId: toAbsent(),
               syncTag: st,
             );
@@ -100,7 +100,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             await fragmentGroup?.reset(
               creatorUserId: toAbsent(),
               fatherFragmentGroupsId: toAbsent(),
-              local_be_Selected: isSelected.toValue(),
+              client_be_Selected: isSelected.toValue(),
               title: toAbsent(),
               syncTag: st,
             );
@@ -115,7 +115,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                   fragmentTemplateId: toAbsent(),
                   title: toAbsent(),
                   content: toAbsent(),
-                  local_be_Selected: isSelected.toValue(),
+                  client_be_Selected: isSelected.toValue(),
                   noteId: toAbsent(),
                   syncTag: st,
                 );
@@ -127,7 +127,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                 await element.reset(
                   creatorUserId: toAbsent(),
                   fatherFragmentGroupsId: toAbsent(),
-                  local_be_Selected: isSelected.toValue(),
+                  client_be_Selected: isSelected.toValue(),
                   title: toAbsent(),
                   syncTag: st,
                 );

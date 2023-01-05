@@ -42,9 +42,9 @@ part 'DriftDb.reset.dart';
 
 part 'table/cloud/Users.dart';
 
-part 'table/cloud/info/FragmentMemoryInfos.dart';
+part 'table/cloud/client/Syncs.dart';
 
-part 'table/cloud/local/Syncs.dart';
+part 'table/cloud/info/FragmentMemoryInfos.dart';
 
 part 'table/cloud/r/RDocument2DocumentGroups.dart';
 
@@ -80,9 +80,9 @@ const List<Type> tableClasses = [
 
   Users,
 
-  FragmentMemoryInfos,
-
   Syncs,
+
+  FragmentMemoryInfos,
 
   RDocument2DocumentGroups,
 

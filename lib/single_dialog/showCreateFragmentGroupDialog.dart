@@ -29,7 +29,7 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
             willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
               creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
               fatherFragmentGroupsId: (fragmentGroupAb?.id).toValue(),
-              local_be_Selected: false,
+              client_be_Selected: false,
               title: tec.text,
             ),
             syncTag: null,

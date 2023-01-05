@@ -16,8 +16,8 @@ class Crt {
   Crt._();
   static UsersCompanion usersCompanion({
     required Value<int?> age,
+    required String client_token,
     required Value<String?> email,
-    required String local_token,
     required Value<String?> password,
     required Value<String?> phone,
     required String username,
@@ -27,11 +27,31 @@ class Crt {
   }) {
     return UsersCompanion(
       age: age,
+      client_token: Value(client_token),
       email: email,
-      local_token: Value(local_token),
       password: password,
       phone: phone,
       username: Value(username),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+    );
+  }
+
+  static SyncsCompanion syncsCompanion({
+    required String rowId,
+    required SyncCurdType syncCurdType,
+    required String syncTableName,
+    required int tag,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
+  }) {
+    return SyncsCompanion(
+      rowId: Value(rowId),
+      syncCurdType: Value(syncCurdType),
+      syncTableName: Value(syncTableName),
+      tag: Value(tag),
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : id,
       updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
@@ -62,26 +82,6 @@ class Crt {
       showFamiliarity: showFamiliarity,
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
-    );
-  }
-
-  static SyncsCompanion syncsCompanion({
-    required String rowId,
-    required SyncCurdType syncCurdType,
-    required String syncTableName,
-    required int tag,
-    DateTime? createdAt,
-    Value<int>? id,
-    DateTime? updatedAt,
-  }) {
-    return SyncsCompanion(
-      rowId: Value(rowId),
-      syncCurdType: Value(syncCurdType),
-      syncTableName: Value(syncTableName),
-      tag: Value(tag),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
-      id: id == null ? const Value.absent() : id,
       updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
     );
   }
@@ -141,13 +141,13 @@ class Crt {
   }
 
   static Test2sCompanion test2sCompanion({
-    required String local_content,
+    required String client_content,
     DateTime? createdAt,
     Value<int>? id,
     DateTime? updatedAt,
   }) {
     return Test2sCompanion(
-      local_content: Value(local_content),
+      client_content: Value(client_content),
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : id,
       updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
@@ -155,13 +155,13 @@ class Crt {
   }
 
   static TestsCompanion testsCompanion({
-    required String local_content,
+    required String client_content,
     DateTime? createdAt,
     Value<int>? id,
     DateTime? updatedAt,
   }) {
     return TestsCompanion(
-      local_content: Value(local_content),
+      client_content: Value(client_content),
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : id,
       updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
@@ -217,11 +217,11 @@ class Crt {
   }
 
   static FragmentsCompanion fragmentsCompanion({
+    required bool client_be_Selected,
     required String content,
     required int creatorUserId,
     required Value<String?> fatherFragmentId,
     required Value<String?> fragmentTemplateId,
-    required bool local_be_Selected,
     required Value<String?> noteId,
     required String title,
     DateTime? createdAt,
@@ -229,11 +229,11 @@ class Crt {
     DateTime? updatedAt,
   }) {
     return FragmentsCompanion(
+      client_be_Selected: Value(client_be_Selected),
       content: Value(content),
       creatorUserId: Value(creatorUserId),
       fatherFragmentId: fatherFragmentId,
       fragmentTemplateId: fragmentTemplateId,
-      local_be_Selected: Value(local_be_Selected),
       noteId: noteId,
       title: Value(title),
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
@@ -333,18 +333,18 @@ class Crt {
   }
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
+    required bool client_be_Selected,
     required int creatorUserId,
     required Value<String?> fatherFragmentGroupsId,
-    required bool local_be_Selected,
     required String title,
     DateTime? createdAt,
     String? id,
     DateTime? updatedAt,
   }) {
     return FragmentGroupsCompanion(
+      client_be_Selected: Value(client_be_Selected),
       creatorUserId: Value(creatorUserId),
       fatherFragmentGroupsId: fatherFragmentGroupsId,
-      local_be_Selected: Value(local_be_Selected),
       title: Value(title),
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : Value(id),
@@ -382,22 +382,22 @@ extension UsersCompanionExt on UsersCompanion {
   }
 }
 
-extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
-  Future<FragmentMemoryInfo> insert({required SyncTag? syncTag}) async {
+extension SyncsCompanionExt on SyncsCompanion {
+  Future<Sync> insert({required SyncTag? syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.fragmentMemoryInfos,
+      ins.syncs,
       entity: this,
       syncTag: syncTag,
     );
   }
 }
 
-extension SyncsCompanionExt on SyncsCompanion {
-  Future<Sync> insert({required SyncTag? syncTag}) async {
+extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
+  Future<FragmentMemoryInfo> insert({required SyncTag? syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.syncs,
+      ins.fragmentMemoryInfos,
       entity: this,
       syncTag: syncTag,
     );

@@ -21,19 +21,20 @@ class GlobalAbController extends AbController {
   }
 
   Future<void> _init() async {
-    await getLoggedInUser();
-    if (loggedInUser.isEmpty()) {
-      SmartDialog.showToast('请先登录哦~');
-      showAskLoginDialog();
-    }
+    await checkIsLoggedIn();
   }
 
-  Future<void> getLoggedInUser() async {
+  /// 检查是否已登录，未登录则弹出登录框。
+  Future<void> checkIsLoggedIn() async {
     final result = await DriftDb.instance.generalQueryDAO.queryUserOrNull();
     if (result == null) {
       loggedInUser.refreshEasy((oldValue) => null);
     } else {
       loggedInUser.refreshEasy((oldValue) => result);
+    }
+    if (loggedInUser.isEmpty()) {
+      SmartDialog.showToast('请先登录哦~');
+      await showAskLoginDialog();
     }
   }
 }

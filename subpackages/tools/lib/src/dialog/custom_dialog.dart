@@ -8,8 +8,12 @@ import 'package:tools/src/dialog/TextField1DialogWidget.dart';
 ///  - [DialogWidget]
 ///  - [OkAndCancelDialogWidget]
 ///  - [TextField1DialogWidget]
-Future<void> showCustomDialog({required Widget Function(BuildContext context) builder}) async {
+Future<void> showCustomDialog({
+  required Widget Function(BuildContext context) builder,
+  bool clickMaskDismiss = true,
+}) async {
   await SmartDialog.show(
+    clickMaskDismiss: clickMaskDismiss,
     backDismiss: true,
     useSystem: true,
     builder: (_) => builder(_),

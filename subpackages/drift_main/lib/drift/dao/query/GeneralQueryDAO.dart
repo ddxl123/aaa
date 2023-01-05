@@ -34,7 +34,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
       from: queryFragmentWhereType,
       targets: {
         [QueryFragmentWhereType.all]: () => null,
-        [QueryFragmentWhereType.selected]: () => fragments.local_be_Selected.equals(true),
+        [QueryFragmentWhereType.selected]: () => fragments.client_be_Selected.equals(true),
       },
       orElse: null,
     );
@@ -185,7 +185,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 查询全部已选的碎片。
   Future<List<Fragment>> querySelectedFragments() async {
     final sel = select(fragments);
-    sel.where((tbl) => tbl.local_be_Selected.equals(true));
+    sel.where((tbl) => tbl.client_be_Selected.equals(true));
     final result = await sel.get();
     return result;
   }
@@ -194,7 +194,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<int> querySelectedFragmentCount() async {
     final count = fragments.id.count();
     final sel = selectOnly(fragments)
-      ..where(fragments.local_be_Selected.equals(true))
+      ..where(fragments.client_be_Selected.equals(true))
       ..addColumns([count]);
     final result = await sel.getSingle();
     return result.read(count)!;

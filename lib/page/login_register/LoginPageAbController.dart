@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/login_register/LoginVerifyPage.dart';
 import 'package:aaa/single_dialog/showDownloadInitDataDialog.dart';
 import 'package:aaa/single_dialog/showExistOtherPlaceLoggedInDialog.dart';
@@ -104,6 +105,8 @@ class LoginPageAbController extends AbController {
           email: getEmail(),
           phone: null,
           verify_code: null,
+          // TODO:
+          device: '',
         ),
         parseResponseData: (responseData) => RegisterOrLoginVo.fromJson(responseData),
       );
@@ -175,6 +178,8 @@ class LoginPageAbController extends AbController {
           email: getEmail(),
           phone: null,
           verify_code: verifyCode,
+          // TODO:
+          device: '',
         ),
         parseResponseData: RegisterOrLoginVo.fromJson,
       );
@@ -193,15 +198,15 @@ class LoginPageAbController extends AbController {
             logger.out(show: "注册成功！");
             await doLogin(context: context, vo: vo);
           } else {
-            // TODO: 先检测是否已经在其他地方登录。
-            if (vo.be_logged_in!) {
-              logger.out(show: "用户已在其他地方登录！");
-              final isContinue = await showExistOtherPlaceLoggedInDialog();
-              if (!isContinue) {
-                Navigator.pop(context);
-                return;
-              }
-            }
+            // TODO:
+            // if (vo.be_logged_in!) {
+            //   logger.out(show: "用户已在其他地方登录！");
+            //   final isContinue = await showExistOtherPlaceLoggedInDialog();
+            //   if (!isContinue) {
+            //     Navigator.pop(context);
+            //     return;
+            //   }
+            // }
             logger.out(show: "登录成功！");
             await doLogin(context: context, vo: vo);
           }
@@ -215,7 +220,8 @@ class LoginPageAbController extends AbController {
 
 /// 存储用户和token。
 Future<void> doLogin({required BuildContext context, required RegisterOrLoginVo vo}) async {
-  await db.rawInsertDAO.rawInsertUser(newUser: vo.user_entity!.toCompanion(false));
+  final user = await db.rawInsertDAO.rawInsertUser(newUser: vo.user_entity!.toCompanion(false));
+  Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => user);
   Navigator.pop(context);
   Navigator.pop(context);
   await showDownloadInitDataDialog();

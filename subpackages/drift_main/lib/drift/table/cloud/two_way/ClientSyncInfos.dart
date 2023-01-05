@@ -2,7 +2,7 @@
 part of drift_db;
 
 @ReferenceTo([])
-class ClientSyncInfos extends LocalTableBase  {
+class ClientSyncInfos extends ClientTableBase  {
 
   @override
   Set<Column>? get primaryKey => {id};
