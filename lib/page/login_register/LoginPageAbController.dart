@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/login_register/LoginVerifyPage.dart';
-import 'package:aaa/single_dialog/showDownloadInitDataDialog.dart';
-import 'package:aaa/single_dialog/showExistOtherPlaceLoggedInDialog.dart';
-import 'package:aaa/single_dialog/showExistUserHandleDialog.dart';
-import 'package:aaa/single_dialog/showLoginAgreeDialog.dart';
+import 'package:aaa/single_dialog/data_sync/showDataSyncDialog.dart';
+import 'package:aaa/single_dialog/register_or_login/showExistOtherPlaceLoggedInDialog.dart';
+import 'package:aaa/single_dialog/register_or_login/showExistUserHandleDialog.dart';
+import 'package:aaa/single_dialog/register_or_login/showLoginAgreeDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -19,17 +18,22 @@ enum LoginType {
   email,
 }
 
-class LoginPageAbController extends AbController {
-  final loginType = LoginType.phone.ab;
-  final isAgree = false.ab;
-  final isSending = false.ab;
-  final isVerifying = false.ab;
-  final phoneTextEditingController = TextEditingController();
-  final emailTextEditingController = TextEditingController();
-  final verifyCodeTextEditingController = TextEditingController();
-  final verifyCountdown = 0.ab;
-  final currentNumberPre = 86.ab;
+abstract class BaseLoginWrapper {
+  BaseLoginWrapper({required this.loginType});
 
+  LoginType loginType;
+
+  bool get isPhone => loginType == LoginType.phone;
+
+  bool get isEmail => loginType == LoginType.email;
+
+  String getEditContent();
+}
+
+class PhoneLoginWrapper extends BaseLoginWrapper {
+  PhoneLoginWrapper() : super(loginType: LoginType.phone);
+  final phoneTextEditingController = TextEditingController();
+  final currentNumberPre = 86.ab;
   final phones = [
     86, // 中国大陆
     852, // 中国香港
@@ -37,26 +41,44 @@ class LoginPageAbController extends AbController {
     886, // 中国台湾
   ];
 
-  String getPhone() => '+${currentNumberPre()}${phoneTextEditingController.text}';
+  @override
+  String getEditContent() => '+${currentNumberPre()}${phoneTextEditingController.text}';
+}
 
-  String getEmail() => emailTextEditingController.text;
+class EmailLoginWrapper extends BaseLoginWrapper {
+  EmailLoginWrapper() : super(loginType: LoginType.email);
+  final emailTextEditingController = TextEditingController();
+
+  @override
+  String getEditContent() => emailTextEditingController.text;
+}
+
+class LoginPageAbController extends AbController {
+  final loginWrapper = Ab<BaseLoginWrapper>(PhoneLoginWrapper());
+  final isAgree = false.ab;
+  final isSending = false.ab;
+  final isVerifying = false.ab;
+  final verifyCodeTextEditingController = TextEditingController();
+  final verifyCountdown = 0.ab;
 
   /// 发送验证码。
   Future<void> send() async {
     if (isSending()) {
       return;
     }
-
-    if (loginType() == LoginType.phone) {
-      if (!getPhone().isPhone()) {
+    final lw = loginWrapper();
+    if (lw is PhoneLoginWrapper) {
+      if (!lw.getEditContent().isPhone()) {
         SmartDialog.showToast('手机号格式不正确！');
         return;
       }
-    } else {
-      if (!getEmail().isEmail()) {
+    } else if (lw is EmailLoginWrapper) {
+      if (!lw.getEditContent().isEmail()) {
         SmartDialog.showToast('邮箱格式不正确！');
         return;
       }
+    } else {
+      throw "未处理类型: ${lw.loginType}";
     }
 
     if (verifyCountdown() != 0) {
@@ -85,8 +107,6 @@ class LoginPageAbController extends AbController {
     if (isSending()) {
       return false;
     }
-    final isContinue = await checkCurrentLogin();
-    if (!isContinue) return false;
     isSending.refreshEasy((oldValue) => true);
     final isSuccess = await doSend();
     isSending.refreshEasy((oldValue) => false);
@@ -97,16 +117,16 @@ class LoginPageAbController extends AbController {
   ///
   /// 返回是否发送成功。
   Future<bool> doSend() async {
-    if (loginType() == LoginType.email) {
+    final lw = loginWrapper();
+    if (lw is EmailLoginWrapper) {
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
         data: RegisterOrLoginDto(
           register_or_login_type: RegisterOrLoginType.email_send,
-          email: getEmail(),
+          email: lw.getEditContent(),
           phone: null,
           verify_code: null,
-          // TODO:
-          device: '',
+          device_info: null,
         ),
         parseResponseData: (responseData) => RegisterOrLoginVo.fromJson(responseData),
       );
@@ -137,20 +157,33 @@ class LoginPageAbController extends AbController {
         },
       );
     } else {
-      logger.out(show: "存在未处理类型！", print: loginType());
-      return false;
+      throw "未处理类型: ${lw.loginType}";
     }
   }
 
-  /// 检查本地是否已存在登录用户，并弹出操作模块。
+  /// 检查本地是否已存在用一个，并弹出操作模块。
   ///
-  /// 返回当前是否继续执行发送验证码任务。
-  Future<bool> checkCurrentLogin() async {
-    final result = await db.generalQueryDAO.queryUserOrNull();
-    if (result == null || getEmail() == result.email || getPhone() == result.phone) {
-      return true;
+  /// 返回是否存在，
+  Future<bool> checkCurrentLoggedIn() async {
+    final userOrNull = await db.generalQueryDAO.queryUserOrNull();
+    final clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+    if (clientSyncInfoOrNull != null) {
+      throw "不应该执行登录,但是执行了登录!";
     }
-    return await showExistUserHandleDialog();
+    if (userOrNull == null) {
+      return false;
+    }
+    final lw = loginWrapper();
+    if (lw is EmailLoginWrapper) {
+      if (lw.getEditContent() == userOrNull.email) return true;
+    } else if (lw is PhoneLoginWrapper) {
+      if (lw.getEditContent() == userOrNull.phone) return true;
+    } else {
+      throw "存在 user,但 loginType 未知";
+    }
+    return false;
+    // TODO:
+    // return await showExistUserHandleDialog();
   }
 
   /// 对验证码进行验证。
@@ -165,21 +198,24 @@ class LoginPageAbController extends AbController {
 
   /// 执行验证。
   Future<void> doVerify() async {
-    if (loginType() == LoginType.email) {
+    final lw = loginWrapper();
+    if (lw is EmailLoginWrapper) {
       int? verifyCode = int.tryParse(verifyCodeTextEditingController.text);
       if (verifyCode == null) {
         logger.out(show: '验证码输入格式不正确！');
         return;
       }
+
+      final deviceInfo = await DeviceInfoSingle.info();
+
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
         data: RegisterOrLoginDto(
           register_or_login_type: RegisterOrLoginType.email_verify,
-          email: getEmail(),
+          email: lw.getEditContent(),
           phone: null,
           verify_code: verifyCode,
-          // TODO:
-          device: '',
+          device_info: deviceInfo,
         ),
         parseResponseData: RegisterOrLoginVo.fromJson,
       );
@@ -195,34 +231,49 @@ class LoginPageAbController extends AbController {
         },
         code102: (String showMessage, RegisterOrLoginVo vo) async {
           if (vo.be_new_user) {
-            logger.out(show: "注册成功！");
-            await doLogin(context: context, vo: vo);
+            await doClientLogin(context: context, vo: vo);
           } else {
-            // TODO:
-            // if (vo.be_logged_in!) {
-            //   logger.out(show: "用户已在其他地方登录！");
-            //   final isContinue = await showExistOtherPlaceLoggedInDialog();
-            //   if (!isContinue) {
-            //     Navigator.pop(context);
-            //     return;
-            //   }
-            // }
-            logger.out(show: "登录成功！");
-            await doLogin(context: context, vo: vo);
+            if (vo.device_and_token_bo_list!.isNotEmpty) {
+              logger.out(show: "用户已在其他地方登录！");
+              final isContinue = await showExistOtherPlaceLoggedInDialog(vo: vo);
+              if (!isContinue) {
+                Navigator.pop(context);
+                return;
+              }
+            }
+            await doClientLogin(context: context, vo: vo);
           }
         },
       );
     } else {
-      logger.out(show: "未处理登录类型", print: loginType());
+      throw "未处理类型: ${lw.loginType}";
     }
   }
-}
 
-/// 存储用户和token。
-Future<void> doLogin({required BuildContext context, required RegisterOrLoginVo vo}) async {
-  final user = await db.rawInsertDAO.rawInsertUser(newUser: vo.user_entity!.toCompanion(false));
-  Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => user);
-  Navigator.pop(context);
-  Navigator.pop(context);
-  await showDownloadInitDataDialog();
+  /// 存储用户和token。
+  ///
+  /// 返回是否本地登录成功.
+  Future<void> doClientLogin({required BuildContext context, required RegisterOrLoginVo vo}) async {
+    final isLoginSuccess = await db.rawDAO.clientLogin(
+      usersCompanion: vo.user_entity!.toCompanion(false),
+      deviceInfo: vo.device_and_token_bo.deviceInfo,
+      token: vo.device_and_token_bo.token,
+      loginTypeName: loginWrapper().loginType.name,
+      loginEditContent: loginWrapper().getEditContent(),
+      isClearDbWhenUserDiff: () async {
+        return await showExistClientLoggedInHandleDialog();
+      },
+    );
+    if (isLoginSuccess) {
+      final user = await db.generalQueryDAO.queryUserOrNull();
+      Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => user!);
+      SmartDialog.showToast(vo.be_new_user ? "注册成功!" : "登录成功!");
+      Navigator.pop(context);
+      Navigator.pop(context);
+      await showDataSyncDialog();
+    } else {
+      SmartDialog.showToast("已取消!");
+      Navigator.pop(context);
+    }
+  }
 }

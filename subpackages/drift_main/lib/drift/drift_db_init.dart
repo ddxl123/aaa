@@ -24,7 +24,7 @@ LazyDatabase _openConnection() {
   tables: [...tableClasses],
   daos: [
     InsertDAO,
-    RawInsertDAO,
+    RawDAO,
     UpdateDAO,
     DeleteDAO,
     GeneralQueryDAO,

@@ -8,13 +8,13 @@ part of httper;
 
 DeviceAndTokenBo _$DeviceAndTokenBoFromJson(Map<String, dynamic> json) =>
     DeviceAndTokenBo(
-      device: json['device'] as String,
+      deviceInfo: json['deviceInfo'] as String,
       token: json['token'] as String,
     );
 
 Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
     <String, dynamic>{
-      'device': instance.device,
+      'deviceInfo': instance.deviceInfo,
       'token': instance.token,
     };
 
@@ -25,7 +25,7 @@ RegisterOrLoginDto _$RegisterOrLoginDtoFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       verify_code: json['verify_code'] as int?,
-      device: json['device'] as String,
+      device_info: json['device_info'] as String?,
     );
 
 Map<String, dynamic> _$RegisterOrLoginDtoToJson(RegisterOrLoginDto instance) =>
@@ -35,7 +35,7 @@ Map<String, dynamic> _$RegisterOrLoginDtoToJson(RegisterOrLoginDto instance) =>
       'email': instance.email,
       'phone': instance.phone,
       'verify_code': instance.verify_code,
-      'device': instance.device,
+      'device_info': instance.device_info,
     };
 
 const _$RegisterOrLoginTypeEnumMap = {
@@ -50,10 +50,11 @@ RegisterOrLoginVo _$RegisterOrLoginVoFromJson(Map<String, dynamic> json) =>
       register_or_login_type: $enumDecode(
           _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
       be_new_user: json['be_new_user'] as bool,
-      be_exist_logged_in: json['be_exist_logged_in'] as bool?,
       user_entity: json['user_entity'] == null
           ? null
           : User.fromJson(json['user_entity'] as Map<String, dynamic>),
+      device_and_token_bo: DeviceAndTokenBo.fromJson(
+          json['device_and_token_bo'] as Map<String, dynamic>),
       device_and_token_bo_list:
           (json['device_and_token_bo_list'] as List<dynamic>?)
               ?.map((e) => DeviceAndTokenBo.fromJson(e as Map<String, dynamic>))
@@ -65,7 +66,7 @@ Map<String, dynamic> _$RegisterOrLoginVoToJson(RegisterOrLoginVo instance) =>
       'register_or_login_type':
           _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
       'be_new_user': instance.be_new_user,
-      'be_exist_logged_in': instance.be_exist_logged_in,
       'user_entity': instance.user_entity,
+      'device_and_token_bo': instance.device_and_token_bo,
       'device_and_token_bo_list': instance.device_and_token_bo_list,
     };

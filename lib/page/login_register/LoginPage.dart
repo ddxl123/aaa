@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
               AbwBuilder(
                 builder: (abw) {
                   return Text(
-                    c.loginType(abw) == LoginType.phone ? '手机号登录' : '邮箱登录',
+                    c.loginWrapper(abw) == LoginType.phone ? '手机号登录' : '邮箱登录',
                     style: Theme.of(context).textTheme.titleLarge,
                   );
                 },
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
               AbwBuilder(
                 builder: (abw) {
                   return Text(
-                    c.loginType(abw) == LoginType.phone ? '未注册的手机号会在验证后自动注册' : '未注册的邮箱会在验证后自动注册',
+                    c.loginWrapper(abw) == LoginType.phone ? '未注册的手机号会在验证后自动注册' : '未注册的邮箱会在验证后自动注册',
                     style: const TextStyle(color: Colors.grey),
                   );
                 },
@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 30),
               AbwBuilder(
                 builder: (abw) {
-                  if (c.loginType(abw) == LoginType.phone) {
+                  if (c.loginWrapper(abw) == LoginType.phone) {
                     return TextField(
                       autofocus: true,
                       controller: c.phoneTextEditingController,
@@ -153,7 +153,7 @@ class LoginPage extends StatelessWidget {
               AbwBuilder(
                 builder: (abw) {
                   void onPressed() {
-                    c.loginType.refreshEasy(
+                    c.loginWrapper.refreshEasy(
                       (oldValue) {
                         return oldValue == LoginType.phone ? LoginType.email : LoginType.phone;
                       },
@@ -161,7 +161,7 @@ class LoginPage extends StatelessWidget {
                     FocusScope.of(context).unfocus();
                   }
 
-                  if (c.loginType(abw) == LoginType.phone) {
+                  if (c.loginWrapper(abw) == LoginType.phone) {
                     return Center(
                       child: MaterialButton(
                         onPressed: onPressed,

@@ -1,6 +1,7 @@
 import 'package:tools/tools.dart';
 
-Future<void> showDownloadInitDataDialog() async {
+/// 处理初始化数据,同步数据等.
+Future<void> showDataSyncDialog() async {
   await showCustomDialog(
     builder: (_) => DialogWidget(
       mainVerticalWidgets: [],

@@ -42,7 +42,6 @@ extension UserExt on User {
   /// 使用方式查看 [withRefs]。
   FutureOr<User> reset({
     required Value<int?> age,
-    required Value<String> client_token,
     required Value<String?> email,
     required Value<String?> password,
     required Value<String?> phone,
@@ -54,11 +53,6 @@ extension UserExt on User {
     if (age.present && this.age != age.value) {
       isCloudModify = true;
       this.age = age.value;
-    }
-
-    if (client_token.present && this.client_token != client_token.value) {
-      isCloudModify = true;
-      this.client_token = client_token.value;
     }
 
     if (email.present && this.email != email.value) {
@@ -84,6 +78,51 @@ extension UserExt on User {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.users,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [ClientSyncInfos]
+extension ClientSyncInfoExt on ClientSyncInfo {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<ClientSyncInfo> reset({
+    required Value<String> deviceInfo,
+    required Value<DateTime?> recentSyncTime,
+    required Value<String?> token,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (deviceInfo.present && this.deviceInfo != deviceInfo.value) {
+      isCloudModify = true;
+      this.deviceInfo = deviceInfo.value;
+    }
+
+    if (recentSyncTime.present && this.recentSyncTime != recentSyncTime.value) {
+      isCloudModify = true;
+      this.recentSyncTime = recentSyncTime.value;
+    }
+
+    if (token.present && this.token != token.value) {
+      isCloudModify = true;
+      this.token = token.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.clientSyncInfos,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -416,39 +455,6 @@ extension TestExt on Test {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.tests,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [ClientSyncInfos]
-extension ClientSyncInfoExt on ClientSyncInfo {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<ClientSyncInfo> reset({
-    required Value<DateTime> recentSyncTime,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (recentSyncTime.present && this.recentSyncTime != recentSyncTime.value) {
-      isCloudModify = true;
-      this.recentSyncTime = recentSyncTime.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.clientSyncInfos,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;

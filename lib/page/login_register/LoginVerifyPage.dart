@@ -27,7 +27,7 @@ class LoginVerifyPage extends StatelessWidget {
             Text('输入验证码', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 10),
             Text(
-              '${c.loginType() == LoginType.phone ? '短信' : '邮箱'}已发送至 ${c.loginType() == LoginType.phone ? c.getPhone() : c.getEmail()}',
+              '${c.loginWrapper() == LoginType.phone ? '短信' : '邮箱'}已发送至 ${c.loginWrapper() == LoginType.phone ? c.getPhone() : c.getEmail()}',
               style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 20),

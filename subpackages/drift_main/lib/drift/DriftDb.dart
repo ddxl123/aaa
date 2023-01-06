@@ -17,7 +17,7 @@ part 'dao/query/GeneralQueryDAO.dart';
 
 part 'dao/insert/InsertDAO.dart';
 
-part 'dao/insert/RawInsertDAO.dart';
+part 'dao/RawDAO.dart';
 
 part 'dao/UpdateDAO.dart';
 
@@ -42,6 +42,8 @@ part 'DriftDb.reset.dart';
 
 part 'table/cloud/Users.dart';
 
+part 'table/cloud/client/ClientSyncInfos.dart';
+
 part 'table/cloud/client/Syncs.dart';
 
 part 'table/cloud/info/FragmentMemoryInfos.dart';
@@ -55,8 +57,6 @@ part 'table/cloud/r/RNote2NoteGroups.dart';
 part 'table/cloud/test/Test2s.dart';
 
 part 'table/cloud/test/Tests.dart';
-
-part 'table/cloud/two_way/ClientSyncInfos.dart';
 
 part 'table/cloud/unit/Documents.dart';
 
@@ -80,6 +80,8 @@ const List<Type> tableClasses = [
 
   Users,
 
+  ClientSyncInfos,
+
   Syncs,
 
   FragmentMemoryInfos,
@@ -93,8 +95,6 @@ const List<Type> tableClasses = [
   Test2s,
 
   Tests,
-
-  ClientSyncInfos,
 
   Documents,
 

@@ -16,7 +16,6 @@ class Crt {
   Crt._();
   static UsersCompanion usersCompanion({
     required Value<int?> age,
-    required String client_token,
     required Value<String?> email,
     required Value<String?> password,
     required Value<String?> phone,
@@ -27,11 +26,28 @@ class Crt {
   }) {
     return UsersCompanion(
       age: age,
-      client_token: Value(client_token),
       email: email,
       password: password,
       phone: phone,
       username: Value(username),
+      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      id: id == null ? const Value.absent() : id,
+      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+    );
+  }
+
+  static ClientSyncInfosCompanion clientSyncInfosCompanion({
+    required String deviceInfo,
+    required Value<DateTime?> recentSyncTime,
+    required Value<String?> token,
+    DateTime? createdAt,
+    Value<int>? id,
+    DateTime? updatedAt,
+  }) {
+    return ClientSyncInfosCompanion(
+      deviceInfo: Value(deviceInfo),
+      recentSyncTime: recentSyncTime,
+      token: token,
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : id,
       updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
@@ -162,20 +178,6 @@ class Crt {
   }) {
     return TestsCompanion(
       client_content: Value(client_content),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
-      id: id == null ? const Value.absent() : id,
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
-    );
-  }
-
-  static ClientSyncInfosCompanion clientSyncInfosCompanion({
-    required DateTime recentSyncTime,
-    DateTime? createdAt,
-    Value<int>? id,
-    DateTime? updatedAt,
-  }) {
-    return ClientSyncInfosCompanion(
-      recentSyncTime: Value(recentSyncTime),
       createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
       id: id == null ? const Value.absent() : id,
       updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
@@ -382,6 +384,17 @@ extension UsersCompanionExt on UsersCompanion {
   }
 }
 
+extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
+  Future<ClientSyncInfo> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.clientSyncInfos,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
 extension SyncsCompanionExt on SyncsCompanion {
   Future<Sync> insert({required SyncTag? syncTag}) async {
     final ins = DriftDb.instance;
@@ -455,17 +468,6 @@ extension TestsCompanionExt on TestsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.tests,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
-  Future<ClientSyncInfo> insert({required SyncTag? syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.clientSyncInfos,
       entity: this,
       syncTag: syncTag,
     );

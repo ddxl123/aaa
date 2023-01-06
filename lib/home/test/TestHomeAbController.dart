@@ -53,10 +53,9 @@ class TestHomeAbController extends AbController {
     await globalAbController.checkIsLoggedIn();
     if (globalAbController.loggedInUser() == null) {
       final user = await DriftDb.instance.rawInsertDAO.rawInsertUser(
-        newUser: Crt.usersCompanion(
+        newUsersCompanion: Crt.usersCompanion(
           age: null.toValue(),
           email: null.toValue(),
-          client_token: "",
           password: null.toValue(),
           phone: null.toValue(),
           username: "username",

@@ -11,10 +11,11 @@ import 'package:tools/src/dialog/TextField1DialogWidget.dart';
 Future<void> showCustomDialog({
   required Widget Function(BuildContext context) builder,
   bool clickMaskDismiss = true,
+  bool backDismiss = true,
 }) async {
   await SmartDialog.show(
     clickMaskDismiss: clickMaskDismiss,
-    backDismiss: true,
+    backDismiss: backDismiss,
     useSystem: true,
     builder: (_) => builder(_),
   );

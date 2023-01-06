@@ -7,7 +7,11 @@ class ClientSyncInfos extends ClientTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  DateTimeColumn get recentSyncTime => dateTime()();
+  TextColumn get deviceInfo => text()();
+
+  DateTimeColumn get recentSyncTime => dateTime().nullable()();
+
+  TextColumn get token => text().nullable()();
 
   DateTimeColumn get createdAt => dateTime()();
 

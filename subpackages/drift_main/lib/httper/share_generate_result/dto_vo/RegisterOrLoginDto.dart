@@ -16,8 +16,8 @@ class RegisterOrLoginDto extends BaseObject{
     /// 
     int? verify_code;
 
-    /// 必须带上设备，以便鉴别多设备登录！
-    String device;
+    /// 验证验证码成功后，必须带上设备数据进行登录/注册，以便鉴别多设备登录！
+    String? device_info;
 
 
 RegisterOrLoginDto({
@@ -30,7 +30,7 @@ RegisterOrLoginDto({
 
     required this.verify_code,
 
-    required this.device,
+    required this.device_info,
 
 });
   factory RegisterOrLoginDto.fromJson(Map<String, dynamic> json) => _$RegisterOrLoginDtoFromJson(json);

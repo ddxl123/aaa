@@ -10,13 +10,13 @@ class RegisterOrLoginVo extends BaseObject{
     /// 当前用户是否为新用户
     bool be_new_user;
 
-    /// 当前用户是否以存在登录(可能在其他多个地方登录)
-    bool? be_exist_logged_in;
-
     /// 
     User? user_entity;
 
-    /// 注册状态时，当前会话产生的 token 放到 User 实体中, 登录状态时，全部的 token 放到这里（包含当前会话产生的 token）
+    /// 当前登录/注册状态时的数据
+    DeviceAndTokenBo device_and_token_bo;
+
+    /// 注册状态时，当前会话产生的 token 放到 ClientSyncInfos.token 中, 登录状态时，全部的 token 放到这里（不包含当前会话产生的 token）
     List<DeviceAndTokenBo>? device_and_token_bo_list;
 
 
@@ -26,9 +26,9 @@ RegisterOrLoginVo({
 
     required this.be_new_user,
 
-    required this.be_exist_logged_in,
-
     required this.user_entity,
+
+    required this.device_and_token_bo,
 
     required this.device_and_token_bo_list,
 

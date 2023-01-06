@@ -101,7 +101,7 @@ class TestHome extends StatelessWidget {
                                     TextButton(
                                       child: const Text('获取设备和应用信息'),
                                       onPressed: () async {
-                                        extra = "设备信息: ${const JsonEncoder.withIndent(" ").convert((await DeviceInfoSingle.android()).toMap())}\n"
+                                        extra = "设备信息: ${const JsonEncoder.withIndent(" ").convert(await DeviceInfoSingle.allData())}\n"
                                             "应用信息: \n${await PackageInfoSingle.info()}";
                                         resetValue(extra, true);
                                       },

@@ -1,5 +1,5 @@
 import 'package:aaa/push_page/push_page.dart';
-import 'package:aaa/single_dialog/showAskLoginDialog.dart';
+import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';

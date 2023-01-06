@@ -12,6 +12,22 @@ typedef ResetFutureFunction<T> = Future<T> Function(SyncTag resetSyncTag);
 class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   UpdateDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  Future<void> resetClientSyncInfo({
+    required ResetFutureFunction<ClientSyncInfo> originalClientSyncInfoReset,
+    required SyncTag? syncTag,
+  }) async {
+    await withRefs(
+      syncTag: syncTag,
+      ref: (st) async {
+        return RefClientSyncInfos(
+          self: (_) async {
+            await originalClientSyncInfoReset(st);
+          },
+        );
+      },
+    );
+  }
+
   /// 修改 [originalFragmentReset]。
   Future<void> resetFragment({
     required ResetFutureFunction<Fragment> originalFragmentReset,

@@ -6,6 +6,12 @@ part of drift_db;
 class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   InsertDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  Future<ClientSyncInfo> insertClientSyncInfo({required ClientSyncInfosCompanion newClientSyncInfoCompanion}) async {
+    final find = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+    if (find != null) throw "本地已存在客户端同步信息！";
+    return newClientSyncInfoCompanion.insert(syncTag: null);
+  }
+
   /// 插入一个碎片组。
   Future<FragmentGroup> insertFragmentGroup({
     required FragmentGroupsCompanion willFragmentGroupsCompanion,
