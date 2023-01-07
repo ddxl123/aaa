@@ -52,7 +52,7 @@ class TestHomeAbController extends AbController {
     final globalAbController = Aber.find<GlobalAbController>();
     await globalAbController.checkIsLoggedIn();
     if (globalAbController.loggedInUser() == null) {
-      final user = await DriftDb.instance.rawInsertDAO.rawInsertUser(
+      final user = await DriftDb.instance.rawDAO.rawInsertUser(
         newUsersCompanion: Crt.usersCompanion(
           age: null.toValue(),
           email: null.toValue(),

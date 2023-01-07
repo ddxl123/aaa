@@ -1,7 +1,5 @@
-import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/minehome/MineHomeAbController.dart';
 import 'package:aaa/home/test/TestHome.dart';
-import 'package:aaa/home/test/TestHomeAbController.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +63,7 @@ class MineHome extends StatelessWidget {
                 const SizedBox(width: 10),
                 AbwBuilder(
                   builder: (abw) {
-                    if (c.globalAbController.loggedInUser() == null) {
+                    if (c.globalAbController.loggedInUser(abw) == null) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                         child: GestureDetector(
@@ -146,7 +144,7 @@ class MineHome extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              ...c.globalAbController.loggedInUser() == null
+              ...c.globalAbController.loggedInUser(abw) == null
                   ? [
                       GestureDetector(
                         child: Text('点击登录', style: Theme.of(c.context).textTheme.headlineSmall),

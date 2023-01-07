@@ -23,16 +23,21 @@ abstract class BaseLoginWrapper {
 
   LoginType loginType;
 
-  bool get isPhone => loginType == LoginType.phone;
+  final textEditingController = TextEditingController();
 
-  bool get isEmail => loginType == LoginType.email;
+  bool isPhone([Abw? abw]) {
+    return loginType == LoginType.phone;
+  }
+
+  bool isEmail([Abw? abw]) {
+    return loginType == LoginType.email;
+  }
 
   String getEditContent();
 }
 
 class PhoneLoginWrapper extends BaseLoginWrapper {
   PhoneLoginWrapper() : super(loginType: LoginType.phone);
-  final phoneTextEditingController = TextEditingController();
   final currentNumberPre = 86.ab;
   final phones = [
     86, // 中国大陆
@@ -42,15 +47,14 @@ class PhoneLoginWrapper extends BaseLoginWrapper {
   ];
 
   @override
-  String getEditContent() => '+${currentNumberPre()}${phoneTextEditingController.text}';
+  String getEditContent() => '+${currentNumberPre()}${textEditingController.text}';
 }
 
 class EmailLoginWrapper extends BaseLoginWrapper {
   EmailLoginWrapper() : super(loginType: LoginType.email);
-  final emailTextEditingController = TextEditingController();
 
   @override
-  String getEditContent() => emailTextEditingController.text;
+  String getEditContent() => textEditingController.text;
 }
 
 class LoginPageAbController extends AbController {
@@ -121,21 +125,21 @@ class LoginPageAbController extends AbController {
     if (lw is EmailLoginWrapper) {
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
-        data: RegisterOrLoginDto(
+        data: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_send,
           email: lw.getEditContent(),
           phone: null,
           verify_code: null,
           device_info: null,
         ),
-        parseResponseData: (responseData) => RegisterOrLoginVo.fromJson(responseData),
+        parseResponseData: (responseData) => SendOrVerifyVo.fromJson(responseData),
       );
       return await result.handleCode<bool>(
         otherException: (code, msg, st) async {
           logger.out(show: msg.showMessage, print: msg.debugMessage, stackTrace: st);
           return false;
         },
-        code100: (String message) async {
+        code10101: (String message) async {
           verifyCountdown.refreshEasy((oldValue) => 5);
           Timer.periodic(
             const Duration(seconds: 1),
@@ -149,41 +153,16 @@ class LoginPageAbController extends AbController {
           SmartDialog.showToast('验证码已发送，请注意查收！');
           return true;
         },
-        code101: (String message) async {
-          throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
+        code10102: (String message) async {
+          throw ShouldNotExecuteHereHttperException();
         },
-        code102: (String message, RegisterOrLoginVo vo) async {
-          throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
+        code10103: (String message, SendOrVerifyVo vo) async {
+          throw ShouldNotExecuteHereHttperException();
         },
       );
     } else {
       throw "未处理类型: ${lw.loginType}";
     }
-  }
-
-  /// 检查本地是否已存在用一个，并弹出操作模块。
-  ///
-  /// 返回是否存在，
-  Future<bool> checkCurrentLoggedIn() async {
-    final userOrNull = await db.generalQueryDAO.queryUserOrNull();
-    final clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
-    if (clientSyncInfoOrNull != null) {
-      throw "不应该执行登录,但是执行了登录!";
-    }
-    if (userOrNull == null) {
-      return false;
-    }
-    final lw = loginWrapper();
-    if (lw is EmailLoginWrapper) {
-      if (lw.getEditContent() == userOrNull.email) return true;
-    } else if (lw is PhoneLoginWrapper) {
-      if (lw.getEditContent() == userOrNull.phone) return true;
-    } else {
-      throw "存在 user,但 loginType 未知";
-    }
-    return false;
-    // TODO:
-    // return await showExistUserHandleDialog();
   }
 
   /// 对验证码进行验证。
@@ -210,26 +189,26 @@ class LoginPageAbController extends AbController {
 
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
-        data: RegisterOrLoginDto(
+        data: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_verify,
           email: lw.getEditContent(),
           phone: null,
           verify_code: verifyCode,
           device_info: deviceInfo,
         ),
-        parseResponseData: RegisterOrLoginVo.fromJson,
+        parseResponseData: SendOrVerifyVo.fromJson,
       );
       await result.handleCode(
-        otherException: (int? code, HttperMessage httperException, StackTrace st) async {
+        otherException: (int? code, HttperException httperException, StackTrace st) async {
           logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
         },
-        code100: (String showMessage) async {
-          throw HttperMessage(showMessage: '请求异常！', debugMessage: '不应该执行这里！');
+        code10101: (String showMessage) async {
+          throw ShouldNotExecuteHereHttperException();
         },
-        code101: (String showMessage) async {
+        code10102: (String showMessage) async {
           logger.out(show: showMessage);
         },
-        code102: (String showMessage, RegisterOrLoginVo vo) async {
+        code10103: (String showMessage, SendOrVerifyVo vo) async {
           if (vo.be_new_user) {
             await doClientLogin(context: context, vo: vo);
           } else {
@@ -253,27 +232,60 @@ class LoginPageAbController extends AbController {
   /// 存储用户和token。
   ///
   /// 返回是否本地登录成功.
-  Future<void> doClientLogin({required BuildContext context, required RegisterOrLoginVo vo}) async {
-    final isLoginSuccess = await db.rawDAO.clientLogin(
+  Future<void> doClientLogin({required BuildContext context, required SendOrVerifyVo vo}) async {
+    final isLoginSuccess = await db.registerOrLoginDAO.clientLogin(
       usersCompanion: vo.user_entity!.toCompanion(false),
-      deviceInfo: vo.device_and_token_bo.deviceInfo,
-      token: vo.device_and_token_bo.token,
+      deviceInfo: vo.current_device_and_token_bo.deviceInfo,
+      token: vo.current_device_and_token_bo.token,
       loginTypeName: loginWrapper().loginType.name,
       loginEditContent: loginWrapper().getEditContent(),
       isClearDbWhenUserDiff: () async {
         return await showExistClientLoggedInHandleDialog();
       },
     );
+    // 未取消登录
     if (isLoginSuccess) {
       final user = await db.generalQueryDAO.queryUserOrNull();
       Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => user!);
-      SmartDialog.showToast(vo.be_new_user ? "注册成功!" : "登录成功!");
+      logger.out(show: vo.be_new_user ? "注册成功!" : "登录成功!");
       Navigator.pop(context);
       Navigator.pop(context);
       await showDataSyncDialog();
-    } else {
-      SmartDialog.showToast("已取消!");
-      Navigator.pop(context);
+    }
+    // 取消了登录。把注销当前登录会话。
+    else {
+      final result = await request(
+        path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+        data: LogoutDto(
+          be_active: false,
+          current_device_and_token_bo: vo.current_device_and_token_bo,
+          device_and_token_bo: vo.current_device_and_token_bo,
+        ),
+        parseResponseData: LogoutVo.fromJson,
+      );
+      await result.handleCode(
+        otherException: (int? code, HttperException httperException, StackTrace st) async {
+          logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+          Navigator.pop(context);
+        },
+        code10201: (String showMessage) async {
+          throw ShouldNotExecuteHereHttperException();
+        },
+        code10202: (String showMessage) async {
+          throw ShouldNotExecuteHereHttperException();
+        },
+        code10203: (String showMessage) async {
+          logger.out(show: showMessage);
+          Navigator.pop(context);
+        },
+        code10204: (String showMessage) async {
+          throw ShouldNotExecuteHereHttperException();
+        },
+        code10205: (String showMessage) async {
+          logger.out(show: "已取消本次登录！", print: "$showMessage\n但当前操作是【本地登录失败】操作，因此给予权限。");
+          Navigator.pop(context);
+        },
+      );
     }
   }
 }

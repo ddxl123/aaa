@@ -132,7 +132,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               // 需要将 willNewLearnCount +1。
               await db.updateDAO.resetMemoryGroupForOnlySave(
                 originalMemoryGroupReset: (SyncTag resetSyncTag) async {
-                  return memoryGroup.reset(
+                  return await memoryGroup.reset(
                     creatorUserId: toAbsent(),
                     memoryModelId: toAbsent(),
                     newDisplayOrder: toAbsent(),

@@ -19,6 +19,8 @@ part 'dao/insert/InsertDAO.dart';
 
 part 'dao/RawDAO.dart';
 
+part 'dao/RegisterOrLoginDAO.dart';
+
 part 'dao/UpdateDAO.dart';
 
 part 'dao/DeleteDAO.dart';

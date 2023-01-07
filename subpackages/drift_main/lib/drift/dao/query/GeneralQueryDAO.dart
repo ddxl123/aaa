@@ -29,7 +29,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<ClientSyncInfo> queryClientSyncInfo([String? deviceInfo]) async {
     final result = await queryClientSyncInfoOrNull();
     if (result == null) throw "ClientSyncInfo 不应该为空";
-    if (result.deviceInfo != deviceInfo) throw "响应的 deviceInfo 与本地查询到的不一致！";
+    if (deviceInfo != null && result.deviceInfo != deviceInfo) throw "响应的 deviceInfo 与本地查询到的不一致！";
     return result;
   }
 

@@ -1,6 +1,7 @@
 import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -25,16 +26,65 @@ class GlobalAbController extends AbController {
   }
 
   /// 检查是否已登录，未登录则弹出登录框。
-  Future<void> checkIsLoggedIn() async {
-    final result = await DriftDb.instance.generalQueryDAO.queryUserOrNull();
-    if (result == null) {
+  ///
+  /// 返回是否已登录，若返回 null，则检查失败。
+  /// 若未登录，则会弹出登录框，如果在登录框中进行了登录或取消了登录，该函数同样返回对应是否登录。
+  Future<bool?> checkIsLoggedIn() async {
+    final userOrNull = await db.generalQueryDAO.queryUserOrNull();
+    final clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+    if (userOrNull == null || clientSyncInfoOrNull == null) {
+      await db.deleteDAO.clearDb();
       loggedInUser.refreshEasy((oldValue) => null);
     } else {
-      loggedInUser.refreshEasy((oldValue) => result);
+      if (clientSyncInfoOrNull.token == null) {
+        loggedInUser.refreshEasy((oldValue) => null);
+      } else {
+        // 本地已登录，检查服务器端是否已登录。
+        final result = await request(
+          path: HttpPath.REGISTER_OR_LOGIN_CHECK_LOGIN,
+          data: CheckLoginDto(
+            device_and_token_bo: DeviceAndTokenBo(
+              deviceInfo: clientSyncInfoOrNull.deviceInfo,
+              token: clientSyncInfoOrNull.token!,
+            ),
+          ),
+          parseResponseData: CheckLoginDto.fromJson,
+        );
+        final isLoggedIn = await result.handleCode<bool?>(
+          otherException: (int? code, HttperException httperException, StackTrace st) async {
+            logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+            return null;
+          },
+          code10301: (String showMessage) async {
+            return true;
+          },
+          code10302: (String showMessage) async {
+            return false;
+          },
+        );
+        if (isLoggedIn == null) return null;
+        if (isLoggedIn) {
+          loggedInUser.refreshEasy((oldValue) => userOrNull);
+          return true;
+        }
+      }
     }
+
+    // 检查到未登录后的操作
     if (loggedInUser.isEmpty()) {
       SmartDialog.showToast('请先登录哦~');
       await showAskLoginDialog();
+
+      final resultUserOrNull = await db.generalQueryDAO.queryUserOrNull();
+      final resultClientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+      if (resultClientSyncInfoOrNull?.token != null) {
+        loggedInUser.refreshEasy((oldValue) => resultUserOrNull!);
+        return true;
+      }
+      return false;
     }
+
+    logger.out(show: "发生异常！", print: "检查结果为用户已登录，但 loggedInUser() 却为 null！", level: LogLevel.error);
+    return null;
   }
 }

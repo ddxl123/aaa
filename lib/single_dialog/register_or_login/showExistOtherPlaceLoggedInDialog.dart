@@ -7,10 +7,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 /// 存在其他地方已登录。
 ///
 /// 返回当前是否继续执行登录操作。
-///
-/// TODO: 将刚登录的进行注销。
 Future<bool> showExistOtherPlaceLoggedInDialog({
-  required RegisterOrLoginVo vo,
+  required SendOrVerifyVo vo,
 }) async {
   bool isContinue = false;
   await showCustomDialog(
@@ -51,7 +49,41 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                         Expanded(child: Text(DeviceInfoSingle.getDevice(deviceInfo: e.deviceInfo))),
                         TextButton(
                           child: const Text("下线", style: TextStyle(color: Colors.red)),
-                          onPressed: () {},
+                          onPressed: () async {
+                            final result = await request(
+                              path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+                              data: LogoutDto(
+                                be_active: false,
+                                current_device_and_token_bo: vo.current_device_and_token_bo,
+                                device_and_token_bo: e,
+                              ),
+                              parseResponseData: LogoutVo.fromJson,
+                            );
+                            await result.handleCode(
+                              otherException: (int? code, HttperException httperException, StackTrace st) async {
+                                logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+                              },
+                              code10201: (String showMessage) async {
+                                throw ShouldNotExecuteHereHttperException();
+                              },
+                              code10202: (String showMessage) async {
+                                // 下线成功
+                                vo.device_and_token_bo_list?.remove(e);
+                                logger.out(show: showMessage);
+                                reBuild(() {});
+                              },
+                              code10203: (String showMessage) async {
+                                throw ShouldNotExecuteHereHttperException();
+                              },
+                              code10204: (String showMessage) async {
+                                throw ShouldNotExecuteHereHttperException();
+                              },
+                              code10205: (String showMessage) async {
+                                // 下线失败
+                                logger.out(show: showMessage, print: showMessage);
+                              },
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -66,13 +98,49 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
               TextButton(
                 style: const ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: Colors.pinkAccent))),
                 child: const Text("继续登录(会员)", style: TextStyle(color: Colors.pinkAccent)),
-                onPressed: () {},
+                onPressed: () {
+                  isContinue = true;
+                  SmartDialog.dismiss(status: SmartStatus.dialog);
+                },
               ),
               const SizedBox(width: 10),
               TextButton(
                 style: const ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: Colors.grey))),
-                child: const Text("注销全部并登录", style: TextStyle(color: Colors.red)),
-                onPressed: () {},
+                child: const Text("下线全部并登录", style: TextStyle(color: Colors.red)),
+                onPressed: () async {
+                  final result = await request(
+                    path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+                    data: LogoutDto(
+                      be_active: false,
+                      current_device_and_token_bo: vo.current_device_and_token_bo,
+                      device_and_token_bo: null,
+                    ),
+                    parseResponseData: LogoutVo.fromJson,
+                  );
+                  await result.handleCode(
+                    otherException: (int? code, HttperException httperException, StackTrace st) async {
+                      logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
+                    },
+                    code10201: (String showMessage) async {
+                      logger.out(show: "$showMessage\n本次登录成功！");
+                      isContinue = true;
+                      SmartDialog.dismiss(status: SmartStatus.dialog);
+                    },
+                    code10202: (String showMessage) async {
+                      throw ShouldNotExecuteHereHttperException();
+                    },
+                    code10203: (String showMessage) async {
+                      throw ShouldNotExecuteHereHttperException();
+                    },
+                    code10204: (String showMessage) async {
+                      throw ShouldNotExecuteHereHttperException();
+                    },
+                    code10205: (String showMessage) async {
+                      // 下线失败
+                      logger.out(show: showMessage, print: showMessage);
+                    },
+                  );
+                },
               ),
             ],
           ),
@@ -80,8 +148,39 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
             TextButton(
               child: const Text("取消本次登录", style: TextStyle(color: Colors.grey)),
               onPressed: () async {
-                await db.deleteDAO.clearDb();
-                SmartDialog.dismiss();
+                final result = await request(
+                  path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+                  data: LogoutDto(
+                    be_active: false,
+                    current_device_and_token_bo: vo.current_device_and_token_bo,
+                    device_and_token_bo: vo.current_device_and_token_bo,
+                  ),
+                  parseResponseData: LogoutVo.fromJson,
+                );
+                await result.handleCode(
+                  otherException: (int? code, HttperException httperException, StackTrace st) async {
+                    isContinue = false;
+                    SmartDialog.dismiss(status: SmartStatus.dialog);
+                    logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+                  },
+                  code10201: (String showMessage) async {
+                    throw ShouldNotExecuteHereHttperException();
+                  },
+                  code10202: (String showMessage) async {
+                    throw ShouldNotExecuteHereHttperException();
+                  },
+                  code10203: (String showMessage) async {
+                    isContinue = false;
+                    logger.out(show: showMessage);
+                    SmartDialog.dismiss(status: SmartStatus.dialog);
+                  },
+                  code10204: (String showMessage) async {
+                    throw ShouldNotExecuteHereHttperException();
+                  },
+                  code10205: (String showMessage) async {
+                    logger.out(show: "已取消本次登录！", print: "$showMessage\n但当前操作是【取消本次登录】操作，因此给予权限。");
+                  },
+                );
               },
             ),
           ],

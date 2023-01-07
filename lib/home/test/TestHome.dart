@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
+import 'package:aaa/single_dialog/register_or_login/showIsLogoutCurrentUserDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/tool/DriftViewer.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -61,7 +62,7 @@ class TestHome extends StatelessWidget {
                                   child: TextField(controller: c.textEditingController),
                                 ),
                                 ElevatedButton(
-                                  child: const Text('    分析    '),
+                                  child: const Text('    分析算法    '),
                                   onPressed: () async {
                                     final ContextModel cm = ContextModel();
                                     cm.bindVariable(Variable('大苏打1'), Number(123));
@@ -77,32 +78,33 @@ class TestHome extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                TextButton(
-                                  child: Text('data'),
-                                  onPressed: () {
-                                    showDialog(context: Aber.find<GlobalAbController>().context, builder: (_) => IconButton(onPressed: () {}, icon: Icon(Icons.add)));
-                                  },
-                                ),
-                              ],
-                            ),
-                            TextButton(
-                              child: const Text('登录'),
+                            ElevatedButton(
+                              child: const Text('用户登录'),
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginPage()));
+                              },
+                            ),
+                            ElevatedButton(
+                              child: const Text('用户下线'),
+                              onPressed: () {
+                                showIsLogoutCurrentUserDialog();
                               },
                             ),
                             StfBuilder1<String>(
                               initValue: "",
                               builder: (String extra, BuildContext context, void Function(String, bool) resetValue) {
                                 return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    TextButton(
-                                      child: const Text('获取设备和应用信息'),
+                                    ElevatedButton(
+                                      child: const Text('显示/隐藏 设备和应用信息'),
                                       onPressed: () async {
-                                        extra = "设备信息: ${const JsonEncoder.withIndent(" ").convert(await DeviceInfoSingle.allData())}\n"
-                                            "应用信息: \n${await PackageInfoSingle.info()}";
+                                        if (extra == "") {
+                                          extra = "设备信息: ${const JsonEncoder.withIndent(" ").convert(await DeviceInfoSingle.allData())}\n"
+                                              "应用信息: \n${await PackageInfoSingle.info()}";
+                                        } else {
+                                          extra = "";
+                                        }
                                         resetValue(extra, true);
                                       },
                                     ),

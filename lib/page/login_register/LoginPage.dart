@@ -2,7 +2,6 @@ import 'package:aaa/page/login_register/LoginPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 
 class LoginPage extends StatelessWidget {
@@ -45,35 +44,46 @@ class LoginPage extends StatelessWidget {
             children: [
               AbwBuilder(
                 builder: (abw) {
-                  return Text(
-                    c.loginWrapper(abw) == LoginType.phone ? '手机号登录' : '邮箱登录',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  );
+                  late final String text;
+                  if (c.loginWrapper(abw).isPhone(abw)) {
+                    text = "手机号登录";
+                  } else if (c.loginWrapper(abw).isEmail(abw)) {
+                    text = "邮箱登录";
+                  } else {
+                    throw "未处理类型: ${c.loginWrapper().loginType}";
+                  }
+                  return Text(text, style: Theme.of(context).textTheme.titleLarge);
                 },
               ),
               const SizedBox(height: 10),
               AbwBuilder(
                 builder: (abw) {
-                  return Text(
-                    c.loginWrapper(abw) == LoginType.phone ? '未注册的手机号会在验证后自动注册' : '未注册的邮箱会在验证后自动注册',
-                    style: const TextStyle(color: Colors.grey),
-                  );
+                  late final String text;
+                  if (c.loginWrapper(abw).isPhone(abw)) {
+                    text = "未注册的手机号会在验证后自动注册";
+                  } else if (c.loginWrapper(abw).isEmail(abw)) {
+                    text = "未注册的邮箱会在验证后自动注册";
+                  } else {
+                    throw "未处理类型: ${c.loginWrapper().loginType}";
+                  }
+                  return Text(text, style: const TextStyle(color: Colors.grey));
                 },
               ),
               const SizedBox(height: 30),
               AbwBuilder(
                 builder: (abw) {
-                  if (c.loginWrapper(abw) == LoginType.phone) {
+                  final lw = c.loginWrapper(abw);
+                  if (lw.isPhone(abw)) {
                     return TextField(
                       autofocus: true,
-                      controller: c.phoneTextEditingController,
+                      controller: lw.textEditingController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         prefixIcon: CustomDropdownBodyButton<int>(
-                          initValue: c.currentNumberPre(abw),
-                          items: c.phones.map((e) => Item(value: e, text: '+$e')).toList(),
+                          initValue: (lw as PhoneLoginWrapper).currentNumberPre(abw),
+                          items: lw.phones.map((e) => Item(value: e, text: '+$e')).toList(),
                           onChanged: (v) {
-                            c.currentNumberPre.refreshEasy((oldValue) => v!);
+                            lw.currentNumberPre.refreshEasy((oldValue) => v!);
                           },
                         ),
                         hintText: '手机号',
@@ -82,7 +92,7 @@ class LoginPage extends StatelessWidget {
                   } else {
                     return TextField(
                       autofocus: true,
-                      controller: c.emailTextEditingController,
+                      controller: lw.textEditingController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(prefixIcon: Icon(Icons.email_outlined), hintText: '邮箱'),
                     );
@@ -152,27 +162,26 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 10),
               AbwBuilder(
                 builder: (abw) {
-                  void onPressed() {
-                    c.loginWrapper.refreshEasy(
-                      (oldValue) {
-                        return oldValue == LoginType.phone ? LoginType.email : LoginType.phone;
-                      },
-                    );
-                    FocusScope.of(context).unfocus();
-                  }
-
-                  if (c.loginWrapper(abw) == LoginType.phone) {
+                  if (c.loginWrapper(abw).isPhone(abw)) {
                     return Center(
                       child: MaterialButton(
-                        onPressed: onPressed,
                         child: const Text('邮箱登录', style: TextStyle(color: Colors.grey)),
+                        onPressed: () {
+                          c.loginWrapper.refreshEasy((oldValue) => EmailLoginWrapper());
+                          FocusScope.of(context).unfocus();
+                        },
                       ),
                     );
-                  } else {
+                  } else if (c.loginWrapper(abw).isEmail(abw)) {
                     return MaterialButton(
-                      onPressed: onPressed,
                       child: const Text('手机号登录', style: TextStyle(color: Colors.grey)),
+                      onPressed: () {
+                        c.loginWrapper.refreshEasy((oldValue) => PhoneLoginWrapper());
+                        FocusScope.of(context).unfocus();
+                      },
                     );
+                  } else {
+                    throw "未处理类型: ${c.loginWrapper(abw).loginType}";
                   }
                 },
               ),

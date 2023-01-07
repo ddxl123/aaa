@@ -20,9 +20,21 @@ part 'HttperException.dart';
 
 part 'share_generate_result/bo/bo.dart';
 
-part 'share_generate_result/dto_vo/RegisterOrLoginDto.dart';
+part 'share_generate_result/dto_vo/CheckLoginDto.dart';
 
 
-part 'share_generate_result/dto_vo/RegisterOrLoginVo.dart';
+part 'share_generate_result/dto_vo/CheckLoginVo.dart';
+
+
+part 'share_generate_result/dto_vo/LogoutDto.dart';
+
+
+part 'share_generate_result/dto_vo/LogoutVo.dart';
+
+
+part 'share_generate_result/dto_vo/SendOrVerifyDto.dart';
+
+
+part 'share_generate_result/dto_vo/SendOrVerifyVo.dart';
 
 

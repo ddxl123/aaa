@@ -114,7 +114,7 @@ class InAppStageAbController extends AbController {
     final isNew = info.nextPlanShowTime == null ? true : false;
     await performerQuery.finish(
       originalFragmentMemoryInfoReset: (SyncTag resetSyncTag) async {
-        return currentPerformer()!.fragmentMemoryInfo.reset(
+        return await currentPerformer()!.fragmentMemoryInfo.reset(
               creatorUserId: toAbsent(),
               fragmentId: toAbsent(),
               memoryGroupId: toAbsent(),

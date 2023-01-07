@@ -18,8 +18,52 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
       'token': instance.token,
     };
 
-RegisterOrLoginDto _$RegisterOrLoginDtoFromJson(Map<String, dynamic> json) =>
-    RegisterOrLoginDto(
+CheckLoginDto _$CheckLoginDtoFromJson(Map<String, dynamic> json) =>
+    CheckLoginDto(
+      device_and_token_bo: DeviceAndTokenBo.fromJson(
+          json['device_and_token_bo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CheckLoginDtoToJson(CheckLoginDto instance) =>
+    <String, dynamic>{
+      'device_and_token_bo': instance.device_and_token_bo,
+    };
+
+CheckLoginVo _$CheckLoginVoFromJson(Map<String, dynamic> json) => CheckLoginVo(
+      ok: json['ok'] as bool,
+    );
+
+Map<String, dynamic> _$CheckLoginVoToJson(CheckLoginVo instance) =>
+    <String, dynamic>{
+      'ok': instance.ok,
+    };
+
+LogoutDto _$LogoutDtoFromJson(Map<String, dynamic> json) => LogoutDto(
+      be_active: json['be_active'] as bool,
+      current_device_and_token_bo: DeviceAndTokenBo.fromJson(
+          json['current_device_and_token_bo'] as Map<String, dynamic>),
+      device_and_token_bo: json['device_and_token_bo'] == null
+          ? null
+          : DeviceAndTokenBo.fromJson(
+              json['device_and_token_bo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$LogoutDtoToJson(LogoutDto instance) => <String, dynamic>{
+      'be_active': instance.be_active,
+      'current_device_and_token_bo': instance.current_device_and_token_bo,
+      'device_and_token_bo': instance.device_and_token_bo,
+    };
+
+LogoutVo _$LogoutVoFromJson(Map<String, dynamic> json) => LogoutVo(
+      ok: json['ok'] as bool,
+    );
+
+Map<String, dynamic> _$LogoutVoToJson(LogoutVo instance) => <String, dynamic>{
+      'ok': instance.ok,
+    };
+
+SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>
+    SendOrVerifyDto(
       register_or_login_type: $enumDecode(
           _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
       email: json['email'] as String?,
@@ -28,7 +72,7 @@ RegisterOrLoginDto _$RegisterOrLoginDtoFromJson(Map<String, dynamic> json) =>
       device_info: json['device_info'] as String?,
     );
 
-Map<String, dynamic> _$RegisterOrLoginDtoToJson(RegisterOrLoginDto instance) =>
+Map<String, dynamic> _$SendOrVerifyDtoToJson(SendOrVerifyDto instance) =>
     <String, dynamic>{
       'register_or_login_type':
           _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
@@ -45,28 +89,28 @@ const _$RegisterOrLoginTypeEnumMap = {
   RegisterOrLoginType.phone_verify: 'phone_verify',
 };
 
-RegisterOrLoginVo _$RegisterOrLoginVoFromJson(Map<String, dynamic> json) =>
-    RegisterOrLoginVo(
+SendOrVerifyVo _$SendOrVerifyVoFromJson(Map<String, dynamic> json) =>
+    SendOrVerifyVo(
       register_or_login_type: $enumDecode(
           _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
       be_new_user: json['be_new_user'] as bool,
       user_entity: json['user_entity'] == null
           ? null
           : User.fromJson(json['user_entity'] as Map<String, dynamic>),
-      device_and_token_bo: DeviceAndTokenBo.fromJson(
-          json['device_and_token_bo'] as Map<String, dynamic>),
+      current_device_and_token_bo: DeviceAndTokenBo.fromJson(
+          json['current_device_and_token_bo'] as Map<String, dynamic>),
       device_and_token_bo_list:
           (json['device_and_token_bo_list'] as List<dynamic>?)
               ?.map((e) => DeviceAndTokenBo.fromJson(e as Map<String, dynamic>))
               .toList(),
     );
 
-Map<String, dynamic> _$RegisterOrLoginVoToJson(RegisterOrLoginVo instance) =>
+Map<String, dynamic> _$SendOrVerifyVoToJson(SendOrVerifyVo instance) =>
     <String, dynamic>{
       'register_or_login_type':
           _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
       'be_new_user': instance.be_new_user,
       'user_entity': instance.user_entity,
-      'device_and_token_bo': instance.device_and_token_bo,
+      'current_device_and_token_bo': instance.current_device_and_token_bo,
       'device_and_token_bo_list': instance.device_and_token_bo_list,
     };

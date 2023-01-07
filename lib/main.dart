@@ -14,7 +14,7 @@ import 'algorithm_parser/AlgorithmKeyboard.dart';
 void main() {
   // flutter_smart_dialog 相关
   SmartDialog.config
-    ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 1000), displayType: SmartToastType.last)
+    ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 2000), displayType: SmartToastType.normal)
     ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
   AlgorithmKeyboard.register();
   runMockApp(const KeyboardRootWidget(child: MyApp()));
