@@ -117,6 +117,12 @@ class TestHome extends StatelessWidget {
                                 );
                               },
                             ),
+                            ElevatedButton(
+                              child: const Text('产生异常'),
+                              onPressed: () {
+                                throw "这是一条异常!";
+                              },
+                            ),
                           ],
                         ),
                       ],

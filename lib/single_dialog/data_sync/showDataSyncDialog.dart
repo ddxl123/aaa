@@ -4,6 +4,7 @@ import 'package:tools/tools.dart';
 Future<void> showDataSyncDialog() async {
   await showCustomDialog(
     builder: (_) => DialogWidget(
+      title: "未完善",
       mainVerticalWidgets: [],
       bottomHorizontalButtonWidgets: [],
     ),

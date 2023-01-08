@@ -17,7 +17,6 @@ class MemoryGroupListPageAbController extends AbController {
   }
 
   void onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) {
-
     Navigator.push(
       context,
       MaterialPageRoute(

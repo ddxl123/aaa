@@ -22,20 +22,22 @@ CheckLoginDto _$CheckLoginDtoFromJson(Map<String, dynamic> json) =>
     CheckLoginDto(
       device_and_token_bo: DeviceAndTokenBo.fromJson(
           json['device_and_token_bo'] as Map<String, dynamic>),
+      dto_padding: json['dto_padding'] as bool?,
     );
 
 Map<String, dynamic> _$CheckLoginDtoToJson(CheckLoginDto instance) =>
     <String, dynamic>{
       'device_and_token_bo': instance.device_and_token_bo,
+      'dto_padding': instance.dto_padding,
     };
 
 CheckLoginVo _$CheckLoginVoFromJson(Map<String, dynamic> json) => CheckLoginVo(
-      ok: json['ok'] as bool,
+      vo_padding: json['vo_padding'] as bool?,
     );
 
 Map<String, dynamic> _$CheckLoginVoToJson(CheckLoginVo instance) =>
     <String, dynamic>{
-      'ok': instance.ok,
+      'vo_padding': instance.vo_padding,
     };
 
 LogoutDto _$LogoutDtoFromJson(Map<String, dynamic> json) => LogoutDto(
@@ -55,11 +57,11 @@ Map<String, dynamic> _$LogoutDtoToJson(LogoutDto instance) => <String, dynamic>{
     };
 
 LogoutVo _$LogoutVoFromJson(Map<String, dynamic> json) => LogoutVo(
-      ok: json['ok'] as bool,
+      vo_padding: json['vo_padding'] as bool?,
     );
 
 Map<String, dynamic> _$LogoutVoToJson(LogoutVo instance) => <String, dynamic>{
-      'ok': instance.ok,
+      'vo_padding': instance.vo_padding,
     };
 
 SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>

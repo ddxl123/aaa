@@ -94,7 +94,6 @@ class MemoryGroupListPage extends StatelessWidget {
       tag: Aber.single,
       builder: (c, abw) {
         final memoryGroupGizmo = c.memoryGroupGizmos(abw)[index];
-
         return Hero(
           tag: memoryGroupGizmo.hashCode,
           child: GestureDetector(

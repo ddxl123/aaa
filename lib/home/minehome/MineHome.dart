@@ -50,15 +50,18 @@ class MineHome extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent),
-                  style: ButtonStyle(
-                    visualDensity: kMinVisualDensity,
-                    padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    side: const MaterialStatePropertyAll(BorderSide(color: Colors.grey)),
+                Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                  child: IconButton(
+                    icon: const Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent),
+                    style: ButtonStyle(
+                      visualDensity: kMinVisualDensity,
+                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      // side: const MaterialStatePropertyAll(BorderSide(color: Colors.grey)),
+                    ),
+                    onPressed: () {},
                   ),
-                  onPressed: () {},
                 ),
                 const SizedBox(width: 10),
                 AbwBuilder(
@@ -112,10 +115,8 @@ class MineHome extends StatelessWidget {
   Widget _card({required Widget child, EdgeInsetsGeometry? cardPadding}) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
         child: Card(
-          shadowColor: Colors.white,
-          elevation: 4,
           child: Padding(
             padding: cardPadding ?? const EdgeInsets.all(20),
             child: child,

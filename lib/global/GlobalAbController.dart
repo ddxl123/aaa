@@ -1,4 +1,3 @@
-import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
@@ -47,6 +46,7 @@ class GlobalAbController extends AbController {
               deviceInfo: clientSyncInfoOrNull.deviceInfo,
               token: clientSyncInfoOrNull.token!,
             ),
+            dto_padding: null,
           ),
           parseResponseData: CheckLoginDto.fromJson,
         );

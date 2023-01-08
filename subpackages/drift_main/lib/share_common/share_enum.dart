@@ -1,16 +1,4 @@
 
-enum RegisterOrLoginType {
-  
-  email_send,
-
-  email_verify,
-
-  phone_send,
-
-  phone_verify,
-
-}
-        
 enum SyncCurdType {
   
   c,
@@ -50,6 +38,18 @@ enum NewReviewDisplayOrder {
   newReview,
 
   reviewNew,
+
+}
+        
+enum RegisterOrLoginType {
+  
+  email_send,
+
+  email_verify,
+
+  phone_send,
+
+  phone_verify,
 
 }
         

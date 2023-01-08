@@ -15,7 +15,7 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
           db.allTables,
           (element) async {
             await delete(element).go();
-            db.customStatement("DELETE FROM sqlite_sequence");
+            await db.customStatement("DELETE FROM sqlite_sequence");
           },
         );
       },

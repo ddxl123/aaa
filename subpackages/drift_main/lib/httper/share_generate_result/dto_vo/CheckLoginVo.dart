@@ -4,13 +4,13 @@ part of httper;
 @JsonSerializable()
 class CheckLoginVo extends BaseObject{
 
-    /// 
-    bool ok;
+    /// 填充字段
+    bool? vo_padding;
 
 
 CheckLoginVo({
 
-    required this.ok,
+    required this.vo_padding,
 
 });
   factory CheckLoginVo.fromJson(Map<String, dynamic> json) => _$CheckLoginVoFromJson(json);

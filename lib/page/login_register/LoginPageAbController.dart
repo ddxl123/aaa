@@ -4,7 +4,6 @@ import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/login_register/LoginVerifyPage.dart';
 import 'package:aaa/single_dialog/data_sync/showDataSyncDialog.dart';
 import 'package:aaa/single_dialog/register_or_login/showExistOtherPlaceLoggedInDialog.dart';
-import 'package:aaa/single_dialog/register_or_login/showExistUserHandleDialog.dart';
 import 'package:aaa/single_dialog/register_or_login/showLoginAgreeDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
@@ -12,6 +11,8 @@ import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
+import '../../single_dialog/register_or_login/showExistClientLoggedInHandleDialog.dart';
 
 enum LoginType {
   phone,

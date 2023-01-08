@@ -11,12 +11,12 @@ class MemoryGroupGizmoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: AbBuilder<MemoryGroupGizmoPageAbController>(
-        putController: MemoryGroupGizmoPageAbController(memoryGroupGizmo: memoryGroupGizmo),
-        builder: (putC, putAbw) {
-          return SmartRefresher(
+    return AbBuilder<MemoryGroupGizmoPageAbController>(
+      putController: MemoryGroupGizmoPageAbController(memoryGroupGizmo: memoryGroupGizmo),
+      builder: (putC, putAbw) {
+        return Scaffold(
+          appBar: AppBar(),
+          body: SmartRefresher(
             controller: putC.refreshController,
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: CustomScrollView(
@@ -30,9 +30,9 @@ class MemoryGroupGizmoPage extends StatelessWidget {
               await putC.refreshPage();
               putC.refreshController.refreshCompleted();
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -54,7 +54,7 @@ class MemoryGroupGizmoPage extends StatelessWidget {
             (context, index) {
               return TextButton(
                 onPressed: () {},
-                child: Text(c.fragments()[index](abw).content.toString()),
+                child: Text(c.fragments()[index](abw).title.toString()),
               );
             },
             childCount: c.fragments(abw).length,

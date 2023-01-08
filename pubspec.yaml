@@ -49,8 +49,10 @@ dependencies:
   extended_nested_scroll_view: any
   # 下拉列表 - 其他 flutter_speed_dial
   dropdown_button2: any
-  # 图标库
+  # 图标库1
   font_awesome_flutter: any
+  # 图标库2
+  line_icons: ^2.0.1
   # 数学公式解析
   math_expressions: any
   dio: any
@@ -64,6 +66,9 @@ dependencies:
   flutter_spinkit: ^5.1.0
   # 加载
   flutter_easyloading: ^3.0.5
+  # 异常捕获
+  catcher: ^0.7.0
+
 
   build_runner: any
   source_gen: any

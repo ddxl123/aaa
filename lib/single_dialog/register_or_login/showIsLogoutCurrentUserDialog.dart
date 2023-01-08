@@ -1,5 +1,4 @@
 import 'package:aaa/global/GlobalAbController.dart';
-import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
+/// 展示是否退出当前本地已登录用户，同时当前用户在服务端下线。
 Future<void> showIsLogoutCurrentUserDialog() async {
   final user = await db.generalQueryDAO.queryUserOrNull();
   final clientSyncInfo = await db.generalQueryDAO.queryClientSyncInfoOrNull();
@@ -69,6 +69,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
             },
             code10205: (String showMessage) async {
               // 退出成功
+              await db.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
               logger.out(show: "退出成功！", print: "$showMessage\n但当前操作是【本地已登录，用户对其主动下线】的操作，因此给予权限。");
               SmartDialog.dismiss(status: SmartStatus.dialog);

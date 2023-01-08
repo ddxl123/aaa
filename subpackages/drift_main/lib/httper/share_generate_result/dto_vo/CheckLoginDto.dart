@@ -7,10 +7,15 @@ class CheckLoginDto extends BaseObject{
     /// 检查 user 的同时，必须同时检查这个
     DeviceAndTokenBo device_and_token_bo;
 
+    /// 填充字段
+    bool? dto_padding;
+
 
 CheckLoginDto({
 
     required this.device_and_token_bo,
+
+    required this.dto_padding,
 
 });
   factory CheckLoginDto.fromJson(Map<String, dynamic> json) => _$CheckLoginDtoFromJson(json);

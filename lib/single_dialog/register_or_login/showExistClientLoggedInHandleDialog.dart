@@ -18,7 +18,7 @@ Future<bool> showExistClientLoggedInHandleDialog() async {
         okText: "清空并登录",
         cancelText: "暂不登录",
         onOk: () async {
-          await db.deleteDAO.clearDb();
+          // 会在上一层函数内清空数据库。
           isContinue = true;
           SmartDialog.dismiss(status: SmartStatus.dialog);
         },

@@ -4,13 +4,13 @@ part of httper;
 @JsonSerializable()
 class LogoutVo extends BaseObject{
 
-    /// 
-    bool ok;
+    /// 填充字段
+    bool? vo_padding;
 
 
 LogoutVo({
 
-    required this.ok,
+    required this.vo_padding,
 
 });
   factory LogoutVo.fromJson(Map<String, dynamic> json) => _$LogoutVoFromJson(json);
