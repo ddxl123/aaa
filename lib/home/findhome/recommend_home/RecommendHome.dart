@@ -11,27 +11,92 @@ class RecommendHome extends StatelessWidget {
       putController: RecommendHomeAbController(),
       builder: (c, abw) {
         return Scaffold(
-          appBar: CustomNarrowAppBar(
-            isDivider: true,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              child: Row(
-                children: [
-                  const Text("datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata"),
-                ],
+          body: CustomScrollView(
+            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            slivers: [
+              SliverAppBar(
+                toolbarHeight: 0,
+                bottom: CustomNarrowAppBar(
+                  isDivider: true,
+                  child: Container(
+                    height: kMinInteractiveDimension,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      scrollDirection: Axis.horizontal,
+                      child: AbwBuilder(
+                        builder: (abw) {
+                          return Row(
+                            children: c.categories(abw).map(
+                              (e) {
+                                return TextButton(
+                                  style: ButtonStyle(
+                                    visualDensity: kMinVisualDensity,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
+                                  ),
+                                  onPressed: () {},
+                                  child: AbwBuilder(
+                                    builder: (abw) {
+                                      return Text(
+                                        e.name,
+                                        style: TextStyle(
+                                          color: c.getSelectedCategory(abw) == e ? Colors.black : Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ).toList(),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    IconButton(
+                      style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                      icon: const Icon(Icons.expand_more),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
-            ),
-            actions: [
-              IconButton(
-                style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                icon: const Icon(Icons.expand_more),
-                onPressed: () {},
-              ),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Text('data'),
+                ),
+              ]))
             ],
           ),
-          body: Text("data"),
         );
       },
     );

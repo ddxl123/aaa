@@ -22,6 +22,31 @@ class Category {
 /// 例如以上, 大类别高考-1级子类别数学/1级子类别英语
 ///
 /// 会出现一个问题: 假设法硕的碎片有1万个,英语的碎片却只有1千个,这会造成[法硕类别等级高于英语], 这与[英语类别等级高于法硕]的事实相违背
+/// 每个用户公开的相同[主-相关标签]的，将视为同一次数，来解决这个问题。
+///
+/// 热门：按热门类别排序，同以上。
+/// 推荐：按推荐类别排序，按照自身的重复次数最高的来排序。
 class RecommendHomeAbController extends AbController {
-  final categories = <Category>[Category(name: "全部"), Category(name: "name")].ab;
+  final categories = <Category>[
+    Category(name: "全部"),
+    Category(name: "考研"),
+    Category(name: "法硕"),
+    Category(name: "中医"),
+    Category(name: "CPA"),
+    Category(name: "大学"),
+    Category(name: "高考"),
+    Category(name: "中考"),
+    Category(name: "小学"),
+    Category(name: "学前"),
+    Category(name: "其他"),
+  ].ab;
+
+  final selectedIndex = 0.ab;
+
+  Category getSelectedCategory([Abw? abw]) {
+    if (selectedIndex(abw) > categories(abw).length - 1) {
+      return categories(abw).first;
+    }
+    return categories(abw)[selectedIndex(abw)];
+  }
 }
