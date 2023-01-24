@@ -20,9 +20,9 @@ class Crt {
     required Value<String?> password,
     required Value<String?> phone,
     required String username,
-    DateTime? createdAt,
+    DateTime? created_at,
     Value<int>? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return UsersCompanion(
       age: age,
@@ -30,345 +30,351 @@ class Crt {
       password: password,
       phone: phone,
       username: Value(username),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static ClientSyncInfosCompanion clientSyncInfosCompanion({
-    required String deviceInfo,
-    required Value<DateTime?> recentSyncTime,
+    required String device_info,
+    required Value<DateTime?> recent_sync_time,
     required Value<String?> token,
-    DateTime? createdAt,
+    DateTime? created_at,
     Value<int>? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return ClientSyncInfosCompanion(
-      deviceInfo: Value(deviceInfo),
-      recentSyncTime: recentSyncTime,
+      device_info: Value(device_info),
+      recent_sync_time: recent_sync_time,
       token: token,
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static SyncsCompanion syncsCompanion({
-    required String rowId,
-    required SyncCurdType syncCurdType,
-    required String syncTableName,
+    required String row_id,
+    required SyncCurdType sync_curd_type,
+    required String sync_table_name,
     required int tag,
-    DateTime? createdAt,
+    DateTime? created_at,
     Value<int>? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return SyncsCompanion(
-      rowId: Value(rowId),
-      syncCurdType: Value(syncCurdType),
-      syncTableName: Value(syncTableName),
+      row_id: Value(row_id),
+      sync_curd_type: Value(sync_curd_type),
+      sync_table_name: Value(sync_table_name),
       tag: Value(tag),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static FragmentMemoryInfosCompanion fragmentMemoryInfosCompanion({
-    required Value<String?> clickTime,
-    required Value<String?> clickValue,
-    required int creatorUserId,
-    required Value<String?> currentActualShowTime,
-    required String fragmentId,
-    required String memoryGroupId,
-    required Value<String?> nextPlanShowTime,
-    required Value<String?> showFamiliarity,
-    DateTime? createdAt,
+    required Value<String?> click_time,
+    required Value<String?> click_value,
+    required int creator_user_id,
+    required Value<String?> current_actual_show_time,
+    required String fragment_id,
+    required String memory_group_id,
+    required Value<String?> next_plan_show_time,
+    required Value<String?> show_familiarity,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return FragmentMemoryInfosCompanion(
-      clickTime: clickTime,
-      clickValue: clickValue,
-      creatorUserId: Value(creatorUserId),
-      currentActualShowTime: currentActualShowTime,
-      fragmentId: Value(fragmentId),
-      memoryGroupId: Value(memoryGroupId),
-      nextPlanShowTime: nextPlanShowTime,
-      showFamiliarity: showFamiliarity,
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      click_time: click_time,
+      click_value: click_value,
+      creator_user_id: Value(creator_user_id),
+      current_actual_show_time: current_actual_show_time,
+      fragment_id: Value(fragment_id),
+      memory_group_id: Value(memory_group_id),
+      next_plan_show_time: next_plan_show_time,
+      show_familiarity: show_familiarity,
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static RDocument2DocumentGroupsCompanion rDocument2DocumentGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> documentGroupId,
-    required String documentId,
-    DateTime? createdAt,
+    required int creator_user_id,
+    required Value<String?> document_group_id,
+    required String document_id,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return RDocument2DocumentGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      documentGroupId: documentGroupId,
-      documentId: Value(documentId),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      creator_user_id: Value(creator_user_id),
+      document_group_id: document_group_id,
+      document_id: Value(document_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> fragmentGroupId,
-    required String fragmentId,
-    DateTime? createdAt,
+    required int creator_user_id,
+    required Value<String?> fragment_group_id,
+    required String fragment_id,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return RFragment2FragmentGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fragmentGroupId: fragmentGroupId,
-      fragmentId: Value(fragmentId),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      creator_user_id: Value(creator_user_id),
+      fragment_group_id: fragment_group_id,
+      fragment_id: Value(fragment_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static RNote2NoteGroupsCompanion rNote2NoteGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> noteGroupId,
-    required String noteId,
-    DateTime? createdAt,
+    required int creator_user_id,
+    required Value<String?> note_group_id,
+    required String note_id,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return RNote2NoteGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      noteGroupId: noteGroupId,
-      noteId: Value(noteId),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      creator_user_id: Value(creator_user_id),
+      note_group_id: note_group_id,
+      note_id: Value(note_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static Test2sCompanion test2sCompanion({
     required String client_content,
-    DateTime? createdAt,
+    DateTime? created_at,
     Value<int>? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return Test2sCompanion(
       client_content: Value(client_content),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static TestsCompanion testsCompanion({
+    required String client_a,
     required String client_content,
-    DateTime? createdAt,
+    DateTime? created_at,
     Value<int>? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return TestsCompanion(
+      client_a: Value(client_a),
       client_content: Value(client_content),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static DocumentsCompanion documentsCompanion({
     required String content,
-    required int creatorUserId,
-    DateTime? createdAt,
+    required int creator_user_id,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return DocumentsCompanion(
       content: Value(content),
-      creatorUserId: Value(creatorUserId),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      creator_user_id: Value(creator_user_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static FragmentTemplatesCompanion fragmentTemplatesCompanion({
     required String content,
-    required int ownerUserId,
+    required int owner_user_id,
     required FragmentTemplateType type,
-    DateTime? createdAt,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return FragmentTemplatesCompanion(
       content: Value(content),
-      ownerUserId: Value(ownerUserId),
+      owner_user_id: Value(owner_user_id),
       type: Value(type),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static FragmentsCompanion fragmentsCompanion({
-    required bool client_be_Selected,
+    required bool be_private,
+    required bool be_publish,
+    required bool client_be_selected,
     required String content,
-    required int creatorUserId,
-    required Value<String?> fatherFragmentId,
-    required Value<String?> fragmentTemplateId,
-    required Value<String?> noteId,
+    required int creator_user_id,
+    required Value<String?> father_fragment_id,
+    required Value<String?> fragment_template_id,
+    required Value<String?> note_id,
     required String title,
-    DateTime? createdAt,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return FragmentsCompanion(
-      client_be_Selected: Value(client_be_Selected),
+      be_private: Value(be_private),
+      be_publish: Value(be_publish),
+      client_be_selected: Value(client_be_selected),
       content: Value(content),
-      creatorUserId: Value(creatorUserId),
-      fatherFragmentId: fatherFragmentId,
-      fragmentTemplateId: fragmentTemplateId,
-      noteId: noteId,
+      creator_user_id: Value(creator_user_id),
+      father_fragment_id: father_fragment_id,
+      fragment_template_id: fragment_template_id,
+      note_id: note_id,
       title: Value(title),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static MemoryGroupsCompanion memoryGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> memoryModelId,
-    required NewDisplayOrder newDisplayOrder,
-    required NewReviewDisplayOrder newReviewDisplayOrder,
-    required DateTime reviewInterval,
-    required Value<DateTime?> startTime,
+    required int creator_user_id,
+    required Value<String?> memory_model_id,
+    required NewDisplayOrder new_display_order,
+    required NewReviewDisplayOrder new_review_display_order,
+    required DateTime review_interval,
+    required Value<DateTime?> start_time,
     required String title,
-    required int willNewLearnCount,
-    DateTime? createdAt,
+    required int will_new_learn_count,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return MemoryGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      memoryModelId: memoryModelId,
-      newDisplayOrder: Value(newDisplayOrder),
-      newReviewDisplayOrder: Value(newReviewDisplayOrder),
-      reviewInterval: Value(reviewInterval),
-      startTime: startTime,
+      creator_user_id: Value(creator_user_id),
+      memory_model_id: memory_model_id,
+      new_display_order: Value(new_display_order),
+      new_review_display_order: Value(new_review_display_order),
+      review_interval: Value(review_interval),
+      start_time: start_time,
       title: Value(title),
-      willNewLearnCount: Value(willNewLearnCount),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      will_new_learn_count: Value(will_new_learn_count),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static MemoryModelsCompanion memoryModelsCompanion({
-    required String buttonAlgorithm,
-    required int creatorUserId,
-    required String familiarityAlgorithm,
-    required Value<String?> fatherMemoryModelId,
-    required String nextTimeAlgorithm,
+    required String button_algorithm,
+    required int creator_user_id,
+    required String familiarity_algorithm,
+    required Value<String?> father_memory_model_id,
+    required String next_time_algorithm,
     required String title,
-    DateTime? createdAt,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return MemoryModelsCompanion(
-      buttonAlgorithm: Value(buttonAlgorithm),
-      creatorUserId: Value(creatorUserId),
-      familiarityAlgorithm: Value(familiarityAlgorithm),
-      fatherMemoryModelId: fatherMemoryModelId,
-      nextTimeAlgorithm: Value(nextTimeAlgorithm),
+      button_algorithm: Value(button_algorithm),
+      creator_user_id: Value(creator_user_id),
+      familiarity_algorithm: Value(familiarity_algorithm),
+      father_memory_model_id: father_memory_model_id,
+      next_time_algorithm: Value(next_time_algorithm),
       title: Value(title),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static NotesCompanion notesCompanion({
     required String content,
-    required int creatorUserId,
-    required Value<String?> documentId,
-    required Value<String?> fatherNoteId,
-    DateTime? createdAt,
+    required int creator_user_id,
+    required Value<String?> document_id,
+    required Value<String?> father_note_id,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return NotesCompanion(
       content: Value(content),
-      creatorUserId: Value(creatorUserId),
-      documentId: documentId,
-      fatherNoteId: fatherNoteId,
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      creator_user_id: Value(creator_user_id),
+      document_id: document_id,
+      father_note_id: father_note_id,
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static DocumentGroupsCompanion documentGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> fatherDocumentGroupsId,
+    required int creator_user_id,
+    required Value<String?> father_document_groups_id,
     required String title,
-    DateTime? createdAt,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return DocumentGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fatherDocumentGroupsId: fatherDocumentGroupsId,
+      creator_user_id: Value(creator_user_id),
+      father_document_groups_id: father_document_groups_id,
       title: Value(title),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
-    required bool client_be_Selected,
-    required int creatorUserId,
-    required Value<String?> fatherFragmentGroupsId,
+    required bool client_be_selected,
+    required int creator_user_id,
+    required Value<String?> father_fragment_groups_id,
     required String title,
-    DateTime? createdAt,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return FragmentGroupsCompanion(
-      client_be_Selected: Value(client_be_Selected),
-      creatorUserId: Value(creatorUserId),
-      fatherFragmentGroupsId: fatherFragmentGroupsId,
+      client_be_selected: Value(client_be_selected),
+      creator_user_id: Value(creator_user_id),
+      father_fragment_groups_id: father_fragment_groups_id,
       title: Value(title),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 
   static NoteGroupsCompanion noteGroupsCompanion({
-    required int creatorUserId,
-    required Value<String?> fatherNoteGroupsId,
+    required int creator_user_id,
+    required Value<String?> father_note_groups_id,
     required String title,
-    DateTime? createdAt,
+    DateTime? created_at,
     String? id,
-    DateTime? updatedAt,
+    DateTime? updated_at,
   }) {
     return NoteGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fatherNoteGroupsId: fatherNoteGroupsId,
+      creator_user_id: Value(creator_user_id),
+      father_note_groups_id: father_note_groups_id,
       title: Value(title),
-      createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
-      updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 }

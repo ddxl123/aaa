@@ -18,6 +18,9 @@ class Ab<V> {
     value = initial;
   }
 
+  /// 对 [value] 进行延迟初始化。
+  Ab.late();
+
   /// 只获取值，不进行任何操作。
   ///
   /// 建议使用 [call] 方法，即 count()。
@@ -28,6 +31,14 @@ class Ab<V> {
 
   /// 存储每个引用该对象的 [AbBuilder] 的 [_AbBuilderState.refresh]。
   final Set<RefreshFunction> _refreshFunctions = {};
+
+  /// 当使用 [Ab.late] 进行对象的创建时，需要使用 [lateAssign] 对其进行第一次分配，
+  /// 分配后会自动 refresh。
+  ///
+  /// 等价于直接 [value] = [v]。
+  void lateAssign(V v) {
+    value = v;
+  }
 
   /// 对 [V] 为可空类型时的判断的快捷方法。
   ///
@@ -82,8 +93,15 @@ class Ab<V> {
   ///
   /// 当 [diff] 的返回值与 [value] 不是同一个对象时，[value] 将会被替换掉，并进行重建。
   void refreshInevitable(V Function(V obj) diff) {
-    value = diff(value);
-    refreshForce();
+    try {
+      value = diff(value);
+      refreshForce();
+    } catch (e) {
+      if (e.toString().contains("LateInitializationError")) {
+        throw "使用 Ab.late() 进行创建 Ab 对象时，需要使用 lateAssign 进行初始化赋值！";
+      }
+      rethrow;
+    }
   }
 
   /// 只有 [value] 自身被替换掉时才会尝试重建，而与 [value] 这个对象的属性有没有被修改完全没有关系。
@@ -93,13 +111,20 @@ class Ab<V> {
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
   void refreshEasy(V Function(V oldValue) diff, [bool isForce = false]) async {
     if (V is num || V is String || V is bool) {
-      print('Aber-Warning: Modifying values that are not basic data type, '
+      debugPrint('Aber-Warning: Modifying values that are not basic data type, '
           'please use the refreshComplex or modify method.');
     }
-    final nv = diff(value);
-    if (value != nv || isForce) {
-      value = nv;
-      _refresh();
+    try {
+      final nv = diff(value);
+      if (value != nv || isForce) {
+        value = nv;
+        _refresh();
+      }
+    } catch (e) {
+      if (e.toString().contains("LateInitializationError")) {
+        throw "使用 Ab.late() 进行创建 Ab 对象时，需要使用 lateAssign 进行初始化赋值！";
+      }
+      rethrow;
     }
   }
 
@@ -107,8 +132,15 @@ class Ab<V> {
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
   void refreshComplex(bool Function(V obj) diff) async {
-    if (diff(value)) {
-      _refresh();
+    try {
+      if (diff(value)) {
+        _refresh();
+      }
+    } catch (e) {
+      if (e.toString().contains("LateInitializationError")) {
+        throw "使用 Ab.late() 进行创建 Ab 对象时，需要使用 lateAssign 进行初始化赋值！";
+      }
+      rethrow;
     }
   }
 

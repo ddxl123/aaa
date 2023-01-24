@@ -70,9 +70,9 @@ class MemoryGroupListPage extends StatelessWidget {
   }
 
   Color _statusButtonBackgroundColorFilter(MemoryGroup memoryGroup) {
-    if (memoryGroup.startTime == null) {
+    if (memoryGroup.start_time == null) {
       return Colors.amberAccent;
-    } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
+    } else if (memoryGroup.start_time == DateTime.fromMicrosecondsSinceEpoch(0)) {
       return Colors.grey;
     } else {
       return Colors.greenAccent;
@@ -80,9 +80,9 @@ class MemoryGroupListPage extends StatelessWidget {
   }
 
   String _statusButtonTextFilter(MemoryGroup memoryGroup) {
-    if (memoryGroup.startTime == null) {
+    if (memoryGroup.start_time == null) {
       return '未执行';
-    } else if (memoryGroup.startTime == DateTime.fromMicrosecondsSinceEpoch(0)) {
+    } else if (memoryGroup.start_time == DateTime.fromMicrosecondsSinceEpoch(0)) {
       return '已完成';
     } else {
       return '继续';

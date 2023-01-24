@@ -4,11 +4,11 @@ part of httper;
 
 @JsonSerializable()
 class DeviceAndTokenBo {
-    String deviceInfo;
+    String device_info;
     String token;
 
 DeviceAndTokenBo({
-    required this.deviceInfo,
+    required this.device_info,
     required this.token,
 
 });

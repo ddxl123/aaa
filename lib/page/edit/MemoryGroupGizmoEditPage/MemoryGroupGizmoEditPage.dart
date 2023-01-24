@@ -55,7 +55,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return c.memoryGroupAb().startTime == null
+        return c.memoryGroupAb().start_time == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
                 text: const Text('保存并执行', style: TextStyle(color: Colors.white)),

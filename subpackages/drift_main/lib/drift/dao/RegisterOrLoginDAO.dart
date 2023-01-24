@@ -35,8 +35,8 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
           userOrNull = await db.rawDAO.rawInsertUser(newUsersCompanion: usersCompanion);
           clientSyncInfoOrNull = await db.insertDAO.insertClientSyncInfo(
             newClientSyncInfoCompanion: Crt.clientSyncInfosCompanion(
-              deviceInfo: deviceInfo,
-              recentSyncTime: null.toAbsent(),
+              device_info: deviceInfo,
+              recent_sync_time: null.toAbsent(),
               token: token.toValue(),
             ),
           );
@@ -50,7 +50,7 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
 
         // 在执行 login 前,如果本地存在已登录用户数据,必须先下线用户,否则抛出异常.
         if (clientSyncInfoOrNull!.token != null) {
-          logger.out(show: "请先下线本地已登录账户！", print: "不应该执行到这里。因为在登录用户前，必须先注销本地已登录的用户！", level: LogLevel.error);
+          logger.outError(show: "请先下线本地已登录账户！", print: "不应该执行到这里。因为在登录用户前，必须先注销本地已登录的用户！");
           return false;
         }
 
@@ -61,8 +61,8 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
               originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
                 return clientSyncInfoOrNull!.reset(
                   // 实际上可更换可不更换
-                  deviceInfo: deviceInfo.toValue(),
-                  recentSyncTime: toAbsent(),
+                  device_info: deviceInfo.toValue(),
+                  recent_sync_time: toAbsent(),
                   // 必须更换
                   token: token.toValue(),
                   syncTag: resetSyncTag,
@@ -98,8 +98,8 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
       await db.updateDAO.resetClientSyncInfo(
         originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
           return await result.reset(
-            deviceInfo: toAbsent(),
-            recentSyncTime: toAbsent(),
+            device_info: toAbsent(),
+            recent_sync_time: toAbsent(),
             token: null.toValue(),
             syncTag: null,
           );

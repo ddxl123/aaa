@@ -137,7 +137,7 @@ class LoginPageAbController extends AbController {
       );
       return await result.handleCode<bool>(
         otherException: (code, msg, st) async {
-          logger.out(show: msg.showMessage, print: msg.debugMessage, stackTrace: st);
+          logger.outError(show: msg.showMessage, print: msg.debugMessage, stackTrace: st);
           return false;
         },
         code10101: (String message) async {
@@ -182,7 +182,7 @@ class LoginPageAbController extends AbController {
     if (lw is EmailLoginWrapper) {
       int? verifyCode = int.tryParse(verifyCodeTextEditingController.text);
       if (verifyCode == null) {
-        logger.out(show: '验证码输入格式不正确！');
+        logger.outError(show: '验证码输入格式不正确！');
         return;
       }
 
@@ -201,20 +201,20 @@ class LoginPageAbController extends AbController {
       );
       await result.handleCode(
         otherException: (int? code, HttperException httperException, StackTrace st) async {
-          logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+          logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
         },
         code10101: (String showMessage) async {
           throw ShouldNotExecuteHereHttperException();
         },
         code10102: (String showMessage) async {
-          logger.out(show: showMessage);
+          logger.outNormal(show: showMessage);
         },
         code10103: (String showMessage, SendOrVerifyVo vo) async {
           if (vo.be_new_user) {
             await doClientLogin(context: context, vo: vo);
           } else {
             if (vo.device_and_token_bo_list!.isNotEmpty) {
-              logger.out(show: "用户已在其他地方登录！");
+              logger.outNormal(show: "用户已在其他地方登录！");
               final isContinue = await showExistOtherPlaceLoggedInDialog(vo: vo);
               if (!isContinue) {
                 Navigator.pop(context);
@@ -236,7 +236,7 @@ class LoginPageAbController extends AbController {
   Future<void> doClientLogin({required BuildContext context, required SendOrVerifyVo vo}) async {
     final isLoginSuccess = await db.registerOrLoginDAO.clientLogin(
       usersCompanion: vo.user_entity!.toCompanion(false),
-      deviceInfo: vo.current_device_and_token_bo.deviceInfo,
+      deviceInfo: vo.current_device_and_token_bo.device_info,
       token: vo.current_device_and_token_bo.token,
       loginTypeName: loginWrapper().loginType.name,
       loginEditContent: loginWrapper().getEditContent(),
@@ -248,7 +248,7 @@ class LoginPageAbController extends AbController {
     if (isLoginSuccess) {
       final user = await db.generalQueryDAO.queryUserOrNull();
       Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => user!);
-      logger.out(show: vo.be_new_user ? "注册成功!" : "登录成功!");
+      logger.outNormal(show: vo.be_new_user ? "注册成功!" : "登录成功!");
       Navigator.pop(context);
       Navigator.pop(context);
       await showDataSyncDialog();
@@ -266,7 +266,7 @@ class LoginPageAbController extends AbController {
       );
       await result.handleCode(
         otherException: (int? code, HttperException httperException, StackTrace st) async {
-          logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+          logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
           Navigator.pop(context);
         },
         code10201: (String showMessage) async {
@@ -276,14 +276,14 @@ class LoginPageAbController extends AbController {
           throw ShouldNotExecuteHereHttperException();
         },
         code10203: (String showMessage) async {
-          logger.out(show: showMessage);
+          logger.outNormal(show: showMessage);
           Navigator.pop(context);
         },
         code10204: (String showMessage) async {
           throw ShouldNotExecuteHereHttperException();
         },
         code10205: (String showMessage) async {
-          logger.out(show: "已取消本次登录！", print: "$showMessage\n但当前操作是【本地登录失败】操作，因此给予权限。");
+          logger.outNormal(show: "已取消本次登录！", print: "$showMessage\n但当前操作是【本地登录失败】操作，因此给予权限。");
           Navigator.pop(context);
         },
       );

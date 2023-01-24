@@ -29,14 +29,14 @@ class TestHomeAbController extends AbController {
   Future<void> insertTests() async {
     for (int i = 0; i < 5; i++) {
       final t = await db.into(db.tests).insertReturning(
-            TestsCompanion.insert(client_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
+            TestsCompanion.insert(client_content: Random().nextInt(10).toString(), created_at: DateTime.now(), updated_at: DateTime.now(), client_a: ''),
           );
       // await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
     }
     for (int i = 0; i < 5; i++) {
       final t = await db.into(db.test2s).insertReturning(
-            Test2sCompanion.insert(client_content: Random().nextInt(10).toString(), createdAt: DateTime.now(), updatedAt: DateTime.now()),
+            Test2sCompanion.insert(client_content: Random().nextInt(10).toString(), created_at: DateTime.now(), updated_at: DateTime.now()),
           );
       // await Future.delayed(const Duration(milliseconds: 1000));
       print(t);
@@ -72,10 +72,10 @@ class TestHomeAbController extends AbController {
       for (int i = 0; i < count; i++) {
         final fg = await DriftDb.instance.insertDAO.insertFragmentGroup(
           willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
-            creatorUserId: globalAbController.loggedInUser()!.id,
+            creator_user_id: globalAbController.loggedInUser()!.id,
             title: 'test ${Random().nextInt(999999)}',
-            fatherFragmentGroupsId: (fatherFragmentGroup?.id).toValue(),
-            client_be_Selected: false,
+            father_fragment_groups_id: (fatherFragmentGroup?.id).toValue(),
+            client_be_selected: false,
           ),
           syncTag: st,
         );
@@ -83,13 +83,15 @@ class TestHomeAbController extends AbController {
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragment(
             willFragmentsCompanion: Crt.fragmentsCompanion(
-              creatorUserId: globalAbController.loggedInUser()!.id,
-              fatherFragmentId: null.toValue(),
-              fragmentTemplateId: null.toValue(),
+              creator_user_id: globalAbController.loggedInUser()!.id,
+              father_fragment_id: null.toValue(),
+              fragment_template_id: null.toValue(),
               title: '标题 ${Random().nextInt(999999)}',
               content: '内容 ${Random().nextInt(999999)}',
-              client_be_Selected: false,
-              noteId: null.toValue(),
+              be_private: false,
+              be_publish: true,
+              client_be_selected: false,
+              note_id: null.toValue(),
             ),
             whichFragmentGroups: [null],
             syncTag: st,
@@ -98,13 +100,15 @@ class TestHomeAbController extends AbController {
         for (int i = 0; i < count; i++) {
           await DriftDb.instance.insertDAO.insertFragment(
             willFragmentsCompanion: Crt.fragmentsCompanion(
-              creatorUserId: globalAbController.loggedInUser()!.id,
-              fatherFragmentId: null.toValue(),
-              fragmentTemplateId: null.toValue(),
+              creator_user_id: globalAbController.loggedInUser()!.id,
+              father_fragment_id: null.toValue(),
+              fragment_template_id: null.toValue(),
               title: '标题 ${Random().nextInt(999999)}',
               content: '内容 ${Random().nextInt(999999)}',
-              client_be_Selected: false,
-              noteId: null.toValue(),
+              be_private: false,
+              be_publish: true,
+              client_be_selected: false,
+              note_id: null.toValue(),
             ),
             whichFragmentGroups: [fg],
             syncTag: st,

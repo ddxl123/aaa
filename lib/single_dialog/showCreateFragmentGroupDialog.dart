@@ -27,9 +27,9 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
           }
           await db.insertDAO.insertFragmentGroup(
             willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
-              creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
-              fatherFragmentGroupsId: (fragmentGroupAb?.id).toValue(),
-              client_be_Selected: false,
+              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+              father_fragment_groups_id: (fragmentGroupAb?.id).toValue(),
+              client_be_selected: false,
               title: tec.text,
             ),
             syncTag: null,

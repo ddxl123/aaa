@@ -3,7 +3,7 @@ part of drift_db;
 extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
-  /// 插入一条数据，并自动插入 createdAt/updatedAt，以及 id。
+  /// 插入一条数据，并自动插入 created_at/updated_at，以及 id。
   ///
   /// 初始化插入不能使用该函数。
   ///
@@ -42,8 +42,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
         }
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
-        entityDynamic.createdAt = DateTime.now().toValue();
-        entityDynamic.updatedAt = DateTime.now().toValue();
+        entityDynamic.created_at = DateTime.now().toValue();
+        entityDynamic.updated_at = DateTime.now().toValue();
 
         // CloudTableBase 类型表生成 String 类型 id，需要手动配置。
         //
@@ -70,9 +70,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.toValue(),
-              rowId: (returningEntityDynamic.id as String).toValue(),
-              syncCurdType: SyncCurdType.c.toValue(),
+              sync_table_name: table.actualTableName.toValue(),
+              row_id: (returningEntityDynamic.id as String).toValue(),
+              sync_curd_type: SyncCurdType.c.toValue(),
               tag: innerSyncTag!.tag.toValue(),
             ),
             syncTag: innerSyncTag,
@@ -84,7 +84,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
     );
   }
 
-  /// 根据 [entity] 的 id，修改一条数据，并自动修改 updatedAt。
+  /// 根据 [entity] 的 id，修改一条数据，并自动修改 updated_at。
   ///
   /// 如果 [T] 是 [CloudTableBase] 且 [isSync] 为 true 的话，还会自动插入一条对应的 [Sync]。
   ///
@@ -118,7 +118,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 设置时间 - 每个更新语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
         // TODO: 如果之后执行失败的话，下面所修改的时间需要恢复。
-        entityDynamic.updatedAt = DateTime.now().toValue();
+        entityDynamic.updated_at = DateTime.now().toValue();
 
         // 修改某行
         final newUpdate = update(table);
@@ -135,10 +135,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.toValue(),
+              sync_table_name: table.actualTableName.toValue(),
               // 无法识别到 dynamic.toValue() 这个扩展，因此直接使用 Value()。
-              rowId: Value((returningEntity as dynamic).id),
-              syncCurdType: SyncCurdType.u.toValue(),
+              row_id: Value((returningEntity as dynamic).id),
+              sync_curd_type: SyncCurdType.u.toValue(),
               tag: st.tag.toValue(),
             ),
             syncTag: st,
@@ -191,9 +191,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
-              syncTableName: table.actualTableName.toValue(),
-              rowId: (selectEntity.id as String).toValue(),
-              syncCurdType: SyncCurdType.d.toValue(),
+              sync_table_name: table.actualTableName.toValue(),
+              row_id: (selectEntity.id as String).toValue(),
+              sync_curd_type: SyncCurdType.d.toValue(),
               tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,

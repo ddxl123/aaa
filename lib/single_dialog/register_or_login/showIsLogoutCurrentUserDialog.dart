@@ -11,15 +11,15 @@ Future<void> showIsLogoutCurrentUserDialog() async {
   final user = await db.generalQueryDAO.queryUserOrNull();
   final clientSyncInfo = await db.generalQueryDAO.queryClientSyncInfoOrNull();
   if (user == null) {
-    logger.out(show: "本地不存在用户！", print: "本地不存在用户，但却执行了退出登录！", level: LogLevel.error);
+    logger.outError(show: "本地不存在用户！", print: "本地不存在用户，但却执行了退出登录！");
     return;
   }
   if (clientSyncInfo == null) {
-    logger.out(show: "本地不存在登录信息！", print: "本地存在用户，但是并不是登录信息，却执行了退出登录！", level: LogLevel.error);
+    logger.outError(show: "本地不存在登录信息！", print: "本地存在用户，但是并不是登录信息，却执行了退出登录！");
     return;
   }
   if (clientSyncInfo.token == null) {
-    logger.out(show: "本地不存在登录用户！", print: "本地存在用户，但不存在 token，却执行了退出登录！", level: LogLevel.error);
+    logger.outError(show: "本地不存在登录用户！", print: "本地存在用户，但不存在 token，却执行了退出登录！");
     return;
   }
   await showCustomDialog(
@@ -34,7 +34,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
         },
         onOk: () async {
           final dt = DeviceAndTokenBo(
-            deviceInfo: clientSyncInfo.deviceInfo,
+            device_info: clientSyncInfo.device_info,
             token: clientSyncInfo.token!,
           );
           final result = await request(
@@ -48,7 +48,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
           );
           await result.handleCode(
             otherException: (int? code, HttperException httperException, StackTrace st) async {
-              logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+              logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
             },
             code10201: (String showMessage) async {
               throw ShouldNotExecuteHereHttperException();
@@ -63,7 +63,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
               // 退出成功
               await db.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
-              logger.out(show: showMessage);
+              logger.outNormal(show: showMessage);
               SmartDialog.dismiss(status: SmartStatus.dialog);
               Navigator.pop(_);
             },
@@ -71,7 +71,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
               // 退出成功
               await db.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
-              logger.out(show: "退出成功！", print: "$showMessage\n但当前操作是【本地已登录，用户对其主动下线】的操作，因此给予权限。");
+              logger.outNormal(show: "退出成功！", print: "$showMessage\n但当前操作是【本地已登录，用户对其主动下线】的操作，因此给予权限。");
               SmartDialog.dismiss(status: SmartStatus.dialog);
               Navigator.pop(_);
             },

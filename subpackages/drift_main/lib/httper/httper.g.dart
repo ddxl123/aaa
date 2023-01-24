@@ -8,13 +8,13 @@ part of httper;
 
 DeviceAndTokenBo _$DeviceAndTokenBoFromJson(Map<String, dynamic> json) =>
     DeviceAndTokenBo(
-      deviceInfo: json['deviceInfo'] as String,
+      device_info: json['device_info'] as String,
       token: json['token'] as String,
     );
 
 Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
     <String, dynamic>{
-      'deviceInfo': instance.deviceInfo,
+      'device_info': instance.device_info,
       'token': instance.token,
     };
 
@@ -36,6 +36,30 @@ CheckLoginVo _$CheckLoginVoFromJson(Map<String, dynamic> json) => CheckLoginVo(
     );
 
 Map<String, dynamic> _$CheckLoginVoToJson(CheckLoginVo instance) =>
+    <String, dynamic>{
+      'vo_padding': instance.vo_padding,
+    };
+
+InitDownloadDto _$InitDownloadDtoFromJson(Map<String, dynamic> json) =>
+    InitDownloadDto(
+      sync_entity: Sync.fromJson(json['sync_entity'] as Map<String, dynamic>),
+      row_map: json['row_map'] as Map<String, dynamic>,
+      dto_padding: json['dto_padding'] as bool?,
+    );
+
+Map<String, dynamic> _$InitDownloadDtoToJson(InitDownloadDto instance) =>
+    <String, dynamic>{
+      'sync_entity': instance.sync_entity,
+      'row_map': instance.row_map,
+      'dto_padding': instance.dto_padding,
+    };
+
+InitDownloadVo _$InitDownloadVoFromJson(Map<String, dynamic> json) =>
+    InitDownloadVo(
+      vo_padding: json['vo_padding'] as bool?,
+    );
+
+Map<String, dynamic> _$InitDownloadVoToJson(InitDownloadVo instance) =>
     <String, dynamic>{
       'vo_padding': instance.vo_padding,
     };

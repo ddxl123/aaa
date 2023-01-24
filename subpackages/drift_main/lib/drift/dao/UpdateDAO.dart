@@ -61,9 +61,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         return RefFragmentGroups(
           self: ($FragmentGroupsTable table) async {
             await originalFragmentGroup?.reset(
-              creatorUserId: toAbsent(),
-              fatherFragmentGroupsId: toAbsent(),
-              client_be_Selected: isSelected.toValue(),
+              creator_user_id: toAbsent(),
+              father_fragment_groups_id: toAbsent(),
+              client_be_selected: isSelected.toValue(),
               title: toAbsent(),
               syncTag: st,
             );
@@ -87,13 +87,15 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         return RefFragments(
           self: (_) async {
             await originalFragment.reset(
-              creatorUserId: toAbsent(),
-              fatherFragmentId: toAbsent(),
-              fragmentTemplateId: toAbsent(),
+              creator_user_id: toAbsent(),
+              father_fragment_id: toAbsent(),
+              fragment_template_id: toAbsent(),
               title: toAbsent(),
               content: toAbsent(),
-              client_be_Selected: isSelected.toValue(),
-              noteId: toAbsent(),
+              be_private: toAbsent(),
+              be_publish: toAbsent(),
+              client_be_selected: isSelected.toValue(),
+              note_id: toAbsent(),
               syncTag: st,
             );
           },
@@ -114,9 +116,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         return RefFragmentGroups(
           self: (table) async {
             await fragmentGroup?.reset(
-              creatorUserId: toAbsent(),
-              fatherFragmentGroupsId: toAbsent(),
-              client_be_Selected: isSelected.toValue(),
+              creator_user_id: toAbsent(),
+              father_fragment_groups_id: toAbsent(),
+              client_be_selected: isSelected.toValue(),
               title: toAbsent(),
               syncTag: st,
             );
@@ -126,13 +128,15 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               fs,
               (element) async {
                 await element.reset(
-                  creatorUserId: toAbsent(),
-                  fatherFragmentId: toAbsent(),
-                  fragmentTemplateId: toAbsent(),
+                  creator_user_id: toAbsent(),
+                  father_fragment_id: toAbsent(),
+                  fragment_template_id: toAbsent(),
                   title: toAbsent(),
                   content: toAbsent(),
-                  client_be_Selected: isSelected.toValue(),
-                  noteId: toAbsent(),
+                  be_private: toAbsent(),
+                  be_publish: toAbsent(),
+                  client_be_selected: isSelected.toValue(),
+                  note_id: toAbsent(),
                   syncTag: st,
                 );
               },
@@ -141,9 +145,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               fgs,
               (element) async {
                 await element.reset(
-                  creatorUserId: toAbsent(),
-                  fatherFragmentGroupsId: toAbsent(),
-                  client_be_Selected: isSelected.toValue(),
+                  creator_user_id: toAbsent(),
+                  father_fragment_groups_id: toAbsent(),
+                  client_be_selected: isSelected.toValue(),
                   title: toAbsent(),
                   syncTag: st,
                 );
@@ -214,14 +218,14 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               if (isNew) {
                 // 需要 willNewLearnCount -1。
                 await originalMemoryGroup.reset(
-                  creatorUserId: toAbsent(),
-                  memoryModelId: toAbsent(),
-                  newDisplayOrder: toAbsent(),
-                  newReviewDisplayOrder: toAbsent(),
-                  reviewInterval: toAbsent(),
-                  startTime: toAbsent(),
+                  creator_user_id: toAbsent(),
+                  memory_model_id: toAbsent(),
+                  new_display_order: toAbsent(),
+                  new_review_display_order: toAbsent(),
+                  review_interval: toAbsent(),
+                  start_time: toAbsent(),
                   title: toAbsent(),
-                  willNewLearnCount: (originalMemoryGroup.willNewLearnCount - 1).toValue(),
+                  will_new_learn_count: (originalMemoryGroup.will_new_learn_count - 1).toValue(),
                   syncTag: st,
                 );
               }

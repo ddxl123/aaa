@@ -48,19 +48,15 @@ class CustomNarrowAppBar extends StatelessWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: isDivider ? const EdgeInsets.fromLTRB(0, 1, 0, 10) : null,
-          color: Colors.white,
-          child: Row(
-            children: [
-              Expanded(child: child ?? Container()),
-              ...(actions ?? []),
-            ],
-          ),
-        ),
-      ],
+    return Container(
+      margin: isDivider ? const EdgeInsets.fromLTRB(0, 1, 0, 10) : null,
+      color: Colors.white,
+      child: Row(
+        children: [
+          Expanded(child: child ?? Container()),
+          ...(actions ?? []),
+        ],
+      ),
     );
   }
 

@@ -69,6 +69,8 @@ dependencies:
   # 异常捕获
   catcher: ^0.7.0
 
+  modal_bottom_sheet: ^2.1.2
+
 
   build_runner: any
   source_gen: any

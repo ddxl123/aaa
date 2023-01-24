@@ -3,21 +3,23 @@ part of drift_db;
 
 @ReferenceTo([])
 class ClientSyncInfos extends ClientTableBase  {
-
+  @override
+  String? get tableName => "client_sync_infos";
+  
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get deviceInfo => text()();
+  TextColumn get device_info => text().named("device_info")();
 
-  DateTimeColumn get recentSyncTime => dateTime().nullable()();
+  DateTimeColumn get recent_sync_time => dateTime().named("recent_sync_time").nullable()();
 
-  TextColumn get token => text().nullable()();
+  TextColumn get token => text().named("token").nullable()();
 
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  IntColumn get id => integer().autoIncrement()();
+  IntColumn get id => integer().named("id").autoIncrement()();
 
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get updated_at => dateTime().named("updated_at")();
 
 }
         

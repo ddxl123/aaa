@@ -90,21 +90,21 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         // TODO: 模拟校验
         final fa = await AlgorithmParser().parse(
           state: FamiliarityState(
-            useContent: mm.familiarityAlgorithm,
+            useContent: mm.familiarity_algorithm,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
         final ff = await AlgorithmParser().parse(
           state: NextShowTimeState(
-            useContent: mm.nextTimeAlgorithm,
+            useContent: mm.next_time_algorithm,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
         final bd = await AlgorithmParser().parse(
           state: ButtonDataState(
-            useContent: mm.buttonAlgorithm,
+            useContent: mm.button_algorithm,
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -145,18 +145,18 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       ..addAll(fs.map((e) => e.ab)));
 
     cWillNewLearnCountStorage
-      ..tempValue = memoryGroupAb().willNewLearnCount
-      ..abValue.refreshEasy((obj) => memoryGroupAb().willNewLearnCount);
+      ..tempValue = memoryGroupAb().will_new_learn_count
+      ..abValue.refreshEasy((obj) => memoryGroupAb().will_new_learn_count);
     cReviewIntervalStorage
-      ..tempValue = memoryGroupAb().reviewInterval
-      ..abValue.refreshEasy((oldValue) => memoryGroupAb().reviewInterval);
-    ccReviewIntervalTextEditingController.text = timeDifference(target: memoryGroupAb().reviewInterval, start: DateTime.now()).toString();
+      ..tempValue = memoryGroupAb().review_interval
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().review_interval);
+    ccReviewIntervalTextEditingController.text = timeDifference(target: memoryGroupAb().review_interval, start: DateTime.now()).toString();
     cNewReviewDisplayOrderStorage
-      ..tempValue = memoryGroupAb().newReviewDisplayOrder
-      ..abValue.refreshEasy((oldValue) => memoryGroupAb().newReviewDisplayOrder);
+      ..tempValue = memoryGroupAb().new_review_display_order
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().new_review_display_order);
     cNewDisplayOrderStorage
-      ..tempValue = memoryGroupAb().newDisplayOrder
-      ..abValue.refreshEasy((oldValue) => memoryGroupAb().newDisplayOrder);
+      ..tempValue = memoryGroupAb().new_display_order
+      ..abValue.refreshEasy((oldValue) => memoryGroupAb().new_display_order);
 
     final count = await DriftDb.instance.generalQueryDAO.queryNewFragmentsCount(memoryGroup: memoryGroupAb());
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
@@ -194,14 +194,14 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     await db.updateDAO.resetMemoryGroupForOnlySave(
       originalMemoryGroupReset: (st) async {
         return await memoryGroupAb().reset(
-          creatorUserId: toAbsent(),
-          startTime: isStart ? DateTime.now().toValue() : toAbsent(),
-          memoryModelId: (bSelectedMemoryModelStorage.abValue()?.id).toValue(),
+          creator_user_id: toAbsent(),
+          start_time: isStart ? DateTime.now().toValue() : toAbsent(),
+          memory_model_id: (bSelectedMemoryModelStorage.abValue()?.id).toValue(),
           title: bTitleStorage.abValue().toValue(),
-          willNewLearnCount: cWillNewLearnCountStorage.abValue().toValue(),
-          reviewInterval: cReviewIntervalStorage.abValue().toValue(),
-          newReviewDisplayOrder: cNewReviewDisplayOrderStorage.abValue().toValue(),
-          newDisplayOrder: cNewDisplayOrderStorage.abValue().toValue(),
+          will_new_learn_count: cWillNewLearnCountStorage.abValue().toValue(),
+          review_interval: cReviewIntervalStorage.abValue().toValue(),
+          new_review_display_order: cNewReviewDisplayOrderStorage.abValue().toValue(),
+          new_display_order: cNewDisplayOrderStorage.abValue().toValue(),
           syncTag: st,
         );
       },

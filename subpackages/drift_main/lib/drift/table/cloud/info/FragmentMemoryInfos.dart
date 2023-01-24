@@ -3,34 +3,36 @@ part of drift_db;
 
 @ReferenceTo([])
 class FragmentMemoryInfos extends CloudTableBase  {
-
+  @override
+  String? get tableName => "fragment_memory_infos";
+  
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get clickTime => text().nullable()();
+  TextColumn get click_time => text().named("click_time").nullable()();
 
-  TextColumn get clickValue => text().nullable()();
+  TextColumn get click_value => text().named("click_value").nullable()();
 
   @ReferenceTo([Users])
-  IntColumn get creatorUserId => integer()();
+  IntColumn get creator_user_id => integer().named("creator_user_id")();
 
-  TextColumn get currentActualShowTime => text().nullable()();
+  TextColumn get current_actual_show_time => text().named("current_actual_show_time").nullable()();
 
   @ReferenceTo([Fragments])
-  TextColumn get fragmentId => text()();
+  TextColumn get fragment_id => text().named("fragment_id")();
 
   @ReferenceTo([MemoryGroups])
-  TextColumn get memoryGroupId => text()();
+  TextColumn get memory_group_id => text().named("memory_group_id")();
 
-  TextColumn get nextPlanShowTime => text().nullable()();
+  TextColumn get next_plan_show_time => text().named("next_plan_show_time").nullable()();
 
-  TextColumn get showFamiliarity => text().nullable()();
+  TextColumn get show_familiarity => text().named("show_familiarity").nullable()();
 
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text()();
+  TextColumn get id => text().named("id")();
 
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get updated_at => dateTime().named("updated_at")();
 
 }
         

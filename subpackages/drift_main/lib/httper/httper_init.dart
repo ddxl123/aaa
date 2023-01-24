@@ -80,3 +80,19 @@ Future<String?> otherCodeHandle({required int code}) async {
     },
   );
 }
+
+Future<void> requestDownload() async {
+  await dio.post(
+    "",
+    data: {},
+    onReceiveProgress: (int count, int total) {},
+  );
+}
+
+Future<void> requestUpload() async {
+  await dio.post(
+    "",
+    data: {},
+    onSendProgress: (int count, int total) {},
+  );
+}

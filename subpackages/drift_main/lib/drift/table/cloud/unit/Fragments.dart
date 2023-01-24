@@ -3,33 +3,39 @@ part of drift_db;
 
 @ReferenceTo([])
 class Fragments extends CloudTableBase  {
-
+  @override
+  String? get tableName => "fragments";
+  
   @override
   Set<Column>? get primaryKey => {id};
 
-  BoolColumn get client_be_Selected => boolean()();
+  BoolColumn get be_private => boolean().named("be_private")();
 
-  TextColumn get content => text()();
+  BoolColumn get be_publish => boolean().named("be_publish")();
+
+  BoolColumn get client_be_selected => boolean().named("client_be_selected")();
+
+  TextColumn get content => text().named("content")();
 
   @ReferenceTo([Users])
-  IntColumn get creatorUserId => integer()();
+  IntColumn get creator_user_id => integer().named("creator_user_id")();
 
   @ReferenceTo([Fragments])
-  TextColumn get fatherFragmentId => text().nullable()();
+  TextColumn get father_fragment_id => text().named("father_fragment_id").nullable()();
 
   @ReferenceTo([FragmentTemplates])
-  TextColumn get fragmentTemplateId => text().nullable()();
+  TextColumn get fragment_template_id => text().named("fragment_template_id").nullable()();
 
   @ReferenceTo([Notes])
-  TextColumn get noteId => text().nullable()();
+  TextColumn get note_id => text().named("note_id").nullable()();
 
-  TextColumn get title => text()();
+  TextColumn get title => text().named("title")();
 
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text()();
+  TextColumn get id => text().named("id")();
 
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get updated_at => dateTime().named("updated_at")();
 
 }
         

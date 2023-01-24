@@ -35,7 +35,7 @@ extension UserExt on User {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
@@ -92,27 +92,28 @@ extension ClientSyncInfoExt on ClientSyncInfo {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<ClientSyncInfo> reset({
-    required Value<String> deviceInfo,
-    required Value<DateTime?> recentSyncTime,
+    required Value<String> device_info,
+    required Value<DateTime?> recent_sync_time,
     required Value<String?> token,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (deviceInfo.present && this.deviceInfo != deviceInfo.value) {
+    if (device_info.present && this.device_info != device_info.value) {
       isCloudModify = true;
-      this.deviceInfo = deviceInfo.value;
+      this.device_info = device_info.value;
     }
 
-    if (recentSyncTime.present && this.recentSyncTime != recentSyncTime.value) {
+    if (recent_sync_time.present &&
+        this.recent_sync_time != recent_sync_time.value) {
       isCloudModify = true;
-      this.recentSyncTime = recentSyncTime.value;
+      this.recent_sync_time = recent_sync_time.value;
     }
 
     if (token.present && this.token != token.value) {
@@ -137,33 +138,34 @@ extension SyncExt on Sync {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Sync> reset({
-    required Value<String> rowId,
-    required Value<SyncCurdType> syncCurdType,
-    required Value<String> syncTableName,
+    required Value<String> row_id,
+    required Value<SyncCurdType> sync_curd_type,
+    required Value<String> sync_table_name,
     required Value<int> tag,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (rowId.present && this.rowId != rowId.value) {
+    if (row_id.present && this.row_id != row_id.value) {
       isCloudModify = true;
-      this.rowId = rowId.value;
+      this.row_id = row_id.value;
     }
 
-    if (syncCurdType.present && this.syncCurdType != syncCurdType.value) {
+    if (sync_curd_type.present && this.sync_curd_type != sync_curd_type.value) {
       isCloudModify = true;
-      this.syncCurdType = syncCurdType.value;
+      this.sync_curd_type = sync_curd_type.value;
     }
 
-    if (syncTableName.present && this.syncTableName != syncTableName.value) {
+    if (sync_table_name.present &&
+        this.sync_table_name != sync_table_name.value) {
       isCloudModify = true;
-      this.syncTableName = syncTableName.value;
+      this.sync_table_name = sync_table_name.value;
     }
 
     if (tag.present && this.tag != tag.value) {
@@ -188,65 +190,67 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentMemoryInfo> reset({
-    required Value<String?> clickTime,
-    required Value<String?> clickValue,
-    required Value<int> creatorUserId,
-    required Value<String?> currentActualShowTime,
-    required Value<String> fragmentId,
-    required Value<String> memoryGroupId,
-    required Value<String?> nextPlanShowTime,
-    required Value<String?> showFamiliarity,
+    required Value<String?> click_time,
+    required Value<String?> click_value,
+    required Value<int> creator_user_id,
+    required Value<String?> current_actual_show_time,
+    required Value<String> fragment_id,
+    required Value<String> memory_group_id,
+    required Value<String?> next_plan_show_time,
+    required Value<String?> show_familiarity,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (clickTime.present && this.clickTime != clickTime.value) {
+    if (click_time.present && this.click_time != click_time.value) {
       isCloudModify = true;
-      this.clickTime = clickTime.value;
+      this.click_time = click_time.value;
     }
 
-    if (clickValue.present && this.clickValue != clickValue.value) {
+    if (click_value.present && this.click_value != click_value.value) {
       isCloudModify = true;
-      this.clickValue = clickValue.value;
+      this.click_value = click_value.value;
     }
 
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (currentActualShowTime.present &&
-        this.currentActualShowTime != currentActualShowTime.value) {
+    if (current_actual_show_time.present &&
+        this.current_actual_show_time != current_actual_show_time.value) {
       isCloudModify = true;
-      this.currentActualShowTime = currentActualShowTime.value;
+      this.current_actual_show_time = current_actual_show_time.value;
     }
 
-    if (fragmentId.present && this.fragmentId != fragmentId.value) {
+    if (fragment_id.present && this.fragment_id != fragment_id.value) {
       isCloudModify = true;
-      this.fragmentId = fragmentId.value;
+      this.fragment_id = fragment_id.value;
     }
 
-    if (memoryGroupId.present && this.memoryGroupId != memoryGroupId.value) {
+    if (memory_group_id.present &&
+        this.memory_group_id != memory_group_id.value) {
       isCloudModify = true;
-      this.memoryGroupId = memoryGroupId.value;
+      this.memory_group_id = memory_group_id.value;
     }
 
-    if (nextPlanShowTime.present &&
-        this.nextPlanShowTime != nextPlanShowTime.value) {
+    if (next_plan_show_time.present &&
+        this.next_plan_show_time != next_plan_show_time.value) {
       isCloudModify = true;
-      this.nextPlanShowTime = nextPlanShowTime.value;
+      this.next_plan_show_time = next_plan_show_time.value;
     }
 
-    if (showFamiliarity.present &&
-        this.showFamiliarity != showFamiliarity.value) {
+    if (show_familiarity.present &&
+        this.show_familiarity != show_familiarity.value) {
       isCloudModify = true;
-      this.showFamiliarity = showFamiliarity.value;
+      this.show_familiarity = show_familiarity.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -266,33 +270,34 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RDocument2DocumentGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> documentGroupId,
-    required Value<String> documentId,
+    required Value<int> creator_user_id,
+    required Value<String?> document_group_id,
+    required Value<String> document_id,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (documentGroupId.present &&
-        this.documentGroupId != documentGroupId.value) {
+    if (document_group_id.present &&
+        this.document_group_id != document_group_id.value) {
       isCloudModify = true;
-      this.documentGroupId = documentGroupId.value;
+      this.document_group_id = document_group_id.value;
     }
 
-    if (documentId.present && this.documentId != documentId.value) {
+    if (document_id.present && this.document_id != document_id.value) {
       isCloudModify = true;
-      this.documentId = documentId.value;
+      this.document_id = document_id.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -312,33 +317,34 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RFragment2FragmentGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> fragmentGroupId,
-    required Value<String> fragmentId,
+    required Value<int> creator_user_id,
+    required Value<String?> fragment_group_id,
+    required Value<String> fragment_id,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (fragmentGroupId.present &&
-        this.fragmentGroupId != fragmentGroupId.value) {
+    if (fragment_group_id.present &&
+        this.fragment_group_id != fragment_group_id.value) {
       isCloudModify = true;
-      this.fragmentGroupId = fragmentGroupId.value;
+      this.fragment_group_id = fragment_group_id.value;
     }
 
-    if (fragmentId.present && this.fragmentId != fragmentId.value) {
+    if (fragment_id.present && this.fragment_id != fragment_id.value) {
       isCloudModify = true;
-      this.fragmentId = fragmentId.value;
+      this.fragment_id = fragment_id.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -358,32 +364,33 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<RNote2NoteGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> noteGroupId,
-    required Value<String> noteId,
+    required Value<int> creator_user_id,
+    required Value<String?> note_group_id,
+    required Value<String> note_id,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (noteGroupId.present && this.noteGroupId != noteGroupId.value) {
+    if (note_group_id.present && this.note_group_id != note_group_id.value) {
       isCloudModify = true;
-      this.noteGroupId = noteGroupId.value;
+      this.note_group_id = note_group_id.value;
     }
 
-    if (noteId.present && this.noteId != noteId.value) {
+    if (note_id.present && this.note_id != note_id.value) {
       isCloudModify = true;
-      this.noteId = noteId.value;
+      this.note_id = note_id.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -403,7 +410,7 @@ extension Test2Ext on Test2 {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
@@ -436,17 +443,23 @@ extension TestExt on Test {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Test> reset({
+    required Value<String> client_a,
     required Value<String> client_content,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (client_a.present && this.client_a != client_a.value) {
+      isCloudModify = true;
+      this.client_a = client_a.value;
+    }
+
     if (client_content.present && this.client_content != client_content.value) {
       isCloudModify = true;
       this.client_content = client_content.value;
@@ -469,14 +482,14 @@ extension DocumentExt on Document {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Document> reset({
     required Value<String> content,
-    required Value<int> creatorUserId,
+    required Value<int> creator_user_id,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
@@ -486,9 +499,10 @@ extension DocumentExt on Document {
       this.content = content.value;
     }
 
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -508,14 +522,14 @@ extension FragmentTemplateExt on FragmentTemplate {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentTemplate> reset({
     required Value<String> content,
-    required Value<int> ownerUserId,
+    required Value<int> owner_user_id,
     required Value<FragmentTemplateType> type,
     required SyncTag? syncTag,
   }) async {
@@ -526,9 +540,9 @@ extension FragmentTemplateExt on FragmentTemplate {
       this.content = content.value;
     }
 
-    if (ownerUserId.present && this.ownerUserId != ownerUserId.value) {
+    if (owner_user_id.present && this.owner_user_id != owner_user_id.value) {
       isCloudModify = true;
-      this.ownerUserId = ownerUserId.value;
+      this.owner_user_id = owner_user_id.value;
     }
 
     if (type.present && this.type != type.value) {
@@ -553,27 +567,39 @@ extension FragmentExt on Fragment {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
-    required Value<bool> client_be_Selected,
+    required Value<bool> be_private,
+    required Value<bool> be_publish,
+    required Value<bool> client_be_selected,
     required Value<String> content,
-    required Value<int> creatorUserId,
-    required Value<String?> fatherFragmentId,
-    required Value<String?> fragmentTemplateId,
-    required Value<String?> noteId,
+    required Value<int> creator_user_id,
+    required Value<String?> father_fragment_id,
+    required Value<String?> fragment_template_id,
+    required Value<String?> note_id,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (client_be_Selected.present &&
-        this.client_be_Selected != client_be_Selected.value) {
+    if (be_private.present && this.be_private != be_private.value) {
       isCloudModify = true;
-      this.client_be_Selected = client_be_Selected.value;
+      this.be_private = be_private.value;
+    }
+
+    if (be_publish.present && this.be_publish != be_publish.value) {
+      isCloudModify = true;
+      this.be_publish = be_publish.value;
+    }
+
+    if (client_be_selected.present &&
+        this.client_be_selected != client_be_selected.value) {
+      isCloudModify = true;
+      this.client_be_selected = client_be_selected.value;
     }
 
     if (content.present && this.content != content.value) {
@@ -581,26 +607,27 @@ extension FragmentExt on Fragment {
       this.content = content.value;
     }
 
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (fatherFragmentId.present &&
-        this.fatherFragmentId != fatherFragmentId.value) {
+    if (father_fragment_id.present &&
+        this.father_fragment_id != father_fragment_id.value) {
       isCloudModify = true;
-      this.fatherFragmentId = fatherFragmentId.value;
+      this.father_fragment_id = father_fragment_id.value;
     }
 
-    if (fragmentTemplateId.present &&
-        this.fragmentTemplateId != fragmentTemplateId.value) {
+    if (fragment_template_id.present &&
+        this.fragment_template_id != fragment_template_id.value) {
       isCloudModify = true;
-      this.fragmentTemplateId = fragmentTemplateId.value;
+      this.fragment_template_id = fragment_template_id.value;
     }
 
-    if (noteId.present && this.noteId != noteId.value) {
+    if (note_id.present && this.note_id != note_id.value) {
       isCloudModify = true;
-      this.noteId = noteId.value;
+      this.note_id = note_id.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -625,54 +652,57 @@ extension MemoryGroupExt on MemoryGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> memoryModelId,
-    required Value<NewDisplayOrder> newDisplayOrder,
-    required Value<NewReviewDisplayOrder> newReviewDisplayOrder,
-    required Value<DateTime> reviewInterval,
-    required Value<DateTime?> startTime,
+    required Value<int> creator_user_id,
+    required Value<String?> memory_model_id,
+    required Value<NewDisplayOrder> new_display_order,
+    required Value<NewReviewDisplayOrder> new_review_display_order,
+    required Value<DateTime> review_interval,
+    required Value<DateTime?> start_time,
     required Value<String> title,
-    required Value<int> willNewLearnCount,
+    required Value<int> will_new_learn_count,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (memoryModelId.present && this.memoryModelId != memoryModelId.value) {
+    if (memory_model_id.present &&
+        this.memory_model_id != memory_model_id.value) {
       isCloudModify = true;
-      this.memoryModelId = memoryModelId.value;
+      this.memory_model_id = memory_model_id.value;
     }
 
-    if (newDisplayOrder.present &&
-        this.newDisplayOrder != newDisplayOrder.value) {
+    if (new_display_order.present &&
+        this.new_display_order != new_display_order.value) {
       isCloudModify = true;
-      this.newDisplayOrder = newDisplayOrder.value;
+      this.new_display_order = new_display_order.value;
     }
 
-    if (newReviewDisplayOrder.present &&
-        this.newReviewDisplayOrder != newReviewDisplayOrder.value) {
+    if (new_review_display_order.present &&
+        this.new_review_display_order != new_review_display_order.value) {
       isCloudModify = true;
-      this.newReviewDisplayOrder = newReviewDisplayOrder.value;
+      this.new_review_display_order = new_review_display_order.value;
     }
 
-    if (reviewInterval.present && this.reviewInterval != reviewInterval.value) {
+    if (review_interval.present &&
+        this.review_interval != review_interval.value) {
       isCloudModify = true;
-      this.reviewInterval = reviewInterval.value;
+      this.review_interval = review_interval.value;
     }
 
-    if (startTime.present && this.startTime != startTime.value) {
+    if (start_time.present && this.start_time != start_time.value) {
       isCloudModify = true;
-      this.startTime = startTime.value;
+      this.start_time = start_time.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -680,10 +710,10 @@ extension MemoryGroupExt on MemoryGroup {
       this.title = title.value;
     }
 
-    if (willNewLearnCount.present &&
-        this.willNewLearnCount != willNewLearnCount.value) {
+    if (will_new_learn_count.present &&
+        this.will_new_learn_count != will_new_learn_count.value) {
       isCloudModify = true;
-      this.willNewLearnCount = willNewLearnCount.value;
+      this.will_new_learn_count = will_new_learn_count.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -703,49 +733,50 @@ extension MemoryModelExt on MemoryModel {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModel> reset({
-    required Value<String> buttonAlgorithm,
-    required Value<int> creatorUserId,
-    required Value<String> familiarityAlgorithm,
-    required Value<String?> fatherMemoryModelId,
-    required Value<String> nextTimeAlgorithm,
+    required Value<String> button_algorithm,
+    required Value<int> creator_user_id,
+    required Value<String> familiarity_algorithm,
+    required Value<String?> father_memory_model_id,
+    required Value<String> next_time_algorithm,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (buttonAlgorithm.present &&
-        this.buttonAlgorithm != buttonAlgorithm.value) {
+    if (button_algorithm.present &&
+        this.button_algorithm != button_algorithm.value) {
       isCloudModify = true;
-      this.buttonAlgorithm = buttonAlgorithm.value;
+      this.button_algorithm = button_algorithm.value;
     }
 
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (familiarityAlgorithm.present &&
-        this.familiarityAlgorithm != familiarityAlgorithm.value) {
+    if (familiarity_algorithm.present &&
+        this.familiarity_algorithm != familiarity_algorithm.value) {
       isCloudModify = true;
-      this.familiarityAlgorithm = familiarityAlgorithm.value;
+      this.familiarity_algorithm = familiarity_algorithm.value;
     }
 
-    if (fatherMemoryModelId.present &&
-        this.fatherMemoryModelId != fatherMemoryModelId.value) {
+    if (father_memory_model_id.present &&
+        this.father_memory_model_id != father_memory_model_id.value) {
       isCloudModify = true;
-      this.fatherMemoryModelId = fatherMemoryModelId.value;
+      this.father_memory_model_id = father_memory_model_id.value;
     }
 
-    if (nextTimeAlgorithm.present &&
-        this.nextTimeAlgorithm != nextTimeAlgorithm.value) {
+    if (next_time_algorithm.present &&
+        this.next_time_algorithm != next_time_algorithm.value) {
       isCloudModify = true;
-      this.nextTimeAlgorithm = nextTimeAlgorithm.value;
+      this.next_time_algorithm = next_time_algorithm.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -770,16 +801,16 @@ extension NoteExt on Note {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Note> reset({
     required Value<String> content,
-    required Value<int> creatorUserId,
-    required Value<String?> documentId,
-    required Value<String?> fatherNoteId,
+    required Value<int> creator_user_id,
+    required Value<String?> document_id,
+    required Value<String?> father_note_id,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
@@ -789,19 +820,20 @@ extension NoteExt on Note {
       this.content = content.value;
     }
 
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (documentId.present && this.documentId != documentId.value) {
+    if (document_id.present && this.document_id != document_id.value) {
       isCloudModify = true;
-      this.documentId = documentId.value;
+      this.document_id = document_id.value;
     }
 
-    if (fatherNoteId.present && this.fatherNoteId != fatherNoteId.value) {
+    if (father_note_id.present && this.father_note_id != father_note_id.value) {
       isCloudModify = true;
-      this.fatherNoteId = fatherNoteId.value;
+      this.father_note_id = father_note_id.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -821,28 +853,29 @@ extension DocumentGroupExt on DocumentGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<DocumentGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> fatherDocumentGroupsId,
+    required Value<int> creator_user_id,
+    required Value<String?> father_document_groups_id,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (fatherDocumentGroupsId.present &&
-        this.fatherDocumentGroupsId != fatherDocumentGroupsId.value) {
+    if (father_document_groups_id.present &&
+        this.father_document_groups_id != father_document_groups_id.value) {
       isCloudModify = true;
-      this.fatherDocumentGroupsId = fatherDocumentGroupsId.value;
+      this.father_document_groups_id = father_document_groups_id.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -867,35 +900,36 @@ extension FragmentGroupExt on FragmentGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentGroup> reset({
-    required Value<bool> client_be_Selected,
-    required Value<int> creatorUserId,
-    required Value<String?> fatherFragmentGroupsId,
+    required Value<bool> client_be_selected,
+    required Value<int> creator_user_id,
+    required Value<String?> father_fragment_groups_id,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (client_be_Selected.present &&
-        this.client_be_Selected != client_be_Selected.value) {
+    if (client_be_selected.present &&
+        this.client_be_selected != client_be_selected.value) {
       isCloudModify = true;
-      this.client_be_Selected = client_be_Selected.value;
+      this.client_be_selected = client_be_selected.value;
     }
 
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (fatherFragmentGroupsId.present &&
-        this.fatherFragmentGroupsId != fatherFragmentGroupsId.value) {
+    if (father_fragment_groups_id.present &&
+        this.father_fragment_groups_id != father_fragment_groups_id.value) {
       isCloudModify = true;
-      this.fatherFragmentGroupsId = fatherFragmentGroupsId.value;
+      this.father_fragment_groups_id = father_fragment_groups_id.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -920,28 +954,29 @@ extension NoteGroupExt on NoteGroup {
   ///
   /// 只能修改当前 id 的行。
   ///
-  /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   ///
   /// 若 [syncTag] 为空，内部会自动创建。
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<NoteGroup> reset({
-    required Value<int> creatorUserId,
-    required Value<String?> fatherNoteGroupsId,
+    required Value<int> creator_user_id,
+    required Value<String?> father_note_groups_id,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (creatorUserId.present && this.creatorUserId != creatorUserId.value) {
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
-      this.creatorUserId = creatorUserId.value;
+      this.creator_user_id = creator_user_id.value;
     }
 
-    if (fatherNoteGroupsId.present &&
-        this.fatherNoteGroupsId != fatherNoteGroupsId.value) {
+    if (father_note_groups_id.present &&
+        this.father_note_groups_id != father_note_groups_id.value) {
       isCloudModify = true;
-      this.fatherNoteGroupsId = fatherNoteGroupsId.value;
+      this.father_note_groups_id = father_note_groups_id.value;
     }
 
     if (title.present && this.title != title.value) {

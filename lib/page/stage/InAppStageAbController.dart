@@ -80,7 +80,7 @@ class InAppStageAbController extends AbController {
     if (currentPerformer() == null) return;
 
     // 必须按照顺序进行获取，否则要么没有对应的值，要么可能会使用上一次的值。
-    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().startTime!);
+    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!);
     currentShowFamiliar = await _parseCurrentFamiliarity();
 
     final pbd = await _parseButtonData();
@@ -111,18 +111,18 @@ class InAppStageAbController extends AbController {
 
     final info = currentPerformer()!.fragmentMemoryInfo;
 
-    final isNew = info.nextPlanShowTime == null ? true : false;
+    final isNew = info.next_plan_show_time == null ? true : false;
     await performerQuery.finish(
       originalFragmentMemoryInfoReset: (SyncTag resetSyncTag) async {
         return await currentPerformer()!.fragmentMemoryInfo.reset(
-              creatorUserId: toAbsent(),
-              fragmentId: toAbsent(),
-              memoryGroupId: toAbsent(),
-              clickTime: (info.clickTime ?? '[]').arrayAdd(timeDifference(target: DateTime.now(), start: memoryGroupAb().startTime!)).toValue(),
-              clickValue: (info.clickValue ?? '[]').arrayAdd(clickValue).toValue(),
-              currentActualShowTime: (info.currentActualShowTime ?? '[]').arrayAdd(currentActualShowTime).toValue(),
-              nextPlanShowTime: (info.nextPlanShowTime ?? '[]').arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
-              showFamiliarity: (info.showFamiliarity ?? '[]').arrayAdd(currentShowFamiliar).toValue(),
+              creator_user_id: toAbsent(),
+              fragment_id: toAbsent(),
+              memory_group_id: toAbsent(),
+              click_time: (info.click_time ?? '[]').arrayAdd(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
+              click_value: (info.click_value ?? '[]').arrayAdd(clickValue).toValue(),
+              current_actual_show_time: (info.current_actual_show_time ?? '[]').arrayAdd(currentActualShowTime).toValue(),
+              next_plan_show_time: (info.next_plan_show_time ?? '[]').arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
+              show_familiarity: (info.show_familiarity ?? '[]').arrayAdd(currentShowFamiliar).toValue(),
               syncTag: resetSyncTag,
             );
       },
@@ -150,7 +150,7 @@ class InAppStageAbController extends AbController {
   Future<double> _parseCurrentFamiliarity() async {
     final currentFamiliarity = await AlgorithmParser<FamiliarityState>().parse(
       state: FamiliarityState(
-        useContent: memoryModelAb().familiarityAlgorithm,
+        useContent: memoryModelAb().familiarity_algorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -205,7 +205,7 @@ class InAppStageAbController extends AbController {
   Future<ButtonDataState> _parseButtonData() async {
     final parseResult = await AlgorithmParser<ButtonDataState>().parse(
       state: ButtonDataState(
-        useContent: memoryModelAb().buttonAlgorithm,
+        useContent: memoryModelAb().button_algorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -262,7 +262,7 @@ class InAppStageAbController extends AbController {
   Future<void> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     final parseResult = await AlgorithmParser<NextShowTimeState>().parse(
       state: NextShowTimeState(
-        useContent: memoryModelAb().nextTimeAlgorithm,
+        useContent: memoryModelAb().next_time_algorithm,
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(

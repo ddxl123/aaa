@@ -109,16 +109,16 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       ..abValue.refreshEasy((oldValue) => mm.title);
 
     familiarityAlgorithmStorage
-      ..tempValue = mm.familiarityAlgorithm
-      ..abValue.refreshEasy((oldValue) => mm.familiarityAlgorithm);
+      ..tempValue = mm.familiarity_algorithm
+      ..abValue.refreshEasy((oldValue) => mm.familiarity_algorithm);
 
     nextTimeAlgorithmStorage
-      ..tempValue = mm.nextTimeAlgorithm
-      ..abValue.refreshEasy((oldValue) => mm.nextTimeAlgorithm);
+      ..tempValue = mm.next_time_algorithm
+      ..abValue.refreshEasy((oldValue) => mm.next_time_algorithm);
 
     buttonAlgorithmStorage
-      ..tempValue = mm.buttonAlgorithm
-      ..abValue.refreshEasy((oldValue) => mm.buttonAlgorithm);
+      ..tempValue = mm.button_algorithm
+      ..abValue.refreshEasy((oldValue) => mm.button_algorithm);
 
     titleEditingController.text = titleStorage.abValue();
     familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.abValue();
@@ -183,12 +183,12 @@ class MemoryModelGizmoEditPageAbController extends AbController {
             await db.updateDAO.resetMemoryModelOnlySave(
               originalMemoryModelReset: (st) async {
                 return await memoryModelAb().reset(
-                  creatorUserId: toAbsent(),
-                  fatherMemoryModelId: toAbsent(),
+                  creator_user_id: toAbsent(),
+                  father_memory_model_id: toAbsent(),
                   title: titleStorage.abValue().toValue(),
-                  familiarityAlgorithm: familiarityAlgorithmStorage.abValue().toValue(),
-                  nextTimeAlgorithm: nextTimeAlgorithmStorage.abValue().toValue(),
-                  buttonAlgorithm: buttonAlgorithmStorage.abValue().toValue(),
+                  familiarity_algorithm: familiarityAlgorithmStorage.abValue().toValue(),
+                  next_time_algorithm: nextTimeAlgorithmStorage.abValue().toValue(),
+                  button_algorithm: buttonAlgorithmStorage.abValue().toValue(),
                   syncTag: st,
                 );
               },

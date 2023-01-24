@@ -22,7 +22,7 @@ class CustomLogger {
   /// [show] - toast 内容。
   ///
   /// [print] - 控制台打印内容。
-  void out({
+  void _out({
     dynamic show,
     dynamic print,
     // required String? record,
@@ -42,6 +42,24 @@ class CustomLogger {
       }
     }
   }
+
+  void outNormal({
+    dynamic show,
+    dynamic print,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) {
+    _out(show: show, print: print, error: error, stackTrace: stackTrace, level: LogLevel.normal);
+  }
+
+  void outError({
+    dynamic show,
+    dynamic print,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) {
+    _out(show: show, print: print, error: error, stackTrace: stackTrace, level: LogLevel.error);
+  }
 }
 
 extension QuickLog<T> on T {
@@ -49,7 +67,7 @@ extension QuickLog<T> on T {
     dynamic error,
     StackTrace? stackTrace,
   }) {
-    logger.out(print: this, error: error, stackTrace: stackTrace);
+    logger.outNormal(print: this, error: error, stackTrace: stackTrace);
     return this;
   }
 }

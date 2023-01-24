@@ -147,8 +147,8 @@ class CurrentCircleWidget extends StatelessWidget {
                 initValue: c.cNewReviewDisplayOrderStorage.abValue(abw),
                 items: [
                   Item(value: NewReviewDisplayOrder.mix, text: '混合'),
-                  Item(value: NewReviewDisplayOrder.newReview, text: '优先新碎片'),
-                  Item(value: NewReviewDisplayOrder.reviewNew, text: '优先复习碎片'),
+                  Item(value: NewReviewDisplayOrder.new_review, text: '优先新碎片'),
+                  Item(value: NewReviewDisplayOrder.review_new, text: '优先复习碎片'),
                 ],
                 onChanged: (v) {
                   c.cNewReviewDisplayOrderStorage.abValue.refreshEasy((oldValue) => v!);
@@ -172,8 +172,8 @@ class CurrentCircleWidget extends StatelessWidget {
                 initValue: c.cNewDisplayOrderStorage.abValue(abw),
                 items: [
                   Item(value: NewDisplayOrder.random, text: '随机'),
-                  Item(value: NewDisplayOrder.titleA2Z, text: '标题首字母A~Z顺序'),
-                  Item(value: NewDisplayOrder.createEarly2Late, text: '创建时间'),
+                  Item(value: NewDisplayOrder.title_a_2_z, text: '标题首字母A~Z顺序'),
+                  Item(value: NewDisplayOrder.create_early_2_late, text: '创建时间'),
                 ],
                 onChanged: (v) {
                   c.cNewDisplayOrderStorage.abValue.refreshEasy((oldValue) => v!);

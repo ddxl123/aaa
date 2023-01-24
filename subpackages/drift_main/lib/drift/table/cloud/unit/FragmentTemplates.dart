@@ -3,22 +3,24 @@ part of drift_db;
 
 @ReferenceTo([])
 class FragmentTemplates extends CloudTableBase  {
-
+  @override
+  String? get tableName => "fragment_templates";
+  
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text()();
+  TextColumn get content => text().named("content")();
 
   @ReferenceTo([Users])
-  IntColumn get ownerUserId => integer()();
+  IntColumn get owner_user_id => integer().named("owner_user_id")();
 
-  IntColumn get type => intEnum<FragmentTemplateType>()();
+  IntColumn get type => intEnum<FragmentTemplateType>().named("type")();
 
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text()();
+  TextColumn get id => text().named("id")();
 
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get updated_at => dateTime().named("updated_at")();
 
 }
         

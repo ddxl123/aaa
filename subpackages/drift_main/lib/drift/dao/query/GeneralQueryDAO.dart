@@ -29,7 +29,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<ClientSyncInfo> queryClientSyncInfo([String? deviceInfo]) async {
     final result = await queryClientSyncInfoOrNull();
     if (result == null) throw "ClientSyncInfo 不应该为空";
-    if (deviceInfo != null && result.deviceInfo != deviceInfo) throw "响应的 deviceInfo 与本地查询到的不一致！";
+    if (deviceInfo != null && result.device_info != deviceInfo) throw "响应的 deviceInfo 与本地查询到的不一致！";
     return result;
   }
 
@@ -39,24 +39,29 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return sel.isEmpty ? null : sel.first;
   }
 
+  Future<Fragment> queryFragmentById({required String id}) async {
+    return await (select(fragments)..where((tbl) => tbl.id.equals(id))).getSingle();
+  }
+
   /// 查询 [targetFragmentGroup] 内的碎片数量，不包含子碎片。
   Future<int> queryFragmentsCountInFragmentGroup({
     required FragmentGroup? targetFragmentGroup,
     required QueryFragmentWhereType queryFragmentWhereType,
   }) async {
     final count = fragments.id.count();
-    final baseWhereEpr = targetFragmentGroup == null ? rFragment2FragmentGroups.fragmentGroupId.isNull() : rFragment2FragmentGroups.fragmentGroupId.equals(targetFragmentGroup.id);
+    final baseWhereEpr =
+        targetFragmentGroup == null ? rFragment2FragmentGroups.fragment_group_id.isNull() : rFragment2FragmentGroups.fragment_group_id.equals(targetFragmentGroup.id);
     final filterWhere = filter<QueryFragmentWhereType, Expression<bool>?>(
       from: queryFragmentWhereType,
       targets: {
         [QueryFragmentWhereType.all]: () => null,
-        [QueryFragmentWhereType.selected]: () => fragments.client_be_Selected.equals(true),
+        [QueryFragmentWhereType.selected]: () => fragments.client_be_selected.equals(true),
       },
       orElse: null,
     );
     final sel = selectOnly(fragments).join(
       [
-        innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragmentId.equalsExp(fragments.id), useColumns: false),
+        innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragment_id.equalsExp(fragments.id), useColumns: false),
       ],
     )
       ..addColumns([count])
@@ -70,10 +75,10 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<List<Fragment>> queryFragmentsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
     final sel = select(fragments).join(
       [
-        innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragmentId.equalsExp(fragments.id)),
+        innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragment_id.equalsExp(fragments.id)),
       ],
     )..where(
-        targetFragmentGroup == null ? rFragment2FragmentGroups.fragmentGroupId.isNull() : rFragment2FragmentGroups.fragmentGroupId.equals(targetFragmentGroup.id),
+        targetFragmentGroup == null ? rFragment2FragmentGroups.fragment_group_id.isNull() : rFragment2FragmentGroups.fragment_group_id.equals(targetFragmentGroup.id),
       );
     final result = await sel.get();
     return result.map((e) => e.readTable(fragments)).toList();
@@ -82,7 +87,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 查询 [targetFragmentGroup] 内的全部碎片组，不包含子碎片组。
   Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
     final sel = select(fragmentGroups)
-      ..where((tbl) => targetFragmentGroup == null ? tbl.fatherFragmentGroupsId.isNull() : tbl.fatherFragmentGroupsId.equals(targetFragmentGroup.id));
+      ..where((tbl) => targetFragmentGroup == null ? tbl.father_fragment_groups_id.isNull() : tbl.father_fragment_groups_id.equals(targetFragmentGroup.id));
     return await sel.get();
   }
 
@@ -154,11 +159,11 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final singleChain = <FragmentGroup>[fragmentGroup];
     // 开始循环
     Future<void> foreachQuery(FragmentGroup fg) async {
-      if (fg.fatherFragmentGroupsId == null) {
+      if (fg.father_fragment_groups_id == null) {
         return;
       }
       final foreachSel = select(fragmentGroups);
-      foreachSel.where((tbl) => tbl.id.equals(fg.fatherFragmentGroupsId!));
+      foreachSel.where((tbl) => tbl.id.equals(fg.father_fragment_groups_id!));
       final foreachResult = await foreachSel.getSingle();
       singleChain.add(foreachResult);
       await foreachQuery(foreachResult);
@@ -176,20 +181,20 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 如果 chain 为空数组，则表示 root 组，root 组不算进 chain 数组中。
   Future<List<List<FragmentGroup>>> queryFragmentInWhichFragmentGroupChain({required Fragment fragment}) async {
     final rSel = select(rFragment2FragmentGroups);
-    rSel.where((tbl) => tbl.fragmentId.equals(fragment.id));
+    rSel.where((tbl) => tbl.fragment_id.equals(fragment.id));
     final rSelResult = await rSel.get();
 
     final multiChain = <List<FragmentGroup>>[];
     await Future.forEach<RFragment2FragmentGroup>(
       rSelResult,
       (element) async {
-        if (element.fragmentGroupId == null) {
+        if (element.fragment_group_id == null) {
           multiChain.add([]);
           return;
         }
 
         final latestSel = select(fragmentGroups);
-        latestSel.where((tbl) => tbl.id.equals(element.fragmentGroupId!));
+        latestSel.where((tbl) => tbl.id.equals(element.fragment_group_id!));
         final latestResult = await latestSel.getSingle();
         final singleChain = await queryFragmentGroupInWhichFragmentGroupChain(fragmentGroup: latestResult);
         multiChain.add(singleChain);
@@ -201,7 +206,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 查询全部已选的碎片。
   Future<List<Fragment>> querySelectedFragments() async {
     final sel = select(fragments);
-    sel.where((tbl) => tbl.client_be_Selected.equals(true));
+    sel.where((tbl) => tbl.client_be_selected.equals(true));
     final result = await sel.get();
     return result;
   }
@@ -210,7 +215,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   Future<int> querySelectedFragmentCount() async {
     final count = fragments.id.count();
     final sel = selectOnly(fragments)
-      ..where(fragments.client_be_Selected.equals(true))
+      ..where(fragments.client_be_selected.equals(true))
       ..addColumns([count]);
     final result = await sel.getSingle();
     return result.read(count)!;
@@ -219,9 +224,9 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 查询已选碎片在 [memoryGroup] 中重复的数量，根据 [FragmentMemoryInfo.fragmentId] 判断。
   Future<int> querySelectedFragmentsRepeatCount({required MemoryGroup memoryGroup}) async {
     final count = fragmentMemoryInfos.id.count();
-    final selOnly = selectOnly(fragmentMemoryInfos).join([innerJoin(fragments, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId), useColumns: false)])
-      ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id))
-      ..groupBy([fragmentMemoryInfos.fragmentId])
+    final selOnly = selectOnly(fragmentMemoryInfos).join([innerJoin(fragments, fragments.id.equalsExp(fragmentMemoryInfos.fragment_id), useColumns: false)])
+      ..where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id))
+      ..groupBy([fragmentMemoryInfos.fragment_id])
       ..addColumns([count]);
     final result = await selOnly.get();
     return result.length;
@@ -244,8 +249,8 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
 
   /// 查询 [memoryGroup] 中的全部碎片。
   Future<List<Fragment>> queryFragmentsInMemoryGroup({required MemoryGroup memoryGroup}) async {
-    final selJoin = select(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId))])
-      ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id));
+    final selJoin = select(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragment_id))])
+      ..where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id));
     final result = await selJoin.get();
     return result.map((e) => e.readTable(fragments)).toList();
   }
@@ -257,7 +262,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   }) async {
     final selOnly = select(fragmentMemoryInfos)
       ..where(
-        (tbl) => tbl.fragmentId.equals(fragment.id) & tbl.memoryGroupId.equals(memoryGroup.id),
+        (tbl) => tbl.fragment_id.equals(fragment.id) & tbl.memory_group_id.equals(memoryGroup.id),
       );
     final result = await selOnly.get();
     return result.isEmpty ? false : true;
@@ -266,8 +271,8 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   /// 查询 [memoryGroup] 中的全部碎片数量。
   Future<int> queryFragmentsCountInMemoryGroup({required MemoryGroup memoryGroup}) async {
     final count = fragments.id.count();
-    final selJoin = selectOnly(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragmentId), useColumns: false)])
-      ..where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id))
+    final selJoin = selectOnly(fragments).join([innerJoin(fragmentMemoryInfos, fragments.id.equalsExp(fragmentMemoryInfos.fragment_id), useColumns: false)])
+      ..where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id))
       ..addColumns([count]);
     final result = await selJoin.getSingle();
     return result.read(count)!;
@@ -275,8 +280,8 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
 
   /// 查询 [memoryGroup] 中的 [MemoryModel]。
   Future<MemoryModel?> queryMemoryModelInMemoryGroup({required MemoryGroup memoryGroup}) async {
-    if (memoryGroup.memoryModelId == null) return null;
-    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroup.memoryModelId!))).getSingle();
+    if (memoryGroup.memory_model_id == null) return null;
+    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroup.memory_model_id!))).getSingle();
   }
 
   /// 根据 [MemoryModel.id] 查询 [MemoryModel]。
@@ -291,7 +296,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final count = fragmentMemoryInfos.id.count();
     final sel = selectOnly(fragmentMemoryInfos);
     sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id));
+    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id));
     final result = await sel.getSingle();
     return result.read(count)!;
   }
@@ -303,7 +308,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final count = fragmentMemoryInfos.id.count();
     final sel = selectOnly(fragmentMemoryInfos);
     sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id) & fragmentMemoryInfos.nextPlanShowTime.isNull());
+    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.next_plan_show_time.isNull());
     final result = await sel.getSingle();
     return result.read(count)!;
   }
@@ -315,7 +320,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final count = fragmentMemoryInfos.id.count();
     final sel = selectOnly(fragmentMemoryInfos);
     sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memoryGroupId.equals(memoryGroup.id) & fragmentMemoryInfos.nextPlanShowTime.isNotNull());
+    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.next_plan_show_time.isNotNull());
     final result = await sel.getSingle();
     return result.read(count)!;
   }

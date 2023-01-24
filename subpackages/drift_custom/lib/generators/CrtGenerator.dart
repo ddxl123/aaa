@@ -19,7 +19,7 @@ class CrtGenerator extends Generator {
           final singleContent = '''
           static $companionName ${companionName.toCamelCase}({${params.map(
                     (e) {
-                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
                       return isWriteBlank ? '${e.type}? ${e.name}' : 'required ${e.type} ${e.name}';
                     },
                   ).where(
@@ -27,7 +27,7 @@ class CrtGenerator extends Generator {
                   ).join(',')},}) {
             return $companionName(${params.map(
                     (e) {
-                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
                       return isWriteBlank
                           ? '${e.name}: ${e.name} == null ? const Value.absent() : ${e.isRequired ? 'Value(${e.name})' : e.name}'
                           : '${e.name}: ${e.isRequired ? 'Value(${e.name})' : e.name}';

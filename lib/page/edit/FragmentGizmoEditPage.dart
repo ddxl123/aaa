@@ -1,4 +1,5 @@
 import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
+import 'package:aaa/single_dialog/showPrivatePublishDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
@@ -44,7 +45,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
       leading: IconButton(
         icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
         onPressed: () async {
-          final result = await c.currentPerformer()!.isExistModified(fragmentGizmoEditPageAbController: c);
+          final result = await c.currentPerformer().isExistModified(fragmentGizmoEditPageAbController: c);
           if (result != null) {
             SmartDialog.showToast(result);
           } else {
@@ -81,41 +82,63 @@ class FragmentGizmoEditPage extends StatelessWidget {
             ),
             Row(
               children: [
-                const SizedBox(width: 10),
-                // 存放位置
-                AbwBuilder(
-                  builder: (abwSingle) {
-                    return IconButton(
-                      style: c.currentPerformer(abwSingle)!.fragmentGroupChains.isEmpty
-                          ? const ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
-                            )
-                          : null,
-                      icon: const FaIcon(FontAwesomeIcons.folder, color: Colors.blue),
-                      onPressed: () {
-                        c.showSaveGroup();
-                      },
-                    );
-                  },
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          // 存放位置
+                          AbwBuilder(
+                            builder: (abwSingle) {
+                              return IconButton(
+                                style: c.currentPerformer(abwSingle).fragmentGroupChains.isEmpty
+                                    ? const ButtonStyle(
+                                        backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
+                                      )
+                                    : null,
+                                icon: const FaIcon(FontAwesomeIcons.folder, color: Colors.blue),
+                                onPressed: () {
+                                  c.showSaveGroup();
+                                },
+                              );
+                            },
+                          ),
+                          const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: VerticalDivider()),
+                          // 使用模板
+                          IconButton(
+                            icon: const FaIcon(FontAwesomeIcons.codepen, color: Colors.blue),
+                            onPressed: () {},
+                          ),
+                          const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: VerticalDivider()),
+                          // 公开/私密/发布
+                          IconButton(
+                            icon: AbwBuilder(
+                              builder: (abw) {
+                                final bePrivate = c.currentPerformer(abw).bePrivate;
+                                final bePublish = c.currentPerformer(abw).bePublish;
+                                final privateColor = bePrivate ? Colors.amber : Colors.green;
+                                final publishColor = bePublish ? Colors.green : Colors.amber;
+                                return Row(
+                                  children: [
+                                    Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
+                                    Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
+                                    Text(bePublish ? " 将发布" : " 不发布", style: TextStyle(color: publishColor)),
+                                  ],
+                                );
+                              },
+                            ),
+                            onPressed: () {
+                              showPrivatePublishDialog();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                // AbwBuilder(
-                //   builder: (abwSingle) {
-                //     if (c.selectedFragmentGroupChainsStorage(abwSingle) == null) {
-                //       return Container();
-                //     }
-                //     if (c.selectedFragmentGroupChainsStorage(abwSingle)!.isEmpty) {
-                //       return const Text('~');
-                //     }
-                //     return Text(c.selectedFragmentGroupChainsStorage(abwSingle)!.last.title);
-                //   },
-                // ),
-                const SizedBox(width: 10),
-                // 使用模板
-                IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.codepen, color: Colors.blue),
-                  onPressed: () {},
-                ),
-                const Spacer(),
                 // 上一个
                 AbwBuilder(
                   builder: (abw) {

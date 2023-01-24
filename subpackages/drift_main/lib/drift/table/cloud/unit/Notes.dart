@@ -3,26 +3,28 @@ part of drift_db;
 
 @ReferenceTo([])
 class Notes extends CloudTableBase  {
-
+  @override
+  String? get tableName => "notes";
+  
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get content => text()();
+  TextColumn get content => text().named("content")();
 
   @ReferenceTo([Users])
-  IntColumn get creatorUserId => integer()();
+  IntColumn get creator_user_id => integer().named("creator_user_id")();
 
   @ReferenceTo([Documents])
-  TextColumn get documentId => text().nullable()();
+  TextColumn get document_id => text().named("document_id").nullable()();
 
   @ReferenceTo([Notes])
-  TextColumn get fatherNoteId => text().nullable()();
+  TextColumn get father_note_id => text().named("father_note_id").nullable()();
 
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text()();
+  TextColumn get id => text().named("id")();
 
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get updated_at => dateTime().named("updated_at")();
 
 }
         

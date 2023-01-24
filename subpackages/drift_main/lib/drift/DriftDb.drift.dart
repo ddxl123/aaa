@@ -158,18 +158,18 @@ class User extends DataClass implements Insertable<User> {
   String? password;
   String? phone;
   String username;
-  DateTime createdAt;
+  DateTime created_at;
   int id;
-  DateTime updatedAt;
+  DateTime updated_at;
   User(
       {this.age,
       this.email,
       this.password,
       this.phone,
       required this.username,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -186,9 +186,9 @@ class User extends DataClass implements Insertable<User> {
       map['phone'] = Variable<String>(phone);
     }
     map['username'] = Variable<String>(username);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
@@ -203,9 +203,9 @@ class User extends DataClass implements Insertable<User> {
       phone:
           phone == null && nullToAbsent ? const Value.absent() : Value(phone),
       username: Value(username),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -218,9 +218,9 @@ class User extends DataClass implements Insertable<User> {
       password: serializer.fromJson<String?>(json['password']),
       phone: serializer.fromJson<String?>(json['phone']),
       username: serializer.fromJson<String>(json['username']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
@@ -232,9 +232,9 @@ class User extends DataClass implements Insertable<User> {
       'password': serializer.toJson<String?>(password),
       'phone': serializer.toJson<String?>(phone),
       'username': serializer.toJson<String>(username),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
@@ -244,18 +244,18 @@ class User extends DataClass implements Insertable<User> {
           Value<String?> password = const Value.absent(),
           Value<String?> phone = const Value.absent(),
           String? username,
-          DateTime? createdAt,
+          DateTime? created_at,
           int? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       User(
         age: age.present ? age.value : this.age,
         email: email.present ? email.value : this.email,
         password: password.present ? password.value : this.password,
         phone: phone.present ? phone.value : this.phone,
         username: username ?? this.username,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
@@ -265,16 +265,16 @@ class User extends DataClass implements Insertable<User> {
           ..write('password: $password, ')
           ..write('phone: $phone, ')
           ..write('username: $username, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-      age, email, password, phone, username, createdAt, id, updatedAt);
+      age, email, password, phone, username, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -284,9 +284,9 @@ class User extends DataClass implements Insertable<User> {
           other.password == this.password &&
           other.phone == this.phone &&
           other.username == this.username &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
@@ -295,18 +295,18 @@ class UsersCompanion extends UpdateCompanion<User> {
   Value<String?> password;
   Value<String?> phone;
   Value<String> username;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<int> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   UsersCompanion({
     this.age = const Value.absent(),
     this.email = const Value.absent(),
     this.password = const Value.absent(),
     this.phone = const Value.absent(),
     this.username = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   UsersCompanion.insert({
     this.age = const Value.absent(),
@@ -314,21 +314,21 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.password = const Value.absent(),
     this.phone = const Value.absent(),
     required String username,
-    required DateTime createdAt,
+    required DateTime created_at,
     this.id = const Value.absent(),
-    required DateTime updatedAt,
+    required DateTime updated_at,
   })  : username = Value(username),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+        created_at = Value(created_at),
+        updated_at = Value(updated_at);
   static Insertable<User> custom({
     Expression<int>? age,
     Expression<String>? email,
     Expression<String>? password,
     Expression<String>? phone,
     Expression<String>? username,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<int>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
       if (age != null) 'age': age,
@@ -336,9 +336,9 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (password != null) 'password': password,
       if (phone != null) 'phone': phone,
       if (username != null) 'username': username,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
@@ -348,18 +348,18 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<String?>? password,
       Value<String?>? phone,
       Value<String>? username,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<int>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return UsersCompanion(
       age: age ?? this.age,
       email: email ?? this.email,
       password: password ?? this.password,
       phone: phone ?? this.phone,
       username: username ?? this.username,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
@@ -381,14 +381,14 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (username.present) {
       map['username'] = Variable<String>(username.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -401,9 +401,9 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('password: $password, ')
           ..write('phone: $phone, ')
           ..write('username: $username, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -441,10 +441,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<String> username = GeneratedColumn<String>(
       'username', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -452,15 +452,15 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [age, email, password, phone, username, createdAt, id, updatedAt];
+      [age, email, password, phone, username, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'users';
   @override
@@ -493,19 +493,23 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       context.missing(_usernameMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -526,11 +530,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           .read(DriftSqlType.string, data['${effectivePrefix}phone']),
       username: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}username'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -542,46 +546,46 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 }
 
 class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
-  String deviceInfo;
-  DateTime? recentSyncTime;
+  String device_info;
+  DateTime? recent_sync_time;
   String? token;
-  DateTime createdAt;
+  DateTime created_at;
   int id;
-  DateTime updatedAt;
+  DateTime updated_at;
   ClientSyncInfo(
-      {required this.deviceInfo,
-      this.recentSyncTime,
+      {required this.device_info,
+      this.recent_sync_time,
       this.token,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['device_info'] = Variable<String>(deviceInfo);
-    if (!nullToAbsent || recentSyncTime != null) {
-      map['recent_sync_time'] = Variable<DateTime>(recentSyncTime);
+    map['device_info'] = Variable<String>(device_info);
+    if (!nullToAbsent || recent_sync_time != null) {
+      map['recent_sync_time'] = Variable<DateTime>(recent_sync_time);
     }
     if (!nullToAbsent || token != null) {
       map['token'] = Variable<String>(token);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   ClientSyncInfosCompanion toCompanion(bool nullToAbsent) {
     return ClientSyncInfosCompanion(
-      deviceInfo: Value(deviceInfo),
-      recentSyncTime: recentSyncTime == null && nullToAbsent
+      device_info: Value(device_info),
+      recent_sync_time: recent_sync_time == null && nullToAbsent
           ? const Value.absent()
-          : Value(recentSyncTime),
+          : Value(recent_sync_time),
       token:
           token == null && nullToAbsent ? const Value.absent() : Value(token),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -589,151 +593,153 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ClientSyncInfo(
-      deviceInfo: serializer.fromJson<String>(json['deviceInfo']),
-      recentSyncTime: serializer.fromJson<DateTime?>(json['recentSyncTime']),
+      device_info: serializer.fromJson<String>(json['device_info']),
+      recent_sync_time:
+          serializer.fromJson<DateTime?>(json['recent_sync_time']),
       token: serializer.fromJson<String?>(json['token']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'deviceInfo': serializer.toJson<String>(deviceInfo),
-      'recentSyncTime': serializer.toJson<DateTime?>(recentSyncTime),
+      'device_info': serializer.toJson<String>(device_info),
+      'recent_sync_time': serializer.toJson<DateTime?>(recent_sync_time),
       'token': serializer.toJson<String?>(token),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   ClientSyncInfo copyWith(
-          {String? deviceInfo,
-          Value<DateTime?> recentSyncTime = const Value.absent(),
+          {String? device_info,
+          Value<DateTime?> recent_sync_time = const Value.absent(),
           Value<String?> token = const Value.absent(),
-          DateTime? createdAt,
+          DateTime? created_at,
           int? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       ClientSyncInfo(
-        deviceInfo: deviceInfo ?? this.deviceInfo,
-        recentSyncTime:
-            recentSyncTime.present ? recentSyncTime.value : this.recentSyncTime,
+        device_info: device_info ?? this.device_info,
+        recent_sync_time: recent_sync_time.present
+            ? recent_sync_time.value
+            : this.recent_sync_time,
         token: token.present ? token.value : this.token,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('ClientSyncInfo(')
-          ..write('deviceInfo: $deviceInfo, ')
-          ..write('recentSyncTime: $recentSyncTime, ')
+          ..write('device_info: $device_info, ')
+          ..write('recent_sync_time: $recent_sync_time, ')
           ..write('token: $token, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(deviceInfo, recentSyncTime, token, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(
+      device_info, recent_sync_time, token, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ClientSyncInfo &&
-          other.deviceInfo == this.deviceInfo &&
-          other.recentSyncTime == this.recentSyncTime &&
+          other.device_info == this.device_info &&
+          other.recent_sync_time == this.recent_sync_time &&
           other.token == this.token &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
-  Value<String> deviceInfo;
-  Value<DateTime?> recentSyncTime;
+  Value<String> device_info;
+  Value<DateTime?> recent_sync_time;
   Value<String?> token;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<int> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   ClientSyncInfosCompanion({
-    this.deviceInfo = const Value.absent(),
-    this.recentSyncTime = const Value.absent(),
+    this.device_info = const Value.absent(),
+    this.recent_sync_time = const Value.absent(),
     this.token = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   ClientSyncInfosCompanion.insert({
-    required String deviceInfo,
-    this.recentSyncTime = const Value.absent(),
+    required String device_info,
+    this.recent_sync_time = const Value.absent(),
     this.token = const Value.absent(),
-    required DateTime createdAt,
+    required DateTime created_at,
     this.id = const Value.absent(),
-    required DateTime updatedAt,
-  })  : deviceInfo = Value(deviceInfo),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+    required DateTime updated_at,
+  })  : device_info = Value(device_info),
+        created_at = Value(created_at),
+        updated_at = Value(updated_at);
   static Insertable<ClientSyncInfo> custom({
-    Expression<String>? deviceInfo,
-    Expression<DateTime>? recentSyncTime,
+    Expression<String>? device_info,
+    Expression<DateTime>? recent_sync_time,
     Expression<String>? token,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<int>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (deviceInfo != null) 'device_info': deviceInfo,
-      if (recentSyncTime != null) 'recent_sync_time': recentSyncTime,
+      if (device_info != null) 'device_info': device_info,
+      if (recent_sync_time != null) 'recent_sync_time': recent_sync_time,
       if (token != null) 'token': token,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   ClientSyncInfosCompanion copyWith(
-      {Value<String>? deviceInfo,
-      Value<DateTime?>? recentSyncTime,
+      {Value<String>? device_info,
+      Value<DateTime?>? recent_sync_time,
       Value<String?>? token,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<int>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return ClientSyncInfosCompanion(
-      deviceInfo: deviceInfo ?? this.deviceInfo,
-      recentSyncTime: recentSyncTime ?? this.recentSyncTime,
+      device_info: device_info ?? this.device_info,
+      recent_sync_time: recent_sync_time ?? this.recent_sync_time,
       token: token ?? this.token,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (deviceInfo.present) {
-      map['device_info'] = Variable<String>(deviceInfo.value);
+    if (device_info.present) {
+      map['device_info'] = Variable<String>(device_info.value);
     }
-    if (recentSyncTime.present) {
-      map['recent_sync_time'] = Variable<DateTime>(recentSyncTime.value);
+    if (recent_sync_time.present) {
+      map['recent_sync_time'] = Variable<DateTime>(recent_sync_time.value);
     }
     if (token.present) {
       map['token'] = Variable<String>(token.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -741,12 +747,12 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
   @override
   String toString() {
     return (StringBuffer('ClientSyncInfosCompanion(')
-          ..write('deviceInfo: $deviceInfo, ')
-          ..write('recentSyncTime: $recentSyncTime, ')
+          ..write('device_info: $device_info, ')
+          ..write('recent_sync_time: $recent_sync_time, ')
           ..write('token: $token, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -758,16 +764,16 @@ class $ClientSyncInfosTable extends ClientSyncInfos
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ClientSyncInfosTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _deviceInfoMeta =
-      const VerificationMeta('deviceInfo');
+  static const VerificationMeta _device_infoMeta =
+      const VerificationMeta('device_info');
   @override
-  late final GeneratedColumn<String> deviceInfo = GeneratedColumn<String>(
+  late final GeneratedColumn<String> device_info = GeneratedColumn<String>(
       'device_info', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _recentSyncTimeMeta =
-      const VerificationMeta('recentSyncTime');
+  static const VerificationMeta _recent_sync_timeMeta =
+      const VerificationMeta('recent_sync_time');
   @override
-  late final GeneratedColumn<DateTime> recentSyncTime =
+  late final GeneratedColumn<DateTime> recent_sync_time =
       GeneratedColumn<DateTime>('recent_sync_time', aliasedName, true,
           type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _tokenMeta = const VerificationMeta('token');
@@ -775,10 +781,10 @@ class $ClientSyncInfosTable extends ClientSyncInfos
   late final GeneratedColumn<String> token = GeneratedColumn<String>(
       'token', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -790,15 +796,15 @@ class $ClientSyncInfosTable extends ClientSyncInfos
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [deviceInfo, recentSyncTime, token, createdAt, id, updatedAt];
+      [device_info, recent_sync_time, token, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'client_sync_infos';
   @override
@@ -810,36 +816,40 @@ class $ClientSyncInfosTable extends ClientSyncInfos
     final data = instance.toColumns(true);
     if (data.containsKey('device_info')) {
       context.handle(
-          _deviceInfoMeta,
-          deviceInfo.isAcceptableOrUnknown(
-              data['device_info']!, _deviceInfoMeta));
+          _device_infoMeta,
+          device_info.isAcceptableOrUnknown(
+              data['device_info']!, _device_infoMeta));
     } else if (isInserting) {
-      context.missing(_deviceInfoMeta);
+      context.missing(_device_infoMeta);
     }
     if (data.containsKey('recent_sync_time')) {
       context.handle(
-          _recentSyncTimeMeta,
-          recentSyncTime.isAcceptableOrUnknown(
-              data['recent_sync_time']!, _recentSyncTimeMeta));
+          _recent_sync_timeMeta,
+          recent_sync_time.isAcceptableOrUnknown(
+              data['recent_sync_time']!, _recent_sync_timeMeta));
     }
     if (data.containsKey('token')) {
       context.handle(
           _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -850,17 +860,17 @@ class $ClientSyncInfosTable extends ClientSyncInfos
   ClientSyncInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ClientSyncInfo(
-      deviceInfo: attachedDatabase.typeMapping
+      device_info: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}device_info'])!,
-      recentSyncTime: attachedDatabase.typeMapping.read(
+      recent_sync_time: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}recent_sync_time']),
       token: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}token']),
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -872,46 +882,46 @@ class $ClientSyncInfosTable extends ClientSyncInfos
 }
 
 class Sync extends DataClass implements Insertable<Sync> {
-  String rowId;
-  SyncCurdType syncCurdType;
-  String syncTableName;
+  String row_id;
+  SyncCurdType sync_curd_type;
+  String sync_table_name;
   int tag;
-  DateTime createdAt;
+  DateTime created_at;
   int id;
-  DateTime updatedAt;
+  DateTime updated_at;
   Sync(
-      {required this.rowId,
-      required this.syncCurdType,
-      required this.syncTableName,
+      {required this.row_id,
+      required this.sync_curd_type,
+      required this.sync_table_name,
       required this.tag,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['row_id'] = Variable<String>(rowId);
+    map['row_id'] = Variable<String>(row_id);
     {
-      final converter = $SyncsTable.$convertersyncCurdType;
-      map['sync_curd_type'] = Variable<int>(converter.toSql(syncCurdType));
+      final converter = $SyncsTable.$convertersync_curd_type;
+      map['sync_curd_type'] = Variable<int>(converter.toSql(sync_curd_type));
     }
-    map['sync_table_name'] = Variable<String>(syncTableName);
+    map['sync_table_name'] = Variable<String>(sync_table_name);
     map['tag'] = Variable<int>(tag);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   SyncsCompanion toCompanion(bool nullToAbsent) {
     return SyncsCompanion(
-      rowId: Value(rowId),
-      syncCurdType: Value(syncCurdType),
-      syncTableName: Value(syncTableName),
+      row_id: Value(row_id),
+      sync_curd_type: Value(sync_curd_type),
+      sync_table_name: Value(sync_table_name),
       tag: Value(tag),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -919,173 +929,173 @@ class Sync extends DataClass implements Insertable<Sync> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Sync(
-      rowId: serializer.fromJson<String>(json['rowId']),
-      syncCurdType: $SyncsTable.$convertersyncCurdType
-          .fromJson(serializer.fromJson<int>(json['syncCurdType'])),
-      syncTableName: serializer.fromJson<String>(json['syncTableName']),
+      row_id: serializer.fromJson<String>(json['row_id']),
+      sync_curd_type: $SyncsTable.$convertersync_curd_type
+          .fromJson(serializer.fromJson<int>(json['sync_curd_type'])),
+      sync_table_name: serializer.fromJson<String>(json['sync_table_name']),
       tag: serializer.fromJson<int>(json['tag']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'rowId': serializer.toJson<String>(rowId),
-      'syncCurdType': serializer
-          .toJson<int>($SyncsTable.$convertersyncCurdType.toJson(syncCurdType)),
-      'syncTableName': serializer.toJson<String>(syncTableName),
+      'row_id': serializer.toJson<String>(row_id),
+      'sync_curd_type': serializer.toJson<int>(
+          $SyncsTable.$convertersync_curd_type.toJson(sync_curd_type)),
+      'sync_table_name': serializer.toJson<String>(sync_table_name),
       'tag': serializer.toJson<int>(tag),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   Sync copyWith(
-          {String? rowId,
-          SyncCurdType? syncCurdType,
-          String? syncTableName,
+          {String? row_id,
+          SyncCurdType? sync_curd_type,
+          String? sync_table_name,
           int? tag,
-          DateTime? createdAt,
+          DateTime? created_at,
           int? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       Sync(
-        rowId: rowId ?? this.rowId,
-        syncCurdType: syncCurdType ?? this.syncCurdType,
-        syncTableName: syncTableName ?? this.syncTableName,
+        row_id: row_id ?? this.row_id,
+        sync_curd_type: sync_curd_type ?? this.sync_curd_type,
+        sync_table_name: sync_table_name ?? this.sync_table_name,
         tag: tag ?? this.tag,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('Sync(')
-          ..write('rowId: $rowId, ')
-          ..write('syncCurdType: $syncCurdType, ')
-          ..write('syncTableName: $syncTableName, ')
+          ..write('row_id: $row_id, ')
+          ..write('sync_curd_type: $sync_curd_type, ')
+          ..write('sync_table_name: $sync_table_name, ')
           ..write('tag: $tag, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-      rowId, syncCurdType, syncTableName, tag, createdAt, id, updatedAt);
+      row_id, sync_curd_type, sync_table_name, tag, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Sync &&
-          other.rowId == this.rowId &&
-          other.syncCurdType == this.syncCurdType &&
-          other.syncTableName == this.syncTableName &&
+          other.row_id == this.row_id &&
+          other.sync_curd_type == this.sync_curd_type &&
+          other.sync_table_name == this.sync_table_name &&
           other.tag == this.tag &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class SyncsCompanion extends UpdateCompanion<Sync> {
-  Value<String> rowId;
-  Value<SyncCurdType> syncCurdType;
-  Value<String> syncTableName;
+  Value<String> row_id;
+  Value<SyncCurdType> sync_curd_type;
+  Value<String> sync_table_name;
   Value<int> tag;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<int> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   SyncsCompanion({
-    this.rowId = const Value.absent(),
-    this.syncCurdType = const Value.absent(),
-    this.syncTableName = const Value.absent(),
+    this.row_id = const Value.absent(),
+    this.sync_curd_type = const Value.absent(),
+    this.sync_table_name = const Value.absent(),
     this.tag = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   SyncsCompanion.insert({
-    required String rowId,
-    required SyncCurdType syncCurdType,
-    required String syncTableName,
+    required String row_id,
+    required SyncCurdType sync_curd_type,
+    required String sync_table_name,
     required int tag,
-    required DateTime createdAt,
+    required DateTime created_at,
     this.id = const Value.absent(),
-    required DateTime updatedAt,
-  })  : rowId = Value(rowId),
-        syncCurdType = Value(syncCurdType),
-        syncTableName = Value(syncTableName),
+    required DateTime updated_at,
+  })  : row_id = Value(row_id),
+        sync_curd_type = Value(sync_curd_type),
+        sync_table_name = Value(sync_table_name),
         tag = Value(tag),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+        created_at = Value(created_at),
+        updated_at = Value(updated_at);
   static Insertable<Sync> custom({
-    Expression<String>? rowId,
-    Expression<int>? syncCurdType,
-    Expression<String>? syncTableName,
+    Expression<String>? row_id,
+    Expression<int>? sync_curd_type,
+    Expression<String>? sync_table_name,
     Expression<int>? tag,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<int>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (rowId != null) 'row_id': rowId,
-      if (syncCurdType != null) 'sync_curd_type': syncCurdType,
-      if (syncTableName != null) 'sync_table_name': syncTableName,
+      if (row_id != null) 'row_id': row_id,
+      if (sync_curd_type != null) 'sync_curd_type': sync_curd_type,
+      if (sync_table_name != null) 'sync_table_name': sync_table_name,
       if (tag != null) 'tag': tag,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   SyncsCompanion copyWith(
-      {Value<String>? rowId,
-      Value<SyncCurdType>? syncCurdType,
-      Value<String>? syncTableName,
+      {Value<String>? row_id,
+      Value<SyncCurdType>? sync_curd_type,
+      Value<String>? sync_table_name,
       Value<int>? tag,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<int>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return SyncsCompanion(
-      rowId: rowId ?? this.rowId,
-      syncCurdType: syncCurdType ?? this.syncCurdType,
-      syncTableName: syncTableName ?? this.syncTableName,
+      row_id: row_id ?? this.row_id,
+      sync_curd_type: sync_curd_type ?? this.sync_curd_type,
+      sync_table_name: sync_table_name ?? this.sync_table_name,
       tag: tag ?? this.tag,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (rowId.present) {
-      map['row_id'] = Variable<String>(rowId.value);
+    if (row_id.present) {
+      map['row_id'] = Variable<String>(row_id.value);
     }
-    if (syncCurdType.present) {
-      final converter = $SyncsTable.$convertersyncCurdType;
+    if (sync_curd_type.present) {
+      final converter = $SyncsTable.$convertersync_curd_type;
       map['sync_curd_type'] =
-          Variable<int>(converter.toSql(syncCurdType.value));
+          Variable<int>(converter.toSql(sync_curd_type.value));
     }
-    if (syncTableName.present) {
-      map['sync_table_name'] = Variable<String>(syncTableName.value);
+    if (sync_table_name.present) {
+      map['sync_table_name'] = Variable<String>(sync_table_name.value);
     }
     if (tag.present) {
       map['tag'] = Variable<int>(tag.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -1093,13 +1103,13 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   @override
   String toString() {
     return (StringBuffer('SyncsCompanion(')
-          ..write('rowId: $rowId, ')
-          ..write('syncCurdType: $syncCurdType, ')
-          ..write('syncTableName: $syncTableName, ')
+          ..write('row_id: $row_id, ')
+          ..write('sync_curd_type: $sync_curd_type, ')
+          ..write('sync_table_name: $sync_table_name, ')
           ..write('tag: $tag, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -1110,22 +1120,23 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SyncsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  static const VerificationMeta _row_idMeta = const VerificationMeta('row_id');
   @override
-  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> row_id = GeneratedColumn<String>(
       'row_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _syncCurdTypeMeta =
-      const VerificationMeta('syncCurdType');
+  static const VerificationMeta _sync_curd_typeMeta =
+      const VerificationMeta('sync_curd_type');
   @override
-  late final GeneratedColumnWithTypeConverter<SyncCurdType, int> syncCurdType =
-      GeneratedColumn<int>('sync_curd_type', aliasedName, false,
+  late final GeneratedColumnWithTypeConverter<SyncCurdType, int>
+      sync_curd_type = GeneratedColumn<int>(
+              'sync_curd_type', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<SyncCurdType>($SyncsTable.$convertersyncCurdType);
-  static const VerificationMeta _syncTableNameMeta =
-      const VerificationMeta('syncTableName');
+          .withConverter<SyncCurdType>($SyncsTable.$convertersync_curd_type);
+  static const VerificationMeta _sync_table_nameMeta =
+      const VerificationMeta('sync_table_name');
   @override
-  late final GeneratedColumn<String> syncTableName = GeneratedColumn<String>(
+  late final GeneratedColumn<String> sync_table_name = GeneratedColumn<String>(
       'sync_table_name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _tagMeta = const VerificationMeta('tag');
@@ -1133,10 +1144,10 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
   late final GeneratedColumn<int> tag = GeneratedColumn<int>(
       'tag', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -1148,15 +1159,22 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [rowId, syncCurdType, syncTableName, tag, createdAt, id, updatedAt];
+  List<GeneratedColumn> get $columns => [
+        row_id,
+        sync_curd_type,
+        sync_table_name,
+        tag,
+        created_at,
+        id,
+        updated_at
+      ];
   @override
   String get aliasedName => _alias ?? 'syncs';
   @override
@@ -1167,19 +1185,19 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('row_id')) {
-      context.handle(
-          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+      context.handle(_row_idMeta,
+          row_id.isAcceptableOrUnknown(data['row_id']!, _row_idMeta));
     } else if (isInserting) {
-      context.missing(_rowIdMeta);
+      context.missing(_row_idMeta);
     }
-    context.handle(_syncCurdTypeMeta, const VerificationResult.success());
+    context.handle(_sync_curd_typeMeta, const VerificationResult.success());
     if (data.containsKey('sync_table_name')) {
       context.handle(
-          _syncTableNameMeta,
-          syncTableName.isAcceptableOrUnknown(
-              data['sync_table_name']!, _syncTableNameMeta));
+          _sync_table_nameMeta,
+          sync_table_name.isAcceptableOrUnknown(
+              data['sync_table_name']!, _sync_table_nameMeta));
     } else if (isInserting) {
-      context.missing(_syncTableNameMeta);
+      context.missing(_sync_table_nameMeta);
     }
     if (data.containsKey('tag')) {
       context.handle(
@@ -1188,19 +1206,23 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       context.missing(_tagMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -1211,20 +1233,20 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
   Sync map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Sync(
-      rowId: attachedDatabase.typeMapping
+      row_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}row_id'])!,
-      syncCurdType: $SyncsTable.$convertersyncCurdType.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}sync_curd_type'])!),
-      syncTableName: attachedDatabase.typeMapping.read(
+      sync_curd_type: $SyncsTable.$convertersync_curd_type.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}sync_curd_type'])!),
+      sync_table_name: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}sync_table_name'])!,
       tag: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}tag'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -1234,85 +1256,86 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     return $SyncsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<SyncCurdType, int, int> $convertersyncCurdType =
+  static JsonTypeConverter2<SyncCurdType, int, int> $convertersync_curd_type =
       const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
 }
 
 class FragmentMemoryInfo extends DataClass
     implements Insertable<FragmentMemoryInfo> {
-  String? clickTime;
-  String? clickValue;
-  int creatorUserId;
-  String? currentActualShowTime;
-  String fragmentId;
-  String memoryGroupId;
-  String? nextPlanShowTime;
-  String? showFamiliarity;
-  DateTime createdAt;
+  String? click_time;
+  String? click_value;
+  int creator_user_id;
+  String? current_actual_show_time;
+  String fragment_id;
+  String memory_group_id;
+  String? next_plan_show_time;
+  String? show_familiarity;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   FragmentMemoryInfo(
-      {this.clickTime,
-      this.clickValue,
-      required this.creatorUserId,
-      this.currentActualShowTime,
-      required this.fragmentId,
-      required this.memoryGroupId,
-      this.nextPlanShowTime,
-      this.showFamiliarity,
-      required this.createdAt,
+      {this.click_time,
+      this.click_value,
+      required this.creator_user_id,
+      this.current_actual_show_time,
+      required this.fragment_id,
+      required this.memory_group_id,
+      this.next_plan_show_time,
+      this.show_familiarity,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || clickTime != null) {
-      map['click_time'] = Variable<String>(clickTime);
+    if (!nullToAbsent || click_time != null) {
+      map['click_time'] = Variable<String>(click_time);
     }
-    if (!nullToAbsent || clickValue != null) {
-      map['click_value'] = Variable<String>(clickValue);
+    if (!nullToAbsent || click_value != null) {
+      map['click_value'] = Variable<String>(click_value);
     }
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || currentActualShowTime != null) {
-      map['current_actual_show_time'] = Variable<String>(currentActualShowTime);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || current_actual_show_time != null) {
+      map['current_actual_show_time'] =
+          Variable<String>(current_actual_show_time);
     }
-    map['fragment_id'] = Variable<String>(fragmentId);
-    map['memory_group_id'] = Variable<String>(memoryGroupId);
-    if (!nullToAbsent || nextPlanShowTime != null) {
-      map['next_plan_show_time'] = Variable<String>(nextPlanShowTime);
+    map['fragment_id'] = Variable<String>(fragment_id);
+    map['memory_group_id'] = Variable<String>(memory_group_id);
+    if (!nullToAbsent || next_plan_show_time != null) {
+      map['next_plan_show_time'] = Variable<String>(next_plan_show_time);
     }
-    if (!nullToAbsent || showFamiliarity != null) {
-      map['show_familiarity'] = Variable<String>(showFamiliarity);
+    if (!nullToAbsent || show_familiarity != null) {
+      map['show_familiarity'] = Variable<String>(show_familiarity);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   FragmentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
     return FragmentMemoryInfosCompanion(
-      clickTime: clickTime == null && nullToAbsent
+      click_time: click_time == null && nullToAbsent
           ? const Value.absent()
-          : Value(clickTime),
-      clickValue: clickValue == null && nullToAbsent
+          : Value(click_time),
+      click_value: click_value == null && nullToAbsent
           ? const Value.absent()
-          : Value(clickValue),
-      creatorUserId: Value(creatorUserId),
-      currentActualShowTime: currentActualShowTime == null && nullToAbsent
+          : Value(click_value),
+      creator_user_id: Value(creator_user_id),
+      current_actual_show_time: current_actual_show_time == null && nullToAbsent
           ? const Value.absent()
-          : Value(currentActualShowTime),
-      fragmentId: Value(fragmentId),
-      memoryGroupId: Value(memoryGroupId),
-      nextPlanShowTime: nextPlanShowTime == null && nullToAbsent
+          : Value(current_actual_show_time),
+      fragment_id: Value(fragment_id),
+      memory_group_id: Value(memory_group_id),
+      next_plan_show_time: next_plan_show_time == null && nullToAbsent
           ? const Value.absent()
-          : Value(nextPlanShowTime),
-      showFamiliarity: showFamiliarity == null && nullToAbsent
+          : Value(next_plan_show_time),
+      show_familiarity: show_familiarity == null && nullToAbsent
           ? const Value.absent()
-          : Value(showFamiliarity),
-      createdAt: Value(createdAt),
+          : Value(show_familiarity),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -1320,254 +1343,256 @@ class FragmentMemoryInfo extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentMemoryInfo(
-      clickTime: serializer.fromJson<String?>(json['clickTime']),
-      clickValue: serializer.fromJson<String?>(json['clickValue']),
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      currentActualShowTime:
-          serializer.fromJson<String?>(json['currentActualShowTime']),
-      fragmentId: serializer.fromJson<String>(json['fragmentId']),
-      memoryGroupId: serializer.fromJson<String>(json['memoryGroupId']),
-      nextPlanShowTime: serializer.fromJson<String?>(json['nextPlanShowTime']),
-      showFamiliarity: serializer.fromJson<String?>(json['showFamiliarity']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      click_time: serializer.fromJson<String?>(json['click_time']),
+      click_value: serializer.fromJson<String?>(json['click_value']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      current_actual_show_time:
+          serializer.fromJson<String?>(json['current_actual_show_time']),
+      fragment_id: serializer.fromJson<String>(json['fragment_id']),
+      memory_group_id: serializer.fromJson<String>(json['memory_group_id']),
+      next_plan_show_time:
+          serializer.fromJson<String?>(json['next_plan_show_time']),
+      show_familiarity: serializer.fromJson<String?>(json['show_familiarity']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'clickTime': serializer.toJson<String?>(clickTime),
-      'clickValue': serializer.toJson<String?>(clickValue),
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'currentActualShowTime':
-          serializer.toJson<String?>(currentActualShowTime),
-      'fragmentId': serializer.toJson<String>(fragmentId),
-      'memoryGroupId': serializer.toJson<String>(memoryGroupId),
-      'nextPlanShowTime': serializer.toJson<String?>(nextPlanShowTime),
-      'showFamiliarity': serializer.toJson<String?>(showFamiliarity),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'click_time': serializer.toJson<String?>(click_time),
+      'click_value': serializer.toJson<String?>(click_value),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'current_actual_show_time':
+          serializer.toJson<String?>(current_actual_show_time),
+      'fragment_id': serializer.toJson<String>(fragment_id),
+      'memory_group_id': serializer.toJson<String>(memory_group_id),
+      'next_plan_show_time': serializer.toJson<String?>(next_plan_show_time),
+      'show_familiarity': serializer.toJson<String?>(show_familiarity),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   FragmentMemoryInfo copyWith(
-          {Value<String?> clickTime = const Value.absent(),
-          Value<String?> clickValue = const Value.absent(),
-          int? creatorUserId,
-          Value<String?> currentActualShowTime = const Value.absent(),
-          String? fragmentId,
-          String? memoryGroupId,
-          Value<String?> nextPlanShowTime = const Value.absent(),
-          Value<String?> showFamiliarity = const Value.absent(),
-          DateTime? createdAt,
+          {Value<String?> click_time = const Value.absent(),
+          Value<String?> click_value = const Value.absent(),
+          int? creator_user_id,
+          Value<String?> current_actual_show_time = const Value.absent(),
+          String? fragment_id,
+          String? memory_group_id,
+          Value<String?> next_plan_show_time = const Value.absent(),
+          Value<String?> show_familiarity = const Value.absent(),
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       FragmentMemoryInfo(
-        clickTime: clickTime.present ? clickTime.value : this.clickTime,
-        clickValue: clickValue.present ? clickValue.value : this.clickValue,
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        currentActualShowTime: currentActualShowTime.present
-            ? currentActualShowTime.value
-            : this.currentActualShowTime,
-        fragmentId: fragmentId ?? this.fragmentId,
-        memoryGroupId: memoryGroupId ?? this.memoryGroupId,
-        nextPlanShowTime: nextPlanShowTime.present
-            ? nextPlanShowTime.value
-            : this.nextPlanShowTime,
-        showFamiliarity: showFamiliarity.present
-            ? showFamiliarity.value
-            : this.showFamiliarity,
-        createdAt: createdAt ?? this.createdAt,
+        click_time: click_time.present ? click_time.value : this.click_time,
+        click_value: click_value.present ? click_value.value : this.click_value,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        current_actual_show_time: current_actual_show_time.present
+            ? current_actual_show_time.value
+            : this.current_actual_show_time,
+        fragment_id: fragment_id ?? this.fragment_id,
+        memory_group_id: memory_group_id ?? this.memory_group_id,
+        next_plan_show_time: next_plan_show_time.present
+            ? next_plan_show_time.value
+            : this.next_plan_show_time,
+        show_familiarity: show_familiarity.present
+            ? show_familiarity.value
+            : this.show_familiarity,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('FragmentMemoryInfo(')
-          ..write('clickTime: $clickTime, ')
-          ..write('clickValue: $clickValue, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('currentActualShowTime: $currentActualShowTime, ')
-          ..write('fragmentId: $fragmentId, ')
-          ..write('memoryGroupId: $memoryGroupId, ')
-          ..write('nextPlanShowTime: $nextPlanShowTime, ')
-          ..write('showFamiliarity: $showFamiliarity, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('click_time: $click_time, ')
+          ..write('click_value: $click_value, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('current_actual_show_time: $current_actual_show_time, ')
+          ..write('fragment_id: $fragment_id, ')
+          ..write('memory_group_id: $memory_group_id, ')
+          ..write('next_plan_show_time: $next_plan_show_time, ')
+          ..write('show_familiarity: $show_familiarity, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-      clickTime,
-      clickValue,
-      creatorUserId,
-      currentActualShowTime,
-      fragmentId,
-      memoryGroupId,
-      nextPlanShowTime,
-      showFamiliarity,
-      createdAt,
+      click_time,
+      click_value,
+      creator_user_id,
+      current_actual_show_time,
+      fragment_id,
+      memory_group_id,
+      next_plan_show_time,
+      show_familiarity,
+      created_at,
       id,
-      updatedAt);
+      updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentMemoryInfo &&
-          other.clickTime == this.clickTime &&
-          other.clickValue == this.clickValue &&
-          other.creatorUserId == this.creatorUserId &&
-          other.currentActualShowTime == this.currentActualShowTime &&
-          other.fragmentId == this.fragmentId &&
-          other.memoryGroupId == this.memoryGroupId &&
-          other.nextPlanShowTime == this.nextPlanShowTime &&
-          other.showFamiliarity == this.showFamiliarity &&
-          other.createdAt == this.createdAt &&
+          other.click_time == this.click_time &&
+          other.click_value == this.click_value &&
+          other.creator_user_id == this.creator_user_id &&
+          other.current_actual_show_time == this.current_actual_show_time &&
+          other.fragment_id == this.fragment_id &&
+          other.memory_group_id == this.memory_group_id &&
+          other.next_plan_show_time == this.next_plan_show_time &&
+          other.show_familiarity == this.show_familiarity &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
-  Value<String?> clickTime;
-  Value<String?> clickValue;
-  Value<int> creatorUserId;
-  Value<String?> currentActualShowTime;
-  Value<String> fragmentId;
-  Value<String> memoryGroupId;
-  Value<String?> nextPlanShowTime;
-  Value<String?> showFamiliarity;
-  Value<DateTime> createdAt;
+  Value<String?> click_time;
+  Value<String?> click_value;
+  Value<int> creator_user_id;
+  Value<String?> current_actual_show_time;
+  Value<String> fragment_id;
+  Value<String> memory_group_id;
+  Value<String?> next_plan_show_time;
+  Value<String?> show_familiarity;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   FragmentMemoryInfosCompanion({
-    this.clickTime = const Value.absent(),
-    this.clickValue = const Value.absent(),
-    this.creatorUserId = const Value.absent(),
-    this.currentActualShowTime = const Value.absent(),
-    this.fragmentId = const Value.absent(),
-    this.memoryGroupId = const Value.absent(),
-    this.nextPlanShowTime = const Value.absent(),
-    this.showFamiliarity = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.click_time = const Value.absent(),
+    this.click_value = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.current_actual_show_time = const Value.absent(),
+    this.fragment_id = const Value.absent(),
+    this.memory_group_id = const Value.absent(),
+    this.next_plan_show_time = const Value.absent(),
+    this.show_familiarity = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   FragmentMemoryInfosCompanion.insert({
-    this.clickTime = const Value.absent(),
-    this.clickValue = const Value.absent(),
-    required int creatorUserId,
-    this.currentActualShowTime = const Value.absent(),
-    required String fragmentId,
-    required String memoryGroupId,
-    this.nextPlanShowTime = const Value.absent(),
-    this.showFamiliarity = const Value.absent(),
-    required DateTime createdAt,
+    this.click_time = const Value.absent(),
+    this.click_value = const Value.absent(),
+    required int creator_user_id,
+    this.current_actual_show_time = const Value.absent(),
+    required String fragment_id,
+    required String memory_group_id,
+    this.next_plan_show_time = const Value.absent(),
+    this.show_familiarity = const Value.absent(),
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        fragmentId = Value(fragmentId),
-        memoryGroupId = Value(memoryGroupId),
-        createdAt = Value(createdAt),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
+        fragment_id = Value(fragment_id),
+        memory_group_id = Value(memory_group_id),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<FragmentMemoryInfo> custom({
-    Expression<String>? clickTime,
-    Expression<String>? clickValue,
-    Expression<int>? creatorUserId,
-    Expression<String>? currentActualShowTime,
-    Expression<String>? fragmentId,
-    Expression<String>? memoryGroupId,
-    Expression<String>? nextPlanShowTime,
-    Expression<String>? showFamiliarity,
-    Expression<DateTime>? createdAt,
+    Expression<String>? click_time,
+    Expression<String>? click_value,
+    Expression<int>? creator_user_id,
+    Expression<String>? current_actual_show_time,
+    Expression<String>? fragment_id,
+    Expression<String>? memory_group_id,
+    Expression<String>? next_plan_show_time,
+    Expression<String>? show_familiarity,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (clickTime != null) 'click_time': clickTime,
-      if (clickValue != null) 'click_value': clickValue,
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (currentActualShowTime != null)
-        'current_actual_show_time': currentActualShowTime,
-      if (fragmentId != null) 'fragment_id': fragmentId,
-      if (memoryGroupId != null) 'memory_group_id': memoryGroupId,
-      if (nextPlanShowTime != null) 'next_plan_show_time': nextPlanShowTime,
-      if (showFamiliarity != null) 'show_familiarity': showFamiliarity,
-      if (createdAt != null) 'created_at': createdAt,
+      if (click_time != null) 'click_time': click_time,
+      if (click_value != null) 'click_value': click_value,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (current_actual_show_time != null)
+        'current_actual_show_time': current_actual_show_time,
+      if (fragment_id != null) 'fragment_id': fragment_id,
+      if (memory_group_id != null) 'memory_group_id': memory_group_id,
+      if (next_plan_show_time != null)
+        'next_plan_show_time': next_plan_show_time,
+      if (show_familiarity != null) 'show_familiarity': show_familiarity,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   FragmentMemoryInfosCompanion copyWith(
-      {Value<String?>? clickTime,
-      Value<String?>? clickValue,
-      Value<int>? creatorUserId,
-      Value<String?>? currentActualShowTime,
-      Value<String>? fragmentId,
-      Value<String>? memoryGroupId,
-      Value<String?>? nextPlanShowTime,
-      Value<String?>? showFamiliarity,
-      Value<DateTime>? createdAt,
+      {Value<String?>? click_time,
+      Value<String?>? click_value,
+      Value<int>? creator_user_id,
+      Value<String?>? current_actual_show_time,
+      Value<String>? fragment_id,
+      Value<String>? memory_group_id,
+      Value<String?>? next_plan_show_time,
+      Value<String?>? show_familiarity,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return FragmentMemoryInfosCompanion(
-      clickTime: clickTime ?? this.clickTime,
-      clickValue: clickValue ?? this.clickValue,
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      currentActualShowTime:
-          currentActualShowTime ?? this.currentActualShowTime,
-      fragmentId: fragmentId ?? this.fragmentId,
-      memoryGroupId: memoryGroupId ?? this.memoryGroupId,
-      nextPlanShowTime: nextPlanShowTime ?? this.nextPlanShowTime,
-      showFamiliarity: showFamiliarity ?? this.showFamiliarity,
-      createdAt: createdAt ?? this.createdAt,
+      click_time: click_time ?? this.click_time,
+      click_value: click_value ?? this.click_value,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      current_actual_show_time:
+          current_actual_show_time ?? this.current_actual_show_time,
+      fragment_id: fragment_id ?? this.fragment_id,
+      memory_group_id: memory_group_id ?? this.memory_group_id,
+      next_plan_show_time: next_plan_show_time ?? this.next_plan_show_time,
+      show_familiarity: show_familiarity ?? this.show_familiarity,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (clickTime.present) {
-      map['click_time'] = Variable<String>(clickTime.value);
+    if (click_time.present) {
+      map['click_time'] = Variable<String>(click_time.value);
     }
-    if (clickValue.present) {
-      map['click_value'] = Variable<String>(clickValue.value);
+    if (click_value.present) {
+      map['click_value'] = Variable<String>(click_value.value);
     }
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (currentActualShowTime.present) {
+    if (current_actual_show_time.present) {
       map['current_actual_show_time'] =
-          Variable<String>(currentActualShowTime.value);
+          Variable<String>(current_actual_show_time.value);
     }
-    if (fragmentId.present) {
-      map['fragment_id'] = Variable<String>(fragmentId.value);
+    if (fragment_id.present) {
+      map['fragment_id'] = Variable<String>(fragment_id.value);
     }
-    if (memoryGroupId.present) {
-      map['memory_group_id'] = Variable<String>(memoryGroupId.value);
+    if (memory_group_id.present) {
+      map['memory_group_id'] = Variable<String>(memory_group_id.value);
     }
-    if (nextPlanShowTime.present) {
-      map['next_plan_show_time'] = Variable<String>(nextPlanShowTime.value);
+    if (next_plan_show_time.present) {
+      map['next_plan_show_time'] = Variable<String>(next_plan_show_time.value);
     }
-    if (showFamiliarity.present) {
-      map['show_familiarity'] = Variable<String>(showFamiliarity.value);
+    if (show_familiarity.present) {
+      map['show_familiarity'] = Variable<String>(show_familiarity.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -1575,17 +1600,17 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   @override
   String toString() {
     return (StringBuffer('FragmentMemoryInfosCompanion(')
-          ..write('clickTime: $clickTime, ')
-          ..write('clickValue: $clickValue, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('currentActualShowTime: $currentActualShowTime, ')
-          ..write('fragmentId: $fragmentId, ')
-          ..write('memoryGroupId: $memoryGroupId, ')
-          ..write('nextPlanShowTime: $nextPlanShowTime, ')
-          ..write('showFamiliarity: $showFamiliarity, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('click_time: $click_time, ')
+          ..write('click_value: $click_value, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('current_actual_show_time: $current_actual_show_time, ')
+          ..write('fragment_id: $fragment_id, ')
+          ..write('memory_group_id: $memory_group_id, ')
+          ..write('next_plan_show_time: $next_plan_show_time, ')
+          ..write('show_familiarity: $show_familiarity, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -1597,58 +1622,58 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentMemoryInfosTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _clickTimeMeta =
-      const VerificationMeta('clickTime');
+  static const VerificationMeta _click_timeMeta =
+      const VerificationMeta('click_time');
   @override
-  late final GeneratedColumn<String> clickTime = GeneratedColumn<String>(
+  late final GeneratedColumn<String> click_time = GeneratedColumn<String>(
       'click_time', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _clickValueMeta =
-      const VerificationMeta('clickValue');
+  static const VerificationMeta _click_valueMeta =
+      const VerificationMeta('click_value');
   @override
-  late final GeneratedColumn<String> clickValue = GeneratedColumn<String>(
+  late final GeneratedColumn<String> click_value = GeneratedColumn<String>(
       'click_value', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _currentActualShowTimeMeta =
-      const VerificationMeta('currentActualShowTime');
+  static const VerificationMeta _current_actual_show_timeMeta =
+      const VerificationMeta('current_actual_show_time');
   @override
-  late final GeneratedColumn<String> currentActualShowTime =
+  late final GeneratedColumn<String> current_actual_show_time =
       GeneratedColumn<String>('current_actual_show_time', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fragmentIdMeta =
-      const VerificationMeta('fragmentId');
+  static const VerificationMeta _fragment_idMeta =
+      const VerificationMeta('fragment_id');
   @override
-  late final GeneratedColumn<String> fragmentId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> fragment_id = GeneratedColumn<String>(
       'fragment_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _memoryGroupIdMeta =
-      const VerificationMeta('memoryGroupId');
+  static const VerificationMeta _memory_group_idMeta =
+      const VerificationMeta('memory_group_id');
   @override
-  late final GeneratedColumn<String> memoryGroupId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> memory_group_id = GeneratedColumn<String>(
       'memory_group_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _nextPlanShowTimeMeta =
-      const VerificationMeta('nextPlanShowTime');
+  static const VerificationMeta _next_plan_show_timeMeta =
+      const VerificationMeta('next_plan_show_time');
   @override
-  late final GeneratedColumn<String> nextPlanShowTime = GeneratedColumn<String>(
-      'next_plan_show_time', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _showFamiliarityMeta =
-      const VerificationMeta('showFamiliarity');
+  late final GeneratedColumn<String> next_plan_show_time =
+      GeneratedColumn<String>('next_plan_show_time', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _show_familiarityMeta =
+      const VerificationMeta('show_familiarity');
   @override
-  late final GeneratedColumn<String> showFamiliarity = GeneratedColumn<String>(
+  late final GeneratedColumn<String> show_familiarity = GeneratedColumn<String>(
       'show_familiarity', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -1656,25 +1681,25 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        clickTime,
-        clickValue,
-        creatorUserId,
-        currentActualShowTime,
-        fragmentId,
-        memoryGroupId,
-        nextPlanShowTime,
-        showFamiliarity,
-        createdAt,
+        click_time,
+        click_value,
+        creator_user_id,
+        current_actual_show_time,
+        fragment_id,
+        memory_group_id,
+        next_plan_show_time,
+        show_familiarity,
+        created_at,
         id,
-        updatedAt
+        updated_at
       ];
   @override
   String get aliasedName => _alias ?? 'fragment_memory_infos';
@@ -1686,62 +1711,67 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('click_time')) {
-      context.handle(_clickTimeMeta,
-          clickTime.isAcceptableOrUnknown(data['click_time']!, _clickTimeMeta));
+      context.handle(
+          _click_timeMeta,
+          click_time.isAcceptableOrUnknown(
+              data['click_time']!, _click_timeMeta));
     }
     if (data.containsKey('click_value')) {
       context.handle(
-          _clickValueMeta,
-          clickValue.isAcceptableOrUnknown(
-              data['click_value']!, _clickValueMeta));
+          _click_valueMeta,
+          click_value.isAcceptableOrUnknown(
+              data['click_value']!, _click_valueMeta));
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('current_actual_show_time')) {
       context.handle(
-          _currentActualShowTimeMeta,
-          currentActualShowTime.isAcceptableOrUnknown(
-              data['current_actual_show_time']!, _currentActualShowTimeMeta));
+          _current_actual_show_timeMeta,
+          current_actual_show_time.isAcceptableOrUnknown(
+              data['current_actual_show_time']!,
+              _current_actual_show_timeMeta));
     }
     if (data.containsKey('fragment_id')) {
       context.handle(
-          _fragmentIdMeta,
-          fragmentId.isAcceptableOrUnknown(
-              data['fragment_id']!, _fragmentIdMeta));
+          _fragment_idMeta,
+          fragment_id.isAcceptableOrUnknown(
+              data['fragment_id']!, _fragment_idMeta));
     } else if (isInserting) {
-      context.missing(_fragmentIdMeta);
+      context.missing(_fragment_idMeta);
     }
     if (data.containsKey('memory_group_id')) {
       context.handle(
-          _memoryGroupIdMeta,
-          memoryGroupId.isAcceptableOrUnknown(
-              data['memory_group_id']!, _memoryGroupIdMeta));
+          _memory_group_idMeta,
+          memory_group_id.isAcceptableOrUnknown(
+              data['memory_group_id']!, _memory_group_idMeta));
     } else if (isInserting) {
-      context.missing(_memoryGroupIdMeta);
+      context.missing(_memory_group_idMeta);
     }
     if (data.containsKey('next_plan_show_time')) {
       context.handle(
-          _nextPlanShowTimeMeta,
-          nextPlanShowTime.isAcceptableOrUnknown(
-              data['next_plan_show_time']!, _nextPlanShowTimeMeta));
+          _next_plan_show_timeMeta,
+          next_plan_show_time.isAcceptableOrUnknown(
+              data['next_plan_show_time']!, _next_plan_show_timeMeta));
     }
     if (data.containsKey('show_familiarity')) {
       context.handle(
-          _showFamiliarityMeta,
-          showFamiliarity.isAcceptableOrUnknown(
-              data['show_familiarity']!, _showFamiliarityMeta));
+          _show_familiarityMeta,
+          show_familiarity.isAcceptableOrUnknown(
+              data['show_familiarity']!, _show_familiarityMeta));
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -1749,10 +1779,12 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -1763,28 +1795,28 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   FragmentMemoryInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentMemoryInfo(
-      clickTime: attachedDatabase.typeMapping
+      click_time: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}click_time']),
-      clickValue: attachedDatabase.typeMapping
+      click_value: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}click_value']),
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      currentActualShowTime: attachedDatabase.typeMapping.read(
+      current_actual_show_time: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}current_actual_show_time']),
-      fragmentId: attachedDatabase.typeMapping
+      fragment_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}fragment_id'])!,
-      memoryGroupId: attachedDatabase.typeMapping.read(
+      memory_group_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}memory_group_id'])!,
-      nextPlanShowTime: attachedDatabase.typeMapping.read(
+      next_plan_show_time: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}next_plan_show_time']),
-      showFamiliarity: attachedDatabase.typeMapping.read(
+      show_familiarity: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}show_familiarity']),
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -1797,43 +1829,43 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
 
 class RDocument2DocumentGroup extends DataClass
     implements Insertable<RDocument2DocumentGroup> {
-  int creatorUserId;
-  String? documentGroupId;
-  String documentId;
-  DateTime createdAt;
+  int creator_user_id;
+  String? document_group_id;
+  String document_id;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   RDocument2DocumentGroup(
-      {required this.creatorUserId,
-      this.documentGroupId,
-      required this.documentId,
-      required this.createdAt,
+      {required this.creator_user_id,
+      this.document_group_id,
+      required this.document_id,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || documentGroupId != null) {
-      map['document_group_id'] = Variable<String>(documentGroupId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || document_group_id != null) {
+      map['document_group_id'] = Variable<String>(document_group_id);
     }
-    map['document_id'] = Variable<String>(documentId);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['document_id'] = Variable<String>(document_id);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   RDocument2DocumentGroupsCompanion toCompanion(bool nullToAbsent) {
     return RDocument2DocumentGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      documentGroupId: documentGroupId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      document_group_id: document_group_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(documentGroupId),
-      documentId: Value(documentId),
-      createdAt: Value(createdAt),
+          : Value(document_group_id),
+      document_id: Value(document_id),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -1841,155 +1873,156 @@ class RDocument2DocumentGroup extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RDocument2DocumentGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      documentGroupId: serializer.fromJson<String?>(json['documentGroupId']),
-      documentId: serializer.fromJson<String>(json['documentId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      document_group_id:
+          serializer.fromJson<String?>(json['document_group_id']),
+      document_id: serializer.fromJson<String>(json['document_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'documentGroupId': serializer.toJson<String?>(documentGroupId),
-      'documentId': serializer.toJson<String>(documentId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'document_group_id': serializer.toJson<String?>(document_group_id),
+      'document_id': serializer.toJson<String>(document_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   RDocument2DocumentGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> documentGroupId = const Value.absent(),
-          String? documentId,
-          DateTime? createdAt,
+          {int? creator_user_id,
+          Value<String?> document_group_id = const Value.absent(),
+          String? document_id,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       RDocument2DocumentGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        documentGroupId: documentGroupId.present
-            ? documentGroupId.value
-            : this.documentGroupId,
-        documentId: documentId ?? this.documentId,
-        createdAt: createdAt ?? this.createdAt,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        document_group_id: document_group_id.present
+            ? document_group_id.value
+            : this.document_group_id,
+        document_id: document_id ?? this.document_id,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('RDocument2DocumentGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('documentGroupId: $documentGroupId, ')
-          ..write('documentId: $documentId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('document_group_id: $document_group_id, ')
+          ..write('document_id: $document_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      creatorUserId, documentGroupId, documentId, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(creator_user_id, document_group_id,
+      document_id, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RDocument2DocumentGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.documentGroupId == this.documentGroupId &&
-          other.documentId == this.documentId &&
-          other.createdAt == this.createdAt &&
+          other.creator_user_id == this.creator_user_id &&
+          other.document_group_id == this.document_group_id &&
+          other.document_id == this.document_id &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class RDocument2DocumentGroupsCompanion
     extends UpdateCompanion<RDocument2DocumentGroup> {
-  Value<int> creatorUserId;
-  Value<String?> documentGroupId;
-  Value<String> documentId;
-  Value<DateTime> createdAt;
+  Value<int> creator_user_id;
+  Value<String?> document_group_id;
+  Value<String> document_id;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   RDocument2DocumentGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.documentGroupId = const Value.absent(),
-    this.documentId = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.document_group_id = const Value.absent(),
+    this.document_id = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   RDocument2DocumentGroupsCompanion.insert({
-    required int creatorUserId,
-    this.documentGroupId = const Value.absent(),
-    required String documentId,
-    required DateTime createdAt,
+    required int creator_user_id,
+    this.document_group_id = const Value.absent(),
+    required String document_id,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        documentId = Value(documentId),
-        createdAt = Value(createdAt),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
+        document_id = Value(document_id),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<RDocument2DocumentGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? documentGroupId,
-    Expression<String>? documentId,
-    Expression<DateTime>? createdAt,
+    Expression<int>? creator_user_id,
+    Expression<String>? document_group_id,
+    Expression<String>? document_id,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (documentGroupId != null) 'document_group_id': documentGroupId,
-      if (documentId != null) 'document_id': documentId,
-      if (createdAt != null) 'created_at': createdAt,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (document_group_id != null) 'document_group_id': document_group_id,
+      if (document_id != null) 'document_id': document_id,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   RDocument2DocumentGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? documentGroupId,
-      Value<String>? documentId,
-      Value<DateTime>? createdAt,
+      {Value<int>? creator_user_id,
+      Value<String?>? document_group_id,
+      Value<String>? document_id,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return RDocument2DocumentGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      documentGroupId: documentGroupId ?? this.documentGroupId,
-      documentId: documentId ?? this.documentId,
-      createdAt: createdAt ?? this.createdAt,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      document_group_id: document_group_id ?? this.document_group_id,
+      document_id: document_id ?? this.document_id,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (documentGroupId.present) {
-      map['document_group_id'] = Variable<String>(documentGroupId.value);
+    if (document_group_id.present) {
+      map['document_group_id'] = Variable<String>(document_group_id.value);
     }
-    if (documentId.present) {
-      map['document_id'] = Variable<String>(documentId.value);
+    if (document_id.present) {
+      map['document_id'] = Variable<String>(document_id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -1997,12 +2030,12 @@ class RDocument2DocumentGroupsCompanion
   @override
   String toString() {
     return (StringBuffer('RDocument2DocumentGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('documentGroupId: $documentGroupId, ')
-          ..write('documentId: $documentId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('document_group_id: $document_group_id, ')
+          ..write('document_id: $document_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -2014,28 +2047,28 @@ class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $RDocument2DocumentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _documentGroupIdMeta =
-      const VerificationMeta('documentGroupId');
+  static const VerificationMeta _document_group_idMeta =
+      const VerificationMeta('document_group_id');
   @override
-  late final GeneratedColumn<String> documentGroupId = GeneratedColumn<String>(
-      'document_group_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _documentIdMeta =
-      const VerificationMeta('documentId');
+  late final GeneratedColumn<String> document_group_id =
+      GeneratedColumn<String>('document_group_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _document_idMeta =
+      const VerificationMeta('document_id');
   @override
-  late final GeneratedColumn<String> documentId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> document_id = GeneratedColumn<String>(
       'document_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -2043,15 +2076,21 @@ class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [creatorUserId, documentGroupId, documentId, createdAt, id, updatedAt];
+  List<GeneratedColumn> get $columns => [
+        creator_user_id,
+        document_group_id,
+        document_id,
+        created_at,
+        id,
+        updated_at
+      ];
   @override
   String get aliasedName => _alias ?? 'r_document2_document_groups';
   @override
@@ -2064,31 +2103,33 @@ class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
     final data = instance.toColumns(true);
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('document_group_id')) {
       context.handle(
-          _documentGroupIdMeta,
-          documentGroupId.isAcceptableOrUnknown(
-              data['document_group_id']!, _documentGroupIdMeta));
+          _document_group_idMeta,
+          document_group_id.isAcceptableOrUnknown(
+              data['document_group_id']!, _document_group_idMeta));
     }
     if (data.containsKey('document_id')) {
       context.handle(
-          _documentIdMeta,
-          documentId.isAcceptableOrUnknown(
-              data['document_id']!, _documentIdMeta));
+          _document_idMeta,
+          document_id.isAcceptableOrUnknown(
+              data['document_id']!, _document_idMeta));
     } else if (isInserting) {
-      context.missing(_documentIdMeta);
+      context.missing(_document_idMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -2096,10 +2137,12 @@ class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -2111,17 +2154,17 @@ class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
       {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return RDocument2DocumentGroup(
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      documentGroupId: attachedDatabase.typeMapping.read(
+      document_group_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}document_group_id']),
-      documentId: attachedDatabase.typeMapping
+      document_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}document_id'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -2134,43 +2177,43 @@ class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
 
 class RFragment2FragmentGroup extends DataClass
     implements Insertable<RFragment2FragmentGroup> {
-  int creatorUserId;
-  String? fragmentGroupId;
-  String fragmentId;
-  DateTime createdAt;
+  int creator_user_id;
+  String? fragment_group_id;
+  String fragment_id;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   RFragment2FragmentGroup(
-      {required this.creatorUserId,
-      this.fragmentGroupId,
-      required this.fragmentId,
-      required this.createdAt,
+      {required this.creator_user_id,
+      this.fragment_group_id,
+      required this.fragment_id,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || fragmentGroupId != null) {
-      map['fragment_group_id'] = Variable<String>(fragmentGroupId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || fragment_group_id != null) {
+      map['fragment_group_id'] = Variable<String>(fragment_group_id);
     }
-    map['fragment_id'] = Variable<String>(fragmentId);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['fragment_id'] = Variable<String>(fragment_id);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   RFragment2FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return RFragment2FragmentGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fragmentGroupId: fragmentGroupId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      fragment_group_id: fragment_group_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(fragmentGroupId),
-      fragmentId: Value(fragmentId),
-      createdAt: Value(createdAt),
+          : Value(fragment_group_id),
+      fragment_id: Value(fragment_id),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -2178,155 +2221,156 @@ class RFragment2FragmentGroup extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RFragment2FragmentGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      fragmentGroupId: serializer.fromJson<String?>(json['fragmentGroupId']),
-      fragmentId: serializer.fromJson<String>(json['fragmentId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      fragment_group_id:
+          serializer.fromJson<String?>(json['fragment_group_id']),
+      fragment_id: serializer.fromJson<String>(json['fragment_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'fragmentGroupId': serializer.toJson<String?>(fragmentGroupId),
-      'fragmentId': serializer.toJson<String>(fragmentId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
+      'fragment_id': serializer.toJson<String>(fragment_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   RFragment2FragmentGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> fragmentGroupId = const Value.absent(),
-          String? fragmentId,
-          DateTime? createdAt,
+          {int? creator_user_id,
+          Value<String?> fragment_group_id = const Value.absent(),
+          String? fragment_id,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       RFragment2FragmentGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        fragmentGroupId: fragmentGroupId.present
-            ? fragmentGroupId.value
-            : this.fragmentGroupId,
-        fragmentId: fragmentId ?? this.fragmentId,
-        createdAt: createdAt ?? this.createdAt,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        fragment_group_id: fragment_group_id.present
+            ? fragment_group_id.value
+            : this.fragment_group_id,
+        fragment_id: fragment_id ?? this.fragment_id,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('RFragment2FragmentGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fragmentGroupId: $fragmentGroupId, ')
-          ..write('fragmentId: $fragmentId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('fragment_group_id: $fragment_group_id, ')
+          ..write('fragment_id: $fragment_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      creatorUserId, fragmentGroupId, fragmentId, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(creator_user_id, fragment_group_id,
+      fragment_id, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RFragment2FragmentGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.fragmentGroupId == this.fragmentGroupId &&
-          other.fragmentId == this.fragmentId &&
-          other.createdAt == this.createdAt &&
+          other.creator_user_id == this.creator_user_id &&
+          other.fragment_group_id == this.fragment_group_id &&
+          other.fragment_id == this.fragment_id &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class RFragment2FragmentGroupsCompanion
     extends UpdateCompanion<RFragment2FragmentGroup> {
-  Value<int> creatorUserId;
-  Value<String?> fragmentGroupId;
-  Value<String> fragmentId;
-  Value<DateTime> createdAt;
+  Value<int> creator_user_id;
+  Value<String?> fragment_group_id;
+  Value<String> fragment_id;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   RFragment2FragmentGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.fragmentGroupId = const Value.absent(),
-    this.fragmentId = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.fragment_group_id = const Value.absent(),
+    this.fragment_id = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   RFragment2FragmentGroupsCompanion.insert({
-    required int creatorUserId,
-    this.fragmentGroupId = const Value.absent(),
-    required String fragmentId,
-    required DateTime createdAt,
+    required int creator_user_id,
+    this.fragment_group_id = const Value.absent(),
+    required String fragment_id,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        fragmentId = Value(fragmentId),
-        createdAt = Value(createdAt),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
+        fragment_id = Value(fragment_id),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<RFragment2FragmentGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? fragmentGroupId,
-    Expression<String>? fragmentId,
-    Expression<DateTime>? createdAt,
+    Expression<int>? creator_user_id,
+    Expression<String>? fragment_group_id,
+    Expression<String>? fragment_id,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (fragmentGroupId != null) 'fragment_group_id': fragmentGroupId,
-      if (fragmentId != null) 'fragment_id': fragmentId,
-      if (createdAt != null) 'created_at': createdAt,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (fragment_group_id != null) 'fragment_group_id': fragment_group_id,
+      if (fragment_id != null) 'fragment_id': fragment_id,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   RFragment2FragmentGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? fragmentGroupId,
-      Value<String>? fragmentId,
-      Value<DateTime>? createdAt,
+      {Value<int>? creator_user_id,
+      Value<String?>? fragment_group_id,
+      Value<String>? fragment_id,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return RFragment2FragmentGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      fragmentGroupId: fragmentGroupId ?? this.fragmentGroupId,
-      fragmentId: fragmentId ?? this.fragmentId,
-      createdAt: createdAt ?? this.createdAt,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      fragment_group_id: fragment_group_id ?? this.fragment_group_id,
+      fragment_id: fragment_id ?? this.fragment_id,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (fragmentGroupId.present) {
-      map['fragment_group_id'] = Variable<String>(fragmentGroupId.value);
+    if (fragment_group_id.present) {
+      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
     }
-    if (fragmentId.present) {
-      map['fragment_id'] = Variable<String>(fragmentId.value);
+    if (fragment_id.present) {
+      map['fragment_id'] = Variable<String>(fragment_id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -2334,12 +2378,12 @@ class RFragment2FragmentGroupsCompanion
   @override
   String toString() {
     return (StringBuffer('RFragment2FragmentGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fragmentGroupId: $fragmentGroupId, ')
-          ..write('fragmentId: $fragmentId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('fragment_group_id: $fragment_group_id, ')
+          ..write('fragment_id: $fragment_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -2351,28 +2395,28 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $RFragment2FragmentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fragmentGroupIdMeta =
-      const VerificationMeta('fragmentGroupId');
+  static const VerificationMeta _fragment_group_idMeta =
+      const VerificationMeta('fragment_group_id');
   @override
-  late final GeneratedColumn<String> fragmentGroupId = GeneratedColumn<String>(
-      'fragment_group_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fragmentIdMeta =
-      const VerificationMeta('fragmentId');
+  late final GeneratedColumn<String> fragment_group_id =
+      GeneratedColumn<String>('fragment_group_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _fragment_idMeta =
+      const VerificationMeta('fragment_id');
   @override
-  late final GeneratedColumn<String> fragmentId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> fragment_id = GeneratedColumn<String>(
       'fragment_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -2380,15 +2424,21 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [creatorUserId, fragmentGroupId, fragmentId, createdAt, id, updatedAt];
+  List<GeneratedColumn> get $columns => [
+        creator_user_id,
+        fragment_group_id,
+        fragment_id,
+        created_at,
+        id,
+        updated_at
+      ];
   @override
   String get aliasedName => _alias ?? 'r_fragment2_fragment_groups';
   @override
@@ -2401,31 +2451,33 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
     final data = instance.toColumns(true);
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('fragment_group_id')) {
       context.handle(
-          _fragmentGroupIdMeta,
-          fragmentGroupId.isAcceptableOrUnknown(
-              data['fragment_group_id']!, _fragmentGroupIdMeta));
+          _fragment_group_idMeta,
+          fragment_group_id.isAcceptableOrUnknown(
+              data['fragment_group_id']!, _fragment_group_idMeta));
     }
     if (data.containsKey('fragment_id')) {
       context.handle(
-          _fragmentIdMeta,
-          fragmentId.isAcceptableOrUnknown(
-              data['fragment_id']!, _fragmentIdMeta));
+          _fragment_idMeta,
+          fragment_id.isAcceptableOrUnknown(
+              data['fragment_id']!, _fragment_idMeta));
     } else if (isInserting) {
-      context.missing(_fragmentIdMeta);
+      context.missing(_fragment_idMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -2433,10 +2485,12 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -2448,17 +2502,17 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return RFragment2FragmentGroup(
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fragmentGroupId: attachedDatabase.typeMapping.read(
+      fragment_group_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}fragment_group_id']),
-      fragmentId: attachedDatabase.typeMapping
+      fragment_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}fragment_id'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -2470,43 +2524,43 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
 }
 
 class RNote2NoteGroup extends DataClass implements Insertable<RNote2NoteGroup> {
-  int creatorUserId;
-  String? noteGroupId;
-  String noteId;
-  DateTime createdAt;
+  int creator_user_id;
+  String? note_group_id;
+  String note_id;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   RNote2NoteGroup(
-      {required this.creatorUserId,
-      this.noteGroupId,
-      required this.noteId,
-      required this.createdAt,
+      {required this.creator_user_id,
+      this.note_group_id,
+      required this.note_id,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || noteGroupId != null) {
-      map['note_group_id'] = Variable<String>(noteGroupId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || note_group_id != null) {
+      map['note_group_id'] = Variable<String>(note_group_id);
     }
-    map['note_id'] = Variable<String>(noteId);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['note_id'] = Variable<String>(note_id);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   RNote2NoteGroupsCompanion toCompanion(bool nullToAbsent) {
     return RNote2NoteGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      noteGroupId: noteGroupId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      note_group_id: note_group_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(noteGroupId),
-      noteId: Value(noteId),
-      createdAt: Value(createdAt),
+          : Value(note_group_id),
+      note_id: Value(note_id),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -2514,152 +2568,153 @@ class RNote2NoteGroup extends DataClass implements Insertable<RNote2NoteGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RNote2NoteGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      noteGroupId: serializer.fromJson<String?>(json['noteGroupId']),
-      noteId: serializer.fromJson<String>(json['noteId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      note_group_id: serializer.fromJson<String?>(json['note_group_id']),
+      note_id: serializer.fromJson<String>(json['note_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'noteGroupId': serializer.toJson<String?>(noteGroupId),
-      'noteId': serializer.toJson<String>(noteId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'note_group_id': serializer.toJson<String?>(note_group_id),
+      'note_id': serializer.toJson<String>(note_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   RNote2NoteGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> noteGroupId = const Value.absent(),
-          String? noteId,
-          DateTime? createdAt,
+          {int? creator_user_id,
+          Value<String?> note_group_id = const Value.absent(),
+          String? note_id,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       RNote2NoteGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        noteGroupId: noteGroupId.present ? noteGroupId.value : this.noteGroupId,
-        noteId: noteId ?? this.noteId,
-        createdAt: createdAt ?? this.createdAt,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        note_group_id:
+            note_group_id.present ? note_group_id.value : this.note_group_id,
+        note_id: note_id ?? this.note_id,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('RNote2NoteGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('noteGroupId: $noteGroupId, ')
-          ..write('noteId: $noteId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('note_group_id: $note_group_id, ')
+          ..write('note_id: $note_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(creatorUserId, noteGroupId, noteId, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(
+      creator_user_id, note_group_id, note_id, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RNote2NoteGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.noteGroupId == this.noteGroupId &&
-          other.noteId == this.noteId &&
-          other.createdAt == this.createdAt &&
+          other.creator_user_id == this.creator_user_id &&
+          other.note_group_id == this.note_group_id &&
+          other.note_id == this.note_id &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class RNote2NoteGroupsCompanion extends UpdateCompanion<RNote2NoteGroup> {
-  Value<int> creatorUserId;
-  Value<String?> noteGroupId;
-  Value<String> noteId;
-  Value<DateTime> createdAt;
+  Value<int> creator_user_id;
+  Value<String?> note_group_id;
+  Value<String> note_id;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   RNote2NoteGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.noteGroupId = const Value.absent(),
-    this.noteId = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.note_group_id = const Value.absent(),
+    this.note_id = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   RNote2NoteGroupsCompanion.insert({
-    required int creatorUserId,
-    this.noteGroupId = const Value.absent(),
-    required String noteId,
-    required DateTime createdAt,
+    required int creator_user_id,
+    this.note_group_id = const Value.absent(),
+    required String note_id,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        noteId = Value(noteId),
-        createdAt = Value(createdAt),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
+        note_id = Value(note_id),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<RNote2NoteGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? noteGroupId,
-    Expression<String>? noteId,
-    Expression<DateTime>? createdAt,
+    Expression<int>? creator_user_id,
+    Expression<String>? note_group_id,
+    Expression<String>? note_id,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (noteGroupId != null) 'note_group_id': noteGroupId,
-      if (noteId != null) 'note_id': noteId,
-      if (createdAt != null) 'created_at': createdAt,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (note_group_id != null) 'note_group_id': note_group_id,
+      if (note_id != null) 'note_id': note_id,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   RNote2NoteGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? noteGroupId,
-      Value<String>? noteId,
-      Value<DateTime>? createdAt,
+      {Value<int>? creator_user_id,
+      Value<String?>? note_group_id,
+      Value<String>? note_id,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return RNote2NoteGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      noteGroupId: noteGroupId ?? this.noteGroupId,
-      noteId: noteId ?? this.noteId,
-      createdAt: createdAt ?? this.createdAt,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      note_group_id: note_group_id ?? this.note_group_id,
+      note_id: note_id ?? this.note_id,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (noteGroupId.present) {
-      map['note_group_id'] = Variable<String>(noteGroupId.value);
+    if (note_group_id.present) {
+      map['note_group_id'] = Variable<String>(note_group_id.value);
     }
-    if (noteId.present) {
-      map['note_id'] = Variable<String>(noteId.value);
+    if (note_id.present) {
+      map['note_id'] = Variable<String>(note_id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -2667,12 +2722,12 @@ class RNote2NoteGroupsCompanion extends UpdateCompanion<RNote2NoteGroup> {
   @override
   String toString() {
     return (StringBuffer('RNote2NoteGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('noteGroupId: $noteGroupId, ')
-          ..write('noteId: $noteId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('note_group_id: $note_group_id, ')
+          ..write('note_id: $note_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -2684,27 +2739,28 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $RNote2NoteGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _noteGroupIdMeta =
-      const VerificationMeta('noteGroupId');
+  static const VerificationMeta _note_group_idMeta =
+      const VerificationMeta('note_group_id');
   @override
-  late final GeneratedColumn<String> noteGroupId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> note_group_id = GeneratedColumn<String>(
       'note_group_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  static const VerificationMeta _note_idMeta =
+      const VerificationMeta('note_id');
   @override
-  late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> note_id = GeneratedColumn<String>(
       'note_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -2712,15 +2768,15 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [creatorUserId, noteGroupId, noteId, createdAt, id, updatedAt];
+      [creator_user_id, note_group_id, note_id, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'r_note2_note_groups';
   @override
@@ -2732,29 +2788,31 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
     final data = instance.toColumns(true);
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('note_group_id')) {
       context.handle(
-          _noteGroupIdMeta,
-          noteGroupId.isAcceptableOrUnknown(
-              data['note_group_id']!, _noteGroupIdMeta));
+          _note_group_idMeta,
+          note_group_id.isAcceptableOrUnknown(
+              data['note_group_id']!, _note_group_idMeta));
     }
     if (data.containsKey('note_id')) {
-      context.handle(_noteIdMeta,
-          noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta));
+      context.handle(_note_idMeta,
+          note_id.isAcceptableOrUnknown(data['note_id']!, _note_idMeta));
     } else if (isInserting) {
-      context.missing(_noteIdMeta);
+      context.missing(_note_idMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -2762,10 +2820,12 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -2776,17 +2836,17 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
   RNote2NoteGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return RNote2NoteGroup(
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      noteGroupId: attachedDatabase.typeMapping
+      note_group_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note_group_id']),
-      noteId: attachedDatabase.typeMapping
+      note_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note_id'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -2799,30 +2859,30 @@ class $RNote2NoteGroupsTable extends RNote2NoteGroups
 
 class Test2 extends DataClass implements Insertable<Test2> {
   String client_content;
-  DateTime createdAt;
+  DateTime created_at;
   int id;
-  DateTime updatedAt;
+  DateTime updated_at;
   Test2(
       {required this.client_content,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['client_content'] = Variable<String>(client_content);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   Test2sCompanion toCompanion(bool nullToAbsent) {
     return Test2sCompanion(
       client_content: Value(client_content),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -2831,9 +2891,9 @@ class Test2 extends DataClass implements Insertable<Test2> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Test2(
       client_content: serializer.fromJson<String>(json['client_content']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
@@ -2841,89 +2901,89 @@ class Test2 extends DataClass implements Insertable<Test2> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'client_content': serializer.toJson<String>(client_content),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   Test2 copyWith(
           {String? client_content,
-          DateTime? createdAt,
+          DateTime? created_at,
           int? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       Test2(
         client_content: client_content ?? this.client_content,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('Test2(')
           ..write('client_content: $client_content, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(client_content, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(client_content, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Test2 &&
           other.client_content == this.client_content &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class Test2sCompanion extends UpdateCompanion<Test2> {
   Value<String> client_content;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<int> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   Test2sCompanion({
     this.client_content = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   Test2sCompanion.insert({
     required String client_content,
-    required DateTime createdAt,
+    required DateTime created_at,
     this.id = const Value.absent(),
-    required DateTime updatedAt,
+    required DateTime updated_at,
   })  : client_content = Value(client_content),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+        created_at = Value(created_at),
+        updated_at = Value(updated_at);
   static Insertable<Test2> custom({
     Expression<String>? client_content,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<int>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
       if (client_content != null) 'client_content': client_content,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   Test2sCompanion copyWith(
       {Value<String>? client_content,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<int>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return Test2sCompanion(
       client_content: client_content ?? this.client_content,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
@@ -2933,14 +2993,14 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
     if (client_content.present) {
       map['client_content'] = Variable<String>(client_content.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -2949,9 +3009,9 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
   String toString() {
     return (StringBuffer('Test2sCompanion(')
           ..write('client_content: $client_content, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -2968,10 +3028,10 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   late final GeneratedColumn<String> client_content = GeneratedColumn<String>(
       'client_content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -2979,15 +3039,15 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [client_content, createdAt, id, updatedAt];
+      [client_content, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'test2s';
   @override
@@ -3006,19 +3066,23 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
       context.missing(_client_contentMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -3031,11 +3095,11 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
     return Test2(
       client_content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}client_content'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -3047,31 +3111,35 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
 }
 
 class Test extends DataClass implements Insertable<Test> {
+  String client_a;
   String client_content;
-  DateTime createdAt;
+  DateTime created_at;
   int id;
-  DateTime updatedAt;
+  DateTime updated_at;
   Test(
-      {required this.client_content,
-      required this.createdAt,
+      {required this.client_a,
+      required this.client_content,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['client_a'] = Variable<String>(client_a);
     map['client_content'] = Variable<String>(client_content);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   TestsCompanion toCompanion(bool nullToAbsent) {
     return TestsCompanion(
+      client_a: Value(client_a),
       client_content: Value(client_content),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -3079,117 +3147,135 @@ class Test extends DataClass implements Insertable<Test> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Test(
+      client_a: serializer.fromJson<String>(json['client_a']),
       client_content: serializer.fromJson<String>(json['client_content']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'client_a': serializer.toJson<String>(client_a),
       'client_content': serializer.toJson<String>(client_content),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   Test copyWith(
-          {String? client_content,
-          DateTime? createdAt,
+          {String? client_a,
+          String? client_content,
+          DateTime? created_at,
           int? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       Test(
+        client_a: client_a ?? this.client_a,
         client_content: client_content ?? this.client_content,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('Test(')
+          ..write('client_a: $client_a, ')
           ..write('client_content: $client_content, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(client_content, createdAt, id, updatedAt);
+  int get hashCode =>
+      Object.hash(client_a, client_content, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Test &&
+          other.client_a == this.client_a &&
           other.client_content == this.client_content &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class TestsCompanion extends UpdateCompanion<Test> {
+  Value<String> client_a;
   Value<String> client_content;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<int> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   TestsCompanion({
+    this.client_a = const Value.absent(),
     this.client_content = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   TestsCompanion.insert({
+    required String client_a,
     required String client_content,
-    required DateTime createdAt,
+    required DateTime created_at,
     this.id = const Value.absent(),
-    required DateTime updatedAt,
-  })  : client_content = Value(client_content),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+    required DateTime updated_at,
+  })  : client_a = Value(client_a),
+        client_content = Value(client_content),
+        created_at = Value(created_at),
+        updated_at = Value(updated_at);
   static Insertable<Test> custom({
+    Expression<String>? client_a,
     Expression<String>? client_content,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<int>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
+      if (client_a != null) 'client_a': client_a,
       if (client_content != null) 'client_content': client_content,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   TestsCompanion copyWith(
-      {Value<String>? client_content,
-      Value<DateTime>? createdAt,
+      {Value<String>? client_a,
+      Value<String>? client_content,
+      Value<DateTime>? created_at,
       Value<int>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return TestsCompanion(
+      client_a: client_a ?? this.client_a,
       client_content: client_content ?? this.client_content,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (client_a.present) {
+      map['client_a'] = Variable<String>(client_a.value);
+    }
     if (client_content.present) {
       map['client_content'] = Variable<String>(client_content.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -3197,10 +3283,11 @@ class TestsCompanion extends UpdateCompanion<Test> {
   @override
   String toString() {
     return (StringBuffer('TestsCompanion(')
+          ..write('client_a: $client_a, ')
           ..write('client_content: $client_content, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -3211,16 +3298,22 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TestsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _client_aMeta =
+      const VerificationMeta('client_a');
+  @override
+  late final GeneratedColumn<String> client_a = GeneratedColumn<String>(
+      'client_a', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _client_contentMeta =
       const VerificationMeta('client_content');
   @override
   late final GeneratedColumn<String> client_content = GeneratedColumn<String>(
       'client_content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -3228,15 +3321,15 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [client_content, createdAt, id, updatedAt];
+      [client_a, client_content, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'tests';
   @override
@@ -3246,6 +3339,12 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('client_a')) {
+      context.handle(_client_aMeta,
+          client_a.isAcceptableOrUnknown(data['client_a']!, _client_aMeta));
+    } else if (isInserting) {
+      context.missing(_client_aMeta);
+    }
     if (data.containsKey('client_content')) {
       context.handle(
           _client_contentMeta,
@@ -3255,19 +3354,23 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
       context.missing(_client_contentMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -3278,13 +3381,15 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   Test map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Test(
+      client_a: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}client_a'])!,
       client_content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}client_content'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -3297,34 +3402,34 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
 
 class Document extends DataClass implements Insertable<Document> {
   String content;
-  int creatorUserId;
-  DateTime createdAt;
+  int creator_user_id;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   Document(
       {required this.content,
-      required this.creatorUserId,
-      required this.createdAt,
+      required this.creator_user_id,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['content'] = Variable<String>(content);
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   DocumentsCompanion toCompanion(bool nullToAbsent) {
     return DocumentsCompanion(
       content: Value(content),
-      creatorUserId: Value(creatorUserId),
-      createdAt: Value(createdAt),
+      creator_user_id: Value(creator_user_id),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -3333,10 +3438,10 @@ class Document extends DataClass implements Insertable<Document> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Document(
       content: serializer.fromJson<String>(json['content']),
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
@@ -3344,104 +3449,104 @@ class Document extends DataClass implements Insertable<Document> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'content': serializer.toJson<String>(content),
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   Document copyWith(
           {String? content,
-          int? creatorUserId,
-          DateTime? createdAt,
+          int? creator_user_id,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       Document(
         content: content ?? this.content,
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        createdAt: createdAt ?? this.createdAt,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('Document(')
           ..write('content: $content, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(content, creatorUserId, createdAt, id, updatedAt);
+      Object.hash(content, creator_user_id, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Document &&
           other.content == this.content &&
-          other.creatorUserId == this.creatorUserId &&
-          other.createdAt == this.createdAt &&
+          other.creator_user_id == this.creator_user_id &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class DocumentsCompanion extends UpdateCompanion<Document> {
   Value<String> content;
-  Value<int> creatorUserId;
-  Value<DateTime> createdAt;
+  Value<int> creator_user_id;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   DocumentsCompanion({
     this.content = const Value.absent(),
-    this.creatorUserId = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   DocumentsCompanion.insert({
     required String content,
-    required int creatorUserId,
-    required DateTime createdAt,
+    required int creator_user_id,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
+    required DateTime updated_at,
   })  : content = Value(content),
-        creatorUserId = Value(creatorUserId),
-        createdAt = Value(createdAt),
+        creator_user_id = Value(creator_user_id),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<Document> custom({
     Expression<String>? content,
-    Expression<int>? creatorUserId,
-    Expression<DateTime>? createdAt,
+    Expression<int>? creator_user_id,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
       if (content != null) 'content': content,
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (createdAt != null) 'created_at': createdAt,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   DocumentsCompanion copyWith(
       {Value<String>? content,
-      Value<int>? creatorUserId,
-      Value<DateTime>? createdAt,
+      Value<int>? creator_user_id,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return DocumentsCompanion(
       content: content ?? this.content,
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      createdAt: createdAt ?? this.createdAt,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
@@ -3451,17 +3556,17 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -3470,10 +3575,10 @@ class DocumentsCompanion extends UpdateCompanion<Document> {
   String toString() {
     return (StringBuffer('DocumentsCompanion(')
           ..write('content: $content, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -3491,16 +3596,16 @@ class $DocumentsTable extends Documents
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -3508,15 +3613,15 @@ class $DocumentsTable extends Documents
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [content, creatorUserId, createdAt, id, updatedAt];
+      [content, creator_user_id, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'documents';
   @override
@@ -3534,17 +3639,19 @@ class $DocumentsTable extends Documents
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -3552,10 +3659,12 @@ class $DocumentsTable extends Documents
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -3568,13 +3677,13 @@ class $DocumentsTable extends Documents
     return Document(
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -3588,41 +3697,41 @@ class $DocumentsTable extends Documents
 class FragmentTemplate extends DataClass
     implements Insertable<FragmentTemplate> {
   String content;
-  int ownerUserId;
+  int owner_user_id;
   FragmentTemplateType type;
-  DateTime createdAt;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   FragmentTemplate(
       {required this.content,
-      required this.ownerUserId,
+      required this.owner_user_id,
       required this.type,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['content'] = Variable<String>(content);
-    map['owner_user_id'] = Variable<int>(ownerUserId);
+    map['owner_user_id'] = Variable<int>(owner_user_id);
     {
       final converter = $FragmentTemplatesTable.$convertertype;
       map['type'] = Variable<int>(converter.toSql(type));
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   FragmentTemplatesCompanion toCompanion(bool nullToAbsent) {
     return FragmentTemplatesCompanion(
       content: Value(content),
-      ownerUserId: Value(ownerUserId),
+      owner_user_id: Value(owner_user_id),
       type: Value(type),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -3631,12 +3740,12 @@ class FragmentTemplate extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentTemplate(
       content: serializer.fromJson<String>(json['content']),
-      ownerUserId: serializer.fromJson<int>(json['ownerUserId']),
+      owner_user_id: serializer.fromJson<int>(json['owner_user_id']),
       type: $FragmentTemplatesTable.$convertertype
           .fromJson(serializer.fromJson<int>(json['type'])),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
@@ -3644,118 +3753,118 @@ class FragmentTemplate extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'content': serializer.toJson<String>(content),
-      'ownerUserId': serializer.toJson<int>(ownerUserId),
+      'owner_user_id': serializer.toJson<int>(owner_user_id),
       'type': serializer
           .toJson<int>($FragmentTemplatesTable.$convertertype.toJson(type)),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   FragmentTemplate copyWith(
           {String? content,
-          int? ownerUserId,
+          int? owner_user_id,
           FragmentTemplateType? type,
-          DateTime? createdAt,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       FragmentTemplate(
         content: content ?? this.content,
-        ownerUserId: ownerUserId ?? this.ownerUserId,
+        owner_user_id: owner_user_id ?? this.owner_user_id,
         type: type ?? this.type,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('FragmentTemplate(')
           ..write('content: $content, ')
-          ..write('ownerUserId: $ownerUserId, ')
+          ..write('owner_user_id: $owner_user_id, ')
           ..write('type: $type, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(content, ownerUserId, type, createdAt, id, updatedAt);
+      Object.hash(content, owner_user_id, type, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentTemplate &&
           other.content == this.content &&
-          other.ownerUserId == this.ownerUserId &&
+          other.owner_user_id == this.owner_user_id &&
           other.type == this.type &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class FragmentTemplatesCompanion extends UpdateCompanion<FragmentTemplate> {
   Value<String> content;
-  Value<int> ownerUserId;
+  Value<int> owner_user_id;
   Value<FragmentTemplateType> type;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   FragmentTemplatesCompanion({
     this.content = const Value.absent(),
-    this.ownerUserId = const Value.absent(),
+    this.owner_user_id = const Value.absent(),
     this.type = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   FragmentTemplatesCompanion.insert({
     required String content,
-    required int ownerUserId,
+    required int owner_user_id,
     required FragmentTemplateType type,
-    required DateTime createdAt,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
+    required DateTime updated_at,
   })  : content = Value(content),
-        ownerUserId = Value(ownerUserId),
+        owner_user_id = Value(owner_user_id),
         type = Value(type),
-        createdAt = Value(createdAt),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<FragmentTemplate> custom({
     Expression<String>? content,
-    Expression<int>? ownerUserId,
+    Expression<int>? owner_user_id,
     Expression<int>? type,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
       if (content != null) 'content': content,
-      if (ownerUserId != null) 'owner_user_id': ownerUserId,
+      if (owner_user_id != null) 'owner_user_id': owner_user_id,
       if (type != null) 'type': type,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   FragmentTemplatesCompanion copyWith(
       {Value<String>? content,
-      Value<int>? ownerUserId,
+      Value<int>? owner_user_id,
       Value<FragmentTemplateType>? type,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return FragmentTemplatesCompanion(
       content: content ?? this.content,
-      ownerUserId: ownerUserId ?? this.ownerUserId,
+      owner_user_id: owner_user_id ?? this.owner_user_id,
       type: type ?? this.type,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
@@ -3765,21 +3874,21 @@ class FragmentTemplatesCompanion extends UpdateCompanion<FragmentTemplate> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
-    if (ownerUserId.present) {
-      map['owner_user_id'] = Variable<int>(ownerUserId.value);
+    if (owner_user_id.present) {
+      map['owner_user_id'] = Variable<int>(owner_user_id.value);
     }
     if (type.present) {
       final converter = $FragmentTemplatesTable.$convertertype;
       map['type'] = Variable<int>(converter.toSql(type.value));
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -3788,11 +3897,11 @@ class FragmentTemplatesCompanion extends UpdateCompanion<FragmentTemplate> {
   String toString() {
     return (StringBuffer('FragmentTemplatesCompanion(')
           ..write('content: $content, ')
-          ..write('ownerUserId: $ownerUserId, ')
+          ..write('owner_user_id: $owner_user_id, ')
           ..write('type: $type, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -3810,10 +3919,10 @@ class $FragmentTemplatesTable extends FragmentTemplates
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _ownerUserIdMeta =
-      const VerificationMeta('ownerUserId');
+  static const VerificationMeta _owner_user_idMeta =
+      const VerificationMeta('owner_user_id');
   @override
-  late final GeneratedColumn<int> ownerUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> owner_user_id = GeneratedColumn<int>(
       'owner_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
@@ -3823,10 +3932,10 @@ class $FragmentTemplatesTable extends FragmentTemplates
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<FragmentTemplateType>(
               $FragmentTemplatesTable.$convertertype);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -3834,15 +3943,15 @@ class $FragmentTemplatesTable extends FragmentTemplates
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [content, ownerUserId, type, createdAt, id, updatedAt];
+      [content, owner_user_id, type, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'fragment_templates';
   @override
@@ -3860,18 +3969,20 @@ class $FragmentTemplatesTable extends FragmentTemplates
     }
     if (data.containsKey('owner_user_id')) {
       context.handle(
-          _ownerUserIdMeta,
-          ownerUserId.isAcceptableOrUnknown(
-              data['owner_user_id']!, _ownerUserIdMeta));
+          _owner_user_idMeta,
+          owner_user_id.isAcceptableOrUnknown(
+              data['owner_user_id']!, _owner_user_idMeta));
     } else if (isInserting) {
-      context.missing(_ownerUserIdMeta);
+      context.missing(_owner_user_idMeta);
     }
     context.handle(_typeMeta, const VerificationResult.success());
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -3879,10 +3990,12 @@ class $FragmentTemplatesTable extends FragmentTemplates
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -3895,16 +4008,16 @@ class $FragmentTemplatesTable extends FragmentTemplates
     return FragmentTemplate(
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      ownerUserId: attachedDatabase.typeMapping
+      owner_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}owner_user_id'])!,
       type: $FragmentTemplatesTable.$convertertype.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -3920,66 +4033,75 @@ class $FragmentTemplatesTable extends FragmentTemplates
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
-  bool client_be_Selected;
+  bool be_private;
+  bool be_publish;
+  bool client_be_selected;
   String content;
-  int creatorUserId;
-  String? fatherFragmentId;
-  String? fragmentTemplateId;
-  String? noteId;
+  int creator_user_id;
+  String? father_fragment_id;
+  String? fragment_template_id;
+  String? note_id;
   String title;
-  DateTime createdAt;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   Fragment(
-      {required this.client_be_Selected,
+      {required this.be_private,
+      required this.be_publish,
+      required this.client_be_selected,
       required this.content,
-      required this.creatorUserId,
-      this.fatherFragmentId,
-      this.fragmentTemplateId,
-      this.noteId,
+      required this.creator_user_id,
+      this.father_fragment_id,
+      this.fragment_template_id,
+      this.note_id,
       required this.title,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['client_be_selected'] = Variable<bool>(client_be_Selected);
+    map['be_private'] = Variable<bool>(be_private);
+    map['be_publish'] = Variable<bool>(be_publish);
+    map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['content'] = Variable<String>(content);
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || fatherFragmentId != null) {
-      map['father_fragment_id'] = Variable<String>(fatherFragmentId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || father_fragment_id != null) {
+      map['father_fragment_id'] = Variable<String>(father_fragment_id);
     }
-    if (!nullToAbsent || fragmentTemplateId != null) {
-      map['fragment_template_id'] = Variable<String>(fragmentTemplateId);
+    if (!nullToAbsent || fragment_template_id != null) {
+      map['fragment_template_id'] = Variable<String>(fragment_template_id);
     }
-    if (!nullToAbsent || noteId != null) {
-      map['note_id'] = Variable<String>(noteId);
+    if (!nullToAbsent || note_id != null) {
+      map['note_id'] = Variable<String>(note_id);
     }
     map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   FragmentsCompanion toCompanion(bool nullToAbsent) {
     return FragmentsCompanion(
-      client_be_Selected: Value(client_be_Selected),
+      be_private: Value(be_private),
+      be_publish: Value(be_publish),
+      client_be_selected: Value(client_be_selected),
       content: Value(content),
-      creatorUserId: Value(creatorUserId),
-      fatherFragmentId: fatherFragmentId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      father_fragment_id: father_fragment_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(fatherFragmentId),
-      fragmentTemplateId: fragmentTemplateId == null && nullToAbsent
+          : Value(father_fragment_id),
+      fragment_template_id: fragment_template_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(fragmentTemplateId),
-      noteId:
-          noteId == null && nullToAbsent ? const Value.absent() : Value(noteId),
+          : Value(fragment_template_id),
+      note_id: note_id == null && nullToAbsent
+          ? const Value.absent()
+          : Value(note_id),
       title: Value(title),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -3987,233 +4109,271 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Fragment(
-      client_be_Selected: serializer.fromJson<bool>(json['client_be_Selected']),
+      be_private: serializer.fromJson<bool>(json['be_private']),
+      be_publish: serializer.fromJson<bool>(json['be_publish']),
+      client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       content: serializer.fromJson<String>(json['content']),
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      fatherFragmentId: serializer.fromJson<String?>(json['fatherFragmentId']),
-      fragmentTemplateId:
-          serializer.fromJson<String?>(json['fragmentTemplateId']),
-      noteId: serializer.fromJson<String?>(json['noteId']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      father_fragment_id:
+          serializer.fromJson<String?>(json['father_fragment_id']),
+      fragment_template_id:
+          serializer.fromJson<String?>(json['fragment_template_id']),
+      note_id: serializer.fromJson<String?>(json['note_id']),
       title: serializer.fromJson<String>(json['title']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'client_be_Selected': serializer.toJson<bool>(client_be_Selected),
+      'be_private': serializer.toJson<bool>(be_private),
+      'be_publish': serializer.toJson<bool>(be_publish),
+      'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'content': serializer.toJson<String>(content),
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'fatherFragmentId': serializer.toJson<String?>(fatherFragmentId),
-      'fragmentTemplateId': serializer.toJson<String?>(fragmentTemplateId),
-      'noteId': serializer.toJson<String?>(noteId),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'father_fragment_id': serializer.toJson<String?>(father_fragment_id),
+      'fragment_template_id': serializer.toJson<String?>(fragment_template_id),
+      'note_id': serializer.toJson<String?>(note_id),
       'title': serializer.toJson<String>(title),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   Fragment copyWith(
-          {bool? client_be_Selected,
+          {bool? be_private,
+          bool? be_publish,
+          bool? client_be_selected,
           String? content,
-          int? creatorUserId,
-          Value<String?> fatherFragmentId = const Value.absent(),
-          Value<String?> fragmentTemplateId = const Value.absent(),
-          Value<String?> noteId = const Value.absent(),
+          int? creator_user_id,
+          Value<String?> father_fragment_id = const Value.absent(),
+          Value<String?> fragment_template_id = const Value.absent(),
+          Value<String?> note_id = const Value.absent(),
           String? title,
-          DateTime? createdAt,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       Fragment(
-        client_be_Selected: client_be_Selected ?? this.client_be_Selected,
+        be_private: be_private ?? this.be_private,
+        be_publish: be_publish ?? this.be_publish,
+        client_be_selected: client_be_selected ?? this.client_be_selected,
         content: content ?? this.content,
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        fatherFragmentId: fatherFragmentId.present
-            ? fatherFragmentId.value
-            : this.fatherFragmentId,
-        fragmentTemplateId: fragmentTemplateId.present
-            ? fragmentTemplateId.value
-            : this.fragmentTemplateId,
-        noteId: noteId.present ? noteId.value : this.noteId,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        father_fragment_id: father_fragment_id.present
+            ? father_fragment_id.value
+            : this.father_fragment_id,
+        fragment_template_id: fragment_template_id.present
+            ? fragment_template_id.value
+            : this.fragment_template_id,
+        note_id: note_id.present ? note_id.value : this.note_id,
         title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('Fragment(')
-          ..write('client_be_Selected: $client_be_Selected, ')
+          ..write('be_private: $be_private, ')
+          ..write('be_publish: $be_publish, ')
+          ..write('client_be_selected: $client_be_selected, ')
           ..write('content: $content, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherFragmentId: $fatherFragmentId, ')
-          ..write('fragmentTemplateId: $fragmentTemplateId, ')
-          ..write('noteId: $noteId, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_fragment_id: $father_fragment_id, ')
+          ..write('fragment_template_id: $fragment_template_id, ')
+          ..write('note_id: $note_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-      client_be_Selected,
+      be_private,
+      be_publish,
+      client_be_selected,
       content,
-      creatorUserId,
-      fatherFragmentId,
-      fragmentTemplateId,
-      noteId,
+      creator_user_id,
+      father_fragment_id,
+      fragment_template_id,
+      note_id,
       title,
-      createdAt,
+      created_at,
       id,
-      updatedAt);
+      updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Fragment &&
-          other.client_be_Selected == this.client_be_Selected &&
+          other.be_private == this.be_private &&
+          other.be_publish == this.be_publish &&
+          other.client_be_selected == this.client_be_selected &&
           other.content == this.content &&
-          other.creatorUserId == this.creatorUserId &&
-          other.fatherFragmentId == this.fatherFragmentId &&
-          other.fragmentTemplateId == this.fragmentTemplateId &&
-          other.noteId == this.noteId &&
+          other.creator_user_id == this.creator_user_id &&
+          other.father_fragment_id == this.father_fragment_id &&
+          other.fragment_template_id == this.fragment_template_id &&
+          other.note_id == this.note_id &&
           other.title == this.title &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class FragmentsCompanion extends UpdateCompanion<Fragment> {
-  Value<bool> client_be_Selected;
+  Value<bool> be_private;
+  Value<bool> be_publish;
+  Value<bool> client_be_selected;
   Value<String> content;
-  Value<int> creatorUserId;
-  Value<String?> fatherFragmentId;
-  Value<String?> fragmentTemplateId;
-  Value<String?> noteId;
+  Value<int> creator_user_id;
+  Value<String?> father_fragment_id;
+  Value<String?> fragment_template_id;
+  Value<String?> note_id;
   Value<String> title;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   FragmentsCompanion({
-    this.client_be_Selected = const Value.absent(),
+    this.be_private = const Value.absent(),
+    this.be_publish = const Value.absent(),
+    this.client_be_selected = const Value.absent(),
     this.content = const Value.absent(),
-    this.creatorUserId = const Value.absent(),
-    this.fatherFragmentId = const Value.absent(),
-    this.fragmentTemplateId = const Value.absent(),
-    this.noteId = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.father_fragment_id = const Value.absent(),
+    this.fragment_template_id = const Value.absent(),
+    this.note_id = const Value.absent(),
     this.title = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   FragmentsCompanion.insert({
-    required bool client_be_Selected,
+    required bool be_private,
+    required bool be_publish,
+    required bool client_be_selected,
     required String content,
-    required int creatorUserId,
-    this.fatherFragmentId = const Value.absent(),
-    this.fragmentTemplateId = const Value.absent(),
-    this.noteId = const Value.absent(),
+    required int creator_user_id,
+    this.father_fragment_id = const Value.absent(),
+    this.fragment_template_id = const Value.absent(),
+    this.note_id = const Value.absent(),
     required String title,
-    required DateTime createdAt,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : client_be_Selected = Value(client_be_Selected),
+    required DateTime updated_at,
+  })  : be_private = Value(be_private),
+        be_publish = Value(be_publish),
+        client_be_selected = Value(client_be_selected),
         content = Value(content),
-        creatorUserId = Value(creatorUserId),
+        creator_user_id = Value(creator_user_id),
         title = Value(title),
-        createdAt = Value(createdAt),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<Fragment> custom({
-    Expression<bool>? client_be_Selected,
+    Expression<bool>? be_private,
+    Expression<bool>? be_publish,
+    Expression<bool>? client_be_selected,
     Expression<String>? content,
-    Expression<int>? creatorUserId,
-    Expression<String>? fatherFragmentId,
-    Expression<String>? fragmentTemplateId,
-    Expression<String>? noteId,
+    Expression<int>? creator_user_id,
+    Expression<String>? father_fragment_id,
+    Expression<String>? fragment_template_id,
+    Expression<String>? note_id,
     Expression<String>? title,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (client_be_Selected != null) 'client_be_selected': client_be_Selected,
+      if (be_private != null) 'be_private': be_private,
+      if (be_publish != null) 'be_publish': be_publish,
+      if (client_be_selected != null) 'client_be_selected': client_be_selected,
       if (content != null) 'content': content,
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (fatherFragmentId != null) 'father_fragment_id': fatherFragmentId,
-      if (fragmentTemplateId != null)
-        'fragment_template_id': fragmentTemplateId,
-      if (noteId != null) 'note_id': noteId,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (father_fragment_id != null) 'father_fragment_id': father_fragment_id,
+      if (fragment_template_id != null)
+        'fragment_template_id': fragment_template_id,
+      if (note_id != null) 'note_id': note_id,
       if (title != null) 'title': title,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   FragmentsCompanion copyWith(
-      {Value<bool>? client_be_Selected,
+      {Value<bool>? be_private,
+      Value<bool>? be_publish,
+      Value<bool>? client_be_selected,
       Value<String>? content,
-      Value<int>? creatorUserId,
-      Value<String?>? fatherFragmentId,
-      Value<String?>? fragmentTemplateId,
-      Value<String?>? noteId,
+      Value<int>? creator_user_id,
+      Value<String?>? father_fragment_id,
+      Value<String?>? fragment_template_id,
+      Value<String?>? note_id,
       Value<String>? title,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return FragmentsCompanion(
-      client_be_Selected: client_be_Selected ?? this.client_be_Selected,
+      be_private: be_private ?? this.be_private,
+      be_publish: be_publish ?? this.be_publish,
+      client_be_selected: client_be_selected ?? this.client_be_selected,
       content: content ?? this.content,
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      fatherFragmentId: fatherFragmentId ?? this.fatherFragmentId,
-      fragmentTemplateId: fragmentTemplateId ?? this.fragmentTemplateId,
-      noteId: noteId ?? this.noteId,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      father_fragment_id: father_fragment_id ?? this.father_fragment_id,
+      fragment_template_id: fragment_template_id ?? this.fragment_template_id,
+      note_id: note_id ?? this.note_id,
       title: title ?? this.title,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (client_be_Selected.present) {
-      map['client_be_selected'] = Variable<bool>(client_be_Selected.value);
+    if (be_private.present) {
+      map['be_private'] = Variable<bool>(be_private.value);
+    }
+    if (be_publish.present) {
+      map['be_publish'] = Variable<bool>(be_publish.value);
+    }
+    if (client_be_selected.present) {
+      map['client_be_selected'] = Variable<bool>(client_be_selected.value);
     }
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (fatherFragmentId.present) {
-      map['father_fragment_id'] = Variable<String>(fatherFragmentId.value);
+    if (father_fragment_id.present) {
+      map['father_fragment_id'] = Variable<String>(father_fragment_id.value);
     }
-    if (fragmentTemplateId.present) {
-      map['fragment_template_id'] = Variable<String>(fragmentTemplateId.value);
+    if (fragment_template_id.present) {
+      map['fragment_template_id'] =
+          Variable<String>(fragment_template_id.value);
     }
-    if (noteId.present) {
-      map['note_id'] = Variable<String>(noteId.value);
+    if (note_id.present) {
+      map['note_id'] = Variable<String>(note_id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -4221,16 +4381,18 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   String toString() {
     return (StringBuffer('FragmentsCompanion(')
-          ..write('client_be_Selected: $client_be_Selected, ')
+          ..write('be_private: $be_private, ')
+          ..write('be_publish: $be_publish, ')
+          ..write('client_be_selected: $client_be_selected, ')
           ..write('content: $content, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherFragmentId: $fatherFragmentId, ')
-          ..write('fragmentTemplateId: $fragmentTemplateId, ')
-          ..write('noteId: $noteId, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_fragment_id: $father_fragment_id, ')
+          ..write('fragment_template_id: $fragment_template_id, ')
+          ..write('note_id: $note_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -4242,10 +4404,34 @@ class $FragmentsTable extends Fragments
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _client_be_SelectedMeta =
-      const VerificationMeta('client_be_Selected');
+  static const VerificationMeta _be_privateMeta =
+      const VerificationMeta('be_private');
   @override
-  late final GeneratedColumn<bool> client_be_Selected =
+  late final GeneratedColumn<bool> be_private =
+      GeneratedColumn<bool>('be_private', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("be_private" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _be_publishMeta =
+      const VerificationMeta('be_publish');
+  @override
+  late final GeneratedColumn<bool> be_publish =
+      GeneratedColumn<bool>('be_publish', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("be_publish" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _client_be_selectedMeta =
+      const VerificationMeta('client_be_selected');
+  @override
+  late final GeneratedColumn<bool> client_be_selected =
       GeneratedColumn<bool>('client_be_selected', aliasedName, false,
           type: DriftSqlType.bool,
           requiredDuringInsert: true,
@@ -4260,27 +4446,28 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fatherFragmentIdMeta =
-      const VerificationMeta('fatherFragmentId');
+  static const VerificationMeta _father_fragment_idMeta =
+      const VerificationMeta('father_fragment_id');
   @override
-  late final GeneratedColumn<String> fatherFragmentId = GeneratedColumn<String>(
-      'father_fragment_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fragmentTemplateIdMeta =
-      const VerificationMeta('fragmentTemplateId');
+  late final GeneratedColumn<String> father_fragment_id =
+      GeneratedColumn<String>('father_fragment_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _fragment_template_idMeta =
+      const VerificationMeta('fragment_template_id');
   @override
-  late final GeneratedColumn<String> fragmentTemplateId =
+  late final GeneratedColumn<String> fragment_template_id =
       GeneratedColumn<String>('fragment_template_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  static const VerificationMeta _note_idMeta =
+      const VerificationMeta('note_id');
   @override
-  late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> note_id = GeneratedColumn<String>(
       'note_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -4288,10 +4475,10 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -4299,24 +4486,26 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        client_be_Selected,
+        be_private,
+        be_publish,
+        client_be_selected,
         content,
-        creatorUserId,
-        fatherFragmentId,
-        fragmentTemplateId,
-        noteId,
+        creator_user_id,
+        father_fragment_id,
+        fragment_template_id,
+        note_id,
         title,
-        createdAt,
+        created_at,
         id,
-        updatedAt
+        updated_at
       ];
   @override
   String get aliasedName => _alias ?? 'fragments';
@@ -4327,13 +4516,29 @@ class $FragmentsTable extends Fragments
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('be_private')) {
+      context.handle(
+          _be_privateMeta,
+          be_private.isAcceptableOrUnknown(
+              data['be_private']!, _be_privateMeta));
+    } else if (isInserting) {
+      context.missing(_be_privateMeta);
+    }
+    if (data.containsKey('be_publish')) {
+      context.handle(
+          _be_publishMeta,
+          be_publish.isAcceptableOrUnknown(
+              data['be_publish']!, _be_publishMeta));
+    } else if (isInserting) {
+      context.missing(_be_publishMeta);
+    }
     if (data.containsKey('client_be_selected')) {
       context.handle(
-          _client_be_SelectedMeta,
-          client_be_Selected.isAcceptableOrUnknown(
-              data['client_be_selected']!, _client_be_SelectedMeta));
+          _client_be_selectedMeta,
+          client_be_selected.isAcceptableOrUnknown(
+              data['client_be_selected']!, _client_be_selectedMeta));
     } else if (isInserting) {
-      context.missing(_client_be_SelectedMeta);
+      context.missing(_client_be_selectedMeta);
     }
     if (data.containsKey('content')) {
       context.handle(_contentMeta,
@@ -4343,27 +4548,27 @@ class $FragmentsTable extends Fragments
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('father_fragment_id')) {
       context.handle(
-          _fatherFragmentIdMeta,
-          fatherFragmentId.isAcceptableOrUnknown(
-              data['father_fragment_id']!, _fatherFragmentIdMeta));
+          _father_fragment_idMeta,
+          father_fragment_id.isAcceptableOrUnknown(
+              data['father_fragment_id']!, _father_fragment_idMeta));
     }
     if (data.containsKey('fragment_template_id')) {
       context.handle(
-          _fragmentTemplateIdMeta,
-          fragmentTemplateId.isAcceptableOrUnknown(
-              data['fragment_template_id']!, _fragmentTemplateIdMeta));
+          _fragment_template_idMeta,
+          fragment_template_id.isAcceptableOrUnknown(
+              data['fragment_template_id']!, _fragment_template_idMeta));
     }
     if (data.containsKey('note_id')) {
-      context.handle(_noteIdMeta,
-          noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta));
+      context.handle(_note_idMeta,
+          note_id.isAcceptableOrUnknown(data['note_id']!, _note_idMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -4372,10 +4577,12 @@ class $FragmentsTable extends Fragments
       context.missing(_titleMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -4383,10 +4590,12 @@ class $FragmentsTable extends Fragments
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -4397,25 +4606,29 @@ class $FragmentsTable extends Fragments
   Fragment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Fragment(
-      client_be_Selected: attachedDatabase.typeMapping.read(
+      be_private: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_private'])!,
+      be_publish: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
+      client_be_selected: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fatherFragmentId: attachedDatabase.typeMapping.read(
+      father_fragment_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}father_fragment_id']),
-      fragmentTemplateId: attachedDatabase.typeMapping.read(
+      fragment_template_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}fragment_template_id']),
-      noteId: attachedDatabase.typeMapping
+      note_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -4427,75 +4640,75 @@ class $FragmentsTable extends Fragments
 }
 
 class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
-  int creatorUserId;
-  String? memoryModelId;
-  NewDisplayOrder newDisplayOrder;
-  NewReviewDisplayOrder newReviewDisplayOrder;
-  DateTime reviewInterval;
-  DateTime? startTime;
+  int creator_user_id;
+  String? memory_model_id;
+  NewDisplayOrder new_display_order;
+  NewReviewDisplayOrder new_review_display_order;
+  DateTime review_interval;
+  DateTime? start_time;
   String title;
-  int willNewLearnCount;
-  DateTime createdAt;
+  int will_new_learn_count;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   MemoryGroup(
-      {required this.creatorUserId,
-      this.memoryModelId,
-      required this.newDisplayOrder,
-      required this.newReviewDisplayOrder,
-      required this.reviewInterval,
-      this.startTime,
+      {required this.creator_user_id,
+      this.memory_model_id,
+      required this.new_display_order,
+      required this.new_review_display_order,
+      required this.review_interval,
+      this.start_time,
       required this.title,
-      required this.willNewLearnCount,
-      required this.createdAt,
+      required this.will_new_learn_count,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || memoryModelId != null) {
-      map['memory_model_id'] = Variable<String>(memoryModelId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || memory_model_id != null) {
+      map['memory_model_id'] = Variable<String>(memory_model_id);
     }
     {
-      final converter = $MemoryGroupsTable.$converternewDisplayOrder;
+      final converter = $MemoryGroupsTable.$converternew_display_order;
       map['new_display_order'] =
-          Variable<int>(converter.toSql(newDisplayOrder));
+          Variable<int>(converter.toSql(new_display_order));
     }
     {
-      final converter = $MemoryGroupsTable.$converternewReviewDisplayOrder;
+      final converter = $MemoryGroupsTable.$converternew_review_display_order;
       map['new_review_display_order'] =
-          Variable<int>(converter.toSql(newReviewDisplayOrder));
+          Variable<int>(converter.toSql(new_review_display_order));
     }
-    map['review_interval'] = Variable<DateTime>(reviewInterval);
-    if (!nullToAbsent || startTime != null) {
-      map['start_time'] = Variable<DateTime>(startTime);
+    map['review_interval'] = Variable<DateTime>(review_interval);
+    if (!nullToAbsent || start_time != null) {
+      map['start_time'] = Variable<DateTime>(start_time);
     }
     map['title'] = Variable<String>(title);
-    map['will_new_learn_count'] = Variable<int>(willNewLearnCount);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['will_new_learn_count'] = Variable<int>(will_new_learn_count);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
     return MemoryGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      memoryModelId: memoryModelId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      memory_model_id: memory_model_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(memoryModelId),
-      newDisplayOrder: Value(newDisplayOrder),
-      newReviewDisplayOrder: Value(newReviewDisplayOrder),
-      reviewInterval: Value(reviewInterval),
-      startTime: startTime == null && nullToAbsent
+          : Value(memory_model_id),
+      new_display_order: Value(new_display_order),
+      new_review_display_order: Value(new_review_display_order),
+      review_interval: Value(review_interval),
+      start_time: start_time == null && nullToAbsent
           ? const Value.absent()
-          : Value(startTime),
+          : Value(start_time),
       title: Value(title),
-      willNewLearnCount: Value(willNewLearnCount),
-      createdAt: Value(createdAt),
+      will_new_learn_count: Value(will_new_learn_count),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -4503,259 +4716,264 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MemoryGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      memoryModelId: serializer.fromJson<String?>(json['memoryModelId']),
-      newDisplayOrder: $MemoryGroupsTable.$converternewDisplayOrder
-          .fromJson(serializer.fromJson<int>(json['newDisplayOrder'])),
-      newReviewDisplayOrder: $MemoryGroupsTable.$converternewReviewDisplayOrder
-          .fromJson(serializer.fromJson<int>(json['newReviewDisplayOrder'])),
-      reviewInterval: serializer.fromJson<DateTime>(json['reviewInterval']),
-      startTime: serializer.fromJson<DateTime?>(json['startTime']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      memory_model_id: serializer.fromJson<String?>(json['memory_model_id']),
+      new_display_order: $MemoryGroupsTable.$converternew_display_order
+          .fromJson(serializer.fromJson<int>(json['new_display_order'])),
+      new_review_display_order: $MemoryGroupsTable
+          .$converternew_review_display_order
+          .fromJson(serializer.fromJson<int>(json['new_review_display_order'])),
+      review_interval: serializer.fromJson<DateTime>(json['review_interval']),
+      start_time: serializer.fromJson<DateTime?>(json['start_time']),
       title: serializer.fromJson<String>(json['title']),
-      willNewLearnCount: serializer.fromJson<int>(json['willNewLearnCount']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      will_new_learn_count:
+          serializer.fromJson<int>(json['will_new_learn_count']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'memoryModelId': serializer.toJson<String?>(memoryModelId),
-      'newDisplayOrder': serializer.toJson<int>(
-          $MemoryGroupsTable.$converternewDisplayOrder.toJson(newDisplayOrder)),
-      'newReviewDisplayOrder': serializer.toJson<int>($MemoryGroupsTable
-          .$converternewReviewDisplayOrder
-          .toJson(newReviewDisplayOrder)),
-      'reviewInterval': serializer.toJson<DateTime>(reviewInterval),
-      'startTime': serializer.toJson<DateTime?>(startTime),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'memory_model_id': serializer.toJson<String?>(memory_model_id),
+      'new_display_order': serializer.toJson<int>($MemoryGroupsTable
+          .$converternew_display_order
+          .toJson(new_display_order)),
+      'new_review_display_order': serializer.toJson<int>($MemoryGroupsTable
+          .$converternew_review_display_order
+          .toJson(new_review_display_order)),
+      'review_interval': serializer.toJson<DateTime>(review_interval),
+      'start_time': serializer.toJson<DateTime?>(start_time),
       'title': serializer.toJson<String>(title),
-      'willNewLearnCount': serializer.toJson<int>(willNewLearnCount),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'will_new_learn_count': serializer.toJson<int>(will_new_learn_count),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   MemoryGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> memoryModelId = const Value.absent(),
-          NewDisplayOrder? newDisplayOrder,
-          NewReviewDisplayOrder? newReviewDisplayOrder,
-          DateTime? reviewInterval,
-          Value<DateTime?> startTime = const Value.absent(),
+          {int? creator_user_id,
+          Value<String?> memory_model_id = const Value.absent(),
+          NewDisplayOrder? new_display_order,
+          NewReviewDisplayOrder? new_review_display_order,
+          DateTime? review_interval,
+          Value<DateTime?> start_time = const Value.absent(),
           String? title,
-          int? willNewLearnCount,
-          DateTime? createdAt,
+          int? will_new_learn_count,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       MemoryGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        memoryModelId:
-            memoryModelId.present ? memoryModelId.value : this.memoryModelId,
-        newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
-        newReviewDisplayOrder:
-            newReviewDisplayOrder ?? this.newReviewDisplayOrder,
-        reviewInterval: reviewInterval ?? this.reviewInterval,
-        startTime: startTime.present ? startTime.value : this.startTime,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        memory_model_id: memory_model_id.present
+            ? memory_model_id.value
+            : this.memory_model_id,
+        new_display_order: new_display_order ?? this.new_display_order,
+        new_review_display_order:
+            new_review_display_order ?? this.new_review_display_order,
+        review_interval: review_interval ?? this.review_interval,
+        start_time: start_time.present ? start_time.value : this.start_time,
         title: title ?? this.title,
-        willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
-        createdAt: createdAt ?? this.createdAt,
+        will_new_learn_count: will_new_learn_count ?? this.will_new_learn_count,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('MemoryGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('memoryModelId: $memoryModelId, ')
-          ..write('newDisplayOrder: $newDisplayOrder, ')
-          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
-          ..write('reviewInterval: $reviewInterval, ')
-          ..write('startTime: $startTime, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('memory_model_id: $memory_model_id, ')
+          ..write('new_display_order: $new_display_order, ')
+          ..write('new_review_display_order: $new_review_display_order, ')
+          ..write('review_interval: $review_interval, ')
+          ..write('start_time: $start_time, ')
           ..write('title: $title, ')
-          ..write('willNewLearnCount: $willNewLearnCount, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('will_new_learn_count: $will_new_learn_count, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-      creatorUserId,
-      memoryModelId,
-      newDisplayOrder,
-      newReviewDisplayOrder,
-      reviewInterval,
-      startTime,
+      creator_user_id,
+      memory_model_id,
+      new_display_order,
+      new_review_display_order,
+      review_interval,
+      start_time,
       title,
-      willNewLearnCount,
-      createdAt,
+      will_new_learn_count,
+      created_at,
       id,
-      updatedAt);
+      updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MemoryGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.memoryModelId == this.memoryModelId &&
-          other.newDisplayOrder == this.newDisplayOrder &&
-          other.newReviewDisplayOrder == this.newReviewDisplayOrder &&
-          other.reviewInterval == this.reviewInterval &&
-          other.startTime == this.startTime &&
+          other.creator_user_id == this.creator_user_id &&
+          other.memory_model_id == this.memory_model_id &&
+          other.new_display_order == this.new_display_order &&
+          other.new_review_display_order == this.new_review_display_order &&
+          other.review_interval == this.review_interval &&
+          other.start_time == this.start_time &&
           other.title == this.title &&
-          other.willNewLearnCount == this.willNewLearnCount &&
-          other.createdAt == this.createdAt &&
+          other.will_new_learn_count == this.will_new_learn_count &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
-  Value<int> creatorUserId;
-  Value<String?> memoryModelId;
-  Value<NewDisplayOrder> newDisplayOrder;
-  Value<NewReviewDisplayOrder> newReviewDisplayOrder;
-  Value<DateTime> reviewInterval;
-  Value<DateTime?> startTime;
+  Value<int> creator_user_id;
+  Value<String?> memory_model_id;
+  Value<NewDisplayOrder> new_display_order;
+  Value<NewReviewDisplayOrder> new_review_display_order;
+  Value<DateTime> review_interval;
+  Value<DateTime?> start_time;
   Value<String> title;
-  Value<int> willNewLearnCount;
-  Value<DateTime> createdAt;
+  Value<int> will_new_learn_count;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   MemoryGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.memoryModelId = const Value.absent(),
-    this.newDisplayOrder = const Value.absent(),
-    this.newReviewDisplayOrder = const Value.absent(),
-    this.reviewInterval = const Value.absent(),
-    this.startTime = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.memory_model_id = const Value.absent(),
+    this.new_display_order = const Value.absent(),
+    this.new_review_display_order = const Value.absent(),
+    this.review_interval = const Value.absent(),
+    this.start_time = const Value.absent(),
     this.title = const Value.absent(),
-    this.willNewLearnCount = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.will_new_learn_count = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
-    required int creatorUserId,
-    this.memoryModelId = const Value.absent(),
-    required NewDisplayOrder newDisplayOrder,
-    required NewReviewDisplayOrder newReviewDisplayOrder,
-    required DateTime reviewInterval,
-    this.startTime = const Value.absent(),
+    required int creator_user_id,
+    this.memory_model_id = const Value.absent(),
+    required NewDisplayOrder new_display_order,
+    required NewReviewDisplayOrder new_review_display_order,
+    required DateTime review_interval,
+    this.start_time = const Value.absent(),
     required String title,
-    required int willNewLearnCount,
-    required DateTime createdAt,
+    required int will_new_learn_count,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
-        newDisplayOrder = Value(newDisplayOrder),
-        newReviewDisplayOrder = Value(newReviewDisplayOrder),
-        reviewInterval = Value(reviewInterval),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
+        new_display_order = Value(new_display_order),
+        new_review_display_order = Value(new_review_display_order),
+        review_interval = Value(review_interval),
         title = Value(title),
-        willNewLearnCount = Value(willNewLearnCount),
-        createdAt = Value(createdAt),
+        will_new_learn_count = Value(will_new_learn_count),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<MemoryGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? memoryModelId,
-    Expression<int>? newDisplayOrder,
-    Expression<int>? newReviewDisplayOrder,
-    Expression<DateTime>? reviewInterval,
-    Expression<DateTime>? startTime,
+    Expression<int>? creator_user_id,
+    Expression<String>? memory_model_id,
+    Expression<int>? new_display_order,
+    Expression<int>? new_review_display_order,
+    Expression<DateTime>? review_interval,
+    Expression<DateTime>? start_time,
     Expression<String>? title,
-    Expression<int>? willNewLearnCount,
-    Expression<DateTime>? createdAt,
+    Expression<int>? will_new_learn_count,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (memoryModelId != null) 'memory_model_id': memoryModelId,
-      if (newDisplayOrder != null) 'new_display_order': newDisplayOrder,
-      if (newReviewDisplayOrder != null)
-        'new_review_display_order': newReviewDisplayOrder,
-      if (reviewInterval != null) 'review_interval': reviewInterval,
-      if (startTime != null) 'start_time': startTime,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (memory_model_id != null) 'memory_model_id': memory_model_id,
+      if (new_display_order != null) 'new_display_order': new_display_order,
+      if (new_review_display_order != null)
+        'new_review_display_order': new_review_display_order,
+      if (review_interval != null) 'review_interval': review_interval,
+      if (start_time != null) 'start_time': start_time,
       if (title != null) 'title': title,
-      if (willNewLearnCount != null) 'will_new_learn_count': willNewLearnCount,
-      if (createdAt != null) 'created_at': createdAt,
+      if (will_new_learn_count != null)
+        'will_new_learn_count': will_new_learn_count,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   MemoryGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? memoryModelId,
-      Value<NewDisplayOrder>? newDisplayOrder,
-      Value<NewReviewDisplayOrder>? newReviewDisplayOrder,
-      Value<DateTime>? reviewInterval,
-      Value<DateTime?>? startTime,
+      {Value<int>? creator_user_id,
+      Value<String?>? memory_model_id,
+      Value<NewDisplayOrder>? new_display_order,
+      Value<NewReviewDisplayOrder>? new_review_display_order,
+      Value<DateTime>? review_interval,
+      Value<DateTime?>? start_time,
       Value<String>? title,
-      Value<int>? willNewLearnCount,
-      Value<DateTime>? createdAt,
+      Value<int>? will_new_learn_count,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return MemoryGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      memoryModelId: memoryModelId ?? this.memoryModelId,
-      newDisplayOrder: newDisplayOrder ?? this.newDisplayOrder,
-      newReviewDisplayOrder:
-          newReviewDisplayOrder ?? this.newReviewDisplayOrder,
-      reviewInterval: reviewInterval ?? this.reviewInterval,
-      startTime: startTime ?? this.startTime,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      memory_model_id: memory_model_id ?? this.memory_model_id,
+      new_display_order: new_display_order ?? this.new_display_order,
+      new_review_display_order:
+          new_review_display_order ?? this.new_review_display_order,
+      review_interval: review_interval ?? this.review_interval,
+      start_time: start_time ?? this.start_time,
       title: title ?? this.title,
-      willNewLearnCount: willNewLearnCount ?? this.willNewLearnCount,
-      createdAt: createdAt ?? this.createdAt,
+      will_new_learn_count: will_new_learn_count ?? this.will_new_learn_count,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (memoryModelId.present) {
-      map['memory_model_id'] = Variable<String>(memoryModelId.value);
+    if (memory_model_id.present) {
+      map['memory_model_id'] = Variable<String>(memory_model_id.value);
     }
-    if (newDisplayOrder.present) {
-      final converter = $MemoryGroupsTable.$converternewDisplayOrder;
+    if (new_display_order.present) {
+      final converter = $MemoryGroupsTable.$converternew_display_order;
       map['new_display_order'] =
-          Variable<int>(converter.toSql(newDisplayOrder.value));
+          Variable<int>(converter.toSql(new_display_order.value));
     }
-    if (newReviewDisplayOrder.present) {
-      final converter = $MemoryGroupsTable.$converternewReviewDisplayOrder;
+    if (new_review_display_order.present) {
+      final converter = $MemoryGroupsTable.$converternew_review_display_order;
       map['new_review_display_order'] =
-          Variable<int>(converter.toSql(newReviewDisplayOrder.value));
+          Variable<int>(converter.toSql(new_review_display_order.value));
     }
-    if (reviewInterval.present) {
-      map['review_interval'] = Variable<DateTime>(reviewInterval.value);
+    if (review_interval.present) {
+      map['review_interval'] = Variable<DateTime>(review_interval.value);
     }
-    if (startTime.present) {
-      map['start_time'] = Variable<DateTime>(startTime.value);
+    if (start_time.present) {
+      map['start_time'] = Variable<DateTime>(start_time.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (willNewLearnCount.present) {
-      map['will_new_learn_count'] = Variable<int>(willNewLearnCount.value);
+    if (will_new_learn_count.present) {
+      map['will_new_learn_count'] = Variable<int>(will_new_learn_count.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -4763,17 +4981,17 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   @override
   String toString() {
     return (StringBuffer('MemoryGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('memoryModelId: $memoryModelId, ')
-          ..write('newDisplayOrder: $newDisplayOrder, ')
-          ..write('newReviewDisplayOrder: $newReviewDisplayOrder, ')
-          ..write('reviewInterval: $reviewInterval, ')
-          ..write('startTime: $startTime, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('memory_model_id: $memory_model_id, ')
+          ..write('new_display_order: $new_display_order, ')
+          ..write('new_review_display_order: $new_review_display_order, ')
+          ..write('review_interval: $review_interval, ')
+          ..write('start_time: $start_time, ')
           ..write('title: $title, ')
-          ..write('willNewLearnCount: $willNewLearnCount, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('will_new_learn_count: $will_new_learn_count, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -4785,46 +5003,46 @@ class $MemoryGroupsTable extends MemoryGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $MemoryGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _memoryModelIdMeta =
-      const VerificationMeta('memoryModelId');
+  static const VerificationMeta _memory_model_idMeta =
+      const VerificationMeta('memory_model_id');
   @override
-  late final GeneratedColumn<String> memoryModelId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> memory_model_id = GeneratedColumn<String>(
       'memory_model_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _newDisplayOrderMeta =
-      const VerificationMeta('newDisplayOrder');
+  static const VerificationMeta _new_display_orderMeta =
+      const VerificationMeta('new_display_order');
   @override
   late final GeneratedColumnWithTypeConverter<NewDisplayOrder, int>
-      newDisplayOrder = GeneratedColumn<int>(
+      new_display_order = GeneratedColumn<int>(
               'new_display_order', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<NewDisplayOrder>(
-              $MemoryGroupsTable.$converternewDisplayOrder);
-  static const VerificationMeta _newReviewDisplayOrderMeta =
-      const VerificationMeta('newReviewDisplayOrder');
+              $MemoryGroupsTable.$converternew_display_order);
+  static const VerificationMeta _new_review_display_orderMeta =
+      const VerificationMeta('new_review_display_order');
   @override
   late final GeneratedColumnWithTypeConverter<NewReviewDisplayOrder, int>
-      newReviewDisplayOrder = GeneratedColumn<int>(
+      new_review_display_order = GeneratedColumn<int>(
               'new_review_display_order', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<NewReviewDisplayOrder>(
-              $MemoryGroupsTable.$converternewReviewDisplayOrder);
-  static const VerificationMeta _reviewIntervalMeta =
-      const VerificationMeta('reviewInterval');
+              $MemoryGroupsTable.$converternew_review_display_order);
+  static const VerificationMeta _review_intervalMeta =
+      const VerificationMeta('review_interval');
   @override
-  late final GeneratedColumn<DateTime> reviewInterval =
+  late final GeneratedColumn<DateTime> review_interval =
       GeneratedColumn<DateTime>('review_interval', aliasedName, false,
           type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _startTimeMeta =
-      const VerificationMeta('startTime');
+  static const VerificationMeta _start_timeMeta =
+      const VerificationMeta('start_time');
   @override
-  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> start_time = GeneratedColumn<DateTime>(
       'start_time', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -4832,16 +5050,16 @@ class $MemoryGroupsTable extends MemoryGroups
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _willNewLearnCountMeta =
-      const VerificationMeta('willNewLearnCount');
+  static const VerificationMeta _will_new_learn_countMeta =
+      const VerificationMeta('will_new_learn_count');
   @override
-  late final GeneratedColumn<int> willNewLearnCount = GeneratedColumn<int>(
+  late final GeneratedColumn<int> will_new_learn_count = GeneratedColumn<int>(
       'will_new_learn_count', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -4849,25 +5067,25 @@ class $MemoryGroupsTable extends MemoryGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        creatorUserId,
-        memoryModelId,
-        newDisplayOrder,
-        newReviewDisplayOrder,
-        reviewInterval,
-        startTime,
+        creator_user_id,
+        memory_model_id,
+        new_display_order,
+        new_review_display_order,
+        review_interval,
+        start_time,
         title,
-        willNewLearnCount,
-        createdAt,
+        will_new_learn_count,
+        created_at,
         id,
-        updatedAt
+        updated_at
       ];
   @override
   String get aliasedName => _alias ?? 'memory_groups';
@@ -4880,32 +5098,34 @@ class $MemoryGroupsTable extends MemoryGroups
     final data = instance.toColumns(true);
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('memory_model_id')) {
       context.handle(
-          _memoryModelIdMeta,
-          memoryModelId.isAcceptableOrUnknown(
-              data['memory_model_id']!, _memoryModelIdMeta));
+          _memory_model_idMeta,
+          memory_model_id.isAcceptableOrUnknown(
+              data['memory_model_id']!, _memory_model_idMeta));
     }
-    context.handle(_newDisplayOrderMeta, const VerificationResult.success());
+    context.handle(_new_display_orderMeta, const VerificationResult.success());
     context.handle(
-        _newReviewDisplayOrderMeta, const VerificationResult.success());
+        _new_review_display_orderMeta, const VerificationResult.success());
     if (data.containsKey('review_interval')) {
       context.handle(
-          _reviewIntervalMeta,
-          reviewInterval.isAcceptableOrUnknown(
-              data['review_interval']!, _reviewIntervalMeta));
+          _review_intervalMeta,
+          review_interval.isAcceptableOrUnknown(
+              data['review_interval']!, _review_intervalMeta));
     } else if (isInserting) {
-      context.missing(_reviewIntervalMeta);
+      context.missing(_review_intervalMeta);
     }
     if (data.containsKey('start_time')) {
-      context.handle(_startTimeMeta,
-          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
+      context.handle(
+          _start_timeMeta,
+          start_time.isAcceptableOrUnknown(
+              data['start_time']!, _start_timeMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -4915,17 +5135,19 @@ class $MemoryGroupsTable extends MemoryGroups
     }
     if (data.containsKey('will_new_learn_count')) {
       context.handle(
-          _willNewLearnCountMeta,
-          willNewLearnCount.isAcceptableOrUnknown(
-              data['will_new_learn_count']!, _willNewLearnCountMeta));
+          _will_new_learn_countMeta,
+          will_new_learn_count.isAcceptableOrUnknown(
+              data['will_new_learn_count']!, _will_new_learn_countMeta));
     } else if (isInserting) {
-      context.missing(_willNewLearnCountMeta);
+      context.missing(_will_new_learn_countMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -4933,10 +5155,12 @@ class $MemoryGroupsTable extends MemoryGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -4947,29 +5171,30 @@ class $MemoryGroupsTable extends MemoryGroups
   MemoryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MemoryGroup(
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      memoryModelId: attachedDatabase.typeMapping
+      memory_model_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}memory_model_id']),
-      newDisplayOrder: $MemoryGroupsTable.$converternewDisplayOrder.fromSql(
+      new_display_order: $MemoryGroupsTable.$converternew_display_order.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
-      newReviewDisplayOrder: $MemoryGroupsTable.$converternewReviewDisplayOrder
+      new_review_display_order: $MemoryGroupsTable
+          .$converternew_review_display_order
           .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
               data['${effectivePrefix}new_review_display_order'])!),
-      reviewInterval: attachedDatabase.typeMapping.read(
+      review_interval: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
-      startTime: attachedDatabase.typeMapping
+      start_time: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}start_time']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      willNewLearnCount: attachedDatabase.typeMapping.read(
+      will_new_learn_count: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}will_new_learn_count'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -4980,64 +5205,64 @@ class $MemoryGroupsTable extends MemoryGroups
   }
 
   static JsonTypeConverter2<NewDisplayOrder, int, int>
-      $converternewDisplayOrder =
+      $converternew_display_order =
       const EnumIndexConverter<NewDisplayOrder>(NewDisplayOrder.values);
   static JsonTypeConverter2<NewReviewDisplayOrder, int, int>
-      $converternewReviewDisplayOrder =
+      $converternew_review_display_order =
       const EnumIndexConverter<NewReviewDisplayOrder>(
           NewReviewDisplayOrder.values);
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
-  String buttonAlgorithm;
-  int creatorUserId;
-  String familiarityAlgorithm;
-  String? fatherMemoryModelId;
-  String nextTimeAlgorithm;
+  String button_algorithm;
+  int creator_user_id;
+  String familiarity_algorithm;
+  String? father_memory_model_id;
+  String next_time_algorithm;
   String title;
-  DateTime createdAt;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   MemoryModel(
-      {required this.buttonAlgorithm,
-      required this.creatorUserId,
-      required this.familiarityAlgorithm,
-      this.fatherMemoryModelId,
-      required this.nextTimeAlgorithm,
+      {required this.button_algorithm,
+      required this.creator_user_id,
+      required this.familiarity_algorithm,
+      this.father_memory_model_id,
+      required this.next_time_algorithm,
       required this.title,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['button_algorithm'] = Variable<String>(buttonAlgorithm);
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    map['familiarity_algorithm'] = Variable<String>(familiarityAlgorithm);
-    if (!nullToAbsent || fatherMemoryModelId != null) {
-      map['father_memory_model_id'] = Variable<String>(fatherMemoryModelId);
+    map['button_algorithm'] = Variable<String>(button_algorithm);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    map['familiarity_algorithm'] = Variable<String>(familiarity_algorithm);
+    if (!nullToAbsent || father_memory_model_id != null) {
+      map['father_memory_model_id'] = Variable<String>(father_memory_model_id);
     }
-    map['next_time_algorithm'] = Variable<String>(nextTimeAlgorithm);
+    map['next_time_algorithm'] = Variable<String>(next_time_algorithm);
     map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   MemoryModelsCompanion toCompanion(bool nullToAbsent) {
     return MemoryModelsCompanion(
-      buttonAlgorithm: Value(buttonAlgorithm),
-      creatorUserId: Value(creatorUserId),
-      familiarityAlgorithm: Value(familiarityAlgorithm),
-      fatherMemoryModelId: fatherMemoryModelId == null && nullToAbsent
+      button_algorithm: Value(button_algorithm),
+      creator_user_id: Value(creator_user_id),
+      familiarity_algorithm: Value(familiarity_algorithm),
+      father_memory_model_id: father_memory_model_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(fatherMemoryModelId),
-      nextTimeAlgorithm: Value(nextTimeAlgorithm),
+          : Value(father_memory_model_id),
+      next_time_algorithm: Value(next_time_algorithm),
       title: Value(title),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -5045,219 +5270,225 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MemoryModel(
-      buttonAlgorithm: serializer.fromJson<String>(json['buttonAlgorithm']),
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      familiarityAlgorithm:
-          serializer.fromJson<String>(json['familiarityAlgorithm']),
-      fatherMemoryModelId:
-          serializer.fromJson<String?>(json['fatherMemoryModelId']),
-      nextTimeAlgorithm: serializer.fromJson<String>(json['nextTimeAlgorithm']),
+      button_algorithm: serializer.fromJson<String>(json['button_algorithm']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      familiarity_algorithm:
+          serializer.fromJson<String>(json['familiarity_algorithm']),
+      father_memory_model_id:
+          serializer.fromJson<String?>(json['father_memory_model_id']),
+      next_time_algorithm:
+          serializer.fromJson<String>(json['next_time_algorithm']),
       title: serializer.fromJson<String>(json['title']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'buttonAlgorithm': serializer.toJson<String>(buttonAlgorithm),
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'familiarityAlgorithm': serializer.toJson<String>(familiarityAlgorithm),
-      'fatherMemoryModelId': serializer.toJson<String?>(fatherMemoryModelId),
-      'nextTimeAlgorithm': serializer.toJson<String>(nextTimeAlgorithm),
+      'button_algorithm': serializer.toJson<String>(button_algorithm),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'familiarity_algorithm': serializer.toJson<String>(familiarity_algorithm),
+      'father_memory_model_id':
+          serializer.toJson<String?>(father_memory_model_id),
+      'next_time_algorithm': serializer.toJson<String>(next_time_algorithm),
       'title': serializer.toJson<String>(title),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   MemoryModel copyWith(
-          {String? buttonAlgorithm,
-          int? creatorUserId,
-          String? familiarityAlgorithm,
-          Value<String?> fatherMemoryModelId = const Value.absent(),
-          String? nextTimeAlgorithm,
+          {String? button_algorithm,
+          int? creator_user_id,
+          String? familiarity_algorithm,
+          Value<String?> father_memory_model_id = const Value.absent(),
+          String? next_time_algorithm,
           String? title,
-          DateTime? createdAt,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       MemoryModel(
-        buttonAlgorithm: buttonAlgorithm ?? this.buttonAlgorithm,
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        familiarityAlgorithm: familiarityAlgorithm ?? this.familiarityAlgorithm,
-        fatherMemoryModelId: fatherMemoryModelId.present
-            ? fatherMemoryModelId.value
-            : this.fatherMemoryModelId,
-        nextTimeAlgorithm: nextTimeAlgorithm ?? this.nextTimeAlgorithm,
+        button_algorithm: button_algorithm ?? this.button_algorithm,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        familiarity_algorithm:
+            familiarity_algorithm ?? this.familiarity_algorithm,
+        father_memory_model_id: father_memory_model_id.present
+            ? father_memory_model_id.value
+            : this.father_memory_model_id,
+        next_time_algorithm: next_time_algorithm ?? this.next_time_algorithm,
         title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('MemoryModel(')
-          ..write('buttonAlgorithm: $buttonAlgorithm, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('familiarityAlgorithm: $familiarityAlgorithm, ')
-          ..write('fatherMemoryModelId: $fatherMemoryModelId, ')
-          ..write('nextTimeAlgorithm: $nextTimeAlgorithm, ')
+          ..write('button_algorithm: $button_algorithm, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('familiarity_algorithm: $familiarity_algorithm, ')
+          ..write('father_memory_model_id: $father_memory_model_id, ')
+          ..write('next_time_algorithm: $next_time_algorithm, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-      buttonAlgorithm,
-      creatorUserId,
-      familiarityAlgorithm,
-      fatherMemoryModelId,
-      nextTimeAlgorithm,
+      button_algorithm,
+      creator_user_id,
+      familiarity_algorithm,
+      father_memory_model_id,
+      next_time_algorithm,
       title,
-      createdAt,
+      created_at,
       id,
-      updatedAt);
+      updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MemoryModel &&
-          other.buttonAlgorithm == this.buttonAlgorithm &&
-          other.creatorUserId == this.creatorUserId &&
-          other.familiarityAlgorithm == this.familiarityAlgorithm &&
-          other.fatherMemoryModelId == this.fatherMemoryModelId &&
-          other.nextTimeAlgorithm == this.nextTimeAlgorithm &&
+          other.button_algorithm == this.button_algorithm &&
+          other.creator_user_id == this.creator_user_id &&
+          other.familiarity_algorithm == this.familiarity_algorithm &&
+          other.father_memory_model_id == this.father_memory_model_id &&
+          other.next_time_algorithm == this.next_time_algorithm &&
           other.title == this.title &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
-  Value<String> buttonAlgorithm;
-  Value<int> creatorUserId;
-  Value<String> familiarityAlgorithm;
-  Value<String?> fatherMemoryModelId;
-  Value<String> nextTimeAlgorithm;
+  Value<String> button_algorithm;
+  Value<int> creator_user_id;
+  Value<String> familiarity_algorithm;
+  Value<String?> father_memory_model_id;
+  Value<String> next_time_algorithm;
   Value<String> title;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   MemoryModelsCompanion({
-    this.buttonAlgorithm = const Value.absent(),
-    this.creatorUserId = const Value.absent(),
-    this.familiarityAlgorithm = const Value.absent(),
-    this.fatherMemoryModelId = const Value.absent(),
-    this.nextTimeAlgorithm = const Value.absent(),
+    this.button_algorithm = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.familiarity_algorithm = const Value.absent(),
+    this.father_memory_model_id = const Value.absent(),
+    this.next_time_algorithm = const Value.absent(),
     this.title = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   MemoryModelsCompanion.insert({
-    required String buttonAlgorithm,
-    required int creatorUserId,
-    required String familiarityAlgorithm,
-    this.fatherMemoryModelId = const Value.absent(),
-    required String nextTimeAlgorithm,
+    required String button_algorithm,
+    required int creator_user_id,
+    required String familiarity_algorithm,
+    this.father_memory_model_id = const Value.absent(),
+    required String next_time_algorithm,
     required String title,
-    required DateTime createdAt,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : buttonAlgorithm = Value(buttonAlgorithm),
-        creatorUserId = Value(creatorUserId),
-        familiarityAlgorithm = Value(familiarityAlgorithm),
-        nextTimeAlgorithm = Value(nextTimeAlgorithm),
+    required DateTime updated_at,
+  })  : button_algorithm = Value(button_algorithm),
+        creator_user_id = Value(creator_user_id),
+        familiarity_algorithm = Value(familiarity_algorithm),
+        next_time_algorithm = Value(next_time_algorithm),
         title = Value(title),
-        createdAt = Value(createdAt),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<MemoryModel> custom({
-    Expression<String>? buttonAlgorithm,
-    Expression<int>? creatorUserId,
-    Expression<String>? familiarityAlgorithm,
-    Expression<String>? fatherMemoryModelId,
-    Expression<String>? nextTimeAlgorithm,
+    Expression<String>? button_algorithm,
+    Expression<int>? creator_user_id,
+    Expression<String>? familiarity_algorithm,
+    Expression<String>? father_memory_model_id,
+    Expression<String>? next_time_algorithm,
     Expression<String>? title,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (buttonAlgorithm != null) 'button_algorithm': buttonAlgorithm,
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (familiarityAlgorithm != null)
-        'familiarity_algorithm': familiarityAlgorithm,
-      if (fatherMemoryModelId != null)
-        'father_memory_model_id': fatherMemoryModelId,
-      if (nextTimeAlgorithm != null) 'next_time_algorithm': nextTimeAlgorithm,
+      if (button_algorithm != null) 'button_algorithm': button_algorithm,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (familiarity_algorithm != null)
+        'familiarity_algorithm': familiarity_algorithm,
+      if (father_memory_model_id != null)
+        'father_memory_model_id': father_memory_model_id,
+      if (next_time_algorithm != null)
+        'next_time_algorithm': next_time_algorithm,
       if (title != null) 'title': title,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   MemoryModelsCompanion copyWith(
-      {Value<String>? buttonAlgorithm,
-      Value<int>? creatorUserId,
-      Value<String>? familiarityAlgorithm,
-      Value<String?>? fatherMemoryModelId,
-      Value<String>? nextTimeAlgorithm,
+      {Value<String>? button_algorithm,
+      Value<int>? creator_user_id,
+      Value<String>? familiarity_algorithm,
+      Value<String?>? father_memory_model_id,
+      Value<String>? next_time_algorithm,
       Value<String>? title,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return MemoryModelsCompanion(
-      buttonAlgorithm: buttonAlgorithm ?? this.buttonAlgorithm,
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      familiarityAlgorithm: familiarityAlgorithm ?? this.familiarityAlgorithm,
-      fatherMemoryModelId: fatherMemoryModelId ?? this.fatherMemoryModelId,
-      nextTimeAlgorithm: nextTimeAlgorithm ?? this.nextTimeAlgorithm,
+      button_algorithm: button_algorithm ?? this.button_algorithm,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      familiarity_algorithm:
+          familiarity_algorithm ?? this.familiarity_algorithm,
+      father_memory_model_id:
+          father_memory_model_id ?? this.father_memory_model_id,
+      next_time_algorithm: next_time_algorithm ?? this.next_time_algorithm,
       title: title ?? this.title,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (buttonAlgorithm.present) {
-      map['button_algorithm'] = Variable<String>(buttonAlgorithm.value);
+    if (button_algorithm.present) {
+      map['button_algorithm'] = Variable<String>(button_algorithm.value);
     }
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (familiarityAlgorithm.present) {
+    if (familiarity_algorithm.present) {
       map['familiarity_algorithm'] =
-          Variable<String>(familiarityAlgorithm.value);
+          Variable<String>(familiarity_algorithm.value);
     }
-    if (fatherMemoryModelId.present) {
+    if (father_memory_model_id.present) {
       map['father_memory_model_id'] =
-          Variable<String>(fatherMemoryModelId.value);
+          Variable<String>(father_memory_model_id.value);
     }
-    if (nextTimeAlgorithm.present) {
-      map['next_time_algorithm'] = Variable<String>(nextTimeAlgorithm.value);
+    if (next_time_algorithm.present) {
+      map['next_time_algorithm'] = Variable<String>(next_time_algorithm.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -5265,15 +5496,15 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   @override
   String toString() {
     return (StringBuffer('MemoryModelsCompanion(')
-          ..write('buttonAlgorithm: $buttonAlgorithm, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('familiarityAlgorithm: $familiarityAlgorithm, ')
-          ..write('fatherMemoryModelId: $fatherMemoryModelId, ')
-          ..write('nextTimeAlgorithm: $nextTimeAlgorithm, ')
+          ..write('button_algorithm: $button_algorithm, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('familiarity_algorithm: $familiarity_algorithm, ')
+          ..write('father_memory_model_id: $father_memory_model_id, ')
+          ..write('next_time_algorithm: $next_time_algorithm, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -5285,34 +5516,34 @@ class $MemoryModelsTable extends MemoryModels
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $MemoryModelsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _buttonAlgorithmMeta =
-      const VerificationMeta('buttonAlgorithm');
+  static const VerificationMeta _button_algorithmMeta =
+      const VerificationMeta('button_algorithm');
   @override
-  late final GeneratedColumn<String> buttonAlgorithm = GeneratedColumn<String>(
+  late final GeneratedColumn<String> button_algorithm = GeneratedColumn<String>(
       'button_algorithm', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _familiarityAlgorithmMeta =
-      const VerificationMeta('familiarityAlgorithm');
+  static const VerificationMeta _familiarity_algorithmMeta =
+      const VerificationMeta('familiarity_algorithm');
   @override
-  late final GeneratedColumn<String> familiarityAlgorithm =
+  late final GeneratedColumn<String> familiarity_algorithm =
       GeneratedColumn<String>('familiarity_algorithm', aliasedName, false,
           type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _fatherMemoryModelIdMeta =
-      const VerificationMeta('fatherMemoryModelId');
+  static const VerificationMeta _father_memory_model_idMeta =
+      const VerificationMeta('father_memory_model_id');
   @override
-  late final GeneratedColumn<String> fatherMemoryModelId =
+  late final GeneratedColumn<String> father_memory_model_id =
       GeneratedColumn<String>('father_memory_model_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _nextTimeAlgorithmMeta =
-      const VerificationMeta('nextTimeAlgorithm');
+  static const VerificationMeta _next_time_algorithmMeta =
+      const VerificationMeta('next_time_algorithm');
   @override
-  late final GeneratedColumn<String> nextTimeAlgorithm =
+  late final GeneratedColumn<String> next_time_algorithm =
       GeneratedColumn<String>('next_time_algorithm', aliasedName, false,
           type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -5320,10 +5551,10 @@ class $MemoryModelsTable extends MemoryModels
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -5331,23 +5562,23 @@ class $MemoryModelsTable extends MemoryModels
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        buttonAlgorithm,
-        creatorUserId,
-        familiarityAlgorithm,
-        fatherMemoryModelId,
-        nextTimeAlgorithm,
+        button_algorithm,
+        creator_user_id,
+        familiarity_algorithm,
+        father_memory_model_id,
+        next_time_algorithm,
         title,
-        createdAt,
+        created_at,
         id,
-        updatedAt
+        updated_at
       ];
   @override
   String get aliasedName => _alias ?? 'memory_models';
@@ -5360,41 +5591,41 @@ class $MemoryModelsTable extends MemoryModels
     final data = instance.toColumns(true);
     if (data.containsKey('button_algorithm')) {
       context.handle(
-          _buttonAlgorithmMeta,
-          buttonAlgorithm.isAcceptableOrUnknown(
-              data['button_algorithm']!, _buttonAlgorithmMeta));
+          _button_algorithmMeta,
+          button_algorithm.isAcceptableOrUnknown(
+              data['button_algorithm']!, _button_algorithmMeta));
     } else if (isInserting) {
-      context.missing(_buttonAlgorithmMeta);
+      context.missing(_button_algorithmMeta);
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('familiarity_algorithm')) {
       context.handle(
-          _familiarityAlgorithmMeta,
-          familiarityAlgorithm.isAcceptableOrUnknown(
-              data['familiarity_algorithm']!, _familiarityAlgorithmMeta));
+          _familiarity_algorithmMeta,
+          familiarity_algorithm.isAcceptableOrUnknown(
+              data['familiarity_algorithm']!, _familiarity_algorithmMeta));
     } else if (isInserting) {
-      context.missing(_familiarityAlgorithmMeta);
+      context.missing(_familiarity_algorithmMeta);
     }
     if (data.containsKey('father_memory_model_id')) {
       context.handle(
-          _fatherMemoryModelIdMeta,
-          fatherMemoryModelId.isAcceptableOrUnknown(
-              data['father_memory_model_id']!, _fatherMemoryModelIdMeta));
+          _father_memory_model_idMeta,
+          father_memory_model_id.isAcceptableOrUnknown(
+              data['father_memory_model_id']!, _father_memory_model_idMeta));
     }
     if (data.containsKey('next_time_algorithm')) {
       context.handle(
-          _nextTimeAlgorithmMeta,
-          nextTimeAlgorithm.isAcceptableOrUnknown(
-              data['next_time_algorithm']!, _nextTimeAlgorithmMeta));
+          _next_time_algorithmMeta,
+          next_time_algorithm.isAcceptableOrUnknown(
+              data['next_time_algorithm']!, _next_time_algorithmMeta));
     } else if (isInserting) {
-      context.missing(_nextTimeAlgorithmMeta);
+      context.missing(_next_time_algorithmMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -5403,10 +5634,12 @@ class $MemoryModelsTable extends MemoryModels
       context.missing(_titleMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -5414,10 +5647,12 @@ class $MemoryModelsTable extends MemoryModels
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -5428,25 +5663,25 @@ class $MemoryModelsTable extends MemoryModels
   MemoryModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MemoryModel(
-      buttonAlgorithm: attachedDatabase.typeMapping.read(
+      button_algorithm: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}button_algorithm'])!,
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      familiarityAlgorithm: attachedDatabase.typeMapping.read(
+      familiarity_algorithm: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}familiarity_algorithm'])!,
-      fatherMemoryModelId: attachedDatabase.typeMapping.read(
+      father_memory_model_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_memory_model_id']),
-      nextTimeAlgorithm: attachedDatabase.typeMapping.read(
+      next_time_algorithm: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}next_time_algorithm'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -5459,50 +5694,50 @@ class $MemoryModelsTable extends MemoryModels
 
 class Note extends DataClass implements Insertable<Note> {
   String content;
-  int creatorUserId;
-  String? documentId;
-  String? fatherNoteId;
-  DateTime createdAt;
+  int creator_user_id;
+  String? document_id;
+  String? father_note_id;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   Note(
       {required this.content,
-      required this.creatorUserId,
-      this.documentId,
-      this.fatherNoteId,
-      required this.createdAt,
+      required this.creator_user_id,
+      this.document_id,
+      this.father_note_id,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['content'] = Variable<String>(content);
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || documentId != null) {
-      map['document_id'] = Variable<String>(documentId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || document_id != null) {
+      map['document_id'] = Variable<String>(document_id);
     }
-    if (!nullToAbsent || fatherNoteId != null) {
-      map['father_note_id'] = Variable<String>(fatherNoteId);
+    if (!nullToAbsent || father_note_id != null) {
+      map['father_note_id'] = Variable<String>(father_note_id);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   NotesCompanion toCompanion(bool nullToAbsent) {
     return NotesCompanion(
       content: Value(content),
-      creatorUserId: Value(creatorUserId),
-      documentId: documentId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      document_id: document_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(documentId),
-      fatherNoteId: fatherNoteId == null && nullToAbsent
+          : Value(document_id),
+      father_note_id: father_note_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(fatherNoteId),
-      createdAt: Value(createdAt),
+          : Value(father_note_id),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -5511,12 +5746,12 @@ class Note extends DataClass implements Insertable<Note> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Note(
       content: serializer.fromJson<String>(json['content']),
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      documentId: serializer.fromJson<String?>(json['documentId']),
-      fatherNoteId: serializer.fromJson<String?>(json['fatherNoteId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      document_id: serializer.fromJson<String?>(json['document_id']),
+      father_note_id: serializer.fromJson<String?>(json['father_note_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
@@ -5524,129 +5759,129 @@ class Note extends DataClass implements Insertable<Note> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'content': serializer.toJson<String>(content),
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'documentId': serializer.toJson<String?>(documentId),
-      'fatherNoteId': serializer.toJson<String?>(fatherNoteId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'document_id': serializer.toJson<String?>(document_id),
+      'father_note_id': serializer.toJson<String?>(father_note_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   Note copyWith(
           {String? content,
-          int? creatorUserId,
-          Value<String?> documentId = const Value.absent(),
-          Value<String?> fatherNoteId = const Value.absent(),
-          DateTime? createdAt,
+          int? creator_user_id,
+          Value<String?> document_id = const Value.absent(),
+          Value<String?> father_note_id = const Value.absent(),
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       Note(
         content: content ?? this.content,
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        documentId: documentId.present ? documentId.value : this.documentId,
-        fatherNoteId:
-            fatherNoteId.present ? fatherNoteId.value : this.fatherNoteId,
-        createdAt: createdAt ?? this.createdAt,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        document_id: document_id.present ? document_id.value : this.document_id,
+        father_note_id:
+            father_note_id.present ? father_note_id.value : this.father_note_id,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('Note(')
           ..write('content: $content, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('documentId: $documentId, ')
-          ..write('fatherNoteId: $fatherNoteId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('document_id: $document_id, ')
+          ..write('father_note_id: $father_note_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(content, creatorUserId, documentId,
-      fatherNoteId, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(content, creator_user_id, document_id,
+      father_note_id, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Note &&
           other.content == this.content &&
-          other.creatorUserId == this.creatorUserId &&
-          other.documentId == this.documentId &&
-          other.fatherNoteId == this.fatherNoteId &&
-          other.createdAt == this.createdAt &&
+          other.creator_user_id == this.creator_user_id &&
+          other.document_id == this.document_id &&
+          other.father_note_id == this.father_note_id &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class NotesCompanion extends UpdateCompanion<Note> {
   Value<String> content;
-  Value<int> creatorUserId;
-  Value<String?> documentId;
-  Value<String?> fatherNoteId;
-  Value<DateTime> createdAt;
+  Value<int> creator_user_id;
+  Value<String?> document_id;
+  Value<String?> father_note_id;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   NotesCompanion({
     this.content = const Value.absent(),
-    this.creatorUserId = const Value.absent(),
-    this.documentId = const Value.absent(),
-    this.fatherNoteId = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.document_id = const Value.absent(),
+    this.father_note_id = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   NotesCompanion.insert({
     required String content,
-    required int creatorUserId,
-    this.documentId = const Value.absent(),
-    this.fatherNoteId = const Value.absent(),
-    required DateTime createdAt,
+    required int creator_user_id,
+    this.document_id = const Value.absent(),
+    this.father_note_id = const Value.absent(),
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
+    required DateTime updated_at,
   })  : content = Value(content),
-        creatorUserId = Value(creatorUserId),
-        createdAt = Value(createdAt),
+        creator_user_id = Value(creator_user_id),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<Note> custom({
     Expression<String>? content,
-    Expression<int>? creatorUserId,
-    Expression<String>? documentId,
-    Expression<String>? fatherNoteId,
-    Expression<DateTime>? createdAt,
+    Expression<int>? creator_user_id,
+    Expression<String>? document_id,
+    Expression<String>? father_note_id,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
       if (content != null) 'content': content,
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (documentId != null) 'document_id': documentId,
-      if (fatherNoteId != null) 'father_note_id': fatherNoteId,
-      if (createdAt != null) 'created_at': createdAt,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (document_id != null) 'document_id': document_id,
+      if (father_note_id != null) 'father_note_id': father_note_id,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   NotesCompanion copyWith(
       {Value<String>? content,
-      Value<int>? creatorUserId,
-      Value<String?>? documentId,
-      Value<String?>? fatherNoteId,
-      Value<DateTime>? createdAt,
+      Value<int>? creator_user_id,
+      Value<String?>? document_id,
+      Value<String?>? father_note_id,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return NotesCompanion(
       content: content ?? this.content,
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      documentId: documentId ?? this.documentId,
-      fatherNoteId: fatherNoteId ?? this.fatherNoteId,
-      createdAt: createdAt ?? this.createdAt,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      document_id: document_id ?? this.document_id,
+      father_note_id: father_note_id ?? this.father_note_id,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
@@ -5656,23 +5891,23 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (documentId.present) {
-      map['document_id'] = Variable<String>(documentId.value);
+    if (document_id.present) {
+      map['document_id'] = Variable<String>(document_id.value);
     }
-    if (fatherNoteId.present) {
-      map['father_note_id'] = Variable<String>(fatherNoteId.value);
+    if (father_note_id.present) {
+      map['father_note_id'] = Variable<String>(father_note_id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -5681,12 +5916,12 @@ class NotesCompanion extends UpdateCompanion<Note> {
   String toString() {
     return (StringBuffer('NotesCompanion(')
           ..write('content: $content, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('documentId: $documentId, ')
-          ..write('fatherNoteId: $fatherNoteId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('document_id: $document_id, ')
+          ..write('father_note_id: $father_note_id, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -5703,28 +5938,28 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _documentIdMeta =
-      const VerificationMeta('documentId');
+  static const VerificationMeta _document_idMeta =
+      const VerificationMeta('document_id');
   @override
-  late final GeneratedColumn<String> documentId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> document_id = GeneratedColumn<String>(
       'document_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fatherNoteIdMeta =
-      const VerificationMeta('fatherNoteId');
+  static const VerificationMeta _father_note_idMeta =
+      const VerificationMeta('father_note_id');
   @override
-  late final GeneratedColumn<String> fatherNoteId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> father_note_id = GeneratedColumn<String>(
       'father_note_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -5732,21 +5967,21 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         content,
-        creatorUserId,
-        documentId,
-        fatherNoteId,
-        createdAt,
+        creator_user_id,
+        document_id,
+        father_note_id,
+        created_at,
         id,
-        updatedAt
+        updated_at
       ];
   @override
   String get aliasedName => _alias ?? 'notes';
@@ -5765,29 +6000,31 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('document_id')) {
       context.handle(
-          _documentIdMeta,
-          documentId.isAcceptableOrUnknown(
-              data['document_id']!, _documentIdMeta));
+          _document_idMeta,
+          document_id.isAcceptableOrUnknown(
+              data['document_id']!, _document_idMeta));
     }
     if (data.containsKey('father_note_id')) {
       context.handle(
-          _fatherNoteIdMeta,
-          fatherNoteId.isAcceptableOrUnknown(
-              data['father_note_id']!, _fatherNoteIdMeta));
+          _father_note_idMeta,
+          father_note_id.isAcceptableOrUnknown(
+              data['father_note_id']!, _father_note_idMeta));
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -5795,10 +6032,12 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -5811,17 +6050,17 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return Note(
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      documentId: attachedDatabase.typeMapping
+      document_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}document_id']),
-      fatherNoteId: attachedDatabase.typeMapping
+      father_note_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}father_note_id']),
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -5833,44 +6072,45 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 }
 
 class DocumentGroup extends DataClass implements Insertable<DocumentGroup> {
-  int creatorUserId;
-  String? fatherDocumentGroupsId;
+  int creator_user_id;
+  String? father_document_groups_id;
   String title;
-  DateTime createdAt;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   DocumentGroup(
-      {required this.creatorUserId,
-      this.fatherDocumentGroupsId,
+      {required this.creator_user_id,
+      this.father_document_groups_id,
       required this.title,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || fatherDocumentGroupsId != null) {
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || father_document_groups_id != null) {
       map['father_document_groups_id'] =
-          Variable<String>(fatherDocumentGroupsId);
+          Variable<String>(father_document_groups_id);
     }
     map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   DocumentGroupsCompanion toCompanion(bool nullToAbsent) {
     return DocumentGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fatherDocumentGroupsId: fatherDocumentGroupsId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fatherDocumentGroupsId),
+      creator_user_id: Value(creator_user_id),
+      father_document_groups_id:
+          father_document_groups_id == null && nullToAbsent
+              ? const Value.absent()
+              : Value(father_document_groups_id),
       title: Value(title),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -5878,159 +6118,159 @@ class DocumentGroup extends DataClass implements Insertable<DocumentGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DocumentGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      fatherDocumentGroupsId:
-          serializer.fromJson<String?>(json['fatherDocumentGroupsId']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      father_document_groups_id:
+          serializer.fromJson<String?>(json['father_document_groups_id']),
       title: serializer.fromJson<String>(json['title']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'fatherDocumentGroupsId':
-          serializer.toJson<String?>(fatherDocumentGroupsId),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'father_document_groups_id':
+          serializer.toJson<String?>(father_document_groups_id),
       'title': serializer.toJson<String>(title),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   DocumentGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> fatherDocumentGroupsId = const Value.absent(),
+          {int? creator_user_id,
+          Value<String?> father_document_groups_id = const Value.absent(),
           String? title,
-          DateTime? createdAt,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       DocumentGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        fatherDocumentGroupsId: fatherDocumentGroupsId.present
-            ? fatherDocumentGroupsId.value
-            : this.fatherDocumentGroupsId,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        father_document_groups_id: father_document_groups_id.present
+            ? father_document_groups_id.value
+            : this.father_document_groups_id,
         title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('DocumentGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherDocumentGroupsId: $fatherDocumentGroupsId, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_document_groups_id: $father_document_groups_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      creatorUserId, fatherDocumentGroupsId, title, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(creator_user_id, father_document_groups_id,
+      title, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is DocumentGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.fatherDocumentGroupsId == this.fatherDocumentGroupsId &&
+          other.creator_user_id == this.creator_user_id &&
+          other.father_document_groups_id == this.father_document_groups_id &&
           other.title == this.title &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class DocumentGroupsCompanion extends UpdateCompanion<DocumentGroup> {
-  Value<int> creatorUserId;
-  Value<String?> fatherDocumentGroupsId;
+  Value<int> creator_user_id;
+  Value<String?> father_document_groups_id;
   Value<String> title;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   DocumentGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.fatherDocumentGroupsId = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.father_document_groups_id = const Value.absent(),
     this.title = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   DocumentGroupsCompanion.insert({
-    required int creatorUserId,
-    this.fatherDocumentGroupsId = const Value.absent(),
+    required int creator_user_id,
+    this.father_document_groups_id = const Value.absent(),
     required String title,
-    required DateTime createdAt,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
         title = Value(title),
-        createdAt = Value(createdAt),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<DocumentGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? fatherDocumentGroupsId,
+    Expression<int>? creator_user_id,
+    Expression<String>? father_document_groups_id,
     Expression<String>? title,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (fatherDocumentGroupsId != null)
-        'father_document_groups_id': fatherDocumentGroupsId,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (father_document_groups_id != null)
+        'father_document_groups_id': father_document_groups_id,
       if (title != null) 'title': title,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   DocumentGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? fatherDocumentGroupsId,
+      {Value<int>? creator_user_id,
+      Value<String?>? father_document_groups_id,
       Value<String>? title,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return DocumentGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      fatherDocumentGroupsId:
-          fatherDocumentGroupsId ?? this.fatherDocumentGroupsId,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      father_document_groups_id:
+          father_document_groups_id ?? this.father_document_groups_id,
       title: title ?? this.title,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (fatherDocumentGroupsId.present) {
+    if (father_document_groups_id.present) {
       map['father_document_groups_id'] =
-          Variable<String>(fatherDocumentGroupsId.value);
+          Variable<String>(father_document_groups_id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -6038,12 +6278,12 @@ class DocumentGroupsCompanion extends UpdateCompanion<DocumentGroup> {
   @override
   String toString() {
     return (StringBuffer('DocumentGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherDocumentGroupsId: $fatherDocumentGroupsId, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_document_groups_id: $father_document_groups_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -6055,16 +6295,16 @@ class $DocumentGroupsTable extends DocumentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $DocumentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fatherDocumentGroupsIdMeta =
-      const VerificationMeta('fatherDocumentGroupsId');
+  static const VerificationMeta _father_document_groups_idMeta =
+      const VerificationMeta('father_document_groups_id');
   @override
-  late final GeneratedColumn<String> fatherDocumentGroupsId =
+  late final GeneratedColumn<String> father_document_groups_id =
       GeneratedColumn<String>('father_document_groups_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -6072,10 +6312,10 @@ class $DocumentGroupsTable extends DocumentGroups
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -6083,15 +6323,21 @@ class $DocumentGroupsTable extends DocumentGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [creatorUserId, fatherDocumentGroupsId, title, createdAt, id, updatedAt];
+  List<GeneratedColumn> get $columns => [
+        creator_user_id,
+        father_document_groups_id,
+        title,
+        created_at,
+        id,
+        updated_at
+      ];
   @override
   String get aliasedName => _alias ?? 'document_groups';
   @override
@@ -6103,17 +6349,18 @@ class $DocumentGroupsTable extends DocumentGroups
     final data = instance.toColumns(true);
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('father_document_groups_id')) {
       context.handle(
-          _fatherDocumentGroupsIdMeta,
-          fatherDocumentGroupsId.isAcceptableOrUnknown(
-              data['father_document_groups_id']!, _fatherDocumentGroupsIdMeta));
+          _father_document_groups_idMeta,
+          father_document_groups_id.isAcceptableOrUnknown(
+              data['father_document_groups_id']!,
+              _father_document_groups_idMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -6122,10 +6369,12 @@ class $DocumentGroupsTable extends DocumentGroups
       context.missing(_titleMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -6133,10 +6382,12 @@ class $DocumentGroupsTable extends DocumentGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -6147,18 +6398,18 @@ class $DocumentGroupsTable extends DocumentGroups
   DocumentGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DocumentGroup(
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fatherDocumentGroupsId: attachedDatabase.typeMapping.read(
+      father_document_groups_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_document_groups_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -6170,48 +6421,49 @@ class $DocumentGroupsTable extends DocumentGroups
 }
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
-  bool client_be_Selected;
-  int creatorUserId;
-  String? fatherFragmentGroupsId;
+  bool client_be_selected;
+  int creator_user_id;
+  String? father_fragment_groups_id;
   String title;
-  DateTime createdAt;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   FragmentGroup(
-      {required this.client_be_Selected,
-      required this.creatorUserId,
-      this.fatherFragmentGroupsId,
+      {required this.client_be_selected,
+      required this.creator_user_id,
+      this.father_fragment_groups_id,
       required this.title,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['client_be_selected'] = Variable<bool>(client_be_Selected);
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || fatherFragmentGroupsId != null) {
+    map['client_be_selected'] = Variable<bool>(client_be_selected);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || father_fragment_groups_id != null) {
       map['father_fragment_groups_id'] =
-          Variable<String>(fatherFragmentGroupsId);
+          Variable<String>(father_fragment_groups_id);
     }
     map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return FragmentGroupsCompanion(
-      client_be_Selected: Value(client_be_Selected),
-      creatorUserId: Value(creatorUserId),
-      fatherFragmentGroupsId: fatherFragmentGroupsId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fatherFragmentGroupsId),
+      client_be_selected: Value(client_be_selected),
+      creator_user_id: Value(creator_user_id),
+      father_fragment_groups_id:
+          father_fragment_groups_id == null && nullToAbsent
+              ? const Value.absent()
+              : Value(father_fragment_groups_id),
       title: Value(title),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -6219,176 +6471,176 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentGroup(
-      client_be_Selected: serializer.fromJson<bool>(json['client_be_Selected']),
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      fatherFragmentGroupsId:
-          serializer.fromJson<String?>(json['fatherFragmentGroupsId']),
+      client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      father_fragment_groups_id:
+          serializer.fromJson<String?>(json['father_fragment_groups_id']),
       title: serializer.fromJson<String>(json['title']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'client_be_Selected': serializer.toJson<bool>(client_be_Selected),
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'fatherFragmentGroupsId':
-          serializer.toJson<String?>(fatherFragmentGroupsId),
+      'client_be_selected': serializer.toJson<bool>(client_be_selected),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'father_fragment_groups_id':
+          serializer.toJson<String?>(father_fragment_groups_id),
       'title': serializer.toJson<String>(title),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   FragmentGroup copyWith(
-          {bool? client_be_Selected,
-          int? creatorUserId,
-          Value<String?> fatherFragmentGroupsId = const Value.absent(),
+          {bool? client_be_selected,
+          int? creator_user_id,
+          Value<String?> father_fragment_groups_id = const Value.absent(),
           String? title,
-          DateTime? createdAt,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       FragmentGroup(
-        client_be_Selected: client_be_Selected ?? this.client_be_Selected,
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        fatherFragmentGroupsId: fatherFragmentGroupsId.present
-            ? fatherFragmentGroupsId.value
-            : this.fatherFragmentGroupsId,
+        client_be_selected: client_be_selected ?? this.client_be_selected,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        father_fragment_groups_id: father_fragment_groups_id.present
+            ? father_fragment_groups_id.value
+            : this.father_fragment_groups_id,
         title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('FragmentGroup(')
-          ..write('client_be_Selected: $client_be_Selected, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherFragmentGroupsId: $fatherFragmentGroupsId, ')
+          ..write('client_be_selected: $client_be_selected, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(client_be_Selected, creatorUserId,
-      fatherFragmentGroupsId, title, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(client_be_selected, creator_user_id,
+      father_fragment_groups_id, title, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentGroup &&
-          other.client_be_Selected == this.client_be_Selected &&
-          other.creatorUserId == this.creatorUserId &&
-          other.fatherFragmentGroupsId == this.fatherFragmentGroupsId &&
+          other.client_be_selected == this.client_be_selected &&
+          other.creator_user_id == this.creator_user_id &&
+          other.father_fragment_groups_id == this.father_fragment_groups_id &&
           other.title == this.title &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
-  Value<bool> client_be_Selected;
-  Value<int> creatorUserId;
-  Value<String?> fatherFragmentGroupsId;
+  Value<bool> client_be_selected;
+  Value<int> creator_user_id;
+  Value<String?> father_fragment_groups_id;
   Value<String> title;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   FragmentGroupsCompanion({
-    this.client_be_Selected = const Value.absent(),
-    this.creatorUserId = const Value.absent(),
-    this.fatherFragmentGroupsId = const Value.absent(),
+    this.client_be_selected = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.father_fragment_groups_id = const Value.absent(),
     this.title = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   FragmentGroupsCompanion.insert({
-    required bool client_be_Selected,
-    required int creatorUserId,
-    this.fatherFragmentGroupsId = const Value.absent(),
+    required bool client_be_selected,
+    required int creator_user_id,
+    this.father_fragment_groups_id = const Value.absent(),
     required String title,
-    required DateTime createdAt,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : client_be_Selected = Value(client_be_Selected),
-        creatorUserId = Value(creatorUserId),
+    required DateTime updated_at,
+  })  : client_be_selected = Value(client_be_selected),
+        creator_user_id = Value(creator_user_id),
         title = Value(title),
-        createdAt = Value(createdAt),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<FragmentGroup> custom({
-    Expression<bool>? client_be_Selected,
-    Expression<int>? creatorUserId,
-    Expression<String>? fatherFragmentGroupsId,
+    Expression<bool>? client_be_selected,
+    Expression<int>? creator_user_id,
+    Expression<String>? father_fragment_groups_id,
     Expression<String>? title,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (client_be_Selected != null) 'client_be_selected': client_be_Selected,
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (fatherFragmentGroupsId != null)
-        'father_fragment_groups_id': fatherFragmentGroupsId,
+      if (client_be_selected != null) 'client_be_selected': client_be_selected,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (father_fragment_groups_id != null)
+        'father_fragment_groups_id': father_fragment_groups_id,
       if (title != null) 'title': title,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   FragmentGroupsCompanion copyWith(
-      {Value<bool>? client_be_Selected,
-      Value<int>? creatorUserId,
-      Value<String?>? fatherFragmentGroupsId,
+      {Value<bool>? client_be_selected,
+      Value<int>? creator_user_id,
+      Value<String?>? father_fragment_groups_id,
       Value<String>? title,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return FragmentGroupsCompanion(
-      client_be_Selected: client_be_Selected ?? this.client_be_Selected,
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      fatherFragmentGroupsId:
-          fatherFragmentGroupsId ?? this.fatherFragmentGroupsId,
+      client_be_selected: client_be_selected ?? this.client_be_selected,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      father_fragment_groups_id:
+          father_fragment_groups_id ?? this.father_fragment_groups_id,
       title: title ?? this.title,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (client_be_Selected.present) {
-      map['client_be_selected'] = Variable<bool>(client_be_Selected.value);
+    if (client_be_selected.present) {
+      map['client_be_selected'] = Variable<bool>(client_be_selected.value);
     }
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (fatherFragmentGroupsId.present) {
+    if (father_fragment_groups_id.present) {
       map['father_fragment_groups_id'] =
-          Variable<String>(fatherFragmentGroupsId.value);
+          Variable<String>(father_fragment_groups_id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -6396,13 +6648,13 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   @override
   String toString() {
     return (StringBuffer('FragmentGroupsCompanion(')
-          ..write('client_be_Selected: $client_be_Selected, ')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherFragmentGroupsId: $fatherFragmentGroupsId, ')
+          ..write('client_be_selected: $client_be_selected, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -6414,10 +6666,10 @@ class $FragmentGroupsTable extends FragmentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _client_be_SelectedMeta =
-      const VerificationMeta('client_be_Selected');
+  static const VerificationMeta _client_be_selectedMeta =
+      const VerificationMeta('client_be_selected');
   @override
-  late final GeneratedColumn<bool> client_be_Selected =
+  late final GeneratedColumn<bool> client_be_selected =
       GeneratedColumn<bool>('client_be_selected', aliasedName, false,
           type: DriftSqlType.bool,
           requiredDuringInsert: true,
@@ -6426,16 +6678,16 @@ class $FragmentGroupsTable extends FragmentGroups
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fatherFragmentGroupsIdMeta =
-      const VerificationMeta('fatherFragmentGroupsId');
+  static const VerificationMeta _father_fragment_groups_idMeta =
+      const VerificationMeta('father_fragment_groups_id');
   @override
-  late final GeneratedColumn<String> fatherFragmentGroupsId =
+  late final GeneratedColumn<String> father_fragment_groups_id =
       GeneratedColumn<String>('father_fragment_groups_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -6443,10 +6695,10 @@ class $FragmentGroupsTable extends FragmentGroups
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -6454,21 +6706,21 @@ class $FragmentGroupsTable extends FragmentGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        client_be_Selected,
-        creatorUserId,
-        fatherFragmentGroupsId,
+        client_be_selected,
+        creator_user_id,
+        father_fragment_groups_id,
         title,
-        createdAt,
+        created_at,
         id,
-        updatedAt
+        updated_at
       ];
   @override
   String get aliasedName => _alias ?? 'fragment_groups';
@@ -6481,25 +6733,26 @@ class $FragmentGroupsTable extends FragmentGroups
     final data = instance.toColumns(true);
     if (data.containsKey('client_be_selected')) {
       context.handle(
-          _client_be_SelectedMeta,
-          client_be_Selected.isAcceptableOrUnknown(
-              data['client_be_selected']!, _client_be_SelectedMeta));
+          _client_be_selectedMeta,
+          client_be_selected.isAcceptableOrUnknown(
+              data['client_be_selected']!, _client_be_selectedMeta));
     } else if (isInserting) {
-      context.missing(_client_be_SelectedMeta);
+      context.missing(_client_be_selectedMeta);
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('father_fragment_groups_id')) {
       context.handle(
-          _fatherFragmentGroupsIdMeta,
-          fatherFragmentGroupsId.isAcceptableOrUnknown(
-              data['father_fragment_groups_id']!, _fatherFragmentGroupsIdMeta));
+          _father_fragment_groups_idMeta,
+          father_fragment_groups_id.isAcceptableOrUnknown(
+              data['father_fragment_groups_id']!,
+              _father_fragment_groups_idMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -6508,10 +6761,12 @@ class $FragmentGroupsTable extends FragmentGroups
       context.missing(_titleMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -6519,10 +6774,12 @@ class $FragmentGroupsTable extends FragmentGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -6533,20 +6790,20 @@ class $FragmentGroupsTable extends FragmentGroups
   FragmentGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentGroup(
-      client_be_Selected: attachedDatabase.typeMapping.read(
+      client_be_selected: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fatherFragmentGroupsId: attachedDatabase.typeMapping.read(
+      father_fragment_groups_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_fragment_groups_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }
@@ -6558,43 +6815,43 @@ class $FragmentGroupsTable extends FragmentGroups
 }
 
 class NoteGroup extends DataClass implements Insertable<NoteGroup> {
-  int creatorUserId;
-  String? fatherNoteGroupsId;
+  int creator_user_id;
+  String? father_note_groups_id;
   String title;
-  DateTime createdAt;
+  DateTime created_at;
   String id;
-  DateTime updatedAt;
+  DateTime updated_at;
   NoteGroup(
-      {required this.creatorUserId,
-      this.fatherNoteGroupsId,
+      {required this.creator_user_id,
+      this.father_note_groups_id,
       required this.title,
-      required this.createdAt,
+      required this.created_at,
       required this.id,
-      required this.updatedAt});
+      required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creatorUserId);
-    if (!nullToAbsent || fatherNoteGroupsId != null) {
-      map['father_note_groups_id'] = Variable<String>(fatherNoteGroupsId);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    if (!nullToAbsent || father_note_groups_id != null) {
+      map['father_note_groups_id'] = Variable<String>(father_note_groups_id);
     }
     map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   NoteGroupsCompanion toCompanion(bool nullToAbsent) {
     return NoteGroupsCompanion(
-      creatorUserId: Value(creatorUserId),
-      fatherNoteGroupsId: fatherNoteGroupsId == null && nullToAbsent
+      creator_user_id: Value(creator_user_id),
+      father_note_groups_id: father_note_groups_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(fatherNoteGroupsId),
+          : Value(father_note_groups_id),
       title: Value(title),
-      createdAt: Value(createdAt),
+      created_at: Value(created_at),
       id: Value(id),
-      updatedAt: Value(updatedAt),
+      updated_at: Value(updated_at),
     );
   }
 
@@ -6602,156 +6859,159 @@ class NoteGroup extends DataClass implements Insertable<NoteGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return NoteGroup(
-      creatorUserId: serializer.fromJson<int>(json['creatorUserId']),
-      fatherNoteGroupsId:
-          serializer.fromJson<String?>(json['fatherNoteGroupsId']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      father_note_groups_id:
+          serializer.fromJson<String?>(json['father_note_groups_id']),
       title: serializer.fromJson<String>(json['title']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'creatorUserId': serializer.toJson<int>(creatorUserId),
-      'fatherNoteGroupsId': serializer.toJson<String?>(fatherNoteGroupsId),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'father_note_groups_id':
+          serializer.toJson<String?>(father_note_groups_id),
       'title': serializer.toJson<String>(title),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   NoteGroup copyWith(
-          {int? creatorUserId,
-          Value<String?> fatherNoteGroupsId = const Value.absent(),
+          {int? creator_user_id,
+          Value<String?> father_note_groups_id = const Value.absent(),
           String? title,
-          DateTime? createdAt,
+          DateTime? created_at,
           String? id,
-          DateTime? updatedAt}) =>
+          DateTime? updated_at}) =>
       NoteGroup(
-        creatorUserId: creatorUserId ?? this.creatorUserId,
-        fatherNoteGroupsId: fatherNoteGroupsId.present
-            ? fatherNoteGroupsId.value
-            : this.fatherNoteGroupsId,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        father_note_groups_id: father_note_groups_id.present
+            ? father_note_groups_id.value
+            : this.father_note_groups_id,
         title: title ?? this.title,
-        createdAt: createdAt ?? this.createdAt,
+        created_at: created_at ?? this.created_at,
         id: id ?? this.id,
-        updatedAt: updatedAt ?? this.updatedAt,
+        updated_at: updated_at ?? this.updated_at,
       );
   @override
   String toString() {
     return (StringBuffer('NoteGroup(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherNoteGroupsId: $fatherNoteGroupsId, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_note_groups_id: $father_note_groups_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      creatorUserId, fatherNoteGroupsId, title, createdAt, id, updatedAt);
+  int get hashCode => Object.hash(creator_user_id, father_note_groups_id, title,
+      created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is NoteGroup &&
-          other.creatorUserId == this.creatorUserId &&
-          other.fatherNoteGroupsId == this.fatherNoteGroupsId &&
+          other.creator_user_id == this.creator_user_id &&
+          other.father_note_groups_id == this.father_note_groups_id &&
           other.title == this.title &&
-          other.createdAt == this.createdAt &&
+          other.created_at == this.created_at &&
           other.id == this.id &&
-          other.updatedAt == this.updatedAt);
+          other.updated_at == this.updated_at);
 }
 
 class NoteGroupsCompanion extends UpdateCompanion<NoteGroup> {
-  Value<int> creatorUserId;
-  Value<String?> fatherNoteGroupsId;
+  Value<int> creator_user_id;
+  Value<String?> father_note_groups_id;
   Value<String> title;
-  Value<DateTime> createdAt;
+  Value<DateTime> created_at;
   Value<String> id;
-  Value<DateTime> updatedAt;
+  Value<DateTime> updated_at;
   NoteGroupsCompanion({
-    this.creatorUserId = const Value.absent(),
-    this.fatherNoteGroupsId = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.father_note_groups_id = const Value.absent(),
     this.title = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.created_at = const Value.absent(),
     this.id = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.updated_at = const Value.absent(),
   });
   NoteGroupsCompanion.insert({
-    required int creatorUserId,
-    this.fatherNoteGroupsId = const Value.absent(),
+    required int creator_user_id,
+    this.father_note_groups_id = const Value.absent(),
     required String title,
-    required DateTime createdAt,
+    required DateTime created_at,
     required String id,
-    required DateTime updatedAt,
-  })  : creatorUserId = Value(creatorUserId),
+    required DateTime updated_at,
+  })  : creator_user_id = Value(creator_user_id),
         title = Value(title),
-        createdAt = Value(createdAt),
+        created_at = Value(created_at),
         id = Value(id),
-        updatedAt = Value(updatedAt);
+        updated_at = Value(updated_at);
   static Insertable<NoteGroup> custom({
-    Expression<int>? creatorUserId,
-    Expression<String>? fatherNoteGroupsId,
+    Expression<int>? creator_user_id,
+    Expression<String>? father_note_groups_id,
     Expression<String>? title,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? created_at,
     Expression<String>? id,
-    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (creatorUserId != null) 'creator_user_id': creatorUserId,
-      if (fatherNoteGroupsId != null)
-        'father_note_groups_id': fatherNoteGroupsId,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (father_note_groups_id != null)
+        'father_note_groups_id': father_note_groups_id,
       if (title != null) 'title': title,
-      if (createdAt != null) 'created_at': createdAt,
+      if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updated_at != null) 'updated_at': updated_at,
     });
   }
 
   NoteGroupsCompanion copyWith(
-      {Value<int>? creatorUserId,
-      Value<String?>? fatherNoteGroupsId,
+      {Value<int>? creator_user_id,
+      Value<String?>? father_note_groups_id,
       Value<String>? title,
-      Value<DateTime>? createdAt,
+      Value<DateTime>? created_at,
       Value<String>? id,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updated_at}) {
     return NoteGroupsCompanion(
-      creatorUserId: creatorUserId ?? this.creatorUserId,
-      fatherNoteGroupsId: fatherNoteGroupsId ?? this.fatherNoteGroupsId,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      father_note_groups_id:
+          father_note_groups_id ?? this.father_note_groups_id,
       title: title ?? this.title,
-      createdAt: createdAt ?? this.createdAt,
+      created_at: created_at ?? this.created_at,
       id: id ?? this.id,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updated_at: updated_at ?? this.updated_at,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (creatorUserId.present) {
-      map['creator_user_id'] = Variable<int>(creatorUserId.value);
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (fatherNoteGroupsId.present) {
-      map['father_note_groups_id'] = Variable<String>(fatherNoteGroupsId.value);
+    if (father_note_groups_id.present) {
+      map['father_note_groups_id'] =
+          Variable<String>(father_note_groups_id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
     }
     return map;
   }
@@ -6759,12 +7019,12 @@ class NoteGroupsCompanion extends UpdateCompanion<NoteGroup> {
   @override
   String toString() {
     return (StringBuffer('NoteGroupsCompanion(')
-          ..write('creatorUserId: $creatorUserId, ')
-          ..write('fatherNoteGroupsId: $fatherNoteGroupsId, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('father_note_groups_id: $father_note_groups_id, ')
           ..write('title: $title, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('created_at: $created_at, ')
           ..write('id: $id, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updated_at: $updated_at')
           ..write(')'))
         .toString();
   }
@@ -6776,16 +7036,16 @@ class $NoteGroupsTable extends NoteGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $NoteGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creatorUserIdMeta =
-      const VerificationMeta('creatorUserId');
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
   @override
-  late final GeneratedColumn<int> creatorUserId = GeneratedColumn<int>(
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fatherNoteGroupsIdMeta =
-      const VerificationMeta('fatherNoteGroupsId');
+  static const VerificationMeta _father_note_groups_idMeta =
+      const VerificationMeta('father_note_groups_id');
   @override
-  late final GeneratedColumn<String> fatherNoteGroupsId =
+  late final GeneratedColumn<String> father_note_groups_id =
       GeneratedColumn<String>('father_note_groups_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -6793,10 +7053,10 @@ class $NoteGroupsTable extends NoteGroups
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -6804,15 +7064,21 @@ class $NoteGroupsTable extends NoteGroups
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [creatorUserId, fatherNoteGroupsId, title, createdAt, id, updatedAt];
+  List<GeneratedColumn> get $columns => [
+        creator_user_id,
+        father_note_groups_id,
+        title,
+        created_at,
+        id,
+        updated_at
+      ];
   @override
   String get aliasedName => _alias ?? 'note_groups';
   @override
@@ -6824,17 +7090,17 @@ class $NoteGroupsTable extends NoteGroups
     final data = instance.toColumns(true);
     if (data.containsKey('creator_user_id')) {
       context.handle(
-          _creatorUserIdMeta,
-          creatorUserId.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creatorUserIdMeta));
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
-      context.missing(_creatorUserIdMeta);
+      context.missing(_creator_user_idMeta);
     }
     if (data.containsKey('father_note_groups_id')) {
       context.handle(
-          _fatherNoteGroupsIdMeta,
-          fatherNoteGroupsId.isAcceptableOrUnknown(
-              data['father_note_groups_id']!, _fatherNoteGroupsIdMeta));
+          _father_note_groups_idMeta,
+          father_note_groups_id.isAcceptableOrUnknown(
+              data['father_note_groups_id']!, _father_note_groups_idMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -6843,10 +7109,12 @@ class $NoteGroupsTable extends NoteGroups
       context.missing(_titleMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
+      context.missing(_created_atMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -6854,10 +7122,12 @@ class $NoteGroupsTable extends NoteGroups
       context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
     } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_updated_atMeta);
     }
     return context;
   }
@@ -6868,17 +7138,17 @@ class $NoteGroupsTable extends NoteGroups
   NoteGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return NoteGroup(
-      creatorUserId: attachedDatabase.typeMapping
+      creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fatherNoteGroupsId: attachedDatabase.typeMapping.read(
+      father_note_groups_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}father_note_groups_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      createdAt: attachedDatabase.typeMapping
+      created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updatedAt: attachedDatabase.typeMapping
+      updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
   }

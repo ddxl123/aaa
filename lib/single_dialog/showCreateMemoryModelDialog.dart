@@ -24,11 +24,11 @@ Future<void> showCreateMemoryModelDialog() async {
           }
           await db.insertDAO.insertMemoryModel(
             memoryModelsCompanion: Crt.memoryModelsCompanion(
-              creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
-              fatherMemoryModelId: null.toValue(),
-              buttonAlgorithm: '',
-              familiarityAlgorithm: '',
-              nextTimeAlgorithm: '',
+              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+              father_memory_model_id: null.toValue(),
+              button_algorithm: '',
+              familiarity_algorithm: '',
+              next_time_algorithm: '',
               title: tec.text,
             ),
             syncTag: null,

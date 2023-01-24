@@ -4,26 +4,31 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class CheckLoginDto extends BaseObject{
+class InitDownloadDto extends BaseObject{
 
-    /// 检查 user 的同时，必须同时检查这个
-    DeviceAndTokenBo device_and_token_bo;
+    /// 
+    Sync sync_entity;
+
+    /// 
+    Map<String, dynamic> row_map;
 
     /// 填充字段
     bool? dto_padding;
 
 
-CheckLoginDto({
+InitDownloadDto({
 
-    required this.device_and_token_bo,
+    required this.sync_entity,
+
+    required this.row_map,
 
     required this.dto_padding,
 
 });
-  factory CheckLoginDto.fromJson(Map<String, dynamic> json) => _$CheckLoginDtoFromJson(json);
+  factory InitDownloadDto.fromJson(Map<String, dynamic> json) => _$InitDownloadDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$CheckLoginDtoToJson(this);
+  Map<String, dynamic> toJson() => _$InitDownloadDtoToJson(this);
   
   
           
@@ -37,7 +42,7 @@ CheckLoginDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  CheckLoginVo? vo;
+  InitDownloadVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
@@ -46,18 +51,12 @@ CheckLoginDto({
 
     // message: 已登录！
     // explain: 用户已登录
-    required Future<T> Function(String showMessage) code10301,
-    
-    // message: 未登录！
-    // explain: 用户未登录
-    required Future<T> Function(String showMessage) code10302,
+    required Future<T> Function(String showMessage) code20101,
     
     }) async {
     try {
 
-        if (code == 10301) return await code10301(httperException!.showMessage);
-
-        if (code == 10302) return await code10302(httperException!.showMessage);
+        if (code == 20101) return await code20101(httperException!.showMessage);
 
     } catch (e, st) {
       if (e is HttperException) {

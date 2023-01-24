@@ -26,14 +26,14 @@ Future<void> showCreateMemoryGroupDialog() async {
           }
           await db.insertDAO.insertMemoryGroup(
             newMemoryGroupsCompanion: Crt.memoryGroupsCompanion(
-              startTime: null.toValue(),
-              memoryModelId: null.toValue(),
+              start_time: null.toValue(),
+              memory_model_id: null.toValue(),
               title: tec.text.trim(),
-              willNewLearnCount: 0,
-              reviewInterval: DateTime.now(),
-              newReviewDisplayOrder: NewReviewDisplayOrder.mix,
-              newDisplayOrder: NewDisplayOrder.random,
-              creatorUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
+              will_new_learn_count: 0,
+              review_interval: DateTime.now(),
+              new_review_display_order: NewReviewDisplayOrder.mix,
+              new_display_order: NewDisplayOrder.random,
+              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
             ),
             syncTag: null,
           );

@@ -38,7 +38,7 @@ abstract class AbController {
         title: '加载出现异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {
-          logger.out(show: title, print: title, level: LogLevel.error, error: ec.error, stackTrace: ec.stackTrace);
+          logger.outError(show: title, print: title, error: ec.error, stackTrace: ec.stackTrace);
         },
       );
 
@@ -46,7 +46,7 @@ abstract class AbController {
         title: '内部构建异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {
-          logger.out(show: title, print: title, level: LogLevel.error, error: ec.error, stackTrace: ec.stackTrace);
+          logger.outError(show: title, print: title, error: ec.error, stackTrace: ec.stackTrace);
         },
       );
 }

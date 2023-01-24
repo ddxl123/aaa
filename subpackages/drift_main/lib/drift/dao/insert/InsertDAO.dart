@@ -57,9 +57,9 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               whichFragmentGroups,
               (whichFragmentGroup) async {
                 await Crt.rFragment2FragmentGroupsCompanion(
-                  creatorUserId: willFragmentsCompanion.creatorUserId.value,
-                  fragmentGroupId: (whichFragmentGroup?.id).toValue(),
-                  fragmentId: willFragmentsCompanion.id.value,
+                  creator_user_id: willFragmentsCompanion.creator_user_id.value,
+                  fragment_group_id: (whichFragmentGroup?.id).toValue(),
+                  fragment_id: willFragmentsCompanion.id.value,
                 ).insert(syncTag: syncTag);
               },
             );
@@ -107,14 +107,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               fs,
               (e) async {
                 final newFmInfo = Crt.fragmentMemoryInfosCompanion(
-                  creatorUserId: user.id,
-                  memoryGroupId: memoryGroup.id,
-                  fragmentId: e.id,
-                  clickTime: null.toValue(),
-                  clickValue: null.toValue(),
-                  currentActualShowTime: null.toValue(),
-                  nextPlanShowTime: null.toValue(),
-                  showFamiliarity: null.toValue(),
+                  creator_user_id: user.id,
+                  memory_group_id: memoryGroup.id,
+                  fragment_id: e.id,
+                  click_time: null.toValue(),
+                  click_value: null.toValue(),
+                  current_actual_show_time: null.toValue(),
+                  next_plan_show_time: null.toValue(),
+                  show_familiarity: null.toValue(),
                 );
                 if (isRemoveRepeat) {
                   final isExist = await db.generalQueryDAO.queryIsExistFragmentInMemoryGroup(fragment: e, memoryGroup: memoryGroup);
@@ -133,14 +133,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               await db.updateDAO.resetMemoryGroupForOnlySave(
                 originalMemoryGroupReset: (SyncTag resetSyncTag) async {
                   return await memoryGroup.reset(
-                    creatorUserId: toAbsent(),
-                    memoryModelId: toAbsent(),
-                    newDisplayOrder: toAbsent(),
-                    newReviewDisplayOrder: toAbsent(),
-                    reviewInterval: toAbsent(),
-                    startTime: toAbsent(),
+                    creator_user_id: toAbsent(),
+                    memory_model_id: toAbsent(),
+                    new_display_order: toAbsent(),
+                    new_review_display_order: toAbsent(),
+                    review_interval: toAbsent(),
+                    start_time: toAbsent(),
                     title: toAbsent(),
-                    willNewLearnCount: (memoryGroup.willNewLearnCount + 1).toValue(),
+                    will_new_learn_count: (memoryGroup.will_new_learn_count + 1).toValue(),
                     syncTag: resetSyncTag,
                   );
                 },

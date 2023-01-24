@@ -1,4 +1,3 @@
-import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -46,7 +45,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                   children: [
                     Row(
                       children: [
-                        Expanded(child: Text(DeviceInfoSingle.getDevice(deviceInfo: e.deviceInfo))),
+                        Expanded(child: Text(DeviceInfoSingle.getDevice(deviceInfo: e.device_info))),
                         TextButton(
                           child: const Text("下线", style: TextStyle(color: Colors.red)),
                           onPressed: () async {
@@ -61,7 +60,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                             );
                             await result.handleCode(
                               otherException: (int? code, HttperException httperException, StackTrace st) async {
-                                logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+                                logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
                               },
                               code10201: (String showMessage) async {
                                 throw ShouldNotExecuteHereHttperException();
@@ -69,7 +68,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                               code10202: (String showMessage) async {
                                 // 下线成功
                                 vo.device_and_token_bo_list?.remove(e);
-                                logger.out(show: showMessage);
+                                logger.outNormal(show: showMessage);
                                 reBuild(() {});
                               },
                               code10203: (String showMessage) async {
@@ -80,7 +79,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                               },
                               code10205: (String showMessage) async {
                                 // 下线失败
-                                logger.out(show: showMessage, print: showMessage);
+                                logger.outNormal(show: showMessage, print: showMessage);
                               },
                             );
                           },
@@ -119,10 +118,10 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                   );
                   await result.handleCode(
                     otherException: (int? code, HttperException httperException, StackTrace st) async {
-                      logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
+                      logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
                     },
                     code10201: (String showMessage) async {
-                      logger.out(show: "$showMessage\n本次登录成功！");
+                      logger.outNormal(show: "$showMessage\n本次登录成功！");
                       isContinue = true;
                       SmartDialog.dismiss(status: SmartStatus.dialog);
                     },
@@ -137,7 +136,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                     },
                     code10205: (String showMessage) async {
                       // 下线失败
-                      logger.out(show: showMessage, print: showMessage);
+                      logger.outNormal(show: showMessage, print: showMessage);
                     },
                   );
                 },
@@ -161,7 +160,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                   otherException: (int? code, HttperException httperException, StackTrace st) async {
                     isContinue = false;
                     SmartDialog.dismiss(status: SmartStatus.dialog);
-                    logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+                    logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
                   },
                   code10201: (String showMessage) async {
                     throw ShouldNotExecuteHereHttperException();
@@ -171,14 +170,14 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                   },
                   code10203: (String showMessage) async {
                     isContinue = false;
-                    logger.out(show: showMessage);
+                    logger.outNormal(show: showMessage);
                     SmartDialog.dismiss(status: SmartStatus.dialog);
                   },
                   code10204: (String showMessage) async {
                     throw ShouldNotExecuteHereHttperException();
                   },
                   code10205: (String showMessage) async {
-                    logger.out(show: "已取消本次登录！", print: "$showMessage\n但当前操作是【取消本次登录】操作，因此给予权限。");
+                    logger.outNormal(show: "已取消本次登录！", print: "$showMessage\n但当前操作是【取消本次登录】操作，因此给予权限。");
                   },
                 );
               },

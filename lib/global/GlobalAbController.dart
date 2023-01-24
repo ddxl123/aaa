@@ -43,7 +43,7 @@ class GlobalAbController extends AbController {
           path: HttpPath.REGISTER_OR_LOGIN_CHECK_LOGIN,
           data: CheckLoginDto(
             device_and_token_bo: DeviceAndTokenBo(
-              deviceInfo: clientSyncInfoOrNull.deviceInfo,
+              device_info: clientSyncInfoOrNull.device_info,
               token: clientSyncInfoOrNull.token!,
             ),
             dto_padding: null,
@@ -52,7 +52,7 @@ class GlobalAbController extends AbController {
         );
         final isLoggedIn = await result.handleCode<bool?>(
           otherException: (int? code, HttperException httperException, StackTrace st) async {
-            logger.out(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st, level: LogLevel.error);
+            logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
             return null;
           },
           code10301: (String showMessage) async {
@@ -84,7 +84,7 @@ class GlobalAbController extends AbController {
       return false;
     }
 
-    logger.out(show: "发生异常！", print: "检查结果为用户已登录，但 loggedInUser() 却为 null！", level: LogLevel.error);
+    logger.outError(show: "发生异常！", print: "检查结果为用户已登录，但 loggedInUser() 却为 null！");
     return null;
   }
 }

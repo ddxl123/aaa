@@ -20,14 +20,14 @@ void main() {
   //   EmailManualHandler(["support@email.com"])
   // ]);
 
-  // flutter_smart_dialog 相关
-  SmartDialog.config
-    ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 2000), displayType: SmartToastType.normal)
-    ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
 
   // 自定义键盘 相关
   AlgorithmKeyboard.register();
 
+  // flutter_smart_dialog 相关
+  // SmartDialog.config
+  //   ..toast = SmartConfigToast(displayTime: const Duration(milliseconds: 2000), displayType: SmartToastType.normal)
+  //   ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
   Catcher(
     runAppFunction: _runMockApp,
     debugConfig: debugOptions,

@@ -1,4 +1,16 @@
 
+enum RegisterOrLoginType {
+  
+  email_send,
+
+  email_verify,
+
+  phone_send,
+
+  phone_verify,
+
+}
+        
 enum SyncCurdType {
   
   c,
@@ -17,7 +29,7 @@ enum SyncCurdType {
         
 enum FragmentTemplateType {
   
-  richAny,
+  rich_any,
 
 }
         
@@ -25,9 +37,9 @@ enum NewDisplayOrder {
   
   random,
 
-  titleA2Z,
+  title_a_2_z,
 
-  createEarly2Late,
+  create_early_2_late,
 
 }
         
@@ -35,21 +47,33 @@ enum NewReviewDisplayOrder {
   
   mix,
 
-  newReview,
+  new_review,
 
-  reviewNew,
+  review_new,
 
 }
         
-enum RegisterOrLoginType {
+enum IdType {
   
-  email_send,
+  idAutoAssignable,
 
-  email_verify,
+  idManualAssignalbe,
 
-  phone_send,
+}
+        
+enum TableType {
+  
+  cloud,
 
-  phone_verify,
+  client,
+
+}
+        
+enum TargetClassType {
+  
+  Dto,
+
+  Vo,
 
 }
         

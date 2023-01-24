@@ -31,7 +31,7 @@ class ResetGenerator extends Generator {
           /// 
           /// 只能修改当前 id 的行。
           /// 
-          /// createdAt updatedAt 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+          /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
           /// 
           /// 若 [syncTag] 为空，内部会自动创建。
           /// 
@@ -39,7 +39,7 @@ class ResetGenerator extends Generator {
           FutureOr<$className> reset({
           ${params.map(
                     (e) {
-                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
                       return isWriteBlank ? '' : 'required Value<${e.type}> ${e.name}';
                     },
                   ).where(
@@ -51,7 +51,7 @@ class ResetGenerator extends Generator {
            bool isLocalModify = false;
             ${params.map(
                     (e) {
-                      final isWriteBlank = e.name == 'id' || e.name == 'createdAt' || e.name == 'updatedAt';
+                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
                       return isWriteBlank
                           ? ''
                           : """

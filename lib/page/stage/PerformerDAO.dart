@@ -22,25 +22,25 @@ class PerformerQuery {
     final newPerformer = await getOneNewFragment(mg: mg);
     final learnedFragment = await getOneLearnedFragment(mg: mg);
 
-    logger.out(print: '获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}');
-    logger.out(print: '获取到的复习碎片：\n${learnedFragment?.fragmentMemoryInfo}\n${learnedFragment?.fragment}');
+    logger.outNormal(print: '获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}');
+    logger.outNormal(print: '获取到的复习碎片：\n${learnedFragment?.fragmentMemoryInfo}\n${learnedFragment?.fragment}');
 
     if (newPerformer == null && learnedFragment == null) return null;
 
     late final Performer? performer;
-    if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.mix) {
+    if (mg.new_review_display_order == NewReviewDisplayOrder.mix) {
       performer = Random().nextBool() == true ? (newPerformer ?? learnedFragment) : (learnedFragment ?? newPerformer);
-    } else if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.reviewNew) {
+    } else if (mg.new_review_display_order == NewReviewDisplayOrder.review_new) {
       performer = learnedFragment ?? newPerformer;
-    } else if (mg.newReviewDisplayOrder == NewReviewDisplayOrder.newReview) {
+    } else if (mg.new_review_display_order == NewReviewDisplayOrder.new_review) {
       performer = newPerformer ?? learnedFragment;
     } else {
-      throw '未处理 ${mg.newReviewDisplayOrder}';
+      throw '未处理 ${mg.new_review_display_order}';
     }
-    if (performer!.fragmentMemoryInfo.nextPlanShowTime == null) {
-      logger.out(print: '最终展示了新碎片！');
+    if (performer!.fragmentMemoryInfo.next_plan_show_time == null) {
+      logger.outNormal(print: '最终展示了新碎片！');
     } else {
-      logger.out(print: '最终展示了复习碎片！');
+      logger.outNormal(print: '最终展示了复习碎片！');
     }
     return performer;
   }
@@ -48,22 +48,22 @@ class PerformerQuery {
   /// 获取新碎片。
   Future<Performer?> getOneNewFragment({required MemoryGroup mg}) async {
     // 识别是否还需要学习新碎片。
-    if (mg.willNewLearnCount == 0) {
+    if (mg.will_new_learn_count == 0) {
       return null;
     }
     final selInfo = db.select(db.fragmentMemoryInfos);
-    selInfo.where((tbl) => tbl.memoryGroupId.equals(mg.id) & tbl.nextPlanShowTime.isNull());
-    if (mg.newDisplayOrder == NewDisplayOrder.random) {
+    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.next_plan_show_time.isNull());
+    if (mg.new_display_order == NewDisplayOrder.random) {
       selInfo.orderBy([(_) => OrderingTerm.random()]);
     } else {
-      throw '未处理 ${mg.newDisplayOrder}';
+      throw '未处理 ${mg.new_display_order}';
     }
     selInfo.limit(1);
 
     final infoResult = await selInfo.getSingleOrNull();
     if (infoResult == null) return null;
 
-    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragmentId));
+    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragment_id));
     final fResult = await selF.getSingleOrNull();
     if (fResult == null) throw '碎片已经被删除，但是仍然残留了记忆信息！';
 
@@ -72,17 +72,17 @@ class PerformerQuery {
 
   /// 获取要复习的碎片。
   Future<Performer?> getOneLearnedFragment({required MemoryGroup mg}) async {
-    final lastNextShowTime = db.fragmentMemoryInfos.nextPlanShowTime.jsonExtract<int>(r'$[#-1]');
+    final lastNextShowTime = db.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[#-1]');
     final selInfo = db.select(db.fragmentMemoryInfos);
     selInfo.addColumns([lastNextShowTime]);
-    selInfo.where((tbl) => tbl.memoryGroupId.equals(mg.id) & tbl.nextPlanShowTime.isNotNull());
+    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.next_plan_show_time.isNotNull());
     selInfo.orderBy([(o) => OrderingTerm(expression: lastNextShowTime, mode: OrderingMode.asc)]);
     selInfo.limit(1);
 
     final infoResult = await selInfo.getSingleOrNull();
     if (infoResult == null) return null;
 
-    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragmentId));
+    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragment_id));
     final fResult = await selF.getSingleOrNull();
     if (fResult == null) throw '碎片已经被删除，但是仍然残留了记忆信息！';
 
@@ -128,7 +128,7 @@ class PerformerQuery {
 
   /// [InternalVariableConstant.timesConst]
   Future<List<int>> getTimes({required Performer performer}) async {
-    return [performer.fragmentMemoryInfo.clickTime?.split(',').length ?? 0];
+    return [performer.fragmentMemoryInfo.click_time?.split(',').length ?? 0];
   }
 
   /// [InternalVariableConstant.currentActualShowTimeConst]
@@ -138,7 +138,7 @@ class PerformerQuery {
   }) async {
     // 最后一个是当前未写入的数据。
     return [
-      ...performer.fragmentMemoryInfo.currentActualShowTime == null ? [] : performer.fragmentMemoryInfo.currentActualShowTime!.toIntArray(),
+      ...performer.fragmentMemoryInfo.current_actual_show_time == null ? [] : performer.fragmentMemoryInfo.current_actual_show_time!.toIntArray(),
       currentShowTime,
     ];
   }
@@ -149,7 +149,7 @@ class PerformerQuery {
     required int? currentNextPlanedShowTime,
   }) async {
     return [
-      ...performer.fragmentMemoryInfo.nextPlanShowTime == null ? [] : performer.fragmentMemoryInfo.nextPlanShowTime!.toIntArray(),
+      ...performer.fragmentMemoryInfo.next_plan_show_time == null ? [] : performer.fragmentMemoryInfo.next_plan_show_time!.toIntArray(),
       currentNextPlanedShowTime,
     ];
   }
@@ -160,7 +160,7 @@ class PerformerQuery {
     required double? currentShowFamiliar,
   }) async {
     return [
-      ...performer.fragmentMemoryInfo.showFamiliarity == null ? [] : performer.fragmentMemoryInfo.showFamiliarity!.toDoubleArray(),
+      ...performer.fragmentMemoryInfo.show_familiarity == null ? [] : performer.fragmentMemoryInfo.show_familiarity!.toDoubleArray(),
       currentShowFamiliar,
     ];
   }
@@ -170,7 +170,7 @@ class PerformerQuery {
     required int? currentClickTime,
   }) async {
     return [
-      ...performer.fragmentMemoryInfo.clickTime == null ? [] : performer.fragmentMemoryInfo.clickTime!.toIntArray(),
+      ...performer.fragmentMemoryInfo.click_time == null ? [] : performer.fragmentMemoryInfo.click_time!.toIntArray(),
       currentClickTime,
     ];
   }
@@ -180,7 +180,7 @@ class PerformerQuery {
     required double? currentClickValue,
   }) async {
     return [
-      ...performer.fragmentMemoryInfo.clickValue == null ? [] : performer.fragmentMemoryInfo.clickValue!.toDoubleArray(),
+      ...performer.fragmentMemoryInfo.click_value == null ? [] : performer.fragmentMemoryInfo.click_value!.toDoubleArray(),
       currentClickValue,
     ];
   }
