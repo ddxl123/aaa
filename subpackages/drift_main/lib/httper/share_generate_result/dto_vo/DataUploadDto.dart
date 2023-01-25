@@ -4,7 +4,7 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class InitDownloadDto extends BaseObject{
+class DataUploadDto extends BaseObject{
 
     /// 
     Sync sync_entity;
@@ -16,7 +16,7 @@ class InitDownloadDto extends BaseObject{
     bool? dto_padding;
 
 
-InitDownloadDto({
+DataUploadDto({
 
     required this.sync_entity,
 
@@ -25,10 +25,10 @@ InitDownloadDto({
     required this.dto_padding,
 
 });
-  factory InitDownloadDto.fromJson(Map<String, dynamic> json) => _$InitDownloadDtoFromJson(json);
+  factory DataUploadDto.fromJson(Map<String, dynamic> json) => _$DataUploadDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$InitDownloadDtoToJson(this);
+  Map<String, dynamic> toJson() => _$DataUploadDtoToJson(this);
   
   
           
@@ -42,15 +42,15 @@ InitDownloadDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  InitDownloadVo? vo;
+  DataUploadVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
 
-    // message: 已登录！
-    // explain: 用户已登录
+    // message: 单次同步成功！
+    // explain: 每次同步请求成功的响应
     required Future<T> Function(String showMessage) code20101,
     
     }) async {

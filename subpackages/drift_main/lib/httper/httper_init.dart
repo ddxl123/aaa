@@ -9,14 +9,17 @@ final Dio dio = Dio(
   ),
 );
 
+/// 当 [dataList] 为 null 时，[data] 的作用为请求数据体。
+/// 当 [dataList] 不为 null 时，[data] 的作用将不是请求数据体，而是需给予一个任意数据的 [RQ] 类型对象，以便存储响应数据，
 Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   required String path,
   required RQ data,
+  List<RQ>? dataList,
   required RP Function(Map<String, dynamic> responseData) parseResponseData,
 }) async {
   dynamic responseData;
   try {
-    final result = await dio.post(path, data: data.toJson());
+    final result = await dio.post(path, data: dataList != null ? dataList.map((e) => e.toJson()).toList() : data.toJson());
     responseData = result.data;
     final parseCode = result.data["code"];
     final parseMessage = result.data["message"];

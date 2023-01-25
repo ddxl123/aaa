@@ -40,26 +40,25 @@ Map<String, dynamic> _$CheckLoginVoToJson(CheckLoginVo instance) =>
       'vo_padding': instance.vo_padding,
     };
 
-InitDownloadDto _$InitDownloadDtoFromJson(Map<String, dynamic> json) =>
-    InitDownloadDto(
+DataUploadDto _$DataUploadDtoFromJson(Map<String, dynamic> json) =>
+    DataUploadDto(
       sync_entity: Sync.fromJson(json['sync_entity'] as Map<String, dynamic>),
       row_map: json['row_map'] as Map<String, dynamic>,
       dto_padding: json['dto_padding'] as bool?,
     );
 
-Map<String, dynamic> _$InitDownloadDtoToJson(InitDownloadDto instance) =>
+Map<String, dynamic> _$DataUploadDtoToJson(DataUploadDto instance) =>
     <String, dynamic>{
       'sync_entity': instance.sync_entity,
       'row_map': instance.row_map,
       'dto_padding': instance.dto_padding,
     };
 
-InitDownloadVo _$InitDownloadVoFromJson(Map<String, dynamic> json) =>
-    InitDownloadVo(
+DataUploadVo _$DataUploadVoFromJson(Map<String, dynamic> json) => DataUploadVo(
       vo_padding: json['vo_padding'] as bool?,
     );
 
-Map<String, dynamic> _$InitDownloadVoToJson(InitDownloadVo instance) =>
+Map<String, dynamic> _$DataUploadVoToJson(DataUploadVo instance) =>
     <String, dynamic>{
       'vo_padding': instance.vo_padding,
     };

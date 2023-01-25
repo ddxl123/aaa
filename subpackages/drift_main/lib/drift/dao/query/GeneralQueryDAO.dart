@@ -15,6 +15,32 @@ enum QueryFragmentWhereType {
 class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMixin {
   GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
+  /// 查询 [Syncs.tag] 最小的一组 [Syncs]，以及对应的 row 实体。
+  ///
+  /// 返回空数组表示已经全部上传完成。
+  Future<List<Tuple2<Sync, dynamic>>> querySameSyncTagWithRow() async {
+    final sel = select(syncs);
+    sel.orderBy([(_) => OrderingTerm.asc(_.tag)]);
+    sel.limit(1);
+    final syncsResult = await sel.getSingleOrNull();
+    if (syncsResult == null) return [];
+
+    final multiSyncsResult = await (select(syncs)..where((tbl) => tbl.tag.equals(syncsResult.tag))).get();
+
+    final returnResult = <Tuple2<Sync, dynamic>>[];
+    await Future.forEach<Sync>(
+      multiSyncsResult,
+      (element) async {
+        dynamic ti = db.getTableInfoFromTableActualName(tableActualName: element.sync_table_name);
+        final fSel = select(ti)..where((tbl) => (tbl as dynamic).id.equals(element.row_id));
+        final result = await fSel.getSingle();
+        returnResult.add(Tuple2(t1: element, t2: result));
+      },
+    );
+
+    return returnResult;
+  }
+
   Future<User?> queryUserOrNull() async {
     final manyUsers = await select(users).get();
     if (manyUsers.length > 1) {

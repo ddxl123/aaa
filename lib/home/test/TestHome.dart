@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:aaa/single_dialog/register_or_login/showIsLogoutCurrentUserDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:drift_main/tool/DriftViewer.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:drift_main/httper/httper.dart';
 
 import '../../global/GlobalAbController.dart';
 import 'TestHomeAbController.dart';
@@ -121,6 +122,38 @@ class TestHome extends StatelessWidget {
                               child: const Text('产生异常'),
                               onPressed: () {
                                 throw "这是一条异常!";
+                              },
+                            ),
+                            ElevatedButton(
+                              child: const Text('上传 tag 最小的一组 sync 数据'),
+                              onPressed: () async {
+                                final result = await db.generalQueryDAO.querySameSyncTagWithRow();
+                                final requestResult = await request(
+                                  path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS,
+                                  data: DataUploadDto(
+                                    sync_entity: Sync(
+                                      row_id: "",
+                                      sync_curd_type: SyncCurdType.u,
+                                      sync_table_name: "",
+                                      tag: 0,
+                                      created_at: DateTime.now(),
+                                      id: 0,
+                                      updated_at: DateTime.now(),
+                                    ),
+                                    row_map: {},
+                                    dto_padding: null,
+                                  ),
+                                  dataList: result.map((e) => DataUploadDto(sync_entity: e.t1, row_map: e.t2.toJson(), dto_padding: null)).toList(),
+                                  parseResponseData: DataUploadVo.fromJson,
+                                );
+                                await requestResult.handleCode(
+                                  otherException: (int? code, HttperException httperException, StackTrace st) async {
+                                    logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
+                                  },
+                                  code20101: (String showMessage) async {
+                                    logger.outNormal(print: showMessage);
+                                  },
+                                );
                               },
                             ),
                           ],

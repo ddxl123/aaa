@@ -40,7 +40,10 @@ class DriftDb extends _$DriftDb {
   String path = '';
 
   /// 'Users' to [TableInfo].
-  final Map<String, TableInfo> _tableInfoMap = {};
+  final Map<String, TableInfo> _dataClassName2TableInfoMap = {};
+
+  /// 'users' to [TableInfo].
+  final Map<String, TableInfo> _tableActualName2TableInfoMap = {};
 
   /// table 的版本号。
   ///
@@ -57,6 +60,7 @@ class DriftDb extends _$DriftDb {
         },
         onUpgrade: (Migrator m, int from, int to) async {},
         beforeOpen: (OpeningDetails details) async {
+          transform();
           await _insertInitTestData();
         },
       );
@@ -82,23 +86,33 @@ class DriftDb extends _$DriftDb {
   /// Convert to [TableInfo] using [entity] or type [E].
   ///
   /// If [entity] is empty, you can use [E] to convert.
-  TableInfo toTableInfo<E extends Insertable, TableDsl extends Table, D>([E? entity]) {
-    if (_tableInfoMap.isEmpty) {
+  void transform() {
+    if (_dataClassName2TableInfoMap.isEmpty) {
       for (var element in DriftDb.instance.allTables) {
         // '$UsersTable'
         final String tableInfoClassName = element.runtimeType.toString();
         // Users
         final String dataClassName = tableInfoClassName.substring(1, tableInfoClassName.length - 5);
         // {'Users':users}
-        _tableInfoMap.addAll({dataClassName: element});
+        _dataClassName2TableInfoMap.addAll({dataClassName: element});
+        // {'users':users}
+        _tableActualName2TableInfoMap.addAll({element.actualTableName: element});
       }
     }
+  }
+
+  TableInfo getTableInfoFromE<E extends Insertable, TableDsl extends Table, D>([E? entity]) {
     // 'User' or 'UsersCompanion'
     final String eName = E.toString();
     // Convert to 'Users'
-    final TableInfo? tableInfo =
-        (eName.length <= 9 || eName.substring(eName.length - 9, eName.length) != 'Companion') ? _tableInfoMap['${eName}s'] : _tableInfoMap[eName.substring(0, eName.length - 9)];
-    return tableInfo ?? (throw 'TableInfo not found.');
+    final TableInfo? tableInfo = (eName.length <= 9 || eName.substring(eName.length - 9, eName.length) != 'Companion')
+        ? _dataClassName2TableInfoMap['${eName}s']
+        : _dataClassName2TableInfoMap[eName.substring(0, eName.length - 9)];
+    return tableInfo ?? (throw 'TableInfo not found: ${E.toString()}');
+  }
+
+  TableInfo getTableInfoFromTableActualName({required String tableActualName}) {
+    return _tableActualName2TableInfoMap[tableActualName] ?? (throw 'TableInfo not found: $tableActualName');
   }
 }
 

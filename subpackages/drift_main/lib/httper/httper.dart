@@ -26,10 +26,10 @@ part 'share_generate_result/dto_vo/CheckLoginDto.dart';
 part 'share_generate_result/dto_vo/CheckLoginVo.dart';
 
 
-part 'share_generate_result/dto_vo/InitDownloadDto.dart';
+part 'share_generate_result/dto_vo/DataUploadDto.dart';
 
 
-part 'share_generate_result/dto_vo/InitDownloadVo.dart';
+part 'share_generate_result/dto_vo/DataUploadVo.dart';
 
 
 part 'share_generate_result/dto_vo/LogoutDto.dart';
