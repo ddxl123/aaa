@@ -169,7 +169,7 @@ class FragmentGroupConfig extends DataClass
   bool be_private;
   bool be_publish;
   int creator_user_id;
-  int fragment_group_id;
+  String fragment_group_id;
   DateTime created_at;
   String id;
   DateTime updated_at;
@@ -187,7 +187,7 @@ class FragmentGroupConfig extends DataClass
     map['be_private'] = Variable<bool>(be_private);
     map['be_publish'] = Variable<bool>(be_publish);
     map['creator_user_id'] = Variable<int>(creator_user_id);
-    map['fragment_group_id'] = Variable<int>(fragment_group_id);
+    map['fragment_group_id'] = Variable<String>(fragment_group_id);
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
@@ -213,7 +213,7 @@ class FragmentGroupConfig extends DataClass
       be_private: serializer.fromJson<bool>(json['be_private']),
       be_publish: serializer.fromJson<bool>(json['be_publish']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      fragment_group_id: serializer.fromJson<int>(json['fragment_group_id']),
+      fragment_group_id: serializer.fromJson<String>(json['fragment_group_id']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
@@ -226,7 +226,7 @@ class FragmentGroupConfig extends DataClass
       'be_private': serializer.toJson<bool>(be_private),
       'be_publish': serializer.toJson<bool>(be_publish),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'fragment_group_id': serializer.toJson<int>(fragment_group_id),
+      'fragment_group_id': serializer.toJson<String>(fragment_group_id),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
@@ -237,7 +237,7 @@ class FragmentGroupConfig extends DataClass
           {bool? be_private,
           bool? be_publish,
           int? creator_user_id,
-          int? fragment_group_id,
+          String? fragment_group_id,
           DateTime? created_at,
           String? id,
           DateTime? updated_at}) =>
@@ -285,7 +285,7 @@ class FragmentGroupConfigsCompanion
   Value<bool> be_private;
   Value<bool> be_publish;
   Value<int> creator_user_id;
-  Value<int> fragment_group_id;
+  Value<String> fragment_group_id;
   Value<DateTime> created_at;
   Value<String> id;
   Value<DateTime> updated_at;
@@ -302,7 +302,7 @@ class FragmentGroupConfigsCompanion
     required bool be_private,
     required bool be_publish,
     required int creator_user_id,
-    required int fragment_group_id,
+    required String fragment_group_id,
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
@@ -317,7 +317,7 @@ class FragmentGroupConfigsCompanion
     Expression<bool>? be_private,
     Expression<bool>? be_publish,
     Expression<int>? creator_user_id,
-    Expression<int>? fragment_group_id,
+    Expression<String>? fragment_group_id,
     Expression<DateTime>? created_at,
     Expression<String>? id,
     Expression<DateTime>? updated_at,
@@ -337,7 +337,7 @@ class FragmentGroupConfigsCompanion
       {Value<bool>? be_private,
       Value<bool>? be_publish,
       Value<int>? creator_user_id,
-      Value<int>? fragment_group_id,
+      Value<String>? fragment_group_id,
       Value<DateTime>? created_at,
       Value<String>? id,
       Value<DateTime>? updated_at}) {
@@ -365,7 +365,7 @@ class FragmentGroupConfigsCompanion
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
     if (fragment_group_id.present) {
-      map['fragment_group_id'] = Variable<int>(fragment_group_id.value);
+      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
     }
     if (created_at.present) {
       map['created_at'] = Variable<DateTime>(created_at.value);
@@ -433,9 +433,9 @@ class $FragmentGroupConfigsTable extends FragmentGroupConfigs
   static const VerificationMeta _fragment_group_idMeta =
       const VerificationMeta('fragment_group_id');
   @override
-  late final GeneratedColumn<int> fragment_group_id = GeneratedColumn<int>(
-      'fragment_group_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<String> fragment_group_id =
+      GeneratedColumn<String>('fragment_group_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _created_atMeta =
       const VerificationMeta('created_at');
   @override
@@ -541,8 +541,8 @@ class $FragmentGroupConfigsTable extends FragmentGroupConfigs
           .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fragment_group_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}fragment_group_id'])!,
+      fragment_group_id: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}fragment_group_id'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping

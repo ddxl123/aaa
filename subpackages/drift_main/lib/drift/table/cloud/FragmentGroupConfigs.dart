@@ -17,7 +17,7 @@ class FragmentGroupConfigs extends CloudTableBase  {
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 
   @ReferenceTo([FragmentGroups])
-  IntColumn get fragment_group_id => integer().named("fragment_group_id")();
+  TextColumn get fragment_group_id => text().named("fragment_group_id")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 

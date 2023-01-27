@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
+import 'package:line_icons/line_icons.dart';
 
-class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatelessWidget {
+class GroupListWidget<G, U, GC, C extends GroupListWidgetController<G, U, GC>> extends StatelessWidget {
   const GroupListWidget({
     Key? key,
     this.headSliver,
@@ -16,16 +17,16 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
   }) : super(key: key);
   final C groupListWidgetController;
 
-  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw)? headSliver;
-  final String Function(Ab<Group<G, U>> group, Abw abw) groupChainStrings;
-  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw) groupBuilder;
+  final Widget Function(C c, Ab<Group<G, U, GC>> group, Abw abw)? headSliver;
+  final String Function(Ab<Group<G, U, GC>> group, Abw abw) groupChainStrings;
+  final Widget Function(C c, Ab<Group<G, U, GC>> group, Abw abw) groupBuilder;
   final Widget Function(C c, Ab<Unit<U>> unit, Abw abw) unitBuilder;
   final Widget Function(C c, Abw abw) oneActionBuilder;
   final void Function(C c) floatingButtonOnPressed;
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<GroupListWidgetController<G, U>>(
+    return AbBuilder<GroupListWidgetController<G, U, GC>>(
       putController: groupListWidgetController,
       tag: Aber.single,
       builder: (c, abw) {
@@ -135,7 +136,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
                         controller: e(abw).refreshController,
                         child: CustomScrollView(
                           slivers: [
-                            headSliver?.call(c, e, abw) ?? SliverToBoxAdapter(),
+                            e(abw).entity(abw) == null ? SliverToBoxAdapter() : (headSliver?.call(c, e, abw) ?? SliverToBoxAdapter()),
                             (e().groups().isEmpty && e().units().isEmpty)
                                 ? SliverToBoxAdapter(
                                     child: Row(
@@ -145,7 +146,27 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
                                     ],
                                   ))
                                 : const SliverToBoxAdapter(),
+                            SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
+                                child: Row(
+                                  children: [
+                                    Text("子组", style: Theme.of(c.context).textTheme.titleLarge),
+                                  ],
+                                ),
+                              ),
+                            ),
                             _fragmentGroupsBuilder(),
+                            SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
+                                child: Row(
+                                  children: [
+                                    Text("碎片", style: Theme.of(c.context).textTheme.titleLarge),
+                                  ],
+                                ),
+                              ),
+                            ),
                             _fragmentsBuilder(),
                             SliverToBoxAdapter(
                               child: TextButton(

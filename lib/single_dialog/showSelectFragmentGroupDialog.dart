@@ -79,10 +79,10 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
     currentFragmentGroup.clear();
     currentFragment.clear();
     currentFragmentGroup.addAll(
-      await db.generalQueryDAO.queryFragmentGroupsInFragmentGroup(targetFragmentGroup: groupChain.isEmpty ? null : groupChain.last),
+      (await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id)).map((e) => e.fragmentGroup),
     );
     currentFragment.addAll(
-      await db.generalQueryDAO.queryFragmentsInFragmentGroup(targetFragmentGroup: groupChain.isEmpty ? null : groupChain.last),
+      await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id),
     );
     if (mounted) setState(() {});
   }

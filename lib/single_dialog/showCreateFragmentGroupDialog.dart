@@ -1,7 +1,5 @@
 import 'package:aaa/page/list/FragmentGroupListPageController.dart';
-import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
-import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -33,6 +31,14 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
               title: tec.text,
             ),
             syncTag: null,
+            willFragmentGroupConfigsCompanion: (fragmentGroupId) {
+              return Crt.fragmentGroupConfigsCompanion(
+                be_private: false,
+                be_publish: false,
+                creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+                fragment_group_id: fragmentGroupId,
+              );
+            },
           );
 
           await Aber.findOrNullLast<FragmentGroupListPageController>()?.refreshCurrentGroup();

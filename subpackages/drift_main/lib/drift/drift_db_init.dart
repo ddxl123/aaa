@@ -1,6 +1,6 @@
 part of drift_db;
 
-const bool isLogStatements = false;
+const bool isLogStatements = true;
 
 /// 执行：flutter packages pub run build_runner build --delete-conflicting-outputs
 ///

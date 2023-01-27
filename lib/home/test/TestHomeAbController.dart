@@ -48,102 +48,102 @@ class TestHomeAbController extends AbController {
     // logger.d(result.map((e) => e.rawData.data).toList().length);
   }
 
-  Future<void> insertsOther() async {
-    final globalAbController = Aber.find<GlobalAbController>();
-    await globalAbController.checkIsLoggedIn();
-    if (globalAbController.loggedInUser() == null) {
-      final user = await DriftDb.instance.rawDAO.rawInsertUser(
-        newUsersCompanion: Crt.usersCompanion(
-          age: null.toValue(),
-          email: null.toValue(),
-          password: null.toValue(),
-          phone: null.toValue(),
-          username: "username",
-        ),
-      );
-      globalAbController.loggedInUser.refreshEasy((oldValue) => user);
-    }
-
-    const count = 5;
-    final st = await SyncTag.create();
-    Future<List<FragmentGroup>> foreach({required FragmentGroup? fatherFragmentGroup}) async {
-      await Future.delayed(const Duration(seconds: 1));
-      final subGroup = <FragmentGroup>[];
-      for (int i = 0; i < count; i++) {
-        final fg = await DriftDb.instance.insertDAO.insertFragmentGroup(
-          willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
-            creator_user_id: globalAbController.loggedInUser()!.id,
-            title: 'test ${Random().nextInt(999999)}',
-            father_fragment_groups_id: (fatherFragmentGroup?.id).toValue(),
-            client_be_selected: false,
-          ),
-          syncTag: st,
-        );
-        subGroup.add(fg);
-        for (int i = 0; i < count; i++) {
-          await DriftDb.instance.insertDAO.insertFragment(
-            willFragmentsCompanion: Crt.fragmentsCompanion(
-              creator_user_id: globalAbController.loggedInUser()!.id,
-              father_fragment_id: null.toValue(),
-              fragment_template_id: null.toValue(),
-              title: '标题 ${Random().nextInt(999999)}',
-              content: '内容 ${Random().nextInt(999999)}',
-              client_be_selected: false,
-              note_id: null.toValue(),
-            ),
-            whichFragmentGroups: [null],
-            syncTag: st,
-          );
-        }
-        for (int i = 0; i < count; i++) {
-          await DriftDb.instance.insertDAO.insertFragment(
-            willFragmentsCompanion: Crt.fragmentsCompanion(
-              creator_user_id: globalAbController.loggedInUser()!.id,
-              father_fragment_id: null.toValue(),
-              fragment_template_id: null.toValue(),
-              title: '标题 ${Random().nextInt(999999)}',
-              content: '内容 ${Random().nextInt(999999)}',
-              client_be_selected: false,
-              note_id: null.toValue(),
-            ),
-            whichFragmentGroups: [fg],
-            syncTag: st,
-          );
-        }
-      }
-      return subGroup;
-    }
-
-    final ones = await foreach(fatherFragmentGroup: null);
-
-    final twos = <FragmentGroup>[];
-    await Future.forEach<FragmentGroup>(
-      ones,
-      (element) async {
-        twos.addAll(await foreach(fatherFragmentGroup: element));
-      },
-    );
-
-    final threes = <FragmentGroup>[];
-    await Future.forEach<FragmentGroup>(
-      twos,
-      (element) async {
-        threes.addAll(await foreach(fatherFragmentGroup: element));
-      },
-    );
-
-// for (int i = 0; i < count; i++) {
-//   await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
-//     WithCrts.memoryModelsCompanion(
-//       title: 'test ${Random().nextInt(999999)}',
-//       familiarityAlgorithm: '',
-//       nextTimeAlgorithm: '',
-//       buttonAlgorithm: '',
-//       applicableGroups: '',
-//       applicableFields: '',
-//       stimulateAlgorithm: '',
-//     ),
-//   );
-// }
-  }
+//   Future<void> insertsOther() async {
+//     final globalAbController = Aber.find<GlobalAbController>();
+//     await globalAbController.checkIsLoggedIn();
+//     if (globalAbController.loggedInUser() == null) {
+//       final user = await DriftDb.instance.rawDAO.rawInsertUser(
+//         newUsersCompanion: Crt.usersCompanion(
+//           age: null.toValue(),
+//           email: null.toValue(),
+//           password: null.toValue(),
+//           phone: null.toValue(),
+//           username: "username",
+//         ),
+//       );
+//       globalAbController.loggedInUser.refreshEasy((oldValue) => user);
+//     }
+//
+//     const count = 5;
+//     final st = await SyncTag.create();
+//     Future<List<FragmentGroup>> foreach({required FragmentGroup? fatherFragmentGroup}) async {
+//       await Future.delayed(const Duration(seconds: 1));
+//       final subGroup = <FragmentGroup>[];
+//       for (int i = 0; i < count; i++) {
+//         final fg = await DriftDb.instance.insertDAO.insertFragmentGroup(
+//           willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
+//             creator_user_id: globalAbController.loggedInUser()!.id,
+//             title: 'test ${Random().nextInt(999999)}',
+//             father_fragment_groups_id: (fatherFragmentGroup?.id).toValue(),
+//             client_be_selected: false,
+//           ),
+//           syncTag: st,
+//         );
+//         subGroup.add(fg);
+//         for (int i = 0; i < count; i++) {
+//           await DriftDb.instance.insertDAO.insertFragment(
+//             willFragmentsCompanion: Crt.fragmentsCompanion(
+//               creator_user_id: globalAbController.loggedInUser()!.id,
+//               father_fragment_id: null.toValue(),
+//               fragment_template_id: null.toValue(),
+//               title: '标题 ${Random().nextInt(999999)}',
+//               content: '内容 ${Random().nextInt(999999)}',
+//               client_be_selected: false,
+//               note_id: null.toValue(),
+//             ),
+//             whichFragmentGroups: [null],
+//             syncTag: st,
+//           );
+//         }
+//         for (int i = 0; i < count; i++) {
+//           await DriftDb.instance.insertDAO.insertFragment(
+//             willFragmentsCompanion: Crt.fragmentsCompanion(
+//               creator_user_id: globalAbController.loggedInUser()!.id,
+//               father_fragment_id: null.toValue(),
+//               fragment_template_id: null.toValue(),
+//               title: '标题 ${Random().nextInt(999999)}',
+//               content: '内容 ${Random().nextInt(999999)}',
+//               client_be_selected: false,
+//               note_id: null.toValue(),
+//             ),
+//             whichFragmentGroups: [fg],
+//             syncTag: st,
+//           );
+//         }
+//       }
+//       return subGroup;
+//     }
+//
+//     final ones = await foreach(fatherFragmentGroup: null);
+//
+//     final twos = <FragmentGroup>[];
+//     await Future.forEach<FragmentGroup>(
+//       ones,
+//       (element) async {
+//         twos.addAll(await foreach(fatherFragmentGroup: element));
+//       },
+//     );
+//
+//     final threes = <FragmentGroup>[];
+//     await Future.forEach<FragmentGroup>(
+//       twos,
+//       (element) async {
+//         threes.addAll(await foreach(fatherFragmentGroup: element));
+//       },
+//     );
+//
+// // for (int i = 0; i < count; i++) {
+// //   await DriftDb.instance.insertDAO.insertMemoryModelWithRef(
+// //     WithCrts.memoryModelsCompanion(
+// //       title: 'test ${Random().nextInt(999999)}',
+// //       familiarityAlgorithm: '',
+// //       nextTimeAlgorithm: '',
+// //       buttonAlgorithm: '',
+// //       applicableGroups: '',
+// //       applicableFields: '',
+// //       stimulateAlgorithm: '',
+// //     ),
+// //   );
+// // }
+//   }
 }

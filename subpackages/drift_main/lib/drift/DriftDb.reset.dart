@@ -44,7 +44,7 @@ extension FragmentGroupConfigExt on FragmentGroupConfig {
     required Value<bool> be_private,
     required Value<bool> be_publish,
     required Value<int> creator_user_id,
-    required Value<int> fragment_group_id,
+    required Value<String> fragment_group_id,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;

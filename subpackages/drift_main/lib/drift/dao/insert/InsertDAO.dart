@@ -12,12 +12,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return newClientSyncInfoCompanion.insert(syncTag: null);
   }
 
-  /// 插入一个碎片组。
-  Future<FragmentGroup> insertFragmentGroup({
+  /// 插入一个碎片组，会同时插入碎片组配置。
+  Future<FragmentGroupAndConfig> insertFragmentGroup({
     required FragmentGroupsCompanion willFragmentGroupsCompanion,
+    required FragmentGroupConfigsCompanion Function(String fragmentGroupId) willFragmentGroupConfigsCompanion,
     required SyncTag? syncTag,
   }) async {
     late FragmentGroup returnFragmentGroup;
+    late FragmentGroupConfig returnFragmentGroupConfig;
     await withRefs(
       syncTag: syncTag,
       ref: (st) async => RefFragmentGroups(
@@ -26,10 +28,14 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         },
         child_fragmentGroups: null,
         rFragment2FragmentGroups: null,
-        fragmentGroupConfigs: null,
+        fragmentGroupConfigs: RefFragmentGroupConfigs(
+          self: ($FragmentGroupConfigsTable table) async {
+            returnFragmentGroupConfig = await willFragmentGroupConfigsCompanion(returnFragmentGroup.id).insert(syncTag: st);
+          },
+        ),
       ),
     );
-    return returnFragmentGroup;
+    return FragmentGroupAndConfig(fragmentGroup: returnFragmentGroup, fragmentGroupConfig: returnFragmentGroupConfig);
   }
 
   /// 向多个 [whichFragmentGroups] 中，插入相同的 [willFragmentsCompanion]。

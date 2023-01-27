@@ -6,10 +6,13 @@ import 'package:tools/tools.dart';
 class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment, FragmentGroupConfig> {
   @override
   Future<GroupsAndUnitEntities<FragmentGroup, Fragment, FragmentGroupConfig>> findEntities(FragmentGroup? whichGroupEntity) async {
-    final fs = await DriftDb.instance.generalQueryDAO.queryFragmentsInFragmentGroup(targetFragmentGroup: whichGroupEntity);
-    final fgs = await DriftDb.instance.generalQueryDAO.queryFragmentGroupsInFragmentGroup(targetFragmentGroup: whichGroupEntity);
+    // 若 whichGroupEntity 不为 null，则必然存在 whichGroupEntity。father_fragment_groups_id!。
+    final config = whichGroupEntity == null ? null : await db.generalQueryDAO.queryFragmentGroupById(targetFragmentGroupId: whichGroupEntity.id);
+    final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
+    final fgs = await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
+    logger.outNormal(print: fgs);
     return GroupsAndUnitEntities(
-      config:,
+      config: config?.fragmentGroupConfig,
       unitEntities: fs,
       groupAndConfigEntities: fgs.map((e) => GroupAndConfig(groupEntity: e.fragmentGroup, groupConfig: e.fragmentGroupConfig)).toList(),
     );
@@ -18,11 +21,11 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   @override
   Future<Tuple2<int, int>> needRefreshCount(FragmentGroup? whichGroupEntity) async {
     final selectedCount = await DriftDb.instance.generalQueryDAO.querySubFragmentsCountInFragmentGroup(
-      targetFragmentGroup: whichGroupEntity,
+      targetFragmentGroupId: whichGroupEntity?.id,
       queryFragmentWhereType: QueryFragmentWhereType.selected,
     );
     final allCount = await DriftDb.instance.generalQueryDAO.querySubFragmentsCountInFragmentGroup(
-      targetFragmentGroup: whichGroupEntity,
+      targetFragmentGroupId: whichGroupEntity?.id,
       queryFragmentWhereType: QueryFragmentWhereType.all,
     );
     if (selectedCount != allCount) {

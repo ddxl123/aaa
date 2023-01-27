@@ -121,8 +121,8 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               title: toAbsent(),
               syncTag: st,
             );
-            final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroup(targetFragmentGroup: fragmentGroup);
-            final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroup(targetFragmentGroup: fragmentGroup);
+            final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
+            final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
             await Future.forEach<Fragment>(
               fs,
               (element) async {
@@ -138,10 +138,10 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                 );
               },
             );
-            await Future.forEach<FragmentGroup>(
+            await Future.forEach<FragmentGroupAndConfig>(
               fgs,
               (element) async {
-                await element.reset(
+                await element.fragmentGroup.reset(
                   creator_user_id: toAbsent(),
                   father_fragment_groups_id: toAbsent(),
                   client_be_selected: isSelected.toValue(),

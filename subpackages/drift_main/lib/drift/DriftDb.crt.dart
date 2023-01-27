@@ -18,7 +18,7 @@ class Crt {
     required bool be_private,
     required bool be_publish,
     required int creator_user_id,
-    required int fragment_group_id,
+    required String fragment_group_id,
     DateTime? created_at,
     String? id,
     DateTime? updated_at,

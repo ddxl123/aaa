@@ -18,6 +18,7 @@ class Unit<U> with AbBroken {
 class Group<G, U, GC> with AbBroken {
   Group({
     required this.fatherGroup,
+    required this.config,
     required this.entity,
   });
 
@@ -25,9 +26,9 @@ class Group<G, U, GC> with AbBroken {
   /// 为 null 表示当前所在组为根组。
   final Ab<Group?> fatherGroup;
 
-  final Ab<G?> entity;
+  final Ab<GC?> config;
 
-  late final Ab<GC?> config;
+  final Ab<G?> entity;
 
   /// 在创建元素时，同时创建元素对应的 [selectedUnitCount] 和 [allUnitCount]。
   final groups = <Ab<Group<G, U, GC>>>[].ab;
@@ -49,8 +50,12 @@ class Group<G, U, GC> with AbBroken {
     required GroupsAndUnitEntities<G, U, GC> groupsAndUnitEntities,
   }) {
     broken(c);
-    config = groupsAndUnitEntities.config.ab;
-    groups().addAll(groupsAndUnitEntities.groupAndConfigEntities.map((e) => Group<G, U, GC>(fatherGroup: fatherGroup, entity: e.groupEntity.ab).ab));
+    config.refreshInevitable((obj) => groupsAndUnitEntities.config);
+    groups().addAll(
+      groupsAndUnitEntities.groupAndConfigEntities.map(
+        (e) => Group<G, U, GC>(fatherGroup: fatherGroup, config: Ab<GC?>(e.groupConfig), entity: e.groupEntity.ab).ab,
+      ),
+    );
     units().addAll(groupsAndUnitEntities.unitEntities.map((e) => Unit<U>(unitEntity: e.ab).ab));
   }
 
@@ -75,7 +80,7 @@ class Group<G, U, GC> with AbBroken {
 abstract class GroupListWidgetController<G, U, GC> extends AbController {
   final refreshController = RefreshController(initialRefresh: true);
   final groupChainScrollController = ScrollController();
-  final group = Group<G, U, GC>(fatherGroup: Ab<Group<G, U, GC>?>(null), entity: Ab<G?>(null)).ab;
+  final group = Group<G, U, GC>(fatherGroup: Ab<Group<G, U, GC>?>(null), config: Ab<GC?>(null), entity: Ab<G?>(null)).ab;
   late final groupChain = <Ab<Group<G, U, GC>>>[group].ab;
   final isUnitSelecting = false.ab;
 
@@ -173,7 +178,8 @@ class GroupAndConfig<G, GC> {
 }
 
 class GroupsAndUnitEntities<G, U, GC> {
-  final GC config;
+  /// 若是根组，则配置为 null。
+  final GC? config;
   final List<GroupAndConfig<G, GC>> groupAndConfigEntities;
   final List<U> unitEntities;
 
