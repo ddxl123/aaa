@@ -7,8 +7,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../global/GlobalAbController.dart';
 
-/// 向 [fragmentGroupAb] 中添加新的碎片组。
-Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGroupAb}) async {
+/// 向 [fragmentGroup] 中添加新的碎片组。
+Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGroup}) async {
   await showCustomDialog(
     builder: (_) {
       return TextField1DialogWidget(
@@ -28,7 +28,7 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
           await db.insertDAO.insertFragmentGroup(
             willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-              father_fragment_groups_id: (fragmentGroupAb?.id).toValue(),
+              father_fragment_groups_id: (fragmentGroup?.id).toValue(),
               client_be_selected: false,
               title: tec.text,
             ),

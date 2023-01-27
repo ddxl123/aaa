@@ -24,16 +24,10 @@ class FragmentPerformer {
   /// 当前操作碎片所使用的模板。
   FragmentTemplate? fragmentTemplate;
 
-  bool bePrivate = false;
-
-  bool bePublish = false;
-
   Future<String?> isExistModified({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
     final isEqualContentOk = isEqualContent(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
     final isEqualFragmentGroupChainsOk = await isEqualFragmentGroupChains(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
     final isEqualFragmentTemplateOk = await isEqualFragmentTemplate();
-    final isEqualBePrivateOk = await isEqualBePrivate();
-    final isEqualBePublishOk = await isEqualBePublish();
     if (!isEqualContentOk) {
       return "内容存在修改！";
     }
@@ -42,12 +36,6 @@ class FragmentPerformer {
     }
     if (!isEqualFragmentTemplateOk) {
       return "碎片模型存在修改！";
-    }
-    if (!isEqualBePrivateOk) {
-      return "公开或私密存在修改！";
-    }
-    if (!isEqualBePublishOk) {
-      return "是否发布存在修改！";
     }
     return null;
   }
@@ -93,8 +81,6 @@ class FragmentPerformer {
           client_be_selected: false,
           note_id: null.toValue(),
           title: fragmentGizmoEditPageAbController.parseTitle(),
-          be_private: bePrivate,
-          be_publish: bePublish,
         ),
         whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
         syncTag: null,
@@ -112,8 +98,6 @@ class FragmentPerformer {
             note_id: toAbsent(),
             title: fragmentGizmoEditPageAbController.parseTitle().toValue(),
             syncTag: st,
-            be_private: bePrivate.toValue(),
-            be_publish: bePublish.toValue(),
           );
         },
         syncTag: null,
@@ -181,32 +165,6 @@ class FragmentPerformer {
       }
     }
     return true;
-  }
-
-  Future<bool> isEqualBePrivate() async {
-    final bool now;
-    final bool saved;
-    if (fragmentAb != null) {
-      now = bePrivate;
-      saved = (await db.generalQueryDAO.queryFragmentById(id: fragmentAb!().id)).be_private;
-    } else {
-      now = bePrivate;
-      saved = false;
-    }
-    return now == saved;
-  }
-
-  Future<bool> isEqualBePublish() async {
-    final bool now;
-    final bool saved;
-    if (fragmentAb != null) {
-      now = bePublish;
-      saved = (await db.generalQueryDAO.queryFragmentById(id: fragmentAb!().id)).be_publish;
-    } else {
-      now = bePublish;
-      saved = false;
-    }
-    return now == saved;
   }
 }
 

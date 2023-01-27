@@ -3,14 +3,15 @@ import 'dart:math';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 
-class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment> {
+class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment, FragmentGroupConfig> {
   @override
-  Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
+  Future<GroupsAndUnitEntities<FragmentGroup, Fragment, FragmentGroupConfig>> findEntities(FragmentGroup? whichGroupEntity) async {
     final fs = await DriftDb.instance.generalQueryDAO.queryFragmentsInFragmentGroup(targetFragmentGroup: whichGroupEntity);
     final fgs = await DriftDb.instance.generalQueryDAO.queryFragmentGroupsInFragmentGroup(targetFragmentGroup: whichGroupEntity);
     return GroupsAndUnitEntities(
+      config:,
       unitEntities: fs,
-      groupEntities: fgs,
+      groupAndConfigEntities: fgs.map((e) => GroupAndConfig(groupEntity: e.fragmentGroup, groupConfig: e.fragmentGroupConfig)).toList(),
     );
   }
 

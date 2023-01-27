@@ -17,10 +17,11 @@ class FindHome extends StatelessWidget {
           appBar: CustomTabAppBar(
             tabController: c.tabController,
             tabs: const [
-              Tab(child: Text('热门')),
-              Tab(child: Text('推荐')),
-              Tab(child: Text('求制作')),
-              Tab(child: Text('关注')),
+              Tab(child: Text("热门")),
+              Tab(child: Text("推荐")),
+              Tab(child: Text("知识库")),
+              Tab(child: Text("求制作")),
+              Tab(child: Text("关注")),
             ],
             otherWidgets: [
               IconButton(
@@ -41,6 +42,9 @@ class FindHome extends StatelessWidget {
             children: [
               KeepStateWidget(
                 builder: (_) => const Text('热门'),
+              ),
+              KeepStateWidget(
+                builder: (_) => const Text("推荐"),
               ),
               KeepStateWidget(
                 builder: (_) => const RecommendHome(),

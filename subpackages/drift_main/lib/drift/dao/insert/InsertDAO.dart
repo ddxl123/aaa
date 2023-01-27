@@ -26,6 +26,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         },
         child_fragmentGroups: null,
         rFragment2FragmentGroups: null,
+        fragmentGroupConfigs: null,
       ),
     );
     return returnFragmentGroup;

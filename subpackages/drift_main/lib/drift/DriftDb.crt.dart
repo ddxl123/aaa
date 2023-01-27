@@ -14,6 +14,26 @@ part of drift_db;
 /// 使用方式查看 [withRefs]。
 class Crt {
   Crt._();
+  static FragmentGroupConfigsCompanion fragmentGroupConfigsCompanion({
+    required bool be_private,
+    required bool be_publish,
+    required int creator_user_id,
+    required int fragment_group_id,
+    DateTime? created_at,
+    String? id,
+    DateTime? updated_at,
+  }) {
+    return FragmentGroupConfigsCompanion(
+      be_private: Value(be_private),
+      be_publish: Value(be_publish),
+      creator_user_id: Value(creator_user_id),
+      fragment_group_id: Value(fragment_group_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : Value(id),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
   static UsersCompanion usersCompanion({
     required Value<int?> age,
     required Value<String?> email,
@@ -221,8 +241,6 @@ class Crt {
   }
 
   static FragmentsCompanion fragmentsCompanion({
-    required bool be_private,
-    required bool be_publish,
     required bool client_be_selected,
     required String content,
     required int creator_user_id,
@@ -235,8 +253,6 @@ class Crt {
     DateTime? updated_at,
   }) {
     return FragmentsCompanion(
-      be_private: Value(be_private),
-      be_publish: Value(be_publish),
       client_be_selected: Value(client_be_selected),
       content: Value(content),
       creator_user_id: Value(creator_user_id),
@@ -375,6 +391,17 @@ class Crt {
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+}
+
+extension FragmentGroupConfigsCompanionExt on FragmentGroupConfigsCompanion {
+  Future<FragmentGroupConfig> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.fragmentGroupConfigs,
+      entity: this,
+      syncTag: syncTag,
     );
   }
 }

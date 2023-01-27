@@ -50,7 +50,7 @@ DataUploadDto({
     required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
 
     // message: 单次同步成功！
-    // explain: 每次同步请求成功的响应
+    // explain: 每次同步请求成功的响应。请求的数据：相同 Syncs.tag 以及对应的 row。
     required Future<T> Function(String showMessage) code20101,
     
     }) async {

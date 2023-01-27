@@ -32,6 +32,7 @@ abstract class Ref {
 /// [Users]
 class RefUsers extends Ref {
   Future<void> Function($UsersTable table) self;
+  RefFragmentGroupConfigs? fragmentGroupConfigs;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRDocument2DocumentGroups? rDocument2DocumentGroups;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
@@ -48,6 +49,7 @@ class RefUsers extends Ref {
 
   RefUsers({
     required this.self,
+    required this.fragmentGroupConfigs,
     required this.fragmentMemoryInfos,
     required this.rDocument2DocumentGroups,
     required this.rFragment2FragmentGroups,
@@ -66,6 +68,7 @@ class RefUsers extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.users);
+    await fragmentGroupConfigs?._run();
     await fragmentMemoryInfos?._run();
     await rDocument2DocumentGroups?._run();
     await rFragment2FragmentGroups?._run();
@@ -79,6 +82,43 @@ class RefUsers extends Ref {
     await documentGroups?._run();
     await fragmentGroups?._run();
     await noteGroups?._run();
+  }
+}
+
+/// [FragmentGroups]
+class RefFragmentGroups extends Ref {
+  Future<void> Function($FragmentGroupsTable table) self;
+  RefFragmentGroupConfigs? fragmentGroupConfigs;
+  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
+  RefFragmentGroups? child_fragmentGroups;
+
+  RefFragmentGroups({
+    required this.self,
+    required this.fragmentGroupConfigs,
+    required this.rFragment2FragmentGroups,
+    required this.child_fragmentGroups,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragmentGroups);
+    await fragmentGroupConfigs?._run();
+    await rFragment2FragmentGroups?._run();
+    await child_fragmentGroups?._run();
+  }
+}
+
+/// [FragmentGroupConfigs]
+class RefFragmentGroupConfigs extends Ref {
+  Future<void> Function($FragmentGroupConfigsTable table) self;
+
+  RefFragmentGroupConfigs({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragmentGroupConfigs);
   }
 }
 
@@ -221,26 +261,6 @@ class RefRDocument2DocumentGroups extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.rDocument2DocumentGroups);
-  }
-}
-
-/// [FragmentGroups]
-class RefFragmentGroups extends Ref {
-  Future<void> Function($FragmentGroupsTable table) self;
-  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefFragmentGroups? child_fragmentGroups;
-
-  RefFragmentGroups({
-    required this.self,
-    required this.rFragment2FragmentGroups,
-    required this.child_fragmentGroups,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragmentGroups);
-    await rFragment2FragmentGroups?._run();
-    await child_fragmentGroups?._run();
   }
 }
 

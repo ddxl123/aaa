@@ -9,10 +9,6 @@ class Fragments extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  BoolColumn get be_private => boolean().named("be_private")();
-
-  BoolColumn get be_publish => boolean().named("be_publish")();
-
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
 
   TextColumn get content => text().named("content")();

@@ -2,6 +2,8 @@
 part of 'DriftDb.dart';
 
 mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
+  $FragmentGroupConfigsTable get fragmentGroupConfigs =>
+      attachedDatabase.fragmentGroupConfigs;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -27,6 +29,8 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
+  $FragmentGroupConfigsTable get fragmentGroupConfigs =>
+      attachedDatabase.fragmentGroupConfigs;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -52,6 +56,8 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
+  $FragmentGroupConfigsTable get fragmentGroupConfigs =>
+      attachedDatabase.fragmentGroupConfigs;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -77,6 +83,8 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
+  $FragmentGroupConfigsTable get fragmentGroupConfigs =>
+      attachedDatabase.fragmentGroupConfigs;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -102,6 +110,8 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
+  $FragmentGroupConfigsTable get fragmentGroupConfigs =>
+      attachedDatabase.fragmentGroupConfigs;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -127,6 +137,8 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
 }
 mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
+  $FragmentGroupConfigsTable get fragmentGroupConfigs =>
+      attachedDatabase.fragmentGroupConfigs;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -150,6 +162,400 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
+}
+
+class FragmentGroupConfig extends DataClass
+    implements Insertable<FragmentGroupConfig> {
+  bool be_private;
+  bool be_publish;
+  int creator_user_id;
+  int fragment_group_id;
+  DateTime created_at;
+  String id;
+  DateTime updated_at;
+  FragmentGroupConfig(
+      {required this.be_private,
+      required this.be_publish,
+      required this.creator_user_id,
+      required this.fragment_group_id,
+      required this.created_at,
+      required this.id,
+      required this.updated_at});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['be_private'] = Variable<bool>(be_private);
+    map['be_publish'] = Variable<bool>(be_publish);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    map['fragment_group_id'] = Variable<int>(fragment_group_id);
+    map['created_at'] = Variable<DateTime>(created_at);
+    map['id'] = Variable<String>(id);
+    map['updated_at'] = Variable<DateTime>(updated_at);
+    return map;
+  }
+
+  FragmentGroupConfigsCompanion toCompanion(bool nullToAbsent) {
+    return FragmentGroupConfigsCompanion(
+      be_private: Value(be_private),
+      be_publish: Value(be_publish),
+      creator_user_id: Value(creator_user_id),
+      fragment_group_id: Value(fragment_group_id),
+      created_at: Value(created_at),
+      id: Value(id),
+      updated_at: Value(updated_at),
+    );
+  }
+
+  factory FragmentGroupConfig.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FragmentGroupConfig(
+      be_private: serializer.fromJson<bool>(json['be_private']),
+      be_publish: serializer.fromJson<bool>(json['be_publish']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      fragment_group_id: serializer.fromJson<int>(json['fragment_group_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
+      id: serializer.fromJson<String>(json['id']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'be_private': serializer.toJson<bool>(be_private),
+      'be_publish': serializer.toJson<bool>(be_publish),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'fragment_group_id': serializer.toJson<int>(fragment_group_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
+      'id': serializer.toJson<String>(id),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
+    };
+  }
+
+  FragmentGroupConfig copyWith(
+          {bool? be_private,
+          bool? be_publish,
+          int? creator_user_id,
+          int? fragment_group_id,
+          DateTime? created_at,
+          String? id,
+          DateTime? updated_at}) =>
+      FragmentGroupConfig(
+        be_private: be_private ?? this.be_private,
+        be_publish: be_publish ?? this.be_publish,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        fragment_group_id: fragment_group_id ?? this.fragment_group_id,
+        created_at: created_at ?? this.created_at,
+        id: id ?? this.id,
+        updated_at: updated_at ?? this.updated_at,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('FragmentGroupConfig(')
+          ..write('be_private: $be_private, ')
+          ..write('be_publish: $be_publish, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('fragment_group_id: $fragment_group_id, ')
+          ..write('created_at: $created_at, ')
+          ..write('id: $id, ')
+          ..write('updated_at: $updated_at')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(be_private, be_publish, creator_user_id,
+      fragment_group_id, created_at, id, updated_at);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FragmentGroupConfig &&
+          other.be_private == this.be_private &&
+          other.be_publish == this.be_publish &&
+          other.creator_user_id == this.creator_user_id &&
+          other.fragment_group_id == this.fragment_group_id &&
+          other.created_at == this.created_at &&
+          other.id == this.id &&
+          other.updated_at == this.updated_at);
+}
+
+class FragmentGroupConfigsCompanion
+    extends UpdateCompanion<FragmentGroupConfig> {
+  Value<bool> be_private;
+  Value<bool> be_publish;
+  Value<int> creator_user_id;
+  Value<int> fragment_group_id;
+  Value<DateTime> created_at;
+  Value<String> id;
+  Value<DateTime> updated_at;
+  FragmentGroupConfigsCompanion({
+    this.be_private = const Value.absent(),
+    this.be_publish = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.fragment_group_id = const Value.absent(),
+    this.created_at = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updated_at = const Value.absent(),
+  });
+  FragmentGroupConfigsCompanion.insert({
+    required bool be_private,
+    required bool be_publish,
+    required int creator_user_id,
+    required int fragment_group_id,
+    required DateTime created_at,
+    required String id,
+    required DateTime updated_at,
+  })  : be_private = Value(be_private),
+        be_publish = Value(be_publish),
+        creator_user_id = Value(creator_user_id),
+        fragment_group_id = Value(fragment_group_id),
+        created_at = Value(created_at),
+        id = Value(id),
+        updated_at = Value(updated_at);
+  static Insertable<FragmentGroupConfig> custom({
+    Expression<bool>? be_private,
+    Expression<bool>? be_publish,
+    Expression<int>? creator_user_id,
+    Expression<int>? fragment_group_id,
+    Expression<DateTime>? created_at,
+    Expression<String>? id,
+    Expression<DateTime>? updated_at,
+  }) {
+    return RawValuesInsertable({
+      if (be_private != null) 'be_private': be_private,
+      if (be_publish != null) 'be_publish': be_publish,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (fragment_group_id != null) 'fragment_group_id': fragment_group_id,
+      if (created_at != null) 'created_at': created_at,
+      if (id != null) 'id': id,
+      if (updated_at != null) 'updated_at': updated_at,
+    });
+  }
+
+  FragmentGroupConfigsCompanion copyWith(
+      {Value<bool>? be_private,
+      Value<bool>? be_publish,
+      Value<int>? creator_user_id,
+      Value<int>? fragment_group_id,
+      Value<DateTime>? created_at,
+      Value<String>? id,
+      Value<DateTime>? updated_at}) {
+    return FragmentGroupConfigsCompanion(
+      be_private: be_private ?? this.be_private,
+      be_publish: be_publish ?? this.be_publish,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      fragment_group_id: fragment_group_id ?? this.fragment_group_id,
+      created_at: created_at ?? this.created_at,
+      id: id ?? this.id,
+      updated_at: updated_at ?? this.updated_at,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (be_private.present) {
+      map['be_private'] = Variable<bool>(be_private.value);
+    }
+    if (be_publish.present) {
+      map['be_publish'] = Variable<bool>(be_publish.value);
+    }
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
+    }
+    if (fragment_group_id.present) {
+      map['fragment_group_id'] = Variable<int>(fragment_group_id.value);
+    }
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FragmentGroupConfigsCompanion(')
+          ..write('be_private: $be_private, ')
+          ..write('be_publish: $be_publish, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('fragment_group_id: $fragment_group_id, ')
+          ..write('created_at: $created_at, ')
+          ..write('id: $id, ')
+          ..write('updated_at: $updated_at')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FragmentGroupConfigsTable extends FragmentGroupConfigs
+    with TableInfo<$FragmentGroupConfigsTable, FragmentGroupConfig> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FragmentGroupConfigsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _be_privateMeta =
+      const VerificationMeta('be_private');
+  @override
+  late final GeneratedColumn<bool> be_private =
+      GeneratedColumn<bool>('be_private', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("be_private" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _be_publishMeta =
+      const VerificationMeta('be_publish');
+  @override
+  late final GeneratedColumn<bool> be_publish =
+      GeneratedColumn<bool>('be_publish', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("be_publish" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
+  @override
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
+      'creator_user_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _fragment_group_idMeta =
+      const VerificationMeta('fragment_group_id');
+  @override
+  late final GeneratedColumn<int> fragment_group_id = GeneratedColumn<int>(
+      'fragment_group_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
+  @override
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
+  @override
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        be_private,
+        be_publish,
+        creator_user_id,
+        fragment_group_id,
+        created_at,
+        id,
+        updated_at
+      ];
+  @override
+  String get aliasedName => _alias ?? 'fragment_group_configs';
+  @override
+  String get actualTableName => 'fragment_group_configs';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<FragmentGroupConfig> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('be_private')) {
+      context.handle(
+          _be_privateMeta,
+          be_private.isAcceptableOrUnknown(
+              data['be_private']!, _be_privateMeta));
+    } else if (isInserting) {
+      context.missing(_be_privateMeta);
+    }
+    if (data.containsKey('be_publish')) {
+      context.handle(
+          _be_publishMeta,
+          be_publish.isAcceptableOrUnknown(
+              data['be_publish']!, _be_publishMeta));
+    } else if (isInserting) {
+      context.missing(_be_publishMeta);
+    }
+    if (data.containsKey('creator_user_id')) {
+      context.handle(
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
+    } else if (isInserting) {
+      context.missing(_creator_user_idMeta);
+    }
+    if (data.containsKey('fragment_group_id')) {
+      context.handle(
+          _fragment_group_idMeta,
+          fragment_group_id.isAcceptableOrUnknown(
+              data['fragment_group_id']!, _fragment_group_idMeta));
+    } else if (isInserting) {
+      context.missing(_fragment_group_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
+    } else if (isInserting) {
+      context.missing(_created_atMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
+    } else if (isInserting) {
+      context.missing(_updated_atMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FragmentGroupConfig map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FragmentGroupConfig(
+      be_private: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_private'])!,
+      be_publish: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
+      creator_user_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
+      fragment_group_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_group_id'])!,
+      created_at: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      updated_at: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $FragmentGroupConfigsTable createAlias(String alias) {
+    return $FragmentGroupConfigsTable(attachedDatabase, alias);
+  }
 }
 
 class User extends DataClass implements Insertable<User> {
@@ -4033,8 +4439,6 @@ class $FragmentTemplatesTable extends FragmentTemplates
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
-  bool be_private;
-  bool be_publish;
   bool client_be_selected;
   String content;
   int creator_user_id;
@@ -4046,9 +4450,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   String id;
   DateTime updated_at;
   Fragment(
-      {required this.be_private,
-      required this.be_publish,
-      required this.client_be_selected,
+      {required this.client_be_selected,
       required this.content,
       required this.creator_user_id,
       this.father_fragment_id,
@@ -4061,8 +4463,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['be_private'] = Variable<bool>(be_private);
-    map['be_publish'] = Variable<bool>(be_publish);
     map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['content'] = Variable<String>(content);
     map['creator_user_id'] = Variable<int>(creator_user_id);
@@ -4084,8 +4484,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   FragmentsCompanion toCompanion(bool nullToAbsent) {
     return FragmentsCompanion(
-      be_private: Value(be_private),
-      be_publish: Value(be_publish),
       client_be_selected: Value(client_be_selected),
       content: Value(content),
       creator_user_id: Value(creator_user_id),
@@ -4109,8 +4507,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Fragment(
-      be_private: serializer.fromJson<bool>(json['be_private']),
-      be_publish: serializer.fromJson<bool>(json['be_publish']),
       client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       content: serializer.fromJson<String>(json['content']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
@@ -4129,8 +4525,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'be_private': serializer.toJson<bool>(be_private),
-      'be_publish': serializer.toJson<bool>(be_publish),
       'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'content': serializer.toJson<String>(content),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
@@ -4145,9 +4539,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   }
 
   Fragment copyWith(
-          {bool? be_private,
-          bool? be_publish,
-          bool? client_be_selected,
+          {bool? client_be_selected,
           String? content,
           int? creator_user_id,
           Value<String?> father_fragment_id = const Value.absent(),
@@ -4158,8 +4550,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           String? id,
           DateTime? updated_at}) =>
       Fragment(
-        be_private: be_private ?? this.be_private,
-        be_publish: be_publish ?? this.be_publish,
         client_be_selected: client_be_selected ?? this.client_be_selected,
         content: content ?? this.content,
         creator_user_id: creator_user_id ?? this.creator_user_id,
@@ -4178,8 +4568,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   @override
   String toString() {
     return (StringBuffer('Fragment(')
-          ..write('be_private: $be_private, ')
-          ..write('be_publish: $be_publish, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')
@@ -4196,8 +4584,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   @override
   int get hashCode => Object.hash(
-      be_private,
-      be_publish,
       client_be_selected,
       content,
       creator_user_id,
@@ -4212,8 +4598,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Fragment &&
-          other.be_private == this.be_private &&
-          other.be_publish == this.be_publish &&
           other.client_be_selected == this.client_be_selected &&
           other.content == this.content &&
           other.creator_user_id == this.creator_user_id &&
@@ -4227,8 +4611,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 }
 
 class FragmentsCompanion extends UpdateCompanion<Fragment> {
-  Value<bool> be_private;
-  Value<bool> be_publish;
   Value<bool> client_be_selected;
   Value<String> content;
   Value<int> creator_user_id;
@@ -4240,8 +4622,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<String> id;
   Value<DateTime> updated_at;
   FragmentsCompanion({
-    this.be_private = const Value.absent(),
-    this.be_publish = const Value.absent(),
     this.client_be_selected = const Value.absent(),
     this.content = const Value.absent(),
     this.creator_user_id = const Value.absent(),
@@ -4254,8 +4634,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.updated_at = const Value.absent(),
   });
   FragmentsCompanion.insert({
-    required bool be_private,
-    required bool be_publish,
     required bool client_be_selected,
     required String content,
     required int creator_user_id,
@@ -4266,9 +4644,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
-  })  : be_private = Value(be_private),
-        be_publish = Value(be_publish),
-        client_be_selected = Value(client_be_selected),
+  })  : client_be_selected = Value(client_be_selected),
         content = Value(content),
         creator_user_id = Value(creator_user_id),
         title = Value(title),
@@ -4276,8 +4652,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
         id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Fragment> custom({
-    Expression<bool>? be_private,
-    Expression<bool>? be_publish,
     Expression<bool>? client_be_selected,
     Expression<String>? content,
     Expression<int>? creator_user_id,
@@ -4290,8 +4664,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (be_private != null) 'be_private': be_private,
-      if (be_publish != null) 'be_publish': be_publish,
       if (client_be_selected != null) 'client_be_selected': client_be_selected,
       if (content != null) 'content': content,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
@@ -4307,9 +4679,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   }
 
   FragmentsCompanion copyWith(
-      {Value<bool>? be_private,
-      Value<bool>? be_publish,
-      Value<bool>? client_be_selected,
+      {Value<bool>? client_be_selected,
       Value<String>? content,
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_id,
@@ -4320,8 +4690,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       Value<String>? id,
       Value<DateTime>? updated_at}) {
     return FragmentsCompanion(
-      be_private: be_private ?? this.be_private,
-      be_publish: be_publish ?? this.be_publish,
       client_be_selected: client_be_selected ?? this.client_be_selected,
       content: content ?? this.content,
       creator_user_id: creator_user_id ?? this.creator_user_id,
@@ -4338,12 +4706,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (be_private.present) {
-      map['be_private'] = Variable<bool>(be_private.value);
-    }
-    if (be_publish.present) {
-      map['be_publish'] = Variable<bool>(be_publish.value);
-    }
     if (client_be_selected.present) {
       map['client_be_selected'] = Variable<bool>(client_be_selected.value);
     }
@@ -4381,8 +4743,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   String toString() {
     return (StringBuffer('FragmentsCompanion(')
-          ..write('be_private: $be_private, ')
-          ..write('be_publish: $be_publish, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')
@@ -4404,30 +4764,6 @@ class $FragmentsTable extends Fragments
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _be_privateMeta =
-      const VerificationMeta('be_private');
-  @override
-  late final GeneratedColumn<bool> be_private =
-      GeneratedColumn<bool>('be_private', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("be_private" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
-  static const VerificationMeta _be_publishMeta =
-      const VerificationMeta('be_publish');
-  @override
-  late final GeneratedColumn<bool> be_publish =
-      GeneratedColumn<bool>('be_publish', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("be_publish" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
   static const VerificationMeta _client_be_selectedMeta =
       const VerificationMeta('client_be_selected');
   @override
@@ -4494,8 +4830,6 @@ class $FragmentsTable extends Fragments
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        be_private,
-        be_publish,
         client_be_selected,
         content,
         creator_user_id,
@@ -4516,22 +4850,6 @@ class $FragmentsTable extends Fragments
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('be_private')) {
-      context.handle(
-          _be_privateMeta,
-          be_private.isAcceptableOrUnknown(
-              data['be_private']!, _be_privateMeta));
-    } else if (isInserting) {
-      context.missing(_be_privateMeta);
-    }
-    if (data.containsKey('be_publish')) {
-      context.handle(
-          _be_publishMeta,
-          be_publish.isAcceptableOrUnknown(
-              data['be_publish']!, _be_publishMeta));
-    } else if (isInserting) {
-      context.missing(_be_publishMeta);
-    }
     if (data.containsKey('client_be_selected')) {
       context.handle(
           _client_be_selectedMeta,
@@ -4606,10 +4924,6 @@ class $FragmentsTable extends Fragments
   Fragment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Fragment(
-      be_private: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}be_private'])!,
-      be_publish: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
       client_be_selected: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       content: attachedDatabase.typeMapping
@@ -7161,6 +7475,8 @@ class $NoteGroupsTable extends NoteGroups
 
 abstract class _$DriftDb extends GeneratedDatabase {
   _$DriftDb(QueryExecutor e) : super(e);
+  late final $FragmentGroupConfigsTable fragmentGroupConfigs =
+      $FragmentGroupConfigsTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $ClientSyncInfosTable clientSyncInfos =
       $ClientSyncInfosTable(this);
@@ -7197,6 +7513,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+        fragmentGroupConfigs,
         users,
         clientSyncInfos,
         syncs,

@@ -15,7 +15,7 @@ class Unit<U> with AbBroken {
   }
 }
 
-class Group<G, U> with AbBroken {
+class Group<G, U, GC> with AbBroken {
   Group({
     required this.fatherGroup,
     required this.entity,
@@ -27,8 +27,10 @@ class Group<G, U> with AbBroken {
 
   final Ab<G?> entity;
 
+  late final Ab<GC?> config;
+
   /// 在创建元素时，同时创建元素对应的 [selectedUnitCount] 和 [allUnitCount]。
-  final groups = <Ab<Group<G, U>>>[].ab;
+  final groups = <Ab<Group<G, U, GC>>>[].ab;
   final units = <Ab<Unit<U>>>[].ab;
 
   final RefreshController refreshController = RefreshController(initialRefresh: true);
@@ -44,10 +46,11 @@ class Group<G, U> with AbBroken {
 
   void refreshGroupsAndUnits({
     required AbController c,
-    required GroupsAndUnitEntities<G, U> groupsAndUnitEntities,
+    required GroupsAndUnitEntities<G, U, GC> groupsAndUnitEntities,
   }) {
     broken(c);
-    groups().addAll(groupsAndUnitEntities.groupEntities.map((e) => Group<G, U>(fatherGroup: fatherGroup, entity: e.ab).ab));
+    config = groupsAndUnitEntities.config.ab;
+    groups().addAll(groupsAndUnitEntities.groupAndConfigEntities.map((e) => Group<G, U, GC>(fatherGroup: fatherGroup, entity: e.groupEntity.ab).ab));
     units().addAll(groupsAndUnitEntities.unitEntities.map((e) => Unit<U>(unitEntity: e.ab).ab));
   }
 
@@ -67,11 +70,13 @@ class Group<G, U> with AbBroken {
 /// [G] 组类型。
 ///
 /// [U] 单元类型。
-abstract class GroupListWidgetController<G, U> extends AbController {
+///
+/// [GC] 组配置。
+abstract class GroupListWidgetController<G, U, GC> extends AbController {
   final refreshController = RefreshController(initialRefresh: true);
   final groupChainScrollController = ScrollController();
-  final group = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
-  late final groupChain = <Ab<Group<G, U>>>[group].ab;
+  final group = Group<G, U, GC>(fatherGroup: Ab<Group<G, U, GC>?>(null), entity: Ab<G?>(null)).ab;
+  late final groupChain = <Ab<Group<G, U, GC>>>[group].ab;
   final isUnitSelecting = false.ab;
 
   @override
@@ -80,7 +85,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
     groupChainScrollController.dispose();
   }
 
-  Ab<Group<G, U>> getCurrentGroupAb() {
+  Ab<Group<G, U, GC>> getCurrentGroupAb() {
     return groupChain().last;
   }
 
@@ -92,12 +97,12 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   /// 可以不用等待异步。
   Future<Tuple2<int, int>> needRefreshCount(G? whichGroupEntity);
 
-  Future<void> refreshCount({required Ab<Group<G, U>> whichGroup, bool isRootRefreshCount = true}) async {
+  Future<void> refreshCount({required Ab<Group<G, U, GC>> whichGroup, bool isRootRefreshCount = true}) async {
     final count = await needRefreshCount(whichGroup().entity());
     whichGroup().selectedUnitCount.refreshEasy((oldValue) => count.t1);
     whichGroup().allUnitCount.refreshEasy((oldValue) => count.t2);
 
-    await Future.forEach<Ab<Group<G, U>>>(
+    await Future.forEach<Ab<Group<G, U, GC>>>(
       whichGroup().groups(),
       (element) async {
         final eCount = await needRefreshCount(element().entity());
@@ -127,7 +132,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   /// 进入哪个 [groupChain] 或进入新的 [whichGroup]。
   ///
   /// [whichGroup] 为 [groupChain] 的元素。
-  Future<void> enterGroup(Ab<Group<G, U>> whichGroup) async {
+  Future<void> enterGroup(Ab<Group<G, U, GC>> whichGroup) async {
     if (groupChain().contains(whichGroup)) {
       final indexOf = groupChain().indexOf(whichGroup);
       if (getCurrentGroupAb() != whichGroup) {
@@ -154,15 +159,27 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   }
 
   /// 查询 [whichGroupEntity] 内的全部 [Group] 实体 和 [Unit] 实体。
-  Future<GroupsAndUnitEntities<G, U>> findEntities(G? whichGroupEntity);
+  Future<GroupsAndUnitEntities<G, U, GC>> findEntities(G? whichGroupEntity);
 }
 
-class GroupsAndUnitEntities<G, U> {
-  final List<G> groupEntities;
+class GroupAndConfig<G, GC> {
+  GroupAndConfig({
+    required this.groupEntity,
+    required this.groupConfig,
+  });
+
+  final G groupEntity;
+  final GC groupConfig;
+}
+
+class GroupsAndUnitEntities<G, U, GC> {
+  final GC config;
+  final List<GroupAndConfig<G, GC>> groupAndConfigEntities;
   final List<U> unitEntities;
 
   GroupsAndUnitEntities({
-    required this.groupEntities,
+    required this.config,
+    required this.groupAndConfigEntities,
     required this.unitEntities,
   });
 }

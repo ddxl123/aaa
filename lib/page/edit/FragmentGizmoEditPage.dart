@@ -113,27 +113,6 @@ class FragmentGizmoEditPage extends StatelessWidget {
                             onPressed: () {},
                           ),
                           const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: VerticalDivider()),
-                          // 公开/私密/发布
-                          IconButton(
-                            icon: AbwBuilder(
-                              builder: (abw) {
-                                final bePrivate = c.currentPerformer(abw).bePrivate;
-                                final bePublish = c.currentPerformer(abw).bePublish;
-                                final privateColor = bePrivate ? Colors.amber : Colors.green;
-                                final publishColor = bePublish ? Colors.green : Colors.amber;
-                                return Row(
-                                  children: [
-                                    Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
-                                    Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
-                                    Text(bePublish ? " 将发布" : " 不发布", style: TextStyle(color: publishColor)),
-                                  ],
-                                );
-                              },
-                            ),
-                            onPressed: () {
-                              showPrivatePublishDialog();
-                            },
-                          ),
                         ],
                       ),
                     ),

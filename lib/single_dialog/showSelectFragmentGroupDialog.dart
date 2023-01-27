@@ -92,7 +92,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
       icon: const Icon(Icons.add),
       style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
       onPressed: () async {
-        await showCreateFragmentGroupDialog(fragmentGroupAb: groupChain.isEmpty ? null : groupChain.last);
+        await showCreateFragmentGroupDialog(fragmentGroup: groupChain.isEmpty ? null : groupChain.last);
         await refreshPage();
       },
     );

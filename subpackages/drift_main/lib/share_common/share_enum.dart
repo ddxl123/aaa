@@ -15,15 +15,9 @@ enum SyncCurdType {
   
   c,
 
-  cing,
-
   u,
 
-  uing,
-
   d,
-
-  ding,
 
 }
         

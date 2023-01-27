@@ -8,6 +8,16 @@ enum QueryFragmentWhereType {
   selected,
 }
 
+class FragmentGroupAndConfig {
+  FragmentGroupAndConfig({
+    required this.fragmentGroup,
+    required this.fragmentGroupConfig,
+  });
+
+  final FragmentGroup fragmentGroup;
+  final FragmentGroupConfig fragmentGroupConfig;
+}
+
 /// TODO: 所有curd函数体都要包裹上事务。
 @DriftAccessor(
   tables: tableClasses,
@@ -110,15 +120,15 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部碎片组，不包含子碎片组。
-  Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
+  /// 查询 [targetFragmentGroup] 内的全部碎片组和碎片组配置，不包含子碎片组。
+  Future<List<FragmentGroupAndConfig>> queryFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
     final sel = select(fragmentGroups)
       ..where((tbl) => targetFragmentGroup == null ? tbl.father_fragment_groups_id.isNull() : tbl.father_fragment_groups_id.equals(targetFragmentGroup.id));
     return await sel.get();
   }
 
   /// 查询 [targetFragmentGroup] 内的全部子碎片组。
-  Future<List<FragmentGroup>> querySubFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
+  Future<List<FragmentGroupAndConfig>> querySubFragmentGroupsInFragmentGroup({required FragmentGroup? targetFragmentGroup}) async {
     Future<List<FragmentGroup>> loop({required List<FragmentGroup> list}) async {
       final returnList = <FragmentGroup>[...list];
       await Future.forEach<FragmentGroup>(

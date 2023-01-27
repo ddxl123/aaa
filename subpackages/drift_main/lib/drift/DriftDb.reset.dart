@@ -27,6 +27,59 @@ extension DriftValueExt<T> on T {
   }
 }
 
+/// [FragmentGroupConfigs]
+extension FragmentGroupConfigExt on FragmentGroupConfig {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<FragmentGroupConfig> reset({
+    required Value<bool> be_private,
+    required Value<bool> be_publish,
+    required Value<int> creator_user_id,
+    required Value<int> fragment_group_id,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (be_private.present && this.be_private != be_private.value) {
+      isCloudModify = true;
+      this.be_private = be_private.value;
+    }
+
+    if (be_publish.present && this.be_publish != be_publish.value) {
+      isCloudModify = true;
+      this.be_publish = be_publish.value;
+    }
+
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
+      isCloudModify = true;
+      this.creator_user_id = creator_user_id.value;
+    }
+
+    if (fragment_group_id.present &&
+        this.fragment_group_id != fragment_group_id.value) {
+      isCloudModify = true;
+      this.fragment_group_id = fragment_group_id.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.fragmentGroupConfigs,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
 /// [Users]
 extension UserExt on User {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -573,8 +626,6 @@ extension FragmentExt on Fragment {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
-    required Value<bool> be_private,
-    required Value<bool> be_publish,
     required Value<bool> client_be_selected,
     required Value<String> content,
     required Value<int> creator_user_id,
@@ -586,16 +637,6 @@ extension FragmentExt on Fragment {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (be_private.present && this.be_private != be_private.value) {
-      isCloudModify = true;
-      this.be_private = be_private.value;
-    }
-
-    if (be_publish.present && this.be_publish != be_publish.value) {
-      isCloudModify = true;
-      this.be_publish = be_publish.value;
-    }
-
     if (client_be_selected.present &&
         this.client_be_selected != client_be_selected.value) {
       isCloudModify = true;

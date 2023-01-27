@@ -70,6 +70,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           },
           rFragment2FragmentGroups: null,
           child_fragmentGroups: null,
+          fragmentGroupConfigs: null,
         );
       },
     );
@@ -92,8 +93,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               fragment_template_id: toAbsent(),
               title: toAbsent(),
               content: toAbsent(),
-              be_private: toAbsent(),
-              be_publish: toAbsent(),
               client_be_selected: isSelected.toValue(),
               note_id: toAbsent(),
               syncTag: st,
@@ -133,8 +132,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                   fragment_template_id: toAbsent(),
                   title: toAbsent(),
                   content: toAbsent(),
-                  be_private: toAbsent(),
-                  be_publish: toAbsent(),
                   client_be_selected: isSelected.toValue(),
                   note_id: toAbsent(),
                   syncTag: st,
@@ -156,6 +153,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           },
           rFragment2FragmentGroups: null,
           child_fragmentGroups: null,
+          fragmentGroupConfigs: null,
         );
       },
     );

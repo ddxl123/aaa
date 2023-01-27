@@ -5,7 +5,7 @@ part of httper;
 
 class HttpPath {
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://192.168.1.109:2814';
+  static const String BASE_PATH_LOCAL = 'http://192.168.1.111:2814';
   
   static const String LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = '/login_required/data_upload/once_syncs';
 
