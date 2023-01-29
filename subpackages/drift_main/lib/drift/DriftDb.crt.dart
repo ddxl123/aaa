@@ -34,6 +34,20 @@ class Crt {
     );
   }
 
+  static KnowledgeBaseCategorysCompanion knowledgeBaseCategorysCompanion({
+    required String categorys,
+    DateTime? created_at,
+    Value<int>? id,
+    DateTime? updated_at,
+  }) {
+    return KnowledgeBaseCategorysCompanion(
+      categorys: Value(categorys),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : id,
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
   static UsersCompanion usersCompanion({
     required Value<int?> age,
     required Value<String?> email,
@@ -247,6 +261,7 @@ class Crt {
     required Value<String?> father_fragment_id,
     required Value<String?> fragment_template_id,
     required Value<String?> note_id,
+    required Value<String?> tags,
     required String title,
     DateTime? created_at,
     String? id,
@@ -259,6 +274,7 @@ class Crt {
       father_fragment_id: father_fragment_id,
       fragment_template_id: fragment_template_id,
       note_id: note_id,
+      tags: tags,
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
@@ -400,6 +416,18 @@ extension FragmentGroupConfigsCompanionExt on FragmentGroupConfigsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentGroupConfigs,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension KnowledgeBaseCategorysCompanionExt
+    on KnowledgeBaseCategorysCompanion {
+  Future<KnowledgeBaseCategory> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.knowledgeBaseCategorys,
       entity: this,
       syncTag: syncTag,
     );

@@ -44,6 +44,8 @@ part 'DriftDb.reset.dart';
 
 part 'table/cloud/FragmentGroupConfigs.dart';
 
+part 'table/cloud/KnowledgeBaseCategorys.dart';
+
 part 'table/cloud/Users.dart';
 
 part 'table/cloud/client/ClientSyncInfos.dart';
@@ -83,6 +85,8 @@ part 'table/cloud/unit_group/NoteGroups.dart';
 const List<Type> tableClasses = [
 
   FragmentGroupConfigs,
+
+  KnowledgeBaseCategorys,
 
   Users,
 

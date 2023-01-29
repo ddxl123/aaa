@@ -19,7 +19,22 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroupConfig?> fragmen
                       Spacer(),
                       Switch(
                         value: fragmentGroupConfigAb(abw)!.be_private,
-                        onChanged: (v) {
+                        onChanged: (v) async {
+                          await db.updateDAO.resetFragmentGroupAndConfig(
+                            originalFragmentGroupReset: null,
+                            originalFragmentGroupConfigReset: fragmentGroupConfigAb() == null
+                                ? null
+                                : (SyncTag resetSyncTag) async {
+                                    return await fragmentGroupConfigAb()!.reset(
+                                      be_private: v.toValue(),
+                                      be_publish: "".toAbsent(),
+                                      creator_user_id: "".toAbsent(),
+                                      fragment_group_id: "".toAbsent(),
+                                      syncTag: resetSyncTag,
+                                    );
+                                  },
+                            syncTag: null,
+                          );
                           fragmentGroupConfigAb.refreshInevitable((obj) => obj!..be_private = v);
                         },
                       ),
@@ -34,7 +49,22 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroupConfig?> fragmen
                       Spacer(),
                       Switch(
                         value: fragmentGroupConfigAb(abw)!.be_publish,
-                        onChanged: (v) {
+                        onChanged: (v) async {
+                          await db.updateDAO.resetFragmentGroupAndConfig(
+                            originalFragmentGroupReset: null,
+                            originalFragmentGroupConfigReset: fragmentGroupConfigAb() == null
+                                ? null
+                                : (SyncTag resetSyncTag) async {
+                                    return await fragmentGroupConfigAb()!.reset(
+                                      be_private: "".toAbsent(),
+                                      be_publish: v.toValue(),
+                                      creator_user_id: "".toAbsent(),
+                                      fragment_group_id: "".toAbsent(),
+                                      syncTag: resetSyncTag,
+                                    );
+                                  },
+                            syncTag: null,
+                          );
                           fragmentGroupConfigAb.refreshInevitable((obj) => obj!..be_publish = v);
                         },
                       ),

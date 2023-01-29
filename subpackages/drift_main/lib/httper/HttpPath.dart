@@ -9,6 +9,8 @@ class HttpPath {
   
   static const String LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = '/login_required/data_upload/once_syncs';
 
+  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_GET_CATEGORYS = '/no_login_required/knowledge_base/get_categorys';
+
   static const String REGISTER_OR_LOGIN_CHECK_LOGIN = '/register_or_login/check_login';
 
   static const String REGISTER_OR_LOGIN_LOGOUT = '/register_or_login/logout';

@@ -63,6 +63,26 @@ Map<String, dynamic> _$DataUploadVoToJson(DataUploadVo instance) =>
       'vo_padding': instance.vo_padding,
     };
 
+GetCategorysDto _$GetCategorysDtoFromJson(Map<String, dynamic> json) =>
+    GetCategorysDto(
+      a: json['a'] as String,
+    );
+
+Map<String, dynamic> _$GetCategorysDtoToJson(GetCategorysDto instance) =>
+    <String, dynamic>{
+      'a': instance.a,
+    };
+
+GetCategorysVo _$GetCategorysVoFromJson(Map<String, dynamic> json) =>
+    GetCategorysVo(
+      one_level_category_names: json['one_level_category_names'] as String,
+    );
+
+Map<String, dynamic> _$GetCategorysVoToJson(GetCategorysVo instance) =>
+    <String, dynamic>{
+      'one_level_category_names': instance.one_level_category_names,
+    };
+
 LogoutDto _$LogoutDtoFromJson(Map<String, dynamic> json) => LogoutDto(
       be_active: json['be_active'] as bool,
       current_device_and_token_bo: DeviceAndTokenBo.fromJson(

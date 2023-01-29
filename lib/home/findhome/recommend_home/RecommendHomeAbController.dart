@@ -1,9 +1,13 @@
 import 'package:tools/tools.dart';
 
 class Category {
-  Category({required this.name});
+  Category({
+    required this.name,
+    required this.subCategoryNames,
+  });
 
   final String name;
+  final List<String> subCategoryNames;
 }
 
 /// 主标签1: 英语
@@ -28,17 +32,17 @@ class Category {
 /// 推荐：按推荐类别排序，按照自身的重复次数最高的来排序。
 class RecommendHomeAbController extends AbController {
   final categories = <Category>[
-    Category(name: "全部"),
-    Category(name: "考研"),
-    Category(name: "法硕"),
-    Category(name: "中医"),
-    Category(name: "CPA"),
-    Category(name: "大学"),
-    Category(name: "高考"),
-    Category(name: "中考"),
-    Category(name: "小学"),
-    Category(name: "学前"),
-    Category(name: "其他"),
+    Category(name: "全部", subCategoryNames: []),
+    Category(name: "考研", subCategoryNames: []),
+    Category(name: "法硕", subCategoryNames: []),
+    Category(name: "中医", subCategoryNames: []),
+    Category(name: "CPA", subCategoryNames: []),
+    Category(name: "大学", subCategoryNames: []),
+    Category(name: "高考", subCategoryNames: []),
+    Category(name: "中考", subCategoryNames: []),
+    Category(name: "小学", subCategoryNames: []),
+    Category(name: "学前", subCategoryNames: []),
+    Category(name: "其他", subCategoryNames: []),
   ].ab;
 
   final selectedIndex = 0.ab;

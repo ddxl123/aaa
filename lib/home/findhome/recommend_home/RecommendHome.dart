@@ -1,6 +1,8 @@
 import 'package:aaa/home/findhome/recommend_home/RecommendHomeAbController.dart';
 import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:tools/tools.dart';
 
 class RecommendHome extends StatelessWidget {
@@ -66,6 +68,18 @@ class RecommendHome extends StatelessWidget {
                       ),
                       onPressed: () {
                         showCategoriesSheet(context: context);
+                      },
+                    ),
+                    CustomDropdownBodyButton<int>(
+                      primaryButton: Icon(Icons.sort, color: Colors.grey),
+                      initValue: 0,
+                      items: [
+                        Item(value: 0, text: "按热度"),
+                        Item(value: 1, text: "按时间"),
+                        Item(value: 2, text: "随机"),
+                      ],
+                      onChanged: (v) {
+                        c;
                       },
                     ),
                   ],

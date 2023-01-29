@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 
@@ -29,9 +30,19 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
       queryFragmentWhereType: QueryFragmentWhereType.all,
     );
     if (selectedCount != allCount) {
-      await db.updateDAO.resetFragmentGroupIsSelected(
-        originalFragmentGroup: whichGroupEntity,
-        isSelected: false,
+      await db.updateDAO.resetFragmentGroupAndConfig(
+        originalFragmentGroupReset: whichGroupEntity == null
+            ? null
+            : (st) async {
+                return await whichGroupEntity.reset(
+                  client_be_selected: false.toValue(),
+                  creator_user_id: toAbsent(),
+                  father_fragment_groups_id: toAbsent(),
+                  title: toAbsent(),
+                  syncTag: st,
+                );
+              },
+        originalFragmentGroupConfigReset: null,
         syncTag: null,
       );
     }

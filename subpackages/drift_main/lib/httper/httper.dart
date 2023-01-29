@@ -32,6 +32,12 @@ part 'share_generate_result/dto_vo/DataUploadDto.dart';
 part 'share_generate_result/dto_vo/DataUploadVo.dart';
 
 
+part 'share_generate_result/dto_vo/GetCategorysDto.dart';
+
+
+part 'share_generate_result/dto_vo/GetCategorysVo.dart';
+
+
 part 'share_generate_result/dto_vo/LogoutDto.dart';
 
 

@@ -4,6 +4,8 @@ part of 'DriftDb.dart';
 mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupConfigsTable get fragmentGroupConfigs =>
       attachedDatabase.fragmentGroupConfigs;
+  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
+      attachedDatabase.knowledgeBaseCategorys;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -31,6 +33,8 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
 mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupConfigsTable get fragmentGroupConfigs =>
       attachedDatabase.fragmentGroupConfigs;
+  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
+      attachedDatabase.knowledgeBaseCategorys;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -58,6 +62,8 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
 mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupConfigsTable get fragmentGroupConfigs =>
       attachedDatabase.fragmentGroupConfigs;
+  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
+      attachedDatabase.knowledgeBaseCategorys;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -85,6 +91,8 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
 mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupConfigsTable get fragmentGroupConfigs =>
       attachedDatabase.fragmentGroupConfigs;
+  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
+      attachedDatabase.knowledgeBaseCategorys;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -112,6 +120,8 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupConfigsTable get fragmentGroupConfigs =>
       attachedDatabase.fragmentGroupConfigs;
+  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
+      attachedDatabase.knowledgeBaseCategorys;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -139,6 +149,8 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
 mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $FragmentGroupConfigsTable get fragmentGroupConfigs =>
       attachedDatabase.fragmentGroupConfigs;
+  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
+      attachedDatabase.knowledgeBaseCategorys;
   $UsersTable get users => attachedDatabase.users;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
@@ -555,6 +567,260 @@ class $FragmentGroupConfigsTable extends FragmentGroupConfigs
   @override
   $FragmentGroupConfigsTable createAlias(String alias) {
     return $FragmentGroupConfigsTable(attachedDatabase, alias);
+  }
+}
+
+class KnowledgeBaseCategory extends DataClass
+    implements Insertable<KnowledgeBaseCategory> {
+  String categorys;
+  DateTime created_at;
+  int id;
+  DateTime updated_at;
+  KnowledgeBaseCategory(
+      {required this.categorys,
+      required this.created_at,
+      required this.id,
+      required this.updated_at});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['categorys'] = Variable<String>(categorys);
+    map['created_at'] = Variable<DateTime>(created_at);
+    map['id'] = Variable<int>(id);
+    map['updated_at'] = Variable<DateTime>(updated_at);
+    return map;
+  }
+
+  KnowledgeBaseCategorysCompanion toCompanion(bool nullToAbsent) {
+    return KnowledgeBaseCategorysCompanion(
+      categorys: Value(categorys),
+      created_at: Value(created_at),
+      id: Value(id),
+      updated_at: Value(updated_at),
+    );
+  }
+
+  factory KnowledgeBaseCategory.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return KnowledgeBaseCategory(
+      categorys: serializer.fromJson<String>(json['categorys']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
+      id: serializer.fromJson<int>(json['id']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'categorys': serializer.toJson<String>(categorys),
+      'created_at': serializer.toJson<DateTime>(created_at),
+      'id': serializer.toJson<int>(id),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
+    };
+  }
+
+  KnowledgeBaseCategory copyWith(
+          {String? categorys,
+          DateTime? created_at,
+          int? id,
+          DateTime? updated_at}) =>
+      KnowledgeBaseCategory(
+        categorys: categorys ?? this.categorys,
+        created_at: created_at ?? this.created_at,
+        id: id ?? this.id,
+        updated_at: updated_at ?? this.updated_at,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('KnowledgeBaseCategory(')
+          ..write('categorys: $categorys, ')
+          ..write('created_at: $created_at, ')
+          ..write('id: $id, ')
+          ..write('updated_at: $updated_at')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(categorys, created_at, id, updated_at);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is KnowledgeBaseCategory &&
+          other.categorys == this.categorys &&
+          other.created_at == this.created_at &&
+          other.id == this.id &&
+          other.updated_at == this.updated_at);
+}
+
+class KnowledgeBaseCategorysCompanion
+    extends UpdateCompanion<KnowledgeBaseCategory> {
+  Value<String> categorys;
+  Value<DateTime> created_at;
+  Value<int> id;
+  Value<DateTime> updated_at;
+  KnowledgeBaseCategorysCompanion({
+    this.categorys = const Value.absent(),
+    this.created_at = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updated_at = const Value.absent(),
+  });
+  KnowledgeBaseCategorysCompanion.insert({
+    required String categorys,
+    required DateTime created_at,
+    this.id = const Value.absent(),
+    required DateTime updated_at,
+  })  : categorys = Value(categorys),
+        created_at = Value(created_at),
+        updated_at = Value(updated_at);
+  static Insertable<KnowledgeBaseCategory> custom({
+    Expression<String>? categorys,
+    Expression<DateTime>? created_at,
+    Expression<int>? id,
+    Expression<DateTime>? updated_at,
+  }) {
+    return RawValuesInsertable({
+      if (categorys != null) 'categorys': categorys,
+      if (created_at != null) 'created_at': created_at,
+      if (id != null) 'id': id,
+      if (updated_at != null) 'updated_at': updated_at,
+    });
+  }
+
+  KnowledgeBaseCategorysCompanion copyWith(
+      {Value<String>? categorys,
+      Value<DateTime>? created_at,
+      Value<int>? id,
+      Value<DateTime>? updated_at}) {
+    return KnowledgeBaseCategorysCompanion(
+      categorys: categorys ?? this.categorys,
+      created_at: created_at ?? this.created_at,
+      id: id ?? this.id,
+      updated_at: updated_at ?? this.updated_at,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (categorys.present) {
+      map['categorys'] = Variable<String>(categorys.value);
+    }
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('KnowledgeBaseCategorysCompanion(')
+          ..write('categorys: $categorys, ')
+          ..write('created_at: $created_at, ')
+          ..write('id: $id, ')
+          ..write('updated_at: $updated_at')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
+    with TableInfo<$KnowledgeBaseCategorysTable, KnowledgeBaseCategory> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $KnowledgeBaseCategorysTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _categorysMeta =
+      const VerificationMeta('categorys');
+  @override
+  late final GeneratedColumn<String> categorys = GeneratedColumn<String>(
+      'categorys', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
+  @override
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
+  @override
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [categorys, created_at, id, updated_at];
+  @override
+  String get aliasedName => _alias ?? 'knowledge_base_categorys';
+  @override
+  String get actualTableName => 'knowledge_base_categorys';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<KnowledgeBaseCategory> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('categorys')) {
+      context.handle(_categorysMeta,
+          categorys.isAcceptableOrUnknown(data['categorys']!, _categorysMeta));
+    } else if (isInserting) {
+      context.missing(_categorysMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
+    } else if (isInserting) {
+      context.missing(_created_atMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
+    } else if (isInserting) {
+      context.missing(_updated_atMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  KnowledgeBaseCategory map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return KnowledgeBaseCategory(
+      categorys: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}categorys'])!,
+      created_at: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      updated_at: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $KnowledgeBaseCategorysTable createAlias(String alias) {
+    return $KnowledgeBaseCategorysTable(attachedDatabase, alias);
   }
 }
 
@@ -4445,6 +4711,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   String? father_fragment_id;
   String? fragment_template_id;
   String? note_id;
+  String? tags;
   String title;
   DateTime created_at;
   String id;
@@ -4456,6 +4723,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       this.father_fragment_id,
       this.fragment_template_id,
       this.note_id,
+      this.tags,
       required this.title,
       required this.created_at,
       required this.id,
@@ -4474,6 +4742,9 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     }
     if (!nullToAbsent || note_id != null) {
       map['note_id'] = Variable<String>(note_id);
+    }
+    if (!nullToAbsent || tags != null) {
+      map['tags'] = Variable<String>(tags);
     }
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
@@ -4496,6 +4767,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       note_id: note_id == null && nullToAbsent
           ? const Value.absent()
           : Value(note_id),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
       title: Value(title),
       created_at: Value(created_at),
       id: Value(id),
@@ -4515,6 +4787,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       fragment_template_id:
           serializer.fromJson<String?>(json['fragment_template_id']),
       note_id: serializer.fromJson<String?>(json['note_id']),
+      tags: serializer.fromJson<String?>(json['tags']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
@@ -4531,6 +4804,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       'father_fragment_id': serializer.toJson<String?>(father_fragment_id),
       'fragment_template_id': serializer.toJson<String?>(fragment_template_id),
       'note_id': serializer.toJson<String?>(note_id),
+      'tags': serializer.toJson<String?>(tags),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
@@ -4545,6 +4819,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           Value<String?> father_fragment_id = const Value.absent(),
           Value<String?> fragment_template_id = const Value.absent(),
           Value<String?> note_id = const Value.absent(),
+          Value<String?> tags = const Value.absent(),
           String? title,
           DateTime? created_at,
           String? id,
@@ -4560,6 +4835,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
             ? fragment_template_id.value
             : this.fragment_template_id,
         note_id: note_id.present ? note_id.value : this.note_id,
+        tags: tags.present ? tags.value : this.tags,
         title: title ?? this.title,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
@@ -4574,6 +4850,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           ..write('father_fragment_id: $father_fragment_id, ')
           ..write('fragment_template_id: $fragment_template_id, ')
           ..write('note_id: $note_id, ')
+          ..write('tags: $tags, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -4590,6 +4867,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       father_fragment_id,
       fragment_template_id,
       note_id,
+      tags,
       title,
       created_at,
       id,
@@ -4604,6 +4882,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           other.father_fragment_id == this.father_fragment_id &&
           other.fragment_template_id == this.fragment_template_id &&
           other.note_id == this.note_id &&
+          other.tags == this.tags &&
           other.title == this.title &&
           other.created_at == this.created_at &&
           other.id == this.id &&
@@ -4617,6 +4896,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<String?> father_fragment_id;
   Value<String?> fragment_template_id;
   Value<String?> note_id;
+  Value<String?> tags;
   Value<String> title;
   Value<DateTime> created_at;
   Value<String> id;
@@ -4628,6 +4908,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.father_fragment_id = const Value.absent(),
     this.fragment_template_id = const Value.absent(),
     this.note_id = const Value.absent(),
+    this.tags = const Value.absent(),
     this.title = const Value.absent(),
     this.created_at = const Value.absent(),
     this.id = const Value.absent(),
@@ -4640,6 +4921,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.father_fragment_id = const Value.absent(),
     this.fragment_template_id = const Value.absent(),
     this.note_id = const Value.absent(),
+    this.tags = const Value.absent(),
     required String title,
     required DateTime created_at,
     required String id,
@@ -4658,6 +4940,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<String>? father_fragment_id,
     Expression<String>? fragment_template_id,
     Expression<String>? note_id,
+    Expression<String>? tags,
     Expression<String>? title,
     Expression<DateTime>? created_at,
     Expression<String>? id,
@@ -4671,6 +4954,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       if (fragment_template_id != null)
         'fragment_template_id': fragment_template_id,
       if (note_id != null) 'note_id': note_id,
+      if (tags != null) 'tags': tags,
       if (title != null) 'title': title,
       if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
@@ -4685,6 +4969,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       Value<String?>? father_fragment_id,
       Value<String?>? fragment_template_id,
       Value<String?>? note_id,
+      Value<String?>? tags,
       Value<String>? title,
       Value<DateTime>? created_at,
       Value<String>? id,
@@ -4696,6 +4981,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       father_fragment_id: father_fragment_id ?? this.father_fragment_id,
       fragment_template_id: fragment_template_id ?? this.fragment_template_id,
       note_id: note_id ?? this.note_id,
+      tags: tags ?? this.tags,
       title: title ?? this.title,
       created_at: created_at ?? this.created_at,
       id: id ?? this.id,
@@ -4725,6 +5011,9 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     if (note_id.present) {
       map['note_id'] = Variable<String>(note_id.value);
     }
+    if (tags.present) {
+      map['tags'] = Variable<String>(tags.value);
+    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
@@ -4749,6 +5038,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
           ..write('father_fragment_id: $father_fragment_id, ')
           ..write('fragment_template_id: $fragment_template_id, ')
           ..write('note_id: $note_id, ')
+          ..write('tags: $tags, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -4806,6 +5096,11 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> note_id = GeneratedColumn<String>(
       'note_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
+  @override
+  late final GeneratedColumn<String> tags = GeneratedColumn<String>(
+      'tags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -4836,6 +5131,7 @@ class $FragmentsTable extends Fragments
         father_fragment_id,
         fragment_template_id,
         note_id,
+        tags,
         title,
         created_at,
         id,
@@ -4888,6 +5184,10 @@ class $FragmentsTable extends Fragments
       context.handle(_note_idMeta,
           note_id.isAcceptableOrUnknown(data['note_id']!, _note_idMeta));
     }
+    if (data.containsKey('tags')) {
+      context.handle(
+          _tagsMeta, tags.isAcceptableOrUnknown(data['tags']!, _tagsMeta));
+    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
@@ -4936,6 +5236,8 @@ class $FragmentsTable extends Fragments
           DriftSqlType.string, data['${effectivePrefix}fragment_template_id']),
       note_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note_id']),
+      tags: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tags']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       created_at: attachedDatabase.typeMapping
@@ -7477,6 +7779,8 @@ abstract class _$DriftDb extends GeneratedDatabase {
   _$DriftDb(QueryExecutor e) : super(e);
   late final $FragmentGroupConfigsTable fragmentGroupConfigs =
       $FragmentGroupConfigsTable(this);
+  late final $KnowledgeBaseCategorysTable knowledgeBaseCategorys =
+      $KnowledgeBaseCategorysTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $ClientSyncInfosTable clientSyncInfos =
       $ClientSyncInfosTable(this);
@@ -7514,6 +7818,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         fragmentGroupConfigs,
+        knowledgeBaseCategorys,
         users,
         clientSyncInfos,
         syncs,

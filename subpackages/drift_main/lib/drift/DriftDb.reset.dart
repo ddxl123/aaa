@@ -80,6 +80,39 @@ extension FragmentGroupConfigExt on FragmentGroupConfig {
   }
 }
 
+/// [KnowledgeBaseCategorys]
+extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<KnowledgeBaseCategory> reset({
+    required Value<String> categorys,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (categorys.present && this.categorys != categorys.value) {
+      isCloudModify = true;
+      this.categorys = categorys.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.knowledgeBaseCategorys,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
 /// [Users]
 extension UserExt on User {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -632,6 +665,7 @@ extension FragmentExt on Fragment {
     required Value<String?> father_fragment_id,
     required Value<String?> fragment_template_id,
     required Value<String?> note_id,
+    required Value<String?> tags,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
@@ -669,6 +703,11 @@ extension FragmentExt on Fragment {
     if (note_id.present && this.note_id != note_id.value) {
       isCloudModify = true;
       this.note_id = note_id.value;
+    }
+
+    if (tags.present && this.tags != tags.value) {
+      isCloudModify = true;
+      this.tags = tags.value;
     }
 
     if (title.present && this.title != title.value) {

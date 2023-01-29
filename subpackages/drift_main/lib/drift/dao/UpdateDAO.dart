@@ -49,10 +49,10 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     );
   }
 
-  /// 修改 [FragmentGroup]，仅修改 [isSelected]
-  Future<void> resetFragmentGroupIsSelected({
-    required FragmentGroup? originalFragmentGroup,
-    required bool isSelected,
+  /// 修改 [FragmentGroup]。
+  Future<void> resetFragmentGroupAndConfig({
+    required ResetFutureFunction<FragmentGroup>? originalFragmentGroupReset,
+    required ResetFutureFunction<FragmentGroupConfig>? originalFragmentGroupConfigReset,
     required SyncTag? syncTag,
   }) async {
     await withRefs(
@@ -60,17 +60,15 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       ref: (SyncTag st) async {
         return RefFragmentGroups(
           self: ($FragmentGroupsTable table) async {
-            await originalFragmentGroup?.reset(
-              creator_user_id: toAbsent(),
-              father_fragment_groups_id: toAbsent(),
-              client_be_selected: isSelected.toValue(),
-              title: toAbsent(),
-              syncTag: st,
-            );
+            await originalFragmentGroupReset?.call(st);
           },
           rFragment2FragmentGroups: null,
           child_fragmentGroups: null,
-          fragmentGroupConfigs: null,
+          fragmentGroupConfigs: RefFragmentGroupConfigs(
+            self: (_) async {
+              await originalFragmentGroupConfigReset?.call(st);
+            },
+          ),
         );
       },
     );
@@ -96,6 +94,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               client_be_selected: isSelected.toValue(),
               note_id: toAbsent(),
               syncTag: st,
+              tags: toAbsent(),
             );
           },
           fragmentMemoryInfos: null,
@@ -135,6 +134,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                   client_be_selected: isSelected.toValue(),
                   note_id: toAbsent(),
                   syncTag: st,
+                  tags: toAbsent(),
                 );
               },
             );

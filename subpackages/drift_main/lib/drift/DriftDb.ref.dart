@@ -122,6 +122,20 @@ class RefFragmentGroupConfigs extends Ref {
   }
 }
 
+/// [KnowledgeBaseCategorys]
+class RefKnowledgeBaseCategorys extends Ref {
+  Future<void> Function($KnowledgeBaseCategorysTable table) self;
+
+  RefKnowledgeBaseCategorys({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.knowledgeBaseCategorys);
+  }
+}
+
 /// [ClientSyncInfos]
 class RefClientSyncInfos extends Ref {
   Future<void> Function($ClientSyncInfosTable table) self;

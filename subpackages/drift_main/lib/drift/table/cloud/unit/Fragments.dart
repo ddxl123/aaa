@@ -25,6 +25,8 @@ class Fragments extends CloudTableBase  {
   @ReferenceTo([Notes])
   TextColumn get note_id => text().named("note_id").nullable()();
 
+  TextColumn get tags => text().named("tags").nullable()();
+
   TextColumn get title => text().named("title")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();

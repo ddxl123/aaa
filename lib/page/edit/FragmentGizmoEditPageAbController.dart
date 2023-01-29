@@ -81,6 +81,7 @@ class FragmentPerformer {
           client_be_selected: false,
           note_id: null.toValue(),
           title: fragmentGizmoEditPageAbController.parseTitle(),
+          tags: "".toValue(),
         ),
         whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
         syncTag: null,
@@ -97,6 +98,7 @@ class FragmentPerformer {
             client_be_selected: toAbsent(),
             note_id: toAbsent(),
             title: fragmentGizmoEditPageAbController.parseTitle().toValue(),
+            tags: "".toValue(),
             syncTag: st,
           );
         },
