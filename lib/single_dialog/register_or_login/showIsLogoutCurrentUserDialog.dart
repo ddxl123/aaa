@@ -39,12 +39,12 @@ Future<void> showIsLogoutCurrentUserDialog() async {
           );
           final result = await request(
             path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
-            data: LogoutDto(
+            dtoData: LogoutDto(
               be_active: true,
               current_device_and_token_bo: dt,
               device_and_token_bo: dt,
             ),
-            parseResponseData: LogoutVo.fromJson,
+            parseResponseVoData: LogoutVo.fromJson,
           );
           await result.handleCode(
             otherException: (int? code, HttperException httperException, StackTrace st) async {

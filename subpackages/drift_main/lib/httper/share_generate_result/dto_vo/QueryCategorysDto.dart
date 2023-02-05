@@ -4,21 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class GetCategorysDto extends BaseObject{
+class QueryCategorysDto extends BaseObject{
 
-    /// 
-    String a;
+    /// 是否查询子类别，false表示主类别
+    bool be_sub;
+
+    /// 需要查询的目标类别
+    String? category;
 
 
-GetCategorysDto({
+QueryCategorysDto({
 
-    required this.a,
+    required this.be_sub,
+
+    required this.category,
 
 });
-  factory GetCategorysDto.fromJson(Map<String, dynamic> json) => _$GetCategorysDtoFromJson(json);
+  factory QueryCategorysDto.fromJson(Map<String, dynamic> json) => _$QueryCategorysDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$GetCategorysDtoToJson(this);
+  Map<String, dynamic> toJson() => _$QueryCategorysDtoToJson(this);
   
   
           
@@ -32,21 +37,27 @@ GetCategorysDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  GetCategorysVo? vo;
+  QueryCategorysVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
 
-    // message: 获取成功！
-    // explain: 成功获取全部知识库类别。
-    required Future<T> Function(String showMessage, GetCategorysVo vo) code30101,
+    // message: 获取主类别成功！
+    // explain: 
+    required Future<T> Function(String showMessage, QueryCategorysVo vo) code30101,
+    
+    // message: 获取子类别成功！
+    // explain: 
+    required Future<T> Function(String showMessage, QueryCategorysVo vo) code30102,
     
     }) async {
     try {
 
         if (code == 30101) return await code30101(httperException!.showMessage, vo!);
+
+        if (code == 30102) return await code30102(httperException!.showMessage, vo!);
 
     } catch (e, st) {
       if (e is HttperException) {

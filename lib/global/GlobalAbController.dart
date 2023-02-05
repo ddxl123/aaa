@@ -41,14 +41,15 @@ class GlobalAbController extends AbController {
         // 本地已登录，检查服务器端是否已登录。
         final result = await request(
           path: HttpPath.REGISTER_OR_LOGIN_CHECK_LOGIN,
-          data: CheckLoginDto(
+          dtoData: CheckLoginDto(
             device_and_token_bo: DeviceAndTokenBo(
               device_info: clientSyncInfoOrNull.device_info,
               token: clientSyncInfoOrNull.token!,
             ),
-            dto_padding: null,
+            dto_padding_1: null,
+            dto_padding_2: null,
           ),
-          parseResponseData: CheckLoginDto.fromJson,
+          parseResponseVoData: CheckLoginVo.fromJson,
         );
         final isLoggedIn = await result.handleCode<bool?>(
           otherException: (int? code, HttperException httperException, StackTrace st) async {

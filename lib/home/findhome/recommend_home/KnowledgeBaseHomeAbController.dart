@@ -1,3 +1,6 @@
+import 'package:drift_main/httper/httper.dart';
+import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
 class Category {
@@ -30,27 +33,54 @@ class Category {
 ///
 /// 热门：按热门类别排序，同以上。
 /// 推荐：按推荐类别排序，按照自身的重复次数最高的来排序。
-class RecommendHomeAbController extends AbController {
+class KnowledgeBaseHomeAbController extends AbController {
   final categories = <Category>[
     Category(name: "全部", subCategoryNames: []),
-    Category(name: "考研", subCategoryNames: []),
-    Category(name: "法硕", subCategoryNames: []),
-    Category(name: "中医", subCategoryNames: []),
-    Category(name: "CPA", subCategoryNames: []),
-    Category(name: "大学", subCategoryNames: []),
-    Category(name: "高考", subCategoryNames: []),
-    Category(name: "中考", subCategoryNames: []),
-    Category(name: "小学", subCategoryNames: []),
-    Category(name: "学前", subCategoryNames: []),
     Category(name: "其他", subCategoryNames: []),
   ].ab;
 
   final selectedIndex = 0.ab;
+
+  RefreshController refreshController = RefreshController(initialRefresh: true);
+
+  @override
+  bool get isEnableLoading => true;
 
   Category getSelectedCategory([Abw? abw]) {
     if (selectedIndex(abw) > categories(abw).length - 1) {
       return categories(abw).first;
     }
     return categories(abw)[selectedIndex(abw)];
+  }
+
+  Future<void> refresh() async {
+    await _queryCategories(category: null);
+  }
+
+  /// 若 [category] 为空，则表示查询主类别。
+  Future<void> _queryCategories({required Category? category}) async {
+    final result = await request<QueryCategorysDto, QueryCategorysVo>(
+      path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_CATEGORYS,
+      dtoData: QueryCategorysDto(be_sub: category != null, category: category!.name),
+      parseResponseVoData: QueryCategorysVo.fromJson,
+    );
+    await result.handleCode(
+      otherException: (int? code, HttperException httperException, StackTrace st) async {
+        logger.outError(show: httperException.showMessage, error: httperException.debugMessage, stackTrace: st);
+      },
+      code30101: (String showMessage, QueryCategorysVo vo) async {
+        categories.refreshInevitable(
+          (obj) => obj
+            ..insertAll(
+              obj.length - 1,
+              vo.category_names.split(",").map((e) => Category(name: e, subCategoryNames: [])),
+            ),
+        );
+      },
+      code30102: (String showMessage, QueryCategorysVo vo) async {
+        category.subCategoryNames.addAll(vo.category_names.split(","));
+        categories.refreshForce();
+      },
+    );
   }
 }

@@ -5,11 +5,11 @@ part of httper;
 
 class HttpPath {
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://192.168.1.111:2814';
+  static const String BASE_PATH_LOCAL = 'http://192.168.101.15:2814';
   
   static const String LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = '/login_required/data_upload/once_syncs';
 
-  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_GET_CATEGORYS = '/no_login_required/knowledge_base/get_categorys';
+  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_CATEGORYS = '/no_login_required/knowledge_base/query_categorys';
 
   static const String REGISTER_OR_LOGIN_CHECK_LOGIN = '/register_or_login/check_login';
 

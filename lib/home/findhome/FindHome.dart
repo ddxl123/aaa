@@ -1,4 +1,4 @@
-import 'package:aaa/home/findhome/recommend_home/RecommendHome.dart';
+import 'package:aaa/home/findhome/recommend_home/KnowledgeBaseHome.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
@@ -47,7 +47,7 @@ class FindHome extends StatelessWidget {
                 builder: (_) => const Text("推荐"),
               ),
               KeepStateWidget(
-                builder: (_) => const RecommendHome(),
+                builder: (_) => const KnowledgeBaseHome(),
               ),
               KeepStateWidget(
                 builder: (_) => const Text('求制作'),

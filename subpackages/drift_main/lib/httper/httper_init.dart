@@ -9,33 +9,33 @@ final Dio dio = Dio(
   ),
 );
 
-/// 当 [dataList] 为 null 时，[data] 的作用为请求数据体。
-/// 当 [dataList] 不为 null 时，[data] 的作用将不是请求数据体，而是需给予一个任意数据的 [RQ] 类型对象，以便存储响应数据，
+/// 当 [dtoDataList] 为 null 时，[dtoData] 的作用为请求数据体。
+/// 当 [dtoDataList] 不为 null 时，[dtoData] 的作用将不是请求数据体，而是需给予一个任意数据的 [RQ] 类型对象，以便存储响应数据，
 Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   required String path,
-  required RQ data,
-  List<RQ>? dataList,
-  required RP Function(Map<String, dynamic> responseData) parseResponseData,
+  required RQ dtoData,
+  List<RQ>? dtoDataList,
+  required RP Function(Map<String, dynamic> responseData) parseResponseVoData,
 }) async {
   dynamic responseData;
   try {
-    final result = await dio.post(path, data: dataList != null ? dataList.map((e) => e.toJson()).toList() : data.toJson());
+    final result = await dio.post(path, data: dtoDataList != null ? dtoDataList.map((e) => e.toJson()).toList() : dtoData.toJson());
     responseData = result.data;
     final parseCode = result.data["code"];
     final parseMessage = result.data["message"];
-    final parseVo = result.data["data"] == null ? null : parseResponseData(result.data["data"]);
+    final parseVo = result.data["data"] == null ? null : parseResponseVoData(result.data["data"]);
     final otherCodeResult = await otherCodeHandle(code: parseCode);
     if (otherCodeResult != null) {
       throw otherCodeResult;
     }
-    return (data as dynamic)
+    return (dtoData as dynamic)
       ..code = parseCode
       ..httperException = HttperException(showMessage: parseMessage, debugMessage: '')
       ..vo = parseVo;
   } catch (e, st) {
     if (e is DioError) {
       if (e.type == DioErrorType.sendTimeout || e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout) {
-        return (data as dynamic)
+        return (dtoData as dynamic)
           ..code = null
           ..httperException = HttperException(
             showMessage: '请求超时！',
@@ -45,7 +45,7 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
           ..st = st;
       }
     }
-    return (data as dynamic)
+    return (dtoData as dynamic)
       ..code = null
       ..httperException = HttperException(
         showMessage: '请求异常！',

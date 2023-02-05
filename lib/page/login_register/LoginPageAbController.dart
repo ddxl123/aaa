@@ -126,14 +126,14 @@ class LoginPageAbController extends AbController {
     if (lw is EmailLoginWrapper) {
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
-        data: SendOrVerifyDto(
+        dtoData: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_send,
           email: lw.getEditContent(),
           phone: null,
           verify_code: null,
           device_info: null,
         ),
-        parseResponseData: (responseData) => SendOrVerifyVo.fromJson(responseData),
+        parseResponseVoData: (responseData) => SendOrVerifyVo.fromJson(responseData),
       );
       return await result.handleCode<bool>(
         otherException: (code, msg, st) async {
@@ -190,14 +190,14 @@ class LoginPageAbController extends AbController {
 
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
-        data: SendOrVerifyDto(
+        dtoData: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_verify,
           email: lw.getEditContent(),
           phone: null,
           verify_code: verifyCode,
           device_info: deviceInfo,
         ),
-        parseResponseData: SendOrVerifyVo.fromJson,
+        parseResponseVoData: SendOrVerifyVo.fromJson,
       );
       await result.handleCode(
         otherException: (int? code, HttperException httperException, StackTrace st) async {
@@ -257,12 +257,12 @@ class LoginPageAbController extends AbController {
     else {
       final result = await request(
         path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
-        data: LogoutDto(
+        dtoData: LogoutDto(
           be_active: false,
           current_device_and_token_bo: vo.current_device_and_token_bo,
           device_and_token_bo: vo.current_device_and_token_bo,
         ),
-        parseResponseData: LogoutVo.fromJson,
+        parseResponseVoData: LogoutVo.fromJson,
       );
       await result.handleCode(
         otherException: (int? code, HttperException httperException, StackTrace st) async {

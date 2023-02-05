@@ -22,65 +22,53 @@ CheckLoginDto _$CheckLoginDtoFromJson(Map<String, dynamic> json) =>
     CheckLoginDto(
       device_and_token_bo: DeviceAndTokenBo.fromJson(
           json['device_and_token_bo'] as Map<String, dynamic>),
-      dto_padding: json['dto_padding'] as bool?,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+      dto_padding_2: json['dto_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$CheckLoginDtoToJson(CheckLoginDto instance) =>
     <String, dynamic>{
       'device_and_token_bo': instance.device_and_token_bo,
-      'dto_padding': instance.dto_padding,
+      'dto_padding_1': instance.dto_padding_1,
+      'dto_padding_2': instance.dto_padding_2,
     };
 
 CheckLoginVo _$CheckLoginVoFromJson(Map<String, dynamic> json) => CheckLoginVo(
-      vo_padding: json['vo_padding'] as bool?,
+      vo_padding_1: json['vo_padding_1'] as bool?,
+      vo_padding_2: json['vo_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$CheckLoginVoToJson(CheckLoginVo instance) =>
     <String, dynamic>{
-      'vo_padding': instance.vo_padding,
+      'vo_padding_1': instance.vo_padding_1,
+      'vo_padding_2': instance.vo_padding_2,
     };
 
 DataUploadDto _$DataUploadDtoFromJson(Map<String, dynamic> json) =>
     DataUploadDto(
       sync_entity: Sync.fromJson(json['sync_entity'] as Map<String, dynamic>),
       row_map: json['row_map'] as Map<String, dynamic>,
-      dto_padding: json['dto_padding'] as bool?,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+      dto_padding_2: json['dto_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$DataUploadDtoToJson(DataUploadDto instance) =>
     <String, dynamic>{
       'sync_entity': instance.sync_entity,
       'row_map': instance.row_map,
-      'dto_padding': instance.dto_padding,
+      'dto_padding_1': instance.dto_padding_1,
+      'dto_padding_2': instance.dto_padding_2,
     };
 
 DataUploadVo _$DataUploadVoFromJson(Map<String, dynamic> json) => DataUploadVo(
-      vo_padding: json['vo_padding'] as bool?,
+      vo_padding_1: json['vo_padding_1'] as bool?,
+      vo_padding_2: json['vo_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$DataUploadVoToJson(DataUploadVo instance) =>
     <String, dynamic>{
-      'vo_padding': instance.vo_padding,
-    };
-
-GetCategorysDto _$GetCategorysDtoFromJson(Map<String, dynamic> json) =>
-    GetCategorysDto(
-      a: json['a'] as String,
-    );
-
-Map<String, dynamic> _$GetCategorysDtoToJson(GetCategorysDto instance) =>
-    <String, dynamic>{
-      'a': instance.a,
-    };
-
-GetCategorysVo _$GetCategorysVoFromJson(Map<String, dynamic> json) =>
-    GetCategorysVo(
-      one_level_category_names: json['one_level_category_names'] as String,
-    );
-
-Map<String, dynamic> _$GetCategorysVoToJson(GetCategorysVo instance) =>
-    <String, dynamic>{
-      'one_level_category_names': instance.one_level_category_names,
+      'vo_padding_1': instance.vo_padding_1,
+      'vo_padding_2': instance.vo_padding_2,
     };
 
 LogoutDto _$LogoutDtoFromJson(Map<String, dynamic> json) => LogoutDto(
@@ -100,11 +88,35 @@ Map<String, dynamic> _$LogoutDtoToJson(LogoutDto instance) => <String, dynamic>{
     };
 
 LogoutVo _$LogoutVoFromJson(Map<String, dynamic> json) => LogoutVo(
-      vo_padding: json['vo_padding'] as bool?,
+      vo_padding_1: json['vo_padding_1'] as bool?,
+      vo_padding_2: json['vo_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$LogoutVoToJson(LogoutVo instance) => <String, dynamic>{
-      'vo_padding': instance.vo_padding,
+      'vo_padding_1': instance.vo_padding_1,
+      'vo_padding_2': instance.vo_padding_2,
+    };
+
+QueryCategorysDto _$QueryCategorysDtoFromJson(Map<String, dynamic> json) =>
+    QueryCategorysDto(
+      be_sub: json['be_sub'] as bool,
+      category: json['category'] as String?,
+    );
+
+Map<String, dynamic> _$QueryCategorysDtoToJson(QueryCategorysDto instance) =>
+    <String, dynamic>{
+      'be_sub': instance.be_sub,
+      'category': instance.category,
+    };
+
+QueryCategorysVo _$QueryCategorysVoFromJson(Map<String, dynamic> json) =>
+    QueryCategorysVo(
+      category_names: json['category_names'] as String,
+    );
+
+Map<String, dynamic> _$QueryCategorysVoToJson(QueryCategorysVo instance) =>
+    <String, dynamic>{
+      'category_names': instance.category_names,
     };
 
 SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>

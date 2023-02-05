@@ -130,7 +130,7 @@ class TestHome extends StatelessWidget {
                                 final result = await db.generalQueryDAO.querySameSyncTagWithRow();
                                 final requestResult = await request(
                                   path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS,
-                                  data: DataUploadDto(
+                                  dtoData: DataUploadDto(
                                     sync_entity: Sync(
                                       row_id: "",
                                       sync_curd_type: SyncCurdType.u,
@@ -141,10 +141,20 @@ class TestHome extends StatelessWidget {
                                       updated_at: DateTime.now(),
                                     ),
                                     row_map: {},
-                                    dto_padding: null,
+                                    dto_padding_1: null,
+                                    dto_padding_2: null,
                                   ),
-                                  dataList: result.map((e) => DataUploadDto(sync_entity: e.t1, row_map: e.t2.toJson(), dto_padding: null)).toList(),
-                                  parseResponseData: DataUploadVo.fromJson,
+                                  dtoDataList: result
+                                      .map(
+                                        (e) => DataUploadDto(
+                                          sync_entity: e.t1,
+                                          row_map: e.t2.toJson(),
+                                          dto_padding_1: null,
+                                          dto_padding_2: null,
+                                        ),
+                                      )
+                                      .toList(),
+                                  parseResponseVoData: DataUploadVo.fromJson,
                                 );
                                 await requestResult.handleCode(
                                   otherException: (int? code, HttperException httperException, StackTrace st) async {

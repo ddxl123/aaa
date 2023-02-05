@@ -51,12 +51,12 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                           onPressed: () async {
                             final result = await request(
                               path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
-                              data: LogoutDto(
+                              dtoData: LogoutDto(
                                 be_active: false,
                                 current_device_and_token_bo: vo.current_device_and_token_bo,
                                 device_and_token_bo: e,
                               ),
-                              parseResponseData: LogoutVo.fromJson,
+                              parseResponseVoData: LogoutVo.fromJson,
                             );
                             await result.handleCode(
                               otherException: (int? code, HttperException httperException, StackTrace st) async {
@@ -109,12 +109,12 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                 onPressed: () async {
                   final result = await request(
                     path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
-                    data: LogoutDto(
+                    dtoData: LogoutDto(
                       be_active: false,
                       current_device_and_token_bo: vo.current_device_and_token_bo,
                       device_and_token_bo: null,
                     ),
-                    parseResponseData: LogoutVo.fromJson,
+                    parseResponseVoData: LogoutVo.fromJson,
                   );
                   await result.handleCode(
                     otherException: (int? code, HttperException httperException, StackTrace st) async {
@@ -149,12 +149,12 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
               onPressed: () async {
                 final result = await request(
                   path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
-                  data: LogoutDto(
+                  dtoData: LogoutDto(
                     be_active: false,
                     current_device_and_token_bo: vo.current_device_and_token_bo,
                     device_and_token_bo: vo.current_device_and_token_bo,
                   ),
-                  parseResponseData: LogoutVo.fromJson,
+                  parseResponseVoData: LogoutVo.fromJson,
                 );
                 await result.handleCode(
                   otherException: (int? code, HttperException httperException, StackTrace st) async {

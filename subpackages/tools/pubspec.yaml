@@ -27,7 +27,7 @@ dependencies:
   font_awesome_flutter: any
 
   # 设备信息
-  device_info_plus: ^7.0.0
+  device_info_plus: ^8.0.0
 
   # 包信息
   package_info_plus: ^3.0.2
