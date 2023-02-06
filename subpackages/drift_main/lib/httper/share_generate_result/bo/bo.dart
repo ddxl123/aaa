@@ -3,6 +3,22 @@
 part of httper;
 
 @JsonSerializable()
+class CategoryContent {
+    Fragment fragment_info;
+    String publisher_username;
+
+CategoryContent({
+    required this.fragment_info,
+    required this.publisher_username,
+
+});
+
+  factory CategoryContent.fromJson(Map<String, dynamic> json) => _$CategoryContentFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$CategoryContentToJson(this);
+}
+
+@JsonSerializable()
 class DeviceAndTokenBo {
     String device_info;
     String token;

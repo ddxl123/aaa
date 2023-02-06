@@ -44,8 +44,6 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
       customButton: widget.primaryButton == null
           ? null
           : Container(
-              padding: Theme.of(context).buttonTheme.padding,
-              alignment: Alignment.center,
               child: widget.primaryButton,
             ),
       underline: const SizedBox(),

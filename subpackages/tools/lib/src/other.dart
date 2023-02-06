@@ -31,7 +31,7 @@ class CustomLogger {
     StackTrace? stackTrace,
   }) {
     if (show != null) SmartDialog.showToast(show.toString());
-    if (print != null) {
+    if (print != null || error != null) {
       final outStackTrace = RegExp(r"(#2[\s\S]*(?=(\n#3)))|(#2[\s\S]*(?=(\n)))").stringMatch(StackTrace.current.toString());
       if (level == LogLevel.normal) {
         logger.d('show - $show\nprint - $print\nfromStackStrace:\n$outStackTrace', error, stackTrace);

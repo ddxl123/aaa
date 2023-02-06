@@ -6,6 +6,19 @@ part of httper;
 // JsonSerializableGenerator
 // **************************************************************************
 
+CategoryContent _$CategoryContentFromJson(Map<String, dynamic> json) =>
+    CategoryContent(
+      fragment_info:
+          Fragment.fromJson(json['fragment_info'] as Map<String, dynamic>),
+      publisher_username: json['publisher_username'] as String,
+    );
+
+Map<String, dynamic> _$CategoryContentToJson(CategoryContent instance) =>
+    <String, dynamic>{
+      'fragment_info': instance.fragment_info,
+      'publisher_username': instance.publisher_username,
+    };
+
 DeviceAndTokenBo _$DeviceAndTokenBoFromJson(Map<String, dynamic> json) =>
     DeviceAndTokenBo(
       device_info: json['device_info'] as String,
@@ -99,24 +112,38 @@ Map<String, dynamic> _$LogoutVoToJson(LogoutVo instance) => <String, dynamic>{
 
 QueryCategorysDto _$QueryCategorysDtoFromJson(Map<String, dynamic> json) =>
     QueryCategorysDto(
-      be_sub: json['be_sub'] as bool,
-      category: json['category'] as String?,
+      main_category: json['main_category'] as String?,
+      sub_category: json['sub_category'] as String?,
+      query_category_type:
+          $enumDecode(_$QueryCategoryTypeEnumMap, json['query_category_type']),
     );
 
 Map<String, dynamic> _$QueryCategorysDtoToJson(QueryCategorysDto instance) =>
     <String, dynamic>{
-      'be_sub': instance.be_sub,
-      'category': instance.category,
+      'main_category': instance.main_category,
+      'sub_category': instance.sub_category,
+      'query_category_type':
+          _$QueryCategoryTypeEnumMap[instance.query_category_type]!,
     };
+
+const _$QueryCategoryTypeEnumMap = {
+  QueryCategoryType.only_main: 'only_main',
+  QueryCategoryType.only_sub: 'only_sub',
+  QueryCategoryType.content: 'content',
+};
 
 QueryCategorysVo _$QueryCategorysVoFromJson(Map<String, dynamic> json) =>
     QueryCategorysVo(
-      category_names: json['category_names'] as String,
+      category_names: json['category_names'] as String?,
+      category_content_list: (json['category_content_list'] as List<dynamic>?)
+          ?.map((e) => CategoryContent.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$QueryCategorysVoToJson(QueryCategorysVo instance) =>
     <String, dynamic>{
       'category_names': instance.category_names,
+      'category_content_list': instance.category_content_list,
     };
 
 SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>

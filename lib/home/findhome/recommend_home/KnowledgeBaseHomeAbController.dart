@@ -1,16 +1,17 @@
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
-import 'package:flutter/material.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
 class Category {
   Category({
     required this.name,
-    required this.subCategoryNames,
+    required this.subCategories,
   });
 
   final String name;
-  final List<String> subCategoryNames;
+  final List<Category> subCategories;
 }
 
 /// 主标签1: 英语
@@ -34,52 +35,111 @@ class Category {
 /// 热门：按热门类别排序，同以上。
 /// 推荐：按推荐类别排序，按照自身的重复次数最高的来排序。
 class KnowledgeBaseHomeAbController extends AbController {
-  final categories = <Category>[
-    Category(name: "全部", subCategoryNames: []),
-    Category(name: "其他", subCategoryNames: []),
-  ].ab;
+  final categories = <Category>[].ab;
 
-  final selectedIndex = 0.ab;
+  final categoryContentAb = <Ab<CategoryContent>>[].ab;
+
+  final selectedMainIndex = 0.ab;
+  final selectedSubIndex = 0.ab;
 
   RefreshController refreshController = RefreshController(initialRefresh: true);
 
-  @override
-  bool get isEnableLoading => true;
-
-  Category getSelectedCategory([Abw? abw]) {
-    if (selectedIndex(abw) > categories(abw).length - 1) {
-      return categories(abw).first;
-    }
-    return categories(abw)[selectedIndex(abw)];
+  Category? getSelectedMainCategory([Abw? abw]) {
+    if (categories(abw).isEmpty) return null;
+    return categories(abw)[selectedMainIndex(abw)];
   }
 
-  Future<void> refresh() async {
-    await _queryCategories(category: null);
+  Category? getSelectedSubCategory([Abw? abw]) {
+    final subs = getSelectedMainCategory(abw)?.subCategories;
+    if (subs == null) return null;
+    return subs.isEmpty ? null : subs[selectedSubIndex(abw)];
+  }
+
+  /// 点击了 [mainCategory]，或点击了 [subCategory]
+  Future<void> changeTo({
+    required Category? mainCategory,
+    required Category? subCategory,
+  }) async {
+    if (mainCategory != null) {
+      selectedMainIndex.refreshEasy((obj) => categories().indexOf(mainCategory));
+      selectedSubIndex.refreshEasy((oldValue) => 0);
+    }
+    if (subCategory != null) {
+      selectedSubIndex.refreshEasy((oldValue) => getSelectedMainCategory()!.subCategories.indexOf(subCategory));
+    }
+    await refreshController.requestRefresh();
+    refreshController.refreshCompleted();
+  }
+
+  Future<void> refreshPage() async {
+    final one = await _refreshCategories(
+      queryCategorysDto: QueryCategorysDto(
+        main_category: null,
+        sub_category: null,
+        query_category_type: QueryCategoryType.only_main,
+      ),
+    );
+    if (!one) return;
+    if (getSelectedMainCategory() == null) return;
+    final two = await _refreshCategories(
+      queryCategorysDto: QueryCategorysDto(
+        main_category: getSelectedMainCategory()!.name,
+        sub_category: null,
+        query_category_type: QueryCategoryType.only_sub,
+      ),
+    );
+    if (!two) return;
+    if (getSelectedSubCategory() == null) return;
+    await _refreshCategories(
+      queryCategorysDto: QueryCategorysDto(
+        main_category: getSelectedMainCategory()!.name,
+        sub_category: getSelectedSubCategory()!.name,
+        query_category_type: QueryCategoryType.content,
+      ),
+    );
   }
 
   /// 若 [category] 为空，则表示查询主类别。
-  Future<void> _queryCategories({required Category? category}) async {
+  ///
+  /// 返回是否查询成功。
+  Future<bool> _refreshCategories({required QueryCategorysDto queryCategorysDto}) async {
     final result = await request<QueryCategorysDto, QueryCategorysVo>(
       path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_CATEGORYS,
-      dtoData: QueryCategorysDto(be_sub: category != null, category: category!.name),
+      dtoData: queryCategorysDto,
       parseResponseVoData: QueryCategorysVo.fromJson,
     );
-    await result.handleCode(
+    return await result.handleCode(
       otherException: (int? code, HttperException httperException, StackTrace st) async {
         logger.outError(show: httperException.showMessage, error: httperException.debugMessage, stackTrace: st);
+        return false;
       },
       code30101: (String showMessage, QueryCategorysVo vo) async {
+        final olds = categories().map((e) => e.name).join(",");
+        final news = vo.category_names!;
+        if (olds == news) return true;
+
         categories.refreshInevitable(
           (obj) => obj
-            ..insertAll(
-              obj.length - 1,
-              vo.category_names.split(",").map((e) => Category(name: e, subCategoryNames: [])),
-            ),
+            ..clear()
+            ..insertAll(0, vo.category_names!.split(",").map((e) => Category(name: e, subCategories: []))),
         );
+        return true;
       },
       code30102: (String showMessage, QueryCategorysVo vo) async {
-        category.subCategoryNames.addAll(vo.category_names.split(","));
+        final olds = getSelectedMainCategory()!.subCategories.join(",");
+        final news = vo.category_names!;
+        if (olds == news) return true;
+
+        getSelectedMainCategory()!.subCategories
+          ..clear()
+          ..addAll((vo.category_names == "" ? [] : vo.category_names!.split(",")).map((e) => Category(name: e, subCategories: [])));
         categories.refreshForce();
+        return true;
+      },
+      code30103: (String showMessage, QueryCategorysVo vo) async {
+        categoryContentAb.clearBroken(this);
+        categoryContentAb.refreshInevitable((obj) => obj..addAll(vo.category_content_list!.map((e) => e.ab)));
+        return true;
       },
     );
   }

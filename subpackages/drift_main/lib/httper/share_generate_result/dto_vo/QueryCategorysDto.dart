@@ -6,18 +6,23 @@ part of httper;
 @JsonSerializable()
 class QueryCategorysDto extends BaseObject{
 
-    /// 是否查询子类别，false表示主类别
-    bool be_sub;
+    /// 查询主类别
+    String? main_category;
 
-    /// 需要查询的目标类别
-    String? category;
+    /// 查询子类别
+    String? sub_category;
+
+    /// 查询类型
+    QueryCategoryType query_category_type;
 
 
 QueryCategorysDto({
 
-    required this.be_sub,
+    required this.main_category,
 
-    required this.category,
+    required this.sub_category,
+
+    required this.query_category_type,
 
 });
   factory QueryCategorysDto.fromJson(Map<String, dynamic> json) => _$QueryCategorysDtoFromJson(json);
@@ -52,12 +57,18 @@ QueryCategorysDto({
     // explain: 
     required Future<T> Function(String showMessage, QueryCategorysVo vo) code30102,
     
+    // message: 获取数据成功！
+    // explain: 
+    required Future<T> Function(String showMessage, QueryCategorysVo vo) code30103,
+    
     }) async {
     try {
 
         if (code == 30101) return await code30101(httperException!.showMessage, vo!);
 
         if (code == 30102) return await code30102(httperException!.showMessage, vo!);
+
+        if (code == 30103) return await code30103(httperException!.showMessage, vo!);
 
     } catch (e, st) {
       if (e is HttperException) {

@@ -72,7 +72,7 @@ class GlobalAbController extends AbController {
     }
 
     // 检查到未登录后的操作
-    if (loggedInUser.isEmpty()) {
+    if (loggedInUser.isAbEmpty()) {
       SmartDialog.showToast('请先登录哦~');
       await showAskLoginDialog();
 

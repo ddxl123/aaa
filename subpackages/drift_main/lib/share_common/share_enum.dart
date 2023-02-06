@@ -1,4 +1,14 @@
 
+enum QueryCategoryType {
+  
+  only_main,
+
+  only_sub,
+
+  content,
+
+}
+        
 enum RegisterOrLoginType {
   
   email_send,
