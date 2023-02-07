@@ -9,6 +9,8 @@ class Fragments extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  BoolColumn get be_publish => boolean().named("be_publish")();
+
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
 
   TextColumn get content => text().named("content")();
@@ -25,7 +27,7 @@ class Fragments extends CloudTableBase  {
   @ReferenceTo([Notes])
   TextColumn get note_id => text().named("note_id").nullable()();
 
-  TextColumn get tags => text().named("tags").nullable()();
+  TextColumn get tags => text().named("tags")();
 
   TextColumn get title => text().named("title")();
 

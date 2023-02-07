@@ -4,7 +4,7 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class QueryCategorysDto extends BaseObject{
+class KnowledgeBaseQueryDto extends BaseObject{
 
     /// 查询主类别
     String? main_category;
@@ -13,22 +13,32 @@ class QueryCategorysDto extends BaseObject{
     String? sub_category;
 
     /// 排序类型
-    CurrentSortType current_sort_type;
+    KnowledgeBaseContentSortType? knowledge_base_content_sort_type;
+
+    /// 分页每页数量，用 Long 类型
+    int? size;
+
+    /// 要查询第几页，用 Long 类型
+    int? page;
 
 
-QueryCategorysDto({
+KnowledgeBaseQueryDto({
 
     required this.main_category,
 
     required this.sub_category,
 
-    required this.current_sort_type,
+    required this.knowledge_base_content_sort_type,
+
+    required this.size,
+
+    required this.page,
 
 });
-  factory QueryCategorysDto.fromJson(Map<String, dynamic> json) => _$QueryCategorysDtoFromJson(json);
+  factory KnowledgeBaseQueryDto.fromJson(Map<String, dynamic> json) => _$KnowledgeBaseQueryDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$QueryCategorysDtoToJson(this);
+  Map<String, dynamic> toJson() => _$KnowledgeBaseQueryDtoToJson(this);
   
   
           
@@ -42,7 +52,7 @@ QueryCategorysDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  QueryCategorysVo? vo;
+  KnowledgeBaseQueryVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
@@ -51,15 +61,15 @@ QueryCategorysDto({
 
     // message: 获取主类别成功！
     // explain: 
-    required Future<T> Function(String showMessage, QueryCategorysVo vo) code30101,
+    required Future<T> Function(String showMessage, KnowledgeBaseQueryVo vo) code30101,
     
     // message: 获取子类别成功！
     // explain: 
-    required Future<T> Function(String showMessage, QueryCategorysVo vo) code30102,
+    required Future<T> Function(String showMessage, KnowledgeBaseQueryVo vo) code30102,
     
     // message: 获取数据成功！
     // explain: 
-    required Future<T> Function(String showMessage, QueryCategorysVo vo) code30103,
+    required Future<T> Function(String showMessage, KnowledgeBaseQueryVo vo) code30103,
     
     }) async {
     try {

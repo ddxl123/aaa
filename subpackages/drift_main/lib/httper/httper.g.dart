@@ -6,19 +6,6 @@ part of httper;
 // JsonSerializableGenerator
 // **************************************************************************
 
-CategoryContent _$CategoryContentFromJson(Map<String, dynamic> json) =>
-    CategoryContent(
-      fragment_info:
-          Fragment.fromJson(json['fragment_info'] as Map<String, dynamic>),
-      publisher_username: json['publisher_username'] as String,
-    );
-
-Map<String, dynamic> _$CategoryContentToJson(CategoryContent instance) =>
-    <String, dynamic>{
-      'fragment_info': instance.fragment_info,
-      'publisher_username': instance.publisher_username,
-    };
-
 DeviceAndTokenBo _$DeviceAndTokenBoFromJson(Map<String, dynamic> json) =>
     DeviceAndTokenBo(
       device_info: json['device_info'] as String,
@@ -29,6 +16,23 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
     <String, dynamic>{
       'device_info': instance.device_info,
       'token': instance.token,
+    };
+
+KnowledgeBaseContent _$KnowledgeBaseContentFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseContent(
+      fragment_group: json['fragment_group'] == null
+          ? null
+          : FragmentGroup.fromJson(
+              json['fragment_group'] as Map<String, dynamic>),
+      publisher_username: json['publisher_username'] as String,
+    );
+
+Map<String, dynamic> _$KnowledgeBaseContentToJson(
+        KnowledgeBaseContent instance) =>
+    <String, dynamic>{
+      'fragment_group': instance.fragment_group,
+      'publisher_username': instance.publisher_username,
     };
 
 CheckLoginDto _$CheckLoginDtoFromJson(Map<String, dynamic> json) =>
@@ -84,6 +88,56 @@ Map<String, dynamic> _$DataUploadVoToJson(DataUploadVo instance) =>
       'vo_padding_2': instance.vo_padding_2,
     };
 
+KnowledgeBaseQueryDto _$KnowledgeBaseQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseQueryDto(
+      main_category: json['main_category'] as String?,
+      sub_category: json['sub_category'] as String?,
+      knowledge_base_content_sort_type: $enumDecodeNullable(
+          _$KnowledgeBaseContentSortTypeEnumMap,
+          json['knowledge_base_content_sort_type']),
+      size: json['size'] as int?,
+      page: json['page'] as int?,
+    );
+
+Map<String, dynamic> _$KnowledgeBaseQueryDtoToJson(
+        KnowledgeBaseQueryDto instance) =>
+    <String, dynamic>{
+      'main_category': instance.main_category,
+      'sub_category': instance.sub_category,
+      'knowledge_base_content_sort_type': _$KnowledgeBaseContentSortTypeEnumMap[
+          instance.knowledge_base_content_sort_type],
+      'size': instance.size,
+      'page': instance.page,
+    };
+
+const _$KnowledgeBaseContentSortTypeEnumMap = {
+  KnowledgeBaseContentSortType.by_random: 'by_random',
+  KnowledgeBaseContentSortType.by_hot: 'by_hot',
+  KnowledgeBaseContentSortType.by_create_time: 'by_create_time',
+  KnowledgeBaseContentSortType.by_publish_time: 'by_publish_time',
+  KnowledgeBaseContentSortType.by_update_time: 'by_update_time',
+  KnowledgeBaseContentSortType.by_like_count: 'by_like_count',
+  KnowledgeBaseContentSortType.by_save_count: 'by_save_count',
+};
+
+KnowledgeBaseQueryVo _$KnowledgeBaseQueryVoFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseQueryVo(
+      category_names: json['category_names'] as String?,
+      knowledge_base_content_list: (json['knowledge_base_content_list']
+              as List<dynamic>?)
+          ?.map((e) => KnowledgeBaseContent.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$KnowledgeBaseQueryVoToJson(
+        KnowledgeBaseQueryVo instance) =>
+    <String, dynamic>{
+      'category_names': instance.category_names,
+      'knowledge_base_content_list': instance.knowledge_base_content_list,
+    };
+
 LogoutDto _$LogoutDtoFromJson(Map<String, dynamic> json) => LogoutDto(
       be_active: json['be_active'] as bool,
       current_device_and_token_bo: DeviceAndTokenBo.fromJson(
@@ -108,42 +162,6 @@ LogoutVo _$LogoutVoFromJson(Map<String, dynamic> json) => LogoutVo(
 Map<String, dynamic> _$LogoutVoToJson(LogoutVo instance) => <String, dynamic>{
       'vo_padding_1': instance.vo_padding_1,
       'vo_padding_2': instance.vo_padding_2,
-    };
-
-QueryCategorysDto _$QueryCategorysDtoFromJson(Map<String, dynamic> json) =>
-    QueryCategorysDto(
-      main_category: json['main_category'] as String?,
-      sub_category: json['sub_category'] as String?,
-      query_category_type:
-          $enumDecode(_$QueryCategoryTypeEnumMap, json['query_category_type']),
-    );
-
-Map<String, dynamic> _$QueryCategorysDtoToJson(QueryCategorysDto instance) =>
-    <String, dynamic>{
-      'main_category': instance.main_category,
-      'sub_category': instance.sub_category,
-      'query_category_type':
-          _$QueryCategoryTypeEnumMap[instance.query_category_type]!,
-    };
-
-const _$QueryCategoryTypeEnumMap = {
-  QueryCategoryType.only_main: 'only_main',
-  QueryCategoryType.only_sub: 'only_sub',
-  QueryCategoryType.content: 'content',
-};
-
-QueryCategorysVo _$QueryCategorysVoFromJson(Map<String, dynamic> json) =>
-    QueryCategorysVo(
-      category_names: json['category_names'] as String?,
-      category_content_list: (json['category_content_list'] as List<dynamic>?)
-          ?.map((e) => CategoryContent.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$QueryCategorysVoToJson(QueryCategorysVo instance) =>
-    <String, dynamic>{
-      'category_names': instance.category_names,
-      'category_content_list': instance.category_content_list,
     };
 
 SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>

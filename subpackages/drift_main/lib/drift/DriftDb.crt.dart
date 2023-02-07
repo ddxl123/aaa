@@ -14,26 +14,6 @@ part of drift_db;
 /// 使用方式查看 [withRefs]。
 class Crt {
   Crt._();
-  static FragmentGroupConfigsCompanion fragmentGroupConfigsCompanion({
-    required bool be_private,
-    required bool be_publish,
-    required int creator_user_id,
-    required String fragment_group_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return FragmentGroupConfigsCompanion(
-      be_private: Value(be_private),
-      be_publish: Value(be_publish),
-      creator_user_id: Value(creator_user_id),
-      fragment_group_id: Value(fragment_group_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static KnowledgeBaseCategorysCompanion knowledgeBaseCategorysCompanion({
     required String categorys,
     DateTime? created_at,
@@ -42,28 +22,6 @@ class Crt {
   }) {
     return KnowledgeBaseCategorysCompanion(
       categorys: Value(categorys),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
-  static UsersCompanion usersCompanion({
-    required Value<int?> age,
-    required Value<String?> email,
-    required Value<String?> password,
-    required Value<String?> phone,
-    required String username,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
-  }) {
-    return UsersCompanion(
-      age: age,
-      email: email,
-      password: password,
-      phone: phone,
-      username: Value(username),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
@@ -255,26 +213,28 @@ class Crt {
   }
 
   static FragmentsCompanion fragmentsCompanion({
+    required bool be_publish,
     required bool client_be_selected,
     required String content,
     required int creator_user_id,
     required Value<String?> father_fragment_id,
     required Value<String?> fragment_template_id,
     required Value<String?> note_id,
-    required Value<String?> tags,
+    required String tags,
     required String title,
     DateTime? created_at,
     String? id,
     DateTime? updated_at,
   }) {
     return FragmentsCompanion(
+      be_publish: Value(be_publish),
       client_be_selected: Value(client_be_selected),
       content: Value(content),
       creator_user_id: Value(creator_user_id),
       father_fragment_id: father_fragment_id,
       fragment_template_id: fragment_template_id,
       note_id: note_id,
-      tags: tags,
+      tags: Value(tags),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
@@ -373,18 +333,24 @@ class Crt {
   }
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
+    required bool be_private,
+    required bool be_publish,
     required bool client_be_selected,
     required int creator_user_id,
     required Value<String?> father_fragment_groups_id,
+    required String tags,
     required String title,
     DateTime? created_at,
     String? id,
     DateTime? updated_at,
   }) {
     return FragmentGroupsCompanion(
+      be_private: Value(be_private),
+      be_publish: Value(be_publish),
       client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id: father_fragment_groups_id,
+      tags: Value(tags),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
@@ -409,15 +375,64 @@ class Crt {
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
-}
 
-extension FragmentGroupConfigsCompanionExt on FragmentGroupConfigsCompanion {
-  Future<FragmentGroupConfig> insert({required SyncTag? syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.fragmentGroupConfigs,
-      entity: this,
-      syncTag: syncTag,
+  static UserCommentsCompanion userCommentsCompanion({
+    required String comment_content,
+    required int commentator_user_id,
+    required Value<String?> fragment_group_id,
+    required Value<String?> fragment_id,
+    DateTime? created_at,
+    Value<int>? id,
+    DateTime? updated_at,
+  }) {
+    return UserCommentsCompanion(
+      comment_content: Value(comment_content),
+      commentator_user_id: Value(commentator_user_id),
+      fragment_group_id: fragment_group_id,
+      fragment_id: fragment_id,
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : id,
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
+  static UserLikesCompanion userLikesCompanion({
+    required Value<String?> fragment_group_id,
+    required Value<String?> fragment_id,
+    required int liker_user_id,
+    DateTime? created_at,
+    Value<int>? id,
+    DateTime? updated_at,
+  }) {
+    return UserLikesCompanion(
+      fragment_group_id: fragment_group_id,
+      fragment_id: fragment_id,
+      liker_user_id: Value(liker_user_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : id,
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
+  static UsersCompanion usersCompanion({
+    required Value<int?> age,
+    required Value<String?> email,
+    required Value<String?> password,
+    required Value<String?> phone,
+    required String username,
+    DateTime? created_at,
+    Value<int>? id,
+    DateTime? updated_at,
+  }) {
+    return UsersCompanion(
+      age: age,
+      email: email,
+      password: password,
+      phone: phone,
+      username: Value(username),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : id,
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
 }
@@ -428,17 +443,6 @@ extension KnowledgeBaseCategorysCompanionExt
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.knowledgeBaseCategorys,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension UsersCompanionExt on UsersCompanion {
-  Future<User> insert({required SyncTag? syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.users,
       entity: this,
       syncTag: syncTag,
     );
@@ -628,6 +632,39 @@ extension NoteGroupsCompanionExt on NoteGroupsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.noteGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension UserCommentsCompanionExt on UserCommentsCompanion {
+  Future<UserComment> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.userComments,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension UserLikesCompanionExt on UserLikesCompanion {
+  Future<UserLike> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.userLikes,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension UsersCompanionExt on UsersCompanion {
+  Future<User> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.users,
       entity: this,
       syncTag: syncTag,
     );

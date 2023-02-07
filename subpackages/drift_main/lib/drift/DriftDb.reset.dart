@@ -27,59 +27,6 @@ extension DriftValueExt<T> on T {
   }
 }
 
-/// [FragmentGroupConfigs]
-extension FragmentGroupConfigExt on FragmentGroupConfig {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<FragmentGroupConfig> reset({
-    required Value<bool> be_private,
-    required Value<bool> be_publish,
-    required Value<int> creator_user_id,
-    required Value<String> fragment_group_id,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (be_private.present && this.be_private != be_private.value) {
-      isCloudModify = true;
-      this.be_private = be_private.value;
-    }
-
-    if (be_publish.present && this.be_publish != be_publish.value) {
-      isCloudModify = true;
-      this.be_publish = be_publish.value;
-    }
-
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (fragment_group_id.present &&
-        this.fragment_group_id != fragment_group_id.value) {
-      isCloudModify = true;
-      this.fragment_group_id = fragment_group_id.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.fragmentGroupConfigs,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [KnowledgeBaseCategorys]
 extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -107,63 +54,6 @@ extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.knowledgeBaseCategorys,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [Users]
-extension UserExt on User {
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
-  FutureOr<User> reset({
-    required Value<int?> age,
-    required Value<String?> email,
-    required Value<String?> password,
-    required Value<String?> phone,
-    required Value<String> username,
-    required SyncTag? syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (age.present && this.age != age.value) {
-      isCloudModify = true;
-      this.age = age.value;
-    }
-
-    if (email.present && this.email != email.value) {
-      isCloudModify = true;
-      this.email = email.value;
-    }
-
-    if (password.present && this.password != password.value) {
-      isCloudModify = true;
-      this.password = password.value;
-    }
-
-    if (phone.present && this.phone != phone.value) {
-      isCloudModify = true;
-      this.phone = phone.value;
-    }
-
-    if (username.present && this.username != username.value) {
-      isCloudModify = true;
-      this.username = username.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.users,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -659,18 +549,24 @@ extension FragmentExt on Fragment {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
+    required Value<bool> be_publish,
     required Value<bool> client_be_selected,
     required Value<String> content,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_id,
     required Value<String?> fragment_template_id,
     required Value<String?> note_id,
-    required Value<String?> tags,
+    required Value<String> tags,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (be_publish.present && this.be_publish != be_publish.value) {
+      isCloudModify = true;
+      this.be_publish = be_publish.value;
+    }
+
     if (client_be_selected.present &&
         this.client_be_selected != client_be_selected.value) {
       isCloudModify = true;
@@ -986,14 +882,27 @@ extension FragmentGroupExt on FragmentGroup {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<FragmentGroup> reset({
+    required Value<bool> be_private,
+    required Value<bool> be_publish,
     required Value<bool> client_be_selected,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
+    required Value<String> tags,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (be_private.present && this.be_private != be_private.value) {
+      isCloudModify = true;
+      this.be_private = be_private.value;
+    }
+
+    if (be_publish.present && this.be_publish != be_publish.value) {
+      isCloudModify = true;
+      this.be_publish = be_publish.value;
+    }
+
     if (client_be_selected.present &&
         this.client_be_selected != client_be_selected.value) {
       isCloudModify = true;
@@ -1010,6 +919,11 @@ extension FragmentGroupExt on FragmentGroup {
         this.father_fragment_groups_id != father_fragment_groups_id.value) {
       isCloudModify = true;
       this.father_fragment_groups_id = father_fragment_groups_id.value;
+    }
+
+    if (tags.present && this.tags != tags.value) {
+      isCloudModify = true;
+      this.tags = tags.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -1067,6 +981,163 @@ extension NoteGroupExt on NoteGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.noteGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [UserComments]
+extension UserCommentExt on UserComment {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<UserComment> reset({
+    required Value<String> comment_content,
+    required Value<int> commentator_user_id,
+    required Value<String?> fragment_group_id,
+    required Value<String?> fragment_id,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (comment_content.present &&
+        this.comment_content != comment_content.value) {
+      isCloudModify = true;
+      this.comment_content = comment_content.value;
+    }
+
+    if (commentator_user_id.present &&
+        this.commentator_user_id != commentator_user_id.value) {
+      isCloudModify = true;
+      this.commentator_user_id = commentator_user_id.value;
+    }
+
+    if (fragment_group_id.present &&
+        this.fragment_group_id != fragment_group_id.value) {
+      isCloudModify = true;
+      this.fragment_group_id = fragment_group_id.value;
+    }
+
+    if (fragment_id.present && this.fragment_id != fragment_id.value) {
+      isCloudModify = true;
+      this.fragment_id = fragment_id.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.userComments,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [UserLikes]
+extension UserLikeExt on UserLike {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<UserLike> reset({
+    required Value<String?> fragment_group_id,
+    required Value<String?> fragment_id,
+    required Value<int> liker_user_id,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (fragment_group_id.present &&
+        this.fragment_group_id != fragment_group_id.value) {
+      isCloudModify = true;
+      this.fragment_group_id = fragment_group_id.value;
+    }
+
+    if (fragment_id.present && this.fragment_id != fragment_id.value) {
+      isCloudModify = true;
+      this.fragment_id = fragment_id.value;
+    }
+
+    if (liker_user_id.present && this.liker_user_id != liker_user_id.value) {
+      isCloudModify = true;
+      this.liker_user_id = liker_user_id.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.userLikes,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [Users]
+extension UserExt on User {
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  ///
+  /// 若 [syncTag] 为空，内部会自动创建。
+  ///
+  /// 使用方式查看 [withRefs]。
+  FutureOr<User> reset({
+    required Value<int?> age,
+    required Value<String?> email,
+    required Value<String?> password,
+    required Value<String?> phone,
+    required Value<String> username,
+    required SyncTag? syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (age.present && this.age != age.value) {
+      isCloudModify = true;
+      this.age = age.value;
+    }
+
+    if (email.present && this.email != email.value) {
+      isCloudModify = true;
+      this.email = email.value;
+    }
+
+    if (password.present && this.password != password.value) {
+      isCloudModify = true;
+      this.password = password.value;
+    }
+
+    if (phone.present && this.phone != phone.value) {
+      isCloudModify = true;
+      this.phone = phone.value;
+    }
+
+    if (username.present && this.username != username.value) {
+      isCloudModify = true;
+      this.username = username.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.users,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;

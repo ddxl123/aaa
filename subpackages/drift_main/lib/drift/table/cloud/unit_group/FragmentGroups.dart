@@ -9,6 +9,10 @@ class FragmentGroups extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  BoolColumn get be_private => boolean().named("be_private")();
+
+  BoolColumn get be_publish => boolean().named("be_publish")();
+
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
 
   @ReferenceTo([Users])
@@ -16,6 +20,8 @@ class FragmentGroups extends CloudTableBase  {
 
   @ReferenceTo([FragmentGroups])
   TextColumn get father_fragment_groups_id => text().named("father_fragment_groups_id").nullable()();
+
+  TextColumn get tags => text().named("tags")();
 
   TextColumn get title => text().named("title")();
 

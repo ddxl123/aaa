@@ -29,99 +29,6 @@ abstract class Ref {
   Future<void> _run();
 }
 
-/// [Users]
-class RefUsers extends Ref {
-  Future<void> Function($UsersTable table) self;
-  RefFragmentGroupConfigs? fragmentGroupConfigs;
-  RefFragmentMemoryInfos? fragmentMemoryInfos;
-  RefRDocument2DocumentGroups? rDocument2DocumentGroups;
-  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefRNote2NoteGroups? rNote2NoteGroups;
-  RefDocuments? documents;
-  RefFragmentTemplates? fragmentTemplates;
-  RefFragments? fragments;
-  RefMemoryGroups? memoryGroups;
-  RefMemoryModels? memoryModels;
-  RefNotes? notes;
-  RefDocumentGroups? documentGroups;
-  RefFragmentGroups? fragmentGroups;
-  RefNoteGroups? noteGroups;
-
-  RefUsers({
-    required this.self,
-    required this.fragmentGroupConfigs,
-    required this.fragmentMemoryInfos,
-    required this.rDocument2DocumentGroups,
-    required this.rFragment2FragmentGroups,
-    required this.rNote2NoteGroups,
-    required this.documents,
-    required this.fragmentTemplates,
-    required this.fragments,
-    required this.memoryGroups,
-    required this.memoryModels,
-    required this.notes,
-    required this.documentGroups,
-    required this.fragmentGroups,
-    required this.noteGroups,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.users);
-    await fragmentGroupConfigs?._run();
-    await fragmentMemoryInfos?._run();
-    await rDocument2DocumentGroups?._run();
-    await rFragment2FragmentGroups?._run();
-    await rNote2NoteGroups?._run();
-    await documents?._run();
-    await fragmentTemplates?._run();
-    await fragments?._run();
-    await memoryGroups?._run();
-    await memoryModels?._run();
-    await notes?._run();
-    await documentGroups?._run();
-    await fragmentGroups?._run();
-    await noteGroups?._run();
-  }
-}
-
-/// [FragmentGroups]
-class RefFragmentGroups extends Ref {
-  Future<void> Function($FragmentGroupsTable table) self;
-  RefFragmentGroupConfigs? fragmentGroupConfigs;
-  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefFragmentGroups? child_fragmentGroups;
-
-  RefFragmentGroups({
-    required this.self,
-    required this.fragmentGroupConfigs,
-    required this.rFragment2FragmentGroups,
-    required this.child_fragmentGroups,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragmentGroups);
-    await fragmentGroupConfigs?._run();
-    await rFragment2FragmentGroups?._run();
-    await child_fragmentGroups?._run();
-  }
-}
-
-/// [FragmentGroupConfigs]
-class RefFragmentGroupConfigs extends Ref {
-  Future<void> Function($FragmentGroupConfigsTable table) self;
-
-  RefFragmentGroupConfigs({
-    required this.self,
-  });
-
-  @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragmentGroupConfigs);
-  }
-}
-
 /// [KnowledgeBaseCategorys]
 class RefKnowledgeBaseCategorys extends Ref {
   Future<void> Function($KnowledgeBaseCategorysTable table) self;
@@ -164,6 +71,65 @@ class RefSyncs extends Ref {
   }
 }
 
+/// [Users]
+class RefUsers extends Ref {
+  Future<void> Function($UsersTable table) self;
+  RefFragmentMemoryInfos? fragmentMemoryInfos;
+  RefRDocument2DocumentGroups? rDocument2DocumentGroups;
+  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
+  RefRNote2NoteGroups? rNote2NoteGroups;
+  RefDocuments? documents;
+  RefFragmentTemplates? fragmentTemplates;
+  RefFragments? fragments;
+  RefMemoryGroups? memoryGroups;
+  RefMemoryModels? memoryModels;
+  RefNotes? notes;
+  RefDocumentGroups? documentGroups;
+  RefFragmentGroups? fragmentGroups;
+  RefNoteGroups? noteGroups;
+  RefUserComments? userComments;
+  RefUserLikes? userLikes;
+
+  RefUsers({
+    required this.self,
+    required this.fragmentMemoryInfos,
+    required this.rDocument2DocumentGroups,
+    required this.rFragment2FragmentGroups,
+    required this.rNote2NoteGroups,
+    required this.documents,
+    required this.fragmentTemplates,
+    required this.fragments,
+    required this.memoryGroups,
+    required this.memoryModels,
+    required this.notes,
+    required this.documentGroups,
+    required this.fragmentGroups,
+    required this.noteGroups,
+    required this.userComments,
+    required this.userLikes,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.users);
+    await fragmentMemoryInfos?._run();
+    await rDocument2DocumentGroups?._run();
+    await rFragment2FragmentGroups?._run();
+    await rNote2NoteGroups?._run();
+    await documents?._run();
+    await fragmentTemplates?._run();
+    await fragments?._run();
+    await memoryGroups?._run();
+    await memoryModels?._run();
+    await notes?._run();
+    await documentGroups?._run();
+    await fragmentGroups?._run();
+    await noteGroups?._run();
+    await userComments?._run();
+    await userLikes?._run();
+  }
+}
+
 /// [Fragments]
 class RefFragments extends Ref {
   Future<void> Function($FragmentsTable table) self;
@@ -171,6 +137,8 @@ class RefFragments extends Ref {
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
   RefFragments? child_fragments;
   RefMemoryModels? memoryModels;
+  RefUserComments? userComments;
+  RefUserLikes? userLikes;
 
   RefFragments({
     required this.self,
@@ -178,6 +146,8 @@ class RefFragments extends Ref {
     required this.rFragment2FragmentGroups,
     required this.child_fragments,
     required this.memoryModels,
+    required this.userComments,
+    required this.userLikes,
   });
 
   @override
@@ -187,6 +157,8 @@ class RefFragments extends Ref {
     await rFragment2FragmentGroups?._run();
     await child_fragments?._run();
     await memoryModels?._run();
+    await userComments?._run();
+    await userLikes?._run();
   }
 }
 
@@ -275,6 +247,32 @@ class RefRDocument2DocumentGroups extends Ref {
   @override
   Future<void> _run() async {
     await self(DriftDb.instance.rDocument2DocumentGroups);
+  }
+}
+
+/// [FragmentGroups]
+class RefFragmentGroups extends Ref {
+  Future<void> Function($FragmentGroupsTable table) self;
+  RefRFragment2FragmentGroups? rFragment2FragmentGroups;
+  RefFragmentGroups? child_fragmentGroups;
+  RefUserComments? userComments;
+  RefUserLikes? userLikes;
+
+  RefFragmentGroups({
+    required this.self,
+    required this.rFragment2FragmentGroups,
+    required this.child_fragmentGroups,
+    required this.userComments,
+    required this.userLikes,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.fragmentGroups);
+    await rFragment2FragmentGroups?._run();
+    await child_fragmentGroups?._run();
+    await userComments?._run();
+    await userLikes?._run();
   }
 }
 
@@ -408,5 +406,33 @@ class RefMemoryModels extends Ref {
   Future<void> _run() async {
     await self(DriftDb.instance.memoryModels);
     await memoryGroups?._run();
+  }
+}
+
+/// [UserComments]
+class RefUserComments extends Ref {
+  Future<void> Function($UserCommentsTable table) self;
+
+  RefUserComments({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.userComments);
+  }
+}
+
+/// [UserLikes]
+class RefUserLikes extends Ref {
+  Future<void> Function($UserLikesTable table) self;
+
+  RefUserLikes({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.userLikes);
   }
 }

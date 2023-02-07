@@ -40,7 +40,10 @@ class KnowledgeBaseHomeAbController extends AbController {
   final categoryContentAb = <Ab<CategoryContent>>[].ab;
 
   final selectedMainIndex = 0.ab;
+
   final selectedSubIndex = 0.ab;
+
+  final currentSortTypeAb = CurrentSortType.by_random.ab;
 
   RefreshController refreshController = RefreshController(initialRefresh: true);
 
@@ -55,10 +58,17 @@ class KnowledgeBaseHomeAbController extends AbController {
     return subs.isEmpty ? null : subs[selectedSubIndex(abw)];
   }
 
-  /// 点击了 [mainCategory]，或点击了 [subCategory]
+  /// 当点击了 [mainCategory] 时,[subCategory] 为 null，子类别会默认"全部"。
+  ///
+  /// 当点击了 [subCategory] 时，[mainCategory] 为 null，会自动利用当前已选主类别。
+  ///
+  /// 当 [mainCategory] 与 [subCategory] 同时为空时，会刷新当前。
+  ///
+  /// 当 [currentSortType] 为 null 时，使用当前排序方式。
   Future<void> changeTo({
     required Category? mainCategory,
     required Category? subCategory,
+    required CurrentSortType? currentSortType,
   }) async {
     if (mainCategory != null) {
       selectedMainIndex.refreshEasy((obj) => categories().indexOf(mainCategory));
@@ -67,8 +77,8 @@ class KnowledgeBaseHomeAbController extends AbController {
     if (subCategory != null) {
       selectedSubIndex.refreshEasy((oldValue) => getSelectedMainCategory()!.subCategories.indexOf(subCategory));
     }
+    currentSortTypeAb.refreshEasy((oldValue) => currentSortType ?? currentSortTypeAb());
     await refreshController.requestRefresh();
-    refreshController.refreshCompleted();
   }
 
   Future<void> refreshPage() async {
@@ -76,27 +86,40 @@ class KnowledgeBaseHomeAbController extends AbController {
       queryCategorysDto: QueryCategorysDto(
         main_category: null,
         sub_category: null,
-        query_category_type: QueryCategoryType.only_main,
+        current_sort_type: currentSortTypeAb(),
       ),
     );
-    if (!one) return;
-    if (getSelectedMainCategory() == null) return;
+    if (!one) {
+      refreshController.refreshFailed();
+      return;
+    }
+    if (getSelectedMainCategory() == null) {
+      refreshController.refreshFailed();
+      return;
+    }
     final two = await _refreshCategories(
       queryCategorysDto: QueryCategorysDto(
         main_category: getSelectedMainCategory()!.name,
         sub_category: null,
-        query_category_type: QueryCategoryType.only_sub,
+        current_sort_type: currentSortTypeAb(),
       ),
     );
-    if (!two) return;
-    if (getSelectedSubCategory() == null) return;
-    await _refreshCategories(
+    if (!two) {
+      refreshController.refreshFailed();
+      return;
+    }
+    final three = await _refreshCategories(
       queryCategorysDto: QueryCategorysDto(
         main_category: getSelectedMainCategory()!.name,
-        sub_category: getSelectedSubCategory()!.name,
-        query_category_type: QueryCategoryType.content,
+        sub_category: getSelectedSubCategory()?.name ?? "全部",
+        current_sort_type: currentSortTypeAb(),
       ),
     );
+    if (!three) {
+      refreshController.refreshFailed();
+      return;
+    }
+    refreshController.refreshCompleted();
   }
 
   /// 若 [category] 为空，则表示查询主类别。
@@ -132,7 +155,7 @@ class KnowledgeBaseHomeAbController extends AbController {
 
         getSelectedMainCategory()!.subCategories
           ..clear()
-          ..addAll((vo.category_names == "" ? [] : vo.category_names!.split(",")).map((e) => Category(name: e, subCategories: [])));
+          ..addAll((vo.category_names == null ? [] : vo.category_names!.split(",")).map((e) => Category(name: e, subCategories: [])));
         categories.refreshForce();
         return true;
       },

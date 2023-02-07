@@ -1,4 +1,5 @@
 import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
@@ -63,7 +64,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                   child: Row(
                     children: [
                       ...c.categories(abw).map(
-                            (e) {
+                        (e) {
                           return TextButton(
                             child: AbwBuilder(
                               builder: (abw) {
@@ -76,7 +77,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                               },
                             ),
                             onPressed: () {
-                              c.changeTo(mainCategory: e, subCategory: null);
+                              c.changeTo(mainCategory: e, subCategory: null, currentSortType: null);
                             },
                           );
                         },
@@ -96,10 +97,7 @@ class KnowledgeBaseHome extends StatelessWidget {
     return AbBuilder<KnowledgeBaseHomeAbController>(
       builder: (c, abw) {
         return Container(
-          height: MediaQuery
-              .of(c.context)
-              .size
-              .height,
+          height: MediaQuery.of(c.context).size.height,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
@@ -109,31 +107,28 @@ class KnowledgeBaseHome extends StatelessWidget {
             physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             child: Column(
               children: [
-                ...c
-                    .getSelectedMainCategory(abw)
-                    ?.subCategories
-                    .map(
+                ...c.getSelectedMainCategory(abw)?.subCategories.map(
                       (e) {
-                    var text = e.name;
-                    if (e.name.length == 5 || e.name.length == 6) {
-                      text = e.name.substring(0, 3) + "\n" + e.name.substring(3);
-                    } else if (e.name.length > 8) {
-                      text = e.name.substring(0, 4) + "\n" + e.name.substring(4, 7) + "...";
-                    } else if (e.name.length > 4) {
-                      text = e.name.substring(0, 4) + "\n" + e.name.substring(4);
-                    }
-                    return MaterialButton(
-                      visualDensity: VisualDensity(horizontal: -3),
-                      child: Text(
-                        text,
-                        style: TextStyle(color: c.getSelectedSubCategory(abw) == e ? Colors.black : Colors.grey),
-                      ),
-                      onPressed: () {
-                        c.changeTo(mainCategory: null, subCategory: e);
+                        var text = e.name;
+                        if (e.name.length == 5 || e.name.length == 6) {
+                          text = e.name.substring(0, 3) + "\n" + e.name.substring(3);
+                        } else if (e.name.length > 8) {
+                          text = e.name.substring(0, 4) + "\n" + e.name.substring(4, 7) + "...";
+                        } else if (e.name.length > 4) {
+                          text = e.name.substring(0, 4) + "\n" + e.name.substring(4);
+                        }
+                        return MaterialButton(
+                          visualDensity: VisualDensity(horizontal: -3),
+                          child: Text(
+                            text,
+                            style: TextStyle(color: c.getSelectedSubCategory(abw) == e ? Colors.black : Colors.grey),
+                          ),
+                          onPressed: () {
+                            c.changeTo(mainCategory: null, subCategory: e, currentSortType: null);
+                          },
+                        );
                       },
-                    );
-                  },
-                ) ??
+                    ) ??
                     [],
               ],
             ),
@@ -153,7 +148,6 @@ class KnowledgeBaseHome extends StatelessWidget {
             header: ClassicHeader(),
             onRefresh: () async {
               await c.refreshPage();
-              c.refreshController.refreshCompleted();
             },
             child: SingleChildScrollView(
               child: Column(
@@ -162,23 +156,44 @@ class KnowledgeBaseHome extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CustomDropdownBodyButton<int>(
-                        primaryButton: Transform.scale(
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: const Icon(Icons.sort, color: Colors.grey),
-                          ),
-                          scaleX: 0.8,
-                          scaleY: 1.0,
-                        ),
-                        initValue: 0,
-                        items: [
-                          Item(value: 0, text: "按热度"),
-                          Item(value: 1, text: "按时间"),
-                          Item(value: 2, text: "随机"),
-                        ],
-                        onChanged: (v) {
-                          c;
+                      AbwBuilder(
+                        builder: (abw) {
+                          return CustomDropdownBodyButton<CurrentSortType>(
+                            primaryButton: Padding(
+                              padding: EdgeInsets.fromLTRB(5, 5, 10, 5),
+                              child: Row(
+                                children: [
+                                  Transform.scale(
+                                    child: const Icon(Icons.sort, color: Colors.blue, size: 18),
+                                    scaleX: 0.8,
+                                    scaleY: 1.0,
+                                  ),
+                                  Text(
+                                    filter(
+                                      from: c.currentSortTypeAb(abw),
+                                      targets: {
+                                        [CurrentSortType.by_hot]: () => "按热度",
+                                        [CurrentSortType.by_time]: () => "按时间",
+                                        [CurrentSortType.by_random]: () => "随机",
+                                      },
+                                      orElse: null,
+                                    ),
+                                    style: TextStyle(color: Colors.blue, fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            initValue: c.currentSortTypeAb(abw),
+                            items: [
+                              Item(value: CurrentSortType.by_hot, text: "按热度"),
+                              Item(value: CurrentSortType.by_time, text: "按时间"),
+                              Item(value: CurrentSortType.by_random, text: "随机"),
+                            ],
+                            onChanged: (v) async {
+                              await c.changeTo(mainCategory: null, subCategory: null, currentSortType: v);
+                              c.currentSortTypeAb.refreshEasy((oldValue) => v!);
+                            },
+                          );
                         },
                       ),
                       SizedBox(width: 5),
@@ -186,10 +201,9 @@ class KnowledgeBaseHome extends StatelessWidget {
                   ),
                   ...List.generate(
                     20,
-                        (index) =>
-                        Card(
-                          child: Container(height: 100),
-                        ),
+                    (index) => Card(
+                      child: Container(height: 100),
+                    ),
                   ),
                 ],
               ),

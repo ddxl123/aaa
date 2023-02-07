@@ -32,16 +32,16 @@ part 'share_generate_result/dto_vo/DataUploadDto.dart';
 part 'share_generate_result/dto_vo/DataUploadVo.dart';
 
 
+part 'share_generate_result/dto_vo/KnowledgeBaseQueryDto.dart';
+
+
+part 'share_generate_result/dto_vo/KnowledgeBaseQueryVo.dart';
+
+
 part 'share_generate_result/dto_vo/LogoutDto.dart';
 
 
 part 'share_generate_result/dto_vo/LogoutVo.dart';
-
-
-part 'share_generate_result/dto_vo/QueryCategorysDto.dart';
-
-
-part 'share_generate_result/dto_vo/QueryCategorysVo.dart';
 
 
 part 'share_generate_result/dto_vo/SendOrVerifyDto.dart';

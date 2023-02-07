@@ -1,11 +1,19 @@
 
-enum QueryCategoryType {
+enum KnowledgeBaseContentSortType {
   
-  only_main,
+  by_random,
 
-  only_sub,
+  by_hot,
 
-  content,
+  by_create_time,
+
+  by_publish_time,
+
+  by_update_time,
+
+  by_like_count,
+
+  by_save_count,
 
 }
         
