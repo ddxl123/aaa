@@ -39,7 +39,7 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
           ..code = null
           ..httperException = HttperException(
             showMessage: '请求超时！',
-            debugMessage: '$e\nresponseData: $responseData',
+            debugMessage: '$e\nrequestDtoData:${dtoData.toJson()}\nrequestDtoDataList:${dtoDataList?.map((e) => e.toJson())}\nresponseData: $responseData',
           )
           ..vo = null
           ..st = st;
@@ -49,7 +49,7 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       ..code = null
       ..httperException = HttperException(
         showMessage: '请求异常！',
-        debugMessage: '$e\nresponseData: $responseData',
+        debugMessage: '$e\nrequestDtoData:${dtoData.toJson()}\nrequestDtoDataList:${dtoDataList?.map((e) => e.toJson())}\nresponseData: $responseData',
       )
       ..vo = null
       ..st = st;

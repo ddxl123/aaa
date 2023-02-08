@@ -39,5 +39,9 @@ ThemeData themeLight(BuildContext context) {
       elevation: 5,
       clipBehavior: Clip.hardEdge,
     ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStatePropertyAll(Colors.blue),
+      trackColor: MaterialStatePropertyAll(Colors.black12),
+    ),
   );
 }
