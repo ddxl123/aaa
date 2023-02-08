@@ -77,7 +77,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                               },
                             ),
                             onPressed: () {
-                              c.changeTo(mainCategory: e, subCategory: null, currentSortType: null);
+                              c.changeTo(mainCategory: e, subCategory: null, currentKnowledgeBaseContentSortType: null);
                             },
                           );
                         },
@@ -124,7 +124,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                             style: TextStyle(color: c.getSelectedSubCategory(abw) == e ? Colors.black : Colors.grey),
                           ),
                           onPressed: () {
-                            c.changeTo(mainCategory: null, subCategory: e, currentSortType: null);
+                            c.changeTo(mainCategory: null, subCategory: e, currentKnowledgeBaseContentSortType: null);
                           },
                         );
                       },
@@ -158,7 +158,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                     children: [
                       AbwBuilder(
                         builder: (abw) {
-                          return CustomDropdownBodyButton<CurrentSortType>(
+                          return CustomDropdownBodyButton<KnowledgeBaseContentSortType>(
                             primaryButton: Padding(
                               padding: EdgeInsets.fromLTRB(5, 5, 10, 5),
                               child: Row(
@@ -170,11 +170,15 @@ class KnowledgeBaseHome extends StatelessWidget {
                                   ),
                                   Text(
                                     filter(
-                                      from: c.currentSortTypeAb(abw),
+                                      from: c.currentKnowledgeBaseContentSortTypeAb(abw),
                                       targets: {
-                                        [CurrentSortType.by_hot]: () => "按热度",
-                                        [CurrentSortType.by_time]: () => "按时间",
-                                        [CurrentSortType.by_random]: () => "随机",
+                                        [KnowledgeBaseContentSortType.by_random]: () => "随机",
+                                        [KnowledgeBaseContentSortType.by_hot]: () => "按热度",
+                                        [KnowledgeBaseContentSortType.by_create_time]: () => "按创建时间",
+                                        [KnowledgeBaseContentSortType.by_publish_time]: () => "按发布时间",
+                                        [KnowledgeBaseContentSortType.by_update_time]: () => "按更新时间",
+                                        [KnowledgeBaseContentSortType.by_like_count]: () => "按点赞量",
+                                        [KnowledgeBaseContentSortType.by_save_count]: () => "按保存量",
                                       },
                                       orElse: null,
                                     ),
@@ -183,15 +187,19 @@ class KnowledgeBaseHome extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            initValue: c.currentSortTypeAb(abw),
+                            initValue: c.currentKnowledgeBaseContentSortTypeAb(abw),
                             items: [
-                              Item(value: CurrentSortType.by_hot, text: "按热度"),
-                              Item(value: CurrentSortType.by_time, text: "按时间"),
-                              Item(value: CurrentSortType.by_random, text: "随机"),
+                              Item(value: KnowledgeBaseContentSortType.by_random, text: "随机"),
+                              Item(value: KnowledgeBaseContentSortType.by_hot, text: "按热度"),
+                              Item(value: KnowledgeBaseContentSortType.by_create_time, text: "按创建时间"),
+                              Item(value: KnowledgeBaseContentSortType.by_publish_time, text: "按发布时间"),
+                              Item(value: KnowledgeBaseContentSortType.by_update_time, text: "按更新时间"),
+                              Item(value: KnowledgeBaseContentSortType.by_like_count, text: "按点赞量"),
+                              Item(value: KnowledgeBaseContentSortType.by_save_count, text: "按保存量"),
                             ],
                             onChanged: (v) async {
-                              await c.changeTo(mainCategory: null, subCategory: null, currentSortType: v);
-                              c.currentSortTypeAb.refreshEasy((oldValue) => v!);
+                              await c.changeTo(mainCategory: null, subCategory: null, currentKnowledgeBaseContentSortType: v);
+                              c.currentKnowledgeBaseContentSortTypeAb.refreshEasy((oldValue) => v!);
                             },
                           );
                         },

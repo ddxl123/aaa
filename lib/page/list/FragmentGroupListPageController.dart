@@ -1,21 +1,17 @@
-import 'dart:math';
-
-import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 
-class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment, FragmentGroupConfig> {
+class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment> {
   @override
-  Future<GroupsAndUnitEntities<FragmentGroup, Fragment, FragmentGroupConfig>> findEntities(FragmentGroup? whichGroupEntity) async {
+  Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
     // 若 whichGroupEntity 不为 null，则必然存在 whichGroupEntity。father_fragment_groups_id!。
     final config = whichGroupEntity == null ? null : await db.generalQueryDAO.queryFragmentGroupById(targetFragmentGroupId: whichGroupEntity.id);
     final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
     final fgs = await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
     logger.outNormal(print: fgs);
     return GroupsAndUnitEntities(
-      config: config?.fragmentGroupConfig,
       unitEntities: fs,
-      groupAndConfigEntities: fgs.map((e) => GroupAndConfig(groupEntity: e.fragmentGroup, groupConfig: e.fragmentGroupConfig)).toList(),
+      groupEntities: fgs.map((e) => e.fragmentGroup).toList(),
     );
   }
 
@@ -30,7 +26,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
       queryFragmentWhereType: QueryFragmentWhereType.all,
     );
     if (selectedCount != allCount) {
-      await db.updateDAO.resetFragmentGroupAndConfig(
+      await db.updateDAO.resetFragmentGroup(
         originalFragmentGroupReset: whichGroupEntity == null
             ? null
             : (st) async {
@@ -40,9 +36,11 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   father_fragment_groups_id: toAbsent(),
                   title: toAbsent(),
                   syncTag: st,
+                  be_private: toAbsent(),
+                  be_publish: toAbsent(),
+                  tags: toAbsent(),
                 );
               },
-        originalFragmentGroupConfigReset: null,
         syncTag: null,
       );
     }

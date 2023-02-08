@@ -29,16 +29,11 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
               father_fragment_groups_id: (fragmentGroup?.id).toValue(),
               client_be_selected: false,
               title: tec.text,
+              be_private: false,
+              be_publish: false,
+              tags: "",
             ),
             syncTag: null,
-            willFragmentGroupConfigsCompanion: (fragmentGroupId) {
-              return Crt.fragmentGroupConfigsCompanion(
-                be_private: false,
-                be_publish: false,
-                creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-                fragment_group_id: fragmentGroupId,
-              );
-            },
           );
 
           await Aber.findOrNullLast<FragmentGroupListPageController>()?.refreshCurrentGroup();

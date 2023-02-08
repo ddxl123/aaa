@@ -16,7 +16,7 @@ class FragmentGroupListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GroupListWidget<FragmentGroup, Fragment, FragmentGroupConfig, FragmentGroupListPageController>(
+    return GroupListWidget<FragmentGroup, Fragment, FragmentGroupListPageController>(
       groupListWidgetController: FragmentGroupListPageController(),
       groupChainStrings: (group, abw) => group(abw).entity(abw)?.title ?? '不存在实体！',
       headSliver: (c, g, abw) => SliverToBoxAdapter(
@@ -28,14 +28,14 @@ class FragmentGroupListPage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(g(abw).entity(abw)!.title+" 组属性", style: Theme.of(context).textTheme.titleLarge),
+                        Text(g(abw).entity(abw)!.title + " 组属性", style: Theme.of(context).textTheme.titleLarge),
                         Spacer(),
                         // 公开/私密/发布
                         IconButton(
                           icon: AbwBuilder(
                             builder: (abw) {
-                              final bePrivate = g(abw).config(abw)!.be_private;
-                              final bePublish = g(abw).config(abw)!.be_publish;
+                              final bePrivate = g(abw).entity(abw)!.be_private;
+                              final bePublish = g(abw).entity(abw)!.be_publish;
                               final privateColor = bePrivate ? Colors.amber : Colors.green;
                               final publishColor = bePublish ? Colors.green : Colors.amber;
                               return Row(
@@ -48,7 +48,7 @@ class FragmentGroupListPage extends StatelessWidget {
                             },
                           ),
                           onPressed: () {
-                            showPrivatePublishDialog(fragmentGroupConfigAb: g().config);
+                            showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
                           },
                         ),
                       ],

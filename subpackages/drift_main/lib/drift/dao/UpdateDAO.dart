@@ -44,15 +44,16 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           rFragment2FragmentGroups: null,
           child_fragments: null,
           memoryModels: null,
+          userComments: null,
+          userLikes: null,
         );
       },
     );
   }
 
   /// 修改 [FragmentGroup]。
-  Future<void> resetFragmentGroupAndConfig({
+  Future<void> resetFragmentGroup({
     required ResetFutureFunction<FragmentGroup>? originalFragmentGroupReset,
-    required ResetFutureFunction<FragmentGroupConfig>? originalFragmentGroupConfigReset,
     required SyncTag? syncTag,
   }) async {
     await withRefs(
@@ -64,11 +65,8 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           },
           rFragment2FragmentGroups: null,
           child_fragmentGroups: null,
-          fragmentGroupConfigs: RefFragmentGroupConfigs(
-            self: (_) async {
-              await originalFragmentGroupConfigReset?.call(st);
-            },
-          ),
+          userComments: null,
+          userLikes: null,
         );
       },
     );
@@ -95,12 +93,15 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               note_id: toAbsent(),
               syncTag: st,
               tags: toAbsent(),
+              be_sep_publish: toAbsent(),
             );
           },
           fragmentMemoryInfos: null,
           rFragment2FragmentGroups: null,
           child_fragments: null,
           memoryModels: null,
+          userComments: null,
+          userLikes: null,
         );
       },
     );
@@ -119,6 +120,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               client_be_selected: isSelected.toValue(),
               title: toAbsent(),
               syncTag: st,
+              be_private: toAbsent(),
+              be_publish: toAbsent(),
+              tags: toAbsent(),
             );
             final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
             final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
@@ -135,10 +139,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                   note_id: toAbsent(),
                   syncTag: st,
                   tags: toAbsent(),
+                  be_sep_publish: toAbsent(),
                 );
               },
             );
-            await Future.forEach<FragmentGroupAndConfig>(
+            await Future.forEach<FragmentGroupWithExtra>(
               fgs,
               (element) async {
                 await element.fragmentGroup.reset(
@@ -147,13 +152,17 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                   client_be_selected: isSelected.toValue(),
                   title: toAbsent(),
                   syncTag: st,
+                  be_private: toAbsent(),
+                  be_publish: toAbsent(),
+                  tags: toAbsent(),
                 );
               },
             );
           },
           rFragment2FragmentGroups: null,
           child_fragmentGroups: null,
-          fragmentGroupConfigs: null,
+          userComments: null,
+          userLikes: null,
         );
       },
     );

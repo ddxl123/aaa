@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
-class GroupListWidget<G, U, GC, C extends GroupListWidgetController<G, U, GC>> extends StatelessWidget {
+class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatelessWidget {
   const GroupListWidget({
     Key? key,
     this.headSliver,
@@ -16,16 +16,16 @@ class GroupListWidget<G, U, GC, C extends GroupListWidgetController<G, U, GC>> e
   }) : super(key: key);
   final C groupListWidgetController;
 
-  final Widget Function(C c, Ab<Group<G, U, GC>> group, Abw abw)? headSliver;
-  final String Function(Ab<Group<G, U, GC>> group, Abw abw) groupChainStrings;
-  final Widget Function(C c, Ab<Group<G, U, GC>> group, Abw abw) groupBuilder;
+  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw)? headSliver;
+  final String Function(Ab<Group<G, U>> group, Abw abw) groupChainStrings;
+  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw) groupBuilder;
   final Widget Function(C c, Ab<Unit<U>> unit, Abw abw) unitBuilder;
   final Widget Function(C c, Abw abw) oneActionBuilder;
   final void Function(C c) floatingButtonOnPressed;
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<GroupListWidgetController<G, U, GC>>(
+    return AbBuilder<GroupListWidgetController<G, U>>(
       putController: groupListWidgetController,
       tag: Aber.single,
       builder: (c, abw) {

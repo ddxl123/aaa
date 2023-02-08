@@ -18,35 +18,35 @@ part 'OtherResponseCode.dart';
 
 part 'HttperException.dart';
 
-part 'share_generate_result/bo/bo.dart';
+part 'dto_vo_bo/bo/bo.dart';
 
-part 'share_generate_result/dto_vo/CheckLoginDto.dart';
-
-
-part 'share_generate_result/dto_vo/CheckLoginVo.dart';
+part 'dto_vo_bo/dto_vo/CheckLoginDto.dart';
 
 
-part 'share_generate_result/dto_vo/DataUploadDto.dart';
+part 'dto_vo_bo/dto_vo/CheckLoginVo.dart';
 
 
-part 'share_generate_result/dto_vo/DataUploadVo.dart';
+part 'dto_vo_bo/dto_vo/DataUploadDto.dart';
 
 
-part 'share_generate_result/dto_vo/KnowledgeBaseQueryDto.dart';
+part 'dto_vo_bo/dto_vo/DataUploadVo.dart';
 
 
-part 'share_generate_result/dto_vo/KnowledgeBaseQueryVo.dart';
+part 'dto_vo_bo/dto_vo/KnowledgeBaseQueryDto.dart';
 
 
-part 'share_generate_result/dto_vo/LogoutDto.dart';
+part 'dto_vo_bo/dto_vo/KnowledgeBaseQueryVo.dart';
 
 
-part 'share_generate_result/dto_vo/LogoutVo.dart';
+part 'dto_vo_bo/dto_vo/LogoutDto.dart';
 
 
-part 'share_generate_result/dto_vo/SendOrVerifyDto.dart';
+part 'dto_vo_bo/dto_vo/LogoutVo.dart';
 
 
-part 'share_generate_result/dto_vo/SendOrVerifyVo.dart';
+part 'dto_vo_bo/dto_vo/SendOrVerifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SendOrVerifyVo.dart';
 
 

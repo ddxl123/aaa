@@ -42,47 +42,47 @@ part 'DriftDb.crt.dart';
 part 'DriftDb.reset.dart';
 
 
-part 'table/cloud/KnowledgeBaseCategorys.dart';
+part 'table/entity/KnowledgeBaseCategorys.dart';
 
-part 'table/cloud/client/ClientSyncInfos.dart';
+part 'table/entity/client/ClientSyncInfos.dart';
 
-part 'table/cloud/client/Syncs.dart';
+part 'table/entity/client/Syncs.dart';
 
-part 'table/cloud/info/FragmentMemoryInfos.dart';
+part 'table/entity/info/FragmentMemoryInfos.dart';
 
-part 'table/cloud/r/RDocument2DocumentGroups.dart';
+part 'table/entity/r/RDocument2DocumentGroups.dart';
 
-part 'table/cloud/r/RFragment2FragmentGroups.dart';
+part 'table/entity/r/RFragment2FragmentGroups.dart';
 
-part 'table/cloud/r/RNote2NoteGroups.dart';
+part 'table/entity/r/RNote2NoteGroups.dart';
 
-part 'table/cloud/test/Test2s.dart';
+part 'table/entity/test/Test2s.dart';
 
-part 'table/cloud/test/Tests.dart';
+part 'table/entity/test/Tests.dart';
 
-part 'table/cloud/unit/Documents.dart';
+part 'table/entity/unit/Documents.dart';
 
-part 'table/cloud/unit/FragmentTemplates.dart';
+part 'table/entity/unit/FragmentTemplates.dart';
 
-part 'table/cloud/unit/Fragments.dart';
+part 'table/entity/unit/Fragments.dart';
 
-part 'table/cloud/unit/MemoryGroups.dart';
+part 'table/entity/unit/MemoryGroups.dart';
 
-part 'table/cloud/unit/MemoryModels.dart';
+part 'table/entity/unit/MemoryModels.dart';
 
-part 'table/cloud/unit/Notes.dart';
+part 'table/entity/unit/Notes.dart';
 
-part 'table/cloud/unit_group/DocumentGroups.dart';
+part 'table/entity/unit_group/DocumentGroups.dart';
 
-part 'table/cloud/unit_group/FragmentGroups.dart';
+part 'table/entity/unit_group/FragmentGroups.dart';
 
-part 'table/cloud/unit_group/NoteGroups.dart';
+part 'table/entity/unit_group/NoteGroups.dart';
 
-part 'table/cloud/user/UserComments.dart';
+part 'table/entity/user/UserComments.dart';
 
-part 'table/cloud/user/UserLikes.dart';
+part 'table/entity/user/UserLikes.dart';
 
-part 'table/cloud/user/Users.dart';
+part 'table/entity/user/Users.dart';
 
 const List<Type> tableClasses = [
 

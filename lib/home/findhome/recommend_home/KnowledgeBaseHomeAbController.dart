@@ -1,4 +1,3 @@
-import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -37,13 +36,13 @@ class Category {
 class KnowledgeBaseHomeAbController extends AbController {
   final categories = <Category>[].ab;
 
-  final categoryContentAb = <Ab<CategoryContent>>[].ab;
+  final knowledgeBaseContentListAb = <Ab<KnowledgeBaseContent>>[].ab;
 
   final selectedMainIndex = 0.ab;
 
   final selectedSubIndex = 0.ab;
 
-  final currentSortTypeAb = CurrentSortType.by_random.ab;
+  final currentKnowledgeBaseContentSortTypeAb = KnowledgeBaseContentSortType.by_random.ab;
 
   RefreshController refreshController = RefreshController(initialRefresh: true);
 
@@ -64,11 +63,11 @@ class KnowledgeBaseHomeAbController extends AbController {
   ///
   /// 当 [mainCategory] 与 [subCategory] 同时为空时，会刷新当前。
   ///
-  /// 当 [currentSortType] 为 null 时，使用当前排序方式。
+  /// 当 [currentKnowledgeBaseContentSortType] 为 null 时，使用当前排序方式。
   Future<void> changeTo({
     required Category? mainCategory,
     required Category? subCategory,
-    required CurrentSortType? currentSortType,
+    required KnowledgeBaseContentSortType? currentKnowledgeBaseContentSortType,
   }) async {
     if (mainCategory != null) {
       selectedMainIndex.refreshEasy((obj) => categories().indexOf(mainCategory));
@@ -77,16 +76,18 @@ class KnowledgeBaseHomeAbController extends AbController {
     if (subCategory != null) {
       selectedSubIndex.refreshEasy((oldValue) => getSelectedMainCategory()!.subCategories.indexOf(subCategory));
     }
-    currentSortTypeAb.refreshEasy((oldValue) => currentSortType ?? currentSortTypeAb());
+    currentKnowledgeBaseContentSortTypeAb.refreshEasy((oldValue) => currentKnowledgeBaseContentSortType ?? currentKnowledgeBaseContentSortTypeAb());
     await refreshController.requestRefresh();
   }
 
   Future<void> refreshPage() async {
     final one = await _refreshCategories(
-      queryCategorysDto: QueryCategorysDto(
+      knowledgeBaseQueryDto: KnowledgeBaseQueryDto(
         main_category: null,
         sub_category: null,
-        current_sort_type: currentSortTypeAb(),
+        knowledge_base_content_sort_type: currentKnowledgeBaseContentSortTypeAb(),
+        page: null,
+        size: null,
       ),
     );
     if (!one) {
@@ -98,10 +99,12 @@ class KnowledgeBaseHomeAbController extends AbController {
       return;
     }
     final two = await _refreshCategories(
-      queryCategorysDto: QueryCategorysDto(
+      knowledgeBaseQueryDto: KnowledgeBaseQueryDto(
         main_category: getSelectedMainCategory()!.name,
         sub_category: null,
-        current_sort_type: currentSortTypeAb(),
+        knowledge_base_content_sort_type: currentKnowledgeBaseContentSortTypeAb(),
+        page: null,
+        size: null,
       ),
     );
     if (!two) {
@@ -109,10 +112,12 @@ class KnowledgeBaseHomeAbController extends AbController {
       return;
     }
     final three = await _refreshCategories(
-      queryCategorysDto: QueryCategorysDto(
+      knowledgeBaseQueryDto: KnowledgeBaseQueryDto(
         main_category: getSelectedMainCategory()!.name,
         sub_category: getSelectedSubCategory()?.name ?? "全部",
-        current_sort_type: currentSortTypeAb(),
+        knowledge_base_content_sort_type: currentKnowledgeBaseContentSortTypeAb(),
+        page: 0,
+        size: 20,
       ),
     );
     if (!three) {
@@ -125,18 +130,18 @@ class KnowledgeBaseHomeAbController extends AbController {
   /// 若 [category] 为空，则表示查询主类别。
   ///
   /// 返回是否查询成功。
-  Future<bool> _refreshCategories({required QueryCategorysDto queryCategorysDto}) async {
-    final result = await request<QueryCategorysDto, QueryCategorysVo>(
+  Future<bool> _refreshCategories({required KnowledgeBaseQueryDto knowledgeBaseQueryDto}) async {
+    final result = await request<KnowledgeBaseQueryDto, KnowledgeBaseQueryVo>(
       path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_CATEGORYS,
-      dtoData: queryCategorysDto,
-      parseResponseVoData: QueryCategorysVo.fromJson,
+      dtoData: knowledgeBaseQueryDto,
+      parseResponseVoData: KnowledgeBaseQueryVo.fromJson,
     );
     return await result.handleCode(
       otherException: (int? code, HttperException httperException, StackTrace st) async {
         logger.outError(show: httperException.showMessage, error: httperException.debugMessage, stackTrace: st);
         return false;
       },
-      code30101: (String showMessage, QueryCategorysVo vo) async {
+      code30101: (String showMessage, KnowledgeBaseQueryVo vo) async {
         final olds = categories().map((e) => e.name).join(",");
         final news = vo.category_names!;
         if (olds == news) return true;
@@ -148,9 +153,11 @@ class KnowledgeBaseHomeAbController extends AbController {
         );
         return true;
       },
-      code30102: (String showMessage, QueryCategorysVo vo) async {
+      code30102: (String showMessage, KnowledgeBaseQueryVo vo) async {
         final olds = getSelectedMainCategory()!.subCategories.join(",");
-        final news = vo.category_names!;
+        final news = vo.category_names;
+        // news 为 null 意味着主类别为"全部"
+        if (news == null) return true;
         if (olds == news) return true;
 
         getSelectedMainCategory()!.subCategories
@@ -159,9 +166,9 @@ class KnowledgeBaseHomeAbController extends AbController {
         categories.refreshForce();
         return true;
       },
-      code30103: (String showMessage, QueryCategorysVo vo) async {
-        categoryContentAb.clearBroken(this);
-        categoryContentAb.refreshInevitable((obj) => obj..addAll(vo.category_content_list!.map((e) => e.ab)));
+      code30103: (String showMessage, KnowledgeBaseQueryVo vo) async {
+        knowledgeBaseContentListAb.clearBroken(this);
+        knowledgeBaseContentListAb.refreshInevitable((obj) => obj..addAll(vo.knowledge_base_content_list!.map((e) => e.ab)));
         return true;
       },
     );

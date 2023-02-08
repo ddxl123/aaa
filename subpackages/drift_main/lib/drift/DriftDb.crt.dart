@@ -213,7 +213,7 @@ class Crt {
   }
 
   static FragmentsCompanion fragmentsCompanion({
-    required bool be_publish,
+    required bool be_sep_publish,
     required bool client_be_selected,
     required String content,
     required int creator_user_id,
@@ -227,7 +227,7 @@ class Crt {
     DateTime? updated_at,
   }) {
     return FragmentsCompanion(
-      be_publish: Value(be_publish),
+      be_sep_publish: Value(be_sep_publish),
       client_be_selected: Value(client_be_selected),
       content: Value(content),
       creator_user_id: Value(creator_user_id),

@@ -549,7 +549,7 @@ extension FragmentExt on Fragment {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
-    required Value<bool> be_publish,
+    required Value<bool> be_sep_publish,
     required Value<bool> client_be_selected,
     required Value<String> content,
     required Value<int> creator_user_id,
@@ -562,9 +562,9 @@ extension FragmentExt on Fragment {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (be_publish.present && this.be_publish != be_publish.value) {
+    if (be_sep_publish.present && this.be_sep_publish != be_sep_publish.value) {
       isCloudModify = true;
-      this.be_publish = be_publish.value;
+      this.be_sep_publish = be_sep_publish.value;
     }
 
     if (client_be_selected.present &&

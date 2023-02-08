@@ -3923,15 +3923,15 @@ class $FragmentsTable extends Fragments
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _be_publishMeta =
-      const VerificationMeta('be_publish');
+  static const VerificationMeta _be_sep_publishMeta =
+      const VerificationMeta('be_sep_publish');
   @override
-  late final GeneratedColumn<bool> be_publish =
-      GeneratedColumn<bool>('be_publish', aliasedName, false,
+  late final GeneratedColumn<bool> be_sep_publish =
+      GeneratedColumn<bool>('be_sep_publish', aliasedName, false,
           type: DriftSqlType.bool,
           requiredDuringInsert: true,
           defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("be_publish" IN (0, 1))',
+            SqlDialect.sqlite: 'CHECK ("be_sep_publish" IN (0, 1))',
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
@@ -4006,7 +4006,7 @@ class $FragmentsTable extends Fragments
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        be_publish,
+        be_sep_publish,
         client_be_selected,
         content,
         creator_user_id,
@@ -4028,13 +4028,13 @@ class $FragmentsTable extends Fragments
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('be_publish')) {
+    if (data.containsKey('be_sep_publish')) {
       context.handle(
-          _be_publishMeta,
-          be_publish.isAcceptableOrUnknown(
-              data['be_publish']!, _be_publishMeta));
+          _be_sep_publishMeta,
+          be_sep_publish.isAcceptableOrUnknown(
+              data['be_sep_publish']!, _be_sep_publishMeta));
     } else if (isInserting) {
-      context.missing(_be_publishMeta);
+      context.missing(_be_sep_publishMeta);
     }
     if (data.containsKey('client_be_selected')) {
       context.handle(
@@ -4116,8 +4116,8 @@ class $FragmentsTable extends Fragments
   Fragment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Fragment(
-      be_publish: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
+      be_sep_publish: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_sep_publish'])!,
       client_be_selected: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       content: attachedDatabase.typeMapping
@@ -4150,7 +4150,7 @@ class $FragmentsTable extends Fragments
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
-  bool be_publish;
+  bool be_sep_publish;
   bool client_be_selected;
   String content;
   int creator_user_id;
@@ -4163,7 +4163,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   String id;
   DateTime updated_at;
   Fragment(
-      {required this.be_publish,
+      {required this.be_sep_publish,
       required this.client_be_selected,
       required this.content,
       required this.creator_user_id,
@@ -4178,7 +4178,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['be_publish'] = Variable<bool>(be_publish);
+    map['be_sep_publish'] = Variable<bool>(be_sep_publish);
     map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['content'] = Variable<String>(content);
     map['creator_user_id'] = Variable<int>(creator_user_id);
@@ -4201,7 +4201,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   FragmentsCompanion toCompanion(bool nullToAbsent) {
     return FragmentsCompanion(
-      be_publish: Value(be_publish),
+      be_sep_publish: Value(be_sep_publish),
       client_be_selected: Value(client_be_selected),
       content: Value(content),
       creator_user_id: Value(creator_user_id),
@@ -4226,7 +4226,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Fragment(
-      be_publish: serializer.fromJson<bool>(json['be_publish']),
+      be_sep_publish: serializer.fromJson<bool>(json['be_sep_publish']),
       client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       content: serializer.fromJson<String>(json['content']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
@@ -4246,7 +4246,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'be_publish': serializer.toJson<bool>(be_publish),
+      'be_sep_publish': serializer.toJson<bool>(be_sep_publish),
       'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'content': serializer.toJson<String>(content),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
@@ -4262,7 +4262,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   }
 
   Fragment copyWith(
-          {bool? be_publish,
+          {bool? be_sep_publish,
           bool? client_be_selected,
           String? content,
           int? creator_user_id,
@@ -4275,7 +4275,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           String? id,
           DateTime? updated_at}) =>
       Fragment(
-        be_publish: be_publish ?? this.be_publish,
+        be_sep_publish: be_sep_publish ?? this.be_sep_publish,
         client_be_selected: client_be_selected ?? this.client_be_selected,
         content: content ?? this.content,
         creator_user_id: creator_user_id ?? this.creator_user_id,
@@ -4295,7 +4295,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   @override
   String toString() {
     return (StringBuffer('Fragment(')
-          ..write('be_publish: $be_publish, ')
+          ..write('be_sep_publish: $be_sep_publish, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')
@@ -4313,7 +4313,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 
   @override
   int get hashCode => Object.hash(
-      be_publish,
+      be_sep_publish,
       client_be_selected,
       content,
       creator_user_id,
@@ -4329,7 +4329,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Fragment &&
-          other.be_publish == this.be_publish &&
+          other.be_sep_publish == this.be_sep_publish &&
           other.client_be_selected == this.client_be_selected &&
           other.content == this.content &&
           other.creator_user_id == this.creator_user_id &&
@@ -4344,7 +4344,7 @@ class Fragment extends DataClass implements Insertable<Fragment> {
 }
 
 class FragmentsCompanion extends UpdateCompanion<Fragment> {
-  Value<bool> be_publish;
+  Value<bool> be_sep_publish;
   Value<bool> client_be_selected;
   Value<String> content;
   Value<int> creator_user_id;
@@ -4357,7 +4357,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<String> id;
   Value<DateTime> updated_at;
   FragmentsCompanion({
-    this.be_publish = const Value.absent(),
+    this.be_sep_publish = const Value.absent(),
     this.client_be_selected = const Value.absent(),
     this.content = const Value.absent(),
     this.creator_user_id = const Value.absent(),
@@ -4371,7 +4371,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.updated_at = const Value.absent(),
   });
   FragmentsCompanion.insert({
-    required bool be_publish,
+    required bool be_sep_publish,
     required bool client_be_selected,
     required String content,
     required int creator_user_id,
@@ -4383,7 +4383,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
-  })  : be_publish = Value(be_publish),
+  })  : be_sep_publish = Value(be_sep_publish),
         client_be_selected = Value(client_be_selected),
         content = Value(content),
         creator_user_id = Value(creator_user_id),
@@ -4393,7 +4393,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
         id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Fragment> custom({
-    Expression<bool>? be_publish,
+    Expression<bool>? be_sep_publish,
     Expression<bool>? client_be_selected,
     Expression<String>? content,
     Expression<int>? creator_user_id,
@@ -4407,7 +4407,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (be_publish != null) 'be_publish': be_publish,
+      if (be_sep_publish != null) 'be_sep_publish': be_sep_publish,
       if (client_be_selected != null) 'client_be_selected': client_be_selected,
       if (content != null) 'content': content,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
@@ -4424,7 +4424,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   }
 
   FragmentsCompanion copyWith(
-      {Value<bool>? be_publish,
+      {Value<bool>? be_sep_publish,
       Value<bool>? client_be_selected,
       Value<String>? content,
       Value<int>? creator_user_id,
@@ -4437,7 +4437,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       Value<String>? id,
       Value<DateTime>? updated_at}) {
     return FragmentsCompanion(
-      be_publish: be_publish ?? this.be_publish,
+      be_sep_publish: be_sep_publish ?? this.be_sep_publish,
       client_be_selected: client_be_selected ?? this.client_be_selected,
       content: content ?? this.content,
       creator_user_id: creator_user_id ?? this.creator_user_id,
@@ -4455,8 +4455,8 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (be_publish.present) {
-      map['be_publish'] = Variable<bool>(be_publish.value);
+    if (be_sep_publish.present) {
+      map['be_sep_publish'] = Variable<bool>(be_sep_publish.value);
     }
     if (client_be_selected.present) {
       map['client_be_selected'] = Variable<bool>(client_be_selected.value);
@@ -4498,7 +4498,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   @override
   String toString() {
     return (StringBuffer('FragmentsCompanion(')
-          ..write('be_publish: $be_publish, ')
+          ..write('be_sep_publish: $be_sep_publish, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')

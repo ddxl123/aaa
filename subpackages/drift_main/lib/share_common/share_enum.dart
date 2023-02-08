@@ -65,27 +65,3 @@ enum NewReviewDisplayOrder {
 
 }
         
-enum IdType {
-  
-  idAutoAssignable,
-
-  idManualAssignalbe,
-
-}
-        
-enum TableType {
-  
-  cloud,
-
-  client,
-
-}
-        
-enum TargetClassType {
-  
-  Dto,
-
-  Vo,
-
-}
-        

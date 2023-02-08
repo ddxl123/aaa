@@ -1,10 +1,9 @@
-import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
-Future<void> showPrivatePublishDialog({required Ab<FragmentGroupConfig?> fragmentGroupConfigAb}) async {
+Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragmentGroupAb}) async {
   return await showCustomDialog(
     builder: (_) {
       return StatefulBuilder(
@@ -18,24 +17,24 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroupConfig?> fragmen
                       Text("是否私密", style: TextStyle(fontSize: 18)),
                       Spacer(),
                       Switch(
-                        value: fragmentGroupConfigAb(abw)!.be_private,
+                        value: currentFragmentGroupAb(abw)!.be_private,
                         onChanged: (v) async {
-                          await db.updateDAO.resetFragmentGroupAndConfig(
-                            originalFragmentGroupReset: null,
-                            originalFragmentGroupConfigReset: fragmentGroupConfigAb() == null
-                                ? null
-                                : (SyncTag resetSyncTag) async {
-                                    return await fragmentGroupConfigAb()!.reset(
-                                      be_private: v.toValue(),
-                                      be_publish: "".toAbsent(),
-                                      creator_user_id: "".toAbsent(),
-                                      fragment_group_id: "".toAbsent(),
-                                      syncTag: resetSyncTag,
-                                    );
-                                  },
+                          await db.updateDAO.resetFragmentGroup(
                             syncTag: null,
+                            originalFragmentGroupReset: (SyncTag resetSyncTag) async {
+                              return await currentFragmentGroupAb()!.reset(
+                                be_private: v.toValue(),
+                                be_publish: 0.toAbsent(),
+                                client_be_selected: 0.toAbsent(),
+                                creator_user_id: 0.toAbsent(),
+                                father_fragment_groups_id: 0.toAbsent(),
+                                tags: 0.toAbsent(),
+                                title: 0.toAbsent(),
+                                syncTag: resetSyncTag,
+                              );
+                            },
                           );
-                          fragmentGroupConfigAb.refreshInevitable((obj) => obj!..be_private = v);
+                          currentFragmentGroupAb.refreshInevitable((obj) => obj!..be_private = v);
                         },
                       ),
                     ],
@@ -48,24 +47,24 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroupConfig?> fragmen
                       Text("是否发布", style: TextStyle(fontSize: 18)),
                       Spacer(),
                       Switch(
-                        value: fragmentGroupConfigAb(abw)!.be_publish,
+                        value: currentFragmentGroupAb(abw)!.be_publish,
                         onChanged: (v) async {
-                          await db.updateDAO.resetFragmentGroupAndConfig(
-                            originalFragmentGroupReset: null,
-                            originalFragmentGroupConfigReset: fragmentGroupConfigAb() == null
-                                ? null
-                                : (SyncTag resetSyncTag) async {
-                                    return await fragmentGroupConfigAb()!.reset(
-                                      be_private: "".toAbsent(),
-                                      be_publish: v.toValue(),
-                                      creator_user_id: "".toAbsent(),
-                                      fragment_group_id: "".toAbsent(),
-                                      syncTag: resetSyncTag,
-                                    );
-                                  },
+                          await db.updateDAO.resetFragmentGroup(
                             syncTag: null,
+                            originalFragmentGroupReset: (SyncTag resetSyncTag) async {
+                              return await currentFragmentGroupAb()!.reset(
+                                be_private: 0.toAbsent(),
+                                be_publish: v.toValue(),
+                                client_be_selected: 0.toAbsent(),
+                                creator_user_id: 0.toAbsent(),
+                                father_fragment_groups_id: 0.toAbsent(),
+                                tags: 0.toAbsent(),
+                                title: 0.toAbsent(),
+                                syncTag: resetSyncTag,
+                              );
+                            },
                           );
-                          fragmentGroupConfigAb.refreshInevitable((obj) => obj!..be_publish = v);
+                          currentFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = v);
                         },
                       ),
                     ],

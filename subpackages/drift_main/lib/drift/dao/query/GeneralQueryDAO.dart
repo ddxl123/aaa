@@ -8,14 +8,12 @@ enum QueryFragmentWhereType {
   selected,
 }
 
-class FragmentGroupAndConfig {
-  FragmentGroupAndConfig({
+class FragmentGroupWithExtra {
+  FragmentGroupWithExtra({
     required this.fragmentGroup,
-    required this.fragmentGroupConfig,
   });
 
   final FragmentGroup fragmentGroup;
-  final FragmentGroupConfig fragmentGroupConfig;
 }
 
 /// TODO: 所有curd函数体都要包裹上事务。
@@ -120,44 +118,27 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
-  Future<FragmentGroupAndConfig?> queryFragmentGroupById({required String targetFragmentGroupId}) async {
-    final selJoin = select(fragmentGroups).join(
-      [innerJoin(fragmentGroupConfigs, fragmentGroupConfigs.fragment_group_id.equalsExp(fragmentGroups.id))],
-    );
-    selJoin.where(fragmentGroups.id.equals(targetFragmentGroupId));
-    return await selJoin
-        .map(
-          (p0) => FragmentGroupAndConfig(
-            fragmentGroup: p0.readTable(fragmentGroups),
-            fragmentGroupConfig: p0.readTable(fragmentGroupConfigs),
-          ),
-        )
-        .getSingleOrNull();
+  Future<FragmentGroupWithExtra?> queryFragmentGroupById({required String targetFragmentGroupId}) async {
+    final sel = select(fragmentGroups);
+    sel.where((tbl) => tbl.id.equals(targetFragmentGroupId));
+    final result = await sel.getSingleOrNull();
+    return result == null ? null : FragmentGroupWithExtra(fragmentGroup: result);
   }
 
   /// 查询 [targetFragmentGroupId] 内的全部碎片组和碎片组配置，不包含子碎片组。
-  Future<List<FragmentGroupAndConfig>> queryFragmentGroupsInFragmentGroupById({required String? targetFragmentGroupId}) async {
-    final selJoin = select(fragmentGroups).join(
-      [innerJoin(fragmentGroupConfigs, fragmentGroupConfigs.fragment_group_id.equalsExp(fragmentGroups.id))],
+  Future<List<FragmentGroupWithExtra>> queryFragmentGroupsInFragmentGroupById({required String? targetFragmentGroupId}) async {
+    final sel = select(fragmentGroups);
+    sel.where(
+      (tbl) => targetFragmentGroupId == null ? tbl.father_fragment_groups_id.isNull() : tbl.father_fragment_groups_id.equals(targetFragmentGroupId),
     );
-    selJoin.where(
-      targetFragmentGroupId == null ? fragmentGroups.father_fragment_groups_id.isNull() : fragmentGroups.father_fragment_groups_id.equals(targetFragmentGroupId),
-    );
-    return await selJoin
-        .map(
-          (p0) => FragmentGroupAndConfig(
-            fragmentGroup: p0.readTable(fragmentGroups),
-            fragmentGroupConfig: p0.readTable(fragmentGroupConfigs),
-          ),
-        )
-        .get();
+    return await sel.map((p0) => FragmentGroupWithExtra(fragmentGroup: p0)).get();
   }
 
   /// 查询 [targetFragmentGroupId] 内的全部子碎片组。
-  Future<List<FragmentGroupAndConfig>> querySubFragmentGroupsInFragmentGroupById({required String? targetFragmentGroupId}) async {
-    Future<List<FragmentGroupAndConfig>> loop({required List<FragmentGroupAndConfig> list}) async {
-      final returnList = <FragmentGroupAndConfig>[...list];
-      await Future.forEach<FragmentGroupAndConfig>(
+  Future<List<FragmentGroupWithExtra>> querySubFragmentGroupsInFragmentGroupById({required String? targetFragmentGroupId}) async {
+    Future<List<FragmentGroupWithExtra>> loop({required List<FragmentGroupWithExtra> list}) async {
+      final returnList = <FragmentGroupWithExtra>[...list];
+      await Future.forEach<FragmentGroupWithExtra>(
         list,
         (element) async {
           final resultList = await queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: element.fragmentGroup.id);
@@ -179,7 +160,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     // 查询 targetFragmentGroup 内的碎片。
     final fs = await queryFragmentsInFragmentGroupById(targetFragmentGroupId: targetFragmentGroupId);
     // 查询子碎片组内的碎片。
-    await Future.forEach<FragmentGroupAndConfig>(
+    await Future.forEach<FragmentGroupWithExtra>(
       subFragmentGroups,
       (element) async {
         fs.addAll(await queryFragmentsInFragmentGroupById(targetFragmentGroupId: element.fragmentGroup.id));
@@ -200,7 +181,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
       queryFragmentWhereType: queryFragmentWhereType,
     );
     // 查询子碎片组内的碎片数量。
-    await Future.forEach<FragmentGroupAndConfig>(
+    await Future.forEach<FragmentGroupWithExtra>(
       subFragmentGroups,
       (element) async {
         count += await queryFragmentsCountInFragmentGroup(

@@ -24,6 +24,8 @@ class FragmentPerformer {
   /// 当前操作碎片所使用的模板。
   FragmentTemplate? fragmentTemplate;
 
+  final fragmentTag = <String>[];
+
   Future<String?> isExistModified({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
     final isEqualContentOk = isEqualContent(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
     final isEqualFragmentGroupChainsOk = await isEqualFragmentGroupChains(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
@@ -81,7 +83,8 @@ class FragmentPerformer {
           client_be_selected: false,
           note_id: null.toValue(),
           title: fragmentGizmoEditPageAbController.parseTitle(),
-          tags: "".toValue(),
+          tags: fragmentTag.join(","),
+          be_sep_publish: false,
         ),
         whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
         syncTag: null,
@@ -100,6 +103,7 @@ class FragmentPerformer {
             title: fragmentGizmoEditPageAbController.parseTitle().toValue(),
             tags: "".toValue(),
             syncTag: st,
+            be_sep_publish: false.toValue(),
           );
         },
         syncTag: null,
