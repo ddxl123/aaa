@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -189,3 +190,19 @@ extension ArrayStringInsert on String {
 }
 
 VisualDensity get kMinVisualDensity => const VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity);
+
+extension StringToJson on String {
+  /// 基本类型数组字符串转换成数组对象。
+  List<E> jsonToArray<E>() {
+    if (this.trim() == "") {
+      return [];
+    }
+    return json.decode(this) as List<E>;
+  }
+}
+
+extension ArrayToJson on List {
+  String toJson() {
+    return json.encode(this);
+  }
+}

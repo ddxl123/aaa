@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
@@ -178,7 +180,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                                         [KnowledgeBaseContentSortType.by_publish_time]: () => "按发布时间",
                                         [KnowledgeBaseContentSortType.by_update_time]: () => "按更新时间",
                                         [KnowledgeBaseContentSortType.by_like_count]: () => "按点赞量",
-                                        [KnowledgeBaseContentSortType.by_save_count]: () => "按保存量",
+                                        [KnowledgeBaseContentSortType.by_save_count]: () => "按收集量",
                                       },
                                       orElse: null,
                                     ),
@@ -195,7 +197,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                               Item(value: KnowledgeBaseContentSortType.by_publish_time, text: "按发布时间"),
                               Item(value: KnowledgeBaseContentSortType.by_update_time, text: "按更新时间"),
                               Item(value: KnowledgeBaseContentSortType.by_like_count, text: "按点赞量"),
-                              Item(value: KnowledgeBaseContentSortType.by_save_count, text: "按保存量"),
+                              Item(value: KnowledgeBaseContentSortType.by_save_count, text: "按收集量"),
                             ],
                             onChanged: (v) async {
                               await c.changeTo(mainCategory: null, subCategory: null, currentKnowledgeBaseContentSortType: v);
@@ -207,11 +209,31 @@ class KnowledgeBaseHome extends StatelessWidget {
                       SizedBox(width: 5),
                     ],
                   ),
-                  ...List.generate(
-                    20,
-                    (index) => Card(
-                      child: Container(height: 100),
-                    ),
+                  ...c.knowledgeBaseContentListAb(abw).map(
+                    (e) {
+                      return AbwBuilder(
+                        builder: (abw) {
+                          return Card(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(e(abw).fragment_group.title),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    ...e(abw).fragment_group.tags.jsonToArray().map((e) => Text(e)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),

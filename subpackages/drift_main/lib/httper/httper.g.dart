@@ -21,10 +21,8 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
 KnowledgeBaseContent _$KnowledgeBaseContentFromJson(
         Map<String, dynamic> json) =>
     KnowledgeBaseContent(
-      fragment_group: json['fragment_group'] == null
-          ? null
-          : FragmentGroup.fromJson(
-              json['fragment_group'] as Map<String, dynamic>),
+      fragment_group: FragmentGroup.fromJson(
+          json['fragment_group'] as Map<String, dynamic>),
       publisher_username: json['publisher_username'] as String,
     );
 

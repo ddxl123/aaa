@@ -20,7 +20,7 @@ DeviceAndTokenBo({
 
 @JsonSerializable()
 class KnowledgeBaseContent {
-    FragmentGroup? fragment_group;
+    FragmentGroup fragment_group;
     String publisher_username;
 
 KnowledgeBaseContent({

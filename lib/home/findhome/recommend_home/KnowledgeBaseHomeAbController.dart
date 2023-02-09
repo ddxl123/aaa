@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -142,27 +144,27 @@ class KnowledgeBaseHomeAbController extends AbController {
         return false;
       },
       code30101: (String showMessage, KnowledgeBaseQueryVo vo) async {
-        final olds = categories().map((e) => e.name).join(",");
+        final olds = categories().map((e) => e.name).toList().toJson();
         final news = vo.category_names!;
         if (olds == news) return true;
 
         categories.refreshInevitable(
           (obj) => obj
             ..clear()
-            ..insertAll(0, vo.category_names!.split(",").map((e) => Category(name: e, subCategories: []))),
+            ..insertAll(0, vo.category_names!.jsonToArray().map((e) => Category(name: e, subCategories: []))),
         );
         return true;
       },
       code30102: (String showMessage, KnowledgeBaseQueryVo vo) async {
-        final olds = getSelectedMainCategory()!.subCategories.join(",");
-        final news = vo.category_names;
+        final olds = getSelectedMainCategory()!.subCategories;
+        final news = vo.category_names == null ? null : vo.category_names!.jsonToArray();
         // news 为 null 意味着主类别为"全部"
         if (news == null) return true;
         if (olds == news) return true;
 
         getSelectedMainCategory()!.subCategories
           ..clear()
-          ..addAll((vo.category_names == null ? [] : vo.category_names!.split(",")).map((e) => Category(name: e, subCategories: [])));
+          ..addAll((vo.category_names == null ? [] : vo.category_names!.jsonToArray().map((e) => Category(name: e, subCategories: []))));
         categories.refreshForce();
         return true;
       },

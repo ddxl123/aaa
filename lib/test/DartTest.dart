@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 void main() async {
-  print(<String?>['n', null, 'ddd', null].indexOf(null));
+  print((json.decode('["1",false,null]') as List).last.runtimeType);
 }
