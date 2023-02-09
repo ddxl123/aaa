@@ -214,21 +214,82 @@ class KnowledgeBaseHome extends StatelessWidget {
                       return AbwBuilder(
                         builder: (abw) {
                           return Card(
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(e(abw).fragment_group.title),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    ...e(abw).fragment_group.tags.jsonToArray().map((e) => Text(e)),
-                                  ],
-                                ),
-                              ],
+                            child: Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(e(abw).fragment_group.title, style: Theme.of(c.context).textTheme.titleLarge),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text("448百科知识选择、填空"),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                          "数学",
+                                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Container(
+                                        child: Text(
+                                          "英语",
+                                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Container(
+                                        child: Text(
+                                          "四级英语",
+                                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Container(
+                                        child: Text(
+                                          "···",
+                                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                      ),
+                                      ...e(abw).fragment_group.tags.jsonToArray().map((e) => Text(e)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Spacer(),
+                                      Text(
+                                        "1304 大赞 · 146 评论 · ",
+                                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                                      ),
+                                      Text(
+                                        "82 收集",
+                                        style: TextStyle(color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

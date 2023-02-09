@@ -161,7 +161,8 @@ class TestHome extends StatelessWidget {
                                     logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
                                   },
                                   code20101: (String showMessage) async {
-                                    logger.outNormal(print: showMessage);
+                                    await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.t1).toList());
+                                    logger.outNormal(print: showMessage, show: showMessage);
                                   },
                                 );
                               },

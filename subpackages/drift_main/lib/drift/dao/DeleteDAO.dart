@@ -21,4 +21,17 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
       },
     );
   }
+
+  Future<void> rowDeleteUploadedSync({required List<Sync> syncs}) async {
+    if (syncs.isEmpty) return;
+    await transaction(
+      () async {
+        await db.batch(
+          (batch) {
+            batch.delete(db.syncs, syncs.first);
+          },
+        );
+      },
+    );
+  }
 }
