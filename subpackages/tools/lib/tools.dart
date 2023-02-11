@@ -21,6 +21,7 @@ export 'src/dropdown_button.dart';
 export 'src/filter.dart';
 export 'src/other.dart';
 export 'src/FloatingRoundCornerButton.dart';
+export 'src/Isolater.dart';
 export 'src/KeepStateWidget.dart';
 export 'src/dialog/custom_dialog.dart';
 export 'src/aber/Aber.dart';

@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:aaa/global/GlobalAbController.dart';
-import 'package:aaa/home/Home.dart';
 import 'package:aaa/theme/theme.dart';
 import 'package:catcher/catcher.dart';
 import 'package:cool_ui/cool_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -11,6 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
 import 'algorithm_parser/AlgorithmKeyboard.dart';
+import 'home/Home.dart';
 
 void main() {
   // 全局异常捕获 相关
@@ -19,7 +25,6 @@ void main() {
   // CatcherOptions releaseOptions = CatcherOptions(DialogReportMode(), [
   //   EmailManualHandler(["support@email.com"])
   // ]);
-
 
   // 自定义键盘 相关
   AlgorithmKeyboard.register();

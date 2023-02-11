@@ -127,44 +127,6 @@ class TestHome extends StatelessWidget {
                             ElevatedButton(
                               child: const Text('上传 tag 最小的一组 sync 数据'),
                               onPressed: () async {
-                                final result = await db.generalQueryDAO.querySameSyncTagWithRow();
-                                final requestResult = await request(
-                                  path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS,
-                                  dtoData: DataUploadDto(
-                                    sync_entity: Sync(
-                                      row_id: "",
-                                      sync_curd_type: SyncCurdType.u,
-                                      sync_table_name: "",
-                                      tag: 0,
-                                      created_at: DateTime.now(),
-                                      id: 0,
-                                      updated_at: DateTime.now(),
-                                    ),
-                                    row_map: {},
-                                    dto_padding_1: null,
-                                    dto_padding_2: null,
-                                  ),
-                                  dtoDataList: result
-                                      .map(
-                                        (e) => DataUploadDto(
-                                          sync_entity: e.t1,
-                                          row_map: e.t2.toJson(),
-                                          dto_padding_1: null,
-                                          dto_padding_2: null,
-                                        ),
-                                      )
-                                      .toList(),
-                                  parseResponseVoData: DataUploadVo.fromJson,
-                                );
-                                await requestResult.handleCode(
-                                  otherException: (int? code, HttperException httperException, StackTrace st) async {
-                                    logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
-                                  },
-                                  code20101: (String showMessage) async {
-                                    await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.t1).toList());
-                                    logger.outNormal(print: showMessage, show: showMessage);
-                                  },
-                                );
                               },
                             ),
                           ],

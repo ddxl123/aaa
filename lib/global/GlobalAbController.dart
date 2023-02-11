@@ -1,6 +1,7 @@
 import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -22,6 +23,7 @@ class GlobalAbController extends AbController {
 
   Future<void> _init() async {
     await checkIsLoggedIn();
+    uploadSingleGroupSync();
   }
 
   /// 检查是否已登录，未登录则弹出登录框。
@@ -87,5 +89,54 @@ class GlobalAbController extends AbController {
 
     logger.outError(show: "发生异常！", print: "检查结果为用户已登录，但 loggedInUser() 却为 null！");
     return null;
+  }
+
+  /// 上传 tag 最小的一组 sync 数据
+  Future<void> uploadSingleGroupSync() async {
+    final result = await db.generalQueryDAO.querySameSyncTagWithRow();
+    if (result.isEmpty) {
+      logger.outNormal(show: "上传全部数据成功！");
+      // 当全部上传成功后，每5秒监听一次是否有新的数据需要上传。
+      await Future.delayed(Duration(seconds: 5));
+      await uploadSingleGroupSync();
+      return;
+    }
+    final requestResult = await request(
+      path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS,
+      dtoData: DataUploadDto(
+        sync_entity: Sync(
+          row_id: "",
+          sync_curd_type: SyncCurdType.u,
+          sync_table_name: "",
+          tag: 0,
+          created_at: DateTime.now(),
+          id: 0,
+          updated_at: DateTime.now(),
+        ),
+        row_map: {},
+        dto_padding_1: null,
+        dto_padding_2: null,
+      ),
+      dtoDataList: result
+          .map(
+            (e) => DataUploadDto(
+              sync_entity: e.t1,
+              row_map: e.t2.toJson(),
+              dto_padding_1: null,
+              dto_padding_2: null,
+            ),
+          )
+          .toList(),
+      parseResponseVoData: DataUploadVo.fromJson,
+    );
+    await requestResult.handleCode(
+      otherException: (int? code, HttperException httperException, StackTrace st) async {
+        logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
+      },
+      code20101: (String showMessage) async {
+        await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.t1).toList());
+        await uploadSingleGroupSync();
+      },
+    );
   }
 }

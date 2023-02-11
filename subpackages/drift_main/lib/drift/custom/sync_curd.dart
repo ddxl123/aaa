@@ -1,5 +1,6 @@
 part of drift_db;
 
+/// 不建议使用该同步方案。建议使用每个 row 都添加一个字段的方案来识别是否已被同步。
 extension DriftSyncExt on DatabaseConnectionUser {
   ///
 
