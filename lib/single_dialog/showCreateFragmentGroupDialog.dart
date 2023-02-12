@@ -31,7 +31,7 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
               title: tec.text,
               be_private: false,
               be_publish: false,
-              tags: "",
+              tags: "[]",
             ),
             syncTag: null,
           );

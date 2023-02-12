@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
@@ -229,62 +230,122 @@ class KnowledgeBaseHome extends StatelessWidget {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text("448百科知识选择、填空"),
+                                        child: Text("448百科知识选择、填空", style: TextStyle(color: Colors.black54)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 15),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 40,
+                                          child: VerticalDivider(color: Colors.black12),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.circle, size: 8),
+                                                  SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "dog 的中文翻译是什么的中文翻译是什么的中文翻译是什么的中文翻译是什么的中文翻译是什么的中文翻译是什么？",
+                                                      style: TextStyle(
+                                                        decoration: TextDecoration.underline,
+                                                        decorationColor: Colors.grey,
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.circle, size: 8),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    "人的行为产生的本质是什么？",
+                                                    style: TextStyle(
+                                                      decoration: TextDecoration.underline,
+                                                      decorationColor: Colors.grey,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Wrap(
+                                          spacing: 5,
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                "数学",
+                                                style: TextStyle(fontSize: 12, color: Colors.black54),
+                                              ),
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "英语",
+                                                style: TextStyle(fontSize: 12, color: Colors.black54),
+                                              ),
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "四级英语",
+                                                style: TextStyle(fontSize: 12, color: Colors.black54),
+                                              ),
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "···",
+                                                style: TextStyle(fontSize: 12, color: Colors.black54),
+                                              ),
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
+                                            ),
+                                            ...e(abw).fragment_group.tags.jsonToArray().map((e) => Text(e)),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                   SizedBox(height: 10),
                                   Row(
                                     children: [
-                                      Container(
-                                        child: Text(
-                                          "数学",
-                                          style: TextStyle(fontSize: 12, color: Colors.black54),
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Container(
-                                        child: Text(
-                                          "英语",
-                                          style: TextStyle(fontSize: 12, color: Colors.black54),
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Container(
-                                        child: Text(
-                                          "四级英语",
-                                          style: TextStyle(fontSize: 12, color: Colors.black54),
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Container(
-                                        child: Text(
-                                          "···",
-                                          style: TextStyle(fontSize: 12, color: Colors.black54),
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
-                                      ),
-                                      ...e(abw).fragment_group.tags.jsonToArray().map((e) => Text(e)),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
+                                      FaIcon(FontAwesomeIcons.puzzlePiece, size: 14, color: Colors.orange),
+                                      Text(" 13546", style: TextStyle(color: Colors.orange)),
                                       Spacer(),
                                       Text(
-                                        "1304 大赞 · 146 评论 · ",
-                                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                                        "1304 赞 · 146 评论 · ",
+                                        style: TextStyle(color: Colors.black54),
                                       ),
-                                      Text(
-                                        "82 收集",
-                                        style: TextStyle(color: Colors.green),
+                                      MaterialButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          "82 收集",
+                                          style: TextStyle(color: Colors.green, fontSize:  18),
+                                        ),
+                                        visualDensity: kMinVisualDensity,
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                       ),
                                     ],
                                   ),
