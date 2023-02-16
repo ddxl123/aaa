@@ -3,6 +3,7 @@ import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
 import 'package:aaa/single_dialog/showPrivatePublishDialog.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,47 +24,67 @@ class FragmentGroupListPage extends StatelessWidget {
         child: g(abw).entity(abw) == null
             ? Container()
             : Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(g(abw).entity(abw)!.title + " 组属性", style: Theme.of(context).textTheme.titleLarge),
-                        Spacer(),
-                        // 公开/私密/发布
-                        IconButton(
-                          icon: AbwBuilder(
-                            builder: (abw) {
-                              final bePrivate = g(abw).entity(abw)!.be_private;
-                              final bePublish = g(abw).entity(abw)!.be_publish;
-                              final privateColor = bePrivate ? Colors.amber : Colors.green;
-                              final publishColor = bePublish ? Colors.green : Colors.amber;
-                              return Row(
-                                children: [
-                                  Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
-                                  Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
-                                  Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
-                                ],
-                              );
+                padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
+                child: DottedBorder(
+                  borderType: BorderType.RRect,
+                  radius: Radius.circular(5),
+                  dashPattern: [10, 10],
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: [
+                                Icon(LineIcons.book, size: 34),
+                                Text(g(abw).entity(abw)!.title, style: Theme.of(context).textTheme.titleLarge),
+                              ],
+                            ),
+                          ),
+                          // 公开/私密/发布
+                          IconButton(
+                            icon: AbwBuilder(
+                              builder: (abw) {
+                                final bePrivate = g(abw).entity(abw)!.be_private;
+                                final bePublish = g(abw).entity(abw)!.be_publish;
+                                final privateColor = bePrivate ? Colors.amber : Colors.green;
+                                final publishColor = bePublish ? Colors.green : Colors.amber;
+                                return Row(
+                                  children: [
+                                    Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
+                                    Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
+                                    Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
+                                  ],
+                                );
+                              },
+                            ),
+                            onPressed: () {
+                              showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
                             },
                           ),
-                          onPressed: () {
-                            showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text("【超全】448百科知识选择、填空(含刘军平第二勘误版)"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),
       groupBuilder: (c, group, abw) {
         return Card(
+          elevation: 0,
           child: Row(
             children: [
               Expanded(
                 child: TextButton(
-                  style: const ButtonStyle(
+                  style: ButtonStyle(
                     padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -71,7 +92,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     children: [
                       Icon(LineIcons.book),
                       SizedBox(width: 20),
-                      Expanded(child: Text(group(abw).entity()!.title)),
+                      Expanded(child: Text(group(abw).entity()!.title, style: TextStyle(color: Colors.black))),
                     ],
                   ),
                   onPressed: () async {

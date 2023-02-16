@@ -31,7 +31,6 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
       builder: (c, abw) {
         return Scaffold(
           primary: false,
-          appBar: _appBarBottom(context),
           body: _body(),
           bottomNavigationBar: _bottomNavigationBar(),
           floatingActionButton: c.isUnitSelecting(abw) ? _floatingActionButton() : null,
@@ -121,66 +120,148 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
     return AbBuilder<C>(
       tag: Aber.single,
       builder: (c, tAbw) {
-        return IndexedStack(
-          index: c.groupChain(tAbw).length - 1,
+        return Column(
           children: [
-            ...c.groupChain(tAbw).map(
-                  (e) => AbwBuilder(
-                    builder: (abw) {
-                      return SmartRefresher(
-                        onRefresh: () async {
-                          await c.refreshCurrentGroup();
-                          e().refreshController.refreshCompleted();
-                        },
-                        controller: e(abw).refreshController,
-                        child: CustomScrollView(
-                          slivers: [
-                            e(abw).entity(abw) == null ? SliverToBoxAdapter() : (headSliver?.call(c, e, abw) ?? SliverToBoxAdapter()),
-                            (e().groups().isEmpty && e().units().isEmpty)
-                                ? SliverToBoxAdapter(
-                                    child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text('什么都没有~'),
-                                    ],
-                                  ))
-                                : const SliverToBoxAdapter(),
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
-                                child: Row(
+            Container(
+              height: kMinInteractiveDimension,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: AbBuilder<C>(
+                      tag: Aber.single,
+                      builder: (c, abw) {
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          controller: c.groupChainScrollController,
+                          scrollDirection: Axis.horizontal,
+                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          itemCount: c.groupChain(abw).length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return AbwBuilder(
+                              builder: (innerAbw) {
+                                return Row(
                                   children: [
-                                    Text("子组", style: Theme.of(c.context).textTheme.titleLarge),
+                                    TextButton(
+                                      style: ButtonStyle(
+                                        visualDensity: kMinVisualDensity,
+                                      ),
+                                      child: Text(
+                                        c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null ? '~' : '${groupChainStrings(c.groupChain(abw)[index], innerAbw)}',
+                                      ),
+                                      onPressed: () async {
+                                        await c.enterGroup(c.groupChain(abw)[index]);
+                                      },
+                                    ),
+                                    if (c.groupChain(abw).length - 1 == index) SizedBox(width: MediaQuery.of(context).size.width / 3),
                                   ],
-                                ),
-                              ),
-                            ),
-                            _fragmentGroupsBuilder(),
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
-                                child: Row(
-                                  children: [
-                                    Text("碎片", style: Theme.of(c.context).textTheme.titleLarge),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            _fragmentsBuilder(),
-                            SliverToBoxAdapter(
-                              child: TextButton(
-                                onPressed: () async {
-                                  await c.backGroup();
-                                },
-                                child: const Text('back'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                                );
+                              },
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Icon(Icons.chevron_right);
+                          },
+                        );
+                        return SingleChildScrollView(
+                          controller: c.groupChainScrollController,
+                          scrollDirection: Axis.horizontal,
+                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          child: Row(
+                            children: [
+                              ...c.groupChain(abw).map(
+                                    (e) => AbwBuilder(
+                                      builder: (innerAbw) {
+                                        return TextButton(
+                                          child: Text(
+                                            e(innerAbw).entity(innerAbw) == null ? '~ >' : '${groupChainStrings(e, innerAbw)} >',
+                                          ),
+                                          onPressed: () async {
+                                            await c.enterGroup(e);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                              SizedBox(width: MediaQuery.of(c.context).size.width / 3),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  AbBuilder<C>(
+                    tag: Aber.single,
+                    builder: (c, abw) {
+                      return oneActionBuilder(c, abw);
                     },
                   ),
-                ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: IndexedStack(
+                index: c.groupChain(tAbw).length - 1,
+                children: [
+                  ...c.groupChain(tAbw).map(
+                        (e) => AbwBuilder(
+                          builder: (abw) {
+                            return SmartRefresher(
+                              onRefresh: () async {
+                                await c.refreshCurrentGroup();
+                                e().refreshController.refreshCompleted();
+                              },
+                              controller: e(abw).refreshController,
+                              child: CustomScrollView(
+                                slivers: [
+                                  e(abw).entity(abw) == null ? SliverToBoxAdapter() : (headSliver?.call(c, e, abw) ?? SliverToBoxAdapter()),
+                                  (e().groups().isEmpty && e().units().isEmpty)
+                                      ? SliverToBoxAdapter(
+                                          child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: const [
+                                            Text('什么都没有~'),
+                                          ],
+                                        ))
+                                      : const SliverToBoxAdapter(),
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
+                                      child: Row(
+                                        children: [
+                                          Text("子组", style: TextStyle(color: Colors.grey)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _fragmentGroupsBuilder(),
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
+                                      child: Row(
+                                        children: [
+                                          Text("碎片", style: TextStyle(color: Colors.grey)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _fragmentsBuilder(),
+                                  SliverToBoxAdapter(
+                                    child: TextButton(
+                                      onPressed: () async {
+                                        await c.backGroup();
+                                      },
+                                      child: const Text('back'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                ],
+              ),
+            ),
           ],
         );
       },
@@ -191,68 +272,22 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
     return AbBuilder<C>(
       tag: Aber.single,
       builder: (c, abw) {
+        return SliverToBoxAdapter(
+          child: Column(
+            children: [
+              ...c.getCurrentGroupAb()(abw).groups(abw).map(
+                (e) {
+                  return AbwBuilder(builder: (abw) => groupBuilder(c, e, abw));
+                },
+              ).toList(),
+            ],
+          ),
+        );
         return SliverList(
           delegate: SliverChildListDelegate(
             c.getCurrentGroupAb()(abw).groups(abw).map(
               (e) {
                 return AbwBuilder(builder: (abw) => groupBuilder(c, e, abw));
-                // return Row(
-                //   children: [
-                //     Expanded(
-                //       child: TextButton(
-                //         child: Text(e().currentGroupEntity().toString()),
-                //         onPressed: () {
-                //           // c.enterPart(c.currentPart().indexAbFragmentGroup(index));
-                //         },
-                //         onLongPress: () async {
-                //           // Aber.find<HomeAbController>().isFragmentSelecting.refreshEasy((oldValue) => !oldValue);
-                //         },
-                //       ),
-                //     ),
-                // AbBuilder<HomeAbController>(
-                //   builder: (hController, hAwb) {
-                //     if (hController.isFragmentSelecting(hAwb)) {
-                //       return AbBuilder<FragmentGroupListPageAbController>(
-                //         tag: Aber.single,
-                //         builder: (countC, countAbw) {
-                //           return Text(
-                //             '${countC.currentPart().indexSelectedFragmentCountForAllSubgroup(index, countAbw)}/${countC.currentPart().indexFragmentCountForAllSubgroup(index, countAbw)}',
-                //           );
-                //         },
-                //       );
-                //     }
-                //     return Container();
-                //   },
-                // ),
-                // AbBuilder<HomeAbController>(
-                //   builder: (hController, hAwb) {
-                //     if (hController.isFragmentSelecting(hAwb)) {
-                //       return AbBuilder<FragmentGroupListPageAbController>(
-                //         tag: Aber.single,
-                //         builder: (selectController, selectAbw) {
-                //           return IconButton(
-                //             icon: () {
-                //               final isSelected = selectController.currentPart().indexIsSelectedForFragmentGroup(index, selectAbw);
-                //               if (isSelected == null) {
-                //                 return const FaIcon(FontAwesomeIcons.circleHalfStroke, color: Colors.amber, size: 14);
-                //               }
-                //               if (isSelected) {
-                //                 return const FaIcon(FontAwesomeIcons.solidCircle, color: Colors.amber, size: 14);
-                //               }
-                //               return const FaIcon(FontAwesomeIcons.solidCircle, color: Colors.grey, size: 14);
-                //             }(),
-                //             onPressed: () async {
-                //               await selectController.currentPart().selectFragmentGroup(index, selectController.currentPart().indexFragmentGroup(index).id);
-                //             },
-                //           );
-                //         },
-                //       );
-                //     }
-                //     return Container();
-                //   },
-                // ),
-                //   ],
-                // );
               },
             ).toList(),
           ),
@@ -310,61 +345,6 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
           ),
         );
       },
-    );
-  }
-
-  PreferredSize _appBarBottom(BuildContext context) {
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(kMinInteractiveDimension),
-      child: Container(
-        alignment: Alignment.centerLeft,
-        decoration: const BoxDecoration(
-          color: Colors.white10,
-          border: Border(
-              // bottom: BorderSide(width: 0.5, color: Colors.grey),
-              ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: AbBuilder<C>(
-                  tag: Aber.single,
-                  builder: (c, abw) {
-                    return SingleChildScrollView(
-                      controller: c.groupChainScrollController,
-                      scrollDirection: Axis.horizontal,
-                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                      child: Row(
-                        children: [
-                          ...c.groupChain(abw).map(
-                                (e) => AbwBuilder(
-                                  builder: (innerAbw) {
-                                    return TextButton(
-                                      child: Text(
-                                        e(innerAbw).entity(innerAbw) == null ? '~ >' : '${groupChainStrings(e, innerAbw)} >',
-                                      ),
-                                      onPressed: () async {
-                                        await c.enterGroup(e);
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                          SizedBox(width: MediaQuery.of(context).size.width / 3),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-            AbBuilder<C>(
-              tag: Aber.single,
-              builder: (c, abw) {
-                return oneActionBuilder(c, abw);
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

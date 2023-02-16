@@ -15,6 +15,8 @@ class GlobalAbController extends AbController {
   final loggedInUser = Ab<User?>(null);
   final status = Status.normal.ab;
 
+  final beExistUploadData = true.ab;
+
   @override
   void onInit() {
     super.onInit();
@@ -92,13 +94,15 @@ class GlobalAbController extends AbController {
   }
 
   /// 上传 tag 最小的一组 sync 数据
-  Future<void> uploadSingleGroupSync() async {
+  Future<void> uploadSingleGroupSync({bool isShowToast = true}) async {
     final result = await db.generalQueryDAO.querySameSyncTagWithRow();
     if (result.isEmpty) {
-      logger.outNormal(show: "上传全部数据成功！");
+      if (isShowToast) {
+        logger.outNormal(show: "上传全部数据成功！");
+      }
       // 当全部上传成功后，每5秒监听一次是否有新的数据需要上传。
       await Future.delayed(Duration(seconds: 5));
-      await uploadSingleGroupSync();
+      await uploadSingleGroupSync(isShowToast: false);
       return;
     }
     final requestResult = await request(

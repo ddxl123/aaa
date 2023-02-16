@@ -18,7 +18,7 @@ class KnowledgeBaseQueryDto extends BaseObject{
     /// 分页每页数量，用 Long 类型
     int? size;
 
-    /// 要查询第几页，用 Long 类型
+    /// 要查询第几页，用 Long 类型，从 0 开始
     int? page;
 
 

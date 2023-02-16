@@ -37,7 +37,7 @@ dependencies:
   # drift 需要
   sqlite3_flutter_libs: any
   # drift 需要
-  path_provider: any
+  path_provider: 2.0.12
   # drift 需要
   path: 1.8.2
   # drift 需要，在应用内可视化数据库数据
@@ -68,6 +68,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   # 异常捕获
   catcher: ^0.7.0
+  # 虚线边框
+  dotted_border: any
 
   modal_bottom_sheet: ^3.0.0-pre
 
