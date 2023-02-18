@@ -38,52 +38,81 @@ CheckLoginDto _$CheckLoginDtoFromJson(Map<String, dynamic> json) =>
       device_and_token_bo: DeviceAndTokenBo.fromJson(
           json['device_and_token_bo'] as Map<String, dynamic>),
       dto_padding_1: json['dto_padding_1'] as bool?,
-      dto_padding_2: json['dto_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$CheckLoginDtoToJson(CheckLoginDto instance) =>
     <String, dynamic>{
       'device_and_token_bo': instance.device_and_token_bo,
       'dto_padding_1': instance.dto_padding_1,
-      'dto_padding_2': instance.dto_padding_2,
     };
 
 CheckLoginVo _$CheckLoginVoFromJson(Map<String, dynamic> json) => CheckLoginVo(
       vo_padding_1: json['vo_padding_1'] as bool?,
-      vo_padding_2: json['vo_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$CheckLoginVoToJson(CheckLoginVo instance) =>
     <String, dynamic>{
       'vo_padding_1': instance.vo_padding_1,
-      'vo_padding_2': instance.vo_padding_2,
+    };
+
+DataDownloadForFragmentGroupDto _$DataDownloadForFragmentGroupDtoFromJson(
+        Map<String, dynamic> json) =>
+    DataDownloadForFragmentGroupDto(
+      fragment_group_id: json['fragment_group_id'] as String,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$DataDownloadForFragmentGroupDtoToJson(
+        DataDownloadForFragmentGroupDto instance) =>
+    <String, dynamic>{
+      'fragment_group_id': instance.fragment_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+DataDownloadForFragmentGroupVo _$DataDownloadForFragmentGroupVoFromJson(
+        Map<String, dynamic> json) =>
+    DataDownloadForFragmentGroupVo(
+      fragment_group_list: (json['fragment_group_list'] as List<dynamic>)
+          .map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      r_fragment2_fragment_group_list:
+          (json['r_fragment2_fragment_group_list'] as List<dynamic>)
+              .map((e) =>
+                  RFragment2FragmentGroup.fromJson(e as Map<String, dynamic>))
+              .toList(),
+      fragment_list: (json['fragment_list'] as List<dynamic>)
+          .map((e) => Fragment.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$DataDownloadForFragmentGroupVoToJson(
+        DataDownloadForFragmentGroupVo instance) =>
+    <String, dynamic>{
+      'fragment_group_list': instance.fragment_group_list,
+      'r_fragment2_fragment_group_list':
+          instance.r_fragment2_fragment_group_list,
+      'fragment_list': instance.fragment_list,
     };
 
 DataUploadDto _$DataUploadDtoFromJson(Map<String, dynamic> json) =>
     DataUploadDto(
       sync_entity: Sync.fromJson(json['sync_entity'] as Map<String, dynamic>),
       row_map: json['row_map'] as Map<String, dynamic>,
-      dto_padding_1: json['dto_padding_1'] as bool?,
-      dto_padding_2: json['dto_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$DataUploadDtoToJson(DataUploadDto instance) =>
     <String, dynamic>{
       'sync_entity': instance.sync_entity,
       'row_map': instance.row_map,
-      'dto_padding_1': instance.dto_padding_1,
-      'dto_padding_2': instance.dto_padding_2,
     };
 
 DataUploadVo _$DataUploadVoFromJson(Map<String, dynamic> json) => DataUploadVo(
       vo_padding_1: json['vo_padding_1'] as bool?,
-      vo_padding_2: json['vo_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$DataUploadVoToJson(DataUploadVo instance) =>
     <String, dynamic>{
       'vo_padding_1': instance.vo_padding_1,
-      'vo_padding_2': instance.vo_padding_2,
     };
 
 KnowledgeBaseQueryDto _$KnowledgeBaseQueryDtoFromJson(
@@ -154,12 +183,10 @@ Map<String, dynamic> _$LogoutDtoToJson(LogoutDto instance) => <String, dynamic>{
 
 LogoutVo _$LogoutVoFromJson(Map<String, dynamic> json) => LogoutVo(
       vo_padding_1: json['vo_padding_1'] as bool?,
-      vo_padding_2: json['vo_padding_2'] as bool?,
     );
 
 Map<String, dynamic> _$LogoutVoToJson(LogoutVo instance) => <String, dynamic>{
       'vo_padding_1': instance.vo_padding_1,
-      'vo_padding_2': instance.vo_padding_2,
     };
 
 SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>

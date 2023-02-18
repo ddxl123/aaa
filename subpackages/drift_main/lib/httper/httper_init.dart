@@ -4,8 +4,9 @@ part of httper;
 final Dio dio = Dio(
   BaseOptions(
     baseUrl: HttpPath.BASE_PATH_LOCAL, // 仅本地
-    connectTimeout: 10000, // ms
-    receiveTimeout: 10000, // ms
+    contentType: Headers.jsonContentType,
+    connectTimeout: Duration(seconds: 10),
+    receiveTimeout: Duration(seconds: 10),
   ),
 );
 
@@ -34,7 +35,8 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       ..vo = parseVo;
   } catch (e, st) {
     if (e is DioError) {
-      if (e.type == DioErrorType.sendTimeout || e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout) {
+      //TODO: 其他 DioErrorType 的处理。
+      if (e.type == DioErrorType.sendTimeout || e.type == DioErrorType.connectionTimeout || e.type == DioErrorType.receiveTimeout) {
         return (dtoData as dynamic)
           ..code = null
           ..httperException = HttperException(

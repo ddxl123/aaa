@@ -55,7 +55,7 @@ dependencies:
   line_icons: ^2.0.1
   # 数学公式解析
   math_expressions: any
-  dio: any
+  dio: ^5.0.0
   # 返回键拦截器
   back_button_interceptor: 6.0.0
   # 自定义键盘
@@ -67,7 +67,7 @@ dependencies:
   # 加载
   flutter_easyloading: ^3.0.5
   # 异常捕获
-  catcher: ^0.7.0
+#  catcher: ^0.7.0
   # 虚线边框
   dotted_border: any
   # 异步（取消 Future等）
@@ -91,10 +91,7 @@ dependencies:
 
   tools:
     path: ./subpackages/tools
-dependency_overrides:
-  catcher:
-    git:
-      url: https://github.com/ThexXTURBOXx/catcher.git
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

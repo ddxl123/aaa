@@ -12,22 +12,12 @@ class DataUploadDto extends BaseObject{
     /// 
     Map<String, dynamic> row_map;
 
-    /// 填充字段1
-    bool? dto_padding_1;
-
-    /// 填充字段2
-    bool? dto_padding_2;
-
 
 DataUploadDto({
 
     required this.sync_entity,
 
     required this.row_map,
-
-    required this.dto_padding_1,
-
-    required this.dto_padding_2,
 
 });
   factory DataUploadDto.fromJson(Map<String, dynamic> json) => _$DataUploadDtoFromJson(json);

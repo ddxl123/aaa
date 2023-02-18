@@ -21,5 +21,7 @@ class HttpPath {
 
   static const String LOGIN_REQUIRED_TEST_GET = '/login_required/test/get';
 
+  static const String LOGIN_REQUIRED_TEST_POST = '/login_required/test/post';
+
 }
 

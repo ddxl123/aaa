@@ -51,7 +51,6 @@ class GlobalAbController extends AbController {
               token: clientSyncInfoOrNull.token!,
             ),
             dto_padding_1: null,
-            dto_padding_2: null,
           ),
           parseResponseVoData: CheckLoginVo.fromJson,
         );
@@ -118,16 +117,12 @@ class GlobalAbController extends AbController {
           updated_at: DateTime.now(),
         ),
         row_map: {},
-        dto_padding_1: null,
-        dto_padding_2: null,
       ),
       dtoDataList: result
           .map(
             (e) => DataUploadDto(
               sync_entity: e.t1,
               row_map: e.t2.toJson(),
-              dto_padding_1: null,
-              dto_padding_2: null,
             ),
           )
           .toList(),

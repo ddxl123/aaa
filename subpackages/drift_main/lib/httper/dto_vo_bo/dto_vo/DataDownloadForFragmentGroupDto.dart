@@ -9,10 +9,15 @@ class DataDownloadForFragmentGroupDto extends BaseObject{
     /// 需要查询的碎片组id
     String fragment_group_id;
 
+    /// 填充字段1
+    bool? dto_padding_1;
+
 
 DataDownloadForFragmentGroupDto({
 
     required this.fragment_group_id,
+
+    required this.dto_padding_1,
 
 });
   factory DataDownloadForFragmentGroupDto.fromJson(Map<String, dynamic> json) => _$DataDownloadForFragmentGroupDtoFromJson(json);

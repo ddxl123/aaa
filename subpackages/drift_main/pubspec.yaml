@@ -28,7 +28,7 @@ dev_dependencies:
   path_provider: any
 
 
-  dio: any
+  dio: ^5.0.0
   json_annotation: any
   json_serializable: any
 
