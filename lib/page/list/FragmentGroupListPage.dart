@@ -23,57 +23,78 @@ class FragmentGroupListPage extends StatelessWidget {
       headSliver: (c, g, abw) => SliverToBoxAdapter(
         child: g(abw).entity(abw) == null
             ? Container()
-            : Padding(
-                padding: EdgeInsets.fromLTRB(20, 30, 20, 10),
-                child: DottedBorder(
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(5),
-                  dashPattern: [10, 10],
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      Row(
+            : Card(
+                color: Colors.greenAccent,
+                elevation: 0,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: [
-                                Icon(LineIcons.book, size: 34),
-                                Text(g(abw).entity(abw)!.title, style: Theme.of(context).textTheme.titleLarge),
-                              ],
-                            ),
-                          ),
-                          // 公开/私密/发布
-                          IconButton(
-                            icon: AbwBuilder(
-                              builder: (abw) {
-                                final bePrivate = g(abw).entity(abw)!.be_private;
-                                final bePublish = g(abw).entity(abw)!.be_publish;
-                                final privateColor = bePrivate ? Colors.amber : Colors.green;
-                                final publishColor = bePublish ? Colors.green : Colors.amber;
-                                return Row(
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
                                   children: [
-                                    Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
-                                    Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
-                                    Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
+                                    Icon(LineIcons.book, size: 34),
+                                    Text(g(abw).entity(abw)!.title, style: Theme.of(context).textTheme.titleLarge),
                                   ],
-                                );
-                              },
-                            ),
-                            onPressed: () {
-                              showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
-                            },
+                                ),
+                              ),
+                              // 公开/私密/发布
+                              IconButton(
+                                icon: AbwBuilder(
+                                  builder: (abw) {
+                                    final bePrivate = g(abw).entity(abw)!.be_private;
+                                    final bePublish = g(abw).entity(abw)!.be_publish;
+                                    final privateColor = bePrivate ? Colors.amber : Colors.green;
+                                    final publishColor = bePublish ? Colors.green : Colors.amber;
+                                    return Row(
+                                      children: [
+                                        Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
+                                        Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
+                                        Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
+                                      ],
+                                    );
+                                  },
+                                ),
+                                onPressed: () {
+                                  showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
+                                },
+                              ),
+                            ],
                           ),
+                          Row(
+                            children: [
+                              Text("【超全】448百科知识选择、填空(含刘军平第二勘误版)"),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                child: Text("发布数据"),
+                                onPressed: () {},
+                              ),
+                              SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
+                              TextButton(
+                                child: Text("编辑"),
+                                onPressed: () {},
+                              ),
+                              SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
+                              TextButton(
+                                child: Text("查看详情"),
+                                onPressed: () {},
+                              ),
+                            ],
+                          )
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text("【超全】448百科知识选择、填空(含刘军平第二勘误版)"),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
       ),

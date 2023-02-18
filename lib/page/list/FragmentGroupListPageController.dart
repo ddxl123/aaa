@@ -8,10 +8,9 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     final config = whichGroupEntity == null ? null : await db.generalQueryDAO.queryFragmentGroupById(targetFragmentGroupId: whichGroupEntity.id);
     final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
     final fgs = await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
-    logger.outNormal(print: fgs);
     return GroupsAndUnitEntities(
       unitEntities: fs,
-      groupEntities: fgs.map((e) => e.fragmentGroup).toList(),
+      groupEntities: fgs,
     );
   }
 

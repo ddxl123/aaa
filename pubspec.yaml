@@ -70,6 +70,8 @@ dependencies:
   catcher: ^0.7.0
   # 虚线边框
   dotted_border: any
+  # 异步（取消 Future等）
+  async: ^2.10.0
 
   modal_bottom_sheet: ^3.0.0-pre
 

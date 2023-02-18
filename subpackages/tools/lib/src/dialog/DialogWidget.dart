@@ -12,6 +12,7 @@ class DialogWidget extends StatelessWidget {
     this.topKeepWidget,
     this.bottomKeepWidget,
     this.crossAxisAlignment,
+    this.size,
   }) : super(key: key);
   final String? title;
   final Widget? topRightAction;
@@ -21,6 +22,7 @@ class DialogWidget extends StatelessWidget {
   final Widget? topKeepWidget;
   final Widget? bottomKeepWidget;
   final CrossAxisAlignment? crossAxisAlignment;
+  final Size? size;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,17 @@ class DialogWidget extends StatelessWidget {
       duration: const Duration(milliseconds: 100),
       child: Container(
         padding: const EdgeInsets.fromLTRB(30, 20, 30, 5),
-        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8, maxWidth: MediaQuery.of(context).size.width * 0.8),
+        constraints: size == null
+            ? BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+                maxWidth: MediaQuery.of(context).size.width * 0.8,
+              )
+            : BoxConstraints(
+                minWidth: size!.width,
+                maxWidth: size!.width,
+                minHeight: size!.height,
+                maxHeight: size!.height,
+              ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),

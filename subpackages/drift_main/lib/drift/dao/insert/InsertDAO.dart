@@ -13,7 +13,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }
 
   /// 插入一个碎片组，会同时插入碎片组配置。
-  Future<FragmentGroupWithExtra> insertFragmentGroup({
+  Future<FragmentGroup> insertFragmentGroup({
     required FragmentGroupsCompanion willFragmentGroupsCompanion,
     required SyncTag? syncTag,
   }) async {
@@ -30,7 +30,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         userLikes: null,
       ),
     );
-    return FragmentGroupWithExtra(fragmentGroup: returnFragmentGroup);
+    return returnFragmentGroup;
   }
 
   /// 向多个 [whichFragmentGroups] 中，插入相同的 [willFragmentsCompanion]。

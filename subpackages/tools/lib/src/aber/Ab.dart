@@ -47,6 +47,8 @@ class Ab<V> {
   /// 若 [V] 为不可空类型，则始终返回 true。
   bool isAbEmpty([Abw? abw]) => call(abw) == null ? true : false;
 
+  bool isAbNotEmpty([Abw? abw]) => !isAbEmpty(abw);
+
   /// 当 [AbBuilder] 被 dispose 时，会调用这个函数移除曾经添加过的 [_AbBuilderState.refresh]。
   void _removeRefreshFunction(RefreshFunction refresh) => _refreshFunctions.remove(refresh);
 
@@ -109,10 +111,10 @@ class Ab<V> {
   /// 通常，在 [value] 为 基本数据类型 时使用。
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  void refreshEasy(V Function(V oldValue) diff, [bool isForce = false]) async {
-    if (V is num || V is String || V is bool) {
+  void refreshEasy(V Function(V oldValue) diff, [bool isForce = false]) {
+    if (V is Map || V is Iterable) {
       debugPrint('Aber-Warning: Modifying values that are not basic data type, '
-          'please use the refreshComplex or modify method.');
+          'please use the refreshComplex or refreshInevitable method.');
     }
     try {
       final nv = diff(value);
@@ -131,7 +133,7 @@ class Ab<V> {
   /// 当 [diff] 返回值为 true 时，才会尝试重建。
   ///
   /// 当 [isForce] 为 true，无论修改的值是否相等，都会强制重建。
-  void refreshComplex(bool Function(V obj) diff) async {
+  void refreshComplex(bool Function(V obj) diff) {
     try {
       if (diff(value)) {
         _refresh();

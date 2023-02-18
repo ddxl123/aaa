@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:aaa/single_dialog/showSelectFragmentGroupDialog.dart';
 import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -339,13 +341,15 @@ class KnowledgeBaseHome extends StatelessWidget {
                                         style: TextStyle(color: Colors.black54),
                                       ),
                                       MaterialButton(
-                                        onPressed: () {},
                                         child: Text(
                                           "82 收集",
-                                          style: TextStyle(color: Colors.green, fontSize:  18),
+                                          style: TextStyle(color: Colors.green, fontSize: 18),
                                         ),
                                         visualDensity: kMinVisualDensity,
                                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        onPressed: () {
+                                          c.collect(whichKnowledgeBaseContentAb: e);
+                                        },
                                       ),
                                     ],
                                   ),

@@ -143,10 +143,10 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
                 );
               },
             );
-            await Future.forEach<FragmentGroupWithExtra>(
+            await Future.forEach<FragmentGroup>(
               fgs,
               (element) async {
-                await element.fragmentGroup.reset(
+                await element.reset(
                   creator_user_id: toAbsent(),
                   father_fragment_groups_id: toAbsent(),
                   client_be_selected: isSelected.toValue(),

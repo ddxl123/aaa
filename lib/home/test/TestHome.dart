@@ -127,6 +127,7 @@ class TestHome extends StatelessWidget {
                             ElevatedButton(
                               child: const Text('上传 tag 最小的一组 sync 数据'),
                               onPressed: () async {
+                                Aber.find<GlobalAbController>().uploadSingleGroupSync();
                               },
                             ),
                           ],

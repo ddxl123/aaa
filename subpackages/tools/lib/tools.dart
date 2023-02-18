@@ -3,6 +3,7 @@ library tools;
 export 'src/dialog/custom_dialog.dart';
 export 'src/dialog/DialogWidget.dart';
 export 'src/dialog/TextField1DialogWidget.dart';
+export 'src/dialog/LoadingWidget.dart';
 export 'src/dialog/OkAndCancelDialogWidget.dart';
 
 export 'src/freebox/FreeBox.dart';

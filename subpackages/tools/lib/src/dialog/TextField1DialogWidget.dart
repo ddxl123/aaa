@@ -17,6 +17,7 @@ class TextField1DialogWidget extends StatefulWidget {
     required this.okText,
     this.onOk,
     this.onCancel,
+    this.size,
   }) : super(key: key);
 
   final String? title;
@@ -26,6 +27,7 @@ class TextField1DialogWidget extends StatefulWidget {
   final String okText;
   final FutureOr<void> Function(TextEditingController tec)? onOk;
   final FutureOr<void> Function()? onCancel;
+  final Size? size;
 
   @override
   State<TextField1DialogWidget> createState() => _TextField1DialogWidgetState();
@@ -44,6 +46,7 @@ class _TextField1DialogWidgetState extends State<TextField1DialogWidget> {
   Widget build(BuildContext context) {
     return DialogWidget(
       title: widget.title,
+      size: widget.size,
       mainVerticalWidgets: [
         ...[
           widget.text == null ? Container() : const SizedBox(height: 10),

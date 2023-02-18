@@ -1,9 +1,14 @@
 import 'dart:convert';
 
+import 'package:aaa/global/GlobalAbController.dart';
+import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
+
+import '../../../single_dialog/showSelectFragmentGroupDialog.dart';
 
 class Category {
   Category({
@@ -174,5 +179,19 @@ class KnowledgeBaseHomeAbController extends AbController {
         return true;
       },
     );
+  }
+
+  Future<void> collect({required Ab<KnowledgeBaseContent> whichKnowledgeBaseContentAb}) async {
+    final user = Aber.find<GlobalAbController>().loggedInUser;
+    if (user.isAbEmpty()) {
+      showAskLoginDialog();
+      return;
+    }
+    final selectedFragmentGroupChainAb = Ab<List<FragmentGroup>?>(null);
+    await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb, isWithFragments: false);
+    if (selectedFragmentGroupChainAb.isAbNotEmpty()) {
+      // TODO: 先下载全部碎片组，后从最底层依次到最顶层下载碎片。
+      showCustomDialog(builder: (_) => LoadingWidget());
+    }
   }
 }

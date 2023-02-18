@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "2.4.0"
   async:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: async
       sha256: bfe67ef28df125b7dddcea62755991f807aa39a2492a23e1550161692950bbe0
@@ -85,10 +85,10 @@ packages:
     dependency: transitive
     description:
       name: build_resolvers
-      sha256: "7c35a3a7868626257d8aee47b51c26b9dba11eaddf3431117ed2744951416aab"
+      sha256: db49b8609ef8c81cca2b310618c3017c00f03a92af44c04d310b907b2d692d95
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   build_runner:
     dependency: "direct main"
     description:
@@ -1004,10 +1004,10 @@ packages:
     dependency: transitive
     description:
       name: universal_io
-      sha256: "070d8fcc12d599497b635f82db6a07f0ba0b756d48126a826b50b0c558745007"
+      sha256: "06866290206d196064fd61df4c7aea1ffe9a4e7c4ccaa8fcded42dd41948005d"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   url_launcher:
     dependency: transitive
     description:

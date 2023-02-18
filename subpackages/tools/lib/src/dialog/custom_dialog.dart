@@ -8,6 +8,7 @@ import 'package:tools/src/dialog/TextField1DialogWidget.dart';
 ///  - [DialogWidget]
 ///  - [OkAndCancelDialogWidget]
 ///  - [TextField1DialogWidget]
+///  ...
 Future<void> showCustomDialog({
   required Widget Function(BuildContext context) builder,
   bool clickMaskDismiss = true,
@@ -20,3 +21,4 @@ Future<void> showCustomDialog({
     builder: (_) => builder(_),
   );
 }
+

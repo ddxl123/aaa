@@ -26,6 +26,12 @@ part 'dto_vo_bo/dto_vo/CheckLoginDto.dart';
 part 'dto_vo_bo/dto_vo/CheckLoginVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/DataUploadDto.dart';
 
 

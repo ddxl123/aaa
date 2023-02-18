@@ -19,6 +19,8 @@ class FragmentPerformer {
   String content = richContent;
 
   /// 当前操作碎片所存放的碎片组位置，root 组无需存放。
+  ///
+  /// 使用嵌套数组的原因：一个碎片可能被存放、拷贝到多个碎片组内。
   List<List<FragmentGroup>> fragmentGroupChains = [];
 
   /// 当前操作碎片所使用的模板。

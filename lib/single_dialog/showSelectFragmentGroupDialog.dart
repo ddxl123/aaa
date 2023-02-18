@@ -1,17 +1,36 @@
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
+import 'package:async/async.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
-Future<void> showSelectFragmentGroupDialog({required Ab<List<FragmentGroup>?> selectedFragmentGroupChainAb}) async {
-  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb));
+/// 当 [selectedFragmentGroupChainAb] 为空时，表示取消选择。
+Future<void> showSelectFragmentGroupDialog({
+  required Ab<List<FragmentGroup>?> selectedFragmentGroupChainAb,
+  bool isWithFragments = true,
+  bool isOnlySelectSynced = true,
+}) async {
+  await showCustomDialog(
+    builder: (_) => SelectFragmentGroupDialogWidget(
+      selectedFragmentGroupChainAb: selectedFragmentGroupChainAb,
+      isWithFragments: isWithFragments,
+      isOnlySelectSynced: isOnlySelectSynced,
+    ),
+  );
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {
-  const SelectFragmentGroupDialogWidget({Key? key, required this.selectedFragmentGroupChainAb}) : super(key: key);
+  const SelectFragmentGroupDialogWidget({
+    Key? key,
+    required this.selectedFragmentGroupChainAb,
+    required this.isWithFragments,
+    required this.isOnlySelectSynced,
+  }) : super(key: key);
   final Ab<List<FragmentGroup>?> selectedFragmentGroupChainAb;
+  final bool isWithFragments;
+  final bool isOnlySelectSynced;
 
   @override
   State<SelectFragmentGroupDialogWidget> createState() => _SelectFragmentGroupDialogWidgetState();
@@ -19,14 +38,16 @@ class SelectFragmentGroupDialogWidget extends StatefulWidget {
 
 class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDialogWidget> {
   final groupChain = <FragmentGroup>[];
-  final currentFragment = <Fragment>[];
-  final currentFragmentGroup = <FragmentGroup>[];
+  final fragments = <Fragment>[];
+  final fragmentGroups = <FragmentGroup>[];
+  final fragmentGroupIsSyncedMap = <FragmentGroup, bool>{};
+  final scrollController = ScrollController();
 
   @override
   void dispose() {
     groupChain.clear();
-    currentFragment.clear();
-    currentFragmentGroup.clear();
+    fragments.clear();
+    fragmentGroups.clear();
     BackButtonInterceptor.remove(_homeBack);
     super.dispose();
   }
@@ -73,18 +94,40 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
 
     groupChain.add(whichFragmentGroup);
     await refreshPage();
+
+    Future.delayed(Duration(milliseconds: 100), () {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOutCirc,
+      );
+    });
   }
 
   Future<void> refreshPage() async {
-    currentFragmentGroup.clear();
-    currentFragment.clear();
-    currentFragmentGroup.addAll(
-      (await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id)).map((e) => e.fragmentGroup),
+    fragmentGroups.clear();
+    fragments.clear();
+    fragmentGroups.addAll(
+      await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id),
     );
-    currentFragment.addAll(
-      await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id),
-    );
+    if (widget.isWithFragments) {
+      fragments.addAll(
+        await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id),
+      );
+    }
+    _taskIsSynced().ignore();
     if (mounted) setState(() {});
+  }
+
+  Future<void> _taskIsSynced() async {
+    await Future.forEach<FragmentGroup>(
+      fragmentGroups,
+      (element) async {
+        final result = await db.generalQueryDAO.queryFragmentGroupIsSynced(fragmentGroupId: element.id);
+        fragmentGroupIsSyncedMap[element] = result;
+        setState(() {});
+      },
+    );
   }
 
   Widget _topRightAction() {
@@ -99,37 +142,41 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   }
 
   Widget _topKeepWidget() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-      reverse: true,
-      child: Row(
-        children: [
-          TextButton(
-            child: const Text('~>'),
-            onPressed: () {
-              enter(whichFragmentGroup: null);
-            },
-          ),
-          ...groupChain.isEmpty
-              ? []
-              : groupChain
-                  .map(
-                    (e) => TextButton(
-                      child: Text('${e.title}>'),
-                      onPressed: () {
-                        enter(whichFragmentGroup: e);
-                      },
-                    ),
-                  )
-                  .toList(),
-        ],
+    return Container(
+      height: kMinInteractiveDimension,
+      child: ListView.separated(
+        controller: scrollController,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        itemCount: groupChain.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          return Row(
+            children: [
+              TextButton(
+                style: ButtonStyle(
+                  visualDensity: kMinVisualDensity,
+                ),
+                child: Text(
+                  index == 0 ? '~' : groupChain[index - 1].title,
+                  style: TextStyle(color: (index == 0 || fragmentGroupIsSyncedMap[groupChain[index - 1]] == true) ? null : Colors.grey),
+                ),
+                onPressed: () async {
+                  await enter(whichFragmentGroup: index == 0 ? null : groupChain[index - 1]);
+                },
+              ),
+            ],
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Icon(Icons.chevron_right);
+        },
       ),
     );
   }
 
   List<Widget> _columnChildren() {
-    return currentFragment.isEmpty && currentFragmentGroup.isEmpty
+    return fragments.isEmpty && fragmentGroups.isEmpty
         ? [
             Row(
               children: [
@@ -143,12 +190,15 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
             )
           ]
         : [
-            ...currentFragmentGroup.map(
+            ...fragmentGroups.map(
               (e) => Row(
                 children: [
                   Expanded(
                     child: TextButton(
-                      child: Text(e.title),
+                      child: Text(
+                        e.title,
+                        style: TextStyle(color: fragmentGroupIsSyncedMap[e] == true ? null : Colors.grey),
+                      ),
                       onPressed: () {
                         enter(whichFragmentGroup: e);
                       },
@@ -157,7 +207,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
                 ],
               ),
             ),
-            ...currentFragment.map(
+            ...fragments.map(
               (e) => Row(
                 children: [
                   Expanded(
@@ -173,22 +223,31 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   }
 
   Future<void> _onOk() async {
+    if (widget.isOnlySelectSynced && groupChain.isNotEmpty && fragmentGroupIsSyncedMap[groupChain.last] == false) {
+      logger.outNormal(show: "不能选择未上传的碎片组！");
+      return;
+    }
+
     widget.selectedFragmentGroupChainAb()?.clear();
-    widget.selectedFragmentGroupChainAb.refreshEasy((oldValue) => (oldValue ?? [])..addAll(groupChain.map((e) => e.copyWith()).toList()));
+    widget.selectedFragmentGroupChainAb.refreshEasy(
+      (oldValue) => (oldValue ?? [])..addAll(groupChain.map((e) => e.copyWith()).toList()),
+    );
     widget.selectedFragmentGroupChainAb.refreshForce();
-    SmartDialog.showToast('选择成功！');
+    logger.outNormal(show: "选择成功！");
     SmartDialog.dismiss();
   }
 
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
+      size: Size(MediaQuery.of(context).size.width * 4 / 5, MediaQuery.of(context).size.height / 2),
       title: '选择位置：',
       topRightAction: _topRightAction(),
       columnChildren: _columnChildren(),
       cancelText: '取消',
       okText: '确定',
       onCancel: () async {
+        widget.selectedFragmentGroupChainAb.refreshEasy((oldValue) => null);
         SmartDialog.dismiss();
       },
       onOk: _onOk,

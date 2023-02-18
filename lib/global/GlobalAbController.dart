@@ -25,7 +25,7 @@ class GlobalAbController extends AbController {
 
   Future<void> _init() async {
     await checkIsLoggedIn();
-    uploadSingleGroupSync();
+    // uploadSingleGroupSync();
   }
 
   /// 检查是否已登录，未登录则弹出登录框。

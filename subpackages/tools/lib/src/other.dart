@@ -206,3 +206,9 @@ extension ArrayToJson on List {
     return json.encode(this);
   }
 }
+
+extension ContainReturn<A, B> on Map<A, B> {
+  B? containReturn(A a) {
+    return containsKey(a) ? this[a] : null;
+  }
+}
