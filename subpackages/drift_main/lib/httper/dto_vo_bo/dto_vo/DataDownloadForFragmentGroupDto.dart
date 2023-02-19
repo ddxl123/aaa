@@ -44,7 +44,7 @@ DataDownloadForFragmentGroupDto({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
 
-    // message: 已获取，正在下载...
+    // message: 下载成功，正在存储...
     // explain: 
     required Future<T> Function(String showMessage, DataDownloadForFragmentGroupVo vo) code40101,
     

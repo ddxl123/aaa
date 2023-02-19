@@ -11,8 +11,9 @@ class DialogWidget extends StatelessWidget {
     required this.bottomHorizontalButtonWidgets,
     this.topKeepWidget,
     this.bottomKeepWidget,
-    this.crossAxisAlignment,
+    this.allCrossAxisAlignment,
     this.size,
+    this.mainVerticalWidgetsAlignment,
   }) : super(key: key);
   final String? title;
   final Widget? topRightAction;
@@ -21,7 +22,8 @@ class DialogWidget extends StatelessWidget {
   final List<Widget> bottomHorizontalButtonWidgets;
   final Widget? topKeepWidget;
   final Widget? bottomKeepWidget;
-  final CrossAxisAlignment? crossAxisAlignment;
+  final CrossAxisAlignment? allCrossAxisAlignment;
+  final CrossAxisAlignment? mainVerticalWidgetsAlignment;
   final Size? size;
 
   @override
@@ -51,7 +53,7 @@ class DialogWidget extends StatelessWidget {
           child: IntrinsicWidth(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
+              crossAxisAlignment: allCrossAxisAlignment ?? CrossAxisAlignment.center,
               children: [
                 title == null
                     ? Container()
@@ -78,7 +80,7 @@ class DialogWidget extends StatelessWidget {
                     physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: mainVerticalWidgetsAlignment ?? CrossAxisAlignment.start,
                       // 文字部分
                       children: mainVerticalWidgets,
                     ),

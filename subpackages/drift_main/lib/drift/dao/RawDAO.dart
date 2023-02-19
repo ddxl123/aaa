@@ -13,50 +13,84 @@ class RawDAO extends DatabaseAccessor<DriftDb> with _$RawDAOMixin {
     return await into(db.users).insertReturning(newUsersCompanion);
   }
 
+  Future<void> rawInsertDownloadForFragmentGroup({required User user, required DataDownloadForFragmentGroupVo dataDownloadForFragmentGroupVo}) async {
+    await db.transaction(
+      () async {
+        final st = await SyncTag.create();
+        await db.batch(
+          (batch) async {
+            // 原id - 现id
+            final fragmentGroupMap = <String, String>{};
 
-  // Future<User> rawInsertUserAndToken({
-  //   required UsersCompanion newUsersCompanion,
-  //   required ClientSyncInfo originalClientSyncInfo,
-  //   required String token,
-  // }) async {
-  //   late User user;
-  //   await transaction(
-  //     () async {
-  //       user = await rawInsertUser(newUsersCompanion: newUsersCompanion);
-  //       await db.updateDAO.resetClientSyncInfo(
-  //         originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
-  //           return originalClientSyncInfo.reset(
-  //             deviceInfo: toAbsent(),
-  //             recentSyncTime: toAbsent(),
-  //             token: token.toValue(),
-  //             syncTag: resetSyncTag,
-  //           );
-  //         },
-  //         syncTag: null,
-  //       );
-  //     },
-  //   );
-  //   return user;
-  // }
+            batch.insertAll(
+              fragmentGroups,
+              dataDownloadForFragmentGroupVo.fragment_group_list.map(
+                (e) {
+                  final nowId = st.createCloudId(userId: user.id);
+                  fragmentGroupMap[e.id] = nowId;
+
+                  return Crt.fragmentGroupsCompanion(
+                    be_private: false,
+                    be_publish: false,
+                    client_be_selected: false,
+                    creator_user_id: e.creator_user_id,
+                    father_fragment_groups_id: father_fragment_groups_id,
+                    tags: tags,
+                    title: title,
+                    id: nowId,
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+// Future<User> rawInsertUserAndToken({
+//   required UsersCompanion newUsersCompanion,
+//   required ClientSyncInfo originalClientSyncInfo,
+//   required String token,
+// }) async {
+//   late User user;
+//   await transaction(
+//     () async {
+//       user = await rawInsertUser(newUsersCompanion: newUsersCompanion);
+//       await db.updateDAO.resetClientSyncInfo(
+//         originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
+//           return originalClientSyncInfo.reset(
+//             deviceInfo: toAbsent(),
+//             recentSyncTime: toAbsent(),
+//             token: token.toValue(),
+//             syncTag: resetSyncTag,
+//           );
+//         },
+//         syncTag: null,
+//       );
+//     },
+//   );
+//   return user;
+// }
 
   /// 注销当前账户,注销前需要请求服务器端注销.
-  // Future<void> rawLogoutCurrentUser() async {
-  //   await transaction(
-  //     () async {
-  //       final clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
-  //       if (clientSyncInfoOrNull == null) return;
-  //       await db.updateDAO.resetClientSyncInfo(
-  //         originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
-  //           return clientSyncInfoOrNull.reset(
-  //             deviceInfo: toAbsent(),
-  //             recentSyncTime: toAbsent(),
-  //             token: null.toValue(),
-  //             syncTag: resetSyncTag,
-  //           );
-  //         },
-  //         syncTag: null,
-  //       );
-  //     },
-  //   );
-  // }
+// Future<void> rawLogoutCurrentUser() async {
+//   await transaction(
+//     () async {
+//       final clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+//       if (clientSyncInfoOrNull == null) return;
+//       await db.updateDAO.resetClientSyncInfo(
+//         originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
+//           return clientSyncInfoOrNull.reset(
+//             deviceInfo: toAbsent(),
+//             recentSyncTime: toAbsent(),
+//             token: null.toValue(),
+//             syncTag: resetSyncTag,
+//           );
+//         },
+//         syncTag: null,
+//       );
+//     },
+//   );
+// }
 }

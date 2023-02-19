@@ -13,6 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 
+import '../httper/httper.dart';
+
 part 'dao/query/GeneralQueryDAO.dart';
 
 part 'dao/insert/InsertDAO.dart';

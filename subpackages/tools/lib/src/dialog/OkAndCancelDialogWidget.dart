@@ -76,7 +76,7 @@ class OkAndCancelDialogWidget extends StatelessWidget {
       ],
       topKeepWidget: topKeepWidget,
       bottomKeepWidget: bottomKeepWidget,
-      crossAxisAlignment: crossAxisAlignment,
+      allCrossAxisAlignment: crossAxisAlignment,
     );
   }
 }

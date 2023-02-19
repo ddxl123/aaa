@@ -1,6 +1,6 @@
-import 'dart:convert';
-
+import 'package:aaa/data/DataDownload.dart';
 import 'package:aaa/global/GlobalAbController.dart';
+import 'package:aaa/single_dialog/data_download/showDataDownloadDialog.dart';
 import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
@@ -190,8 +190,12 @@ class KnowledgeBaseHomeAbController extends AbController {
     final selectedFragmentGroupChainAb = Ab<List<FragmentGroup>?>(null);
     await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: selectedFragmentGroupChainAb, isWithFragments: false);
     if (selectedFragmentGroupChainAb.isAbNotEmpty()) {
-      // TODO: 先下载全部碎片组，后从最底层依次到最顶层下载碎片。
-      showCustomDialog(builder: (_) => LoadingWidget());
+      showDataDownloadDialog(
+        (c) async {
+          final result = await DataDownload.downloadForFragmentGroup(fragmentGroup: whichKnowledgeBaseContentAb().fragment_group);
+
+        },
+      );
     }
   }
 }

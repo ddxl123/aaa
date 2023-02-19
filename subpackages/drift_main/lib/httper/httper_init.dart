@@ -17,10 +17,17 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   required RQ dtoData,
   List<RQ>? dtoDataList,
   required RP Function(Map<String, dynamic> responseData) parseResponseVoData,
+  ProgressCallback? onSendProgress,
+  ProgressCallback? onReceiveProgress,
 }) async {
   dynamic responseData;
   try {
-    final result = await dio.post(path, data: dtoDataList != null ? dtoDataList.map((e) => e.toJson()).toList() : dtoData.toJson());
+    final result = await dio.post(
+      path,
+      data: dtoDataList != null ? dtoDataList.map((e) => e.toJson()).toList() : dtoData.toJson(),
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
     responseData = result.data;
     final parseCode = result.data["code"];
     final parseMessage = result.data["message"];
@@ -29,6 +36,7 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
     if (otherCodeResult != null) {
       throw otherCodeResult;
     }
+    print(result.headers);
     return (dtoData as dynamic)
       ..code = parseCode
       ..httperException = HttperException(showMessage: parseMessage, debugMessage: '')
