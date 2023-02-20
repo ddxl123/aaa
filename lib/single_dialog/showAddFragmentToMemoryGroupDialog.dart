@@ -111,6 +111,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
+      dialogSize: DialogSize(width: kDialogFixedWidth, height: null),
       title: '添加至记忆组：',
       topRightAction: _topRightAction(),
       columnChildren: mgsMap.isEmpty ? const [Text('未创建记忆组', style: TextStyle(color: Colors.grey))] : _columnChildren(),
@@ -120,6 +121,14 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
         SmartDialog.dismiss();
       },
       onOk: _onOk,
+      topKeepWidget: Row(
+        children: [
+          Text(
+            "请选择记忆组",
+            style: TextStyle(color: Colors.grey),
+          )
+        ],
+      ),
       bottomKeepWidget: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

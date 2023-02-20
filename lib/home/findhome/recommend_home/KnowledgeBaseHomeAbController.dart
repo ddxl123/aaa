@@ -6,6 +6,7 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
 import '../../../single_dialog/showSelectFragmentGroupDialog.dart';
@@ -192,8 +193,12 @@ class KnowledgeBaseHomeAbController extends AbController {
     if (selectedFragmentGroupChainAb.isAbNotEmpty()) {
       showDataDownloadDialog(
         (c) async {
-          final result = await DataDownload.downloadForFragmentGroup(fragmentGroup: whichKnowledgeBaseContentAb().fragment_group);
-
+          await DataDownload.downloadForFragmentGroup(
+            downloadRootFragmentGroup: whichKnowledgeBaseContentAb().fragment_group,
+            saveFragmentGroup: selectedFragmentGroupChainAb()?.isEmpty == true ? null : selectedFragmentGroupChainAb()?.last,
+          );
+          c.progress.refreshEasy((oldValue) => 100);
+          SmartDialog.dismiss(status: SmartStatus.dialog);
         },
       );
     }

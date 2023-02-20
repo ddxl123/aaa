@@ -41,19 +41,19 @@ class FindHome extends StatelessWidget {
             controller: c.tabController,
             children: [
               KeepStateWidget(
-                builder: (_) => const Text('热门'),
+                child: const Text('热门'),
               ),
               KeepStateWidget(
-                builder: (_) => const Text("推荐"),
+                child: const Text("推荐"),
               ),
               KeepStateWidget(
-                builder: (_) => const KnowledgeBaseHome(),
+                child: const KnowledgeBaseHome(),
               ),
               KeepStateWidget(
-                builder: (_) => const Text('求制作'),
+                child: const Text('求制作'),
               ),
               KeepStateWidget(
-                builder: (_) => const Text('关注'),
+                child: const Text('关注'),
               ),
             ],
           ),

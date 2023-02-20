@@ -5,7 +5,6 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   @override
   Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
     // 若 whichGroupEntity 不为 null，则必然存在 whichGroupEntity。father_fragment_groups_id!。
-    final config = whichGroupEntity == null ? null : await db.generalQueryDAO.queryFragmentGroupById(targetFragmentGroupId: whichGroupEntity.id);
     final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
     final fgs = await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: whichGroupEntity?.id);
     return GroupsAndUnitEntities(

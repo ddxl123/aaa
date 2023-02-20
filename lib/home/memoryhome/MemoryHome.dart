@@ -30,13 +30,13 @@ class _MemoryHomeState extends State<MemoryHome> {
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (ctx) => const MemoryGroupListPage(),
+                child: const MemoryGroupListPage(),
               ),
               KeepStateWidget(
-                builder: (_) => const MemoryModeListPage(),
+                child: const MemoryModeListPage(),
               ),
               KeepStateWidget(
-                builder: (_) => const Text('统计'),
+                child: const Text('统计'),
               ),
             ],
           ),

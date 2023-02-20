@@ -3,7 +3,6 @@ import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
 import 'package:aaa/single_dialog/showPrivatePublishDialog.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +12,7 @@ import '../edit/FragmentGizmoEditPage.dart';
 import 'FragmentGroupListPageController.dart';
 
 class FragmentGroupListPage extends StatelessWidget {
-  const FragmentGroupListPage({Key? key}) : super(key: key);
+  FragmentGroupListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +23,7 @@ class FragmentGroupListPage extends StatelessWidget {
         child: g(abw).entity(abw) == null
             ? Container()
             : Card(
+                margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
                 color: Colors.greenAccent,
                 elevation: 0,
                 child: Column(

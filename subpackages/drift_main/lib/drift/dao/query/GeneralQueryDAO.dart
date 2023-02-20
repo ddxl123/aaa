@@ -110,13 +110,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
-  Future<FragmentGroup?> queryFragmentGroupById({required String targetFragmentGroupId}) async {
-    final sel = select(fragmentGroups);
-    sel.where((tbl) => tbl.id.equals(targetFragmentGroupId));
-    final result = await sel.getSingleOrNull();
-    return result;
-  }
-
   /// 查询 [targetFragmentGroupId] 内的全部碎片组和碎片组配置，不包含子碎片组。
   Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroupById({required String? targetFragmentGroupId}) async {
     final sel = select(fragmentGroups);

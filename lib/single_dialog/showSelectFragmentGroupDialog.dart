@@ -1,5 +1,4 @@
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
-import 'package:async/async.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -240,7 +239,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
-      size: Size(MediaQuery.of(context).size.width * 4 / 5, MediaQuery.of(context).size.height / 2),
+      dialogSize: DialogSize(width: kDialogFixedWidth, height: null),
       title: '选择位置：',
       topRightAction: _topRightAction(),
       columnChildren: _columnChildren(),

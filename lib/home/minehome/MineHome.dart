@@ -201,7 +201,7 @@ class MineHome extends StatelessWidget {
   Widget _task({required BuildContext context}) {
     return _cardWithTitle(
       context: context,
-      title: '学习者中心',
+      title: '学习中心',
       children: [
         _lv(context: context, text: '学习点数'),
         const Divider(height: 40),
@@ -249,7 +249,7 @@ class MineHome extends StatelessWidget {
   Widget _creator({required BuildContext context}) {
     return _cardWithTitle(
       context: context,
-      title: '创作者中心',
+      title: '创作中心',
       children: [
         _lv(context: context, text: '创作点数'),
         const Divider(height: 40),

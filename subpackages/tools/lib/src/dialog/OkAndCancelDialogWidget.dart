@@ -22,7 +22,7 @@ class OkAndCancelDialogWidget extends StatelessWidget {
     this.topKeepWidget,
     this.bottomKeepWidget,
     this.crossAxisAlignment,
-    this.size,
+    this.dialogSize,
   }) : super(key: key);
 
   final String? title;
@@ -37,7 +37,7 @@ class OkAndCancelDialogWidget extends StatelessWidget {
   final Widget? topKeepWidget;
   final Widget? bottomKeepWidget;
   final CrossAxisAlignment? crossAxisAlignment;
-  final Size? size;
+  final DialogSize? dialogSize;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class OkAndCancelDialogWidget extends StatelessWidget {
       title: title,
       topRightAction: topRightAction,
       bottomLiftAction: bottomLiftAction,
-      size: size,
+      dialogSize: dialogSize,
       mainVerticalWidgets: [
         text == null ? Container() : const SizedBox(height: 10),
         text == null

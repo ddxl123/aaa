@@ -21,4 +21,3 @@ Future<void> showCustomDialog({
     builder: (_) => builder(_),
   );
 }
-

@@ -35,13 +35,13 @@ class _FragmentHomeState extends State<FragmentHome> {
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                builder: (_) => const FragmentGroupListPage(),
+                child: FragmentGroupListPage(),
               ),
               KeepStateWidget(
-                builder: (_) => const Text('笔记'),
+                child: const Text('笔记'),
               ),
               KeepStateWidget(
-                builder: (_) => const Text('文档'),
+                child: const Text('文档'),
               ),
             ],
           ),

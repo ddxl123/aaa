@@ -130,6 +130,29 @@ class TestHome extends StatelessWidget {
                                 Aber.find<GlobalAbController>().uploadSingleGroupSync();
                               },
                             ),
+                            ElevatedButton(
+                              child: const Text('test'),
+                              onPressed: () async {
+                                await db.transaction(
+                                  () async {
+                                    await db.batch(
+                                      (batch) {
+                                        batch.insert(
+                                          db.tests,
+                                          Crt.testsCompanion(
+                                            client_a: "test",
+                                            client_content: "ccc",
+                                            created_at: DateTime.now(),
+                                            updated_at: DateTime.now(),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    throw "ddd";
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ],

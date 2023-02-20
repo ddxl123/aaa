@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
-class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatelessWidget {
+class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatefulWidget {
   const GroupListWidget({
     Key? key,
     this.headSliver,
@@ -24,12 +24,26 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
   final void Function(C c) floatingButtonOnPressed;
 
   @override
+  State<GroupListWidget<G, U, C>> createState() => _GroupListWidgetState<G, U, C>();
+}
+
+class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> extends State<GroupListWidget<G, U, C>> {
+  late final C groupListWidgetController;
+
+  @override
+  void initState() {
+    super.initState();
+    groupListWidgetController = widget.groupListWidgetController;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AbBuilder<GroupListWidgetController<G, U>>(
       putController: groupListWidgetController,
       tag: Aber.single,
       builder: (c, abw) {
         return Scaffold(
+          extendBody: true,
           primary: false,
           body: _body(),
           bottomNavigationBar: _bottomNavigationBar(),
@@ -49,7 +63,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
               backgroundColor: Colors.amber,
               child: const Text('记'),
               onPressed: () {
-                floatingButtonOnPressed(groupListWidgetController);
+                widget.floatingButtonOnPressed(groupListWidgetController);
               },
             ),
             groupListWidgetController.groupChain(abw).first(abw).selectedUnitCount(abw) == 0
@@ -92,21 +106,23 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
             );
           }
 
-          return Container(
-            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-            decoration: const BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  button(iconData: FontAwesomeIcons.penToSquare, label: '编辑', onPressed: () {}),
-                  button(iconData: FontAwesomeIcons.copy, label: '复制', onPressed: () {}),
-                  button(iconData: FontAwesomeIcons.paste, label: '粘贴', onPressed: () {}),
-                  button(iconData: FontAwesomeIcons.arrowRightFromBracket, label: '移动', onPressed: () {}),
-                  button(iconData: FontAwesomeIcons.trashCan, label: '删除', color: Colors.red, onPressed: () {}),
-                ],
+          return Card(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 20),
+            child: Container(
+              decoration: BoxDecoration(border: Border.all(color: Colors.amber)),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    button(iconData: FontAwesomeIcons.copy, label: '克隆', onPressed: () {}),
+                    button(iconData: FontAwesomeIcons.clone, label: '复用', onPressed: () {}),
+                    button(iconData: FontAwesomeIcons.penToSquare, label: '修改', onPressed: () {}),
+                    button(iconData: FontAwesomeIcons.arrowRightFromBracket, label: '移动', onPressed: () {}),
+                    button(iconData: FontAwesomeIcons.trashCan, label: '删除', color: Colors.red, onPressed: () {}),
+                  ],
+                ),
               ),
             ),
           );
@@ -122,6 +138,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
       builder: (c, tAbw) {
         return Column(
           children: [
+            SizedBox(height: 5),
             Container(
               height: kMinInteractiveDimension,
               child: Row(
@@ -146,7 +163,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
                                         visualDensity: kMinVisualDensity,
                                       ),
                                       child: Text(
-                                        c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null ? '~' : '${groupChainStrings(c.groupChain(abw)[index], innerAbw)}',
+                                        c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null ? '~' : '${widget.groupChainStrings(c.groupChain(abw)[index], innerAbw)}',
                                       ),
                                       onPressed: () async {
                                         await c.enterGroup(c.groupChain(abw)[index]);
@@ -173,7 +190,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
                                       builder: (innerAbw) {
                                         return TextButton(
                                           child: Text(
-                                            e(innerAbw).entity(innerAbw) == null ? '~ >' : '${groupChainStrings(e, innerAbw)} >',
+                                            e(innerAbw).entity(innerAbw) == null ? '~ >' : '${widget.groupChainStrings(e, innerAbw)} >',
                                           ),
                                           onPressed: () async {
                                             await c.enterGroup(e);
@@ -192,7 +209,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
                   AbBuilder<C>(
                     tag: Aber.single,
                     builder: (c, abw) {
-                      return oneActionBuilder(c, abw);
+                      return widget.oneActionBuilder(c, abw);
                     },
                   ),
                 ],
@@ -213,7 +230,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
                               controller: e(abw).refreshController,
                               child: CustomScrollView(
                                 slivers: [
-                                  e(abw).entity(abw) == null ? SliverToBoxAdapter() : (headSliver?.call(c, e, abw) ?? SliverToBoxAdapter()),
+                                  e(abw).entity(abw) == null ? SliverToBoxAdapter() : (widget.headSliver?.call(c, e, abw) ?? SliverToBoxAdapter()),
                                   (e().groups().isEmpty && e().units().isEmpty)
                                       ? SliverToBoxAdapter(
                                           child: Row(
@@ -277,7 +294,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
             children: [
               ...c.getCurrentGroupAb()(abw).groups(abw).map(
                 (e) {
-                  return AbwBuilder(builder: (abw) => groupBuilder(c, e, abw));
+                  return AbwBuilder(builder: (abw) => widget.groupBuilder(c, e, abw));
                 },
               ).toList(),
             ],
@@ -287,7 +304,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
           delegate: SliverChildListDelegate(
             c.getCurrentGroupAb()(abw).groups(abw).map(
               (e) {
-                return AbwBuilder(builder: (abw) => groupBuilder(c, e, abw));
+                return AbwBuilder(builder: (abw) => widget.groupBuilder(c, e, abw));
               },
             ).toList(),
           ),
@@ -304,7 +321,7 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
           delegate: SliverChildListDelegate(
             c.getCurrentGroupAb()(abw).units(abw).map(
               (e) {
-                return AbwBuilder(builder: (abw) => unitBuilder(c, e, abw));
+                return AbwBuilder(builder: (abw) => widget.unitBuilder(c, e, abw));
                 // return Row(
                 //   children: [
                 // Expanded(

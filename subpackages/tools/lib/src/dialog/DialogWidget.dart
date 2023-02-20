@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+class DialogSize {
+  DialogSize({
+    required this.width,
+    required this.height,
+  });
+
+  /// 若为空则自适应宽度
+  final double? width;
+
+  /// 若为空则自适应高度
+  final double? height;
+}
+
 /// 一个可扩展的 dialog widget。
 class DialogWidget extends StatelessWidget {
   const DialogWidget({
@@ -12,7 +25,7 @@ class DialogWidget extends StatelessWidget {
     this.topKeepWidget,
     this.bottomKeepWidget,
     this.allCrossAxisAlignment,
-    this.size,
+    this.dialogSize,
     this.mainVerticalWidgetsAlignment,
   }) : super(key: key);
   final String? title;
@@ -24,7 +37,7 @@ class DialogWidget extends StatelessWidget {
   final Widget? bottomKeepWidget;
   final CrossAxisAlignment? allCrossAxisAlignment;
   final CrossAxisAlignment? mainVerticalWidgetsAlignment;
-  final Size? size;
+  final DialogSize? dialogSize;
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +46,16 @@ class DialogWidget extends StatelessWidget {
       duration: const Duration(milliseconds: 100),
       child: Container(
         padding: const EdgeInsets.fromLTRB(30, 20, 30, 5),
-        constraints: size == null
+        constraints: dialogSize == null
             ? BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.8,
                 maxWidth: MediaQuery.of(context).size.width * 0.8,
               )
             : BoxConstraints(
-                minWidth: size!.width,
-                maxWidth: size!.width,
-                minHeight: size!.height,
-                maxHeight: size!.height,
+                minWidth: dialogSize?.width ?? 0,
+                maxWidth: dialogSize?.width ?? MediaQuery.of(context).size.width * 0.8,
+                minHeight: dialogSize?.height ?? 0,
+                maxHeight: dialogSize?.height ?? MediaQuery.of(context).size.width * 0.8,
               ),
         decoration: BoxDecoration(
           color: Colors.white,

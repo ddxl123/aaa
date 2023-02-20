@@ -12,6 +12,14 @@ class DataDownloadAbController extends AbController {
   @override
   void onInit() {
     super.onInit();
-    progressHandler(this);
+    _init();
+  }
+
+  Future<void> _init() async {
+    try {
+      await progressHandler(this);
+    } catch (e, st) {
+      logger.outError(show: "获取失败!", error: e, stackTrace: st);
+    }
   }
 }

@@ -55,7 +55,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
                             ],
                           ),
                           onPressed: () async {
-                            await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: e.ab);
+                            await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: Ab<List<FragmentGroup>?>(e));
                             if (mounted) setState(() {});
                           },
                         ),
@@ -81,29 +81,31 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
+      dialogSize: DialogSize(width: kDialogFixedWidth, height: null),
       title: '存放位置：',
       columnChildren: [
         ..._columnChildren(),
-        TextButton(
-          style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 30, 144, 255))),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('添加新位置 '),
-              Icon(Icons.add),
-            ],
-          ),
-          onPressed: () async {
-            final result = Ab<List<FragmentGroup>?>(null);
-            await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: result);
-            if (result() == null) {
-            } else {
-              widget.selectedFragmentGroupChainsAb.refreshEasy((oldValue) => oldValue..add(result()!));
-              if (mounted) setState(() {});
-            }
-          },
-        ),
       ],
+      topKeepWidget: Text("相同碎片可能被存放到多个位置", style: TextStyle(color: Colors.grey)),
+      bottomKeepWidget: TextButton(
+        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 30, 144, 255))),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text('添加新位置 '),
+            Icon(Icons.add),
+          ],
+        ),
+        onPressed: () async {
+          final result = Ab<List<FragmentGroup>?>(null);
+          await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: result);
+          if (result() == null) {
+          } else {
+            widget.selectedFragmentGroupChainsAb.refreshEasy((oldValue) => oldValue..add(result()!));
+            if (mounted) setState(() {});
+          }
+        },
+      ),
       okText: '确定',
       onOk: _onOk,
       crossAxisAlignment: CrossAxisAlignment.start,

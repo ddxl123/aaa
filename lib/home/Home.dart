@@ -53,9 +53,9 @@ class Home extends StatelessWidget {
         return PageView(
           controller: controller.pageController,
           children: [
-            KeepStateWidget(builder: (ctx) => const FindHome()),
-            KeepStateWidget(builder: (ctx) => const MemoryHome()),
-            KeepStateWidget(builder: (ctx) => const FragmentHome()),
+            KeepStateWidget(child: const FindHome()),
+            KeepStateWidget(child: const MemoryHome()),
+            KeepStateWidget(child: const FragmentHome()),
             const MineHome(),
           ],
           onPageChanged: (int toIndex) {
