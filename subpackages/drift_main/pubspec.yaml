@@ -23,9 +23,9 @@ dev_dependencies:
 
   drift_dev: any
   build: any
-  build_runner: any
+  build_runner: 2.3.3
   source_gen: any
-  path_provider: any
+  path_provider: 2.0.12
 
 
   dio: ^5.0.0

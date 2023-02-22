@@ -1,4 +1,5 @@
 import 'package:aaa/home/HomeAbController.dart';
+import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
@@ -82,7 +83,9 @@ class FragmentGroupListPage extends StatelessWidget {
                               SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
                               TextButton(
                                 child: Text("编辑"),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => FragmentGroupGizmoEditPage()));
+                                },
                               ),
                               SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
                               TextButton(

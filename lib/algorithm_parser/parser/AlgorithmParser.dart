@@ -64,7 +64,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     try {
       if (_isParsed) throw '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。';
       _isParsed = true;
-      if (InternalVariableConstant.getAllKV.isEmpty) throw '请先初始化内置变量！';
 
       _state = state;
 

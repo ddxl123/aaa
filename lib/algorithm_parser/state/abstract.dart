@@ -2,6 +2,18 @@ part of algorithm_parser;
 
 typedef ResultHandler = Future<NumberOrNull> Function(InternalVariableAtom atom);
 
+class IfExpr {
+  IfExpr({
+    required this.ifContent,
+    required this.useContent,
+    required this.childIfExpr,
+  });
+
+  final String? ifContent;
+  final String useContent;
+  final IfExpr childIfExpr;
+}
+
 /// 以防 [InternalVariableAtom.filter] 忘记 return。
 class NumberOrNull {
   NumberOrNull(this.number);
