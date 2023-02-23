@@ -4,6 +4,8 @@ import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage.dart';
 import 'package:aaa/push_page/push_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:tools/tools.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +37,152 @@ class Home extends StatelessWidget {
         return FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
-            await pushToFragmentEditPage(
+            showMaterialModalBottomSheet(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               context: c.context,
-              initSomeBefore: [],
-              initSomeAfter: [],
-              initFragmentAb: null,
+              builder: (BuildContext context) {
+                return Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.black12,
+                            ),
+                            width: 30,
+                            height: 5,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Card(
+                        elevation: 0,
+                        color: Color.fromRGBO(240, 240, 240, 1),
+                        margin: EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text("速记", style: TextStyle(fontWeight: FontWeight.bold)),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text("在这里快速记下知识点...", style: TextStyle(color: Colors.grey)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              child: MaterialButton(
+                                child: Icon(Icons.mic, color: Colors.blue, size: 38),
+                                onPressed: () {},
+                              ),
+                              height: 100,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Transform.translate(offset: Offset(0, -2), child: FaIcon(FontAwesomeIcons.puzzlePiece, size: 20, color: Colors.orange)),
+                                SizedBox(width: 5),
+                                Text("制作碎片"),
+                              ],
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(Icons.camera_rear, size: 24, color: Colors.redAccent),
+                                SizedBox(width: 5),
+                                Text("制作模板"),
+                              ],
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(Icons.science_sharp, size: 24, color: Colors.greenAccent),
+                                SizedBox(width: 5),
+                                Text("制作算法"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(Icons.eco_outlined, color: Colors.green),
+                                SizedBox(width: 5),
+                                Text("发表想法"),
+                              ],
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(Icons.article_outlined,color: Colors.blueGrey),
+                                SizedBox(width: 5),
+                                Text("发表文章"),
+                              ],
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(Icons.live_help_outlined,color: Colors.lightBlueAccent,),
+                                SizedBox(width: 5),
+                                Text("求助制作"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
+                );
+              },
             );
+            // await pushToFragmentEditPage(
+            //   context: c.context,
+            //   initSomeBefore: [],
+            //   initSomeAfter: [],
+            //   initFragmentAb: null,
+            // );
           },
         );
       },

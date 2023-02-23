@@ -1,5 +1,6 @@
 import 'package:aaa/home/fragmenthome/FragmentHomeAbController.dart';
 import 'package:aaa/page/list/FragmentGroupListPage.dart';
+import 'package:aaa/page/list/ShorthandListPage.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,10 @@ class _FragmentHomeState extends State<FragmentHome> {
                 text: '碎片',
               ),
               Tab(
-                text: '笔记',
+                text: '速记',
+              ),
+              Tab(
+                text: '文章',
               ),
               Tab(
                 text: '文档',
@@ -38,7 +42,10 @@ class _FragmentHomeState extends State<FragmentHome> {
                 child: FragmentGroupListPage(),
               ),
               KeepStateWidget(
-                child: const Text('笔记'),
+                child: ShorthandListPage(),
+              ),
+              KeepStateWidget(
+                child: const Text('文章'),
               ),
               KeepStateWidget(
                 child: const Text('文档'),
