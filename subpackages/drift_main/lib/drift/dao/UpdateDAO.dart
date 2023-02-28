@@ -243,4 +243,20 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       },
     );
   }
+
+  Future<void> resetShorthand({
+    required ResetFutureFunction<Shorthand> originalShorthandReset,
+    required SyncTag? syncTag,
+  }) async {
+    await withRefs(
+      syncTag: syncTag,
+      ref: (st) async {
+        return RefShorthands(
+          self: ($ShorthandsTable table) async {
+            await originalShorthandReset(st);
+          },
+        );
+      },
+    );
+  }
 }

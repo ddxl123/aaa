@@ -21,7 +21,7 @@ class AbStorage<V> {
     verifyErrorMessage();
   }
 
-  void initVerify({required Future<String?> Function(V v) verifyCallback}) {
+  void assignVerify({required Future<String?> Function(V v) verifyCallback}) {
     _runVerify = verifyCallback;
   }
 
@@ -36,6 +36,8 @@ class AbStorage<V> {
       return false;
     }
   }
+
+  bool isEqual() => abValue() == tempValue;
 
   void removeError() {
     verifyErrorMessage.refreshEasy((oldValue) => null);

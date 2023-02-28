@@ -49,7 +49,7 @@ CheckLoginDto({
     required Future<T> Function(String showMessage) code10301,
     
     // message: 未登录！
-    // explain: 用户未登录
+    // explain: 用户未登录，包含token失效。
     required Future<T> Function(String showMessage) code10302,
     
     }) async {

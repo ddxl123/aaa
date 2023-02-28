@@ -35,6 +35,9 @@ dependencies:
   # 加载指示器
   flutter_spinkit: ^5.1.0
 
+  # 返回键拦截器
+  back_button_interceptor: 6.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

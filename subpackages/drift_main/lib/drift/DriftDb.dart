@@ -11,9 +11,8 @@ import 'package:drift_custom/ReferenceTo.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
-
-import '../httper/httper.dart';
 
 part 'dao/query/GeneralQueryDAO.dart';
 
@@ -74,6 +73,8 @@ part 'table/entity/unit/MemoryModels.dart';
 
 part 'table/entity/unit/Notes.dart';
 
+part 'table/entity/unit/Shorthands.dart';
+
 part 'table/entity/unit_group/DocumentGroups.dart';
 
 part 'table/entity/unit_group/FragmentGroups.dart';
@@ -117,6 +118,8 @@ const List<Type> tableClasses = [
   MemoryModels,
 
   Notes,
+
+  Shorthands,
 
   DocumentGroups,
 

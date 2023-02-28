@@ -73,15 +73,15 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     ccReviewIntervalTextEditingController.dispose();
   }
 
-  Future<void> initVerifies() async {
-    bTitleStorage.initVerify(
+  Future<void> assignVerifies() async {
+    bTitleStorage.assignVerify(
       verifyCallback: (v) async {
         if (v.trim() == '') return '标题不能为空！';
         return null;
       },
     );
 
-    bSelectedMemoryModelStorage.initVerify(
+    bSelectedMemoryModelStorage.assignVerify(
       verifyCallback: (v) async {
         final mm = bSelectedMemoryModelStorage.abValue();
 
@@ -113,7 +113,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       },
     );
 
-    cReviewIntervalStorage.initVerify(
+    cReviewIntervalStorage.assignVerify(
       verifyCallback: (v) async {
         if (v.difference(DateTime.now()).inSeconds < 600) return '复习区间至少10分钟(600秒)以上哦~';
         return null;
@@ -161,7 +161,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     final count = await DriftDb.instance.generalQueryDAO.queryNewFragmentsCount(memoryGroup: memoryGroupAb());
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
 
-    initVerifies();
+    assignVerifies();
   }
 
   /// 返回是否验证成功。

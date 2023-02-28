@@ -14,14 +14,15 @@ class ShorthandListPage extends StatelessWidget {
       builder: (c, abw) {
         return SmartRefresher(
           controller: c.refreshController,
-          onRefresh: () {
+          onRefresh: () async {
+            await c.refreshPage();
             c.refreshController.refreshCompleted();
           },
           header: ClassicHeader(),
           child: MasonryGridView.count(
             padding: EdgeInsets.only(top: 20, bottom: 100),
             crossAxisCount: 2,
-            itemCount: 8,
+            itemCount: c.shorthandsAb(abw).length,
             itemBuilder: (_, index) {
               return Card(
                 child: Container(
@@ -29,7 +30,7 @@ class ShorthandListPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "但是" * index * 50,
+                        c.shorthandsAb(abw)[index](abw).content,
                         maxLines: 6,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -38,7 +39,7 @@ class ShorthandListPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              "2022.9.19",
+                              c.shorthandsAb(abw)[index](abw).updated_at.toString(),
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),

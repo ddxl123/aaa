@@ -9,6 +9,12 @@ extension AbExt<V> on V {
   Ab<V> get ab => Ab<V>(this);
 }
 
+extension AbBool on Ab<bool> {
+  bool isAbTrue([Abw? abw]) => this(abw) == true;
+
+  bool isAbFalse([Abw? abw]) => this(abw) == false;
+}
+
 class Ab<V> {
   /// 当 [V] 的默认值为 null 时，
   /// 应使用 final count = Ab<int?>(null) 方式来初始化，

@@ -84,6 +84,7 @@ class RefUsers extends Ref {
   RefMemoryGroups? memoryGroups;
   RefMemoryModels? memoryModels;
   RefNotes? notes;
+  RefShorthands? shorthands;
   RefDocumentGroups? documentGroups;
   RefFragmentGroups? fragmentGroups;
   RefNoteGroups? noteGroups;
@@ -102,6 +103,7 @@ class RefUsers extends Ref {
     required this.memoryGroups,
     required this.memoryModels,
     required this.notes,
+    required this.shorthands,
     required this.documentGroups,
     required this.fragmentGroups,
     required this.noteGroups,
@@ -122,6 +124,7 @@ class RefUsers extends Ref {
     await memoryGroups?._run();
     await memoryModels?._run();
     await notes?._run();
+    await shorthands?._run();
     await documentGroups?._run();
     await fragmentGroups?._run();
     await noteGroups?._run();
@@ -406,6 +409,20 @@ class RefMemoryModels extends Ref {
   Future<void> _run() async {
     await self(DriftDb.instance.memoryModels);
     await memoryGroups?._run();
+  }
+}
+
+/// [Shorthands]
+class RefShorthands extends Ref {
+  Future<void> Function($ShorthandsTable table) self;
+
+  RefShorthands({
+    required this.self,
+  });
+
+  @override
+  Future<void> _run() async {
+    await self(DriftDb.instance.shorthands);
   }
 }
 

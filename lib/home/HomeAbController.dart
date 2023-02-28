@@ -20,28 +20,13 @@ class HomeAbController extends AbController {
   Timer? timer;
 
   @override
-  void onInit() {
-    super.onInit();
-    BackButtonInterceptor.add(_homeBack, context: context);
-  }
-
-  @override
-  void onDispose() {
-    BackButtonInterceptor.remove(_homeBack);
-    super.onDispose();
-  }
-
-  /// 注意按照顺序。
-  ///
-  /// 返回 true 则拦截，否则不拦截，拦截意味着当前 route 不触发 pop。
-  Future<bool> _homeBack(bool stopDefaultButtonEvent, RouteInfo routeInfo) async {
+  Future<bool> backListener(bool hasRoute) async {
     void timerCancel() {
       timer?.cancel();
       timer = null;
     }
 
-    // 如果一个对话框(或任何其他路由)是打开的，则不拦截。
-    if (routeInfo.ifRouteChanged(context)) {
+    if (hasRoute) {
       timerCancel();
       return false;
     }

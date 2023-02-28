@@ -14,7 +14,7 @@ Future<void> showCustomDialog({
   bool clickMaskDismiss = true,
   bool backDismiss = true,
 }) async {
-  await SmartDialog.show(
+  return await SmartDialog.show(
     clickMaskDismiss: clickMaskDismiss,
     backDismiss: backDismiss,
     useSystem: true,

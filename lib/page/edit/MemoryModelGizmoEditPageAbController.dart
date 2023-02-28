@@ -34,7 +34,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   final isAlgorithmKeyboard = false.ab;
 
   void initVerifies() {
-    titleStorage.initVerify(
+    titleStorage.assignVerify(
       verifyCallback: (v) async {
         if (v.trim() == '') {
           return '标题不能为空！';
@@ -42,7 +42,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         return null;
       },
     );
-    familiarityAlgorithmStorage.initVerify(
+    familiarityAlgorithmStorage.assignVerify(
       verifyCallback: (v) async {
         final result = await AlgorithmParser<FamiliarityState>().parse(
           state: FamiliarityState(
@@ -59,7 +59,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         );
       },
     );
-    nextTimeAlgorithmStorage.initVerify(
+    nextTimeAlgorithmStorage.assignVerify(
       verifyCallback: (v) async {
         final result = await AlgorithmParser<NextShowTimeState>().parse(
           state: NextShowTimeState(
@@ -76,7 +76,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         );
       },
     );
-    buttonAlgorithmStorage.initVerify(
+    buttonAlgorithmStorage.assignVerify(
       verifyCallback: (v) async {
         final result = await AlgorithmParser<ButtonDataState>().parse(
           state: ButtonDataState(

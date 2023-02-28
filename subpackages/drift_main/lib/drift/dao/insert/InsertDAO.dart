@@ -172,4 +172,23 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     );
     return newMemoryModel;
   }
+
+  /// 创建一个新的速记。
+  Future<Shorthand> insertShorthand({
+    required ShorthandsCompanion shorthandsCompanion,
+    required SyncTag? syncTag,
+  }) async {
+    late final Shorthand newShorthand;
+    await withRefs(
+      syncTag: syncTag,
+      ref: (st) async {
+        return RefShorthands(
+          self: ($ShorthandsTable table) async {
+            newShorthand = await shorthandsCompanion.insert(syncTag: st);
+          },
+        );
+      },
+    );
+    return newShorthand;
+  }
 }

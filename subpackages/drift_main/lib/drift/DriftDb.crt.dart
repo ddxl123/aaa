@@ -314,6 +314,22 @@ class Crt {
     );
   }
 
+  static ShorthandsCompanion shorthandsCompanion({
+    required String content,
+    required int creator_user_id,
+    DateTime? created_at,
+    String? id,
+    DateTime? updated_at,
+  }) {
+    return ShorthandsCompanion(
+      content: Value(content),
+      creator_user_id: Value(creator_user_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : Value(id),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
   static DocumentGroupsCompanion documentGroupsCompanion({
     required int creator_user_id,
     required Value<String?> father_document_groups_id,
@@ -599,6 +615,17 @@ extension NotesCompanionExt on NotesCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.notes,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension ShorthandsCompanionExt on ShorthandsCompanion {
+  Future<Shorthand> insert({required SyncTag? syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.shorthands,
       entity: this,
       syncTag: syncTag,
     );

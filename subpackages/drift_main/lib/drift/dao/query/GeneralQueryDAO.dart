@@ -367,4 +367,8 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final result = await sel.get();
     return result.isEmpty;
   }
+
+  Future<List<Shorthand>> queryAllShorthands() async {
+    return await select(shorthands).get();
+  }
 }

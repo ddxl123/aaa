@@ -23,6 +23,7 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
+  $ShorthandsTable get shorthands => attachedDatabase.shorthands;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
@@ -52,6 +53,7 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
+  $ShorthandsTable get shorthands => attachedDatabase.shorthands;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
@@ -81,6 +83,7 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
+  $ShorthandsTable get shorthands => attachedDatabase.shorthands;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
@@ -110,6 +113,7 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
+  $ShorthandsTable get shorthands => attachedDatabase.shorthands;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
@@ -139,6 +143,7 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
+  $ShorthandsTable get shorthands => attachedDatabase.shorthands;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
@@ -168,6 +173,7 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
   $NotesTable get notes => attachedDatabase.notes;
+  $ShorthandsTable get shorthands => attachedDatabase.shorthands;
   $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
   $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
@@ -5947,6 +5953,300 @@ class NotesCompanion extends UpdateCompanion<Note> {
   }
 }
 
+class $ShorthandsTable extends Shorthands
+    with TableInfo<$ShorthandsTable, Shorthand> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ShorthandsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _contentMeta =
+      const VerificationMeta('content');
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+      'content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _creator_user_idMeta =
+      const VerificationMeta('creator_user_id');
+  @override
+  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
+      'creator_user_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _created_atMeta =
+      const VerificationMeta('created_at');
+  @override
+  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _updated_atMeta =
+      const VerificationMeta('updated_at');
+  @override
+  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [content, creator_user_id, created_at, id, updated_at];
+  @override
+  String get aliasedName => _alias ?? 'shorthands';
+  @override
+  String get actualTableName => 'shorthands';
+  @override
+  VerificationContext validateIntegrity(Insertable<Shorthand> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('content')) {
+      context.handle(_contentMeta,
+          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('creator_user_id')) {
+      context.handle(
+          _creator_user_idMeta,
+          creator_user_id.isAcceptableOrUnknown(
+              data['creator_user_id']!, _creator_user_idMeta));
+    } else if (isInserting) {
+      context.missing(_creator_user_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+          _created_atMeta,
+          created_at.isAcceptableOrUnknown(
+              data['created_at']!, _created_atMeta));
+    } else if (isInserting) {
+      context.missing(_created_atMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+          _updated_atMeta,
+          updated_at.isAcceptableOrUnknown(
+              data['updated_at']!, _updated_atMeta));
+    } else if (isInserting) {
+      context.missing(_updated_atMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Shorthand map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Shorthand(
+      content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
+      creator_user_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
+      created_at: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      updated_at: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $ShorthandsTable createAlias(String alias) {
+    return $ShorthandsTable(attachedDatabase, alias);
+  }
+}
+
+class Shorthand extends DataClass implements Insertable<Shorthand> {
+  String content;
+  int creator_user_id;
+  DateTime created_at;
+  String id;
+  DateTime updated_at;
+  Shorthand(
+      {required this.content,
+      required this.creator_user_id,
+      required this.created_at,
+      required this.id,
+      required this.updated_at});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['content'] = Variable<String>(content);
+    map['creator_user_id'] = Variable<int>(creator_user_id);
+    map['created_at'] = Variable<DateTime>(created_at);
+    map['id'] = Variable<String>(id);
+    map['updated_at'] = Variable<DateTime>(updated_at);
+    return map;
+  }
+
+  ShorthandsCompanion toCompanion(bool nullToAbsent) {
+    return ShorthandsCompanion(
+      content: Value(content),
+      creator_user_id: Value(creator_user_id),
+      created_at: Value(created_at),
+      id: Value(id),
+      updated_at: Value(updated_at),
+    );
+  }
+
+  factory Shorthand.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Shorthand(
+      content: serializer.fromJson<String>(json['content']),
+      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
+      created_at: serializer.fromJson<DateTime>(json['created_at']),
+      id: serializer.fromJson<String>(json['id']),
+      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'content': serializer.toJson<String>(content),
+      'creator_user_id': serializer.toJson<int>(creator_user_id),
+      'created_at': serializer.toJson<DateTime>(created_at),
+      'id': serializer.toJson<String>(id),
+      'updated_at': serializer.toJson<DateTime>(updated_at),
+    };
+  }
+
+  Shorthand copyWith(
+          {String? content,
+          int? creator_user_id,
+          DateTime? created_at,
+          String? id,
+          DateTime? updated_at}) =>
+      Shorthand(
+        content: content ?? this.content,
+        creator_user_id: creator_user_id ?? this.creator_user_id,
+        created_at: created_at ?? this.created_at,
+        id: id ?? this.id,
+        updated_at: updated_at ?? this.updated_at,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Shorthand(')
+          ..write('content: $content, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('created_at: $created_at, ')
+          ..write('id: $id, ')
+          ..write('updated_at: $updated_at')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(content, creator_user_id, created_at, id, updated_at);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Shorthand &&
+          other.content == this.content &&
+          other.creator_user_id == this.creator_user_id &&
+          other.created_at == this.created_at &&
+          other.id == this.id &&
+          other.updated_at == this.updated_at);
+}
+
+class ShorthandsCompanion extends UpdateCompanion<Shorthand> {
+  Value<String> content;
+  Value<int> creator_user_id;
+  Value<DateTime> created_at;
+  Value<String> id;
+  Value<DateTime> updated_at;
+  ShorthandsCompanion({
+    this.content = const Value.absent(),
+    this.creator_user_id = const Value.absent(),
+    this.created_at = const Value.absent(),
+    this.id = const Value.absent(),
+    this.updated_at = const Value.absent(),
+  });
+  ShorthandsCompanion.insert({
+    required String content,
+    required int creator_user_id,
+    required DateTime created_at,
+    required String id,
+    required DateTime updated_at,
+  })  : content = Value(content),
+        creator_user_id = Value(creator_user_id),
+        created_at = Value(created_at),
+        id = Value(id),
+        updated_at = Value(updated_at);
+  static Insertable<Shorthand> custom({
+    Expression<String>? content,
+    Expression<int>? creator_user_id,
+    Expression<DateTime>? created_at,
+    Expression<String>? id,
+    Expression<DateTime>? updated_at,
+  }) {
+    return RawValuesInsertable({
+      if (content != null) 'content': content,
+      if (creator_user_id != null) 'creator_user_id': creator_user_id,
+      if (created_at != null) 'created_at': created_at,
+      if (id != null) 'id': id,
+      if (updated_at != null) 'updated_at': updated_at,
+    });
+  }
+
+  ShorthandsCompanion copyWith(
+      {Value<String>? content,
+      Value<int>? creator_user_id,
+      Value<DateTime>? created_at,
+      Value<String>? id,
+      Value<DateTime>? updated_at}) {
+    return ShorthandsCompanion(
+      content: content ?? this.content,
+      creator_user_id: creator_user_id ?? this.creator_user_id,
+      created_at: created_at ?? this.created_at,
+      id: id ?? this.id,
+      updated_at: updated_at ?? this.updated_at,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (creator_user_id.present) {
+      map['creator_user_id'] = Variable<int>(creator_user_id.value);
+    }
+    if (created_at.present) {
+      map['created_at'] = Variable<DateTime>(created_at.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (updated_at.present) {
+      map['updated_at'] = Variable<DateTime>(updated_at.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ShorthandsCompanion(')
+          ..write('content: $content, ')
+          ..write('creator_user_id: $creator_user_id, ')
+          ..write('created_at: $created_at, ')
+          ..write('id: $id, ')
+          ..write('updated_at: $updated_at')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $DocumentGroupsTable extends DocumentGroups
     with TableInfo<$DocumentGroupsTable, DocumentGroup> {
   @override
@@ -8312,6 +8612,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
   late final $NotesTable notes = $NotesTable(this);
+  late final $ShorthandsTable shorthands = $ShorthandsTable(this);
   late final $DocumentGroupsTable documentGroups = $DocumentGroupsTable(this);
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
   late final $NoteGroupsTable noteGroups = $NoteGroupsTable(this);
@@ -8345,6 +8646,7 @@ abstract class _$DriftDb extends GeneratedDatabase {
         memoryGroups,
         memoryModels,
         notes,
+        shorthands,
         documentGroups,
         fragmentGroups,
         noteGroups,

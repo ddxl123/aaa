@@ -18,12 +18,29 @@ abstract class AbController {
   bool get isEnableLoading => false;
 
   /// [AbBuilder] 内部的 initState，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
-  void onInit() {}
+  void onInit() {
+    BackButtonInterceptor.add(_backListener, context: context);
+  }
 
   /// [AbBuilder] 内部的 dispose，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   void onDispose() {
+    BackButtonInterceptor.remove(_backListener);
     _removeRefreshFunctions.clear();
   }
+
+  Future<void> abBack() async {
+    await BackButtonInterceptor.popRoute();
+  }
+
+  /// 返回 true，则不触发 pop。
+  /// 返回 false，则触发 pop。
+  Future<bool> _backListener(bool stopDefaultButtonEvent, RouteInfo routeInfo) async {
+    // 如果一个对话框(或任何其他路由)是打开的。
+    final hasRoute = routeInfo.ifRouteChanged(context);
+    return await backListener(hasRoute);
+  }
+
+  Future<bool> backListener(bool hasRoute) async => false;
 
   /// 需要 [isEnableLoading] 为 true 时才会被触发。
   Future<void> loadingFuture() async {}

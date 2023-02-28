@@ -66,28 +66,34 @@ class Home extends StatelessWidget {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 10),
-                                        child: Text("速记", style: TextStyle(fontWeight: FontWeight.bold)),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 10),
-                                        child: Text("在这里快速记下知识点...", style: TextStyle(color: Colors.grey)),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Text("速记", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Text("在这里快速记下知识点...", style: TextStyle(color: Colors.grey)),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20),
+                                  ],
+                                ),
+                                onTap: () {
+                                  pushToShorthandGizmoEditPage(context: context);
+                                },
                               ),
                             ),
                             SizedBox(
@@ -153,7 +159,7 @@ class Home extends StatelessWidget {
                             onPressed: () {},
                             child: Row(
                               children: [
-                                Icon(Icons.article_outlined,color: Colors.blueGrey),
+                                Icon(Icons.article_outlined, color: Colors.blueGrey),
                                 SizedBox(width: 5),
                                 Text("发表文章"),
                               ],
@@ -163,7 +169,10 @@ class Home extends StatelessWidget {
                             onPressed: () {},
                             child: Row(
                               children: [
-                                Icon(Icons.live_help_outlined,color: Colors.lightBlueAccent,),
+                                Icon(
+                                  Icons.live_help_outlined,
+                                  color: Colors.lightBlueAccent,
+                                ),
                                 SizedBox(width: 5),
                                 Text("求助制作"),
                               ],

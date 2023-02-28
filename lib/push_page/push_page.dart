@@ -1,3 +1,4 @@
+import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,15 @@ Future<void> pushToLoginPage({required BuildContext context}) async {
     context,
     MaterialPageRoute(
       builder: (_) => const LoginPage(),
+    ),
+  );
+}
+
+Future<void> pushToShorthandGizmoEditPage({required BuildContext context}) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const ShorthandGizmoEditPage(),
     ),
   );
 }
