@@ -6,14 +6,14 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
+import '../list/ShorthandListPageAbController.dart';
+
 class ShorthandGizmoEditPageAbController extends AbController {
   ShorthandGizmoEditPageAbController({required this.initShorthand});
 
   final quillController = q.QuillController.basic();
 
   final Shorthand? initShorthand;
-
-  final isSaved = false.ab;
 
   String getCurrentContent() => jsonEncode(quillController.document.toDelta().toJson());
 
@@ -40,6 +40,7 @@ class ShorthandGizmoEditPageAbController extends AbController {
         ),
         syncTag: null,
       );
+      await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
       SmartDialog.showToast("创建成功！");
     } else {
       if (getCurrentContent() != initShorthand!.content) {
@@ -53,6 +54,7 @@ class ShorthandGizmoEditPageAbController extends AbController {
             );
           },
         );
+        await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
         SmartDialog.showToast("修改成功！");
       } else {
         SmartDialog.showToast("无修改！");
@@ -62,7 +64,11 @@ class ShorthandGizmoEditPageAbController extends AbController {
 
   @override
   Future<bool> backListener(bool hasRoute) async {
-    if (isSaved.isAbTrue()) {
+    if (getCurrentContent() == initShorthand?.content) {
+      SmartDialog.showToast("无修改！");
+      return false;
+    }
+    if (initShorthand == null && quillController.document.toPlainText().trim() == "") {
       return false;
     }
     bool isPop = false;

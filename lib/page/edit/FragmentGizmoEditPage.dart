@@ -14,6 +14,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
     required this.initSomeBefore,
     required this.initSomeAfter,
     required this.initFragmentAb,
+    required this.initFragmentGroupChain,
   }) : super(key: key);
 
   final List<Ab<Fragment>> initSomeBefore;
@@ -22,6 +23,8 @@ class FragmentGizmoEditPage extends StatelessWidget {
 
   final Ab<Fragment>? initFragmentAb;
 
+  final List<FragmentGroup>? initFragmentGroupChain;
+
   @override
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGizmoEditPageAbController>(
@@ -29,6 +32,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
         initFragmentAb: initFragmentAb,
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
+        initFragmentGroupChain: initFragmentGroupChain,
       ),
       builder: (controller, abw) {
         return Scaffold(

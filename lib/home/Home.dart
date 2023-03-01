@@ -92,7 +92,7 @@ class Home extends StatelessWidget {
                                   ],
                                 ),
                                 onTap: () {
-                                  pushToShorthandGizmoEditPage(context: context);
+                                  pushToShorthandGizmoEditPage(context: context, initShorthand: null);
                                 },
                               ),
                             ),
@@ -110,7 +110,6 @@ class Home extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           MaterialButton(
-                            onPressed: () {},
                             child: Row(
                               children: [
                                 Transform.translate(offset: Offset(0, -2), child: FaIcon(FontAwesomeIcons.puzzlePiece, size: 20, color: Colors.orange)),
@@ -118,6 +117,15 @@ class Home extends StatelessWidget {
                                 Text("制作碎片"),
                               ],
                             ),
+                            onPressed: () async {
+                              await pushToFragmentEditPage(
+                                context: context,
+                                initSomeBefore: [],
+                                initSomeAfter: [],
+                                initFragmentAb: null,
+                                initFragmentGroupChain: null,
+                              );
+                            },
                           ),
                           MaterialButton(
                             onPressed: () {},
@@ -232,7 +240,7 @@ class Home extends StatelessWidget {
               children: [
                 Icon(
                   c.iconDatas[index],
-                  size: isActive ? 20 : 24,
+                  size: isActive ? 24 : 20,
                   color: isActive ? Colors.blue : Colors.black,
                 ),
                 isActive

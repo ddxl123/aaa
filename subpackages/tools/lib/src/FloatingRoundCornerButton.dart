@@ -22,7 +22,7 @@ class FloatingRoundCornerButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(color),
-        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15, horizontal: 30)),
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 10, horizontal: 15)),
         elevation: MaterialStateProperty.all(5),
         shape: MaterialStateProperty.all(border),
       ),

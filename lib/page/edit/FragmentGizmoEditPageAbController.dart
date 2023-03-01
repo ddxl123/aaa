@@ -181,6 +181,7 @@ class FragmentGizmoEditPageAbController extends AbController {
     required this.initFragmentAb,
     required this.initSomeBefore,
     required this.initSomeAfter,
+    required this.initFragmentGroupChain,
   });
 
   /// 仅用来初始化赋值，若没有的话为 []。
@@ -191,6 +192,9 @@ class FragmentGizmoEditPageAbController extends AbController {
 
   /// 仅用来初始化赋值，若为 null，则初始化时为创建。
   final Ab<Fragment>? initFragmentAb;
+
+  /// 为 null 表示没有选择组。
+  final List<FragmentGroup>? initFragmentGroupChain;
 
   /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragmentAb]、[initSomeAfter] 的对象。
   ///
@@ -212,6 +216,9 @@ class FragmentGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     final current = FragmentPerformer(fragmentAb: initFragmentAb);
+    if (initFragmentGroupChain != null) {
+      current.fragmentGroupChains.add(initFragmentGroupChain!);
+    }
     await current.reload(fragmentGizmoEditPageAbController: this, recent: null);
 
     records().addAll(initSomeBefore.map((e) => FragmentPerformer(fragmentAb: e)));

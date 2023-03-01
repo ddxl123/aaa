@@ -15,21 +15,6 @@ class MemoryGroupListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomNarrowAppBar(
-        actions: [
-          CustomDropdownBodyButton(
-            initValue: 0,
-            primaryButton: const Icon(Icons.more_horiz),
-            itemAlignment: Alignment.centerLeft,
-            items: [
-              Item(value: 0, text: '创建记忆组'),
-            ],
-            onChanged: (v) {
-              showCreateMemoryGroupDialog();
-            },
-          ),
-        ],
-      ),
       body: AbBuilder<MemoryGroupListPageAbController>(
         putController: MemoryGroupListPageAbController(),
         tag: Aber.single,
@@ -39,6 +24,7 @@ class MemoryGroupListPage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: CustomScrollView(
               slivers: [
+                SliverToBoxAdapter(child: SizedBox(height: 30)),
                 _memoryGroupGizmoList(c.context),
               ],
             ),
@@ -48,6 +34,19 @@ class MemoryGroupListPage extends StatelessWidget {
               c.refreshController.refreshCompleted();
             },
           );
+        },
+      ),
+      floatingActionButton: FloatingRoundCornerButton(
+        text: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.science_sharp),
+            SizedBox(width: 10),
+            Text("新增记忆组"),
+          ],
+        ),
+        onPressed: () {
+          showCreateMemoryGroupDialog();
         },
       ),
     );

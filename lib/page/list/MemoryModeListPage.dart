@@ -15,8 +15,20 @@ class MemoryModeListPage extends StatelessWidget {
       tag: Aber.single,
       builder: (c, abw) {
         return Scaffold(
-          appBar: _appBar(context: c.context),
           body: _body(),
+          floatingActionButton: FloatingRoundCornerButton(
+            text: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.science_sharp),
+                SizedBox(width: 10),
+                Text("新增算法"),
+              ],
+            ),
+            onPressed: () {
+              showCreateMemoryModelDialog();
+            },
+          ),
         );
       },
     );

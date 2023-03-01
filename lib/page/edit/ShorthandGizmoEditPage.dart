@@ -7,7 +7,7 @@ import 'package:tools/tools.dart';
 import 'ShorthandGizmoEditPageAbController.dart';
 
 class ShorthandGizmoEditPage extends StatelessWidget {
-  const ShorthandGizmoEditPage({Key? key, this.initShorthand}) : super(key: key);
+  const ShorthandGizmoEditPage({Key? key, required this.initShorthand}) : super(key: key);
 
   final Shorthand? initShorthand;
 
@@ -38,7 +38,7 @@ class ShorthandGizmoEditPage extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(20),
                   child: QuillEditor.basic(
                     controller: c.quillController,
                     readOnly: false,

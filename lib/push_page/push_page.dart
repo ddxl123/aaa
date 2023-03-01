@@ -43,6 +43,7 @@ Future<void> pushToFragmentEditPage({
   required List<Ab<Fragment>> initSomeBefore,
   required List<Ab<Fragment>> initSomeAfter,
   required Ab<Fragment>? initFragmentAb,
+  required List<FragmentGroup>? initFragmentGroupChain,
 }) async {
   await Navigator.push(
     context,
@@ -51,6 +52,7 @@ Future<void> pushToFragmentEditPage({
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
         initFragmentAb: initFragmentAb,
+        initFragmentGroupChain: initFragmentGroupChain,
       ),
     ),
   );
@@ -65,11 +67,14 @@ Future<void> pushToLoginPage({required BuildContext context}) async {
   );
 }
 
-Future<void> pushToShorthandGizmoEditPage({required BuildContext context}) async {
+Future<void> pushToShorthandGizmoEditPage({
+  required BuildContext context,
+  required Shorthand? initShorthand,
+}) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => const ShorthandGizmoEditPage(),
+      builder: (_) => ShorthandGizmoEditPage(initShorthand: initShorthand),
     ),
   );
 }

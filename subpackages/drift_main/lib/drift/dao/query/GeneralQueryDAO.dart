@@ -368,7 +368,14 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.isEmpty;
   }
 
-  Future<List<Shorthand>> queryAllShorthands() async {
-    return await select(shorthands).get();
+  /// 更新时间晚的在前。
+  Future<List<Shorthand>> queryAllShorthandsByTime() async {
+    return await (select(shorthands)
+          ..orderBy(
+            [
+              (_) => OrderingTerm(expression: _.updated_at, mode: OrderingMode.desc),
+            ],
+          ))
+        .get();
   }
 }

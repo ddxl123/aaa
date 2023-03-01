@@ -25,6 +25,7 @@ class Group<G, U> with AbBroken {
   /// 为 null 表示当前所在组为根组。
   final Ab<Group?> fatherGroup;
 
+  /// 为 null 表示当前所在组为根组。
   final Ab<G?> entity;
 
   /// 在创建元素时，同时创建元素对应的 [selectedUnitCount] 和 [allUnitCount]。
@@ -88,6 +89,13 @@ abstract class GroupListWidgetController<G, U> extends AbController {
 
   Ab<Group<G, U>> getCurrentGroupAb() {
     return groupChain().last;
+  }
+
+  List<G> getCurrentFragmentGroupChain([Abw? abw]) {
+    if (groupChain().length == 1) {
+      return [];
+    }
+    return groupChain(abw).sublist(1, groupChain(abw).length).map((e) => e().entity(abw)!).toList();
   }
 
   /// 刷新 [Group.selectedUnitCount] 和 [Group.allUnitCount]

@@ -169,7 +169,13 @@ class FragmentGroupListPage extends StatelessWidget {
                     Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
                   },
                   onPressed: () async {
-                    await pushToFragmentEditPage(context: c.context, initSomeBefore: [], initSomeAfter: [], initFragmentAb: unit().unitEntity);
+                    await pushToFragmentEditPage(
+                      context: c.context,
+                      initSomeBefore: [],
+                      initSomeAfter: [],
+                      initFragmentAb: unit().unitEntity,
+                      initFragmentGroupChain: c.getCurrentFragmentGroupChain(),
+                    );
                   },
                 ),
               ),
@@ -196,7 +202,11 @@ class FragmentGroupListPage extends StatelessWidget {
       oneActionBuilder: (c, abw) {
         return CustomDropdownBodyButton(
           initValue: 0,
-          primaryButton: const Icon(Icons.more_horiz),
+          primaryButton: SizedBox(
+            width: kMinInteractiveDimension,
+            height: kMinInteractiveDimension,
+            child: const Icon(Icons.add),
+          ),
           itemAlignment: Alignment.centerLeft,
           items: [
             Item(value: 0, text: '添加碎片'),
@@ -204,14 +214,13 @@ class FragmentGroupListPage extends StatelessWidget {
           ],
           onChanged: (v) {
             if (v == 0) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (ctx) => const FragmentGizmoEditPage(
-                            initSomeBefore: [],
-                            initSomeAfter: [],
-                            initFragmentAb: null,
-                          )));
+              pushToFragmentEditPage(
+                context: context,
+                initSomeBefore: [],
+                initSomeAfter: [],
+                initFragmentAb: null,
+                initFragmentGroupChain: c.getCurrentFragmentGroupChain(),
+              );
             } else if (v == 1) {
               showCreateFragmentGroupDialog(fragmentGroup: c.getCurrentGroupAb()().entity());
             }
