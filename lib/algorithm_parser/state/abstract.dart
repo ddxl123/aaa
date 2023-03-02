@@ -23,12 +23,12 @@ class NumberOrNull {
 
 abstract class ClassificationState {
   ClassificationState({
-    required this.useContent,
+    required this.algorithmWrapper,
     required this.simulationType,
     required this.externalResultHandler,
   });
 
-  final String useContent;
+  final AlgorithmWrapper algorithmWrapper;
   final SimulationType simulationType;
 
   /// 若 [simulationType] 为 [SimulationType.external]，则 [externalResultHandler] 不能为 null。

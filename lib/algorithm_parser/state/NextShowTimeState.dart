@@ -10,7 +10,7 @@ part of algorithm_parser;
 /// 单位：秒
 class NextShowTimeState extends ClassificationState {
   NextShowTimeState({
-    required super.useContent,
+    required super.ifElseUseWrapper,
     required super.simulationType,
     required super.externalResultHandler,
   });

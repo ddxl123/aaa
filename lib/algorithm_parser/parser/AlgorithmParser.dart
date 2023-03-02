@@ -70,19 +70,13 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       recordLog(content: RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!);
       recordLog(content: '【开始解析 ${state.getStateType}...】');
 
-      String content = state.useContent;
-      content = _clearAnnotated(content: content);
-      content = _toLowerCase(content: content);
+      AlgorithmWrapper algorithmWrapper = state.algorithmWrapper;
 
-      final separateContent = _separate(content: content);
-      final definitionPart = separateContent.t1;
-      final ifUseElsePart = separateContent.t2;
+      algorithmWrapper = _evalCustomVariables(definitionPart: definitionPart, ifUseElsePart: ifUseElsePart);
+      algorithmWrapper = await _evalInternalVariables(content: algorithmWrapper);
+      algorithmWrapper = _emptyMergeEval(content: algorithmWrapper);
 
-      content = _evalCustomVariables(definitionPart: definitionPart, ifUseElsePart: ifUseElsePart);
-      content = await _evalInternalVariables(content: content);
-      content = _emptyMergeEval(content: content);
-
-      _evalIfUseElse(content: content);
+      _evalIfUseElse(content: algorithmWrapper);
     } catch (o, st) {
       exceptionContent = ExceptionContent(error: o, stackTrace: st);
       recordLog(content: exceptionContent.toString());
@@ -91,38 +85,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
     recordLog(content: '【解析完成 ${state.getStateType}！】');
     showLog();
     return this;
-  }
-
-  /// 去掉全部注释
-  String _clearAnnotated({required String content}) {
-    final result = content.replaceAll(RegExper.annotation, '');
-    recordLog(content: '清除注释完成！');
-    return result;
-  }
-
-  /// 小写化
-  String _toLowerCase({required String content}) {
-    final result = content.toLowerCase();
-    recordLog(content: '全部转化成小写字母完成！');
-    return result;
-  }
-
-  /// 分离自定义变量与if-use-else语句。
-  ///
-  /// [Tuple2.t1] - 自定义变量部分。
-  ///
-  /// [Tuple2.t2] - if-use-else语句部分。
-  Tuple2<String, String> _separate({required String content}) {
-    // 分离变量定义与 if-use-else 语句。
-    final ifIndex = content.indexOf('if:');
-    if (ifIndex == -1) throw '缺少 "if:" 语句！';
-    // 变量定义部分。
-    final definitionPart = content.substring(0, ifIndex);
-    // if-use-else 语句部分。
-    final ifUseElsePart = content.substring(ifIndex);
-    recordLog(content: '分离自定义变量与 if-use-else 语句完成！');
-    recordLog(content: '- 自定义变量的定义部分 》》》\n$definitionPart\n- if-use-else 语句部分 》》》\n$ifUseElsePart');
-    return Tuple2(t1: definitionPart, t2: ifUseElsePart);
   }
 
   /// 评估自定义变量。
@@ -162,7 +124,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
         }
       }
 
-      final name = checkNameConvent(name: eSep.first.trim());
+      final name = checkCustomVariableNameConvention(name: eSep.first.trim());
       final originalVal = eSep.last.trim();
       final nowVal = replace(originalVal);
       recordLog(content: '识别到：name:$name originalVal:$originalVal nowVal:$nowVal');

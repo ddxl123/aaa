@@ -33,7 +33,7 @@ class ButtonDataValue2NextShowTime {
 
 class ButtonDataState extends ClassificationState {
   ButtonDataState({
-    required super.useContent,
+    required super.ifElseUseWrapper,
     required super.simulationType,
     required super.externalResultHandler,
   });
