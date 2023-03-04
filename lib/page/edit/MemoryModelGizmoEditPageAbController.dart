@@ -46,7 +46,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       verifyCallback: (v) async {
         final result = await AlgorithmParser<FamiliarityState>().parse(
           state: FamiliarityState(
-            useContent: v,
+            algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -63,7 +63,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       verifyCallback: (v) async {
         final result = await AlgorithmParser<NextShowTimeState>().parse(
           state: NextShowTimeState(
-            useContent: v,
+            algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
@@ -80,7 +80,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       verifyCallback: (v) async {
         final result = await AlgorithmParser<ButtonDataState>().parse(
           state: ButtonDataState(
-            useContent: v,
+            algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),

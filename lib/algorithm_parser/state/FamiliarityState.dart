@@ -4,7 +4,7 @@ part of algorithm_parser;
 /// use: 123
 class FamiliarityState extends ClassificationState {
   FamiliarityState({
-    required super.ifElseUseWrapper,
+    required super.algorithmWrapper,
     required super.simulationType,
     required super.externalResultHandler,
   });

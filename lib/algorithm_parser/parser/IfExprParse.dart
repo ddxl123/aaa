@@ -10,12 +10,10 @@ class IfExprParse {
   }) {
     _algorithmParser = algorithmParser;
 
-    _algorithmParser.recordLog(content: '正在评估 if 语句...');
     if (_isParsed) throw '每个 IfExprParse 实例只能使用一次 parse！若想多次使用，则需要创建多个 IfExprParse 实例。';
     _isParsed = true;
 
     bool result = _recursion(content) == 'true' ? true : false;
-    _algorithmParser.recordLog(content: '评估 if 语句成功：\nif 语句：\n$content\n结果：\n$result');
     return result;
   }
 

@@ -184,27 +184,45 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return CustomAbWrongCard(
-          child: TextField(
-            keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
-            minLines: 1,
-            maxLines: 3,
-            focusNode: c.familiarityAlgorithmFocusNode,
-            controller: c.familiarityAlgorithmEditingController,
-            enabled: filter(
-              from: c.editPageType(abw),
-              targets: {
-                [MemoryModelGizmoEditPageType.modify]: () => true,
-                [MemoryModelGizmoEditPageType.look]: () => false,
-              },
-              orElse: null,
+        return Card(
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: FreeBox(
+              freeBoxController: FreeBoxController(),
+              moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
+                children: [
+                  FreeBoxMoveScaleLayerPositioned(
+                    expectPosition: Offset(0, 0),
+                    child: Text("ddd"),
+                  ),
+                ],
+              ),
+              fixedLayerWidgets: [],
             ),
-            decoration: const InputDecoration(border: InputBorder.none, labelText: '熟悉度算法：'),
-            onChanged: (v) {
-              c.familiarityAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
-            },
           ),
         );
+        // return CustomAbWrongCard(
+        //   child: TextField(
+        //     keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
+        //     minLines: 1,
+        //     maxLines: 3,
+        //     focusNode: c.familiarityAlgorithmFocusNode,
+        //     controller: c.familiarityAlgorithmEditingController,
+        //     enabled: filter(
+        //       from: c.editPageType(abw),
+        //       targets: {
+        //         [MemoryModelGizmoEditPageType.modify]: () => true,
+        //         [MemoryModelGizmoEditPageType.look]: () => false,
+        //       },
+        //       orElse: null,
+        //     ),
+        //     decoration: const InputDecoration(border: InputBorder.none, labelText: '熟悉度算法：'),
+        //     onChanged: (v) {
+        //       c.familiarityAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
+        //     },
+        //   ),
+        // );
       },
     );
   }

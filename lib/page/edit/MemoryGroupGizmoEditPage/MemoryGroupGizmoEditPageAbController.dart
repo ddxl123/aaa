@@ -90,21 +90,21 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
         // TODO: 模拟校验
         final fa = await AlgorithmParser().parse(
           state: FamiliarityState(
-            useContent: mm.familiarity_algorithm,
+            algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.familiarity_algorithm),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
         final ff = await AlgorithmParser().parse(
           state: NextShowTimeState(
-            useContent: mm.next_time_algorithm,
+            algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.next_time_algorithm),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),
         );
         final bd = await AlgorithmParser().parse(
           state: ButtonDataState(
-            useContent: mm.button_algorithm,
+            algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.button_algorithm),
             simulationType: SimulationType.syntaxCheck,
             externalResultHandler: null,
           ),

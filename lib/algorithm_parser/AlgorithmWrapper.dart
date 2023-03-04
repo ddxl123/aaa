@@ -28,6 +28,29 @@ class Ifer {
         "if_else_use_wrapper": this.ifElseUseWrapper,
         "explain": this.explain,
       };
+
+  Future<bool> handle({
+    required Future<bool> Function(String condition) conditionChecker,
+    required Future<void> Function(String use) useChecker,
+  }) async {
+    final isTrue = await conditionChecker(condition);
+    if (isTrue) {
+      if (use != null) {
+        await useChecker(use!);
+      } else {
+        final childrenIfer = ifElseUseWrapper!.ifers;
+        for (int i = 0; i < childrenIfer.length; i++) {
+          final childrenIferResult = await childrenIfer[i].handle(conditionChecker: conditionChecker, useChecker: useChecker);
+          if (childrenIferResult) {
+            return childrenIferResult;
+          }
+        }
+        return await ifElseUseWrapper!.elser.handle(conditionChecker: conditionChecker, useChecker: useChecker);
+      }
+    }
+
+    return isTrue;
+  }
 }
 
 /// [use] 和 [ifElseUseWrapper] 二选一。
@@ -54,6 +77,25 @@ class Elser {
         "if_else_use_wrapper": this.ifElseUseWrapper,
         "explain": this.explain,
       };
+
+  Future<bool> handle({
+    required Future<bool> Function(String condition) conditionChecker,
+    required Future<void> Function(String use) useChecker,
+  }) async {
+    if (use != null) {
+      await useChecker(use!);
+      return true;
+    } else {
+      final childrenIfer = ifElseUseWrapper!.ifers;
+      for (int i = 0; i < childrenIfer.length; i++) {
+        final childrenIferResult = await childrenIfer[i].handle(conditionChecker: conditionChecker, useChecker: useChecker);
+        if (childrenIferResult) {
+          return childrenIferResult;
+        }
+      }
+      return ifElseUseWrapper!.elser.handle(conditionChecker: conditionChecker, useChecker: useChecker);
+    }
+  }
 }
 
 @JsonSerializable()
@@ -75,6 +117,19 @@ class IfElseUseWrapper {
         "ifers": this.ifers,
         "elser": this.elser,
       };
+
+  Future<void> handle({
+    required Future<bool> Function(String condition) conditionChecker,
+    required Future<void> Function(String use) useChecker,
+  }) async {
+    for (int i = 0; i < ifers.length; i++) {
+      final iferResult = await ifers[i].handle(conditionChecker: conditionChecker, useChecker: useChecker);
+      if (iferResult) {
+        return;
+      }
+    }
+    await elser.handle(conditionChecker: conditionChecker, useChecker: useChecker);
+  }
 }
 
 @JsonSerializable()
@@ -112,6 +167,8 @@ class AlgorithmWrapper {
   final List<CustomVariable> customVariables;
   final IfElseUseWrapper ifElseUseWrapper;
 
+  final customVariablesMap = <String, String>{};
+
   factory AlgorithmWrapper.fromJson(Map<String, dynamic> json) => AlgorithmWrapper(
         customVariables: (json["custom_variables"] as List<dynamic>).map((e) => CustomVariable.fromJson(e as Map<String, dynamic>)).toList(),
         ifElseUseWrapper: IfElseUseWrapper.fromJson(json["if_else_use_wrapper"]),
@@ -121,6 +178,10 @@ class AlgorithmWrapper {
         "custom_variables": this.customVariables,
         "if_else_use_wrapper": this.ifElseUseWrapper,
       };
+
+  static fromJsonString(String content) => AlgorithmWrapper.fromJson(jsonDecode(content));
+
+  String toJsonString() => jsonEncode(toJson());
 
   AlgorithmWrapper copy() => AlgorithmWrapper.fromJson(this.toJson());
 }
