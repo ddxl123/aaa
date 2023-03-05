@@ -10,6 +10,10 @@ import 'package:tools/tools.dart';
 class MemoryModelGizmoEditPageAbController extends AbController {
   MemoryModelGizmoEditPageAbController({required this.memoryModelAb});
 
+  final freeBoxController = FreeBoxController();
+
+  final isScrollable = true.ab;
+
   final Ab<MemoryModelGizmoEditPageType> editPageType = MemoryModelGizmoEditPageType.look.ab;
 
   final Ab<MemoryModel> memoryModelAb;
@@ -32,6 +36,12 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   final buttonAlgorithmEditingController = TextEditingController();
 
   final isAlgorithmKeyboard = false.ab;
+
+  @override
+  void onDispose() {
+    super.onDispose();
+    freeBoxController.dispose();
+  }
 
   void initVerifies() {
     titleStorage.assignVerify(

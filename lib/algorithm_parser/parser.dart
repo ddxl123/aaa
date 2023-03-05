@@ -7,11 +7,15 @@ import 'dart:math' as math;
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPageAbController.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
+import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 part 'constant/keyword.dart';
 

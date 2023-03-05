@@ -1,6 +1,7 @@
 import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
+import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -14,8 +15,8 @@ Future<void> showCreateMemoryGroupDialog() async {
         title: '创建记忆组：',
         okText: '创建',
         cancelText: '取消',
-        hintText: '请输入名称',
         text: null,
+        inputDecoration: InputDecoration(hintText: '请输入名称'),
         onCancel: () {
           SmartDialog.dismiss();
         },

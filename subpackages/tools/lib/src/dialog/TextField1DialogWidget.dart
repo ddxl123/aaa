@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../../tools.dart';
 
@@ -12,19 +13,21 @@ class TextField1DialogWidget extends StatefulWidget {
     Key? key,
     this.title,
     this.text,
-    required this.hintText,
     required this.cancelText,
     required this.okText,
     this.onOk,
     this.onCancel,
     this.dialogSize,
+    this.textEditingController,
+    this.inputDecoration = const InputDecoration(),
   }) : super(key: key);
 
   final String? title;
   final String? text;
-  final String hintText;
   final String cancelText;
   final String okText;
+  final InputDecoration inputDecoration;
+  final TextEditingController? textEditingController;
   final FutureOr<void> Function(TextEditingController tec)? onOk;
   final FutureOr<void> Function()? onCancel;
   final DialogSize? dialogSize;
@@ -34,11 +37,17 @@ class TextField1DialogWidget extends StatefulWidget {
 }
 
 class _TextField1DialogWidgetState extends State<TextField1DialogWidget> {
-  final tec = TextEditingController();
+  late final TextEditingController textEditingController;
+
+  @override
+  void initState() {
+    textEditingController = widget.textEditingController ?? TextEditingController();
+    super.initState();
+  }
 
   @override
   void dispose() {
-    tec.dispose();
+    textEditingController.dispose();
     super.dispose();
   }
 
@@ -61,9 +70,9 @@ class _TextField1DialogWidgetState extends State<TextField1DialogWidget> {
           children: [
             Expanded(
               child: TextField(
+                controller: textEditingController,
                 focusNode: FocusNode()..requestFocus(),
-                controller: tec,
-                decoration: InputDecoration(hintText: widget.hintText),
+                decoration: widget.inputDecoration,
               ),
             ),
           ],
@@ -74,7 +83,11 @@ class _TextField1DialogWidgetState extends State<TextField1DialogWidget> {
         TextButton(
           child: Text(widget.cancelText),
           onPressed: () async {
-            await widget.onCancel?.call();
+            if (widget.onCancel == null) {
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+            } else {
+              await widget.onCancel?.call();
+            }
           },
         ),
         const SizedBox(width: 10),
@@ -82,7 +95,7 @@ class _TextField1DialogWidgetState extends State<TextField1DialogWidget> {
           child: Text(widget.okText, style: const TextStyle(color: Colors.red)),
           onPressed: () async {
             // TODO: 输入空字符后点击确定，会抛出异常。
-            await widget.onOk?.call(tec);
+            await widget.onOk?.call(textEditingController);
           },
         ),
       ],

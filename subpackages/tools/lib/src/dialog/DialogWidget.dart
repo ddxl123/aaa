@@ -27,6 +27,7 @@ class DialogWidget extends StatelessWidget {
     this.allCrossAxisAlignment,
     this.dialogSize,
     this.mainVerticalWidgetsAlignment,
+    this.fullPadding = const EdgeInsets.fromLTRB(30, 20, 30, 5),
   }) : super(key: key);
   final String? title;
   final Widget? topRightAction;
@@ -38,6 +39,7 @@ class DialogWidget extends StatelessWidget {
   final CrossAxisAlignment? allCrossAxisAlignment;
   final CrossAxisAlignment? mainVerticalWidgetsAlignment;
   final DialogSize? dialogSize;
+  final EdgeInsets fullPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class DialogWidget extends StatelessWidget {
       padding: MediaQuery.of(context).viewInsets + MediaQuery.of(context).padding,
       duration: const Duration(milliseconds: 100),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(30, 20, 30, 5),
+        padding: fullPadding,
         constraints: dialogSize == null
             ? BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.8,

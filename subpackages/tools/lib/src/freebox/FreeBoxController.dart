@@ -1,7 +1,9 @@
 part of freebox;
 
 class FreeBoxController {
-  FreeBoxController({this.isKeepCameraState = false});
+  FreeBoxController({
+    this.isKeepCameraState = false,
+  });
 
   /// 当前相机
   FreeBoxCamera freeBoxCamera = FreeBoxCamera(expectPosition: Offset.zero, expectScale: 1);
@@ -117,12 +119,9 @@ class FreeBoxController {
     }
 
     animationController!.duration = const Duration(seconds: 1);
-    _positionAnimation = animationController!
-        .drive(CurveTween(curve: Curves.easeInOutBack))
-        .drive(Tween<Offset>(begin: freeBoxCamera.expectPosition, end: targetCamera.expectPosition));
-    _scaleAnimation = animationController!
-        .drive(CurveTween(curve: Curves.easeInOutBack))
-        .drive(Tween<double>(begin: freeBoxCamera.expectScale, end: targetCamera.expectScale));
+    _positionAnimation =
+        animationController!.drive(CurveTween(curve: Curves.easeInOutBack)).drive(Tween<Offset>(begin: freeBoxCamera.expectPosition, end: targetCamera.expectPosition));
+    _scaleAnimation = animationController!.drive(CurveTween(curve: Curves.easeInOutBack)).drive(Tween<double>(begin: freeBoxCamera.expectScale, end: targetCamera.expectScale));
 
     animationController!.forward(from: 0.4);
     animationController!.addListener(_targetSlideListener);

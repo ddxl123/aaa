@@ -14,7 +14,7 @@ part 'FreeBoxWidget.dart';
 const Offset freeBoxTopLeftOffset = Offset(10000, 10000);
 
 class FreeBox extends StatefulWidget {
-  const FreeBox({
+  FreeBox({
     required this.freeBoxController,
     required this.moveScaleLayerWidgets,
     required this.fixedLayerWidgets,
@@ -43,12 +43,6 @@ class _FreeBox extends State<FreeBox> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    widget.freeBoxController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -62,14 +56,16 @@ class _FreeBox extends State<FreeBox> with TickerProviderStateMixin {
   Widget _freeMoveScaleLayer() => GestureDetector(
         // 让不包含 widget 的地方也能被触发移动缩放事件。
         behavior: HitTestBehavior.translucent,
-        onScaleStart: widget.freeBoxController.onScaleStart,
+        onScaleStart: (ScaleStartDetails details) {
+          widget.freeBoxController.freeBoxSetState = () {
+            if (mounted) setState(() {});
+          };
+          widget.freeBoxController.onScaleStart(details);
+        },
         onScaleUpdate: widget.freeBoxController.onScaleUpdate,
         onScaleEnd: widget.freeBoxController.onScaleEnd,
         child: StatefulBuilder(
           builder: (BuildContext context, void Function(void Function()) setState) {
-            widget.freeBoxController.freeBoxSetState ??= () {
-              if (mounted) setState(() {});
-            };
             return Transform.translate(
               offset: widget.freeBoxController.freeBoxCamera.getActualPosition(),
               child: Transform.scale(

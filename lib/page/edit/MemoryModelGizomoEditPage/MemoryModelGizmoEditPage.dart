@@ -1,12 +1,15 @@
 import 'package:aaa/algorithm_parser/AlgorithmKeyboard.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
-import 'package:aaa/page/edit/MemoryModelGizmoEditPageAbController.dart';
+import 'package:aaa/page/edit/MemoryModelGizomoEditPage/FamiliarityAlgorithmPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:cool_ui/cool_ui.dart';
+import 'package:flutter/gestures.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'MemoryModelGizmoEditPageAbController.dart';
 
 class MemoryModelGizmoEditPage extends StatelessWidget {
   const MemoryModelGizmoEditPage({Key? key, required this.memoryModelAb}) : super(key: key);
@@ -29,7 +32,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               ],
             ),
             body: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              physics: c.isScrollable(abw) ? const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()) : NeverScrollableScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(child: _titleWidget()),
                 SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
@@ -184,45 +187,23 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return Card(
-          child: SizedBox(
-            width: 100,
-            height: 100,
-            child: FreeBox(
-              freeBoxController: FreeBoxController(),
-              moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
+        return Padding(
+          padding: EdgeInsets.all(10),
+          child: Card(
+            child: MaterialButton(
+              child: Row(
                 children: [
-                  FreeBoxMoveScaleLayerPositioned(
-                    expectPosition: Offset(0, 0),
-                    child: Text("ddd"),
-                  ),
+                  Text("熟悉度变化算法"),
+                  Spacer(),
+                  Icon(Icons.keyboard_arrow_right),
                 ],
               ),
-              fixedLayerWidgets: [],
+              onPressed: () {
+                Navigator.push(c.context, MaterialPageRoute(builder: (_) => FamiliarityAlgorithmPage()));
+              },
             ),
           ),
         );
-        // return CustomAbWrongCard(
-        //   child: TextField(
-        //     keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
-        //     minLines: 1,
-        //     maxLines: 3,
-        //     focusNode: c.familiarityAlgorithmFocusNode,
-        //     controller: c.familiarityAlgorithmEditingController,
-        //     enabled: filter(
-        //       from: c.editPageType(abw),
-        //       targets: {
-        //         [MemoryModelGizmoEditPageType.modify]: () => true,
-        //         [MemoryModelGizmoEditPageType.look]: () => false,
-        //       },
-        //       orElse: null,
-        //     ),
-        //     decoration: const InputDecoration(border: InputBorder.none, labelText: '熟悉度算法：'),
-        //     onChanged: (v) {
-        //       c.familiarityAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
-        //     },
-        //   ),
-        // );
       },
     );
   }

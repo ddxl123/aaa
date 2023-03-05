@@ -6,7 +6,7 @@ import 'package:tools/tools.dart';
 
 import '../page/edit/FragmentGizmoEditPage.dart';
 import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
-import '../page/edit/MemoryModelGizmoEditPage.dart';
+import '../page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPage.dart';
 import '../page/edit/edit_page_type.dart';
 
 Future<void> pushToMemoryModelGizmoEditPage({

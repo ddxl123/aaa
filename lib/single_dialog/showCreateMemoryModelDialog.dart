@@ -1,6 +1,7 @@
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -12,8 +13,8 @@ Future<void> showCreateMemoryModelDialog() async {
         title: '创建记忆模型：',
         okText: '创建',
         cancelText: '取消',
-        hintText: '请输入名称',
         text: null,
+        inputDecoration: InputDecoration(hintText: '请输入名称'),
         onCancel: () {
           SmartDialog.dismiss();
         },
