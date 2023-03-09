@@ -21,7 +21,7 @@ dependencies:
   # 上拉、下拉刷新 - 已选最佳
   pull_to_refresh: any
 
-  flutter_smart_dialog: 4.8.1
+  flutter_smart_dialog: 4.9.0+1
 
   # 图标库
   font_awesome_flutter: any

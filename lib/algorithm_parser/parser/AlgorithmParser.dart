@@ -72,6 +72,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
       AlgorithmWrapper algorithmWrapper = state.algorithmWrapper;
 
+      _state.algorithmWrapper.customVariablesMap.clear();
       _state.algorithmWrapper.customVariables.map(
         (e) {
           _state.algorithmWrapper.customVariablesMap.addAll({e.name: e.content});

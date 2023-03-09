@@ -15,12 +15,23 @@ class FamiliarityAlgorithmPage extends StatefulWidget {
 class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: AbBuilder<MemoryModelGizmoEditPageAbController>(
-        tag: Aber.single,
-        builder: (c, abw) {
-          return FreeBox(
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.single,
+      builder: (c, abw) {
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () {},
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          body: FreeBox(
             freeBoxController: c.freeBoxController,
             moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
               children: [
@@ -192,30 +203,9 @@ class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
                 ),
               ),
             ],
-          );
-          // return CustomAbWrongCard(
-          //   child: TextField(
-          //     keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
-          //     minLines: 1,
-          //     maxLines: 3,
-          //     focusNode: c.familiarityAlgorithmFocusNode,
-          //     controller: c.familiarityAlgorithmEditingController,
-          //     enabled: filter(
-          //       from: c.editPageType(abw),
-          //       targets: {
-          //         [MemoryModelGizmoEditPageType.modify]: () => true,
-          //         [MemoryModelGizmoEditPageType.look]: () => false,
-          //       },
-          //       orElse: null,
-          //     ),
-          //     decoration: const InputDecoration(border: InputBorder.none, labelText: '熟悉度算法：'),
-          //     onChanged: (v) {
-          //       c.familiarityAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
-          //     },
-          //   ),
-          // );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

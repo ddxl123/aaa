@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'DialogWidget.dart';
 
@@ -63,7 +64,11 @@ class OkAndCancelDialogWidget extends StatelessWidget {
             : TextButton(
                 child: Text(cancelText!),
                 onPressed: () async {
-                  await onCancel?.call();
+                  if (onCancel == null) {
+                    SmartDialog.dismiss(status: SmartStatus.dialog);
+                  } else {
+                    await onCancel!.call();
+                  }
                 },
               ),
         cancelText == null ? Container() : const SizedBox(width: 10),

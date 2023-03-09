@@ -47,13 +47,13 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
               child: widget.primaryButton,
             ),
       underline: const SizedBox(),
-      dropdownElevation: 2,
-      dropdownWidth: maxWidth + 50,
+      // dropdownElevation: 2,
+      // dropdownWidth: maxWidth + 50,
       barrierColor: Colors.black26,
-      dropdownDecoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      itemPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      // dropdownDecoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(10),
+      // ),
+      // itemPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       items: [
         ...widget.items.map(
           (e) => DropdownMenuItem<T>(

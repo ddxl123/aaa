@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:aaa/single_dialog/register_or_login/showIsLogoutCurrentUserDialog.dart';
@@ -16,6 +17,7 @@ import 'TestHomeAbController.dart';
 
 class TestHome extends StatelessWidget {
   const TestHome({Key? key}) : super(key: key);
+
 //
   @override
   Widget build(BuildContext context) {
@@ -150,6 +152,17 @@ class TestHome extends StatelessWidget {
                                     );
                                     throw "ddd";
                                   },
+                                );
+                              },
+                            ),
+                            ElevatedButton(
+                              child: const Text('toast'),
+                              onPressed: () async {
+                                SmartDialog.showToast(
+                                  "test toast ---- ${Random().nextInt(999)}",
+                                  displayType: SmartToastType.multi,
+                                  animationType: SmartAnimationType.centerFade_otherSlide,
+                                  alignment: Alignment.bottomCenter,
                                 );
                               },
                             ),
