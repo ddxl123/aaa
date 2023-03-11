@@ -135,15 +135,6 @@ String? time2TextTime({required int longSeconds}) {
   return result == '' ? null : result;
 }
 
-class ExceptionContent {
-  final Object error;
-  final StackTrace stackTrace;
-
-  ExceptionContent({required this.error, required this.stackTrace});
-
-  @override
-  String toString() => '($hashCode=====>>>>>start:\nExceptionContent:\nerror:\n$error\nstackTrace:\n$stackTrace\n:end<<<<<=====$hashCode)\n';
-}
 
 /// 若 [bs] 全为 true，则返回 true。
 bool boolAllTrue(List<bool> bs) {

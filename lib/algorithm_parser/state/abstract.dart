@@ -44,7 +44,7 @@ abstract class ClassificationState {
   String toStringResult();
 
   /// 当前状态类的 use 的解析方式。
-  ClassificationState useParse({required String useContent, required AlgorithmParser algorithmParser});
+  ClassificationState useParse({required String useContent});
 
   /// 处理 if-else-use 已使用的内置变量。
   ///
@@ -55,7 +55,7 @@ abstract class ClassificationState {
     } else if (simulationType == SimulationType.external) {
       return (await externalInternalVariablesResultHandler(atom)).number;
     }
-    throw '未处理模拟类型：$simulationType';
+    throw KnownAlgorithmException('未处理模拟类型：$simulationType');
   }
 
   /// 语法分析。
@@ -63,7 +63,7 @@ abstract class ClassificationState {
 
   /// 外部处理。
   Future<NumberOrNull> externalInternalVariablesResultHandler(InternalVariableAtom atom) async {
-    if (externalResultHandler == null) throw '当为 SimulationType.external 类型时，externalResultHandler 不能为 null！';
+    if (externalResultHandler == null) throw KnownAlgorithmException('当为 SimulationType.external 类型时，externalResultHandler 不能为 null！');
     return await externalResultHandler!(atom);
   }
 }

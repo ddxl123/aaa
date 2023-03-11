@@ -9,8 +9,8 @@ class BuildExceptionWidget extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
-  final ExceptionContent exceptionContent;
-  final void Function(String title, ExceptionContent exceptionContent) logCallback;
+  final AbException exceptionContent;
+  final void Function(String title, AbException exceptionContent) logCallback;
 
   @override
   Widget build(BuildContext context) {

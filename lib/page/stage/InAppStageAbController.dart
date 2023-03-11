@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aaa/algorithm_parser/AlgorithmException.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
@@ -148,9 +149,9 @@ class InAppStageAbController extends AbController {
 
   /// 解析出当前展示熟练度。
   Future<double> _parseCurrentFamiliarity() async {
-    final currentFamiliarity = await AlgorithmParser<FamiliarityState>().parse(
+    return await AlgorithmParser.parse<FamiliarityState, double>(
       state: FamiliarityState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -190,12 +191,10 @@ class InAppStageAbController extends AbController {
           );
         },
       ),
-    );
-    return await currentFamiliarity.handle(
       onSuccess: (FamiliarityState state) async {
         return state.result;
       },
-      onError: (ExceptionContent ec) async {
+      onError: (AlgorithmException ec) async {
         throw ec;
       },
     );
@@ -203,9 +202,9 @@ class InAppStageAbController extends AbController {
 
   /// 解析按钮的数值数据。
   Future<ButtonDataState> _parseButtonData() async {
-    final parseResult = await AlgorithmParser<ButtonDataState>().parse(
+    return await AlgorithmParser.parse<ButtonDataState, ButtonDataState>(
       state: ButtonDataState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -245,12 +244,10 @@ class InAppStageAbController extends AbController {
           );
         },
       ),
-    );
-    return await parseResult.handle(
       onSuccess: (ButtonDataState state) async {
         return state;
       },
-      onError: (ExceptionContent ec) async {
+      onError: (AlgorithmException ec) async {
         throw ec;
       },
     );
@@ -260,9 +257,9 @@ class InAppStageAbController extends AbController {
   ///
   /// 解析出的值存放到 [buttonDataValue2NextShowTime] 中。
   Future<void> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
-    final parseResult = await AlgorithmParser<NextShowTimeState>().parse(
+    await AlgorithmParser.parse<NextShowTimeState, void>(
       state: NextShowTimeState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -303,12 +300,10 @@ class InAppStageAbController extends AbController {
           );
         },
       ),
-    );
-    return await parseResult.handle(
       onSuccess: (NextShowTimeState state) async {
         buttonDataValue2NextShowTime.nextShowTime = state.result;
       },
-      onError: (ExceptionContent ec) async {
+      onError: (AlgorithmException ec) async {
         throw ec;
       },
     );

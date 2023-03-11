@@ -45,27 +45,27 @@ class ButtonDataState extends ClassificationState {
   bool get isSlidable => resultMin == null || resultMax == null;
 
   @override
-  ButtonDataState useParse({required String useContent, required AlgorithmParser algorithmParser}) {
+  ButtonDataState useParse({required String useContent}) {
     final trim = useContent.trim();
     final blank = trim.split(' ')..removeWhere((element) => element.trim() == '');
     if (blank.length == 1) {
-      _parseComma(comma: blank.first, algorithmParser: algorithmParser);
+      _parseComma(comma: blank.first);
     } else if (blank.length == 3) {
-      resultMin = ButtonDataValue2NextShowTime(value: algorithmParser.calculate(blank.first));
-      resultMax = ButtonDataValue2NextShowTime(value: algorithmParser.calculate(blank.last));
-      _parseComma(comma: blank[1], algorithmParser: algorithmParser);
+      resultMin = ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(blank.first));
+      resultMax = ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(blank.last));
+      _parseComma(comma: blank[1]);
     } else {
       throw '"use:$useContent" 内容书写不规范！';
     }
     return this;
   }
 
-  void _parseComma({required String comma, required AlgorithmParser algorithmParser}) {
+  void _parseComma({required String comma}) {
     final bvs = comma.split(',')..removeWhere((element) => element.trim() == '');
     resultButtonValues.addAll(
       bvs.map(
         (e) {
-          return ButtonDataValue2NextShowTime(value: algorithmParser.calculate(e));
+          return ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(e));
         },
       ),
     );

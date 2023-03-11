@@ -43,9 +43,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                     child: const Text('使用默认记忆算法'),
                     onPressed: () {
                       final content = DefaultAlgorithmContent();
-                      c.familiarityAlgorithmEditingController.text = content.defaultFamiliarContent;
-                      c.buttonAlgorithmEditingController.text = content.defaultButtonDataContent;
-                      c.nextTimeAlgorithmEditingController.text = content.defaultNextShowTimeContent;
+                      // c.familiarityAlgorithmEditingController.text = content.defaultFamiliarContent;
+                      // c.buttonAlgorithmEditingController.text = content.defaultButtonDataContent;
+                      // c.nextTimeAlgorithmEditingController.text = content.defaultNextShowTimeContent;
                     },
                   ),
                 ),
@@ -217,7 +217,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
             maxLines: 3,
-            controller: c.nextTimeAlgorithmEditingController,
+            // controller: c.nextTimeAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -228,7 +228,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '下次展示时间点算法：'),
             onChanged: (v) {
-              c.nextTimeAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
+              // c.nextTimeAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
             },
           ),
         );
@@ -245,7 +245,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             keyboardType: c.isAlgorithmKeyboard(abw) ? AlgorithmKeyboard.inputType : TextInputType.multiline,
             minLines: 1,
             maxLines: 3,
-            controller: c.buttonAlgorithmEditingController,
+            // controller: c.buttonAlgorithmEditingController,
             enabled: filter(
               from: c.editPageType(abw),
               targets: {
@@ -256,7 +256,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             ),
             decoration: const InputDecoration(border: InputBorder.none, labelText: '按钮数值分配算法：'),
             onChanged: (v) {
-              c.buttonAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
+              // c.buttonAlgorithmStorage.abValue.refreshEasy((oldValue) => v);
             },
           ),
         );

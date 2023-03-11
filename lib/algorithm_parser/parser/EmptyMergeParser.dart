@@ -14,18 +14,18 @@ class IndexAndContent {
 }
 
 class EmptyMergeParser {
-  late final AlgorithmParser algorithmParser;
-  bool _isParsed = false;
+  EmptyMergeParser._();
+
+  static String parse<T extends ClassificationState>({required String content}) {
+    return EmptyMergeParser._()._parse(content: content);
+  }
 
   /// 消除空合并。
   ///
   /// 处理多处无相关的空合并。
   ///
   /// 处理类似 '(aaa)-(null??((null??(111+((null)??333)))+(null??222)))eee' 的复杂表达式。
-  String parse<T extends ClassificationState>({required String content, required AlgorithmParser<T> algorithmParser}) {
-    if (_isParsed) throw '每个 EmptyMergeParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 EmptyMergeParser 实例。';
-    _isParsed = true;
-    this.algorithmParser = algorithmParser;
+  String _parse<T extends ClassificationState>({required String content}) {
     return _recursion(content: content);
   }
 
@@ -69,17 +69,17 @@ class EmptyMergeParser {
       }
       if (indexStr == ')') {
         if (content != '') {
-          throw '不规范使用空合并操作符！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。';
+          throw KnownAlgorithmException('不规范使用空合并操作符！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。');
         }
       } else {
         content = indexStr + content;
       }
     }
     if (!hasLeftBracket) {
-      throw '空合并操作符左边变量缺少左括号！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。';
+      throw KnownAlgorithmException('空合并操作符左边变量缺少左括号！\n正确写法：(xxx??yyy) 或 ((xxx??yyy)??zzz), 其中xxx只能为内置变量。');
     }
     if (content.trim() == '') {
-      throw '空合并操作符左边缺少可能为空的变量！';
+      throw KnownAlgorithmException('空合并操作符左边缺少可能为空的变量！');
     }
 
     final leftBracketIndex = match.start - content.length - 2;
@@ -90,7 +90,7 @@ class EmptyMergeParser {
   IndexAndContent toAfter(Match match) {
     final String rightOriginal = match.input.substring(match.end, match.input.length);
     if (rightOriginal.trim() == '') {
-      throw '空合并操作符右边缺少内容！';
+      throw KnownAlgorithmException('空合并操作符右边缺少内容！');
     }
     // 不包含最外层')'
     String content = '';
@@ -113,13 +113,13 @@ class EmptyMergeParser {
       content += indexStr;
     }
     if (content.trim() == '') {
-      throw '空合并运算符右边缺少值！';
+      throw KnownAlgorithmException('空合并运算符右边缺少值！');
     }
     if (leftBrackets.isEmpty) {
-      throw '空合并缺少右括号: $content??';
+      throw KnownAlgorithmException('空合并缺少右括号: $content??');
     }
     if (leftBrackets.length > 1) {
-      throw '空合并括号分配异常：$content';
+      throw KnownAlgorithmException('空合并括号分配异常：$content');
     }
 
     final rightBracketIndex = match.end + content.length + 1;

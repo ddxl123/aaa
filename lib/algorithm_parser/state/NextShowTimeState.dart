@@ -18,8 +18,8 @@ class NextShowTimeState extends ClassificationState {
   late int result;
 
   @override
-  NextShowTimeState useParse({required String useContent, required AlgorithmParser algorithmParser}) {
-    result = algorithmParser.calculate(useContent).toInt();
+  NextShowTimeState useParse({required String useContent}) {
+    result = AlgorithmParser.calculate(useContent).toInt();
     return this;
   }
 

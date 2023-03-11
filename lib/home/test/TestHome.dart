@@ -155,7 +155,7 @@ class TestHome extends StatelessWidget {
                                 );
                               },
                             ),
-                            ElevatedButton(
+                             ElevatedButton(
                               child: const Text('toast'),
                               onPressed: () async {
                                 SmartDialog.showToast(

@@ -51,7 +51,7 @@ abstract class AbController {
   /// 需要 [isEnableLoading] 为 true 时才可能会被触发。
   ///
   /// 会提供 [error] 和 [stackTrace]
-  Widget loadingErrorWidget(ExceptionContent exceptionContent) => BuildExceptionWidget(
+  Widget loadingErrorWidget(AbException exceptionContent) => BuildExceptionWidget(
         title: '加载出现异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {
@@ -59,7 +59,7 @@ abstract class AbController {
         },
       );
 
-  Widget buildInternalExceptionWidget(ExceptionContent exceptionContent) => BuildExceptionWidget(
+  Widget buildInternalExceptionWidget(AbException exceptionContent) => BuildExceptionWidget(
         title: '内部构建异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {

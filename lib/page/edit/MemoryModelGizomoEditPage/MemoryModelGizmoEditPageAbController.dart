@@ -22,19 +22,6 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   final titleStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
   final titleEditingController = TextEditingController();
 
-  /// [MemoryModels.familiarityAlgorithm]
-  final familiarityAlgorithmStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
-  final familiarityAlgorithmEditingController = TextEditingController();
-  final familiarityAlgorithmFocusNode = FocusNode();
-
-  /// [MemoryModels.nextTimeAlgorithm]
-  final nextTimeAlgorithmStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
-  final nextTimeAlgorithmEditingController = TextEditingController();
-
-  /// [MemoryModels.buttonAlgorithm]
-  final buttonAlgorithmStorage = AbStorage<String>(abValue: ''.ab, tempValue: '');
-  final buttonAlgorithmEditingController = TextEditingController();
-
   final isAlgorithmKeyboard = false.ab;
 
   @override
@@ -52,57 +39,57 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         return null;
       },
     );
-    familiarityAlgorithmStorage.assignVerify(
-      verifyCallback: (v) async {
-        final result = await AlgorithmParser<FamiliarityState>().parse(
-          state: FamiliarityState(
-            algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
-            simulationType: SimulationType.syntaxCheck,
-            externalResultHandler: null,
-          ),
-        );
-        return await result.handle(
-          onSuccess: (FamiliarityState state) async => null,
-          onError: (ExceptionContent ec) async {
-            return ec.error.toString();
-          },
-        );
-      },
-    );
-    nextTimeAlgorithmStorage.assignVerify(
-      verifyCallback: (v) async {
-        final result = await AlgorithmParser<NextShowTimeState>().parse(
-          state: NextShowTimeState(
-            algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
-            simulationType: SimulationType.syntaxCheck,
-            externalResultHandler: null,
-          ),
-        );
-        return await result.handle(
-          onSuccess: (NextShowTimeState state) async => null,
-          onError: (ExceptionContent ec) async {
-            return ec.error.toString();
-          },
-        );
-      },
-    );
-    buttonAlgorithmStorage.assignVerify(
-      verifyCallback: (v) async {
-        final result = await AlgorithmParser<ButtonDataState>().parse(
-          state: ButtonDataState(
-            algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
-            simulationType: SimulationType.syntaxCheck,
-            externalResultHandler: null,
-          ),
-        );
-        return await result.handle(
-          onSuccess: (ButtonDataState state) async => null,
-          onError: (ExceptionContent ec) async {
-            return ec.error.toString();
-          },
-        );
-      },
-    );
+    // familiarityAlgorithmStorage.assignVerify(
+    //   verifyCallback: (v) async {
+    //     final result = await AlgorithmParser<FamiliarityState>().parse(
+    //       state: FamiliarityState(
+    //         algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
+    //         simulationType: SimulationType.syntaxCheck,
+    //         externalResultHandler: null,
+    //       ),
+    //     );
+    //     return await result.handle(
+    //       onSuccess: (FamiliarityState state) async => null,
+    //       onError: (ExceptionContent ec) async {
+    //         return ec.error.toString();
+    //       },
+    //     );
+    //   },
+    // );
+    // nextTimeAlgorithmStorage.assignVerify(
+    //   verifyCallback: (v) async {
+    //     final result = await AlgorithmParser<NextShowTimeState>().parse(
+    //       state: NextShowTimeState(
+    //         algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
+    //         simulationType: SimulationType.syntaxCheck,
+    //         externalResultHandler: null,
+    //       ),
+    //     );
+    //     return await result.handle(
+    //       onSuccess: (NextShowTimeState state) async => null,
+    //       onError: (ExceptionContent ec) async {
+    //         return ec.error.toString();
+    //       },
+    //     );
+    //   },
+    // );
+    // buttonAlgorithmStorage.assignVerify(
+    //   verifyCallback: (v) async {
+    //     final result = await AlgorithmParser<ButtonDataState>().parse(
+    //       state: ButtonDataState(
+    //         algorithmWrapper: AlgorithmWrapper.fromJsonString(v),
+    //         simulationType: SimulationType.syntaxCheck,
+    //         externalResultHandler: null,
+    //       ),
+    //     );
+    //     return await result.handle(
+    //       onSuccess: (ButtonDataState state) async => null,
+    //       onError: (ExceptionContent ec) async {
+    //         return ec.error.toString();
+    //       },
+    //     );
+    //   },
+    // );
   }
 
   @override
@@ -118,22 +105,22 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       ..tempValue = mm.title
       ..abValue.refreshEasy((oldValue) => mm.title);
 
-    familiarityAlgorithmStorage
-      ..tempValue = mm.familiarity_algorithm
-      ..abValue.refreshEasy((oldValue) => mm.familiarity_algorithm);
-
-    nextTimeAlgorithmStorage
-      ..tempValue = mm.next_time_algorithm
-      ..abValue.refreshEasy((oldValue) => mm.next_time_algorithm);
-
-    buttonAlgorithmStorage
-      ..tempValue = mm.button_algorithm
-      ..abValue.refreshEasy((oldValue) => mm.button_algorithm);
+    // familiarityAlgorithmStorage
+    //   ..tempValue = mm.familiarity_algorithm!
+    //   ..abValue.refreshEasy((oldValue) => mm.familiarity_algorithm!);
+    //
+    // nextTimeAlgorithmStorage
+    //   ..tempValue = mm.next_time_algorithm!
+    //   ..abValue.refreshEasy((oldValue) => mm.next_time_algorithm!);
+    //
+    // buttonAlgorithmStorage
+    //   ..tempValue = mm.button_algorithm!
+    //   ..abValue.refreshEasy((oldValue) => mm.button_algorithm!);
 
     titleEditingController.text = titleStorage.abValue();
-    familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.abValue();
-    nextTimeAlgorithmEditingController.text = nextTimeAlgorithmStorage.abValue();
-    buttonAlgorithmEditingController.text = buttonAlgorithmStorage.abValue();
+    // familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.abValue();
+    // nextTimeAlgorithmEditingController.text = nextTimeAlgorithmStorage.abValue();
+    // buttonAlgorithmEditingController.text = buttonAlgorithmStorage.abValue();
 
     initVerifies();
   }
@@ -156,9 +143,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   Future<bool> completeAnalyze() async {
     return boolAllTrue([
       await titleStorage.verify(),
-      await familiarityAlgorithmStorage.verify(),
-      await nextTimeAlgorithmStorage.verify(),
-      await buttonAlgorithmStorage.verify(),
+      // await familiarityAlgorithmStorage.verify(),
+      // await nextTimeAlgorithmStorage.verify(),
+      // await buttonAlgorithmStorage.verify(),
     ]);
   }
 
@@ -190,20 +177,20 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       targets: {
         [MemoryModelGizmoEditPageType.modify]: () async {
           if (await saveAnalyze()) {
-            await db.updateDAO.resetMemoryModelOnlySave(
-              originalMemoryModelReset: (st) async {
-                return await memoryModelAb().reset(
-                  creator_user_id: toAbsent(),
-                  father_memory_model_id: toAbsent(),
-                  title: titleStorage.abValue().toValue(),
-                  familiarity_algorithm: familiarityAlgorithmStorage.abValue().toValue(),
-                  next_time_algorithm: nextTimeAlgorithmStorage.abValue().toValue(),
-                  button_algorithm: buttonAlgorithmStorage.abValue().toValue(),
-                  syncTag: st,
-                );
-              },
-              syncTag: null,
-            );
+            // await db.updateDAO.resetMemoryModelOnlySave(
+            //   originalMemoryModelReset: (st) async {
+            //     return await memoryModelAb().reset(
+            //       creator_user_id: toAbsent(),
+            //       father_memory_model_id: toAbsent(),
+            //       title: titleStorage.abValue().toValue(),
+            //       familiarity_algorithm: familiarityAlgorithmStorage.abValue().toValue(),
+            //       next_time_algorithm: nextTimeAlgorithmStorage.abValue().toValue(),
+            //       button_algorithm: buttonAlgorithmStorage.abValue().toValue(),
+            //       syncTag: st,
+            //     );
+            //   },
+            //   syncTag: null,
+            // );
             memoryModelAb.refreshForce();
             return Tuple2(t1: true, t2: '修改成功！');
           } else {
@@ -242,14 +229,14 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   void recovery() {
     titleStorage.recovery();
-    familiarityAlgorithmStorage.recovery();
-    nextTimeAlgorithmStorage.recovery();
-    buttonAlgorithmStorage.recovery();
+    // familiarityAlgorithmStorage.recovery();
+    // nextTimeAlgorithmStorage.recovery();
+    // buttonAlgorithmStorage.recovery();
 
     titleEditingController.text = titleStorage.tempValue;
-    familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.tempValue;
-    nextTimeAlgorithmEditingController.text = nextTimeAlgorithmStorage.tempValue;
-    buttonAlgorithmEditingController.text = buttonAlgorithmStorage.tempValue;
+    // familiarityAlgorithmEditingController.text = familiarityAlgorithmStorage.tempValue;
+    // nextTimeAlgorithmEditingController.text = nextTimeAlgorithmStorage.tempValue;
+    // buttonAlgorithmEditingController.text = buttonAlgorithmStorage.tempValue;
   }
 
   void changeTo({required MemoryModelGizmoEditPageType type}) {

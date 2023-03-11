@@ -9,17 +9,23 @@ class MemoryModels extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get button_algorithm => text().named("button_algorithm")();
+  TextColumn get button_algorithm => text().named("button_algorithm").nullable()();
 
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 
-  TextColumn get familiarity_algorithm => text().named("familiarity_algorithm")();
+  TextColumn get familiarity_algorithm => text().named("familiarity_algorithm").nullable()();
 
   @ReferenceTo([Fragments])
   TextColumn get father_memory_model_id => text().named("father_memory_model_id").nullable()();
 
-  TextColumn get next_time_algorithm => text().named("next_time_algorithm")();
+  TextColumn get modified_button_algorithm => text().named("modified_button_algorithm").nullable()();
+
+  TextColumn get modified_familiarity_algorithm => text().named("modified_familiarity_algorithm").nullable()();
+
+  TextColumn get modified_next_time_algorithm => text().named("modified_next_time_algorithm").nullable()();
+
+  TextColumn get next_time_algorithm => text().named("next_time_algorithm").nullable()();
 
   TextColumn get title => text().named("title")();
 

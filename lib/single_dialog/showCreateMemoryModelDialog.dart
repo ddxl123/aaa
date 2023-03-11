@@ -27,9 +27,9 @@ Future<void> showCreateMemoryModelDialog() async {
             memoryModelsCompanion: Crt.memoryModelsCompanion(
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
               father_memory_model_id: null.toValue(),
-              button_algorithm: '',
-              familiarity_algorithm: '',
-              next_time_algorithm: '',
+              button_algorithm: null.toValue(),
+              familiarity_algorithm: null.toValue(),
+              next_time_algorithm: null.toValue(),
               title: tec.text,
             ),
             syncTag: null,

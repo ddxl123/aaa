@@ -715,11 +715,14 @@ extension MemoryModelExt on MemoryModel {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModel> reset({
-    required Value<String> button_algorithm,
+    required Value<String?> button_algorithm,
     required Value<int> creator_user_id,
-    required Value<String> familiarity_algorithm,
+    required Value<String?> familiarity_algorithm,
     required Value<String?> father_memory_model_id,
-    required Value<String> next_time_algorithm,
+    required Value<String?> modified_button_algorithm,
+    required Value<String?> modified_familiarity_algorithm,
+    required Value<String?> modified_next_time_algorithm,
+    required Value<String?> next_time_algorithm,
     required Value<String> title,
     required SyncTag? syncTag,
   }) async {
@@ -747,6 +750,27 @@ extension MemoryModelExt on MemoryModel {
         this.father_memory_model_id != father_memory_model_id.value) {
       isCloudModify = true;
       this.father_memory_model_id = father_memory_model_id.value;
+    }
+
+    if (modified_button_algorithm.present &&
+        this.modified_button_algorithm != modified_button_algorithm.value) {
+      isCloudModify = true;
+      this.modified_button_algorithm = modified_button_algorithm.value;
+    }
+
+    if (modified_familiarity_algorithm.present &&
+        this.modified_familiarity_algorithm !=
+            modified_familiarity_algorithm.value) {
+      isCloudModify = true;
+      this.modified_familiarity_algorithm =
+          modified_familiarity_algorithm.value;
+    }
+
+    if (modified_next_time_algorithm.present &&
+        this.modified_next_time_algorithm !=
+            modified_next_time_algorithm.value) {
+      isCloudModify = true;
+      this.modified_next_time_algorithm = modified_next_time_algorithm.value;
     }
 
     if (next_time_algorithm.present &&

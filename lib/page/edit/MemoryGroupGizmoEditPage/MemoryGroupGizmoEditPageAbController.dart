@@ -81,37 +81,37 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       },
     );
 
-    bSelectedMemoryModelStorage.assignVerify(
-      verifyCallback: (v) async {
-        final mm = bSelectedMemoryModelStorage.abValue();
-
-        if (mm == null) return '记忆模型不能为空！';
-
-        // TODO: 模拟校验
-        final fa = await AlgorithmParser().parse(
-          state: FamiliarityState(
-            algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.familiarity_algorithm),
-            simulationType: SimulationType.syntaxCheck,
-            externalResultHandler: null,
-          ),
-        );
-        final ff = await AlgorithmParser().parse(
-          state: NextShowTimeState(
-            algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.next_time_algorithm),
-            simulationType: SimulationType.syntaxCheck,
-            externalResultHandler: null,
-          ),
-        );
-        final bd = await AlgorithmParser().parse(
-          state: ButtonDataState(
-            algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.button_algorithm),
-            simulationType: SimulationType.syntaxCheck,
-            externalResultHandler: null,
-          ),
-        );
-        return (fa.exceptionContent != null || ff.exceptionContent != null || bd.exceptionContent != null) ? '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！' : null;
-      },
-    );
+    // bSelectedMemoryModelStorage.assignVerify(
+    //   verifyCallback: (v) async {
+    //     final mm = bSelectedMemoryModelStorage.abValue();
+    //
+    //     if (mm == null) return '记忆模型不能为空！';
+    //
+    //     // TODO: 模拟校验
+    //     final fa = await AlgorithmParser.parse(
+    //       state: FamiliarityState(
+    //         algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.familiarity_algorithm!),
+    //         simulationType: SimulationType.syntaxCheck,
+    //         externalResultHandler: null,
+    //       ),
+    //     );
+    //     final ff = await AlgorithmParser.parse(
+    //       state: NextShowTimeState(
+    //         algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.next_time_algorithm!),
+    //         simulationType: SimulationType.syntaxCheck,
+    //         externalResultHandler: null,
+    //       ),
+    //     );
+    //     final bd = await AlgorithmParser.parse(
+    //       state: ButtonDataState(
+    //         algorithmWrapper: AlgorithmWrapper.fromJsonString(mm.button_algorithm!),
+    //         simulationType: SimulationType.syntaxCheck,
+    //         externalResultHandler: null,
+    //       ),
+    //     );
+    //     return (fa.algorithmException != null || ff.algorithmException != null || bd.algorithmException != null) ? '记忆模型不符合规范！\n可以尝试修改模型配置或更换模型！' : null;
+    //   },
+    // );
 
     cReviewIntervalStorage.assignVerify(
       verifyCallback: (v) async {

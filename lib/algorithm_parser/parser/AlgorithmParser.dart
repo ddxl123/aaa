@@ -1,106 +1,109 @@
 part of algorithm_parser;
 
 class AlgorithmParser<CS extends ClassificationState> with Explain {
-  final ContextModel _cm = ContextModel();
-
-  bool _isParsed = false;
+  AlgorithmParser._();
 
   late final CS _state;
 
   static const nullTag = '_tag_null_tag_';
 
-  /// 是否记录并输出日志
-  final bool _isRecordLog = false;
-
-  final StringBuffer _logStringBuffer = StringBuffer();
-
-  ExceptionContent? exceptionContent;
-
-  /// 记录日志。
-  ///
-  /// 异常捕获会在 [recordLog] 之前捕获。
-  void recordLog({required String content}) {
-    if (_isRecordLog) {
-      final currentSt = RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!.trim();
-      _logStringBuffer.write(
-        '\n-------------------------------------------------------------------\n$content\n${currentSt.substring(2, currentSt.length - 2).trim()}',
-      );
-    }
-  }
-
-  /// 最终展示日志。
-  void showLog() {
-    if (_isRecordLog) {
-      logger.outNormal(print: _logStringBuffer);
-    }
-  }
-
   /// 计算
-  double calculate(String content) {
+  static double calculate(String content) {
     try {
-      return Parser().parse(content).evaluate(EvaluationType.REAL, _cm);
+      return Parser().parse(content).evaluate(EvaluationType.REAL, ContextModel());
     } catch (e) {
-      throw '运算解析失败：$content\n$e';
+      throw KnownAlgorithmException('运算解析失败：$content\n$e');
     }
   }
 
-  Future<T> handle<T>({
-    required Future<T> Function(CS state) onSuccess,
-    required Future<T> Function(ExceptionContent ec) onError,
+  static Future<R> parse<CS extends ClassificationState, R>({
+    required CS state,
+    required Future<R> Function(CS state) onSuccess,
+    required Future<R> Function(AlgorithmException ec) onError,
   }) async {
-    try {
-      if (exceptionContent == null) {
-        return await onSuccess(_state);
-      } else {
-        return await onError(exceptionContent!);
-      }
-    } catch (e, st) {
-      return await onError(ExceptionContent(error: e, stackTrace: st));
-    }
+    return await AlgorithmParser<CS>._()._parse<R>(state: state, onSuccess: onSuccess, onError: onError);
   }
 
-  /// 使用 [handle] 来处理结果。
-  Future<AlgorithmParser<CS>> parse({required CS state}) async {
+  Future<R> _parse<R>({
+    required CS state,
+    required Future<R> Function(CS state) onSuccess,
+    required Future<R> Function(AlgorithmException algorithmException) onError,
+  }) async {
+    _state = state;
     try {
-      if (_isParsed) throw '每个 AlgorithmParser 实例只能使用一次 parse！若想多次使用，则需要创建多个 AlgorithmParser 实例。';
-      _isParsed = true;
-
-      _state = state;
-
-      recordLog(content: RegExper.consolePrint.allMatches(StackTrace.current.toString()).first.group(0)!);
-      recordLog(content: '【开始解析 ${state.getStateType}...】');
-
-      AlgorithmWrapper algorithmWrapper = state.algorithmWrapper;
+      AlgorithmWrapper algorithmWrapper = _state.algorithmWrapper;
 
       _state.algorithmWrapper.customVariablesMap.clear();
-      _state.algorithmWrapper.customVariables.map(
-        (e) {
-          _state.algorithmWrapper.customVariablesMap.addAll({e.name: e.content});
+      await Future.forEach<CustomVariabler>(
+        _state.algorithmWrapper.customVariables,
+        (ele) async {
+          try {
+            checkCustomVariableNameConvention(name: ele.name);
+
+            final contentResult = await _eval(content: ele.content);
+            _state.algorithmWrapper.customVariablesMap.addAll({ele.name: contentResult});
+            ele.setContentAlgorithmException(algorithmException: null);
+          } on KnownAlgorithmException catch (e) {
+            ele.setContentAlgorithmException(algorithmException: e);
+            rethrow;
+          } catch (e, st) {
+            if (e is UnknownAlgorithmException) rethrow;
+            throw UnknownAlgorithmException(e.toString(), st);
+          }
         },
       );
 
-      await algorithmWrapper.ifElseUseWrapper.handle(
-        conditionChecker: (String condition) async {
-          final evalCustomVariablesResult = _evalCustomVariables(content: condition);
-          final evalInternalVariablesResult = await _evalInternalVariables(content: evalCustomVariablesResult);
-          final emptyMergeEval = _emptyMergeEval(content: evalInternalVariablesResult);
-          return _ifParse(content: emptyMergeEval);
+      await algorithmWrapper.ifUseElseWrapper.handle(
+        conditionChecker: (Ifer ifer, String condition) async {
+          try {
+            final result = await _eval(content: condition);
+            final parseResult = _ifParse(content: result);
+            ifer.setConditionAlgorithmException(algorithmException: null);
+            return parseResult;
+          } on KnownAlgorithmException catch (e) {
+            ifer.setConditionAlgorithmException(algorithmException: e);
+            rethrow;
+          } catch (e, st) {
+            if (e is UnknownAlgorithmException) rethrow;
+            throw UnknownAlgorithmException(e.toString(), st);
+          }
         },
-        useChecker: (String use) async {
-          final evalCustomVariablesResult = _evalCustomVariables(content: use);
-          final evalInternalVariablesResult = await _evalInternalVariables(content: evalCustomVariablesResult);
-          final emptyMergeEval = _emptyMergeEval(content: evalInternalVariablesResult);
-          _useParse(content: emptyMergeEval);
+        useChecker: (Ifer ifer, String use) async {
+          try {
+            final result = await _eval(content: use);
+            _useParse(content: result);
+          } on KnownAlgorithmException catch (e) {
+            ifer.setUseAlgorithmException(algorithmException: e);
+            rethrow;
+          } catch (e, st) {
+            if (e is UnknownAlgorithmException) rethrow;
+            throw UnknownAlgorithmException(e.toString(), st);
+          }
+        },
+        elseChecker: (Elser elser, String use) async {
+          try {
+            final result = await _eval(content: use);
+            _useParse(content: result);
+          } on KnownAlgorithmException catch (e) {
+            elser.setUseAlgorithmException(algorithmException: e);
+            rethrow;
+          } catch (e, st) {
+            if (e is UnknownAlgorithmException) rethrow;
+            throw UnknownAlgorithmException(e.toString(), st);
+          }
         },
       );
+      return await onSuccess(state);
     } catch (o, st) {
-      exceptionContent = ExceptionContent(error: o, stackTrace: st);
-      recordLog(content: exceptionContent.toString());
+      return await onError(UnknownAlgorithmException(o.toString(), st));
     }
+  }
 
-    recordLog(content: '【解析完成 ${state.getStateType}！】');
-    showLog();
-    return this;
+  Future<String> _eval({required String content}) async {
+    final evalCustomVariablesResult = _evalCustomVariables(content: content);
+    final evalInternalVariablesResult = await _evalInternalVariables(content: evalCustomVariablesResult);
+    final emptyMergeEvalResult = _emptyMergeEval(content: evalInternalVariablesResult);
+    return emptyMergeEvalResult;
   }
 
   /// 评估自定义变量。
@@ -123,7 +126,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   ///
   /// 可能会返回 [nullTag]。
   Future<String> _evalInternalVariables({required String content}) async {
-    if (InternalVariableConstant.getAllNames.isEmpty) throw '初始内置变量为 empty！';
+    if (InternalVariableConstant.getAllNames.isEmpty) throw KnownAlgorithmException('初始内置变量为 empty！');
 
     // 内置变量-对应的结果值
     final internalVariable2ResultMap = <String, num?>{};
@@ -132,7 +135,6 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       final fullName = match.group(0)!;
       String simplifyName = fullName;
       NTypeNumber? nTypeNumber;
-      recordLog(content: '解析出变量：$fullName');
       final nMatch = RegExper.nSuffix.firstMatch(fullName);
       // 若变量含后缀
       if (nMatch != null) {
@@ -142,7 +144,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
         final nType = NType.values.where((element) => element.name.split(',').last == nTypeMatch!.group(0)!).first;
         final number = int.tryParse(nMatchStr.substring(nType.name.split('.').last.length + 1, nMatchStr.length));
         if (number == null) {
-          throw '扩展类型的后缀必须携带数值，例如 xxx_times1';
+          throw KnownAlgorithmException('扩展类型的后缀必须携带数值，例如 xxx_times1');
         }
         nTypeNumber = NTypeNumber(nType: nType, suffixNumber: number);
       }
@@ -175,16 +177,16 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   /// 评估空合并。
   String _emptyMergeEval({required String content}) {
-    return EmptyMergeParser().parse(content: content, algorithmParser: this);
+    return EmptyMergeParser.parse(content: content);
   }
 
   /// 解析 if 语句。
   bool _ifParse({required String content}) {
-    return IfExprParse().parse(content: content, algorithmParser: this);
+    return IfExprParse.parse(content: content);
   }
 
   /// 解析 use 语句。
   void _useParse({required String content}) {
-    _state.useParse(useContent: content, algorithmParser: this);
+    _state.useParse(useContent: content);
   }
 }

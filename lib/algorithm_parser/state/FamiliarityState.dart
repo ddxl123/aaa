@@ -12,8 +12,8 @@ class FamiliarityState extends ClassificationState {
   late double result;
 
   @override
-  FamiliarityState useParse({required String useContent, required AlgorithmParser algorithmParser}) {
-    result = algorithmParser.calculate(useContent);
+  FamiliarityState useParse({required String useContent}) {
+    result = AlgorithmParser.calculate(useContent);
     return this;
   }
 
