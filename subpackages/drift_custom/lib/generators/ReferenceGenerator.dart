@@ -121,7 +121,7 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
 
           childrenFutureContent.writeln('Ref$child? $childCamel;');
           childrenRequiredContent.writeln('required this.$childCamel,');
-          childrenRunCallContent.writeln('await $childCamel?._run();');
+          childrenRunCallContent.writeln('$childCamel, ');
         }
         classContent.writeln('''
 /// [$father]
@@ -129,12 +129,25 @@ class Ref$father extends Ref {
   Future<void> Function(\$${father}Table table) self;
   $childrenFutureContent
 
-  Ref$father({required this.self, $childrenRequiredContent});
+  Ref$father({required this.self, $childrenRequiredContent required super.order,});
     
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.$fatherCamel);
-    $childrenRunCallContent
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[this, $childrenRunCallContent]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.$fatherCamel);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
         ''');
@@ -146,23 +159,12 @@ class Ref$father extends Ref {
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-/// 增删改时，必须用这个函数。
-///
-/// 增：[withRefs] + [Crt] 和 [UsersCompanionExt]
-/// 删：[withRefs] + [DriftSyncExt.deleteWith]
-/// 改：[withRefs] + [UserExt.reset]
-///
-/// [syncTag] - 若为null，则内部会自动创建一个事务。
-Future<void> withRefs({required SyncTag? syncTag, required Future<Ref> Function(SyncTag syncTag) ref,}) async {
-  await DriftDb.instance.transaction(
-    () async {
-      await (await ref(syncTag ?? await SyncTag.create()))._run();
-    },
-  );
-}
-
 abstract class Ref {
-  Future<void> _run();
+  Ref({required this.order});
+
+  final int order;
+    
+  Future<void> run();
 }
 
 ${bodyContent.toString()}

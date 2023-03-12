@@ -14,7 +14,6 @@ export 'src/icon/CustomIcon.dart';
 
 export 'src/sheetroute/sheet_route.dart';
 
-export 'src/custom_ab_wrong_card.dart';
 export 'src/custom_appbar.dart';
 export 'src/DeviceInfo.dart';
 export 'src/dropdown_button.dart';

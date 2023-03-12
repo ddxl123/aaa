@@ -14,61 +14,49 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   Future<void> resetClientSyncInfo({
     required ResetFutureFunction<ClientSyncInfo> originalClientSyncInfoReset,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefClientSyncInfos(
-          self: (_) async {
-            await originalClientSyncInfoReset(st);
-          },
-        );
+    await RefClientSyncInfos(
+      self: (_) async {
+        await originalClientSyncInfoReset(syncTag);
       },
-    );
+      order: 0,
+    ).run();
   }
 
   /// 修改 [originalFragmentReset]。
   Future<void> resetFragment({
     required ResetFutureFunction<Fragment> originalFragmentReset,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefFragments(
-          self: (_) async {
-            await originalFragmentReset(st);
-          },
-          fragmentMemoryInfos: null,
-          rFragment2FragmentGroups: null,
-          child_fragments: null,
-          memoryModels: null,
-          userComments: null,
-          userLikes: null,
-        );
+    await RefFragments(
+      self: (_) async {
+        await originalFragmentReset(syncTag);
       },
-    );
+      fragmentMemoryInfos: null,
+      rFragment2FragmentGroups: null,
+      child_fragments: null,
+      memoryModels: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
   }
 
   /// 修改 [FragmentGroup]。
   Future<void> resetFragmentGroup({
     required ResetFutureFunction<FragmentGroup>? originalFragmentGroupReset,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (SyncTag st) async {
-        return RefFragmentGroups(
-          self: ($FragmentGroupsTable table) async {
-            await originalFragmentGroupReset?.call(st);
-          },
-          rFragment2FragmentGroups: null,
-          child_fragmentGroups: null,
-          userComments: null,
-          userLikes: null,
-        );
+    await RefFragmentGroups(
+      self: ($FragmentGroupsTable table) async {
+        await originalFragmentGroupReset?.call(syncTag);
       },
+      rFragment2FragmentGroups: null,
+      child_fragmentGroups: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
     );
   }
 
@@ -76,14 +64,57 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   Future<void> resetFragmentIsSelected({
     required Fragment originalFragment,
     required bool isSelected,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (SyncTag st) async {
-        return RefFragments(
-          self: (_) async {
-            await originalFragment.reset(
+    await RefFragments(
+      self: (_) async {
+        await originalFragment.reset(
+          creator_user_id: toAbsent(),
+          father_fragment_id: toAbsent(),
+          fragment_template_id: toAbsent(),
+          title: toAbsent(),
+          content: toAbsent(),
+          client_be_selected: isSelected.toValue(),
+          note_id: toAbsent(),
+          tags: toAbsent(),
+          be_sep_publish: toAbsent(),
+          syncTag: syncTag,
+        );
+      },
+      fragmentMemoryInfos: null,
+      rFragment2FragmentGroups: null,
+      child_fragments: null,
+      memoryModels: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
+  }
+
+  /// 修改 [fragmentGroup] 自身的 [FragmentGroup.local_is_selected]，以及子组和子碎片。
+  Future<void> resetFragmentGroupAndSubIsSelected({
+    required FragmentGroup? fragmentGroup,
+    required bool isSelected,
+    required SyncTag syncTag,
+  }) async {
+    await RefFragmentGroups(
+      self: (table) async {
+        await fragmentGroup?.reset(
+          creator_user_id: toAbsent(),
+          father_fragment_groups_id: toAbsent(),
+          client_be_selected: isSelected.toValue(),
+          title: toAbsent(),
+          be_private: toAbsent(),
+          be_publish: toAbsent(),
+          tags: toAbsent(),
+          syncTag: syncTag,
+        );
+        final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
+        final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
+        await Future.forEach<Fragment>(
+          fs,
+          (element) async {
+            await element.reset(
               creator_user_id: toAbsent(),
               father_fragment_id: toAbsent(),
               fragment_template_id: toAbsent(),
@@ -91,117 +122,62 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               content: toAbsent(),
               client_be_selected: isSelected.toValue(),
               note_id: toAbsent(),
-              syncTag: st,
+              syncTag: syncTag,
               tags: toAbsent(),
               be_sep_publish: toAbsent(),
             );
           },
-          fragmentMemoryInfos: null,
-          rFragment2FragmentGroups: null,
-          child_fragments: null,
-          memoryModels: null,
-          userComments: null,
-          userLikes: null,
         );
-      },
-    );
-  }
-
-  /// 修改 [fragmentGroup] 自身的 [FragmentGroup.local_is_selected]，以及子组和子碎片。
-  Future<void> resetFragmentGroupAndSubIsSelected({required FragmentGroup? fragmentGroup, required bool isSelected}) async {
-    await withRefs(
-      syncTag: null,
-      ref: (st) async {
-        return RefFragmentGroups(
-          self: (table) async {
-            await fragmentGroup?.reset(
+        await Future.forEach<FragmentGroup>(
+          fgs,
+          (element) async {
+            await element.reset(
               creator_user_id: toAbsent(),
               father_fragment_groups_id: toAbsent(),
               client_be_selected: isSelected.toValue(),
               title: toAbsent(),
-              syncTag: st,
               be_private: toAbsent(),
               be_publish: toAbsent(),
               tags: toAbsent(),
-            );
-            final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
-            final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
-            await Future.forEach<Fragment>(
-              fs,
-              (element) async {
-                await element.reset(
-                  creator_user_id: toAbsent(),
-                  father_fragment_id: toAbsent(),
-                  fragment_template_id: toAbsent(),
-                  title: toAbsent(),
-                  content: toAbsent(),
-                  client_be_selected: isSelected.toValue(),
-                  note_id: toAbsent(),
-                  syncTag: st,
-                  tags: toAbsent(),
-                  be_sep_publish: toAbsent(),
-                );
-              },
-            );
-            await Future.forEach<FragmentGroup>(
-              fgs,
-              (element) async {
-                await element.reset(
-                  creator_user_id: toAbsent(),
-                  father_fragment_groups_id: toAbsent(),
-                  client_be_selected: isSelected.toValue(),
-                  title: toAbsent(),
-                  syncTag: st,
-                  be_private: toAbsent(),
-                  be_publish: toAbsent(),
-                  tags: toAbsent(),
-                );
-              },
+              syncTag: syncTag,
             );
           },
-          rFragment2FragmentGroups: null,
-          child_fragmentGroups: null,
-          userComments: null,
-          userLikes: null,
         );
       },
-    );
+      rFragment2FragmentGroups: null,
+      child_fragmentGroups: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
   }
 
   /// 修改 [MemoryGroup]，仅进行修改后的存储，不影响 [FragmentMemoryInfo]。
   Future<void> resetMemoryGroupForOnlySave({
     required ResetFutureFunction<MemoryGroup> originalMemoryGroupReset,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (syncTag) async {
-        return RefMemoryGroups(
-          self: (table) async {
-            await originalMemoryGroupReset(syncTag);
-          },
-          fragmentMemoryInfos: null,
-        );
+    await RefMemoryGroups(
+      self: (table) async {
+        await originalMemoryGroupReset(syncTag);
       },
-    );
+      fragmentMemoryInfos: null,
+      order: 0,
+    ).run();
   }
 
   /// 修改 [MemoryGroup]，仅进行修改后的存储，不影响 [FragmentMemoryInfo]。
   Future<void> resetMemoryModelOnlySave({
     required ResetFutureFunction<MemoryModel> originalMemoryModelReset,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefMemoryModels(
-          self: ($MemoryModelsTable table) async {
-            await originalMemoryModelReset(st);
-          },
-          memoryGroups: null,
-        );
-      },
-    );
+    await RefMemoryModels(
+            self: ($MemoryModelsTable table) async {
+              await originalMemoryModelReset(syncTag);
+            },
+            memoryGroups: null,
+            order: 0)
+        .run();
   }
 
   /// performer 完成后，对其记忆信息进行修改。
@@ -211,52 +187,45 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required ResetFutureFunction<FragmentMemoryInfo> originalFragmentMemoryInfoReset,
     required MemoryGroup originalMemoryGroup,
     required bool isNew,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefFragmentMemoryInfos(
-          self: (_) async {
-            await originalFragmentMemoryInfoReset(st);
-          },
-          memoryGroups: RefMemoryGroups(
-            self: (_) async {
-              if (isNew) {
-                // 需要 willNewLearnCount -1。
-                await originalMemoryGroup.reset(
-                  creator_user_id: toAbsent(),
-                  memory_model_id: toAbsent(),
-                  new_display_order: toAbsent(),
-                  new_review_display_order: toAbsent(),
-                  review_interval: toAbsent(),
-                  start_time: toAbsent(),
-                  title: toAbsent(),
-                  will_new_learn_count: (originalMemoryGroup.will_new_learn_count - 1).toValue(),
-                  syncTag: st,
-                );
-              }
-            },
-            fragmentMemoryInfos: null,
-          ),
-        );
+    await RefFragmentMemoryInfos(
+      self: (_) async {
+        await originalFragmentMemoryInfoReset(syncTag);
       },
-    );
+      memoryGroups: RefMemoryGroups(
+        self: (_) async {
+          if (isNew) {
+            // 需要 willNewLearnCount -1。
+            await originalMemoryGroup.reset(
+              creator_user_id: toAbsent(),
+              memory_model_id: toAbsent(),
+              new_display_order: toAbsent(),
+              new_review_display_order: toAbsent(),
+              review_interval: toAbsent(),
+              start_time: toAbsent(),
+              title: toAbsent(),
+              will_new_learn_count: (originalMemoryGroup.will_new_learn_count - 1).toValue(),
+              syncTag: syncTag,
+            );
+          }
+        },
+        fragmentMemoryInfos: null,
+        order: 1,
+      ),
+      order: 0,
+    ).run();
   }
 
   Future<void> resetShorthand({
     required ResetFutureFunction<Shorthand> originalShorthandReset,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefShorthands(
-          self: ($ShorthandsTable table) async {
-            await originalShorthandReset(st);
-          },
-        );
+    await RefShorthands(
+      self: ($ShorthandsTable table) async {
+        await originalShorthandReset(syncTag);
       },
-    );
+      order: 0,
+    ).run();
   }
 }

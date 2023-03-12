@@ -205,7 +205,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
           syncTag: st,
         );
       },
-      syncTag: null,
+      syncTag: await SyncTag.create(),
     );
     memoryGroupAb.refreshForce();
   }

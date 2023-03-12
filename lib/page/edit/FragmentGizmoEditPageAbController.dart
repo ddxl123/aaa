@@ -89,7 +89,7 @@ class FragmentPerformer {
           be_sep_publish: false,
         ),
         whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
-        syncTag: null,
+        syncTag: await SyncTag.create(),
       );
       return newFragment;
     } else {
@@ -108,7 +108,7 @@ class FragmentPerformer {
             be_sep_publish: false.toValue(),
           );
         },
-        syncTag: null,
+        syncTag: await SyncTag.create(),
       );
       fragmentAb!.refreshForce();
       return fragmentAb!();

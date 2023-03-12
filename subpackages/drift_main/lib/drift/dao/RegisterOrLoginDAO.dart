@@ -24,6 +24,7 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
     required String loginTypeName,
     required String loginEditContent,
     required Future<bool> Function() isClearDbWhenUserDiff,
+    required SyncTag syncTag,
   }) async {
     return await transaction<bool>(
       () async {
@@ -33,12 +34,13 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
         Future<void> clearDbAndDoLogin() async {
           await db.deleteDAO.clearDb();
           userOrNull = await db.rawDAO.rawInsertUser(newUsersCompanion: usersCompanion);
-          clientSyncInfoOrNull = await db.insertDAO.insertClientSyncInfo(
+          await db.insertDAO.insertClientSyncInfo(
             newClientSyncInfoCompanion: Crt.clientSyncInfosCompanion(
               device_info: deviceInfo,
               recent_sync_time: null.toAbsent(),
               token: token.toValue(),
             ),
+            syncTag: syncTag,
           );
         }
 
@@ -49,7 +51,7 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
         }
 
         // 在执行 login 前,如果本地存在已登录用户数据,必须先下线用户,否则抛出异常.
-        if (clientSyncInfoOrNull!.token != null) {
+        if (clientSyncInfoOrNull.token != null) {
           logger.outError(show: "请先下线本地已登录账户！", print: "不应该执行到这里。因为在登录用户前，必须先注销本地已登录的用户！");
           return false;
         }
@@ -57,9 +59,9 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
         Future<bool> ifs({required String savedLoginTypeValue}) async {
           if (savedLoginTypeValue == loginEditContent) {
             await db.updateDAO.resetClientSyncInfo(
-              syncTag: null,
+              syncTag: syncTag,
               originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
-                return clientSyncInfoOrNull!.reset(
+                return clientSyncInfoOrNull.reset(
                   // 实际上可更换可不更换
                   device_info: deviceInfo.toValue(),
                   recent_sync_time: toAbsent(),
@@ -92,7 +94,7 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
     );
   }
 
-  Future<void> clientLogout() async {
+  Future<void> clientLogout({required SyncTag syncTag}) async {
     final result = await db.generalQueryDAO.queryClientSyncInfoOrNull();
     if (result != null) {
       await db.updateDAO.resetClientSyncInfo(
@@ -101,10 +103,10 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
             device_info: toAbsent(),
             recent_sync_time: toAbsent(),
             token: null.toValue(),
-            syncTag: null,
+            syncTag: resetSyncTag,
           );
         },
-        syncTag: null,
+        syncTag: syncTag,
       );
     }
   }

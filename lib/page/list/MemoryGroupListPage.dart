@@ -96,7 +96,7 @@ class MemoryGroupListPage extends StatelessWidget {
         return Hero(
           tag: memoryGroupGizmo.hashCode,
           child: GestureDetector(
-            child: CustomAbWrongCard(
+            child: Card(
               child: Column(
                 children: [
                   Row(

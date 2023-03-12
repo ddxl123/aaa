@@ -38,19 +38,19 @@ class ShorthandGizmoEditPageAbController extends AbController {
           content: getCurrentContent(),
           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
         ),
-        syncTag: null,
+        syncTag: await SyncTag.create(),
       );
       await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
       SmartDialog.showToast("创建成功！");
     } else {
       if (getCurrentContent() != initShorthand!.content) {
         await db.updateDAO.resetShorthand(
-          syncTag: null,
+          syncTag: await SyncTag.create(),
           originalShorthandReset: (SyncTag resetSyncTag) async {
             return await initShorthand!.reset(
               content: getCurrentContent().toValue(),
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id.toValue(),
-              syncTag: null,
+              syncTag: resetSyncTag,
             );
           },
         );

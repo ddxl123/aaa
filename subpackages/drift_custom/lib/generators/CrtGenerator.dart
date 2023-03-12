@@ -42,7 +42,7 @@ class CrtGenerator extends Generator {
 
           final singleExtContent = '''
           extension ${companionName}Ext on $companionName {
-            Future<$classNoSName> insert({required SyncTag? syncTag}) async {
+            Future<$classNoSName> insert({required SyncTag syncTag}) async {
               final ins = DriftDb.instance;
               return await ins.insertReturningWith(
                 ins.${classWithSName.toCamelCase},

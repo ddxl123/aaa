@@ -271,28 +271,47 @@ class Crt {
   }
 
   static MemoryModelsCompanion memoryModelsCompanion({
-    required Value<String?> button_algorithm,
+    required Value<String?> button_algorithm_a,
+    required Value<String?> button_algorithm_b,
+    required Value<String?> button_algorithm_c,
+    required Value<String?> button_algorithm_remark,
+    required AlgorithmUsageStatus button_algorithm_usage_status,
     required int creator_user_id,
-    required Value<String?> familiarity_algorithm,
+    required Value<String?> familiarity_algorithm_a,
+    required Value<String?> familiarity_algorithm_b,
+    required Value<String?> familiarity_algorithm_c,
+    required Value<String?> familiarity_algorithm_remark,
+    required AlgorithmUsageStatus familiarity_algorithm_usage_status,
     required Value<String?> father_memory_model_id,
-    required Value<String?> modified_button_algorithm,
-    required Value<String?> modified_familiarity_algorithm,
-    required Value<String?> modified_next_time_algorithm,
-    required Value<String?> next_time_algorithm,
+    required Value<String?> next_time_algorithm_a,
+    required Value<String?> next_time_algorithm_b,
+    required Value<String?> next_time_algorithm_c,
+    required Value<String?> next_time_algorithm_remark,
+    required AlgorithmUsageStatus next_time_algorithm_usage_status,
     required String title,
     DateTime? created_at,
     String? id,
     DateTime? updated_at,
   }) {
     return MemoryModelsCompanion(
-      button_algorithm: button_algorithm,
+      button_algorithm_a: button_algorithm_a,
+      button_algorithm_b: button_algorithm_b,
+      button_algorithm_c: button_algorithm_c,
+      button_algorithm_remark: button_algorithm_remark,
+      button_algorithm_usage_status: Value(button_algorithm_usage_status),
       creator_user_id: Value(creator_user_id),
-      familiarity_algorithm: familiarity_algorithm,
+      familiarity_algorithm_a: familiarity_algorithm_a,
+      familiarity_algorithm_b: familiarity_algorithm_b,
+      familiarity_algorithm_c: familiarity_algorithm_c,
+      familiarity_algorithm_remark: familiarity_algorithm_remark,
+      familiarity_algorithm_usage_status:
+          Value(familiarity_algorithm_usage_status),
       father_memory_model_id: father_memory_model_id,
-      modified_button_algorithm: modified_button_algorithm,
-      modified_familiarity_algorithm: modified_familiarity_algorithm,
-      modified_next_time_algorithm: modified_next_time_algorithm,
-      next_time_algorithm: next_time_algorithm,
+      next_time_algorithm_a: next_time_algorithm_a,
+      next_time_algorithm_b: next_time_algorithm_b,
+      next_time_algorithm_c: next_time_algorithm_c,
+      next_time_algorithm_remark: next_time_algorithm_remark,
+      next_time_algorithm_usage_status: Value(next_time_algorithm_usage_status),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
@@ -461,7 +480,7 @@ class Crt {
 
 extension KnowledgeBaseCategorysCompanionExt
     on KnowledgeBaseCategorysCompanion {
-  Future<KnowledgeBaseCategory> insert({required SyncTag? syncTag}) async {
+  Future<KnowledgeBaseCategory> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.knowledgeBaseCategorys,
@@ -472,7 +491,7 @@ extension KnowledgeBaseCategorysCompanionExt
 }
 
 extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
-  Future<ClientSyncInfo> insert({required SyncTag? syncTag}) async {
+  Future<ClientSyncInfo> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.clientSyncInfos,
@@ -483,7 +502,7 @@ extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
 }
 
 extension SyncsCompanionExt on SyncsCompanion {
-  Future<Sync> insert({required SyncTag? syncTag}) async {
+  Future<Sync> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.syncs,
@@ -494,7 +513,7 @@ extension SyncsCompanionExt on SyncsCompanion {
 }
 
 extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
-  Future<FragmentMemoryInfo> insert({required SyncTag? syncTag}) async {
+  Future<FragmentMemoryInfo> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentMemoryInfos,
@@ -506,7 +525,7 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
 
 extension RDocument2DocumentGroupsCompanionExt
     on RDocument2DocumentGroupsCompanion {
-  Future<RDocument2DocumentGroup> insert({required SyncTag? syncTag}) async {
+  Future<RDocument2DocumentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.rDocument2DocumentGroups,
@@ -518,7 +537,7 @@ extension RDocument2DocumentGroupsCompanionExt
 
 extension RFragment2FragmentGroupsCompanionExt
     on RFragment2FragmentGroupsCompanion {
-  Future<RFragment2FragmentGroup> insert({required SyncTag? syncTag}) async {
+  Future<RFragment2FragmentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.rFragment2FragmentGroups,
@@ -529,7 +548,7 @@ extension RFragment2FragmentGroupsCompanionExt
 }
 
 extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
-  Future<RNote2NoteGroup> insert({required SyncTag? syncTag}) async {
+  Future<RNote2NoteGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.rNote2NoteGroups,
@@ -540,7 +559,7 @@ extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
 }
 
 extension Test2sCompanionExt on Test2sCompanion {
-  Future<Test2> insert({required SyncTag? syncTag}) async {
+  Future<Test2> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.test2s,
@@ -551,7 +570,7 @@ extension Test2sCompanionExt on Test2sCompanion {
 }
 
 extension TestsCompanionExt on TestsCompanion {
-  Future<Test> insert({required SyncTag? syncTag}) async {
+  Future<Test> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.tests,
@@ -562,7 +581,7 @@ extension TestsCompanionExt on TestsCompanion {
 }
 
 extension DocumentsCompanionExt on DocumentsCompanion {
-  Future<Document> insert({required SyncTag? syncTag}) async {
+  Future<Document> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.documents,
@@ -573,7 +592,7 @@ extension DocumentsCompanionExt on DocumentsCompanion {
 }
 
 extension FragmentTemplatesCompanionExt on FragmentTemplatesCompanion {
-  Future<FragmentTemplate> insert({required SyncTag? syncTag}) async {
+  Future<FragmentTemplate> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentTemplates,
@@ -584,7 +603,7 @@ extension FragmentTemplatesCompanionExt on FragmentTemplatesCompanion {
 }
 
 extension FragmentsCompanionExt on FragmentsCompanion {
-  Future<Fragment> insert({required SyncTag? syncTag}) async {
+  Future<Fragment> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragments,
@@ -595,7 +614,7 @@ extension FragmentsCompanionExt on FragmentsCompanion {
 }
 
 extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
-  Future<MemoryGroup> insert({required SyncTag? syncTag}) async {
+  Future<MemoryGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.memoryGroups,
@@ -606,7 +625,7 @@ extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
 }
 
 extension MemoryModelsCompanionExt on MemoryModelsCompanion {
-  Future<MemoryModel> insert({required SyncTag? syncTag}) async {
+  Future<MemoryModel> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.memoryModels,
@@ -617,7 +636,7 @@ extension MemoryModelsCompanionExt on MemoryModelsCompanion {
 }
 
 extension NotesCompanionExt on NotesCompanion {
-  Future<Note> insert({required SyncTag? syncTag}) async {
+  Future<Note> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.notes,
@@ -628,7 +647,7 @@ extension NotesCompanionExt on NotesCompanion {
 }
 
 extension ShorthandsCompanionExt on ShorthandsCompanion {
-  Future<Shorthand> insert({required SyncTag? syncTag}) async {
+  Future<Shorthand> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.shorthands,
@@ -639,7 +658,7 @@ extension ShorthandsCompanionExt on ShorthandsCompanion {
 }
 
 extension DocumentGroupsCompanionExt on DocumentGroupsCompanion {
-  Future<DocumentGroup> insert({required SyncTag? syncTag}) async {
+  Future<DocumentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.documentGroups,
@@ -650,7 +669,7 @@ extension DocumentGroupsCompanionExt on DocumentGroupsCompanion {
 }
 
 extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
-  Future<FragmentGroup> insert({required SyncTag? syncTag}) async {
+  Future<FragmentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentGroups,
@@ -661,7 +680,7 @@ extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
 }
 
 extension NoteGroupsCompanionExt on NoteGroupsCompanion {
-  Future<NoteGroup> insert({required SyncTag? syncTag}) async {
+  Future<NoteGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.noteGroups,
@@ -672,7 +691,7 @@ extension NoteGroupsCompanionExt on NoteGroupsCompanion {
 }
 
 extension UserCommentsCompanionExt on UserCommentsCompanion {
-  Future<UserComment> insert({required SyncTag? syncTag}) async {
+  Future<UserComment> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.userComments,
@@ -683,7 +702,7 @@ extension UserCommentsCompanionExt on UserCommentsCompanion {
 }
 
 extension UserLikesCompanionExt on UserLikesCompanion {
-  Future<UserLike> insert({required SyncTag? syncTag}) async {
+  Future<UserLike> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.userLikes,
@@ -694,7 +713,7 @@ extension UserLikesCompanionExt on UserLikesCompanion {
 }
 
 extension UsersCompanionExt on UsersCompanion {
-  Future<User> insert({required SyncTag? syncTag}) async {
+  Future<User> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.users,

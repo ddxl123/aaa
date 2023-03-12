@@ -39,7 +39,6 @@ part 'state/FamiliarityState.dart';
 
 part 'state/NextShowTimeState.dart';
 
-part 'DefaultAlgorithmContent.dart';
 
 part 'enums.dart';
 
@@ -56,3 +55,6 @@ part 'algorithm_wrapper/IfElseUseWrapper.dart';
 part 'algorithm_wrapper/CustomVariabler.dart';
 
 part 'name_convention.dart';
+
+
+/// TODO: 对算法内容添加函数功能，例如 max(a,b,c)，if_else(a,b,c,d)

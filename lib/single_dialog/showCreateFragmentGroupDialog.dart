@@ -20,22 +20,31 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
           SmartDialog.dismiss();
         },
         onOk: (tec) async {
-          if (tec.text.trim().isEmpty) {
+          if (tec.text
+              .trim()
+              .isEmpty) {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
-          await db.insertDAO.insertFragmentGroup(
-            willFragmentGroupsCompanion: Crt.fragmentGroupsCompanion(
-              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-              father_fragment_groups_id: (fragmentGroup?.id).toValue(),
-              client_be_selected: false,
-              title: tec.text,
-              be_private: false,
-              be_publish: false,
-              tags: "[]",
-            ),
-            syncTag: null,
-          );
+          final st = await SyncTag.create();
+          await RefFragmentGroups(
+            self: (_) async {
+              Crt.fragmentGroupsCompanion(
+                creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+                father_fragment_groups_id: (fragmentGroup?.id).toValue(),
+                client_be_selected: false,
+                title: tec.text,
+                be_private: false,
+                be_publish: false,
+                tags: "[]",
+              ).insert(syncTag: st);
+            },
+            rFragment2FragmentGroups: null,
+            child_fragmentGroups: null,
+            userComments: null,
+            userLikes: null,
+            order: 0,
+          ).run();
 
           await Aber.findOrNullLast<FragmentGroupListPageController>()?.refreshCurrentGroup();
 

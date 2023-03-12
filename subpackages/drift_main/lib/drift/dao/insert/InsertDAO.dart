@@ -6,30 +6,31 @@ part of drift_db;
 class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   InsertDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
-  Future<ClientSyncInfo> insertClientSyncInfo({required ClientSyncInfosCompanion newClientSyncInfoCompanion}) async {
+  Future<ClientSyncInfo> insertClientSyncInfo({
+    required ClientSyncInfosCompanion newClientSyncInfoCompanion,
+    required SyncTag syncTag,
+  }) async {
     final find = await db.generalQueryDAO.queryClientSyncInfoOrNull();
     if (find != null) throw "本地已存在客户端同步信息！";
-    return newClientSyncInfoCompanion.insert(syncTag: null);
+    return newClientSyncInfoCompanion.insert(syncTag: syncTag);
   }
 
   /// 插入一个碎片组，会同时插入碎片组配置。
   Future<FragmentGroup> insertFragmentGroup({
     required FragmentGroupsCompanion willFragmentGroupsCompanion,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     late FragmentGroup returnFragmentGroup;
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async => RefFragmentGroups(
-        self: (table) async {
-          returnFragmentGroup = await willFragmentGroupsCompanion.insert(syncTag: st);
-        },
-        child_fragmentGroups: null,
-        rFragment2FragmentGroups: null,
-        userComments: null,
-        userLikes: null,
-      ),
-    );
+    await RefFragmentGroups(
+      self: (table) async {
+        returnFragmentGroup = await willFragmentGroupsCompanion.insert(syncTag: syncTag);
+      },
+      child_fragmentGroups: null,
+      rFragment2FragmentGroups: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
     return returnFragmentGroup;
   }
 
@@ -41,56 +42,54 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   Future<Fragment> insertFragment({
     required FragmentsCompanion willFragmentsCompanion,
     required List<FragmentGroup?> whichFragmentGroups,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     if (whichFragmentGroups.isEmpty) {
       throw '要插入的碎片组不能为空！';
     }
     late Fragment newFragment;
-    await withRefs(
-      syncTag: syncTag,
-      ref: (syncTag) async => RefFragments(
+    await RefFragments(
+      self: (table) async {
+        newFragment = await willFragmentsCompanion.insert(syncTag: syncTag);
+      },
+      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
         self: (table) async {
-          newFragment = await willFragmentsCompanion.insert(syncTag: syncTag);
+          await Future.forEach<FragmentGroup?>(
+            whichFragmentGroups,
+            (whichFragmentGroup) async {
+              await Crt.rFragment2FragmentGroupsCompanion(
+                creator_user_id: willFragmentsCompanion.creator_user_id.value,
+                fragment_group_id: (whichFragmentGroup?.id).toValue(),
+                fragment_id: willFragmentsCompanion.id.value,
+              ).insert(syncTag: syncTag);
+            },
+          );
         },
-        rFragment2FragmentGroups: RefRFragment2FragmentGroups(
-          self: (table) async {
-            await Future.forEach<FragmentGroup?>(
-              whichFragmentGroups,
-              (whichFragmentGroup) async {
-                await Crt.rFragment2FragmentGroupsCompanion(
-                  creator_user_id: willFragmentsCompanion.creator_user_id.value,
-                  fragment_group_id: (whichFragmentGroup?.id).toValue(),
-                  fragment_id: willFragmentsCompanion.id.value,
-                ).insert(syncTag: syncTag);
-              },
-            );
-          },
-        ),
-        child_fragments: null,
-        fragmentMemoryInfos: null,
-        memoryModels: null,
-        userComments: null,
-        userLikes: null,
+        order: 1,
       ),
-    );
+      child_fragments: null,
+      fragmentMemoryInfos: null,
+      memoryModels: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
     return newFragment;
   }
 
   /// 创建一个记忆组。
-  Future<MemoryGroup> insertMemoryGroup({required MemoryGroupsCompanion newMemoryGroupsCompanion, required SyncTag? syncTag}) async {
+  Future<MemoryGroup> insertMemoryGroup({
+    required MemoryGroupsCompanion newMemoryGroupsCompanion,
+    required SyncTag syncTag,
+  }) async {
     late final MemoryGroup newMg;
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefMemoryGroups(
-          self: (table) async {
-            newMg = await newMemoryGroupsCompanion.insert(syncTag: st);
-          },
-          fragmentMemoryInfos: null,
-        );
+    await RefMemoryGroups(
+      self: (table) async {
+        newMg = await newMemoryGroupsCompanion.insert(syncTag: syncTag);
       },
-    );
+      fragmentMemoryInfos: null,
+      order: 0,
+    ).run();
     return newMg;
   }
 
@@ -98,97 +97,92 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   Future<void> insertSelectedFragmentToMemoryGroup({
     required MemoryGroup memoryGroup,
     required bool isRemoveRepeat,
+    required SyncTag syncTag,
   }) async {
-    await withRefs(
-      syncTag: null,
-      ref: (st) async {
-        return RefFragmentMemoryInfos(
-          self: (_) async {
-            // TODO: user 为 null 时的处理。
-            final user = (await db.generalQueryDAO.queryUserOrNull())!;
-            final fs = await db.generalQueryDAO.querySelectedFragments();
-            await Future.forEach<Fragment>(
-              fs,
-              (e) async {
-                final newFmInfo = Crt.fragmentMemoryInfosCompanion(
-                  creator_user_id: user.id,
-                  memory_group_id: memoryGroup.id,
-                  fragment_id: e.id,
-                  click_time: null.toValue(),
-                  click_value: null.toValue(),
-                  current_actual_show_time: null.toValue(),
-                  next_plan_show_time: null.toValue(),
-                  show_familiarity: null.toValue(),
-                );
-                if (isRemoveRepeat) {
-                  final isExist = await db.generalQueryDAO.queryIsExistFragmentInMemoryGroup(fragment: e, memoryGroup: memoryGroup);
-                  if (!isExist) {
-                    await newFmInfo.insert(syncTag: st);
-                  }
-                } else {
-                  await newFmInfo.insert(syncTag: st);
-                }
-              },
+    await RefFragmentMemoryInfos(
+      self: (_) async {
+        // TODO: user 为 null 时的处理。
+        final user = (await db.generalQueryDAO.queryUserOrNull())!;
+        final fs = await db.generalQueryDAO.querySelectedFragments();
+        await Future.forEach<Fragment>(
+          fs,
+          (e) async {
+            final newFmInfo = Crt.fragmentMemoryInfosCompanion(
+              creator_user_id: user.id,
+              memory_group_id: memoryGroup.id,
+              fragment_id: e.id,
+              click_time: null.toValue(),
+              click_value: null.toValue(),
+              current_actual_show_time: null.toValue(),
+              next_plan_show_time: null.toValue(),
+              show_familiarity: null.toValue(),
             );
+            if (isRemoveRepeat) {
+              final isExist = await db.generalQueryDAO.queryIsExistFragmentInMemoryGroup(fragment: e, memoryGroup: memoryGroup);
+              if (!isExist) {
+                await newFmInfo.insert(syncTag: syncTag);
+              }
+            } else {
+              await newFmInfo.insert(syncTag: syncTag);
+            }
           },
-          memoryGroups: RefMemoryGroups(
-            self: (_) async {
-              // 需要将 willNewLearnCount +1。
-              await db.updateDAO.resetMemoryGroupForOnlySave(
-                originalMemoryGroupReset: (SyncTag resetSyncTag) async {
-                  return await memoryGroup.reset(
-                    creator_user_id: toAbsent(),
-                    memory_model_id: toAbsent(),
-                    new_display_order: toAbsent(),
-                    new_review_display_order: toAbsent(),
-                    review_interval: toAbsent(),
-                    start_time: toAbsent(),
-                    title: toAbsent(),
-                    will_new_learn_count: (memoryGroup.will_new_learn_count + 1).toValue(),
-                    syncTag: resetSyncTag,
-                  );
-                },
-                syncTag: st,
-              );
-            },
-            fragmentMemoryInfos: null,
-          ),
         );
       },
-    );
+      memoryGroups: RefMemoryGroups(
+        self: (_) async {
+          // 需要将 willNewLearnCount +1。
+          await db.updateDAO.resetMemoryGroupForOnlySave(
+            originalMemoryGroupReset: (SyncTag resetSyncTag) async {
+              return await memoryGroup.reset(
+                creator_user_id: toAbsent(),
+                memory_model_id: toAbsent(),
+                new_display_order: toAbsent(),
+                new_review_display_order: toAbsent(),
+                review_interval: toAbsent(),
+                start_time: toAbsent(),
+                title: toAbsent(),
+                will_new_learn_count: (memoryGroup.will_new_learn_count + 1).toValue(),
+                syncTag: resetSyncTag,
+              );
+            },
+            syncTag: syncTag,
+          );
+        },
+        fragmentMemoryInfos: null,
+        order: 1,
+      ),
+      order: 0,
+    ).run();
   }
 
   /// 创建一个新的记忆模型。
-  Future<MemoryModel> insertMemoryModel({required MemoryModelsCompanion memoryModelsCompanion, required SyncTag? syncTag}) async {
+  Future<MemoryModel> insertMemoryModel({
+    required MemoryModelsCompanion memoryModelsCompanion,
+    required SyncTag syncTag,
+  }) async {
     late final MemoryModel newMemoryModel;
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async => RefMemoryModels(
-        self: (table) async {
-          newMemoryModel = await memoryModelsCompanion.insert(syncTag: st);
-        },
-        memoryGroups: null,
-      ),
-    );
+    await RefMemoryModels(
+      self: (table) async {
+        newMemoryModel = await memoryModelsCompanion.insert(syncTag: syncTag);
+      },
+      memoryGroups: null,
+      order: 0,
+    ).run();
     return newMemoryModel;
   }
 
   /// 创建一个新的速记。
   Future<Shorthand> insertShorthand({
     required ShorthandsCompanion shorthandsCompanion,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     late final Shorthand newShorthand;
-    await withRefs(
-      syncTag: syncTag,
-      ref: (st) async {
-        return RefShorthands(
-          self: ($ShorthandsTable table) async {
-            newShorthand = await shorthandsCompanion.insert(syncTag: st);
-          },
-        );
+    await RefShorthands(
+      self: ($ShorthandsTable table) async {
+        newShorthand = await shorthandsCompanion.insert(syncTag: syncTag);
       },
-    );
+      order: 0,
+    ).run();
     return newShorthand;
   }
 }

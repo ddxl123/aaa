@@ -243,6 +243,7 @@ class LoginPageAbController extends AbController {
       isClearDbWhenUserDiff: () async {
         return await showExistClientLoggedInHandleDialog();
       },
+      syncTag: await SyncTag.create(),
     );
     // 未取消登录
     if (isLoginSuccess) {

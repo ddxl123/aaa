@@ -21,7 +21,7 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                         value: currentFragmentGroupAb(abw)!.be_private,
                         onChanged: (v) async {
                           await db.updateDAO.resetFragmentGroup(
-                            syncTag: null,
+                            syncTag: await SyncTag.create(),
                             originalFragmentGroupReset: (SyncTag resetSyncTag) async {
                               return await currentFragmentGroupAb()!.reset(
                                 be_private: v.toValue(),
@@ -51,7 +51,7 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                         value: currentFragmentGroupAb(abw)!.be_publish,
                         onChanged: (v) async {
                           await db.updateDAO.resetFragmentGroup(
-                            syncTag: null,
+                            syncTag: await SyncTag.create(),
                             originalFragmentGroupReset: (SyncTag resetSyncTag) async {
                               return await currentFragmentGroupAb()!.reset(
                                 be_private: 0.toAbsent(),

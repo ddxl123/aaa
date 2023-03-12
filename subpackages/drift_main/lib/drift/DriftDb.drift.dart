@@ -5101,55 +5101,117 @@ class $MemoryModelsTable extends MemoryModels
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $MemoryModelsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _button_algorithmMeta =
-      const VerificationMeta('button_algorithm');
+  static const VerificationMeta _button_algorithm_aMeta =
+      const VerificationMeta('button_algorithm_a');
   @override
-  late final GeneratedColumn<String> button_algorithm = GeneratedColumn<String>(
-      'button_algorithm', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<String> button_algorithm_a =
+      GeneratedColumn<String>('button_algorithm_a', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _button_algorithm_bMeta =
+      const VerificationMeta('button_algorithm_b');
+  @override
+  late final GeneratedColumn<String> button_algorithm_b =
+      GeneratedColumn<String>('button_algorithm_b', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _button_algorithm_cMeta =
+      const VerificationMeta('button_algorithm_c');
+  @override
+  late final GeneratedColumn<String> button_algorithm_c =
+      GeneratedColumn<String>('button_algorithm_c', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _button_algorithm_remarkMeta =
+      const VerificationMeta('button_algorithm_remark');
+  @override
+  late final GeneratedColumn<String> button_algorithm_remark =
+      GeneratedColumn<String>('button_algorithm_remark', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _button_algorithm_usage_statusMeta =
+      const VerificationMeta('button_algorithm_usage_status');
+  @override
+  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, int>
+      button_algorithm_usage_status = GeneratedColumn<int>(
+              'button_algorithm_usage_status', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<AlgorithmUsageStatus>(
+              $MemoryModelsTable.$converterbutton_algorithm_usage_status);
   static const VerificationMeta _creator_user_idMeta =
       const VerificationMeta('creator_user_id');
   @override
   late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _familiarity_algorithmMeta =
-      const VerificationMeta('familiarity_algorithm');
+  static const VerificationMeta _familiarity_algorithm_aMeta =
+      const VerificationMeta('familiarity_algorithm_a');
   @override
-  late final GeneratedColumn<String> familiarity_algorithm =
-      GeneratedColumn<String>('familiarity_algorithm', aliasedName, true,
+  late final GeneratedColumn<String> familiarity_algorithm_a =
+      GeneratedColumn<String>('familiarity_algorithm_a', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _familiarity_algorithm_bMeta =
+      const VerificationMeta('familiarity_algorithm_b');
+  @override
+  late final GeneratedColumn<String> familiarity_algorithm_b =
+      GeneratedColumn<String>('familiarity_algorithm_b', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _familiarity_algorithm_cMeta =
+      const VerificationMeta('familiarity_algorithm_c');
+  @override
+  late final GeneratedColumn<String> familiarity_algorithm_c =
+      GeneratedColumn<String>('familiarity_algorithm_c', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _familiarity_algorithm_remarkMeta =
+      const VerificationMeta('familiarity_algorithm_remark');
+  @override
+  late final GeneratedColumn<String> familiarity_algorithm_remark =
+      GeneratedColumn<String>('familiarity_algorithm_remark', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _familiarity_algorithm_usage_statusMeta =
+      const VerificationMeta('familiarity_algorithm_usage_status');
+  @override
+  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, int>
+      familiarity_algorithm_usage_status = GeneratedColumn<int>(
+              'familiarity_algorithm_usage_status', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<AlgorithmUsageStatus>(
+              $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status);
   static const VerificationMeta _father_memory_model_idMeta =
       const VerificationMeta('father_memory_model_id');
   @override
   late final GeneratedColumn<String> father_memory_model_id =
       GeneratedColumn<String>('father_memory_model_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _modified_button_algorithmMeta =
-      const VerificationMeta('modified_button_algorithm');
+  static const VerificationMeta _next_time_algorithm_aMeta =
+      const VerificationMeta('next_time_algorithm_a');
   @override
-  late final GeneratedColumn<String> modified_button_algorithm =
-      GeneratedColumn<String>('modified_button_algorithm', aliasedName, true,
+  late final GeneratedColumn<String> next_time_algorithm_a =
+      GeneratedColumn<String>('next_time_algorithm_a', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _modified_familiarity_algorithmMeta =
-      const VerificationMeta('modified_familiarity_algorithm');
+  static const VerificationMeta _next_time_algorithm_bMeta =
+      const VerificationMeta('next_time_algorithm_b');
   @override
-  late final GeneratedColumn<String> modified_familiarity_algorithm =
-      GeneratedColumn<String>(
-          'modified_familiarity_algorithm', aliasedName, true,
+  late final GeneratedColumn<String> next_time_algorithm_b =
+      GeneratedColumn<String>('next_time_algorithm_b', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _modified_next_time_algorithmMeta =
-      const VerificationMeta('modified_next_time_algorithm');
+  static const VerificationMeta _next_time_algorithm_cMeta =
+      const VerificationMeta('next_time_algorithm_c');
   @override
-  late final GeneratedColumn<String> modified_next_time_algorithm =
-      GeneratedColumn<String>('modified_next_time_algorithm', aliasedName, true,
+  late final GeneratedColumn<String> next_time_algorithm_c =
+      GeneratedColumn<String>('next_time_algorithm_c', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _next_time_algorithmMeta =
-      const VerificationMeta('next_time_algorithm');
+  static const VerificationMeta _next_time_algorithm_remarkMeta =
+      const VerificationMeta('next_time_algorithm_remark');
   @override
-  late final GeneratedColumn<String> next_time_algorithm =
-      GeneratedColumn<String>('next_time_algorithm', aliasedName, true,
+  late final GeneratedColumn<String> next_time_algorithm_remark =
+      GeneratedColumn<String>('next_time_algorithm_remark', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _next_time_algorithm_usage_statusMeta =
+      const VerificationMeta('next_time_algorithm_usage_status');
+  @override
+  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, int>
+      next_time_algorithm_usage_status = GeneratedColumn<int>(
+              'next_time_algorithm_usage_status', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<AlgorithmUsageStatus>(
+              $MemoryModelsTable.$converternext_time_algorithm_usage_status);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -5174,14 +5236,23 @@ class $MemoryModelsTable extends MemoryModels
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        button_algorithm,
+        button_algorithm_a,
+        button_algorithm_b,
+        button_algorithm_c,
+        button_algorithm_remark,
+        button_algorithm_usage_status,
         creator_user_id,
-        familiarity_algorithm,
+        familiarity_algorithm_a,
+        familiarity_algorithm_b,
+        familiarity_algorithm_c,
+        familiarity_algorithm_remark,
+        familiarity_algorithm_usage_status,
         father_memory_model_id,
-        modified_button_algorithm,
-        modified_familiarity_algorithm,
-        modified_next_time_algorithm,
-        next_time_algorithm,
+        next_time_algorithm_a,
+        next_time_algorithm_b,
+        next_time_algorithm_c,
+        next_time_algorithm_remark,
+        next_time_algorithm_usage_status,
         title,
         created_at,
         id,
@@ -5196,12 +5267,32 @@ class $MemoryModelsTable extends MemoryModels
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('button_algorithm')) {
+    if (data.containsKey('button_algorithm_a')) {
       context.handle(
-          _button_algorithmMeta,
-          button_algorithm.isAcceptableOrUnknown(
-              data['button_algorithm']!, _button_algorithmMeta));
+          _button_algorithm_aMeta,
+          button_algorithm_a.isAcceptableOrUnknown(
+              data['button_algorithm_a']!, _button_algorithm_aMeta));
     }
+    if (data.containsKey('button_algorithm_b')) {
+      context.handle(
+          _button_algorithm_bMeta,
+          button_algorithm_b.isAcceptableOrUnknown(
+              data['button_algorithm_b']!, _button_algorithm_bMeta));
+    }
+    if (data.containsKey('button_algorithm_c')) {
+      context.handle(
+          _button_algorithm_cMeta,
+          button_algorithm_c.isAcceptableOrUnknown(
+              data['button_algorithm_c']!, _button_algorithm_cMeta));
+    }
+    if (data.containsKey('button_algorithm_remark')) {
+      context.handle(
+          _button_algorithm_remarkMeta,
+          button_algorithm_remark.isAcceptableOrUnknown(
+              data['button_algorithm_remark']!, _button_algorithm_remarkMeta));
+    }
+    context.handle(
+        _button_algorithm_usage_statusMeta, const VerificationResult.success());
     if (data.containsKey('creator_user_id')) {
       context.handle(
           _creator_user_idMeta,
@@ -5210,45 +5301,66 @@ class $MemoryModelsTable extends MemoryModels
     } else if (isInserting) {
       context.missing(_creator_user_idMeta);
     }
-    if (data.containsKey('familiarity_algorithm')) {
+    if (data.containsKey('familiarity_algorithm_a')) {
       context.handle(
-          _familiarity_algorithmMeta,
-          familiarity_algorithm.isAcceptableOrUnknown(
-              data['familiarity_algorithm']!, _familiarity_algorithmMeta));
+          _familiarity_algorithm_aMeta,
+          familiarity_algorithm_a.isAcceptableOrUnknown(
+              data['familiarity_algorithm_a']!, _familiarity_algorithm_aMeta));
     }
+    if (data.containsKey('familiarity_algorithm_b')) {
+      context.handle(
+          _familiarity_algorithm_bMeta,
+          familiarity_algorithm_b.isAcceptableOrUnknown(
+              data['familiarity_algorithm_b']!, _familiarity_algorithm_bMeta));
+    }
+    if (data.containsKey('familiarity_algorithm_c')) {
+      context.handle(
+          _familiarity_algorithm_cMeta,
+          familiarity_algorithm_c.isAcceptableOrUnknown(
+              data['familiarity_algorithm_c']!, _familiarity_algorithm_cMeta));
+    }
+    if (data.containsKey('familiarity_algorithm_remark')) {
+      context.handle(
+          _familiarity_algorithm_remarkMeta,
+          familiarity_algorithm_remark.isAcceptableOrUnknown(
+              data['familiarity_algorithm_remark']!,
+              _familiarity_algorithm_remarkMeta));
+    }
+    context.handle(_familiarity_algorithm_usage_statusMeta,
+        const VerificationResult.success());
     if (data.containsKey('father_memory_model_id')) {
       context.handle(
           _father_memory_model_idMeta,
           father_memory_model_id.isAcceptableOrUnknown(
               data['father_memory_model_id']!, _father_memory_model_idMeta));
     }
-    if (data.containsKey('modified_button_algorithm')) {
+    if (data.containsKey('next_time_algorithm_a')) {
       context.handle(
-          _modified_button_algorithmMeta,
-          modified_button_algorithm.isAcceptableOrUnknown(
-              data['modified_button_algorithm']!,
-              _modified_button_algorithmMeta));
+          _next_time_algorithm_aMeta,
+          next_time_algorithm_a.isAcceptableOrUnknown(
+              data['next_time_algorithm_a']!, _next_time_algorithm_aMeta));
     }
-    if (data.containsKey('modified_familiarity_algorithm')) {
+    if (data.containsKey('next_time_algorithm_b')) {
       context.handle(
-          _modified_familiarity_algorithmMeta,
-          modified_familiarity_algorithm.isAcceptableOrUnknown(
-              data['modified_familiarity_algorithm']!,
-              _modified_familiarity_algorithmMeta));
+          _next_time_algorithm_bMeta,
+          next_time_algorithm_b.isAcceptableOrUnknown(
+              data['next_time_algorithm_b']!, _next_time_algorithm_bMeta));
     }
-    if (data.containsKey('modified_next_time_algorithm')) {
+    if (data.containsKey('next_time_algorithm_c')) {
       context.handle(
-          _modified_next_time_algorithmMeta,
-          modified_next_time_algorithm.isAcceptableOrUnknown(
-              data['modified_next_time_algorithm']!,
-              _modified_next_time_algorithmMeta));
+          _next_time_algorithm_cMeta,
+          next_time_algorithm_c.isAcceptableOrUnknown(
+              data['next_time_algorithm_c']!, _next_time_algorithm_cMeta));
     }
-    if (data.containsKey('next_time_algorithm')) {
+    if (data.containsKey('next_time_algorithm_remark')) {
       context.handle(
-          _next_time_algorithmMeta,
-          next_time_algorithm.isAcceptableOrUnknown(
-              data['next_time_algorithm']!, _next_time_algorithmMeta));
+          _next_time_algorithm_remarkMeta,
+          next_time_algorithm_remark.isAcceptableOrUnknown(
+              data['next_time_algorithm_remark']!,
+              _next_time_algorithm_remarkMeta));
     }
+    context.handle(_next_time_algorithm_usage_statusMeta,
+        const VerificationResult.success());
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
@@ -5285,26 +5397,53 @@ class $MemoryModelsTable extends MemoryModels
   MemoryModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MemoryModel(
-      button_algorithm: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}button_algorithm']),
+      button_algorithm_a: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}button_algorithm_a']),
+      button_algorithm_b: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}button_algorithm_b']),
+      button_algorithm_c: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}button_algorithm_c']),
+      button_algorithm_remark: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}button_algorithm_remark']),
+      button_algorithm_usage_status: $MemoryModelsTable
+          .$converterbutton_algorithm_usage_status
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+              data['${effectivePrefix}button_algorithm_usage_status'])!),
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      familiarity_algorithm: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}familiarity_algorithm']),
+      familiarity_algorithm_a: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}familiarity_algorithm_a']),
+      familiarity_algorithm_b: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}familiarity_algorithm_b']),
+      familiarity_algorithm_c: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}familiarity_algorithm_c']),
+      familiarity_algorithm_remark: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}familiarity_algorithm_remark']),
+      familiarity_algorithm_usage_status: $MemoryModelsTable
+          .$converterfamiliarity_algorithm_usage_status
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+              data['${effectivePrefix}familiarity_algorithm_usage_status'])!),
       father_memory_model_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_memory_model_id']),
-      modified_button_algorithm: attachedDatabase.typeMapping.read(
+      next_time_algorithm_a: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}next_time_algorithm_a']),
+      next_time_algorithm_b: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}next_time_algorithm_b']),
+      next_time_algorithm_c: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}next_time_algorithm_c']),
+      next_time_algorithm_remark: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
-          data['${effectivePrefix}modified_button_algorithm']),
-      modified_familiarity_algorithm: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}modified_familiarity_algorithm']),
-      modified_next_time_algorithm: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}modified_next_time_algorithm']),
-      next_time_algorithm: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}next_time_algorithm']),
+          data['${effectivePrefix}next_time_algorithm_remark']),
+      next_time_algorithm_usage_status: $MemoryModelsTable
+          .$converternext_time_algorithm_usage_status
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+              data['${effectivePrefix}next_time_algorithm_usage_status'])!),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       created_at: attachedDatabase.typeMapping
@@ -5320,30 +5459,61 @@ class $MemoryModelsTable extends MemoryModels
   $MemoryModelsTable createAlias(String alias) {
     return $MemoryModelsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<AlgorithmUsageStatus, int, int>
+      $converterbutton_algorithm_usage_status =
+      const EnumIndexConverter<AlgorithmUsageStatus>(
+          AlgorithmUsageStatus.values);
+  static JsonTypeConverter2<AlgorithmUsageStatus, int, int>
+      $converterfamiliarity_algorithm_usage_status =
+      const EnumIndexConverter<AlgorithmUsageStatus>(
+          AlgorithmUsageStatus.values);
+  static JsonTypeConverter2<AlgorithmUsageStatus, int, int>
+      $converternext_time_algorithm_usage_status =
+      const EnumIndexConverter<AlgorithmUsageStatus>(
+          AlgorithmUsageStatus.values);
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
-  String? button_algorithm;
+  String? button_algorithm_a;
+  String? button_algorithm_b;
+  String? button_algorithm_c;
+  String? button_algorithm_remark;
+  AlgorithmUsageStatus button_algorithm_usage_status;
   int creator_user_id;
-  String? familiarity_algorithm;
+  String? familiarity_algorithm_a;
+  String? familiarity_algorithm_b;
+  String? familiarity_algorithm_c;
+  String? familiarity_algorithm_remark;
+  AlgorithmUsageStatus familiarity_algorithm_usage_status;
   String? father_memory_model_id;
-  String? modified_button_algorithm;
-  String? modified_familiarity_algorithm;
-  String? modified_next_time_algorithm;
-  String? next_time_algorithm;
+  String? next_time_algorithm_a;
+  String? next_time_algorithm_b;
+  String? next_time_algorithm_c;
+  String? next_time_algorithm_remark;
+  AlgorithmUsageStatus next_time_algorithm_usage_status;
   String title;
   DateTime created_at;
   String id;
   DateTime updated_at;
   MemoryModel(
-      {this.button_algorithm,
+      {this.button_algorithm_a,
+      this.button_algorithm_b,
+      this.button_algorithm_c,
+      this.button_algorithm_remark,
+      required this.button_algorithm_usage_status,
       required this.creator_user_id,
-      this.familiarity_algorithm,
+      this.familiarity_algorithm_a,
+      this.familiarity_algorithm_b,
+      this.familiarity_algorithm_c,
+      this.familiarity_algorithm_remark,
+      required this.familiarity_algorithm_usage_status,
       this.father_memory_model_id,
-      this.modified_button_algorithm,
-      this.modified_familiarity_algorithm,
-      this.modified_next_time_algorithm,
-      this.next_time_algorithm,
+      this.next_time_algorithm_a,
+      this.next_time_algorithm_b,
+      this.next_time_algorithm_c,
+      this.next_time_algorithm_remark,
+      required this.next_time_algorithm_usage_status,
       required this.title,
       required this.created_at,
       required this.id,
@@ -5351,30 +5521,69 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || button_algorithm != null) {
-      map['button_algorithm'] = Variable<String>(button_algorithm);
+    if (!nullToAbsent || button_algorithm_a != null) {
+      map['button_algorithm_a'] = Variable<String>(button_algorithm_a);
+    }
+    if (!nullToAbsent || button_algorithm_b != null) {
+      map['button_algorithm_b'] = Variable<String>(button_algorithm_b);
+    }
+    if (!nullToAbsent || button_algorithm_c != null) {
+      map['button_algorithm_c'] = Variable<String>(button_algorithm_c);
+    }
+    if (!nullToAbsent || button_algorithm_remark != null) {
+      map['button_algorithm_remark'] =
+          Variable<String>(button_algorithm_remark);
+    }
+    {
+      final converter =
+          $MemoryModelsTable.$converterbutton_algorithm_usage_status;
+      map['button_algorithm_usage_status'] =
+          Variable<int>(converter.toSql(button_algorithm_usage_status));
     }
     map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || familiarity_algorithm != null) {
-      map['familiarity_algorithm'] = Variable<String>(familiarity_algorithm);
+    if (!nullToAbsent || familiarity_algorithm_a != null) {
+      map['familiarity_algorithm_a'] =
+          Variable<String>(familiarity_algorithm_a);
+    }
+    if (!nullToAbsent || familiarity_algorithm_b != null) {
+      map['familiarity_algorithm_b'] =
+          Variable<String>(familiarity_algorithm_b);
+    }
+    if (!nullToAbsent || familiarity_algorithm_c != null) {
+      map['familiarity_algorithm_c'] =
+          Variable<String>(familiarity_algorithm_c);
+    }
+    if (!nullToAbsent || familiarity_algorithm_remark != null) {
+      map['familiarity_algorithm_remark'] =
+          Variable<String>(familiarity_algorithm_remark);
+    }
+    {
+      final converter =
+          $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status;
+      map['familiarity_algorithm_usage_status'] =
+          Variable<int>(converter.toSql(familiarity_algorithm_usage_status));
     }
     if (!nullToAbsent || father_memory_model_id != null) {
       map['father_memory_model_id'] = Variable<String>(father_memory_model_id);
     }
-    if (!nullToAbsent || modified_button_algorithm != null) {
-      map['modified_button_algorithm'] =
-          Variable<String>(modified_button_algorithm);
+    if (!nullToAbsent || next_time_algorithm_a != null) {
+      map['next_time_algorithm_a'] = Variable<String>(next_time_algorithm_a);
     }
-    if (!nullToAbsent || modified_familiarity_algorithm != null) {
-      map['modified_familiarity_algorithm'] =
-          Variable<String>(modified_familiarity_algorithm);
+    if (!nullToAbsent || next_time_algorithm_b != null) {
+      map['next_time_algorithm_b'] = Variable<String>(next_time_algorithm_b);
     }
-    if (!nullToAbsent || modified_next_time_algorithm != null) {
-      map['modified_next_time_algorithm'] =
-          Variable<String>(modified_next_time_algorithm);
+    if (!nullToAbsent || next_time_algorithm_c != null) {
+      map['next_time_algorithm_c'] = Variable<String>(next_time_algorithm_c);
     }
-    if (!nullToAbsent || next_time_algorithm != null) {
-      map['next_time_algorithm'] = Variable<String>(next_time_algorithm);
+    if (!nullToAbsent || next_time_algorithm_remark != null) {
+      map['next_time_algorithm_remark'] =
+          Variable<String>(next_time_algorithm_remark);
+    }
+    {
+      final converter =
+          $MemoryModelsTable.$converternext_time_algorithm_usage_status;
+      map['next_time_algorithm_usage_status'] =
+          Variable<int>(converter.toSql(next_time_algorithm_usage_status));
     }
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
@@ -5385,31 +5594,52 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
 
   MemoryModelsCompanion toCompanion(bool nullToAbsent) {
     return MemoryModelsCompanion(
-      button_algorithm: button_algorithm == null && nullToAbsent
+      button_algorithm_a: button_algorithm_a == null && nullToAbsent
           ? const Value.absent()
-          : Value(button_algorithm),
+          : Value(button_algorithm_a),
+      button_algorithm_b: button_algorithm_b == null && nullToAbsent
+          ? const Value.absent()
+          : Value(button_algorithm_b),
+      button_algorithm_c: button_algorithm_c == null && nullToAbsent
+          ? const Value.absent()
+          : Value(button_algorithm_c),
+      button_algorithm_remark: button_algorithm_remark == null && nullToAbsent
+          ? const Value.absent()
+          : Value(button_algorithm_remark),
+      button_algorithm_usage_status: Value(button_algorithm_usage_status),
       creator_user_id: Value(creator_user_id),
-      familiarity_algorithm: familiarity_algorithm == null && nullToAbsent
+      familiarity_algorithm_a: familiarity_algorithm_a == null && nullToAbsent
           ? const Value.absent()
-          : Value(familiarity_algorithm),
+          : Value(familiarity_algorithm_a),
+      familiarity_algorithm_b: familiarity_algorithm_b == null && nullToAbsent
+          ? const Value.absent()
+          : Value(familiarity_algorithm_b),
+      familiarity_algorithm_c: familiarity_algorithm_c == null && nullToAbsent
+          ? const Value.absent()
+          : Value(familiarity_algorithm_c),
+      familiarity_algorithm_remark:
+          familiarity_algorithm_remark == null && nullToAbsent
+              ? const Value.absent()
+              : Value(familiarity_algorithm_remark),
+      familiarity_algorithm_usage_status:
+          Value(familiarity_algorithm_usage_status),
       father_memory_model_id: father_memory_model_id == null && nullToAbsent
           ? const Value.absent()
           : Value(father_memory_model_id),
-      modified_button_algorithm:
-          modified_button_algorithm == null && nullToAbsent
-              ? const Value.absent()
-              : Value(modified_button_algorithm),
-      modified_familiarity_algorithm:
-          modified_familiarity_algorithm == null && nullToAbsent
-              ? const Value.absent()
-              : Value(modified_familiarity_algorithm),
-      modified_next_time_algorithm:
-          modified_next_time_algorithm == null && nullToAbsent
-              ? const Value.absent()
-              : Value(modified_next_time_algorithm),
-      next_time_algorithm: next_time_algorithm == null && nullToAbsent
+      next_time_algorithm_a: next_time_algorithm_a == null && nullToAbsent
           ? const Value.absent()
-          : Value(next_time_algorithm),
+          : Value(next_time_algorithm_a),
+      next_time_algorithm_b: next_time_algorithm_b == null && nullToAbsent
+          ? const Value.absent()
+          : Value(next_time_algorithm_b),
+      next_time_algorithm_c: next_time_algorithm_c == null && nullToAbsent
+          ? const Value.absent()
+          : Value(next_time_algorithm_c),
+      next_time_algorithm_remark:
+          next_time_algorithm_remark == null && nullToAbsent
+              ? const Value.absent()
+              : Value(next_time_algorithm_remark),
+      next_time_algorithm_usage_status: Value(next_time_algorithm_usage_status),
       title: Value(title),
       created_at: Value(created_at),
       id: Value(id),
@@ -5421,20 +5651,44 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MemoryModel(
-      button_algorithm: serializer.fromJson<String?>(json['button_algorithm']),
+      button_algorithm_a:
+          serializer.fromJson<String?>(json['button_algorithm_a']),
+      button_algorithm_b:
+          serializer.fromJson<String?>(json['button_algorithm_b']),
+      button_algorithm_c:
+          serializer.fromJson<String?>(json['button_algorithm_c']),
+      button_algorithm_remark:
+          serializer.fromJson<String?>(json['button_algorithm_remark']),
+      button_algorithm_usage_status:
+          $MemoryModelsTable.$converterbutton_algorithm_usage_status.fromJson(
+              serializer.fromJson<int>(json['button_algorithm_usage_status'])),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      familiarity_algorithm:
-          serializer.fromJson<String?>(json['familiarity_algorithm']),
+      familiarity_algorithm_a:
+          serializer.fromJson<String?>(json['familiarity_algorithm_a']),
+      familiarity_algorithm_b:
+          serializer.fromJson<String?>(json['familiarity_algorithm_b']),
+      familiarity_algorithm_c:
+          serializer.fromJson<String?>(json['familiarity_algorithm_c']),
+      familiarity_algorithm_remark:
+          serializer.fromJson<String?>(json['familiarity_algorithm_remark']),
+      familiarity_algorithm_usage_status: $MemoryModelsTable
+          .$converterfamiliarity_algorithm_usage_status
+          .fromJson(serializer
+              .fromJson<int>(json['familiarity_algorithm_usage_status'])),
       father_memory_model_id:
           serializer.fromJson<String?>(json['father_memory_model_id']),
-      modified_button_algorithm:
-          serializer.fromJson<String?>(json['modified_button_algorithm']),
-      modified_familiarity_algorithm:
-          serializer.fromJson<String?>(json['modified_familiarity_algorithm']),
-      modified_next_time_algorithm:
-          serializer.fromJson<String?>(json['modified_next_time_algorithm']),
-      next_time_algorithm:
-          serializer.fromJson<String?>(json['next_time_algorithm']),
+      next_time_algorithm_a:
+          serializer.fromJson<String?>(json['next_time_algorithm_a']),
+      next_time_algorithm_b:
+          serializer.fromJson<String?>(json['next_time_algorithm_b']),
+      next_time_algorithm_c:
+          serializer.fromJson<String?>(json['next_time_algorithm_c']),
+      next_time_algorithm_remark:
+          serializer.fromJson<String?>(json['next_time_algorithm_remark']),
+      next_time_algorithm_usage_status: $MemoryModelsTable
+          .$converternext_time_algorithm_usage_status
+          .fromJson(serializer
+              .fromJson<int>(json['next_time_algorithm_usage_status'])),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
@@ -5445,19 +5699,39 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'button_algorithm': serializer.toJson<String?>(button_algorithm),
+      'button_algorithm_a': serializer.toJson<String?>(button_algorithm_a),
+      'button_algorithm_b': serializer.toJson<String?>(button_algorithm_b),
+      'button_algorithm_c': serializer.toJson<String?>(button_algorithm_c),
+      'button_algorithm_remark':
+          serializer.toJson<String?>(button_algorithm_remark),
+      'button_algorithm_usage_status': serializer.toJson<int>($MemoryModelsTable
+          .$converterbutton_algorithm_usage_status
+          .toJson(button_algorithm_usage_status)),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'familiarity_algorithm':
-          serializer.toJson<String?>(familiarity_algorithm),
+      'familiarity_algorithm_a':
+          serializer.toJson<String?>(familiarity_algorithm_a),
+      'familiarity_algorithm_b':
+          serializer.toJson<String?>(familiarity_algorithm_b),
+      'familiarity_algorithm_c':
+          serializer.toJson<String?>(familiarity_algorithm_c),
+      'familiarity_algorithm_remark':
+          serializer.toJson<String?>(familiarity_algorithm_remark),
+      'familiarity_algorithm_usage_status': serializer.toJson<int>(
+          $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status
+              .toJson(familiarity_algorithm_usage_status)),
       'father_memory_model_id':
           serializer.toJson<String?>(father_memory_model_id),
-      'modified_button_algorithm':
-          serializer.toJson<String?>(modified_button_algorithm),
-      'modified_familiarity_algorithm':
-          serializer.toJson<String?>(modified_familiarity_algorithm),
-      'modified_next_time_algorithm':
-          serializer.toJson<String?>(modified_next_time_algorithm),
-      'next_time_algorithm': serializer.toJson<String?>(next_time_algorithm),
+      'next_time_algorithm_a':
+          serializer.toJson<String?>(next_time_algorithm_a),
+      'next_time_algorithm_b':
+          serializer.toJson<String?>(next_time_algorithm_b),
+      'next_time_algorithm_c':
+          serializer.toJson<String?>(next_time_algorithm_c),
+      'next_time_algorithm_remark':
+          serializer.toJson<String?>(next_time_algorithm_remark),
+      'next_time_algorithm_usage_status': serializer.toJson<int>(
+          $MemoryModelsTable.$converternext_time_algorithm_usage_status
+              .toJson(next_time_algorithm_usage_status)),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
@@ -5466,41 +5740,75 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   }
 
   MemoryModel copyWith(
-          {Value<String?> button_algorithm = const Value.absent(),
+          {Value<String?> button_algorithm_a = const Value.absent(),
+          Value<String?> button_algorithm_b = const Value.absent(),
+          Value<String?> button_algorithm_c = const Value.absent(),
+          Value<String?> button_algorithm_remark = const Value.absent(),
+          AlgorithmUsageStatus? button_algorithm_usage_status,
           int? creator_user_id,
-          Value<String?> familiarity_algorithm = const Value.absent(),
+          Value<String?> familiarity_algorithm_a = const Value.absent(),
+          Value<String?> familiarity_algorithm_b = const Value.absent(),
+          Value<String?> familiarity_algorithm_c = const Value.absent(),
+          Value<String?> familiarity_algorithm_remark = const Value.absent(),
+          AlgorithmUsageStatus? familiarity_algorithm_usage_status,
           Value<String?> father_memory_model_id = const Value.absent(),
-          Value<String?> modified_button_algorithm = const Value.absent(),
-          Value<String?> modified_familiarity_algorithm = const Value.absent(),
-          Value<String?> modified_next_time_algorithm = const Value.absent(),
-          Value<String?> next_time_algorithm = const Value.absent(),
+          Value<String?> next_time_algorithm_a = const Value.absent(),
+          Value<String?> next_time_algorithm_b = const Value.absent(),
+          Value<String?> next_time_algorithm_c = const Value.absent(),
+          Value<String?> next_time_algorithm_remark = const Value.absent(),
+          AlgorithmUsageStatus? next_time_algorithm_usage_status,
           String? title,
           DateTime? created_at,
           String? id,
           DateTime? updated_at}) =>
       MemoryModel(
-        button_algorithm: button_algorithm.present
-            ? button_algorithm.value
-            : this.button_algorithm,
+        button_algorithm_a: button_algorithm_a.present
+            ? button_algorithm_a.value
+            : this.button_algorithm_a,
+        button_algorithm_b: button_algorithm_b.present
+            ? button_algorithm_b.value
+            : this.button_algorithm_b,
+        button_algorithm_c: button_algorithm_c.present
+            ? button_algorithm_c.value
+            : this.button_algorithm_c,
+        button_algorithm_remark: button_algorithm_remark.present
+            ? button_algorithm_remark.value
+            : this.button_algorithm_remark,
+        button_algorithm_usage_status:
+            button_algorithm_usage_status ?? this.button_algorithm_usage_status,
         creator_user_id: creator_user_id ?? this.creator_user_id,
-        familiarity_algorithm: familiarity_algorithm.present
-            ? familiarity_algorithm.value
-            : this.familiarity_algorithm,
+        familiarity_algorithm_a: familiarity_algorithm_a.present
+            ? familiarity_algorithm_a.value
+            : this.familiarity_algorithm_a,
+        familiarity_algorithm_b: familiarity_algorithm_b.present
+            ? familiarity_algorithm_b.value
+            : this.familiarity_algorithm_b,
+        familiarity_algorithm_c: familiarity_algorithm_c.present
+            ? familiarity_algorithm_c.value
+            : this.familiarity_algorithm_c,
+        familiarity_algorithm_remark: familiarity_algorithm_remark.present
+            ? familiarity_algorithm_remark.value
+            : this.familiarity_algorithm_remark,
+        familiarity_algorithm_usage_status:
+            familiarity_algorithm_usage_status ??
+                this.familiarity_algorithm_usage_status,
         father_memory_model_id: father_memory_model_id.present
             ? father_memory_model_id.value
             : this.father_memory_model_id,
-        modified_button_algorithm: modified_button_algorithm.present
-            ? modified_button_algorithm.value
-            : this.modified_button_algorithm,
-        modified_familiarity_algorithm: modified_familiarity_algorithm.present
-            ? modified_familiarity_algorithm.value
-            : this.modified_familiarity_algorithm,
-        modified_next_time_algorithm: modified_next_time_algorithm.present
-            ? modified_next_time_algorithm.value
-            : this.modified_next_time_algorithm,
-        next_time_algorithm: next_time_algorithm.present
-            ? next_time_algorithm.value
-            : this.next_time_algorithm,
+        next_time_algorithm_a: next_time_algorithm_a.present
+            ? next_time_algorithm_a.value
+            : this.next_time_algorithm_a,
+        next_time_algorithm_b: next_time_algorithm_b.present
+            ? next_time_algorithm_b.value
+            : this.next_time_algorithm_b,
+        next_time_algorithm_c: next_time_algorithm_c.present
+            ? next_time_algorithm_c.value
+            : this.next_time_algorithm_c,
+        next_time_algorithm_remark: next_time_algorithm_remark.present
+            ? next_time_algorithm_remark.value
+            : this.next_time_algorithm_remark,
+        next_time_algorithm_usage_status: next_time_algorithm_usage_status ??
+            this.next_time_algorithm_usage_status,
         title: title ?? this.title,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
@@ -5509,16 +5817,27 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   @override
   String toString() {
     return (StringBuffer('MemoryModel(')
-          ..write('button_algorithm: $button_algorithm, ')
+          ..write('button_algorithm_a: $button_algorithm_a, ')
+          ..write('button_algorithm_b: $button_algorithm_b, ')
+          ..write('button_algorithm_c: $button_algorithm_c, ')
+          ..write('button_algorithm_remark: $button_algorithm_remark, ')
+          ..write(
+              'button_algorithm_usage_status: $button_algorithm_usage_status, ')
           ..write('creator_user_id: $creator_user_id, ')
-          ..write('familiarity_algorithm: $familiarity_algorithm, ')
+          ..write('familiarity_algorithm_a: $familiarity_algorithm_a, ')
+          ..write('familiarity_algorithm_b: $familiarity_algorithm_b, ')
+          ..write('familiarity_algorithm_c: $familiarity_algorithm_c, ')
+          ..write(
+              'familiarity_algorithm_remark: $familiarity_algorithm_remark, ')
+          ..write(
+              'familiarity_algorithm_usage_status: $familiarity_algorithm_usage_status, ')
           ..write('father_memory_model_id: $father_memory_model_id, ')
-          ..write('modified_button_algorithm: $modified_button_algorithm, ')
+          ..write('next_time_algorithm_a: $next_time_algorithm_a, ')
+          ..write('next_time_algorithm_b: $next_time_algorithm_b, ')
+          ..write('next_time_algorithm_c: $next_time_algorithm_c, ')
+          ..write('next_time_algorithm_remark: $next_time_algorithm_remark, ')
           ..write(
-              'modified_familiarity_algorithm: $modified_familiarity_algorithm, ')
-          ..write(
-              'modified_next_time_algorithm: $modified_next_time_algorithm, ')
-          ..write('next_time_algorithm: $next_time_algorithm, ')
+              'next_time_algorithm_usage_status: $next_time_algorithm_usage_status, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -5528,33 +5847,54 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      button_algorithm,
-      creator_user_id,
-      familiarity_algorithm,
-      father_memory_model_id,
-      modified_button_algorithm,
-      modified_familiarity_algorithm,
-      modified_next_time_algorithm,
-      next_time_algorithm,
-      title,
-      created_at,
-      id,
-      updated_at);
+  int get hashCode => Object.hashAll([
+        button_algorithm_a,
+        button_algorithm_b,
+        button_algorithm_c,
+        button_algorithm_remark,
+        button_algorithm_usage_status,
+        creator_user_id,
+        familiarity_algorithm_a,
+        familiarity_algorithm_b,
+        familiarity_algorithm_c,
+        familiarity_algorithm_remark,
+        familiarity_algorithm_usage_status,
+        father_memory_model_id,
+        next_time_algorithm_a,
+        next_time_algorithm_b,
+        next_time_algorithm_c,
+        next_time_algorithm_remark,
+        next_time_algorithm_usage_status,
+        title,
+        created_at,
+        id,
+        updated_at
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MemoryModel &&
-          other.button_algorithm == this.button_algorithm &&
+          other.button_algorithm_a == this.button_algorithm_a &&
+          other.button_algorithm_b == this.button_algorithm_b &&
+          other.button_algorithm_c == this.button_algorithm_c &&
+          other.button_algorithm_remark == this.button_algorithm_remark &&
+          other.button_algorithm_usage_status ==
+              this.button_algorithm_usage_status &&
           other.creator_user_id == this.creator_user_id &&
-          other.familiarity_algorithm == this.familiarity_algorithm &&
+          other.familiarity_algorithm_a == this.familiarity_algorithm_a &&
+          other.familiarity_algorithm_b == this.familiarity_algorithm_b &&
+          other.familiarity_algorithm_c == this.familiarity_algorithm_c &&
+          other.familiarity_algorithm_remark ==
+              this.familiarity_algorithm_remark &&
+          other.familiarity_algorithm_usage_status ==
+              this.familiarity_algorithm_usage_status &&
           other.father_memory_model_id == this.father_memory_model_id &&
-          other.modified_button_algorithm == this.modified_button_algorithm &&
-          other.modified_familiarity_algorithm ==
-              this.modified_familiarity_algorithm &&
-          other.modified_next_time_algorithm ==
-              this.modified_next_time_algorithm &&
-          other.next_time_algorithm == this.next_time_algorithm &&
+          other.next_time_algorithm_a == this.next_time_algorithm_a &&
+          other.next_time_algorithm_b == this.next_time_algorithm_b &&
+          other.next_time_algorithm_c == this.next_time_algorithm_c &&
+          other.next_time_algorithm_remark == this.next_time_algorithm_remark &&
+          other.next_time_algorithm_usage_status ==
+              this.next_time_algorithm_usage_status &&
           other.title == this.title &&
           other.created_at == this.created_at &&
           other.id == this.id &&
@@ -5562,79 +5902,137 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
 }
 
 class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
-  Value<String?> button_algorithm;
+  Value<String?> button_algorithm_a;
+  Value<String?> button_algorithm_b;
+  Value<String?> button_algorithm_c;
+  Value<String?> button_algorithm_remark;
+  Value<AlgorithmUsageStatus> button_algorithm_usage_status;
   Value<int> creator_user_id;
-  Value<String?> familiarity_algorithm;
+  Value<String?> familiarity_algorithm_a;
+  Value<String?> familiarity_algorithm_b;
+  Value<String?> familiarity_algorithm_c;
+  Value<String?> familiarity_algorithm_remark;
+  Value<AlgorithmUsageStatus> familiarity_algorithm_usage_status;
   Value<String?> father_memory_model_id;
-  Value<String?> modified_button_algorithm;
-  Value<String?> modified_familiarity_algorithm;
-  Value<String?> modified_next_time_algorithm;
-  Value<String?> next_time_algorithm;
+  Value<String?> next_time_algorithm_a;
+  Value<String?> next_time_algorithm_b;
+  Value<String?> next_time_algorithm_c;
+  Value<String?> next_time_algorithm_remark;
+  Value<AlgorithmUsageStatus> next_time_algorithm_usage_status;
   Value<String> title;
   Value<DateTime> created_at;
   Value<String> id;
   Value<DateTime> updated_at;
   MemoryModelsCompanion({
-    this.button_algorithm = const Value.absent(),
+    this.button_algorithm_a = const Value.absent(),
+    this.button_algorithm_b = const Value.absent(),
+    this.button_algorithm_c = const Value.absent(),
+    this.button_algorithm_remark = const Value.absent(),
+    this.button_algorithm_usage_status = const Value.absent(),
     this.creator_user_id = const Value.absent(),
-    this.familiarity_algorithm = const Value.absent(),
+    this.familiarity_algorithm_a = const Value.absent(),
+    this.familiarity_algorithm_b = const Value.absent(),
+    this.familiarity_algorithm_c = const Value.absent(),
+    this.familiarity_algorithm_remark = const Value.absent(),
+    this.familiarity_algorithm_usage_status = const Value.absent(),
     this.father_memory_model_id = const Value.absent(),
-    this.modified_button_algorithm = const Value.absent(),
-    this.modified_familiarity_algorithm = const Value.absent(),
-    this.modified_next_time_algorithm = const Value.absent(),
-    this.next_time_algorithm = const Value.absent(),
+    this.next_time_algorithm_a = const Value.absent(),
+    this.next_time_algorithm_b = const Value.absent(),
+    this.next_time_algorithm_c = const Value.absent(),
+    this.next_time_algorithm_remark = const Value.absent(),
+    this.next_time_algorithm_usage_status = const Value.absent(),
     this.title = const Value.absent(),
     this.created_at = const Value.absent(),
     this.id = const Value.absent(),
     this.updated_at = const Value.absent(),
   });
   MemoryModelsCompanion.insert({
-    this.button_algorithm = const Value.absent(),
+    this.button_algorithm_a = const Value.absent(),
+    this.button_algorithm_b = const Value.absent(),
+    this.button_algorithm_c = const Value.absent(),
+    this.button_algorithm_remark = const Value.absent(),
+    required AlgorithmUsageStatus button_algorithm_usage_status,
     required int creator_user_id,
-    this.familiarity_algorithm = const Value.absent(),
+    this.familiarity_algorithm_a = const Value.absent(),
+    this.familiarity_algorithm_b = const Value.absent(),
+    this.familiarity_algorithm_c = const Value.absent(),
+    this.familiarity_algorithm_remark = const Value.absent(),
+    required AlgorithmUsageStatus familiarity_algorithm_usage_status,
     this.father_memory_model_id = const Value.absent(),
-    this.modified_button_algorithm = const Value.absent(),
-    this.modified_familiarity_algorithm = const Value.absent(),
-    this.modified_next_time_algorithm = const Value.absent(),
-    this.next_time_algorithm = const Value.absent(),
+    this.next_time_algorithm_a = const Value.absent(),
+    this.next_time_algorithm_b = const Value.absent(),
+    this.next_time_algorithm_c = const Value.absent(),
+    this.next_time_algorithm_remark = const Value.absent(),
+    required AlgorithmUsageStatus next_time_algorithm_usage_status,
     required String title,
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
+  })  : button_algorithm_usage_status = Value(button_algorithm_usage_status),
+        creator_user_id = Value(creator_user_id),
+        familiarity_algorithm_usage_status =
+            Value(familiarity_algorithm_usage_status),
+        next_time_algorithm_usage_status =
+            Value(next_time_algorithm_usage_status),
         title = Value(title),
         created_at = Value(created_at),
         id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<MemoryModel> custom({
-    Expression<String>? button_algorithm,
+    Expression<String>? button_algorithm_a,
+    Expression<String>? button_algorithm_b,
+    Expression<String>? button_algorithm_c,
+    Expression<String>? button_algorithm_remark,
+    Expression<int>? button_algorithm_usage_status,
     Expression<int>? creator_user_id,
-    Expression<String>? familiarity_algorithm,
+    Expression<String>? familiarity_algorithm_a,
+    Expression<String>? familiarity_algorithm_b,
+    Expression<String>? familiarity_algorithm_c,
+    Expression<String>? familiarity_algorithm_remark,
+    Expression<int>? familiarity_algorithm_usage_status,
     Expression<String>? father_memory_model_id,
-    Expression<String>? modified_button_algorithm,
-    Expression<String>? modified_familiarity_algorithm,
-    Expression<String>? modified_next_time_algorithm,
-    Expression<String>? next_time_algorithm,
+    Expression<String>? next_time_algorithm_a,
+    Expression<String>? next_time_algorithm_b,
+    Expression<String>? next_time_algorithm_c,
+    Expression<String>? next_time_algorithm_remark,
+    Expression<int>? next_time_algorithm_usage_status,
     Expression<String>? title,
     Expression<DateTime>? created_at,
     Expression<String>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (button_algorithm != null) 'button_algorithm': button_algorithm,
+      if (button_algorithm_a != null) 'button_algorithm_a': button_algorithm_a,
+      if (button_algorithm_b != null) 'button_algorithm_b': button_algorithm_b,
+      if (button_algorithm_c != null) 'button_algorithm_c': button_algorithm_c,
+      if (button_algorithm_remark != null)
+        'button_algorithm_remark': button_algorithm_remark,
+      if (button_algorithm_usage_status != null)
+        'button_algorithm_usage_status': button_algorithm_usage_status,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (familiarity_algorithm != null)
-        'familiarity_algorithm': familiarity_algorithm,
+      if (familiarity_algorithm_a != null)
+        'familiarity_algorithm_a': familiarity_algorithm_a,
+      if (familiarity_algorithm_b != null)
+        'familiarity_algorithm_b': familiarity_algorithm_b,
+      if (familiarity_algorithm_c != null)
+        'familiarity_algorithm_c': familiarity_algorithm_c,
+      if (familiarity_algorithm_remark != null)
+        'familiarity_algorithm_remark': familiarity_algorithm_remark,
+      if (familiarity_algorithm_usage_status != null)
+        'familiarity_algorithm_usage_status':
+            familiarity_algorithm_usage_status,
       if (father_memory_model_id != null)
         'father_memory_model_id': father_memory_model_id,
-      if (modified_button_algorithm != null)
-        'modified_button_algorithm': modified_button_algorithm,
-      if (modified_familiarity_algorithm != null)
-        'modified_familiarity_algorithm': modified_familiarity_algorithm,
-      if (modified_next_time_algorithm != null)
-        'modified_next_time_algorithm': modified_next_time_algorithm,
-      if (next_time_algorithm != null)
-        'next_time_algorithm': next_time_algorithm,
+      if (next_time_algorithm_a != null)
+        'next_time_algorithm_a': next_time_algorithm_a,
+      if (next_time_algorithm_b != null)
+        'next_time_algorithm_b': next_time_algorithm_b,
+      if (next_time_algorithm_c != null)
+        'next_time_algorithm_c': next_time_algorithm_c,
+      if (next_time_algorithm_remark != null)
+        'next_time_algorithm_remark': next_time_algorithm_remark,
+      if (next_time_algorithm_usage_status != null)
+        'next_time_algorithm_usage_status': next_time_algorithm_usage_status,
       if (title != null) 'title': title,
       if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
@@ -5643,32 +6041,58 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   }
 
   MemoryModelsCompanion copyWith(
-      {Value<String?>? button_algorithm,
+      {Value<String?>? button_algorithm_a,
+      Value<String?>? button_algorithm_b,
+      Value<String?>? button_algorithm_c,
+      Value<String?>? button_algorithm_remark,
+      Value<AlgorithmUsageStatus>? button_algorithm_usage_status,
       Value<int>? creator_user_id,
-      Value<String?>? familiarity_algorithm,
+      Value<String?>? familiarity_algorithm_a,
+      Value<String?>? familiarity_algorithm_b,
+      Value<String?>? familiarity_algorithm_c,
+      Value<String?>? familiarity_algorithm_remark,
+      Value<AlgorithmUsageStatus>? familiarity_algorithm_usage_status,
       Value<String?>? father_memory_model_id,
-      Value<String?>? modified_button_algorithm,
-      Value<String?>? modified_familiarity_algorithm,
-      Value<String?>? modified_next_time_algorithm,
-      Value<String?>? next_time_algorithm,
+      Value<String?>? next_time_algorithm_a,
+      Value<String?>? next_time_algorithm_b,
+      Value<String?>? next_time_algorithm_c,
+      Value<String?>? next_time_algorithm_remark,
+      Value<AlgorithmUsageStatus>? next_time_algorithm_usage_status,
       Value<String>? title,
       Value<DateTime>? created_at,
       Value<String>? id,
       Value<DateTime>? updated_at}) {
     return MemoryModelsCompanion(
-      button_algorithm: button_algorithm ?? this.button_algorithm,
+      button_algorithm_a: button_algorithm_a ?? this.button_algorithm_a,
+      button_algorithm_b: button_algorithm_b ?? this.button_algorithm_b,
+      button_algorithm_c: button_algorithm_c ?? this.button_algorithm_c,
+      button_algorithm_remark:
+          button_algorithm_remark ?? this.button_algorithm_remark,
+      button_algorithm_usage_status:
+          button_algorithm_usage_status ?? this.button_algorithm_usage_status,
       creator_user_id: creator_user_id ?? this.creator_user_id,
-      familiarity_algorithm:
-          familiarity_algorithm ?? this.familiarity_algorithm,
+      familiarity_algorithm_a:
+          familiarity_algorithm_a ?? this.familiarity_algorithm_a,
+      familiarity_algorithm_b:
+          familiarity_algorithm_b ?? this.familiarity_algorithm_b,
+      familiarity_algorithm_c:
+          familiarity_algorithm_c ?? this.familiarity_algorithm_c,
+      familiarity_algorithm_remark:
+          familiarity_algorithm_remark ?? this.familiarity_algorithm_remark,
+      familiarity_algorithm_usage_status: familiarity_algorithm_usage_status ??
+          this.familiarity_algorithm_usage_status,
       father_memory_model_id:
           father_memory_model_id ?? this.father_memory_model_id,
-      modified_button_algorithm:
-          modified_button_algorithm ?? this.modified_button_algorithm,
-      modified_familiarity_algorithm:
-          modified_familiarity_algorithm ?? this.modified_familiarity_algorithm,
-      modified_next_time_algorithm:
-          modified_next_time_algorithm ?? this.modified_next_time_algorithm,
-      next_time_algorithm: next_time_algorithm ?? this.next_time_algorithm,
+      next_time_algorithm_a:
+          next_time_algorithm_a ?? this.next_time_algorithm_a,
+      next_time_algorithm_b:
+          next_time_algorithm_b ?? this.next_time_algorithm_b,
+      next_time_algorithm_c:
+          next_time_algorithm_c ?? this.next_time_algorithm_c,
+      next_time_algorithm_remark:
+          next_time_algorithm_remark ?? this.next_time_algorithm_remark,
+      next_time_algorithm_usage_status: next_time_algorithm_usage_status ??
+          this.next_time_algorithm_usage_status,
       title: title ?? this.title,
       created_at: created_at ?? this.created_at,
       id: id ?? this.id,
@@ -5679,34 +6103,75 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (button_algorithm.present) {
-      map['button_algorithm'] = Variable<String>(button_algorithm.value);
+    if (button_algorithm_a.present) {
+      map['button_algorithm_a'] = Variable<String>(button_algorithm_a.value);
+    }
+    if (button_algorithm_b.present) {
+      map['button_algorithm_b'] = Variable<String>(button_algorithm_b.value);
+    }
+    if (button_algorithm_c.present) {
+      map['button_algorithm_c'] = Variable<String>(button_algorithm_c.value);
+    }
+    if (button_algorithm_remark.present) {
+      map['button_algorithm_remark'] =
+          Variable<String>(button_algorithm_remark.value);
+    }
+    if (button_algorithm_usage_status.present) {
+      final converter =
+          $MemoryModelsTable.$converterbutton_algorithm_usage_status;
+      map['button_algorithm_usage_status'] =
+          Variable<int>(converter.toSql(button_algorithm_usage_status.value));
     }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
-    if (familiarity_algorithm.present) {
-      map['familiarity_algorithm'] =
-          Variable<String>(familiarity_algorithm.value);
+    if (familiarity_algorithm_a.present) {
+      map['familiarity_algorithm_a'] =
+          Variable<String>(familiarity_algorithm_a.value);
+    }
+    if (familiarity_algorithm_b.present) {
+      map['familiarity_algorithm_b'] =
+          Variable<String>(familiarity_algorithm_b.value);
+    }
+    if (familiarity_algorithm_c.present) {
+      map['familiarity_algorithm_c'] =
+          Variable<String>(familiarity_algorithm_c.value);
+    }
+    if (familiarity_algorithm_remark.present) {
+      map['familiarity_algorithm_remark'] =
+          Variable<String>(familiarity_algorithm_remark.value);
+    }
+    if (familiarity_algorithm_usage_status.present) {
+      final converter =
+          $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status;
+      map['familiarity_algorithm_usage_status'] = Variable<int>(
+          converter.toSql(familiarity_algorithm_usage_status.value));
     }
     if (father_memory_model_id.present) {
       map['father_memory_model_id'] =
           Variable<String>(father_memory_model_id.value);
     }
-    if (modified_button_algorithm.present) {
-      map['modified_button_algorithm'] =
-          Variable<String>(modified_button_algorithm.value);
+    if (next_time_algorithm_a.present) {
+      map['next_time_algorithm_a'] =
+          Variable<String>(next_time_algorithm_a.value);
     }
-    if (modified_familiarity_algorithm.present) {
-      map['modified_familiarity_algorithm'] =
-          Variable<String>(modified_familiarity_algorithm.value);
+    if (next_time_algorithm_b.present) {
+      map['next_time_algorithm_b'] =
+          Variable<String>(next_time_algorithm_b.value);
     }
-    if (modified_next_time_algorithm.present) {
-      map['modified_next_time_algorithm'] =
-          Variable<String>(modified_next_time_algorithm.value);
+    if (next_time_algorithm_c.present) {
+      map['next_time_algorithm_c'] =
+          Variable<String>(next_time_algorithm_c.value);
     }
-    if (next_time_algorithm.present) {
-      map['next_time_algorithm'] = Variable<String>(next_time_algorithm.value);
+    if (next_time_algorithm_remark.present) {
+      map['next_time_algorithm_remark'] =
+          Variable<String>(next_time_algorithm_remark.value);
+    }
+    if (next_time_algorithm_usage_status.present) {
+      final converter =
+          $MemoryModelsTable.$converternext_time_algorithm_usage_status;
+      map['next_time_algorithm_usage_status'] = Variable<int>(
+          converter.toSql(next_time_algorithm_usage_status.value));
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -5726,16 +6191,27 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   @override
   String toString() {
     return (StringBuffer('MemoryModelsCompanion(')
-          ..write('button_algorithm: $button_algorithm, ')
+          ..write('button_algorithm_a: $button_algorithm_a, ')
+          ..write('button_algorithm_b: $button_algorithm_b, ')
+          ..write('button_algorithm_c: $button_algorithm_c, ')
+          ..write('button_algorithm_remark: $button_algorithm_remark, ')
+          ..write(
+              'button_algorithm_usage_status: $button_algorithm_usage_status, ')
           ..write('creator_user_id: $creator_user_id, ')
-          ..write('familiarity_algorithm: $familiarity_algorithm, ')
+          ..write('familiarity_algorithm_a: $familiarity_algorithm_a, ')
+          ..write('familiarity_algorithm_b: $familiarity_algorithm_b, ')
+          ..write('familiarity_algorithm_c: $familiarity_algorithm_c, ')
+          ..write(
+              'familiarity_algorithm_remark: $familiarity_algorithm_remark, ')
+          ..write(
+              'familiarity_algorithm_usage_status: $familiarity_algorithm_usage_status, ')
           ..write('father_memory_model_id: $father_memory_model_id, ')
-          ..write('modified_button_algorithm: $modified_button_algorithm, ')
+          ..write('next_time_algorithm_a: $next_time_algorithm_a, ')
+          ..write('next_time_algorithm_b: $next_time_algorithm_b, ')
+          ..write('next_time_algorithm_c: $next_time_algorithm_c, ')
+          ..write('next_time_algorithm_remark: $next_time_algorithm_remark, ')
           ..write(
-              'modified_familiarity_algorithm: $modified_familiarity_algorithm, ')
-          ..write(
-              'modified_next_time_algorithm: $modified_next_time_algorithm, ')
-          ..write('next_time_algorithm: $next_time_algorithm, ')
+              'next_time_algorithm_usage_status: $next_time_algorithm_usage_status, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')

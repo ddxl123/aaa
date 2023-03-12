@@ -45,7 +45,7 @@ class ResetGenerator extends Generator {
                   ).where(
                     (element) => element != '',
                   ).join(',')}, 
-            required SyncTag? syncTag,
+            required SyncTag syncTag,
             }) async {
            bool isCloudModify = false;
            bool isLocalModify = false;

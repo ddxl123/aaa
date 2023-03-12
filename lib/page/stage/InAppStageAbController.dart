@@ -129,7 +129,6 @@ class InAppStageAbController extends AbController {
       },
       originalMemoryGroup: memoryGroupAb(),
       isNew: isNew,
-      syncTag: null,
     );
     currentShowFamiliar = null;
     currentActualShowTime = null;
@@ -151,7 +150,7 @@ class InAppStageAbController extends AbController {
   Future<double> _parseCurrentFamiliarity() async {
     return await AlgorithmParser.parse<FamiliarityState, double>(
       state: FamiliarityState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -204,7 +203,7 @@ class InAppStageAbController extends AbController {
   Future<ButtonDataState> _parseButtonData() async {
     return await AlgorithmParser.parse<ButtonDataState, ButtonDataState>(
       state: ButtonDataState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -259,7 +258,7 @@ class InAppStageAbController extends AbController {
   Future<void> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     await AlgorithmParser.parse<NextShowTimeState, void>(
       state: NextShowTimeState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(

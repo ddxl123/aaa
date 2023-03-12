@@ -99,13 +99,12 @@ class PerformerQuery {
     required ResetFutureFunction<FragmentMemoryInfo> originalFragmentMemoryInfoReset,
     required MemoryGroup originalMemoryGroup,
     required bool isNew,
-    required SyncTag? syncTag,
   }) async {
     await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
       originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
       originalMemoryGroup: originalMemoryGroup,
       isNew: isNew,
-      syncTag: syncTag,
+      syncTag: await SyncTag.create(),
     );
   }
 

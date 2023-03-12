@@ -39,6 +39,16 @@ enum SyncCurdType {
 
 }
         
+enum AlgorithmUsageStatus {
+  
+  a,
+
+  b,
+
+  c,
+
+}
+        
 enum FragmentTemplateType {
   
   rich_any,

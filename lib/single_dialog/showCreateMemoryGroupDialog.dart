@@ -36,7 +36,7 @@ Future<void> showCreateMemoryGroupDialog() async {
               new_display_order: NewDisplayOrder.random,
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
             ),
-            syncTag: null,
+            syncTag: await SyncTag.create(),
           );
 
           Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();

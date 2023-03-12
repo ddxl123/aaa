@@ -42,7 +42,7 @@ extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
   /// 使用方式查看 [withRefs]。
   FutureOr<KnowledgeBaseCategory> reset({
     required Value<String> categorys,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -77,7 +77,7 @@ extension ClientSyncInfoExt on ClientSyncInfo {
     required Value<String> device_info,
     required Value<DateTime?> recent_sync_time,
     required Value<String?> token,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -124,7 +124,7 @@ extension SyncExt on Sync {
     required Value<SyncCurdType> sync_curd_type,
     required Value<String> sync_table_name,
     required Value<int> tag,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -180,7 +180,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> memory_group_id,
     required Value<String?> next_plan_show_time,
     required Value<String?> show_familiarity,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -255,7 +255,7 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
     required Value<int> creator_user_id,
     required Value<String?> document_group_id,
     required Value<String> document_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -302,7 +302,7 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
     required Value<int> creator_user_id,
     required Value<String?> fragment_group_id,
     required Value<String> fragment_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -349,7 +349,7 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
     required Value<int> creator_user_id,
     required Value<String?> note_group_id,
     required Value<String> note_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -393,7 +393,7 @@ extension Test2Ext on Test2 {
   /// 使用方式查看 [withRefs]。
   FutureOr<Test2> reset({
     required Value<String> client_content,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -427,7 +427,7 @@ extension TestExt on Test {
   FutureOr<Test> reset({
     required Value<String> client_a,
     required Value<String> client_content,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -466,7 +466,7 @@ extension DocumentExt on Document {
   FutureOr<Document> reset({
     required Value<String> content,
     required Value<int> creator_user_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -507,7 +507,7 @@ extension FragmentTemplateExt on FragmentTemplate {
     required Value<String> content,
     required Value<int> owner_user_id,
     required Value<FragmentTemplateType> type,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -558,7 +558,7 @@ extension FragmentExt on Fragment {
     required Value<String?> note_id,
     required Value<String> tags,
     required Value<String> title,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -642,7 +642,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<DateTime?> start_time,
     required Value<String> title,
     required Value<int> will_new_learn_count,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -715,23 +715,57 @@ extension MemoryModelExt on MemoryModel {
   ///
   /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModel> reset({
-    required Value<String?> button_algorithm,
+    required Value<String?> button_algorithm_a,
+    required Value<String?> button_algorithm_b,
+    required Value<String?> button_algorithm_c,
+    required Value<String?> button_algorithm_remark,
+    required Value<AlgorithmUsageStatus> button_algorithm_usage_status,
     required Value<int> creator_user_id,
-    required Value<String?> familiarity_algorithm,
+    required Value<String?> familiarity_algorithm_a,
+    required Value<String?> familiarity_algorithm_b,
+    required Value<String?> familiarity_algorithm_c,
+    required Value<String?> familiarity_algorithm_remark,
+    required Value<AlgorithmUsageStatus> familiarity_algorithm_usage_status,
     required Value<String?> father_memory_model_id,
-    required Value<String?> modified_button_algorithm,
-    required Value<String?> modified_familiarity_algorithm,
-    required Value<String?> modified_next_time_algorithm,
-    required Value<String?> next_time_algorithm,
+    required Value<String?> next_time_algorithm_a,
+    required Value<String?> next_time_algorithm_b,
+    required Value<String?> next_time_algorithm_c,
+    required Value<String?> next_time_algorithm_remark,
+    required Value<AlgorithmUsageStatus> next_time_algorithm_usage_status,
     required Value<String> title,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (button_algorithm.present &&
-        this.button_algorithm != button_algorithm.value) {
+    if (button_algorithm_a.present &&
+        this.button_algorithm_a != button_algorithm_a.value) {
       isCloudModify = true;
-      this.button_algorithm = button_algorithm.value;
+      this.button_algorithm_a = button_algorithm_a.value;
+    }
+
+    if (button_algorithm_b.present &&
+        this.button_algorithm_b != button_algorithm_b.value) {
+      isCloudModify = true;
+      this.button_algorithm_b = button_algorithm_b.value;
+    }
+
+    if (button_algorithm_c.present &&
+        this.button_algorithm_c != button_algorithm_c.value) {
+      isCloudModify = true;
+      this.button_algorithm_c = button_algorithm_c.value;
+    }
+
+    if (button_algorithm_remark.present &&
+        this.button_algorithm_remark != button_algorithm_remark.value) {
+      isCloudModify = true;
+      this.button_algorithm_remark = button_algorithm_remark.value;
+    }
+
+    if (button_algorithm_usage_status.present &&
+        this.button_algorithm_usage_status !=
+            button_algorithm_usage_status.value) {
+      isCloudModify = true;
+      this.button_algorithm_usage_status = button_algorithm_usage_status.value;
     }
 
     if (creator_user_id.present &&
@@ -740,10 +774,37 @@ extension MemoryModelExt on MemoryModel {
       this.creator_user_id = creator_user_id.value;
     }
 
-    if (familiarity_algorithm.present &&
-        this.familiarity_algorithm != familiarity_algorithm.value) {
+    if (familiarity_algorithm_a.present &&
+        this.familiarity_algorithm_a != familiarity_algorithm_a.value) {
       isCloudModify = true;
-      this.familiarity_algorithm = familiarity_algorithm.value;
+      this.familiarity_algorithm_a = familiarity_algorithm_a.value;
+    }
+
+    if (familiarity_algorithm_b.present &&
+        this.familiarity_algorithm_b != familiarity_algorithm_b.value) {
+      isCloudModify = true;
+      this.familiarity_algorithm_b = familiarity_algorithm_b.value;
+    }
+
+    if (familiarity_algorithm_c.present &&
+        this.familiarity_algorithm_c != familiarity_algorithm_c.value) {
+      isCloudModify = true;
+      this.familiarity_algorithm_c = familiarity_algorithm_c.value;
+    }
+
+    if (familiarity_algorithm_remark.present &&
+        this.familiarity_algorithm_remark !=
+            familiarity_algorithm_remark.value) {
+      isCloudModify = true;
+      this.familiarity_algorithm_remark = familiarity_algorithm_remark.value;
+    }
+
+    if (familiarity_algorithm_usage_status.present &&
+        this.familiarity_algorithm_usage_status !=
+            familiarity_algorithm_usage_status.value) {
+      isCloudModify = true;
+      this.familiarity_algorithm_usage_status =
+          familiarity_algorithm_usage_status.value;
     }
 
     if (father_memory_model_id.present &&
@@ -752,31 +813,36 @@ extension MemoryModelExt on MemoryModel {
       this.father_memory_model_id = father_memory_model_id.value;
     }
 
-    if (modified_button_algorithm.present &&
-        this.modified_button_algorithm != modified_button_algorithm.value) {
+    if (next_time_algorithm_a.present &&
+        this.next_time_algorithm_a != next_time_algorithm_a.value) {
       isCloudModify = true;
-      this.modified_button_algorithm = modified_button_algorithm.value;
+      this.next_time_algorithm_a = next_time_algorithm_a.value;
     }
 
-    if (modified_familiarity_algorithm.present &&
-        this.modified_familiarity_algorithm !=
-            modified_familiarity_algorithm.value) {
+    if (next_time_algorithm_b.present &&
+        this.next_time_algorithm_b != next_time_algorithm_b.value) {
       isCloudModify = true;
-      this.modified_familiarity_algorithm =
-          modified_familiarity_algorithm.value;
+      this.next_time_algorithm_b = next_time_algorithm_b.value;
     }
 
-    if (modified_next_time_algorithm.present &&
-        this.modified_next_time_algorithm !=
-            modified_next_time_algorithm.value) {
+    if (next_time_algorithm_c.present &&
+        this.next_time_algorithm_c != next_time_algorithm_c.value) {
       isCloudModify = true;
-      this.modified_next_time_algorithm = modified_next_time_algorithm.value;
+      this.next_time_algorithm_c = next_time_algorithm_c.value;
     }
 
-    if (next_time_algorithm.present &&
-        this.next_time_algorithm != next_time_algorithm.value) {
+    if (next_time_algorithm_remark.present &&
+        this.next_time_algorithm_remark != next_time_algorithm_remark.value) {
       isCloudModify = true;
-      this.next_time_algorithm = next_time_algorithm.value;
+      this.next_time_algorithm_remark = next_time_algorithm_remark.value;
+    }
+
+    if (next_time_algorithm_usage_status.present &&
+        this.next_time_algorithm_usage_status !=
+            next_time_algorithm_usage_status.value) {
+      isCloudModify = true;
+      this.next_time_algorithm_usage_status =
+          next_time_algorithm_usage_status.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -811,7 +877,7 @@ extension NoteExt on Note {
     required Value<int> creator_user_id,
     required Value<String?> document_id,
     required Value<String?> father_note_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -861,7 +927,7 @@ extension ShorthandExt on Shorthand {
   FutureOr<Shorthand> reset({
     required Value<String> content,
     required Value<int> creator_user_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -902,7 +968,7 @@ extension DocumentGroupExt on DocumentGroup {
     required Value<int> creator_user_id,
     required Value<String?> father_document_groups_id,
     required Value<String> title,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -953,7 +1019,7 @@ extension FragmentGroupExt on FragmentGroup {
     required Value<String?> father_fragment_groups_id,
     required Value<String> tags,
     required Value<String> title,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1021,7 +1087,7 @@ extension NoteGroupExt on NoteGroup {
     required Value<int> creator_user_id,
     required Value<String?> father_note_groups_id,
     required Value<String> title,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1069,7 +1135,7 @@ extension UserCommentExt on UserComment {
     required Value<int> commentator_user_id,
     required Value<String?> fragment_group_id,
     required Value<String?> fragment_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1122,7 +1188,7 @@ extension UserLikeExt on UserLike {
     required Value<String?> fragment_group_id,
     required Value<String?> fragment_id,
     required Value<int> liker_user_id,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1170,7 +1236,7 @@ extension UserExt on User {
     required Value<String?> password,
     required Value<String?> phone,
     required Value<String> username,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;

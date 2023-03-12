@@ -102,6 +102,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
       await db.insertDAO.insertSelectedFragmentToMemoryGroup(
         memoryGroup: selectedMg!,
         isRemoveRepeat: isRemoveDuplication,
+        syncTag: await SyncTag.create(),
       );
       SmartDialog.dismiss();
       SmartDialog.showToast('添加成功！');

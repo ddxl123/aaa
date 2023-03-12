@@ -32,12 +32,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     return await transaction(
       () async {
-        SyncTag? innerSyncTag = syncTag;
-
         if (table is Users) {
           throw '对 User 的插入不能使用 insertReturningWith 函数，请使用 insertUser 函数进行插入！';
         }
@@ -50,14 +48,13 @@ extension DriftSyncExt on DatabaseConnectionUser {
         //
         // LocalTableBase 类型表全部都是自增主键，不需要手动配置。
         if (table is CloudTableBase) {
-          innerSyncTag = innerSyncTag ?? await SyncTag.create();
           // TODO: 可以使用全局获取 user。
           final mulUsers = await select(DriftDb.instance.users).get();
           if (mulUsers.length != 1) {
             throw 'users 行数不为1';
           }
 
-          entityDynamic.id = innerSyncTag.createCloudId(userId: mulUsers.first.id).toValue();
+          entityDynamic.id = syncTag.createCloudId(userId: mulUsers.first.id).toValue();
         }
 
         // 插入
@@ -74,9 +71,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
               sync_table_name: table.actualTableName.toValue(),
               row_id: (returningEntityDynamic.id as String).toValue(),
               sync_curd_type: SyncCurdType.c.toValue(),
-              tag: innerSyncTag!.tag.toValue(),
+              tag: syncTag.tag.toValue(),
             ),
-            syncTag: innerSyncTag,
+            syncTag: syncTag,
           );
         }
 
@@ -108,7 +105,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
     TableInfo<T, DC> table, {
     required E entity,
     required bool isSync,
-    required SyncTag? syncTag,
+    required SyncTag syncTag,
   }) async {
     return await transaction(
       () async {
@@ -132,7 +129,6 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
         // 增加一条 sync 记录 - 仅对 cloud
         if ((table is CloudTableBase) && isSync == true) {
-          final st = syncTag ?? await SyncTag.create();
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
@@ -140,9 +136,9 @@ extension DriftSyncExt on DatabaseConnectionUser {
               // 无法识别到 dynamic.toValue() 这个扩展，因此直接使用 Value()。
               row_id: Value((returningEntity as dynamic).id),
               sync_curd_type: SyncCurdType.u.toValue(),
-              tag: st.tag.toValue(),
+              tag: syncTag.tag.toValue(),
             ),
-            syncTag: st,
+            syncTag: syncTag,
           );
         }
 

@@ -7,26 +7,12 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-/// 增删改时，必须用这个函数。
-///
-/// 增：[withRefs] + [Crt] 和 [UsersCompanionExt]
-/// 删：[withRefs] + [DriftSyncExt.deleteWith]
-/// 改：[withRefs] + [UserExt.reset]
-///
-/// [syncTag] - 若为null，则内部会自动创建一个事务。
-Future<void> withRefs({
-  required SyncTag? syncTag,
-  required Future<Ref> Function(SyncTag syncTag) ref,
-}) async {
-  await DriftDb.instance.transaction(
-    () async {
-      await (await ref(syncTag ?? await SyncTag.create()))._run();
-    },
-  );
-}
-
 abstract class Ref {
-  Future<void> _run();
+  Ref({required this.order});
+
+  final int order;
+
+  Future<void> run();
 }
 
 /// [KnowledgeBaseCategorys]
@@ -35,11 +21,28 @@ class RefKnowledgeBaseCategorys extends Ref {
 
   RefKnowledgeBaseCategorys({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.knowledgeBaseCategorys);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.knowledgeBaseCategorys);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -49,11 +52,28 @@ class RefClientSyncInfos extends Ref {
 
   RefClientSyncInfos({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.clientSyncInfos);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.clientSyncInfos);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -63,11 +83,28 @@ class RefSyncs extends Ref {
 
   RefSyncs({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.syncs);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.syncs);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -109,27 +146,44 @@ class RefUsers extends Ref {
     required this.noteGroups,
     required this.userComments,
     required this.userLikes,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.users);
-    await fragmentMemoryInfos?._run();
-    await rDocument2DocumentGroups?._run();
-    await rFragment2FragmentGroups?._run();
-    await rNote2NoteGroups?._run();
-    await documents?._run();
-    await fragmentTemplates?._run();
-    await fragments?._run();
-    await memoryGroups?._run();
-    await memoryModels?._run();
-    await notes?._run();
-    await shorthands?._run();
-    await documentGroups?._run();
-    await fragmentGroups?._run();
-    await noteGroups?._run();
-    await userComments?._run();
-    await userLikes?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          fragmentMemoryInfos,
+          rDocument2DocumentGroups,
+          rFragment2FragmentGroups,
+          rNote2NoteGroups,
+          documents,
+          fragmentTemplates,
+          fragments,
+          memoryGroups,
+          memoryModels,
+          notes,
+          shorthands,
+          documentGroups,
+          fragmentGroups,
+          noteGroups,
+          userComments,
+          userLikes,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.users);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -151,17 +205,34 @@ class RefFragments extends Ref {
     required this.memoryModels,
     required this.userComments,
     required this.userLikes,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragments);
-    await fragmentMemoryInfos?._run();
-    await rFragment2FragmentGroups?._run();
-    await child_fragments?._run();
-    await memoryModels?._run();
-    await userComments?._run();
-    await userLikes?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          fragmentMemoryInfos,
+          rFragment2FragmentGroups,
+          child_fragments,
+          memoryModels,
+          userComments,
+          userLikes,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.fragments);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -173,12 +244,29 @@ class RefMemoryGroups extends Ref {
   RefMemoryGroups({
     required this.self,
     required this.fragmentMemoryInfos,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.memoryGroups);
-    await fragmentMemoryInfos?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          fragmentMemoryInfos,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.memoryGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -190,12 +278,29 @@ class RefFragmentMemoryInfos extends Ref {
   RefFragmentMemoryInfos({
     required this.self,
     required this.memoryGroups,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragmentMemoryInfos);
-    await memoryGroups?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          memoryGroups,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.fragmentMemoryInfos);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -209,13 +314,30 @@ class RefDocumentGroups extends Ref {
     required this.self,
     required this.rDocument2DocumentGroups,
     required this.child_documentGroups,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.documentGroups);
-    await rDocument2DocumentGroups?._run();
-    await child_documentGroups?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          rDocument2DocumentGroups,
+          child_documentGroups,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.documentGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -229,13 +351,30 @@ class RefDocuments extends Ref {
     required this.self,
     required this.rDocument2DocumentGroups,
     required this.notes,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.documents);
-    await rDocument2DocumentGroups?._run();
-    await notes?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          rDocument2DocumentGroups,
+          notes,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.documents);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -245,11 +384,28 @@ class RefRDocument2DocumentGroups extends Ref {
 
   RefRDocument2DocumentGroups({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.rDocument2DocumentGroups);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.rDocument2DocumentGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -267,15 +423,32 @@ class RefFragmentGroups extends Ref {
     required this.child_fragmentGroups,
     required this.userComments,
     required this.userLikes,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragmentGroups);
-    await rFragment2FragmentGroups?._run();
-    await child_fragmentGroups?._run();
-    await userComments?._run();
-    await userLikes?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          rFragment2FragmentGroups,
+          child_fragmentGroups,
+          userComments,
+          userLikes,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.fragmentGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -285,11 +458,28 @@ class RefRFragment2FragmentGroups extends Ref {
 
   RefRFragment2FragmentGroups({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.rFragment2FragmentGroups);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.rFragment2FragmentGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -303,13 +493,30 @@ class RefNoteGroups extends Ref {
     required this.self,
     required this.rNote2NoteGroups,
     required this.child_noteGroups,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.noteGroups);
-    await rNote2NoteGroups?._run();
-    await child_noteGroups?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          rNote2NoteGroups,
+          child_noteGroups,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.noteGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -325,14 +532,31 @@ class RefNotes extends Ref {
     required this.rNote2NoteGroups,
     required this.fragments,
     required this.child_notes,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.notes);
-    await rNote2NoteGroups?._run();
-    await fragments?._run();
-    await child_notes?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          rNote2NoteGroups,
+          fragments,
+          child_notes,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.notes);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -342,11 +566,28 @@ class RefRNote2NoteGroups extends Ref {
 
   RefRNote2NoteGroups({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.rNote2NoteGroups);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.rNote2NoteGroups);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -356,11 +597,28 @@ class RefTest2s extends Ref {
 
   RefTest2s({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.test2s);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.test2s);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -370,11 +628,28 @@ class RefTests extends Ref {
 
   RefTests({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.tests);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.tests);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -386,12 +661,29 @@ class RefFragmentTemplates extends Ref {
   RefFragmentTemplates({
     required this.self,
     required this.fragments,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.fragmentTemplates);
-    await fragments?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          fragments,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.fragmentTemplates);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -403,12 +695,29 @@ class RefMemoryModels extends Ref {
   RefMemoryModels({
     required this.self,
     required this.memoryGroups,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.memoryModels);
-    await memoryGroups?._run();
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+          memoryGroups,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.memoryModels);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -418,11 +727,28 @@ class RefShorthands extends Ref {
 
   RefShorthands({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.shorthands);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.shorthands);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -432,11 +758,28 @@ class RefUserComments extends Ref {
 
   RefUserComments({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.userComments);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.userComments);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }
 
@@ -446,10 +789,27 @@ class RefUserLikes extends Ref {
 
   RefUserLikes({
     required this.self,
+    required super.order,
   });
 
   @override
-  Future<void> _run() async {
-    await self(DriftDb.instance.userLikes);
+  Future<void> run() async {
+    await DriftDb.instance.transaction(
+      () async {
+        final list = <Ref?>[
+          this,
+        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+        await Future.forEach<Ref?>(
+          list,
+          (element) async {
+            if (element == this) {
+              await self(DriftDb.instance.userLikes);
+            } else {
+              await element?.run();
+            }
+          },
+        );
+      },
+    );
   }
 }

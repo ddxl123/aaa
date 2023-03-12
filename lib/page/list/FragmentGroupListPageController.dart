@@ -39,7 +39,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   tags: toAbsent(),
                 );
               },
-        syncTag: null,
+        syncTag: await SyncTag.create(),
       );
     }
     return Tuple2(t1: selectedCount, t2: allCount);
@@ -49,14 +49,18 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     await db.updateDAO.resetFragmentIsSelected(
       originalFragment: fragmentAb(),
       isSelected: isSelected,
-      syncTag: null,
+      syncTag: await SyncTag.create(),
     );
     fragmentAb.refreshForce();
     await refreshCount(whichGroup: getCurrentGroupAb());
   }
 
   Future<void> resetFragmentGroupAndSubIsSelected({required Ab<FragmentGroup?> fragmentGroupAb, required bool isSelected}) async {
-    await db.updateDAO.resetFragmentGroupAndSubIsSelected(fragmentGroup: fragmentGroupAb(), isSelected: isSelected);
+    await db.updateDAO.resetFragmentGroupAndSubIsSelected(
+      fragmentGroup: fragmentGroupAb(),
+      isSelected: isSelected,
+      syncTag: await SyncTag.create(),
+    );
     fragmentGroupAb.refreshForce();
     await refreshCount(whichGroup: getCurrentGroupAb());
   }

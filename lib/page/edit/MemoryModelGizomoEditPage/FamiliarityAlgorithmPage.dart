@@ -32,9 +32,9 @@ class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
                   TextButton(
                     child: Text("分析"),
                     onPressed: () {
-                      AlgorithmParser.parse(state: FamiliarityState(algorithmWrapper: algorithmWrapper,
-                          simulationType: simulationType,
-                          externalResultHandler: externalResultHandler), onSuccess: onSuccess, onError: onError)
+                      // AlgorithmParser.parse(state: FamiliarityState(algorithmWrapper: algorithmWrapper,
+                      //     simulationType: simulationType,
+                      //     externalResultHandler: externalResultHandler), onSuccess: onSuccess, onError: onError)
                     },
                   ),
                   IconButton(
@@ -44,7 +44,7 @@ class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
                 ],
               ),
               body: FreeBox(
-                freeBoxController: c.freeBoxController,
+                freeBoxController: fc.freeBoxController,
                 moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
                   children: [
                     FreeBoxMoveScaleLayerPositioned(
@@ -52,10 +52,7 @@ class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
                       child: SizedBox(
                         width: 2500,
                         child: AlgorithmWrapper.fromJsonString(
-                          c
-                              .memoryModelAb(abw)
-                              .familiarity_algorithm ??
-                              AlgorithmWrapper.emptyAlgorithmWrapper.toJsonString(),
+                          c.copyMemoryModelAb(abw).familiarity_algorithm_a ?? AlgorithmWrapper.emptyAlgorithmWrapper.toJsonString(),
                         ).toWidget(),
                       ),
                     ),
@@ -72,7 +69,7 @@ class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
                             return IconButton(
                               icon: Icon(FontAwesomeIcons.locationCrosshairs, size: 28),
                               onPressed: () {
-                                c.freeBoxController.targetSlide(
+                                fc.freeBoxController.targetSlide(
                                   targetCamera: FreeBoxCamera(expectPosition: Offset.zero, expectScale: 1.0),
                                   rightNow: false,
                                 );
