@@ -191,9 +191,10 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   ///
   /// 若 [isStart] 为 true，则会将启动时间设置为当前时间，否则不变。
   Future<void> _saveMemoryGroup({required bool isStart}) async {
+    final st = await SyncTag.create();
     await db.updateDAO.resetMemoryGroupForOnlySave(
-      originalMemoryGroupReset: (st) async {
-        return await memoryGroupAb().reset(
+      originalMemoryGroupReset: () async {
+        await memoryGroupAb().reset(
           creator_user_id: toAbsent(),
           start_time: isStart ? DateTime.now().toValue() : toAbsent(),
           memory_model_id: (bSelectedMemoryModelStorage.abValue()?.id).toValue(),
@@ -205,7 +206,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
           syncTag: st,
         );
       },
-      syncTag: await SyncTag.create(),
+      syncTag: st,
     );
     memoryGroupAb.refreshForce();
   }

@@ -22,7 +22,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }) async {
     late FragmentGroup returnFragmentGroup;
     await RefFragmentGroups(
-      self: (table) async {
+      self: () async {
         returnFragmentGroup = await willFragmentGroupsCompanion.insert(syncTag: syncTag);
       },
       child_fragmentGroups: null,
@@ -49,11 +49,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     }
     late Fragment newFragment;
     await RefFragments(
-      self: (table) async {
+      self: () async {
         newFragment = await willFragmentsCompanion.insert(syncTag: syncTag);
       },
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
-        self: (table) async {
+        self: () async {
           await Future.forEach<FragmentGroup?>(
             whichFragmentGroups,
             (whichFragmentGroup) async {
@@ -84,7 +84,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }) async {
     late final MemoryGroup newMg;
     await RefMemoryGroups(
-      self: (table) async {
+      self: () async {
         newMg = await newMemoryGroupsCompanion.insert(syncTag: syncTag);
       },
       fragmentMemoryInfos: null,
@@ -100,7 +100,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     required SyncTag syncTag,
   }) async {
     await RefFragmentMemoryInfos(
-      self: (_) async {
+      self: () async {
         // TODO: user 为 null 时的处理。
         final user = (await db.generalQueryDAO.queryUserOrNull())!;
         final fs = await db.generalQueryDAO.querySelectedFragments();
@@ -129,11 +129,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         );
       },
       memoryGroups: RefMemoryGroups(
-        self: (_) async {
+        self: () async {
           // 需要将 willNewLearnCount +1。
           await db.updateDAO.resetMemoryGroupForOnlySave(
-            originalMemoryGroupReset: (SyncTag resetSyncTag) async {
-              return await memoryGroup.reset(
+            originalMemoryGroupReset: () async {
+              await memoryGroup.reset(
                 creator_user_id: toAbsent(),
                 memory_model_id: toAbsent(),
                 new_display_order: toAbsent(),
@@ -142,7 +142,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 start_time: toAbsent(),
                 title: toAbsent(),
                 will_new_learn_count: (memoryGroup.will_new_learn_count + 1).toValue(),
-                syncTag: resetSyncTag,
+                syncTag: syncTag,
               );
             },
             syncTag: syncTag,
@@ -162,7 +162,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }) async {
     late final MemoryModel newMemoryModel;
     await RefMemoryModels(
-      self: (table) async {
+      self: () async {
         newMemoryModel = await memoryModelsCompanion.insert(syncTag: syncTag);
       },
       memoryGroups: null,
@@ -178,7 +178,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }) async {
     late final Shorthand newShorthand;
     await RefShorthands(
-      self: ($ShorthandsTable table) async {
+      self: () async {
         newShorthand = await shorthandsCompanion.insert(syncTag: syncTag);
       },
       order: 0,

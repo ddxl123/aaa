@@ -113,9 +113,10 @@ class InAppStageAbController extends AbController {
     final info = currentPerformer()!.fragmentMemoryInfo;
 
     final isNew = info.next_plan_show_time == null ? true : false;
+    final st = await SyncTag.create();
     await performerQuery.finish(
-      originalFragmentMemoryInfoReset: (SyncTag resetSyncTag) async {
-        return await currentPerformer()!.fragmentMemoryInfo.reset(
+      originalFragmentMemoryInfoReset: () async {
+        await currentPerformer()!.fragmentMemoryInfo.reset(
               creator_user_id: toAbsent(),
               fragment_id: toAbsent(),
               memory_group_id: toAbsent(),
@@ -124,11 +125,12 @@ class InAppStageAbController extends AbController {
               current_actual_show_time: (info.current_actual_show_time ?? '[]').arrayAdd(currentActualShowTime).toValue(),
               next_plan_show_time: (info.next_plan_show_time ?? '[]').arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
               show_familiarity: (info.show_familiarity ?? '[]').arrayAdd(currentShowFamiliar).toValue(),
-              syncTag: resetSyncTag,
+              syncTag: st,
             );
       },
       originalMemoryGroup: memoryGroupAb(),
       isNew: isNew,
+      syncTag: st,
     );
     currentShowFamiliar = null;
     currentActualShowTime = null;

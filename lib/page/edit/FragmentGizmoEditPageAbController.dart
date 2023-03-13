@@ -75,6 +75,7 @@ class FragmentPerformer {
     if (modifyMessage == null) {
       return null;
     }
+    final st = await SyncTag.create();
     if (fragmentAb == null) {
       final newFragment = await db.insertDAO.insertFragment(
         willFragmentsCompanion: Crt.fragmentsCompanion(
@@ -89,13 +90,13 @@ class FragmentPerformer {
           be_sep_publish: false,
         ),
         whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
-        syncTag: await SyncTag.create(),
+        syncTag: st,
       );
       return newFragment;
     } else {
       await db.updateDAO.resetFragment(
-        originalFragmentReset: (st) async {
-          return await fragmentAb!().reset(
+        originalFragmentReset: () async {
+          await fragmentAb!().reset(
             content: fragmentGizmoEditPageAbController.richToJson().toValue(),
             creator_user_id: toAbsent(),
             father_fragment_id: toAbsent(),
@@ -108,7 +109,7 @@ class FragmentPerformer {
             be_sep_publish: false.toValue(),
           );
         },
-        syncTag: await SyncTag.create(),
+        syncTag: st,
       );
       fragmentAb!.refreshForce();
       return fragmentAb!();

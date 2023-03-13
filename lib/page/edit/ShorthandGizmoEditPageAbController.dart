@@ -32,13 +32,14 @@ class ShorthandGizmoEditPageAbController extends AbController {
   }
 
   Future<void> save() async {
+    final st = await SyncTag.create();
     if (initShorthand == null) {
       await db.insertDAO.insertShorthand(
         shorthandsCompanion: Crt.shorthandsCompanion(
           content: getCurrentContent(),
           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
         ),
-        syncTag: await SyncTag.create(),
+        syncTag: st,
       );
       await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
       SmartDialog.showToast("创建成功！");
@@ -46,11 +47,11 @@ class ShorthandGizmoEditPageAbController extends AbController {
       if (getCurrentContent() != initShorthand!.content) {
         await db.updateDAO.resetShorthand(
           syncTag: await SyncTag.create(),
-          originalShorthandReset: (SyncTag resetSyncTag) async {
-            return await initShorthand!.reset(
+          originalShorthandReset: () async {
+            await initShorthand!.reset(
               content: getCurrentContent().toValue(),
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id.toValue(),
-              syncTag: resetSyncTag,
+              syncTag: st,
             );
           },
         );

@@ -20,15 +20,13 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
           SmartDialog.dismiss();
         },
         onOk: (tec) async {
-          if (tec.text
-              .trim()
-              .isEmpty) {
+          if (tec.text.trim().isEmpty) {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
           final st = await SyncTag.create();
           await RefFragmentGroups(
-            self: (_) async {
+            self: () async {
               Crt.fragmentGroupsCompanion(
                 creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
                 father_fragment_groups_id: (fragmentGroup?.id).toValue(),

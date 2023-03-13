@@ -20,10 +20,11 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                       Switch(
                         value: currentFragmentGroupAb(abw)!.be_private,
                         onChanged: (v) async {
+                          final st = await SyncTag.create();
                           await db.updateDAO.resetFragmentGroup(
-                            syncTag: await SyncTag.create(),
-                            originalFragmentGroupReset: (SyncTag resetSyncTag) async {
-                              return await currentFragmentGroupAb()!.reset(
+                            syncTag: st,
+                            originalFragmentGroupReset: () async {
+                              await currentFragmentGroupAb()!.reset(
                                 be_private: v.toValue(),
                                 be_publish: 0.toAbsent(),
                                 client_be_selected: 0.toAbsent(),
@@ -31,7 +32,7 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                                 father_fragment_groups_id: 0.toAbsent(),
                                 tags: 0.toAbsent(),
                                 title: 0.toAbsent(),
-                                syncTag: resetSyncTag,
+                                syncTag: st,
                               );
                             },
                           );
@@ -50,10 +51,11 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                       Switch(
                         value: currentFragmentGroupAb(abw)!.be_publish,
                         onChanged: (v) async {
+                          final st = await SyncTag.create();
                           await db.updateDAO.resetFragmentGroup(
-                            syncTag: await SyncTag.create(),
-                            originalFragmentGroupReset: (SyncTag resetSyncTag) async {
-                              return await currentFragmentGroupAb()!.reset(
+                            syncTag: st,
+                            originalFragmentGroupReset: () async {
+                              await currentFragmentGroupAb()!.reset(
                                 be_private: 0.toAbsent(),
                                 be_publish: v.toValue(),
                                 client_be_selected: 0.toAbsent(),
@@ -61,7 +63,7 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                                 father_fragment_groups_id: 0.toAbsent(),
                                 tags: 0.toAbsent(),
                                 title: 0.toAbsent(),
-                                syncTag: resetSyncTag,
+                                syncTag: st,
                               );
                             },
                           );

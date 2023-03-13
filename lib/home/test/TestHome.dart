@@ -6,6 +6,7 @@ import 'package:aaa/single_dialog/register_or_login/showIsLogoutCurrentUserDialo
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:drift_main/tool/DriftViewer.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,7 @@ class TestHome extends StatelessWidget {
                                 );
                               },
                             ),
-                             ElevatedButton(
+                            ElevatedButton(
                               child: const Text('toast'),
                               onPressed: () async {
                                 SmartDialog.showToast(
@@ -163,6 +164,19 @@ class TestHome extends StatelessWidget {
                                   displayType: SmartToastType.multi,
                                   animationType: SmartAnimationType.centerFade_otherSlide,
                                   alignment: Alignment.bottomCenter,
+                                );
+                              },
+                            ),
+                            ElevatedButton(
+                              child: Text("chatgpt"),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) {
+                                      return InAppWebView(initialUrlRequest: URLRequest(url: Uri.parse("https://www.baidu.com")));
+                                    },
+                                  ),
                                 );
                               },
                             ),

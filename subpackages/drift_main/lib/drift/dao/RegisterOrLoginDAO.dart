@@ -60,14 +60,14 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
           if (savedLoginTypeValue == loginEditContent) {
             await db.updateDAO.resetClientSyncInfo(
               syncTag: syncTag,
-              originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
-                return clientSyncInfoOrNull.reset(
+              originalClientSyncInfoReset: () async {
+                await clientSyncInfoOrNull.reset(
                   // 实际上可更换可不更换
                   device_info: deviceInfo.toValue(),
                   recent_sync_time: toAbsent(),
                   // 必须更换
                   token: token.toValue(),
-                  syncTag: resetSyncTag,
+                  syncTag: syncTag,
                 );
               },
             );
@@ -98,12 +98,12 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
     final result = await db.generalQueryDAO.queryClientSyncInfoOrNull();
     if (result != null) {
       await db.updateDAO.resetClientSyncInfo(
-        originalClientSyncInfoReset: (SyncTag resetSyncTag) async {
-          return await result.reset(
+        originalClientSyncInfoReset: () async {
+          await result.reset(
             device_info: toAbsent(),
             recent_sync_time: toAbsent(),
             token: null.toValue(),
-            syncTag: resetSyncTag,
+            syncTag: syncTag,
           );
         },
         syncTag: syncTag,

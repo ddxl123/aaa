@@ -24,11 +24,12 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
       queryFragmentWhereType: QueryFragmentWhereType.all,
     );
     if (selectedCount != allCount) {
+      final st = await SyncTag.create();
       await db.updateDAO.resetFragmentGroup(
         originalFragmentGroupReset: whichGroupEntity == null
             ? null
-            : (st) async {
-                return await whichGroupEntity.reset(
+            : () async {
+                await whichGroupEntity.reset(
                   client_be_selected: false.toValue(),
                   creator_user_id: toAbsent(),
                   father_fragment_groups_id: toAbsent(),
@@ -39,7 +40,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   tags: toAbsent(),
                 );
               },
-        syncTag: await SyncTag.create(),
+        syncTag: st,
       );
     }
     return Tuple2(t1: selectedCount, t2: allCount);

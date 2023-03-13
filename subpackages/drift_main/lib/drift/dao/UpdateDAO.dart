@@ -1,11 +1,8 @@
 part of drift_db;
 
 /// xxx.reset 专用。
-typedef ResetFutureFunction<T> = Future<T> Function(SyncTag resetSyncTag);
+typedef FutureFunction = Future<void> Function();
 
-/// TODO: 所有curd函数体都要包裹上事务, withRefs 内部自带事务。
-///
-///
 @DriftAccessor(
   tables: tableClasses,
 )
@@ -13,26 +10,22 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   UpdateDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
   Future<void> resetClientSyncInfo({
-    required ResetFutureFunction<ClientSyncInfo> originalClientSyncInfoReset,
+    required FutureFunction originalClientSyncInfoReset,
     required SyncTag syncTag,
   }) async {
     await RefClientSyncInfos(
-      self: (_) async {
-        await originalClientSyncInfoReset(syncTag);
-      },
+      self: originalClientSyncInfoReset,
       order: 0,
     ).run();
   }
 
   /// 修改 [originalFragmentReset]。
   Future<void> resetFragment({
-    required ResetFutureFunction<Fragment> originalFragmentReset,
+    required FutureFunction originalFragmentReset,
     required SyncTag syncTag,
   }) async {
     await RefFragments(
-      self: (_) async {
-        await originalFragmentReset(syncTag);
-      },
+      self: originalFragmentReset,
       fragmentMemoryInfos: null,
       rFragment2FragmentGroups: null,
       child_fragments: null,
@@ -45,19 +38,17 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   /// 修改 [FragmentGroup]。
   Future<void> resetFragmentGroup({
-    required ResetFutureFunction<FragmentGroup>? originalFragmentGroupReset,
+    required FutureFunction? originalFragmentGroupReset,
     required SyncTag syncTag,
   }) async {
     await RefFragmentGroups(
-      self: ($FragmentGroupsTable table) async {
-        await originalFragmentGroupReset?.call(syncTag);
-      },
+      self: originalFragmentGroupReset ?? () async {},
       rFragment2FragmentGroups: null,
       child_fragmentGroups: null,
       userComments: null,
       userLikes: null,
       order: 0,
-    );
+    ).run();
   }
 
   /// 修改 [Fragment]，仅修改 [isSelected]
@@ -67,7 +58,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required SyncTag syncTag,
   }) async {
     await RefFragments(
-      self: (_) async {
+      self: () async {
         await originalFragment.reset(
           creator_user_id: toAbsent(),
           father_fragment_id: toAbsent(),
@@ -98,7 +89,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required SyncTag syncTag,
   }) async {
     await RefFragmentGroups(
-      self: (table) async {
+      self: () async {
         await fragmentGroup?.reset(
           creator_user_id: toAbsent(),
           father_fragment_groups_id: toAbsent(),
@@ -154,13 +145,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   /// 修改 [MemoryGroup]，仅进行修改后的存储，不影响 [FragmentMemoryInfo]。
   Future<void> resetMemoryGroupForOnlySave({
-    required ResetFutureFunction<MemoryGroup> originalMemoryGroupReset,
+    required FutureFunction originalMemoryGroupReset,
     required SyncTag syncTag,
   }) async {
     await RefMemoryGroups(
-      self: (table) async {
-        await originalMemoryGroupReset(syncTag);
-      },
+      self: originalMemoryGroupReset,
       fragmentMemoryInfos: null,
       order: 0,
     ).run();
@@ -168,33 +157,29 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   /// 修改 [MemoryGroup]，仅进行修改后的存储，不影响 [FragmentMemoryInfo]。
   Future<void> resetMemoryModelOnlySave({
-    required ResetFutureFunction<MemoryModel> originalMemoryModelReset,
+    required FutureFunction originalMemoryModelReset,
     required SyncTag syncTag,
   }) async {
     await RefMemoryModels(
-            self: ($MemoryModelsTable table) async {
-              await originalMemoryModelReset(syncTag);
-            },
-            memoryGroups: null,
-            order: 0)
-        .run();
+      self: originalMemoryModelReset,
+      memoryGroups: null,
+      order: 0,
+    ).run();
   }
 
   /// performer 完成后，对其记忆信息进行修改。
   ///
   /// 会将 [MemoryGroup.willNewLearnCount] 减去 1。
   Future<void> resetFragmentMemoryInfoForFinishPerform({
-    required ResetFutureFunction<FragmentMemoryInfo> originalFragmentMemoryInfoReset,
+    required FutureFunction originalFragmentMemoryInfoReset,
     required MemoryGroup originalMemoryGroup,
     required bool isNew,
     required SyncTag syncTag,
   }) async {
     await RefFragmentMemoryInfos(
-      self: (_) async {
-        await originalFragmentMemoryInfoReset(syncTag);
-      },
+      self: originalFragmentMemoryInfoReset,
       memoryGroups: RefMemoryGroups(
-        self: (_) async {
+        self: () async {
           if (isNew) {
             // 需要 willNewLearnCount -1。
             await originalMemoryGroup.reset(
@@ -218,13 +203,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   }
 
   Future<void> resetShorthand({
-    required ResetFutureFunction<Shorthand> originalShorthandReset,
+    required FutureFunction originalShorthandReset,
     required SyncTag syncTag,
   }) async {
     await RefShorthands(
-      self: ($ShorthandsTable table) async {
-        await originalShorthandReset(syncTag);
-      },
+      self: originalShorthandReset,
       order: 0,
     ).run();
   }

@@ -96,15 +96,16 @@ class PerformerQuery {
   /// [isNew] - 将产生碎片信息的碎片是否为 新碎片（非复习碎片），
   /// 若为新的，则需要将 [MemoryGroup.willNewLearnCount] 减去 1。
   Future<void> finish({
-    required ResetFutureFunction<FragmentMemoryInfo> originalFragmentMemoryInfoReset,
+    required FutureFunction originalFragmentMemoryInfoReset,
     required MemoryGroup originalMemoryGroup,
     required bool isNew,
+    required SyncTag syncTag,
   }) async {
     await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
       originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
       originalMemoryGroup: originalMemoryGroup,
       isNew: isNew,
-      syncTag: await SyncTag.create(),
+      syncTag: syncTag,
     );
   }
 

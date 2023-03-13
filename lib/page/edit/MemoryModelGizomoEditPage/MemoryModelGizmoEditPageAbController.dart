@@ -28,6 +28,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     if (originalMemoryModelAb() == copyMemoryModelAb()) {
       return false;
     }
+    bool isBack = false;
     await showCustomDialog(
       builder: (_) => OkAndCancelDialogWidget(
         title: '是否要丢弃？',
@@ -35,15 +36,19 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         cancelText: '继续编辑',
         text: null,
         onOk: () async {
-          // await db.updateDAO.resetMemoryModelOnlySave(originalMemoryModelReset: originalMemoryModelReset, syncTag: syncTag)
-          originalMemoryModelAb.refreshForce();
+          SmartDialog.dismiss();
+          isBack = true;
         },
         onCancel: () {
           SmartDialog.dismiss();
         },
       ),
     );
-    return true;
+    return !isBack;
+  }
+
+  Future<void> save() async {
+    // await db.updateDAO.resetMemoryModelOnlySave(originalMemoryModel Reset: originalMemoryModelReset, syncTag: syncTag)
   }
 
   void changeKeyword() {

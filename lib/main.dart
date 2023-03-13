@@ -16,6 +16,7 @@ import 'algorithm_parser/AlgorithmKeyboard.dart';
 import 'home/Home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   // 自定义键盘 相关
   AlgorithmKeyboard.register();
 

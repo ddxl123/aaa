@@ -17,7 +17,7 @@ abstract class Ref {
 
 /// [KnowledgeBaseCategorys]
 class RefKnowledgeBaseCategorys extends Ref {
-  Future<void> Function($KnowledgeBaseCategorysTable table) self;
+  Future<void> Function() self;
 
   RefKnowledgeBaseCategorys({
     required this.self,
@@ -35,7 +35,7 @@ class RefKnowledgeBaseCategorys extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.knowledgeBaseCategorys);
+              await self();
             } else {
               await element?.run();
             }
@@ -48,7 +48,7 @@ class RefKnowledgeBaseCategorys extends Ref {
 
 /// [ClientSyncInfos]
 class RefClientSyncInfos extends Ref {
-  Future<void> Function($ClientSyncInfosTable table) self;
+  Future<void> Function() self;
 
   RefClientSyncInfos({
     required this.self,
@@ -66,7 +66,7 @@ class RefClientSyncInfos extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.clientSyncInfos);
+              await self();
             } else {
               await element?.run();
             }
@@ -79,7 +79,7 @@ class RefClientSyncInfos extends Ref {
 
 /// [Syncs]
 class RefSyncs extends Ref {
-  Future<void> Function($SyncsTable table) self;
+  Future<void> Function() self;
 
   RefSyncs({
     required this.self,
@@ -97,7 +97,7 @@ class RefSyncs extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.syncs);
+              await self();
             } else {
               await element?.run();
             }
@@ -110,7 +110,7 @@ class RefSyncs extends Ref {
 
 /// [Users]
 class RefUsers extends Ref {
-  Future<void> Function($UsersTable table) self;
+  Future<void> Function() self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRDocument2DocumentGroups? rDocument2DocumentGroups;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
@@ -176,7 +176,7 @@ class RefUsers extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.users);
+              await self();
             } else {
               await element?.run();
             }
@@ -189,7 +189,7 @@ class RefUsers extends Ref {
 
 /// [Fragments]
 class RefFragments extends Ref {
-  Future<void> Function($FragmentsTable table) self;
+  Future<void> Function() self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
   RefFragments? child_fragments;
@@ -225,7 +225,7 @@ class RefFragments extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.fragments);
+              await self();
             } else {
               await element?.run();
             }
@@ -238,7 +238,7 @@ class RefFragments extends Ref {
 
 /// [MemoryGroups]
 class RefMemoryGroups extends Ref {
-  Future<void> Function($MemoryGroupsTable table) self;
+  Future<void> Function() self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
 
   RefMemoryGroups({
@@ -259,7 +259,7 @@ class RefMemoryGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.memoryGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -272,7 +272,7 @@ class RefMemoryGroups extends Ref {
 
 /// [FragmentMemoryInfos]
 class RefFragmentMemoryInfos extends Ref {
-  Future<void> Function($FragmentMemoryInfosTable table) self;
+  Future<void> Function() self;
   RefMemoryGroups? memoryGroups;
 
   RefFragmentMemoryInfos({
@@ -293,7 +293,7 @@ class RefFragmentMemoryInfos extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.fragmentMemoryInfos);
+              await self();
             } else {
               await element?.run();
             }
@@ -306,7 +306,7 @@ class RefFragmentMemoryInfos extends Ref {
 
 /// [DocumentGroups]
 class RefDocumentGroups extends Ref {
-  Future<void> Function($DocumentGroupsTable table) self;
+  Future<void> Function() self;
   RefRDocument2DocumentGroups? rDocument2DocumentGroups;
   RefDocumentGroups? child_documentGroups;
 
@@ -330,7 +330,7 @@ class RefDocumentGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.documentGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -343,7 +343,7 @@ class RefDocumentGroups extends Ref {
 
 /// [Documents]
 class RefDocuments extends Ref {
-  Future<void> Function($DocumentsTable table) self;
+  Future<void> Function() self;
   RefRDocument2DocumentGroups? rDocument2DocumentGroups;
   RefNotes? notes;
 
@@ -367,7 +367,7 @@ class RefDocuments extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.documents);
+              await self();
             } else {
               await element?.run();
             }
@@ -380,7 +380,7 @@ class RefDocuments extends Ref {
 
 /// [RDocument2DocumentGroups]
 class RefRDocument2DocumentGroups extends Ref {
-  Future<void> Function($RDocument2DocumentGroupsTable table) self;
+  Future<void> Function() self;
 
   RefRDocument2DocumentGroups({
     required this.self,
@@ -398,7 +398,7 @@ class RefRDocument2DocumentGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.rDocument2DocumentGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -411,7 +411,7 @@ class RefRDocument2DocumentGroups extends Ref {
 
 /// [FragmentGroups]
 class RefFragmentGroups extends Ref {
-  Future<void> Function($FragmentGroupsTable table) self;
+  Future<void> Function() self;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
   RefFragmentGroups? child_fragmentGroups;
   RefUserComments? userComments;
@@ -441,7 +441,7 @@ class RefFragmentGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.fragmentGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -454,7 +454,7 @@ class RefFragmentGroups extends Ref {
 
 /// [RFragment2FragmentGroups]
 class RefRFragment2FragmentGroups extends Ref {
-  Future<void> Function($RFragment2FragmentGroupsTable table) self;
+  Future<void> Function() self;
 
   RefRFragment2FragmentGroups({
     required this.self,
@@ -472,7 +472,7 @@ class RefRFragment2FragmentGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.rFragment2FragmentGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -485,7 +485,7 @@ class RefRFragment2FragmentGroups extends Ref {
 
 /// [NoteGroups]
 class RefNoteGroups extends Ref {
-  Future<void> Function($NoteGroupsTable table) self;
+  Future<void> Function() self;
   RefRNote2NoteGroups? rNote2NoteGroups;
   RefNoteGroups? child_noteGroups;
 
@@ -509,7 +509,7 @@ class RefNoteGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.noteGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -522,7 +522,7 @@ class RefNoteGroups extends Ref {
 
 /// [Notes]
 class RefNotes extends Ref {
-  Future<void> Function($NotesTable table) self;
+  Future<void> Function() self;
   RefRNote2NoteGroups? rNote2NoteGroups;
   RefFragments? fragments;
   RefNotes? child_notes;
@@ -549,7 +549,7 @@ class RefNotes extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.notes);
+              await self();
             } else {
               await element?.run();
             }
@@ -562,7 +562,7 @@ class RefNotes extends Ref {
 
 /// [RNote2NoteGroups]
 class RefRNote2NoteGroups extends Ref {
-  Future<void> Function($RNote2NoteGroupsTable table) self;
+  Future<void> Function() self;
 
   RefRNote2NoteGroups({
     required this.self,
@@ -580,7 +580,7 @@ class RefRNote2NoteGroups extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.rNote2NoteGroups);
+              await self();
             } else {
               await element?.run();
             }
@@ -593,7 +593,7 @@ class RefRNote2NoteGroups extends Ref {
 
 /// [Test2s]
 class RefTest2s extends Ref {
-  Future<void> Function($Test2sTable table) self;
+  Future<void> Function() self;
 
   RefTest2s({
     required this.self,
@@ -611,7 +611,7 @@ class RefTest2s extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.test2s);
+              await self();
             } else {
               await element?.run();
             }
@@ -624,7 +624,7 @@ class RefTest2s extends Ref {
 
 /// [Tests]
 class RefTests extends Ref {
-  Future<void> Function($TestsTable table) self;
+  Future<void> Function() self;
 
   RefTests({
     required this.self,
@@ -642,7 +642,7 @@ class RefTests extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.tests);
+              await self();
             } else {
               await element?.run();
             }
@@ -655,7 +655,7 @@ class RefTests extends Ref {
 
 /// [FragmentTemplates]
 class RefFragmentTemplates extends Ref {
-  Future<void> Function($FragmentTemplatesTable table) self;
+  Future<void> Function() self;
   RefFragments? fragments;
 
   RefFragmentTemplates({
@@ -676,7 +676,7 @@ class RefFragmentTemplates extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.fragmentTemplates);
+              await self();
             } else {
               await element?.run();
             }
@@ -689,7 +689,7 @@ class RefFragmentTemplates extends Ref {
 
 /// [MemoryModels]
 class RefMemoryModels extends Ref {
-  Future<void> Function($MemoryModelsTable table) self;
+  Future<void> Function() self;
   RefMemoryGroups? memoryGroups;
 
   RefMemoryModels({
@@ -710,7 +710,7 @@ class RefMemoryModels extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.memoryModels);
+              await self();
             } else {
               await element?.run();
             }
@@ -723,7 +723,7 @@ class RefMemoryModels extends Ref {
 
 /// [Shorthands]
 class RefShorthands extends Ref {
-  Future<void> Function($ShorthandsTable table) self;
+  Future<void> Function() self;
 
   RefShorthands({
     required this.self,
@@ -741,7 +741,7 @@ class RefShorthands extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.shorthands);
+              await self();
             } else {
               await element?.run();
             }
@@ -754,7 +754,7 @@ class RefShorthands extends Ref {
 
 /// [UserComments]
 class RefUserComments extends Ref {
-  Future<void> Function($UserCommentsTable table) self;
+  Future<void> Function() self;
 
   RefUserComments({
     required this.self,
@@ -772,7 +772,7 @@ class RefUserComments extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.userComments);
+              await self();
             } else {
               await element?.run();
             }
@@ -785,7 +785,7 @@ class RefUserComments extends Ref {
 
 /// [UserLikes]
 class RefUserLikes extends Ref {
-  Future<void> Function($UserLikesTable table) self;
+  Future<void> Function() self;
 
   RefUserLikes({
     required this.self,
@@ -803,7 +803,7 @@ class RefUserLikes extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.userLikes);
+              await self();
             } else {
               await element?.run();
             }

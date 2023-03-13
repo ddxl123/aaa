@@ -126,7 +126,7 @@ class ReferenceGenerator extends GeneratorForAnnotation<ReferenceTo> {
         classContent.writeln('''
 /// [$father]
 class Ref$father extends Ref {
-  Future<void> Function(\$${father}Table table) self;
+  Future<void> Function() self;
   $childrenFutureContent
 
   Ref$father({required this.self, $childrenRequiredContent required super.order,});
@@ -140,7 +140,7 @@ class Ref$father extends Ref {
           list,
           (element) async {
             if (element == this) {
-              await self(DriftDb.instance.$fatherCamel);
+              await self();
             } else {
               await element?.run();
             }
