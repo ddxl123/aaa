@@ -25,6 +25,24 @@ class ResetGenerator extends Generator {
           final singleContent = '''
         /// [${className}s]
         extension ${className}Ext on $className {
+
+          Future<void> resetByEntity({
+            required $className $camelClassName,
+            required SyncTag syncTag,
+          }) async {
+            await reset(
+            ${params.map(
+                    (e) {
+                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
+                      return isWriteBlank ? '' : '${e.name}: $camelClassName.${e.name}.toValue()';
+                    },
+                  ).where(
+                    (element) => element != '',
+                  ).join(',')},
+              syncTag: syncTag,
+            );
+          }
+          
           /// 将传入的新数据覆盖掉旧数据类实例。
           ///
           /// 值覆写方式：[DriftValueExt]
@@ -32,10 +50,6 @@ class ResetGenerator extends Generator {
           /// 只能修改当前 id 的行。
           /// 
           /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-          /// 
-          /// 若 [syncTag] 为空，内部会自动创建。
-          /// 
-          /// 使用方式查看 [withRefs]。
           FutureOr<$className> reset({
           ${params.map(
                     (e) {

@@ -1,32 +1,39 @@
 import 'package:aaa/algorithm_parser/parser.dart';
-import 'package:aaa/page/edit/MemoryModelGizomoEditPage/FamiliarityAlgorithmPageAbController.dart';
+import 'package:aaa/page/edit/MemoryModelGizomoEditPage/AlgorithmEditPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
 import 'MemoryModelGizmoEditPageAbController.dart';
 
-class FamiliarityAlgorithmPage extends StatefulWidget {
-  const FamiliarityAlgorithmPage({Key? key}) : super(key: key);
+class AlgorithmEditPage extends StatefulWidget {
+  const AlgorithmEditPage({Key? key}) : super(key: key);
 
   @override
-  State<FamiliarityAlgorithmPage> createState() => _FamiliarityAlgorithmPageState();
+  State<AlgorithmEditPage> createState() => _AlgorithmEditPageState();
 }
 
-class _FamiliarityAlgorithmPageState extends State<FamiliarityAlgorithmPage> {
+class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return AbBuilder<FamiliarityAlgorithmPageAbController>(
-          putController: FamiliarityAlgorithmPageAbController(),
+        return AbBuilder<AlgorithmEditPageAbController>(
+          putController: AlgorithmEditPageAbController(),
           builder: (fc, fAbw) {
             return Scaffold(
               appBar: AppBar(
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back_ios),
                   onPressed: () {},
+                ),
+                title: Text(
+                  c.filterForEnterType(
+                    buttonDataState: () => ButtonDataState.NAME,
+                    familiarityState: () => FamiliarityState.NAME,
+                    nextShowTimeState: () => NextShowTimeState.NAME,
+                  ),
                 ),
                 actions: [
                   TextButton(

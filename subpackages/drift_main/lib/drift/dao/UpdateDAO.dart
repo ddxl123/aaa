@@ -155,8 +155,10 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     ).run();
   }
 
-  /// 修改 [MemoryGroup]，仅进行修改后的存储，不影响 [FragmentMemoryInfo]。
-  Future<void> resetMemoryModelOnlySave({
+  /// 修改 [MemoryGroup]。
+  ///
+  /// TODO: 是否要对 memoryGroups 进行修改
+  Future<void> resetMemoryModel({
     required FutureFunction originalMemoryModelReset,
     required SyncTag syncTag,
   }) async {

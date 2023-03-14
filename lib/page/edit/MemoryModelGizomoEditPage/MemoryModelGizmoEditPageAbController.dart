@@ -7,6 +7,11 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
+class EnterType{
+  final Type algorithmType;
+  final
+}
+
 class MemoryModelGizmoEditPageAbController extends AbController {
   MemoryModelGizmoEditPageAbController({
     required this.originalMemoryModelAb,
@@ -21,7 +26,26 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final titleEditingController = TextEditingController();
 
+  final currentEnterAlgorithmEditPageType = Ab<Type>(ButtonDataState);
+
   final isAlgorithmKeyboard = false.ab;
+
+  T filterForEnterType<T>({
+    required T Function() buttonDataState,
+    required T Function() familiarityState,
+    required T Function() nextShowTimeState,
+    Abw? abw,
+  }) {
+    return filter(
+      from: currentEnterAlgorithmEditPageType(abw),
+      targets: {
+        [ButtonDataState]: buttonDataState,
+        [FamiliarityState]: buttonDataState,
+        [NextShowTimeState]: nextShowTimeState,
+      },
+      orElse: null,
+    );
+  }
 
   @override
   Future<bool> backListener(bool hasRoute) async {
@@ -48,7 +72,15 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   }
 
   Future<void> save() async {
-    // await db.updateDAO.resetMemoryModelOnlySave(originalMemoryModel Reset: originalMemoryModelReset, syncTag: syncTag)
+    final st = await SyncTag.create();
+    await db.updateDAO.resetMemoryModel(
+      originalMemoryModelReset: () async {
+        await originalMemoryModelAb().resetByEntity(memoryModel: copyMemoryModelAb(), syncTag: st);
+      },
+      syncTag: st,
+    );
+    originalMemoryModelAb.refreshForce();
+    SmartDialog.showToast("保存成功！");
   }
 
   void changeKeyword() {

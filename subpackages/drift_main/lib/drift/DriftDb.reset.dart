@@ -29,6 +29,16 @@ extension DriftValueExt<T> on T {
 
 /// [KnowledgeBaseCategorys]
 extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
+  Future<void> resetByEntity({
+    required KnowledgeBaseCategory knowledgeBaseCategory,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      categorys: knowledgeBaseCategory.categorys.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -36,10 +46,6 @@ extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<KnowledgeBaseCategory> reset({
     required Value<String> categorys,
     required SyncTag syncTag,
@@ -62,6 +68,18 @@ extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
 
 /// [ClientSyncInfos]
 extension ClientSyncInfoExt on ClientSyncInfo {
+  Future<void> resetByEntity({
+    required ClientSyncInfo clientSyncInfo,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      device_info: clientSyncInfo.device_info.toValue(),
+      recent_sync_time: clientSyncInfo.recent_sync_time.toValue(),
+      token: clientSyncInfo.token.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -69,10 +87,6 @@ extension ClientSyncInfoExt on ClientSyncInfo {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<ClientSyncInfo> reset({
     required Value<String> device_info,
     required Value<DateTime?> recent_sync_time,
@@ -108,6 +122,19 @@ extension ClientSyncInfoExt on ClientSyncInfo {
 
 /// [Syncs]
 extension SyncExt on Sync {
+  Future<void> resetByEntity({
+    required Sync sync,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      row_id: sync.row_id.toValue(),
+      sync_curd_type: sync.sync_curd_type.toValue(),
+      sync_table_name: sync.sync_table_name.toValue(),
+      tag: sync.tag.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -115,10 +142,6 @@ extension SyncExt on Sync {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Sync> reset({
     required Value<String> row_id,
     required Value<SyncCurdType> sync_curd_type,
@@ -160,6 +183,24 @@ extension SyncExt on Sync {
 
 /// [FragmentMemoryInfos]
 extension FragmentMemoryInfoExt on FragmentMemoryInfo {
+  Future<void> resetByEntity({
+    required FragmentMemoryInfo fragmentMemoryInfo,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      click_time: fragmentMemoryInfo.click_time.toValue(),
+      click_value: fragmentMemoryInfo.click_value.toValue(),
+      creator_user_id: fragmentMemoryInfo.creator_user_id.toValue(),
+      current_actual_show_time:
+          fragmentMemoryInfo.current_actual_show_time.toValue(),
+      fragment_id: fragmentMemoryInfo.fragment_id.toValue(),
+      memory_group_id: fragmentMemoryInfo.memory_group_id.toValue(),
+      next_plan_show_time: fragmentMemoryInfo.next_plan_show_time.toValue(),
+      show_familiarity: fragmentMemoryInfo.show_familiarity.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -167,10 +208,6 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<FragmentMemoryInfo> reset({
     required Value<String?> click_time,
     required Value<String?> click_value,
@@ -240,6 +277,18 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
 
 /// [RDocument2DocumentGroups]
 extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
+  Future<void> resetByEntity({
+    required RDocument2DocumentGroup rDocument2DocumentGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id: rDocument2DocumentGroup.creator_user_id.toValue(),
+      document_group_id: rDocument2DocumentGroup.document_group_id.toValue(),
+      document_id: rDocument2DocumentGroup.document_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -247,10 +296,6 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<RDocument2DocumentGroup> reset({
     required Value<int> creator_user_id,
     required Value<String?> document_group_id,
@@ -287,6 +332,18 @@ extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
 
 /// [RFragment2FragmentGroups]
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
+  Future<void> resetByEntity({
+    required RFragment2FragmentGroup rFragment2FragmentGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id: rFragment2FragmentGroup.creator_user_id.toValue(),
+      fragment_group_id: rFragment2FragmentGroup.fragment_group_id.toValue(),
+      fragment_id: rFragment2FragmentGroup.fragment_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -294,10 +351,6 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<RFragment2FragmentGroup> reset({
     required Value<int> creator_user_id,
     required Value<String?> fragment_group_id,
@@ -334,6 +387,18 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
 
 /// [RNote2NoteGroups]
 extension RNote2NoteGroupExt on RNote2NoteGroup {
+  Future<void> resetByEntity({
+    required RNote2NoteGroup rNote2NoteGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id: rNote2NoteGroup.creator_user_id.toValue(),
+      note_group_id: rNote2NoteGroup.note_group_id.toValue(),
+      note_id: rNote2NoteGroup.note_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -341,10 +406,6 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<RNote2NoteGroup> reset({
     required Value<int> creator_user_id,
     required Value<String?> note_group_id,
@@ -380,6 +441,16 @@ extension RNote2NoteGroupExt on RNote2NoteGroup {
 
 /// [Test2s]
 extension Test2Ext on Test2 {
+  Future<void> resetByEntity({
+    required Test2 test2,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      client_content: test2.client_content.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -387,10 +458,6 @@ extension Test2Ext on Test2 {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Test2> reset({
     required Value<String> client_content,
     required SyncTag syncTag,
@@ -413,6 +480,17 @@ extension Test2Ext on Test2 {
 
 /// [Tests]
 extension TestExt on Test {
+  Future<void> resetByEntity({
+    required Test test,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      client_a: test.client_a.toValue(),
+      client_content: test.client_content.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -420,10 +498,6 @@ extension TestExt on Test {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Test> reset({
     required Value<String> client_a,
     required Value<String> client_content,
@@ -452,6 +526,17 @@ extension TestExt on Test {
 
 /// [Documents]
 extension DocumentExt on Document {
+  Future<void> resetByEntity({
+    required Document document,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      content: document.content.toValue(),
+      creator_user_id: document.creator_user_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -459,10 +544,6 @@ extension DocumentExt on Document {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Document> reset({
     required Value<String> content,
     required Value<int> creator_user_id,
@@ -492,6 +573,18 @@ extension DocumentExt on Document {
 
 /// [FragmentTemplates]
 extension FragmentTemplateExt on FragmentTemplate {
+  Future<void> resetByEntity({
+    required FragmentTemplate fragmentTemplate,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      content: fragmentTemplate.content.toValue(),
+      owner_user_id: fragmentTemplate.owner_user_id.toValue(),
+      type: fragmentTemplate.type.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -499,10 +592,6 @@ extension FragmentTemplateExt on FragmentTemplate {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<FragmentTemplate> reset({
     required Value<String> content,
     required Value<int> owner_user_id,
@@ -537,6 +626,24 @@ extension FragmentTemplateExt on FragmentTemplate {
 
 /// [Fragments]
 extension FragmentExt on Fragment {
+  Future<void> resetByEntity({
+    required Fragment fragment,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      be_sep_publish: fragment.be_sep_publish.toValue(),
+      client_be_selected: fragment.client_be_selected.toValue(),
+      content: fragment.content.toValue(),
+      creator_user_id: fragment.creator_user_id.toValue(),
+      father_fragment_id: fragment.father_fragment_id.toValue(),
+      fragment_template_id: fragment.fragment_template_id.toValue(),
+      note_id: fragment.note_id.toValue(),
+      tags: fragment.tags.toValue(),
+      title: fragment.title.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -544,10 +651,6 @@ extension FragmentExt on Fragment {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Fragment> reset({
     required Value<bool> be_sep_publish,
     required Value<bool> client_be_selected,
@@ -622,6 +725,23 @@ extension FragmentExt on Fragment {
 
 /// [MemoryGroups]
 extension MemoryGroupExt on MemoryGroup {
+  Future<void> resetByEntity({
+    required MemoryGroup memoryGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id: memoryGroup.creator_user_id.toValue(),
+      memory_model_id: memoryGroup.memory_model_id.toValue(),
+      new_display_order: memoryGroup.new_display_order.toValue(),
+      new_review_display_order: memoryGroup.new_review_display_order.toValue(),
+      review_interval: memoryGroup.review_interval.toValue(),
+      start_time: memoryGroup.start_time.toValue(),
+      title: memoryGroup.title.toValue(),
+      will_new_learn_count: memoryGroup.will_new_learn_count.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -629,10 +749,6 @@ extension MemoryGroupExt on MemoryGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<MemoryGroup> reset({
     required Value<int> creator_user_id,
     required Value<String?> memory_model_id,
@@ -703,6 +819,38 @@ extension MemoryGroupExt on MemoryGroup {
 
 /// [MemoryModels]
 extension MemoryModelExt on MemoryModel {
+  Future<void> resetByEntity({
+    required MemoryModel memoryModel,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      button_algorithm_a: memoryModel.button_algorithm_a.toValue(),
+      button_algorithm_b: memoryModel.button_algorithm_b.toValue(),
+      button_algorithm_c: memoryModel.button_algorithm_c.toValue(),
+      button_algorithm_remark: memoryModel.button_algorithm_remark.toValue(),
+      button_algorithm_usage_status:
+          memoryModel.button_algorithm_usage_status.toValue(),
+      creator_user_id: memoryModel.creator_user_id.toValue(),
+      familiarity_algorithm_a: memoryModel.familiarity_algorithm_a.toValue(),
+      familiarity_algorithm_b: memoryModel.familiarity_algorithm_b.toValue(),
+      familiarity_algorithm_c: memoryModel.familiarity_algorithm_c.toValue(),
+      familiarity_algorithm_remark:
+          memoryModel.familiarity_algorithm_remark.toValue(),
+      familiarity_algorithm_usage_status:
+          memoryModel.familiarity_algorithm_usage_status.toValue(),
+      father_memory_model_id: memoryModel.father_memory_model_id.toValue(),
+      next_time_algorithm_a: memoryModel.next_time_algorithm_a.toValue(),
+      next_time_algorithm_b: memoryModel.next_time_algorithm_b.toValue(),
+      next_time_algorithm_c: memoryModel.next_time_algorithm_c.toValue(),
+      next_time_algorithm_remark:
+          memoryModel.next_time_algorithm_remark.toValue(),
+      next_time_algorithm_usage_status:
+          memoryModel.next_time_algorithm_usage_status.toValue(),
+      title: memoryModel.title.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -710,10 +858,6 @@ extension MemoryModelExt on MemoryModel {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<MemoryModel> reset({
     required Value<String?> button_algorithm_a,
     required Value<String?> button_algorithm_b,
@@ -861,6 +1005,19 @@ extension MemoryModelExt on MemoryModel {
 
 /// [Notes]
 extension NoteExt on Note {
+  Future<void> resetByEntity({
+    required Note note,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      content: note.content.toValue(),
+      creator_user_id: note.creator_user_id.toValue(),
+      document_id: note.document_id.toValue(),
+      father_note_id: note.father_note_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -868,10 +1025,6 @@ extension NoteExt on Note {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Note> reset({
     required Value<String> content,
     required Value<int> creator_user_id,
@@ -913,6 +1066,17 @@ extension NoteExt on Note {
 
 /// [Shorthands]
 extension ShorthandExt on Shorthand {
+  Future<void> resetByEntity({
+    required Shorthand shorthand,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      content: shorthand.content.toValue(),
+      creator_user_id: shorthand.creator_user_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -920,10 +1084,6 @@ extension ShorthandExt on Shorthand {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<Shorthand> reset({
     required Value<String> content,
     required Value<int> creator_user_id,
@@ -953,6 +1113,19 @@ extension ShorthandExt on Shorthand {
 
 /// [DocumentGroups]
 extension DocumentGroupExt on DocumentGroup {
+  Future<void> resetByEntity({
+    required DocumentGroup documentGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id: documentGroup.creator_user_id.toValue(),
+      father_document_groups_id:
+          documentGroup.father_document_groups_id.toValue(),
+      title: documentGroup.title.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -960,10 +1133,6 @@ extension DocumentGroupExt on DocumentGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<DocumentGroup> reset({
     required Value<int> creator_user_id,
     required Value<String?> father_document_groups_id,
@@ -1000,6 +1169,23 @@ extension DocumentGroupExt on DocumentGroup {
 
 /// [FragmentGroups]
 extension FragmentGroupExt on FragmentGroup {
+  Future<void> resetByEntity({
+    required FragmentGroup fragmentGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      be_private: fragmentGroup.be_private.toValue(),
+      be_publish: fragmentGroup.be_publish.toValue(),
+      client_be_selected: fragmentGroup.client_be_selected.toValue(),
+      creator_user_id: fragmentGroup.creator_user_id.toValue(),
+      father_fragment_groups_id:
+          fragmentGroup.father_fragment_groups_id.toValue(),
+      tags: fragmentGroup.tags.toValue(),
+      title: fragmentGroup.title.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -1007,10 +1193,6 @@ extension FragmentGroupExt on FragmentGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<FragmentGroup> reset({
     required Value<bool> be_private,
     required Value<bool> be_publish,
@@ -1072,6 +1254,18 @@ extension FragmentGroupExt on FragmentGroup {
 
 /// [NoteGroups]
 extension NoteGroupExt on NoteGroup {
+  Future<void> resetByEntity({
+    required NoteGroup noteGroup,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id: noteGroup.creator_user_id.toValue(),
+      father_note_groups_id: noteGroup.father_note_groups_id.toValue(),
+      title: noteGroup.title.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -1079,10 +1273,6 @@ extension NoteGroupExt on NoteGroup {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<NoteGroup> reset({
     required Value<int> creator_user_id,
     required Value<String?> father_note_groups_id,
@@ -1119,6 +1309,19 @@ extension NoteGroupExt on NoteGroup {
 
 /// [UserComments]
 extension UserCommentExt on UserComment {
+  Future<void> resetByEntity({
+    required UserComment userComment,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      comment_content: userComment.comment_content.toValue(),
+      commentator_user_id: userComment.commentator_user_id.toValue(),
+      fragment_group_id: userComment.fragment_group_id.toValue(),
+      fragment_id: userComment.fragment_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -1126,10 +1329,6 @@ extension UserCommentExt on UserComment {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<UserComment> reset({
     required Value<String> comment_content,
     required Value<int> commentator_user_id,
@@ -1173,6 +1372,18 @@ extension UserCommentExt on UserComment {
 
 /// [UserLikes]
 extension UserLikeExt on UserLike {
+  Future<void> resetByEntity({
+    required UserLike userLike,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      fragment_group_id: userLike.fragment_group_id.toValue(),
+      fragment_id: userLike.fragment_id.toValue(),
+      liker_user_id: userLike.liker_user_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -1180,10 +1391,6 @@ extension UserLikeExt on UserLike {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<UserLike> reset({
     required Value<String?> fragment_group_id,
     required Value<String?> fragment_id,
@@ -1219,6 +1426,20 @@ extension UserLikeExt on UserLike {
 
 /// [Users]
 extension UserExt on User {
+  Future<void> resetByEntity({
+    required User user,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      age: user.age.toValue(),
+      email: user.email.toValue(),
+      password: user.password.toValue(),
+      phone: user.phone.toValue(),
+      username: user.username.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
   /// 将传入的新数据覆盖掉旧数据类实例。
   ///
   /// 值覆写方式：[DriftValueExt]
@@ -1226,10 +1447,6 @@ extension UserExt on User {
   /// 只能修改当前 id 的行。
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  ///
-  /// 若 [syncTag] 为空，内部会自动创建。
-  ///
-  /// 使用方式查看 [withRefs]。
   FutureOr<User> reset({
     required Value<int?> age,
     required Value<String?> email,

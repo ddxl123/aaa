@@ -38,6 +38,8 @@ class ButtonDataState extends ClassificationState {
     required super.externalResultHandler,
   });
 
+  static const NAME = "按钮数值分配算法";
+
   ButtonDataValue2NextShowTime? resultMin;
   ButtonDataValue2NextShowTime? resultMax;
   final List<ButtonDataValue2NextShowTime> resultButtonValues = [];

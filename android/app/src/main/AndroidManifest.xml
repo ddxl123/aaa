@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.linlong.aaa">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
     <application
             android:label="aaa"
             android:name="${applicationName}"

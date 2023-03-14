@@ -1,3 +1,5 @@
+import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/page/edit/MemoryModelGizomoEditPage/AlgorithmEditPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:cool_ui/cool_ui.dart';
 import 'package:drift_main/share_common/share_enum.dart';
@@ -94,7 +96,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       builder: (c, abw) {
         return IconButton(
           icon: Icon(Icons.save),
-          onPressed: () {},
+          onPressed: () {
+            c.save();
+          },
         );
       },
     );
@@ -133,14 +137,35 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     required bool aIsEmptyScheme,
     required bool bIsEmptyScheme,
     required bool cIsEmptyScheme,
+    required void Function() aEnterFunc,
+    required void Function() bEnterFunc,
+    required void Function() cEnterFunc,
   }) {
     return Card(
       child: ExpansionTile(
         title: Text(title + "："),
         children: [
-          _single(value: AlgorithmUsageStatus.a, groupValue: groupValue, onChanged: onChanged, isEmptyScheme: aIsEmptyScheme),
-          _single(value: AlgorithmUsageStatus.b, groupValue: groupValue, onChanged: onChanged, isEmptyScheme: bIsEmptyScheme),
-          _single(value: AlgorithmUsageStatus.c, groupValue: groupValue, onChanged: onChanged, isEmptyScheme: cIsEmptyScheme),
+          _single(
+            value: AlgorithmUsageStatus.a,
+            groupValue: groupValue,
+            onChanged: onChanged,
+            isEmptyScheme: aIsEmptyScheme,
+            enterFunc: aEnterFunc,
+          ),
+          _single(
+            value: AlgorithmUsageStatus.b,
+            groupValue: groupValue,
+            onChanged: onChanged,
+            isEmptyScheme: bIsEmptyScheme,
+            enterFunc: bEnterFunc,
+          ),
+          _single(
+            value: AlgorithmUsageStatus.c,
+            groupValue: groupValue,
+            onChanged: onChanged,
+            isEmptyScheme: cIsEmptyScheme,
+            enterFunc: cEnterFunc,
+          ),
           StfBuilder1(
             initValue: false,
             builder: (bool extra, BuildContext context, void Function(bool, bool) resetValue) {
@@ -186,6 +211,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     required AlgorithmUsageStatus? groupValue,
     required ValueChanged<AlgorithmUsageStatus?>? onChanged,
     required bool isEmptyScheme,
+    required void Function() enterFunc,
   }) {
     return Row(
       children: [
@@ -245,7 +271,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                 Icon(Icons.chevron_right),
               ],
             ),
-            onPressed: () {},
+            onPressed: enterFunc,
           ),
         ),
         Radio(
@@ -265,7 +291,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: _bigSingle(
             context: c.context,
-            title: "熟悉度变化算法",
+            title: FamiliarityState.NAME,
             groupValue: c.copyMemoryModelAb(abw).familiarity_algorithm_usage_status,
             onChanged: (v) {
               c.copyMemoryModelAb().familiarity_algorithm_usage_status = v!;
@@ -274,6 +300,10 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_c == null,
+            aEnterFunc: () {
+              c.currentEnterAlgorithmEditPageType.refreshEasy((oldValue) => FamiliarityState);
+              Navigator.push(c.context, MaterialPageRoute(builder: (_) => AlgorithmEditPage()));
+            },
           ),
         );
       },
@@ -288,7 +318,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: _bigSingle(
             context: c.context,
-            title: "下次展示时间点算法",
+            title: NextShowTimeState.NAME,
             groupValue: c.copyMemoryModelAb(abw).next_time_algorithm_usage_status,
             onChanged: (v) {
               c.copyMemoryModelAb().next_time_algorithm_usage_status = v!;
@@ -311,7 +341,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: _bigSingle(
             context: c.context,
-            title: "按钮数值分配算法",
+            title: ButtonDataState.NAME,
             groupValue: c.copyMemoryModelAb(abw).button_algorithm_usage_status,
             onChanged: (v) {
               c.copyMemoryModelAb().button_algorithm_usage_status = v!;
@@ -320,6 +350,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_c == null,
+            aEnterFunc: () {},
           ),
         );
       },

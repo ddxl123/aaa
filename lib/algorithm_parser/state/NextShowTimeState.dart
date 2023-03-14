@@ -15,6 +15,8 @@ class NextShowTimeState extends ClassificationState {
     required super.externalResultHandler,
   });
 
+  static const NAME = "下次展示时间点算法";
+
   late int result;
 
   @override
