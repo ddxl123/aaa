@@ -137,9 +137,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     required bool aIsEmptyScheme,
     required bool bIsEmptyScheme,
     required bool cIsEmptyScheme,
-    required void Function() aEnterFunc,
-    required void Function() bEnterFunc,
-    required void Function() cEnterFunc,
+    required EnterType aEnterType,
+    required EnterType bEnterType,
+    required EnterType cEnterType,
   }) {
     return Card(
       child: ExpansionTile(
@@ -150,21 +150,21 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             groupValue: groupValue,
             onChanged: onChanged,
             isEmptyScheme: aIsEmptyScheme,
-            enterFunc: aEnterFunc,
+            enterType: aEnterType,
           ),
           _single(
             value: AlgorithmUsageStatus.b,
             groupValue: groupValue,
             onChanged: onChanged,
             isEmptyScheme: bIsEmptyScheme,
-            enterFunc: bEnterFunc,
+            enterType: bEnterType,
           ),
           _single(
             value: AlgorithmUsageStatus.c,
             groupValue: groupValue,
             onChanged: onChanged,
             isEmptyScheme: cIsEmptyScheme,
-            enterFunc: cEnterFunc,
+            enterType: cEnterType,
           ),
           StfBuilder1(
             initValue: false,
@@ -211,75 +211,79 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     required AlgorithmUsageStatus? groupValue,
     required ValueChanged<AlgorithmUsageStatus?>? onChanged,
     required bool isEmptyScheme,
-    required void Function() enterFunc,
+    required EnterType enterType,
   }) {
-    return Row(
-      children: [
-        Expanded(
-          child: MaterialButton(
-            padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-            child: Row(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: 20,
-                  height: 20,
-                  child: filter(
-                    from: value,
-                    targets: {
-                      [AlgorithmUsageStatus.a]: () => Text("A"),
-                      [AlgorithmUsageStatus.b]: () => Text("B"),
-                      [AlgorithmUsageStatus.c]: () => Text("C"),
-                    },
-                    orElse: null,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    border: Border.all(width: 1.5),
-                  ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Row(
+    return AbBuilder<MemoryModelGizmoEditPageAbController>(
+      tag: Aber.single,
+      builder: (c, abw) {
+        return Row(
+          children: [
+            Expanded(
+              child: MaterialButton(
+                padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
+                child: Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      width: 20,
+                      height: 20,
+                      child: c.filterForStatus(
+                        algorithmUsageStatus: value,
+                        aFunc: () => Text("A"),
+                        bFunc: () => Text("B"),
+                        cFunc: () => Text("C"),
+                        abw: abw,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        border: Border.all(width: 1.5),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: filter(
-                              from: value,
-                              targets: {
-                                [AlgorithmUsageStatus.a]: () => Text("方案 A  ${isEmptyScheme ? "(未配置)" : ""}"),
-                                [AlgorithmUsageStatus.b]: () => Text("方案 B  ${isEmptyScheme ? "(A 的副本)" : ""}"),
-                                [AlgorithmUsageStatus.c]: () => Text("方案 C  ${isEmptyScheme ? "(A 的副本)" : ""}"),
-                              },
-                              orElse: null,
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: c.filterForStatus(
+                                  algorithmUsageStatus: value,
+                                  aFunc: () => Text("方案 A  ${isEmptyScheme ? "(未配置)" : ""}"),
+                                  bFunc: () => Text("方案 B  ${isEmptyScheme ? "(A 的副本)" : ""}"),
+                                  cFunc: () => Text("方案 C  ${isEmptyScheme ? "(A 的副本)" : ""}"),
+                                  abw: abw,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(value == groupValue ? "正在使用(不可修改)" : "可修改", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(value == groupValue ? "正在使用(不可修改)" : "可修改", style: TextStyle(color: Colors.grey, fontSize: 14)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    Icon(Icons.chevron_right),
+                  ],
                 ),
-                Icon(Icons.chevron_right),
-              ],
+                onPressed: () {
+                  c.enterType.refreshEasy((oldValue) => enterType);
+                  Navigator.push(c.context, MaterialPageRoute(builder: (_) => AlgorithmEditPage()));
+                },
+              ),
             ),
-            onPressed: enterFunc,
-          ),
-        ),
-        Radio(
-          value: value,
-          groupValue: groupValue,
-          onChanged: onChanged,
-        ),
-      ],
+            Radio(
+              value: value,
+              groupValue: groupValue,
+              onChanged: onChanged,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -300,10 +304,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_c == null,
-            aEnterFunc: () {
-              c.currentEnterAlgorithmEditPageType.refreshEasy((oldValue) => FamiliarityState);
-              Navigator.push(c.context, MaterialPageRoute(builder: (_) => AlgorithmEditPage()));
-            },
+            aEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.a),
+            bEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.b),
+            cEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.c),
           ),
         );
       },
@@ -327,6 +330,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_c == null,
+            aEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.a),
+            bEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.b),
+            cEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.c),
           ),
         );
       },
@@ -350,7 +356,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_c == null,
-            aEnterFunc: () {},
+            aEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.a),
+            bEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.b),
+            cEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.c),
           ),
         );
       },

@@ -3,13 +3,19 @@ import 'dart:async';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
-class EnterType{
+class EnterType {
+  EnterType({
+    required this.algorithmType,
+    required this.algorithmUsageStatus,
+  });
+
   final Type algorithmType;
-  final
+  final AlgorithmUsageStatus algorithmUsageStatus;
 }
 
 class MemoryModelGizmoEditPageAbController extends AbController {
@@ -26,22 +32,41 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final titleEditingController = TextEditingController();
 
-  final currentEnterAlgorithmEditPageType = Ab<Type>(ButtonDataState);
+  final enterType = Ab<EnterType?>(null);
 
   final isAlgorithmKeyboard = false.ab;
 
-  T filterForEnterType<T>({
-    required T Function() buttonDataState,
-    required T Function() familiarityState,
-    required T Function() nextShowTimeState,
+  T filterForStatus<T>({
+    required AlgorithmUsageStatus algorithmUsageStatus,
+    required T Function() aFunc,
+    required T Function() bFunc,
+    required T Function() cFunc,
     Abw? abw,
   }) {
     return filter(
-      from: currentEnterAlgorithmEditPageType(abw),
+      from: algorithmUsageStatus,
       targets: {
-        [ButtonDataState]: buttonDataState,
-        [FamiliarityState]: buttonDataState,
-        [NextShowTimeState]: nextShowTimeState,
+        [AlgorithmUsageStatus.a]: aFunc,
+        [AlgorithmUsageStatus.b]: bFunc,
+        [AlgorithmUsageStatus.c]: cFunc,
+      },
+      orElse: null,
+    );
+  }
+
+  T filterForType<T>({
+    required Type algorithmType,
+    required T Function() buttonDataStateFunc,
+    required T Function() familiarityStateFunc,
+    required T Function() nextShowTimeStateFunc,
+    Abw? abw,
+  }) {
+    return filter(
+      from: algorithmType,
+      targets: {
+        [ButtonDataState]: buttonDataStateFunc,
+        [FamiliarityState]: buttonDataStateFunc,
+        [NextShowTimeState]: nextShowTimeStateFunc,
       },
       orElse: null,
     );

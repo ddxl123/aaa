@@ -29,10 +29,12 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                   onPressed: () {},
                 ),
                 title: Text(
-                  c.filterForEnterType(
-                    buttonDataState: () => ButtonDataState.NAME,
-                    familiarityState: () => FamiliarityState.NAME,
-                    nextShowTimeState: () => NextShowTimeState.NAME,
+                  c.filterForType(
+                    algorithmType: c.enterType(abw)!.algorithmType,
+                    buttonDataStateFunc: () => ButtonDataState.NAME,
+                    familiarityStateFunc: () => FamiliarityState.NAME,
+                    nextShowTimeStateFunc: () => NextShowTimeState.NAME,
+                    abw: abw,
                   ),
                 ),
                 actions: [
