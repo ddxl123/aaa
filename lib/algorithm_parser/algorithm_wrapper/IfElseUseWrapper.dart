@@ -20,6 +20,13 @@ class IfUseElseWrapper {
         "elser": this.elser,
       };
 
+  void cancelAllException() {
+    ifers.forEach((element) {
+      element.cancelAllException();
+    });
+    elser.cancelAllException();
+  }
+
   Future<void> handle({
     required Future<bool> Function(Ifer ifer, String condition) conditionChecker,
     required Future<void> Function(Ifer ifer, String use) useChecker,

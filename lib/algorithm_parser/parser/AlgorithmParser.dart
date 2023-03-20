@@ -39,7 +39,14 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
         (ele) async {
           try {
             checkCustomVariableNameConvention(name: ele.name);
-
+          } on KnownAlgorithmException catch (e) {
+            ele.setNameAlgorithmException(algorithmException: e);
+            rethrow;
+          } catch (e, st) {
+            if (e is UnknownAlgorithmException) rethrow;
+            throw UnknownAlgorithmException(e.toString(), st);
+          }
+          try {
             final contentResult = await _eval(content: ele.content);
             _state.algorithmWrapper.customVariablesMap.addAll({ele.name: contentResult});
             ele.setContentAlgorithmException(algorithmException: null);
@@ -109,7 +116,12 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   /// 评估自定义变量。
   String _evalCustomVariables({required String content}) {
     String replaceResult = content;
+    int i = 100;
     while (true) {
+      i = i - 1;
+      if (i == 0) {
+        throw KnownAlgorithmException("评估自定义变量时循环超过100次");
+      }
       final newReplaceResult = content.replaceAllMapped(
         RegExper.variableMatching('(${_state.algorithmWrapper.customVariablesMap.keys.map((e) => '($e)').join('|').nothingMatches()})'),
         (match) {

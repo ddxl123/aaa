@@ -70,6 +70,8 @@ class _TextField1DialogWidgetState extends State<TextField1DialogWidget> {
           children: [
             Expanded(
               child: TextField(
+                maxLines: 10,
+                minLines: 1,
                 controller: textEditingController,
                 focusNode: FocusNode()..requestFocus(),
                 decoration: widget.inputDecoration,

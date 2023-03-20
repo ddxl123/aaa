@@ -32,6 +32,11 @@ class Ifer {
     refresh?.call();
   }
 
+  void cancelAllException() {
+    setUseAlgorithmException(algorithmException: null);
+    setConditionAlgorithmException(algorithmException: null);
+  }
+
   factory Ifer.fromJson(Map<String, dynamic> json) => Ifer(
         condition: json["condition"] as String,
         use: json["use"] as String?,
@@ -123,82 +128,118 @@ class Ifer {
                     ),
                   ],
                 ),
-                TextButton(
-                  child: Text("编辑当前 ${isElseIf ? "else if" : "if"}"),
-                  onPressed: () {
-                    showCustomDialog(
-                      builder: (_) => TextField1DialogWidget(
-                        textEditingController: TextEditingController(text: condition),
-                        text: "当前： $condition",
-                        cancelText: "取消",
-                        okText: "确定",
-                        onOk: (tec) {
-                          condition = tec.text;
-                          refresh?.call();
-                          SmartDialog.dismiss(status: SmartStatus.dialog);
-                          SmartDialog.dismiss(status: SmartStatus.dialog);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                TextButton(
-                  child: Text("增加一个与当前并列 if"),
-                  onPressed: () {
-                    father.ifers.insert(father.ifers.indexOf(this) + 1, Ifer.emptyIfer);
-                    algorithmWrapper.refresh?.call();
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                  },
-                ),
-                TextButton(
-                  child: Text("if 上移"),
-                  onPressed: () {
-                    final index = father.ifers.indexOf(this);
-                    if (index != 0) {
-                      final before = father.ifers[index - 1];
-                      final after = father.ifers[index];
-                      father.ifers.removeRange(index - 1, index + 1);
-                      father.ifers.insertAll(index - 1, [after, before]);
-                    }
-                    algorithmWrapper.refresh?.call();
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                  },
-                ),
-                TextButton(
-                  child: Text("if 下移"),
-                  onPressed: () {
-                    final index = father.ifers.indexOf(this);
-                    if (index != father.ifers.length - 1) {
-                      final before = father.ifers[index];
-                      final after = father.ifers[index + 1];
-                      father.ifers.removeRange(index, index + 2);
-                      father.ifers.insertAll(index, [after, before]);
-                    }
-                    algorithmWrapper.refresh?.call();
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                  },
-                ),
-                TextButton(
-                  child: Text("移除当前 ${isElseIf ? "else if" : "if"}", style: TextStyle(color: Colors.red)),
-                  onPressed: () {
-                    father.remove(ifer: this);
-                    algorithmWrapper.refresh?.call();
-                    SmartDialog.dismiss(status: SmartStatus.dialog);
-                  },
-                ),
-                ifElseUseWrapper == null
-                    ? Container()
-                    : TextButton(
-                        child: Text("清空全部子项", style: TextStyle(color: Colors.red)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        child: Text("编辑当前 ${isElseIf ? "else if" : "if"}"),
                         onPressed: () {
-                          clearChildren();
-                          refresh?.call();
+                          showCustomDialog(
+                            builder: (_) => TextField1DialogWidget(
+                              textEditingController: TextEditingController(text: condition),
+                              text: "当前： $condition",
+                              cancelText: "取消",
+                              okText: "确定",
+                              onOk: (tec) {
+                                condition = tec.text;
+                                refresh?.call();
+                                SmartDialog.dismiss(status: SmartStatus.dialog);
+                                SmartDialog.dismiss(status: SmartStatus.dialog);
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        child: Text("增加一个与当前并列 if"),
+                        onPressed: () {
+                          father.ifers.insert(father.ifers.indexOf(this) + 1, Ifer.emptyIfer);
+                          algorithmWrapper.refresh?.call();
+                          SmartDialog.dismiss(status: SmartStatus.dialog);
                           SmartDialog.dismiss(status: SmartStatus.dialog);
                         },
                       ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        child: Text("if 上移"),
+                        onPressed: () {
+                          final index = father.ifers.indexOf(this);
+                          if (index != 0) {
+                            final before = father.ifers[index - 1];
+                            final after = father.ifers[index];
+                            father.ifers.removeRange(index - 1, index + 1);
+                            father.ifers.insertAll(index - 1, [after, before]);
+                          }
+                          algorithmWrapper.refresh?.call();
+                          SmartDialog.dismiss(status: SmartStatus.dialog);
+                          SmartDialog.dismiss(status: SmartStatus.dialog);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        child: Text("if 下移"),
+                        onPressed: () {
+                          final index = father.ifers.indexOf(this);
+                          if (index != father.ifers.length - 1) {
+                            final before = father.ifers[index];
+                            final after = father.ifers[index + 1];
+                            father.ifers.removeRange(index, index + 2);
+                            father.ifers.insertAll(index, [after, before]);
+                          }
+                          algorithmWrapper.refresh?.call();
+                          SmartDialog.dismiss(status: SmartStatus.dialog);
+                          SmartDialog.dismiss(status: SmartStatus.dialog);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        child: Text("移除当前 ${isElseIf ? "else if" : "if"}", style: TextStyle(color: Colors.red)),
+                        onPressed: () {
+                          father.remove(ifer: this);
+                          algorithmWrapper.refresh?.call();
+                          SmartDialog.dismiss(status: SmartStatus.dialog);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ifElseUseWrapper == null
+                          ? Container()
+                          : TextButton(
+                              child: Text("清空全部子项", style: TextStyle(color: Colors.red)),
+                              onPressed: () {
+                                clearChildren();
+                                refresh?.call();
+                                SmartDialog.dismiss(status: SmartStatus.dialog);
+                              },
+                            ),
+                    ),
+                  ],
+                ),
               ],
               bottomHorizontalButtonWidgets: [],
             ),

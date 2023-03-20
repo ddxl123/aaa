@@ -21,10 +21,7 @@ class EnterType {
 class MemoryModelGizmoEditPageAbController extends AbController {
   MemoryModelGizmoEditPageAbController({
     required this.originalMemoryModelAb,
-  }) {
-    copyMemoryModelAb = originalMemoryModelAb().copyWith().ab;
-    titleEditingController.text = copyMemoryModelAb().title;
-  }
+  });
 
   final Ab<MemoryModel> originalMemoryModelAb;
 
@@ -36,6 +33,13 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   final isAlgorithmKeyboard = false.ab;
 
+  @override
+  void onInit() {
+    super.onInit();
+    copyMemoryModelAb = originalMemoryModelAb().copyWith().ab;
+    titleEditingController.text = copyMemoryModelAb().title;
+  }
+
   T filterForStatus<T>({
     required AlgorithmUsageStatus algorithmUsageStatus,
     required T Function() aFunc,
@@ -46,9 +50,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     return filter(
       from: algorithmUsageStatus,
       targets: {
-        [AlgorithmUsageStatus.a]: aFunc,
-        [AlgorithmUsageStatus.b]: bFunc,
-        [AlgorithmUsageStatus.c]: cFunc,
+        [AlgorithmUsageStatus.A]: aFunc,
+        [AlgorithmUsageStatus.B]: bFunc,
+        [AlgorithmUsageStatus.C]: cFunc,
       },
       orElse: null,
     );
@@ -80,7 +84,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     bool isBack = false;
     await showCustomDialog(
       builder: (_) => OkAndCancelDialogWidget(
-        title: '是否要丢弃？',
+        title: '内容存在修改，是否要丢弃？',
         okText: '丢弃',
         cancelText: '继续编辑',
         text: null,
@@ -96,6 +100,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     return !isBack;
   }
 
+  /// 将 [copyMemoryModelAb] 的数据传递给 [originalMemoryModelAb]，并对数据库进行修改。
   Future<void> save() async {
     final st = await SyncTag.create();
     await db.updateDAO.resetMemoryModel(

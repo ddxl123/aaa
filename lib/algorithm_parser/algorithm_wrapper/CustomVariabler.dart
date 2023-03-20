@@ -29,6 +29,11 @@ class CustomVariabler {
     refresh?.call();
   }
 
+  void cancelAllException() {
+    setNameAlgorithmException(algorithmException: null);
+    setContentAlgorithmException(algorithmException: null);
+  }
+
   factory CustomVariabler.fromJson(Map<String, dynamic> json) => CustomVariabler(
         name: json["name"],
         content: json["content"],
@@ -58,7 +63,6 @@ class CustomVariabler {
         return ListTile(
           title: Card(
             elevation: 0,
-            color: Colors.lightGreenAccent,
             child: Row(
               children: [
                 _settingWidget(algorithmWrapper: algorithmWrapper),

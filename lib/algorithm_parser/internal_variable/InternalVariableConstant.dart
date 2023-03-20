@@ -81,7 +81,7 @@ class InternalVariableConstant {
   static const InternalVariableConst timesConst = InternalVariableConst(
     name: 'times',
     explain: '展示碎片时会获取：该碎片在当前记忆组中学习过的次数。',
-    numericTypeExplain: '正整数（1，2，3...）。',
+    numericTypeExplain: '正整数（0，1，2，3...）。',
     whenAvailable: WhenAvailable.whenShow,
     usableStates: {
       UsableState(usableStateType: FamiliarityState, usableSuffixNTypes: {}, selfExistStatus: SelfExistStatus.notEmpty),

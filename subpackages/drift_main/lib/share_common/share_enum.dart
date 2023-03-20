@@ -1,6 +1,6 @@
 
 enum KnowledgeBaseContentSortType {
-  
+
   by_random,
 
   by_hot,
@@ -16,9 +16,9 @@ enum KnowledgeBaseContentSortType {
   by_save_count,
 
 }
-        
+
 enum RegisterOrLoginType {
-  
+
   email_send,
 
   email_verify,
@@ -28,9 +28,9 @@ enum RegisterOrLoginType {
   phone_verify,
 
 }
-        
+
 enum SyncCurdType {
-  
+
   c,
 
   u,
@@ -38,25 +38,25 @@ enum SyncCurdType {
   d,
 
 }
-        
+
 enum AlgorithmUsageStatus {
-  
-  a,
 
-  b,
+  A,
 
-  c,
+  B,
+
+  C,
 
 }
-        
+
 enum FragmentTemplateType {
-  
+
   rich_any,
 
 }
-        
+
 enum NewDisplayOrder {
-  
+
   random,
 
   title_a_2_z,
@@ -64,9 +64,9 @@ enum NewDisplayOrder {
   create_early_2_late,
 
 }
-        
+
 enum NewReviewDisplayOrder {
-  
+
   mix,
 
   new_review,
@@ -74,4 +74,3 @@ enum NewReviewDisplayOrder {
   review_new,
 
 }
-        

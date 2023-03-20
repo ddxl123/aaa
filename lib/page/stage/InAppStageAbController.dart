@@ -85,12 +85,6 @@ class InAppStageAbController extends AbController {
     currentShowFamiliar = await _parseCurrentFamiliarity();
 
     final pbd = await _parseButtonData();
-    if (pbd.resultMin != null) {
-      await _parseNextShowTime(buttonDataValue2NextShowTime: pbd.resultMin!);
-    }
-    if (pbd.resultMax != null) {
-      await _parseNextShowTime(buttonDataValue2NextShowTime: pbd.resultMax!);
-    }
     for (var element in pbd.resultButtonValues) {
       await _parseNextShowTime(buttonDataValue2NextShowTime: element);
     }
@@ -107,7 +101,7 @@ class InAppStageAbController extends AbController {
       throw '没有下一个碎片了，却仍然请求了下一个碎片！';
     }
 
-    final buttonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue);
+    final buttonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: "临时");
     await _parseNextShowTime(buttonDataValue2NextShowTime: buttonDataValue2NextShowTime);
 
     final info = currentPerformer()!.fragmentMemoryInfo;

@@ -26,70 +26,77 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
               appBar: AppBar(
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back_ios),
-                  onPressed: () {},
+                  onPressed: () {
+                    c.abBack();
+                  },
                 ),
                 title: Text(
                   c.filterForType(
-                    algorithmType: c.enterType(abw)!.algorithmType,
-                    buttonDataStateFunc: () => ButtonDataState.NAME,
-                    familiarityStateFunc: () => FamiliarityState.NAME,
-                    nextShowTimeStateFunc: () => NextShowTimeState.NAME,
-                    abw: abw,
-                  ),
+                        algorithmType: c.enterType(abw)!.algorithmType,
+                        buttonDataStateFunc: () => ButtonDataState.NAME,
+                        familiarityStateFunc: () => FamiliarityState.NAME,
+                        nextShowTimeStateFunc: () => NextShowTimeState.NAME,
+                        abw: abw,
+                      ) +
+                      " · 方案 ${c.enterType()!.algorithmUsageStatus.name}",
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
+                titleSpacing: 0,
                 actions: [
                   TextButton(
                     child: Text("分析"),
                     onPressed: () {
-                      // AlgorithmParser.parse(state: FamiliarityState(algorithmWrapper: algorithmWrapper,
-                      //     simulationType: simulationType,
-                      //     externalResultHandler: externalResultHandler), onSuccess: onSuccess, onError: onError)
+                      fc.analysis();
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.save),
-                    onPressed: () {},
+                    onPressed: () {
+                      fc.save();
+                    },
                   ),
                 ],
               ),
-              body: FreeBox(
-                freeBoxController: fc.freeBoxController,
-                moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
-                  children: [
-                    FreeBoxMoveScaleLayerPositioned(
-                      expectPosition: Offset(10, 10),
-                      child: SizedBox(
-                        width: 2500,
-                        child: AlgorithmWrapper.fromJsonString(
-                          c.copyMemoryModelAb(abw).familiarity_algorithm_a ?? AlgorithmWrapper.emptyAlgorithmWrapper.toJsonString(),
-                        ).toWidget(),
-                      ),
-                    ),
-                  ],
-                ),
-                fixedLayerWidgets: [
-                  FreeBoxFixedLayerPositioned(
-                    bottom: 50,
-                    right: 25,
-                    child: Column(
+              body: AbBuilder<AlgorithmEditPageAbController>(
+                builder: (c, abw) {
+                  return FreeBox(
+                    freeBoxController: fc.freeBoxController,
+                    moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
                       children: [
-                        AbwBuilder(
-                          builder: (abw) {
-                            return IconButton(
-                              icon: Icon(FontAwesomeIcons.locationCrosshairs, size: 28),
-                              onPressed: () {
-                                fc.freeBoxController.targetSlide(
-                                  targetCamera: FreeBoxCamera(expectPosition: Offset.zero, expectScale: 1.0),
-                                  rightNow: false,
-                                );
-                              },
-                            );
-                          },
+                        FreeBoxMoveScaleLayerPositioned(
+                          expectPosition: Offset(10, 10),
+                          child: SizedBox(
+                            width: 2500,
+                            child: c.currentAlgorithmWrapper(abw).toWidget(),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    fixedLayerWidgets: [
+                      FreeBoxFixedLayerPositioned(
+                        bottom: 50,
+                        right: 25,
+                        child: Column(
+                          children: [
+                            AbwBuilder(
+                              builder: (abw) {
+                                return IconButton(
+                                  icon: Icon(FontAwesomeIcons.locationCrosshairs, size: 28),
+                                  onPressed: () {
+                                    fc.freeBoxController.targetSlide(
+                                      targetCamera: FreeBoxCamera(expectPosition: Offset.zero, expectScale: 1.0),
+                                      rightNow: false,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             );
           },

@@ -23,6 +23,10 @@ class Elser {
     refresh?.call();
   }
 
+  void cancelAllException() {
+    setUseAlgorithmException(algorithmException: null);
+  }
+
   factory Elser.fromJson(Map<String, dynamic> json) => Elser(
         use: json["use"] as String?,
         ifElseUseWrapper: json["if_else_use_wrapper"] == null ? null : IfUseElseWrapper.fromJson(json["if_else_use_wrapper"]),

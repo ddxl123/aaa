@@ -49,6 +49,13 @@ class AlgorithmWrapper {
     ifUseElseWrapper.elser.resetToEmpty();
   }
 
+  void cancelAllException() {
+    customVariables.forEach((element) {
+      element.cancelAllException();
+    });
+    ifUseElseWrapper.cancelAllException();
+  }
+
   Widget toWidget() {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
@@ -110,7 +117,6 @@ class AlgorithmWrapper {
             ListTile(
               title: Card(
                 elevation: 0,
-                color: Colors.lightGreenAccent,
                 child: MaterialButton(
                   child: Row(
                     children: [

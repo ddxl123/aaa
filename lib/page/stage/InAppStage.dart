@@ -59,55 +59,28 @@ class _InAppStageState extends State<InAppStage> {
       builder: (c, abw) {
         if (c.currentPerformer(abw) == null) return const SizedBox(height: 0);
         if (c.currentButtonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
-        if (!c.currentButtonDataState(abw)!.isSlidable) {
-          // 不可滑动
-          return Row(
-            children: c.currentButtonDataState()!.resultButtonValues.map(
-              (e) {
-                final parseTime = e.parseTime();
-                if (parseTime == null) {
-                  return const SizedBox(height: 0);
-                }
-                return Expanded(
-                  child: AbwBuilder(
-                    builder: (abw) {
-                      return TextButton(
-                        child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
-                        onPressed: () async {
-                          await c.finishAndNext(clickValue: e.value);
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
-            ).toList(),
-          );
-        } else {
-          // 可滑动
-          return Row(
-            children: c.currentButtonDataState()!.resultButtonValues.map(
-              (e) {
-                final parseTime = e.parseTime();
-                if (parseTime == null) {
-                  return const SizedBox(height: 0);
-                }
-                return Expanded(
-                  child: ElevatedButton(
-                    child: AbwBuilder(
-                      builder: (abw) {
-                        return Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime);
+        return Row(
+          children: c.currentButtonDataState()!.resultButtonValues.map(
+            (e) {
+              final parseTime = e.parseTime();
+              if (parseTime == null) {
+                return const SizedBox(height: 0);
+              }
+              return Expanded(
+                child: AbwBuilder(
+                  builder: (abw) {
+                    return TextButton(
+                      child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
+                      onPressed: () async {
+                        await c.finishAndNext(clickValue: e.value);
                       },
-                    ),
-                    onPressed: () async {
-                      await c.finishAndNext(clickValue: e.value);
-                    },
-                  ),
-                );
-              },
-            ).toList(),
-          );
-        }
+                    );
+                  },
+                ),
+              );
+            },
+          ).toList(),
+        );
       },
     );
   }

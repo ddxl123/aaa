@@ -146,21 +146,21 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
         title: Text(title + "："),
         children: [
           _single(
-            value: AlgorithmUsageStatus.a,
+            value: AlgorithmUsageStatus.A,
             groupValue: groupValue,
             onChanged: onChanged,
             isEmptyScheme: aIsEmptyScheme,
             enterType: aEnterType,
           ),
           _single(
-            value: AlgorithmUsageStatus.b,
+            value: AlgorithmUsageStatus.B,
             groupValue: groupValue,
             onChanged: onChanged,
             isEmptyScheme: bIsEmptyScheme,
             enterType: bEnterType,
           ),
           _single(
-            value: AlgorithmUsageStatus.c,
+            value: AlgorithmUsageStatus.C,
             groupValue: groupValue,
             onChanged: onChanged,
             isEmptyScheme: cIsEmptyScheme,
@@ -248,9 +248,24 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                               Expanded(
                                 child: c.filterForStatus(
                                   algorithmUsageStatus: value,
-                                  aFunc: () => Text("方案 A  ${isEmptyScheme ? "(未配置)" : ""}"),
-                                  bFunc: () => Text("方案 B  ${isEmptyScheme ? "(A 的副本)" : ""}"),
-                                  cFunc: () => Text("方案 C  ${isEmptyScheme ? "(A 的副本)" : ""}"),
+                                  aFunc: () => Row(
+                                    children: [
+                                      Text("方案 A"),
+                                      Text("  ${isEmptyScheme ? "(未配置)" : ""}"),
+                                    ],
+                                  ),
+                                  bFunc: () => Row(
+                                    children: [
+                                      Text("方案 B"),
+                                      Text("  ${isEmptyScheme ? "(A 的副本)" : ""}", style: TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                                  cFunc: () => Row(
+                                    children: [
+                                      Text("方案 C"),
+                                      Text("  ${isEmptyScheme ? "(A 的副本)" : ""}", style: TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
                                   abw: abw,
                                 ),
                               ),
@@ -304,9 +319,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_c == null,
-            aEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.a),
-            bEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.b),
-            cEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.c),
+            aEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.A),
+            bEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.B),
+            cEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.C),
           ),
         );
       },
@@ -330,9 +345,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_c == null,
-            aEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.a),
-            bEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.b),
-            cEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.c),
+            aEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.A),
+            bEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.B),
+            cEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.C),
           ),
         );
       },
@@ -356,9 +371,9 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
             aIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_a == null,
             bIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_b == null,
             cIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_c == null,
-            aEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.a),
-            bEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.b),
-            cEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.c),
+            aEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.A),
+            bEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.B),
+            cEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.C),
           ),
         );
       },

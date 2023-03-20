@@ -16,14 +16,8 @@ class BasicConfigWidget extends StatelessWidget {
             data: Theme.of(c.context).copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
               maintainState: true,
-              title: AbwBuilder(
-                builder: (abw) {
-                  return Text(
-                    '基础配置：',
-                    style: TextStyle(color: c.isBasicConfigRedErr(abw) ? Colors.red : null),
-                  );
-                },
-              ),
+              childrenPadding: EdgeInsets.all(10),
+              title: Text('基础配置：'),
               children: [
                 _titleWidget(),
                 _memoryModelWidget(),
@@ -40,19 +34,22 @@ class BasicConfigWidget extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Card(
-          child: Row(
-            children: [
-              const Text('名称：', style: TextStyle(fontSize: 16)),
-              Expanded(
-                child: TextField(
-                  controller: c.bcTitleTextEditingController,
-                  decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
-                  onChanged: (v) {
-                    c.bTitleStorage.abValue.refreshEasy((oldValue) => v);
-                  },
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Text('名称：', style: TextStyle(fontSize: 16)),
+                Expanded(
+                  child: TextField(
+                    controller: c.titleTextEditingController,
+                    decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
+                    onChanged: (v) {
+                      c.copyMemoryGroupAb.refreshInevitable((obj) => obj..title = v);
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -63,20 +60,24 @@ class BasicConfigWidget extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Card(
-          child: Row(
-            children: [
-              const Text('记忆模型：', style: TextStyle(fontSize: 16)),
-              TextButton(
-                child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-                  builder: (gzC, gzAbw) {
-                    return Text(gzC.bSelectedMemoryModelStorage.abValue(gzAbw)?.title ?? '点击选择');
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Text('记忆模型：', style: TextStyle(fontSize: 16)),
+                TextButton(
+                  child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
+                    builder: (gzC, gzAbw) {
+                      return Text(gzC.bSelectedMemoryModelStorage.abValue(gzAbw)?.title ?? '点击选择');
+                    },
+                  ),
+                  onPressed: () {
+                    showSelectMemoryModelInMemoryGroupDialog(selectedMemoryModelAb: c.bSelectedMemoryModelStorage.abValue);
                   },
                 ),
-                onPressed: () {
-                  showSelectMemoryModelInMemoryGroupDialog(selectedMemoryModelAb: c.bSelectedMemoryModelStorage.abValue);
-                },
-              ),
-            ],
+                Text("模拟(验证模型的准确性)"),
+              ],
+            ),
           ),
         );
       },
@@ -87,52 +88,55 @@ class BasicConfigWidget extends StatelessWidget {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
         return Card(
-          child: Row(
-            children: [
-              const Text('已选碎片：', style: TextStyle(fontSize: 16)),
-              TextButton(
-                child: Text('点击查看（共 ${c.bSelectedFragments(abw).length} 个）', style: const TextStyle(fontSize: 16)),
-                onPressed: () {
-                  Navigator.of(c.context).push(
-                    DefaultSheetRoute(
-                      bodySliver0: () {
-                        return SliverToBoxAdapter(
-                          child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
-                            builder: (sController, sAbw) {
-                              return Material(
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  child: SingleChildScrollView(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        ...(sController.bSelectedFragments(sAbw).isEmpty
-                                            ? [Container()]
-                                            : sController.bSelectedFragments(sAbw).map(
-                                                  (e) => Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 200,
-                                                        child: Text(e(abw).content.toString()),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )),
-                                      ],
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Text('已选碎片：', style: TextStyle(fontSize: 16)),
+                TextButton(
+                  child: Text('点击查看（共 ${c.selectedFragmentCountAb(abw).length} 个）', style: const TextStyle(fontSize: 16)),
+                  onPressed: () {
+                    Navigator.of(c.context).push(
+                      DefaultSheetRoute(
+                        bodySliver0: () {
+                          return SliverToBoxAdapter(
+                            child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
+                              builder: (sController, sAbw) {
+                                return Material(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    child: SingleChildScrollView(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          ...(sController.selectedFragmentCountAb(sAbw).isEmpty
+                                              ? [Container()]
+                                              : sController.selectedFragmentCountAb(sAbw).map(
+                                                    (e) => Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 200,
+                                                          child: Text(e(abw).content.toString()),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

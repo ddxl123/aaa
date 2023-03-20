@@ -53,7 +53,7 @@ List<Widget> algorithmExceptionTextWidgetList({required AlgorithmException? algo
         ? []
         : [
             SizedBox(width: 10),
-            Text(algorithmException.error),
+            Text(algorithmException.error, style: TextStyle(color: Colors.red)),
           ]
   ];
 }

@@ -1,16 +1,22 @@
 part of algorithm_parser;
 
 /// String 类型时的 use 写法：
-/// use: 1 2,3 4
-/// 或
 /// use: 2,3
+/// 或
+/// use: 2,3;按钮描述1,按钮描述2
 class ButtonDataValue2NextShowTime {
-  ButtonDataValue2NextShowTime({required this.value});
+  ButtonDataValue2NextShowTime({
+    required this.value,
+    required this.explain,
+  });
 
   /// 从 [ButtonDataState] 获取到的 use 中的单个数值。
   ///
   /// 只是按钮的数值而已，并非直接涉及时间。
   final double value;
+
+  /// 按钮显示文字
+  final String? explain;
 
   /// 从 [NextShowTimeState] 解析结果中获取。
   ///
@@ -39,42 +45,31 @@ class ButtonDataState extends ClassificationState {
   });
 
   static const NAME = "按钮数值分配算法";
-
-  ButtonDataValue2NextShowTime? resultMin;
-  ButtonDataValue2NextShowTime? resultMax;
   final List<ButtonDataValue2NextShowTime> resultButtonValues = [];
-
-  bool get isSlidable => resultMin == null || resultMax == null;
 
   @override
   ButtonDataState useParse({required String useContent}) {
-    final trim = useContent.trim();
-    final blank = trim.split(' ')..removeWhere((element) => element.trim() == '');
-    if (blank.length == 1) {
-      _parseComma(comma: blank.first);
-    } else if (blank.length == 3) {
-      resultMin = ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(blank.first));
-      resultMax = ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(blank.last));
-      _parseComma(comma: blank[1]);
-    } else {
-      throw '"use:$useContent" 内容书写不规范！';
+    final sp = useContent.split(";");
+    final explain = <String>[];
+    if (sp.length > 1) {
+      explain.addAll(sp.last.split(",").map((e) => e.trim()));
     }
+    _parseComma(comma: sp.first, explains: explain);
     return this;
   }
 
-  void _parseComma({required String comma}) {
-    final bvs = comma.split(',')..removeWhere((element) => element.trim() == '');
-    resultButtonValues.addAll(
-      bvs.map(
-        (e) {
-          return ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(e));
-        },
-      ),
-    );
+  void _parseComma({required String comma, required List<String> explains}) {
+    final bvs = comma.split(',');
+    if (bvs.length != explains.length) {
+      throw KnownAlgorithmException("按钮个数与解释个数不匹配！");
+    }
+    for (int i = 0; i < bvs.length; i++) {
+      resultButtonValues.add(ButtonDataValue2NextShowTime(value: AlgorithmParser.calculate(bvs[i]), explain: explains[i]));
+    }
   }
 
   @override
-  String toStringResult() => '${resultMin ?? ''} ${resultButtonValues.map((e) => e.toString()).join(',')} ${resultMax ?? ''}';
+  String toStringResult() => '${resultButtonValues.map((e) => e.toString()).join(',')}';
 
   @override
   Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
