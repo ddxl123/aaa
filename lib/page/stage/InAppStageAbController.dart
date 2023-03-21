@@ -81,7 +81,7 @@ class InAppStageAbController extends AbController {
     if (currentPerformer() == null) return;
 
     // 必须按照顺序进行获取，否则要么没有对应的值，要么可能会使用上一次的值。
-    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!);
+    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time  !);
     currentShowFamiliar = await _parseCurrentFamiliarity();
 
     final pbd = await _parseButtonData();
@@ -131,7 +131,9 @@ class InAppStageAbController extends AbController {
     currentButtonDataState.refreshEasy((oldValue) => null);
     currentPerformer.refreshEasy((oldValue) => null);
     if (isNew) {
-      Aber.findOrNull<MemoryGroupGizmoEditPageAbController>()?.cWillNewLearnCountStorage.abValue.refreshEasy((oldValue) => oldValue - 1);
+      Aber.findOrNull<MemoryGroupGizmoEditPageAbController>()?.copyMemoryGroupAb.refreshInevitable(
+            (oldValue) => oldValue..will_new_learn_count = oldValue.will_new_learn_count - 1,
+          );
     }
     memoryGroupAb.refreshForce();
   }

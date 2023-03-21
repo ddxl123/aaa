@@ -77,7 +77,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return Text(c.bTitleStorage.abValue(abw));
+        return Text(c.copyMemoryGroupAb(abw).title);
       },
     );
   }
@@ -89,7 +89,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return IconButton(
           icon: const FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.red),
           onPressed: () {
-            c.cancel();
+            c.abBack();
           },
         );
       },
@@ -103,15 +103,12 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return Row(
           children: [
             TextButton(
-              child: const Text('分析'),
-              onPressed: () async {
-                await c.onlyAnalyze();
-              },
-            ),
-            TextButton(
               child: const Text('保存'),
               onPressed: () async {
-                await c.onlySave();
+                final isSavedSuccess = await c.save();
+                if (isSavedSuccess) {
+                  c.abBack();
+                }
               },
             ),
           ],

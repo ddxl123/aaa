@@ -18,14 +18,7 @@ class CurrentCircleWidget extends StatelessWidget {
               maintainState: true,
               initiallyExpanded: true,
               childrenPadding: EdgeInsets.symmetric(horizontal: 10),
-              title: AbwBuilder(
-                builder: (abw) {
-                  return Text(
-                    '当前周期：',
-                    style: TextStyle(color: c.isCurrentCycleRedErr(abw) ? Colors.red : null),
-                  );
-                },
-              ),
+              title: Text('当前周期：'),
               children: [
                 _newLearnCountWidget(),
                 _reviewIntervalWidget(),
@@ -53,7 +46,7 @@ class CurrentCircleWidget extends StatelessWidget {
                 Expanded(
                   child: StfBuilder1<int>(
                     // 保留上一次的设置
-                    initValue: c.cWillNewLearnCountStorage.abValue(abw),
+                    initValue: c.copyMemoryGroupAb(abw).will_new_learn_count,
                     builder: (int value, BuildContext context, ResetValue<int> resetValue) {
                       int finallyValue = value;
                       // 不能超过最大值
@@ -77,7 +70,8 @@ class CurrentCircleWidget extends StatelessWidget {
                                 resetValue(n.toInt(), true);
                               },
                               onChangeEnd: (n) {
-                                c.cWillNewLearnCountStorage.abValue.refreshEasy((oldValue) => n.floor());
+                                c.copyMemoryGroupAb().will_new_learn_count = n.floor();
+                                c.copyMemoryGroupAb.refreshForce();
                               },
                             ),
                           ),
@@ -116,7 +110,9 @@ class CurrentCircleWidget extends StatelessWidget {
                               maxLength: 9,
                               keyboardType: TextInputType.number,
                               onChanged: (v) {
-                                c.cReviewIntervalStorage.abValue.refreshEasy((oldValue) => DateTime.now().add(Duration(seconds: int.tryParse(v) ?? 0)));
+                                c.copyMemoryGroupAb.refreshInevitable(
+                                  (obj) => obj..review_interval = DateTime.now().add(Duration(seconds: int.tryParse(v) ?? 0)),
+                                );
                               },
                             ),
                           ),
@@ -127,7 +123,7 @@ class CurrentCircleWidget extends StatelessWidget {
                         children: [
                           AbwBuilder(
                             builder: (abwT) {
-                              return Text('${c.cReviewIntervalStorage.abValue(abwT)}前');
+                              return Text('${c.copyMemoryGroupAb(abw).review_interval}前');
                             },
                           ),
                         ],
@@ -153,14 +149,14 @@ class CurrentCircleWidget extends StatelessWidget {
               children: [
                 const Text('新 | 复习 碎片展示顺序：'),
                 CustomDropdownBodyButton<NewReviewDisplayOrder>(
-                  initValue: c.cNewReviewDisplayOrderStorage.abValue(abw),
+                  initValue: c.copyMemoryGroupAb(abw).new_review_display_order,
                   items: [
                     Item(value: NewReviewDisplayOrder.mix, text: '混合'),
                     Item(value: NewReviewDisplayOrder.new_review, text: '优先新碎片'),
                     Item(value: NewReviewDisplayOrder.review_new, text: '优先复习碎片'),
                   ],
                   onChanged: (v) {
-                    c.cNewReviewDisplayOrderStorage.abValue.refreshEasy((oldValue) => v!);
+                    c.copyMemoryGroupAb.refreshInevitable((obj) => obj..new_review_display_order = v!);
                   },
                 ),
               ],
@@ -181,14 +177,14 @@ class CurrentCircleWidget extends StatelessWidget {
               children: [
                 const Text('新碎片 展示顺序：'),
                 CustomDropdownBodyButton<NewDisplayOrder>(
-                  initValue: c.cNewDisplayOrderStorage.abValue(abw),
+                  initValue: c.copyMemoryGroupAb(abw).new_display_order,
                   items: [
                     Item(value: NewDisplayOrder.random, text: '随机'),
                     Item(value: NewDisplayOrder.title_a_2_z, text: '标题首字母A~Z顺序'),
                     Item(value: NewDisplayOrder.create_early_2_late, text: '创建时间'),
                   ],
                   onChanged: (v) {
-                    c.cNewDisplayOrderStorage.abValue.refreshEasy((oldValue) => v!);
+                    c.copyMemoryGroupAb.refreshInevitable((obj) => obj..new_display_order = v!);
                   },
                 ),
               ],

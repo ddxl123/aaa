@@ -14,19 +14,13 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   late final Ab<MemoryGroup> copyMemoryGroupAb;
 
-  @override
-  void onInit() {
-    super.onInit();
-    copyMemoryGroupAb = originalMemoryGroupAb().copyWith().ab;
-    titleTextEditingController.text = copyMemoryGroupAb().title;
-    reviewIntervalTextEditingController.text = timeDifference(target: copyMemoryGroupAb().review_interval, start: DateTime.now()).toString();
-  }
+  final selectedMemoryModelAb = Ab<MemoryModel?>(null);
 
   final titleTextEditingController = TextEditingController();
 
-  final selectedFragmentCountAb = 0.ab;
-
   final reviewIntervalTextEditingController = TextEditingController();
+
+  final selectedFragmentCountAb = 0.ab;
 
   /// 当前记忆组剩余未学习的数量。
   final Ab<int> remainNewFragmentsCount = 0.ab;
@@ -34,7 +28,13 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 是否全部展开
   final isExpandAll = false.ab;
 
-  /// ========== 不可操作-其他部分 ==========
+  @override
+  void onInit() {
+    super.onInit();
+    copyMemoryGroupAb = originalMemoryGroupAb().copyWith().ab;
+    titleTextEditingController.text = copyMemoryGroupAb().title;
+    reviewIntervalTextEditingController.text = timeDifference(target: copyMemoryGroupAb().review_interval, start: DateTime.now()).toString();
+  }
 
   @override
   void onDispose() {
@@ -80,6 +80,9 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
     final count = await DriftDb.instance.generalQueryDAO.queryNewFragmentsCount(memoryGroup: originalMemoryGroupAb());
     remainNewFragmentsCount.refreshEasy((oldValue) => count);
+
+    final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: copyMemoryGroupAb());
+    selectedMemoryModelAb.refreshInevitable((obj) => mm);
   }
 
   /// 返回是否保存成功。
@@ -96,7 +99,6 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     await originalMemoryGroupAb().resetByEntity(memoryGroup: copyMemoryGroupAb(), syncTag: st);
     originalMemoryGroupAb.refreshForce();
     SmartDialog.showToast("保存成功");
-    abBack();
     return true;
   }
 
