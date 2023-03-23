@@ -107,7 +107,7 @@ class AlgorithmKeyboard extends StatelessWidget {
                   Wrap(
                     spacing: 10,
                     children: [
-                      ...InternalVariableConstant.getAllNames.map(
+                      ...InternalVariableConstantHandler.getNames.map(
                         (e) => ElevatedButton(
                           child: Text(e),
                           onPressed: () {

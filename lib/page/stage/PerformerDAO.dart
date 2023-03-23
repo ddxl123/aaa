@@ -111,12 +111,12 @@ class PerformerQuery {
 
   /// ========================================================================================
 
-  /// [InternalVariableConstant.countAllConst]
-  Future<List<int>> getCountAll({required MemoryGroup memoryGroup}) async {
-    return [await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup)];
+  /// [InternalVariableConstantHandler.k1countAllConst]
+  Future<int> getCountAll({required MemoryGroup memoryGroup}) async {
+    return await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup);
   }
 
-  /// [InternalVariableConstant.countNewConst]
+  /// [InternalVariableConstantHandler.k2CountNewConst]
   Future<List<int>> getCountNew({required MemoryGroup memoryGroup}) async {
     return [await db.generalQueryDAO.queryNewFragmentsCount(memoryGroup: memoryGroup)];
   }
@@ -126,24 +126,24 @@ class PerformerQuery {
   //   return [await db.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroup)];
   // }
 
-  /// [InternalVariableConstant.timesConst]
+  /// [InternalVariableConstantHandler.k3TimesConst]
   Future<List<int>> getTimes({required Performer performer}) async {
     return [performer.fragmentMemoryInfo.click_time?.split(',').length ?? 0];
   }
 
-  /// [InternalVariableConstant.currentActualShowTimeConst]
+  /// [InternalVariableConstantHandler.i1ActualShowTimeConst]
   Future<List<int>> getCurrentActualShowTimes({
     required Performer performer,
     required int currentShowTime,
   }) async {
     // 最后一个是当前未写入的数据。
     return [
-      ...performer.fragmentMemoryInfo.current_actual_show_time == null ? [] : performer.fragmentMemoryInfo.current_actual_show_time!.toIntArray(),
+      ...performer.fragmentMemoryInfo.actual_show_time == null ? [] : performer.fragmentMemoryInfo.actual_show_time!.toIntArray(),
       currentShowTime,
     ];
   }
 
-  /// [InternalVariableConstant.nextPlanedShowTimeConst]
+  /// [InternalVariableConstantHandler.i2NextPlanShowTimeConst]
   Future<List<int?>> getNextPlanedShowTime({
     required Performer performer,
     required int? currentNextPlanedShowTime,
@@ -154,7 +154,7 @@ class PerformerQuery {
     ];
   }
 
-  /// [InternalVariableConstant.showFamiliarConst]
+  /// [InternalVariableConstantHandler.k5CurrentShowFamiliarityConst]
   Future<List<double?>> getShowFamiliar({
     required Performer performer,
     required double? currentShowFamiliar,

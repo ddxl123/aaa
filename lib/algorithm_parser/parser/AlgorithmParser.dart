@@ -138,7 +138,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   ///
   /// 可能会返回 [nullTag]。
   Future<String> _evalInternalVariables({required String content}) async {
-    if (InternalVariableConstant.getAllNames.isEmpty) throw KnownAlgorithmException('初始内置变量为 empty！');
+    if (InternalVariableConstantHandler.getNames.isEmpty) throw KnownAlgorithmException('初始内置变量为 empty！');
 
     // 内置变量-对应的结果值
     final internalVariable2ResultMap = <String, num?>{};
@@ -162,12 +162,12 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       }
       // 相同的变量名值只绑定一次，但是 hasNullMerge 必须每次都执行。
       final atom = InternalVariableAtom(
-        internalVariableConst: InternalVariableConstant.getConstByName(simplifyName),
+        internalVariableConstant: InternalVariableConstantHandler.getConstByName(simplifyName),
         currentState: _state,
         nTypeNumber: nTypeNumber,
         hasNullMerge: match.input.substring(match.end, match.input.length).contains(RegExper.isExistNullMerge),
       );
-      atom.handle();
+      atom.handleException();
 
       if (internalVariable2ResultMap.containsKey(fullName)) {
         if (internalVariable2ResultMap[fullName] == null) {

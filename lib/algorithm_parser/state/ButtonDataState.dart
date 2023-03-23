@@ -72,7 +72,7 @@ class ButtonDataState extends ClassificationState {
   String toStringResult() => '${resultButtonValues.map((e) => e.toString()).join(',')}';
 
   @override
-  Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
+  Future<RawResultOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
     const countCapping = 10000;
     // 5个月
     const timeCapping = 12960000;

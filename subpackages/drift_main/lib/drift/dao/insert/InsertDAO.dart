@@ -111,11 +111,13 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               creator_user_id: user.id,
               memory_group_id: memoryGroup.id,
               fragment_id: e.id,
-              click_time: null.toValue(),
-              click_value: null.toValue(),
-              current_actual_show_time: null.toValue(),
-              next_plan_show_time: null.toValue(),
-              show_familiarity: null.toValue(),
+              click_time: "",
+              click_value: "",
+              actual_show_time: "",
+              click_familiarity: "",
+              next_plan_show_time: "",
+              show_familiarity: "",
+              button_values: "",
             );
             if (isRemoveRepeat) {
               final isExist = await db.generalQueryDAO.queryIsExistFragmentInMemoryGroup(fragment: e, memoryGroup: memoryGroup);

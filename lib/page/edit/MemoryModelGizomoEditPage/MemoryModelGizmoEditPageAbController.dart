@@ -50,9 +50,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     return filter(
       from: algorithmUsageStatus,
       targets: {
-        [AlgorithmUsageStatus.A]: aFunc,
-        [AlgorithmUsageStatus.B]: bFunc,
-        [AlgorithmUsageStatus.C]: cFunc,
+        [AlgorithmUsageStatus.a]: aFunc,
+        [AlgorithmUsageStatus.b]: bFunc,
+        [AlgorithmUsageStatus.c]: cFunc,
       },
       orElse: null,
     );

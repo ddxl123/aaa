@@ -36,7 +36,7 @@ class RegExper {
   ///
   /// 注意前后不包含变量正则表达式。
   static RegExp get fullName => variableMatching(
-        '(${InternalVariableConstant.getAllNames.map((e) => '($e)').join('|').nothingMatches()})'
+        '(${InternalVariableConstantHandler.getNames.map((e) => '($e)').join('|').nothingMatches()})'
         '(_(${NType.values.map((e) => '(${e.name})').join('|').nothingMatches()})([0-9]*))?',
       );
 

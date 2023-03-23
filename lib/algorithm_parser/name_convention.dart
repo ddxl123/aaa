@@ -16,7 +16,7 @@ String checkCustomVariableNameConvention({required String name}) {
   if (keywords.contains(nameTrim)) {
     throw KnownAlgorithmException('自定义变量名称不能与关键字名称相同：$nameTrim\n关键字：${keywords.join(',')}');
   }
-  final constAllNames = InternalVariableConstant.getAllNames;
+  final constAllNames = InternalVariableConstantHandler.getNames;
   if (constAllNames.contains(nameTrim)) {
     throw KnownAlgorithmException('自定义变量名称不能与内置变量名称相同：$nameTrim\n内置变量：${constAllNames.join(',')}');
   }

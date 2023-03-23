@@ -1,6 +1,6 @@
 part of algorithm_parser;
 
-typedef ResultHandler = Future<NumberOrNull> Function(InternalVariableAtom atom);
+typedef ResultHandler = Future<RawResultOrNull> Function(InternalVariableAtom atom);
 
 class IfExpr {
   IfExpr({
@@ -12,13 +12,6 @@ class IfExpr {
   final String? ifContent;
   final String useContent;
   final IfExpr childIfExpr;
-}
-
-/// 以防 [InternalVariableAtom.filter] 忘记 return。
-class NumberOrNull {
-  NumberOrNull(this.number);
-
-  final num? number;
 }
 
 abstract class ClassificationState {
@@ -51,18 +44,18 @@ abstract class ClassificationState {
   /// 根据 [SimulationType] 进行扩展。
   Future<num?> internalVariablesResultHandler(InternalVariableAtom atom) async {
     if (simulationType == SimulationType.syntaxCheck) {
-      return (await syntaxCheckInternalVariablesResultHandler(atom)).number;
+      return (await syntaxCheckInternalVariablesResultHandler(atom)).rawTypeResult;
     } else if (simulationType == SimulationType.external) {
-      return (await externalInternalVariablesResultHandler(atom)).number;
+      return (await externalInternalVariablesResultHandler(atom)).rawTypeResult;
     }
     throw KnownAlgorithmException('未处理模拟类型：$simulationType');
   }
 
   /// 语法分析。
-  Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom);
+  Future<RawResultOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom);
 
   /// 外部处理。
-  Future<NumberOrNull> externalInternalVariablesResultHandler(InternalVariableAtom atom) async {
+  Future<RawResultOrNull> externalInternalVariablesResultHandler(InternalVariableAtom atom) async {
     if (externalResultHandler == null) throw KnownAlgorithmException('当为 SimulationType.external 类型时，externalResultHandler 不能为 null！');
     return await externalResultHandler!(atom);
   }

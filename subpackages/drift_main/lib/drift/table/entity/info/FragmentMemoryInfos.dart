@@ -9,14 +9,18 @@ class FragmentMemoryInfos extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  TextColumn get click_time => text().named("click_time").nullable()();
+  TextColumn get actual_show_time => text().named("actual_show_time")();
 
-  TextColumn get click_value => text().named("click_value").nullable()();
+  TextColumn get button_values => text().named("button_values")();
+
+  TextColumn get click_familiarity => text().named("click_familiarity")();
+
+  TextColumn get click_time => text().named("click_time")();
+
+  TextColumn get click_value => text().named("click_value")();
 
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
-
-  TextColumn get current_actual_show_time => text().named("current_actual_show_time").nullable()();
 
   @ReferenceTo([Fragments])
   TextColumn get fragment_id => text().named("fragment_id")();
@@ -24,9 +28,9 @@ class FragmentMemoryInfos extends CloudTableBase  {
   @ReferenceTo([MemoryGroups])
   TextColumn get memory_group_id => text().named("memory_group_id")();
 
-  TextColumn get next_plan_show_time => text().named("next_plan_show_time").nullable()();
+  TextColumn get next_plan_show_time => text().named("next_plan_show_time")();
 
-  TextColumn get show_familiarity => text().named("show_familiarity").nullable()();
+  TextColumn get show_familiarity => text().named("show_familiarity")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 

@@ -1157,30 +1157,42 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentMemoryInfosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _actual_show_timeMeta =
+      const VerificationMeta('actual_show_time');
+  @override
+  late final GeneratedColumn<String> actual_show_time = GeneratedColumn<String>(
+      'actual_show_time', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _button_valuesMeta =
+      const VerificationMeta('button_values');
+  @override
+  late final GeneratedColumn<String> button_values = GeneratedColumn<String>(
+      'button_values', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _click_familiarityMeta =
+      const VerificationMeta('click_familiarity');
+  @override
+  late final GeneratedColumn<String> click_familiarity =
+      GeneratedColumn<String>('click_familiarity', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _click_timeMeta =
       const VerificationMeta('click_time');
   @override
   late final GeneratedColumn<String> click_time = GeneratedColumn<String>(
-      'click_time', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      'click_time', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _click_valueMeta =
       const VerificationMeta('click_value');
   @override
   late final GeneratedColumn<String> click_value = GeneratedColumn<String>(
-      'click_value', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      'click_value', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _creator_user_idMeta =
       const VerificationMeta('creator_user_id');
   @override
   late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
       'creator_user_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _current_actual_show_timeMeta =
-      const VerificationMeta('current_actual_show_time');
-  @override
-  late final GeneratedColumn<String> current_actual_show_time =
-      GeneratedColumn<String>('current_actual_show_time', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _fragment_idMeta =
       const VerificationMeta('fragment_id');
   @override
@@ -1197,14 +1209,14 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       const VerificationMeta('next_plan_show_time');
   @override
   late final GeneratedColumn<String> next_plan_show_time =
-      GeneratedColumn<String>('next_plan_show_time', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+      GeneratedColumn<String>('next_plan_show_time', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _show_familiarityMeta =
       const VerificationMeta('show_familiarity');
   @override
   late final GeneratedColumn<String> show_familiarity = GeneratedColumn<String>(
-      'show_familiarity', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      'show_familiarity', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _created_atMeta =
       const VerificationMeta('created_at');
   @override
@@ -1224,10 +1236,12 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
+        actual_show_time,
+        button_values,
+        click_familiarity,
         click_time,
         click_value,
         creator_user_id,
-        current_actual_show_time,
         fragment_id,
         memory_group_id,
         next_plan_show_time,
@@ -1245,17 +1259,45 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('actual_show_time')) {
+      context.handle(
+          _actual_show_timeMeta,
+          actual_show_time.isAcceptableOrUnknown(
+              data['actual_show_time']!, _actual_show_timeMeta));
+    } else if (isInserting) {
+      context.missing(_actual_show_timeMeta);
+    }
+    if (data.containsKey('button_values')) {
+      context.handle(
+          _button_valuesMeta,
+          button_values.isAcceptableOrUnknown(
+              data['button_values']!, _button_valuesMeta));
+    } else if (isInserting) {
+      context.missing(_button_valuesMeta);
+    }
+    if (data.containsKey('click_familiarity')) {
+      context.handle(
+          _click_familiarityMeta,
+          click_familiarity.isAcceptableOrUnknown(
+              data['click_familiarity']!, _click_familiarityMeta));
+    } else if (isInserting) {
+      context.missing(_click_familiarityMeta);
+    }
     if (data.containsKey('click_time')) {
       context.handle(
           _click_timeMeta,
           click_time.isAcceptableOrUnknown(
               data['click_time']!, _click_timeMeta));
+    } else if (isInserting) {
+      context.missing(_click_timeMeta);
     }
     if (data.containsKey('click_value')) {
       context.handle(
           _click_valueMeta,
           click_value.isAcceptableOrUnknown(
               data['click_value']!, _click_valueMeta));
+    } else if (isInserting) {
+      context.missing(_click_valueMeta);
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
@@ -1264,13 +1306,6 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
               data['creator_user_id']!, _creator_user_idMeta));
     } else if (isInserting) {
       context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('current_actual_show_time')) {
-      context.handle(
-          _current_actual_show_timeMeta,
-          current_actual_show_time.isAcceptableOrUnknown(
-              data['current_actual_show_time']!,
-              _current_actual_show_timeMeta));
     }
     if (data.containsKey('fragment_id')) {
       context.handle(
@@ -1293,12 +1328,16 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
           _next_plan_show_timeMeta,
           next_plan_show_time.isAcceptableOrUnknown(
               data['next_plan_show_time']!, _next_plan_show_timeMeta));
+    } else if (isInserting) {
+      context.missing(_next_plan_show_timeMeta);
     }
     if (data.containsKey('show_familiarity')) {
       context.handle(
           _show_familiarityMeta,
           show_familiarity.isAcceptableOrUnknown(
               data['show_familiarity']!, _show_familiarityMeta));
+    } else if (isInserting) {
+      context.missing(_show_familiarityMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -1330,23 +1369,26 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   FragmentMemoryInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentMemoryInfo(
+      actual_show_time: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}actual_show_time'])!,
+      button_values: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}button_values'])!,
+      click_familiarity: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}click_familiarity'])!,
       click_time: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}click_time']),
+          .read(DriftSqlType.string, data['${effectivePrefix}click_time'])!,
       click_value: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}click_value']),
+          .read(DriftSqlType.string, data['${effectivePrefix}click_value'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      current_actual_show_time: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}current_actual_show_time']),
       fragment_id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}fragment_id'])!,
       memory_group_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}memory_group_id'])!,
       next_plan_show_time: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}next_plan_show_time']),
+          DriftSqlType.string, data['${effectivePrefix}next_plan_show_time'])!,
       show_familiarity: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}show_familiarity']),
+          DriftSqlType.string, data['${effectivePrefix}show_familiarity'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
@@ -1364,51 +1406,46 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
 
 class FragmentMemoryInfo extends DataClass
     implements Insertable<FragmentMemoryInfo> {
-  String? click_time;
-  String? click_value;
+  String actual_show_time;
+  String button_values;
+  String click_familiarity;
+  String click_time;
+  String click_value;
   int creator_user_id;
-  String? current_actual_show_time;
   String fragment_id;
   String memory_group_id;
-  String? next_plan_show_time;
-  String? show_familiarity;
+  String next_plan_show_time;
+  String show_familiarity;
   DateTime created_at;
   String id;
   DateTime updated_at;
   FragmentMemoryInfo(
-      {this.click_time,
-      this.click_value,
+      {required this.actual_show_time,
+      required this.button_values,
+      required this.click_familiarity,
+      required this.click_time,
+      required this.click_value,
       required this.creator_user_id,
-      this.current_actual_show_time,
       required this.fragment_id,
       required this.memory_group_id,
-      this.next_plan_show_time,
-      this.show_familiarity,
+      required this.next_plan_show_time,
+      required this.show_familiarity,
       required this.created_at,
       required this.id,
       required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || click_time != null) {
-      map['click_time'] = Variable<String>(click_time);
-    }
-    if (!nullToAbsent || click_value != null) {
-      map['click_value'] = Variable<String>(click_value);
-    }
+    map['actual_show_time'] = Variable<String>(actual_show_time);
+    map['button_values'] = Variable<String>(button_values);
+    map['click_familiarity'] = Variable<String>(click_familiarity);
+    map['click_time'] = Variable<String>(click_time);
+    map['click_value'] = Variable<String>(click_value);
     map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || current_actual_show_time != null) {
-      map['current_actual_show_time'] =
-          Variable<String>(current_actual_show_time);
-    }
     map['fragment_id'] = Variable<String>(fragment_id);
     map['memory_group_id'] = Variable<String>(memory_group_id);
-    if (!nullToAbsent || next_plan_show_time != null) {
-      map['next_plan_show_time'] = Variable<String>(next_plan_show_time);
-    }
-    if (!nullToAbsent || show_familiarity != null) {
-      map['show_familiarity'] = Variable<String>(show_familiarity);
-    }
+    map['next_plan_show_time'] = Variable<String>(next_plan_show_time);
+    map['show_familiarity'] = Variable<String>(show_familiarity);
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
@@ -1417,24 +1454,16 @@ class FragmentMemoryInfo extends DataClass
 
   FragmentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
     return FragmentMemoryInfosCompanion(
-      click_time: click_time == null && nullToAbsent
-          ? const Value.absent()
-          : Value(click_time),
-      click_value: click_value == null && nullToAbsent
-          ? const Value.absent()
-          : Value(click_value),
+      actual_show_time: Value(actual_show_time),
+      button_values: Value(button_values),
+      click_familiarity: Value(click_familiarity),
+      click_time: Value(click_time),
+      click_value: Value(click_value),
       creator_user_id: Value(creator_user_id),
-      current_actual_show_time: current_actual_show_time == null && nullToAbsent
-          ? const Value.absent()
-          : Value(current_actual_show_time),
       fragment_id: Value(fragment_id),
       memory_group_id: Value(memory_group_id),
-      next_plan_show_time: next_plan_show_time == null && nullToAbsent
-          ? const Value.absent()
-          : Value(next_plan_show_time),
-      show_familiarity: show_familiarity == null && nullToAbsent
-          ? const Value.absent()
-          : Value(show_familiarity),
+      next_plan_show_time: Value(next_plan_show_time),
+      show_familiarity: Value(show_familiarity),
       created_at: Value(created_at),
       id: Value(id),
       updated_at: Value(updated_at),
@@ -1445,16 +1474,17 @@ class FragmentMemoryInfo extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentMemoryInfo(
-      click_time: serializer.fromJson<String?>(json['click_time']),
-      click_value: serializer.fromJson<String?>(json['click_value']),
+      actual_show_time: serializer.fromJson<String>(json['actual_show_time']),
+      button_values: serializer.fromJson<String>(json['button_values']),
+      click_familiarity: serializer.fromJson<String>(json['click_familiarity']),
+      click_time: serializer.fromJson<String>(json['click_time']),
+      click_value: serializer.fromJson<String>(json['click_value']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      current_actual_show_time:
-          serializer.fromJson<String?>(json['current_actual_show_time']),
       fragment_id: serializer.fromJson<String>(json['fragment_id']),
       memory_group_id: serializer.fromJson<String>(json['memory_group_id']),
       next_plan_show_time:
-          serializer.fromJson<String?>(json['next_plan_show_time']),
-      show_familiarity: serializer.fromJson<String?>(json['show_familiarity']),
+          serializer.fromJson<String>(json['next_plan_show_time']),
+      show_familiarity: serializer.fromJson<String>(json['show_familiarity']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
@@ -1464,15 +1494,16 @@ class FragmentMemoryInfo extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'click_time': serializer.toJson<String?>(click_time),
-      'click_value': serializer.toJson<String?>(click_value),
+      'actual_show_time': serializer.toJson<String>(actual_show_time),
+      'button_values': serializer.toJson<String>(button_values),
+      'click_familiarity': serializer.toJson<String>(click_familiarity),
+      'click_time': serializer.toJson<String>(click_time),
+      'click_value': serializer.toJson<String>(click_value),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'current_actual_show_time':
-          serializer.toJson<String?>(current_actual_show_time),
       'fragment_id': serializer.toJson<String>(fragment_id),
       'memory_group_id': serializer.toJson<String>(memory_group_id),
-      'next_plan_show_time': serializer.toJson<String?>(next_plan_show_time),
-      'show_familiarity': serializer.toJson<String?>(show_familiarity),
+      'next_plan_show_time': serializer.toJson<String>(next_plan_show_time),
+      'show_familiarity': serializer.toJson<String>(show_familiarity),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
@@ -1480,32 +1511,30 @@ class FragmentMemoryInfo extends DataClass
   }
 
   FragmentMemoryInfo copyWith(
-          {Value<String?> click_time = const Value.absent(),
-          Value<String?> click_value = const Value.absent(),
+          {String? actual_show_time,
+          String? button_values,
+          String? click_familiarity,
+          String? click_time,
+          String? click_value,
           int? creator_user_id,
-          Value<String?> current_actual_show_time = const Value.absent(),
           String? fragment_id,
           String? memory_group_id,
-          Value<String?> next_plan_show_time = const Value.absent(),
-          Value<String?> show_familiarity = const Value.absent(),
+          String? next_plan_show_time,
+          String? show_familiarity,
           DateTime? created_at,
           String? id,
           DateTime? updated_at}) =>
       FragmentMemoryInfo(
-        click_time: click_time.present ? click_time.value : this.click_time,
-        click_value: click_value.present ? click_value.value : this.click_value,
+        actual_show_time: actual_show_time ?? this.actual_show_time,
+        button_values: button_values ?? this.button_values,
+        click_familiarity: click_familiarity ?? this.click_familiarity,
+        click_time: click_time ?? this.click_time,
+        click_value: click_value ?? this.click_value,
         creator_user_id: creator_user_id ?? this.creator_user_id,
-        current_actual_show_time: current_actual_show_time.present
-            ? current_actual_show_time.value
-            : this.current_actual_show_time,
         fragment_id: fragment_id ?? this.fragment_id,
         memory_group_id: memory_group_id ?? this.memory_group_id,
-        next_plan_show_time: next_plan_show_time.present
-            ? next_plan_show_time.value
-            : this.next_plan_show_time,
-        show_familiarity: show_familiarity.present
-            ? show_familiarity.value
-            : this.show_familiarity,
+        next_plan_show_time: next_plan_show_time ?? this.next_plan_show_time,
+        show_familiarity: show_familiarity ?? this.show_familiarity,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
         updated_at: updated_at ?? this.updated_at,
@@ -1513,10 +1542,12 @@ class FragmentMemoryInfo extends DataClass
   @override
   String toString() {
     return (StringBuffer('FragmentMemoryInfo(')
+          ..write('actual_show_time: $actual_show_time, ')
+          ..write('button_values: $button_values, ')
+          ..write('click_familiarity: $click_familiarity, ')
           ..write('click_time: $click_time, ')
           ..write('click_value: $click_value, ')
           ..write('creator_user_id: $creator_user_id, ')
-          ..write('current_actual_show_time: $current_actual_show_time, ')
           ..write('fragment_id: $fragment_id, ')
           ..write('memory_group_id: $memory_group_id, ')
           ..write('next_plan_show_time: $next_plan_show_time, ')
@@ -1530,10 +1561,12 @@ class FragmentMemoryInfo extends DataClass
 
   @override
   int get hashCode => Object.hash(
+      actual_show_time,
+      button_values,
+      click_familiarity,
       click_time,
       click_value,
       creator_user_id,
-      current_actual_show_time,
       fragment_id,
       memory_group_id,
       next_plan_show_time,
@@ -1545,10 +1578,12 @@ class FragmentMemoryInfo extends DataClass
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentMemoryInfo &&
+          other.actual_show_time == this.actual_show_time &&
+          other.button_values == this.button_values &&
+          other.click_familiarity == this.click_familiarity &&
           other.click_time == this.click_time &&
           other.click_value == this.click_value &&
           other.creator_user_id == this.creator_user_id &&
-          other.current_actual_show_time == this.current_actual_show_time &&
           other.fragment_id == this.fragment_id &&
           other.memory_group_id == this.memory_group_id &&
           other.next_plan_show_time == this.next_plan_show_time &&
@@ -1559,22 +1594,26 @@ class FragmentMemoryInfo extends DataClass
 }
 
 class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
-  Value<String?> click_time;
-  Value<String?> click_value;
+  Value<String> actual_show_time;
+  Value<String> button_values;
+  Value<String> click_familiarity;
+  Value<String> click_time;
+  Value<String> click_value;
   Value<int> creator_user_id;
-  Value<String?> current_actual_show_time;
   Value<String> fragment_id;
   Value<String> memory_group_id;
-  Value<String?> next_plan_show_time;
-  Value<String?> show_familiarity;
+  Value<String> next_plan_show_time;
+  Value<String> show_familiarity;
   Value<DateTime> created_at;
   Value<String> id;
   Value<DateTime> updated_at;
   FragmentMemoryInfosCompanion({
+    this.actual_show_time = const Value.absent(),
+    this.button_values = const Value.absent(),
+    this.click_familiarity = const Value.absent(),
     this.click_time = const Value.absent(),
     this.click_value = const Value.absent(),
     this.creator_user_id = const Value.absent(),
-    this.current_actual_show_time = const Value.absent(),
     this.fragment_id = const Value.absent(),
     this.memory_group_id = const Value.absent(),
     this.next_plan_show_time = const Value.absent(),
@@ -1584,28 +1623,39 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     this.updated_at = const Value.absent(),
   });
   FragmentMemoryInfosCompanion.insert({
-    this.click_time = const Value.absent(),
-    this.click_value = const Value.absent(),
+    required String actual_show_time,
+    required String button_values,
+    required String click_familiarity,
+    required String click_time,
+    required String click_value,
     required int creator_user_id,
-    this.current_actual_show_time = const Value.absent(),
     required String fragment_id,
     required String memory_group_id,
-    this.next_plan_show_time = const Value.absent(),
-    this.show_familiarity = const Value.absent(),
+    required String next_plan_show_time,
+    required String show_familiarity,
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
+  })  : actual_show_time = Value(actual_show_time),
+        button_values = Value(button_values),
+        click_familiarity = Value(click_familiarity),
+        click_time = Value(click_time),
+        click_value = Value(click_value),
+        creator_user_id = Value(creator_user_id),
         fragment_id = Value(fragment_id),
         memory_group_id = Value(memory_group_id),
+        next_plan_show_time = Value(next_plan_show_time),
+        show_familiarity = Value(show_familiarity),
         created_at = Value(created_at),
         id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentMemoryInfo> custom({
+    Expression<String>? actual_show_time,
+    Expression<String>? button_values,
+    Expression<String>? click_familiarity,
     Expression<String>? click_time,
     Expression<String>? click_value,
     Expression<int>? creator_user_id,
-    Expression<String>? current_actual_show_time,
     Expression<String>? fragment_id,
     Expression<String>? memory_group_id,
     Expression<String>? next_plan_show_time,
@@ -1615,11 +1665,12 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
+      if (actual_show_time != null) 'actual_show_time': actual_show_time,
+      if (button_values != null) 'button_values': button_values,
+      if (click_familiarity != null) 'click_familiarity': click_familiarity,
       if (click_time != null) 'click_time': click_time,
       if (click_value != null) 'click_value': click_value,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (current_actual_show_time != null)
-        'current_actual_show_time': current_actual_show_time,
       if (fragment_id != null) 'fragment_id': fragment_id,
       if (memory_group_id != null) 'memory_group_id': memory_group_id,
       if (next_plan_show_time != null)
@@ -1632,23 +1683,26 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   }
 
   FragmentMemoryInfosCompanion copyWith(
-      {Value<String?>? click_time,
-      Value<String?>? click_value,
+      {Value<String>? actual_show_time,
+      Value<String>? button_values,
+      Value<String>? click_familiarity,
+      Value<String>? click_time,
+      Value<String>? click_value,
       Value<int>? creator_user_id,
-      Value<String?>? current_actual_show_time,
       Value<String>? fragment_id,
       Value<String>? memory_group_id,
-      Value<String?>? next_plan_show_time,
-      Value<String?>? show_familiarity,
+      Value<String>? next_plan_show_time,
+      Value<String>? show_familiarity,
       Value<DateTime>? created_at,
       Value<String>? id,
       Value<DateTime>? updated_at}) {
     return FragmentMemoryInfosCompanion(
+      actual_show_time: actual_show_time ?? this.actual_show_time,
+      button_values: button_values ?? this.button_values,
+      click_familiarity: click_familiarity ?? this.click_familiarity,
       click_time: click_time ?? this.click_time,
       click_value: click_value ?? this.click_value,
       creator_user_id: creator_user_id ?? this.creator_user_id,
-      current_actual_show_time:
-          current_actual_show_time ?? this.current_actual_show_time,
       fragment_id: fragment_id ?? this.fragment_id,
       memory_group_id: memory_group_id ?? this.memory_group_id,
       next_plan_show_time: next_plan_show_time ?? this.next_plan_show_time,
@@ -1662,6 +1716,15 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (actual_show_time.present) {
+      map['actual_show_time'] = Variable<String>(actual_show_time.value);
+    }
+    if (button_values.present) {
+      map['button_values'] = Variable<String>(button_values.value);
+    }
+    if (click_familiarity.present) {
+      map['click_familiarity'] = Variable<String>(click_familiarity.value);
+    }
     if (click_time.present) {
       map['click_time'] = Variable<String>(click_time.value);
     }
@@ -1670,10 +1733,6 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (current_actual_show_time.present) {
-      map['current_actual_show_time'] =
-          Variable<String>(current_actual_show_time.value);
     }
     if (fragment_id.present) {
       map['fragment_id'] = Variable<String>(fragment_id.value);
@@ -1702,10 +1761,12 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   @override
   String toString() {
     return (StringBuffer('FragmentMemoryInfosCompanion(')
+          ..write('actual_show_time: $actual_show_time, ')
+          ..write('button_values: $button_values, ')
+          ..write('click_familiarity: $click_familiarity, ')
           ..write('click_time: $click_time, ')
           ..write('click_value: $click_value, ')
           ..write('creator_user_id: $creator_user_id, ')
-          ..write('current_actual_show_time: $current_actual_show_time, ')
           ..write('fragment_id: $fragment_id, ')
           ..write('memory_group_id: $memory_group_id, ')
           ..write('next_plan_show_time: $next_plan_show_time, ')

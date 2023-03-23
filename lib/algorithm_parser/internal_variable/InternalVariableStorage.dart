@@ -9,9 +9,9 @@ class NTypeNumber {
   String get getCombineString => '_${nType.name}$suffixNumber';
 }
 
-class IvFilter<T extends num?> {
-  /// [T] 为返回的数值类型。
-  final Future<List<T>> Function() ivf;
+class IvFilter<R> {
+  /// [R] 为获取到的数值类型。
+  final Future<R> Function() ivf;
 
   /// 如果在同一个 [InternalVariableStorage] 对象中，重复出现相同变量多次，是否要重新获取。
   final bool isReGet;
@@ -19,166 +19,155 @@ class IvFilter<T extends num?> {
   IvFilter({required this.ivf, required this.isReGet});
 }
 
-/// 无论识别到的变量是否已识别过，都会生成一个新的 [InternalVariableAtom] 实例。
+/// 无论识别到的内置变量是否已识别过，只要识别到一个内置变量，都会生成一个新的 [InternalVariableAtom] 实例。
 class InternalVariableAtom<CS extends ClassificationState> {
   InternalVariableAtom({
-    required this.internalVariableConst,
+    required this.internalVariableConstant,
     required this.currentState,
     required this.nTypeNumber,
     required this.hasNullMerge,
   });
 
-  final InternalVariableConst internalVariableConst;
+  final InternalVariableConstant internalVariableConstant;
   final CS currentState;
   final NTypeNumber? nTypeNumber;
 
   /// 变量后面是否存在空合并符号。
   final bool hasNullMerge;
 
-  String get getCombineName => internalVariableConst.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
-
-  /// 返回空表示当前 [internalVariableConst] 不能使用 [currentState]。
-  UsableState? getCurrentUsableStateForCurrentState() {
-    final manyUsable = internalVariableConst.usableStates.where((element) => element.usableStateType == currentState.getStateType);
-    if (manyUsable.isEmpty) return null;
-    if (manyUsable.length == 1) return manyUsable.single;
-    throw '初始化配置异常：usable 里出现了两个相同实例！';
-  }
+  String get getCombineName => internalVariableConstant.name + (nTypeNumber == null ? '' : nTypeNumber!.getCombineString);
 
   /// 排查错误。
-  void handle() {
-    final usableState = getCurrentUsableStateForCurrentState();
-    if (usableState == null) {
-      throw '该算法内容不能使用 $getCombineName 变量，因为获取到的结果值始终为空！';
-    }
-
-    if (nTypeNumber != null) {
-      final isUsableSuffix = usableState.usableSuffixNTypes.contains(nTypeNumber!.nType);
-      if (!isUsableSuffix) {
-        throw '${internalVariableConst.name} 变量不支持 "_${nTypeNumber!.nType}n" 后缀！';
+  void handleException() {
+    if (internalVariableConstant.isReadFromMemoryInfo) {
+      if (!internalVariableConstant.isNullable && hasNullMerge) {
+        throw KnownAlgorithmException("$getCombineName 内置变量必然不为空，请去掉空合并运算符！");
+      }
+      if (nTypeNumber == null) {
+        throw KnownAlgorithmException("$getCombineName 内置变量缺少 _${NType.last}n 或 _${NType.times}n 后缀！");
       }
 
       if (nTypeNumber!.suffixNumber <= 0) {
-        throw '"_${nTypeNumber!.nType.name}n" 内的 "n" 值必须大于 0！';
+        throw KnownAlgorithmException('"$getCombineName" 内置变量的 "n" 值必须大于 0！');
       }
-
-      if (!hasNullMerge) {
-        throw '$getCombineName 扩展变量存在为空的可能性，请使用空合并运算符(??)来预防！';
-      }
-    }
-
-    if (nTypeNumber == null) {
-      if (usableState.selfExistStatus == SelfExistStatus.nullable && !hasNullMerge) {
-        throw '$getCombineName 变量存在为空的可能性，请使用空合并运算符(??)来预防！';
-      }
-      if (usableState.selfExistStatus == SelfExistStatus.notEmpty && hasNullMerge) {
-        throw '$getCombineName 变量必然不为空，请去掉空合并运算符(??)！';
-      }
-      if (usableState.selfExistStatus == SelfExistStatus.empty && !hasNullMerge) {
-        throw '$getCombineName 变量在当前算法下必然为空，请使用空合并运算符(??)来预防，或者放弃使用该变量！';
+    } else {
+      if (nTypeNumber != null) {
+        throw KnownAlgorithmException('$getCombineName 内置变量不支持 _${NType.last}n 或 _${NType.times}n 后缀！');
       }
     }
   }
 
-  Future<NumberOrNull> save({
+  /// 根据 [ivFilter] 查询该变量原始类型值(例如 字符串数组、int、double...)，并将查询结果存储在 [storage] 中，
+  /// 最后根据 [nTypeNumber] 返回变量结果值。
+  Future<NR> saveAndGet<NR>({
     required InternalVariableStorage storage,
-    required IvFilter<num?> ivFilter,
+    required IvFilter ivFilter,
   }) async {
-    if (getCurrentUsableStateForCurrentState()?.selfExistStatus == SelfExistStatus.empty) {
-      return NumberOrNull(null);
-    }
-    // 获取需要的 index 对应的结果值。
-    num? singleResult({required InternalVariableWithResults i}) {
-      if (nTypeNumber == null) {
-        return i.results.last;
-      }
-      if (nTypeNumber!.nType == NType.times) {
-        return i.getResult(index: nTypeNumber!.suffixNumber);
-      }
-      if (nTypeNumber!.nType == NType.last) {
-        return i.getResult(index: i.results.length - 1 - nTypeNumber!.suffixNumber);
-      }
-      throw '未处理类型：${nTypeNumber!.nType}';
-    }
-
+    // 若变量值已获取过
     for (var element in storage.storage) {
-      if (element.internalVariableConst == internalVariableConst) {
-        if (element.results.isEmpty || ivFilter.isReGet) {
-          element.results.clear();
+      if (element.atom.getCombineName == this.getCombineName) {
+        // 若该变量值已获取但为空，或者需要重新获取时
+        if (element.rawTypeResult == null || ivFilter.isReGet) {
           final ivfResults = await ivFilter.ivf();
-          element.results.addAll(ivfResults);
+          element.rawTypeResult = ivfResults;
         }
-        return NumberOrNull(singleResult(i: element));
+        return element.getNResult(nTypeNumber: nTypeNumber);
       }
     }
 
-    final newI = InternalVariableWithResults(internalVariableConst: internalVariableConst);
+    // 若变量值未获取过
+    final newI = InternalVariableWithResults(atom: this);
     storage.storage.add(newI);
     final ivfResults = await ivFilter.ivf();
-    newI.results.addAll(ivfResults);
-    return NumberOrNull(singleResult(i: newI));
+    newI.rawTypeResult = ivfResults;
+    return newI.getNResult(nTypeNumber: nTypeNumber);
   }
 
-  Future<NumberOrNull> filter({
+  Future<NR> filter<NR>({
     required InternalVariableStorage storage,
-    required IvFilter<int?> countAllIF,
-    required IvFilter<int?> countNewIF,
-    required IvFilter<int?> timesIF,
-    required IvFilter<int?> currentActualShowTimeIF,
-    required IvFilter<int?> nextPlanedShowTimeIF,
-    required IvFilter<double?> showFamiliarIF,
-    required IvFilter<int?> clickTimeIF,
-    required IvFilter<double?> clickValueIF,
+    required IvFilter<int> k1countAllConst,
+    required IvFilter<int> k2CountNewConst,
+    required IvFilter<int> k3TimesConst,
+    required IvFilter<int> k4CurrentShowTimeConst,
+    required IvFilter<double> k5CurrentShowFamiliarityConst,
+    required IvFilter<List<double>> k6CurrentButtonValuesConst,
+    required IvFilter<List<int>> i1ActualShowTimeConst,
+    required IvFilter<List<int>> i2NextPlanShowTimeConst,
+    required IvFilter<List<double>> i3ShowFamiliarityConst,
+    required IvFilter<List<double>> i4ClickFamiliarityConst,
+    required IvFilter<List<int>> i5ClickTimeConst,
+    required IvFilter<List<double>> i6ClickValueConst,
+    required IvFilter<List<List<double>>> i7ButtonValuesConst,
   }) async {
-    if (internalVariableConst == InternalVariableConstant.countAllConst) {
-      return await save(storage: storage, ivFilter: countAllIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.k1countAllConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.countNewConst) {
-      return await save(storage: storage, ivFilter: countNewIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.k2CountNewConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.timesConst) {
-      return await save(storage: storage, ivFilter: timesIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.k3TimesConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.currentActualShowTimeConst) {
-      return await save(storage: storage, ivFilter: currentActualShowTimeIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.k4CurrentShowTimeConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.nextPlanedShowTimeConst) {
-      return await save(storage: storage, ivFilter: nextPlanedShowTimeIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.k5CurrentShowFamiliarityConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.showFamiliarConst) {
-      return await save(storage: storage, ivFilter: showFamiliarIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValuesConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.clickTimeConst) {
-      return await save(storage: storage, ivFilter: clickTimeIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.i1ActualShowTimeConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConst == InternalVariableConstant.clickValueConst) {
-      return await save(storage: storage, ivFilter: clickValueIF);
+    if (internalVariableConstant == InternalVariableConstantHandler.i2NextPlanShowTimeConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
     }
-    throw '未处理变量: $getCombineName';
+    if (internalVariableConstant == InternalVariableConstantHandler.i3ShowFamiliarityConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.i4ClickFamiliarityConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.i5ClickTimeConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.i6ClickValueConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.i7ButtonValuesConst) {
+      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+    }
+    throw KnownAlgorithmException('filter 未处理变量: $getCombineName');
   }
 }
 
 class InternalVariableWithResults {
-  final InternalVariableConst internalVariableConst;
+  InternalVariableWithResults({required this.atom});
 
-  /// 存储每次的结果，按照时间排序。
-  /// 最后一个 index 始终是当前展示的结果。
-  /// 若当前展示的结果无法获取，则必须默认赋值为 null，即 [results.length] 必然大于等于 1。
-  final List<num?> results = [];
+  final InternalVariableAtom atom;
 
-  InternalVariableWithResults({required this.internalVariableConst});
+  dynamic rawTypeResult = null;
 
-  num? getResult({required int index}) {
-    if (results.isEmpty) {
-      throw '结果集不能为空！';
+  E? getNResult<E>({required NTypeNumber? nTypeNumber}) {
+    if (rawTypeResult is List) {
+      if (atom.internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValuesConst) {
+
+      }
+
+      if (rawTypeResult.isEmpty) {
+        throw KnownAlgorithmException("getNResult 结果集不能为空！");
+      }
+      if (rawTypeResult.length - 1 < index || index < 0) {
+        return null;
+      }
+      return rawTypeResult[index] as E;
     }
-    if (results.length - 1 < index || index < 0) {
-      return null;
-    }
-    return results[index];
+    return rawTypeResult as E?;
   }
 }
 
+/// 存储每个内置变量的仓库。
 class InternalVariableStorage {
   final List<InternalVariableWithResults> storage = [];
 }

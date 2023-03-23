@@ -188,11 +188,12 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required SyncTag syncTag,
   }) async {
     await reset(
+      actual_show_time: fragmentMemoryInfo.actual_show_time.toValue(),
+      button_values: fragmentMemoryInfo.button_values.toValue(),
+      click_familiarity: fragmentMemoryInfo.click_familiarity.toValue(),
       click_time: fragmentMemoryInfo.click_time.toValue(),
       click_value: fragmentMemoryInfo.click_value.toValue(),
       creator_user_id: fragmentMemoryInfo.creator_user_id.toValue(),
-      current_actual_show_time:
-          fragmentMemoryInfo.current_actual_show_time.toValue(),
       fragment_id: fragmentMemoryInfo.fragment_id.toValue(),
       memory_group_id: fragmentMemoryInfo.memory_group_id.toValue(),
       next_plan_show_time: fragmentMemoryInfo.next_plan_show_time.toValue(),
@@ -209,18 +210,37 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<FragmentMemoryInfo> reset({
-    required Value<String?> click_time,
-    required Value<String?> click_value,
+    required Value<String> actual_show_time,
+    required Value<String> button_values,
+    required Value<String> click_familiarity,
+    required Value<String> click_time,
+    required Value<String> click_value,
     required Value<int> creator_user_id,
-    required Value<String?> current_actual_show_time,
     required Value<String> fragment_id,
     required Value<String> memory_group_id,
-    required Value<String?> next_plan_show_time,
-    required Value<String?> show_familiarity,
+    required Value<String> next_plan_show_time,
+    required Value<String> show_familiarity,
     required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (actual_show_time.present &&
+        this.actual_show_time != actual_show_time.value) {
+      isCloudModify = true;
+      this.actual_show_time = actual_show_time.value;
+    }
+
+    if (button_values.present && this.button_values != button_values.value) {
+      isCloudModify = true;
+      this.button_values = button_values.value;
+    }
+
+    if (click_familiarity.present &&
+        this.click_familiarity != click_familiarity.value) {
+      isCloudModify = true;
+      this.click_familiarity = click_familiarity.value;
+    }
+
     if (click_time.present && this.click_time != click_time.value) {
       isCloudModify = true;
       this.click_time = click_time.value;
@@ -235,12 +255,6 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
         this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;
       this.creator_user_id = creator_user_id.value;
-    }
-
-    if (current_actual_show_time.present &&
-        this.current_actual_show_time != current_actual_show_time.value) {
-      isCloudModify = true;
-      this.current_actual_show_time = current_actual_show_time.value;
     }
 
     if (fragment_id.present && this.fragment_id != fragment_id.value) {

@@ -81,7 +81,7 @@ class InAppStageAbController extends AbController {
     if (currentPerformer() == null) return;
 
     // 必须按照顺序进行获取，否则要么没有对应的值，要么可能会使用上一次的值。
-    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time  !);
+    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!);
     currentShowFamiliar = await _parseCurrentFamiliarity();
 
     final pbd = await _parseButtonData();
@@ -114,11 +114,15 @@ class InAppStageAbController extends AbController {
               creator_user_id: toAbsent(),
               fragment_id: toAbsent(),
               memory_group_id: toAbsent(),
-              click_time: (info.click_time ?? '[]').arrayAdd(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
-              click_value: (info.click_value ?? '[]').arrayAdd(clickValue).toValue(),
-              current_actual_show_time: (info.current_actual_show_time ?? '[]').arrayAdd(currentActualShowTime).toValue(),
-              next_plan_show_time: (info.next_plan_show_time ?? '[]').arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
-              show_familiarity: (info.show_familiarity ?? '[]').arrayAdd(currentShowFamiliar).toValue(),
+              click_time: info.click_time.arrayAdd(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
+              click_value: info.click_value.arrayAdd(clickValue).toValue(),
+              actual_show_time: info.actual_show_time.arrayAdd(currentActualShowTime).toValue(),
+              next_plan_show_time: info.next_plan_show_time.arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
+              show_familiarity: info.show_familiarity.arrayAdd(currentShowFamiliar).toValue(),
+              // TODO: currentActualShowTime 改成 show_familiarity
+              click_familiarity: info.show_familiarity.arrayAdd(currentActualShowTime).toValue(),
+              // TODO:
+              button_values: "".toValue(),
               syncTag: st,
             );
       },

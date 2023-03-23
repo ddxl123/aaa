@@ -23,7 +23,7 @@ class FamiliarityState extends ClassificationState {
   String toStringResult() => result.toString();
 
   @override
-  Future<NumberOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
+  Future<RawResultOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
     const countCapping = 10000;
     // 5个月
     const timeCapping = 12960000;
