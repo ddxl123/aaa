@@ -10,7 +10,7 @@ class NTypeNumber {
 }
 
 class IvFilter<R> {
-  /// [R] 为获取到的数值类型。
+  /// [R] ：查看 [InternalVariableWithResults.rawTypeResult] 注释。
   final Future<R> Function() ivf;
 
   /// 如果在同一个 [InternalVariableStorage] 对象中，重复出现相同变量多次，是否要重新获取。
@@ -30,6 +30,8 @@ class InternalVariableAtom<CS extends ClassificationState> {
 
   final InternalVariableConstant internalVariableConstant;
   final CS currentState;
+
+  /// 若 [internalVariableConstant] 不支持 _n 后缀，则 [nTypeNumber] 必然为空，否则必然不为空。
   final NTypeNumber? nTypeNumber;
 
   /// 变量后面是否存在空合并符号。
@@ -57,8 +59,10 @@ class InternalVariableAtom<CS extends ClassificationState> {
     }
   }
 
-  /// 根据 [ivFilter] 查询该变量原始类型值(例如 字符串数组、int、double...)，并将查询结果存储在 [storage] 中，
-  /// 最后根据 [nTypeNumber] 返回变量结果值。
+  /// 存储并获取 atom 值。
+  ///
+  /// 根据 [ivFilter] 查询该变量原始数据，并将查询结果存储在 [storage] 中，
+  /// 最后根据会 [nTypeNumber] 返回 atom 值。
   Future<NR> saveAndGet<NR>({
     required InternalVariableStorage storage,
     required IvFilter ivFilter,
@@ -68,8 +72,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
       if (element.atom.getCombineName == this.getCombineName) {
         // 若该变量值已获取但为空，或者需要重新获取时
         if (element.rawTypeResult == null || ivFilter.isReGet) {
-          final ivfResults = await ivFilter.ivf();
-          element.rawTypeResult = ivfResults;
+          element.rawTypeResult = await ivFilter.ivf();
         }
         return element.getNResult(nTypeNumber: nTypeNumber);
       }
@@ -78,8 +81,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
     // 若变量值未获取过
     final newI = InternalVariableWithResults(atom: this);
     storage.storage.add(newI);
-    final ivfResults = await ivFilter.ivf();
-    newI.rawTypeResult = ivfResults;
+    newI.rawTypeResult = await ivFilter.ivf();
     return newI.getNResult(nTypeNumber: nTypeNumber);
   }
 
@@ -147,23 +149,50 @@ class InternalVariableWithResults {
 
   final InternalVariableAtom atom;
 
+  /// 原始数据。
+  ///
+  /// 例如 N 类型 List 列表、非 N 类型数据。
+  /// 例如：all_count=123(int类型)，show_time_lastn=[1,2,3](数组类型)，button_data_lastn=[[1,2,3],[1],[]]
   dynamic rawTypeResult = null;
 
+  /// 获取 [rawTypeResult] 中某个元素或自身。
+  ///
+  /// 若 [rawTypeResult] 自身为非数组，则返回自身，且 [nTypeNumber] 必然为空。
+  /// 若 [rawTypeResult] 自身为数组，则返回 [nTypeNumber] 角标元素，且 [nTypeNumber] 必然不为空。
+  ///
+  /// 当 [nTypeNumber] 为空时，返回结果必然不为空。
+  /// 返回 null 的可能性：
+  ///  - [nTypeNumber] 超出 list 长度。
   E? getNResult<E>({required NTypeNumber? nTypeNumber}) {
-    if (rawTypeResult is List) {
-      if (atom.internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValuesConst) {
-
+    if (rawTypeResult is List?) {
+      if (rawTypeResult == null) {
+        throw KnownAlgorithmException("当 rawTypeResult 为 List 时，rawTypeResult 不能为 null！");
       }
-
+      if (nTypeNumber == null) {
+        throw KnownAlgorithmException("当 rawTypeResult 为 List 时，nTypeNumber 不能为 null！");
+      }
       if (rawTypeResult.isEmpty) {
         throw KnownAlgorithmException("getNResult 结果集不能为空！");
       }
-      if (rawTypeResult.length - 1 < index || index < 0) {
+      if (nTypeNumber.suffixNumber > (rawTypeResult as List).length) {
         return null;
       }
-      return rawTypeResult[index] as E;
+      if (nTypeNumber.nType == NType.times) {
+        return rawTypeResult[nTypeNumber.suffixNumber - 1];
+      } else if (nTypeNumber.nType == NType.last) {
+        return (rawTypeResult as List).reversed.toList()[nTypeNumber.suffixNumber - 1];
+      } else {
+        throw KnownAlgorithmException("未处理 ${nTypeNumber.nType}");
+      }
+    } else {
+      if (rawTypeResult == null) {
+        throw KnownAlgorithmException("当 rawTypeResult 为不为 List? 类型时，rawTypeResult 不能为 null！");
+      }
+      if (nTypeNumber != null) {
+        throw KnownAlgorithmException("当 rawTypeResult 为非 List 时，nTypeNumber 必须为 null！");
+      }
+      return rawTypeResult as E;
     }
-    return rawTypeResult as E?;
   }
 }
 
