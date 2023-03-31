@@ -171,10 +171,10 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
       if (internalVariable2ResultMap.containsKey(fullName)) {
         if (internalVariable2ResultMap[fullName] == null) {
-          internalVariable2ResultMap[fullName] = await _state.internalVariablesResultHandler(atom);
+          internalVariable2ResultMap[fullName] = (await _state.internalVariablesResultHandler(atom)).nr;
         }
       } else {
-        internalVariable2ResultMap.addAll({fullName: await _state.internalVariablesResultHandler(atom)});
+        internalVariable2ResultMap.addAll({fullName: (await _state.internalVariablesResultHandler(atom)).nr});
       }
     }
     final replaceResult = content.replaceAllMapped(

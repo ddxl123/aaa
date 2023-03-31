@@ -23,25 +23,28 @@ class FamiliarityState extends ClassificationState {
   String toStringResult() => result.toString();
 
   @override
-  Future<RawResultOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
-    const countCapping = 10000;
-    // 5个月
-    const timeCapping = 12960000;
-
-    final countAll = math.Random().nextInt(countCapping);
-
-    final planedShowTime = math.Random().nextInt(timeCapping);
-    final actualShowTime = math.Random().nextInt(timeCapping);
+  Future<AtomResultOrNull> syntaxCheckInternalVariablesResultHandler(InternalVariableAtom atom) async {
     return await atom.filter(
       storage: internalVariableStorage,
-      countAllIF: IvFilter(ivf: () async => [countAll], isReGet: true),
-      countNewIF: IvFilter(ivf: () async => [countCapping ~/ 2], isReGet: true),
-      timesIF: IvFilter(ivf: () async => [math.Random().nextInt(9) + 1], isReGet: true),
-      currentActualShowTimeIF: IvFilter(ivf: () async => [actualShowTime], isReGet: true),
-      nextPlanedShowTimeIF: IvFilter(ivf: () async => [planedShowTime], isReGet: true),
-      showFamiliarIF: IvFilter(ivf: () async => [math.Random().nextDouble() * 200], isReGet: true),
-      clickTimeIF: IvFilter(ivf: () async => [actualShowTime + math.Random().nextInt(600)], isReGet: true),
-      clickValueIF: IvFilter(ivf: () async => [math.Random().nextDouble() * 200], isReGet: true),
+      k1countAllConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k2CountNewConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k3TimesConst: IvFilter(ivf: () async => math.Random().nextInt(9) + 1, isReGet: true),
+      k4CurrentShowTimeConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k5CurrentShowFamiliarityConst: IvFilter(ivf: () async => math.Random().nextDouble() * 200, isReGet: true),
+      k6CurrentButtonValuesConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
+      i1ActualShowTimeConst: IvFilter(ivf: () async => [1, 1, 1], isReGet: true),
+      i2NextPlanShowTimeConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
+      i3ShowFamiliarityConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
+      i4ClickFamiliarityConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
+      i5ClickTimeConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
+      i6ClickValueConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
+      i7ButtonValuesConst: IvFilter(
+          ivf: () async => [
+                [1],
+                [2],
+                [3]
+              ],
+          isReGet: true),
     );
   }
 }

@@ -19,6 +19,15 @@ class IvFilter<R> {
   IvFilter({required this.ivf, required this.isReGet});
 }
 
+/// 防止忘记返回。
+///
+/// [NR] - [InternalVariableWithResults.InternalVariableWithResults] 注释。
+class AtomResultOrNull<NR> {
+  AtomResultOrNull(this.nr);
+
+  NR? nr;
+}
+
 /// 无论识别到的内置变量是否已识别过，只要识别到一个内置变量，都会生成一个新的 [InternalVariableAtom] 实例。
 class InternalVariableAtom<CS extends ClassificationState> {
   InternalVariableAtom({
@@ -63,7 +72,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
   ///
   /// 根据 [ivFilter] 查询该变量原始数据，并将查询结果存储在 [storage] 中，
   /// 最后根据会 [nTypeNumber] 返回 atom 值。
-  Future<NR> saveAndGet<NR>({
+  Future<AtomResultOrNull<NR>> saveAndGet<NR>({
     required InternalVariableStorage storage,
     required IvFilter ivFilter,
   }) async {
@@ -74,7 +83,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
         if (element.rawTypeResult == null || ivFilter.isReGet) {
           element.rawTypeResult = await ivFilter.ivf();
         }
-        return element.getNResult(nTypeNumber: nTypeNumber);
+        return element.getNResult<NR>(nTypeNumber: nTypeNumber);
       }
     }
 
@@ -85,7 +94,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
     return newI.getNResult(nTypeNumber: nTypeNumber);
   }
 
-  Future<NR> filter<NR>({
+  Future<AtomResultOrNull<NR>> filter<NR>({
     required InternalVariableStorage storage,
     required IvFilter<int> k1countAllConst,
     required IvFilter<int> k2CountNewConst,
@@ -102,43 +111,43 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required IvFilter<List<List<double>>> i7ButtonValuesConst,
   }) async {
     if (internalVariableConstant == InternalVariableConstantHandler.k1countAllConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k2CountNewConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k3TimesConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k4CurrentShowTimeConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k5CurrentShowFamiliarityConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValuesConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i1ActualShowTimeConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i2NextPlanShowTimeConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i3ShowFamiliarityConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i4ClickFamiliarityConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i5ClickTimeConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i6ClickValueConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i7ButtonValuesConst) {
-      return await saveAndGet(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
     throw KnownAlgorithmException('filter 未处理变量: $getCombineName');
   }
@@ -163,7 +172,7 @@ class InternalVariableWithResults {
   /// 当 [nTypeNumber] 为空时，返回结果必然不为空。
   /// 返回 null 的可能性：
   ///  - [nTypeNumber] 超出 list 长度。
-  E? getNResult<E>({required NTypeNumber? nTypeNumber}) {
+  AtomResultOrNull<E> getNResult<E>({required NTypeNumber? nTypeNumber}) {
     if (rawTypeResult is List?) {
       if (rawTypeResult == null) {
         throw KnownAlgorithmException("当 rawTypeResult 为 List 时，rawTypeResult 不能为 null！");
@@ -175,7 +184,7 @@ class InternalVariableWithResults {
         throw KnownAlgorithmException("getNResult 结果集不能为空！");
       }
       if (nTypeNumber.suffixNumber > (rawTypeResult as List).length) {
-        return null;
+        return AtomResultOrNull(null);
       }
       if (nTypeNumber.nType == NType.times) {
         return rawTypeResult[nTypeNumber.suffixNumber - 1];
@@ -191,7 +200,7 @@ class InternalVariableWithResults {
       if (nTypeNumber != null) {
         throw KnownAlgorithmException("当 rawTypeResult 为非 List 时，nTypeNumber 必须为 null！");
       }
-      return rawTypeResult as E;
+      return AtomResultOrNull(rawTypeResult as E);
     }
   }
 }
