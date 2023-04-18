@@ -198,6 +198,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
       memory_group_id: fragmentMemoryInfo.memory_group_id.toValue(),
       next_plan_show_time: fragmentMemoryInfo.next_plan_show_time.toValue(),
       show_familiarity: fragmentMemoryInfo.show_familiarity.toValue(),
+      study_status: fragmentMemoryInfo.study_status.toValue(),
       syncTag: syncTag,
     );
   }
@@ -220,6 +221,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> memory_group_id,
     required Value<String> next_plan_show_time,
     required Value<String> show_familiarity,
+    required Value<StudyStatus> study_status,
     required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
@@ -278,6 +280,11 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
         this.show_familiarity != show_familiarity.value) {
       isCloudModify = true;
       this.show_familiarity = show_familiarity.value;
+    }
+
+    if (study_status.present && this.study_status != study_status.value) {
+      isCloudModify = true;
+      this.study_status = study_status.value;
     }
 
     if (isCloudModify || isLocalModify) {
@@ -748,6 +755,7 @@ extension MemoryGroupExt on MemoryGroup {
       memory_model_id: memoryGroup.memory_model_id.toValue(),
       new_display_order: memoryGroup.new_display_order.toValue(),
       new_review_display_order: memoryGroup.new_review_display_order.toValue(),
+      review_display_order: memoryGroup.review_display_order.toValue(),
       review_interval: memoryGroup.review_interval.toValue(),
       start_time: memoryGroup.start_time.toValue(),
       title: memoryGroup.title.toValue(),
@@ -768,6 +776,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String?> memory_model_id,
     required Value<NewDisplayOrder> new_display_order,
     required Value<NewReviewDisplayOrder> new_review_display_order,
+    required Value<ReviewDisplayOrder> review_display_order,
     required Value<DateTime> review_interval,
     required Value<DateTime?> start_time,
     required Value<String> title,
@@ -798,6 +807,12 @@ extension MemoryGroupExt on MemoryGroup {
         this.new_review_display_order != new_review_display_order.value) {
       isCloudModify = true;
       this.new_review_display_order = new_review_display_order.value;
+    }
+
+    if (review_display_order.present &&
+        this.review_display_order != review_display_order.value) {
+      isCloudModify = true;
+      this.review_display_order = review_display_order.value;
     }
 
     if (review_interval.present &&

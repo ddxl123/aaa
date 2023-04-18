@@ -36,8 +36,8 @@ class InternalVariableConstant<R> {
 class InternalVariableConstantHandler {
   InternalVariableConstantHandler._();
 
-  static InternalVariableConstant k1countAllConst = InternalVariableConstant<int>(
-    name: 'count_all',
+  static InternalVariableConstant k1FCountAllConst = InternalVariableConstant<int>(
+    name: 'f_count_all',
     explain: '当前记忆组全部碎片的数量',
     numericTypeExplain: '单位：个\n例如：1,2,3...',
     isReadFromMemoryInfo: false,
@@ -47,9 +47,19 @@ class InternalVariableConstantHandler {
     },
   );
 
-  static InternalVariableConstant k2CountNewConst = InternalVariableConstant<int>(
-    name: 'count_new',
-    explain: '当前记忆组中从未学习过的碎片的数量（如果本次展示的碎片也是，则本次碎片也被计算在内）',
+  static InternalVariableConstant k2FCountNeverConst = InternalVariableConstant<int>(
+    name: 'f_count_never',
+    explain: '从本次碎片展示前进行计算，当前记忆组中未学习过的碎片的数量',
+    numericTypeExplain: '单位：个\n例子：0,1,2,3...',
+    isReadFromMemoryInfo: false,
+    isNullable: false,
+    rawStringToDartTypeFunc: (String rawStringResult) {
+      return int.parse(rawStringResult);
+    },
+  );
+  static InternalVariableConstant k2FCountReviewConst = InternalVariableConstant<int>(
+    name: 'f_count_review',
+    explain: '从本次碎片展示前进行计算，当前记忆组中学习过但还需要再复习的碎片的数量',
     numericTypeExplain: '单位：个\n例子：0,1,2,3...',
     isReadFromMemoryInfo: false,
     isNullable: false,
@@ -58,9 +68,30 @@ class InternalVariableConstantHandler {
     },
   );
 
-  static InternalVariableConstant k3TimesConst = InternalVariableConstant<int>(
-    name: 'times',
-    explain: '在当前记忆组中本次展示是第几次学习该碎片',
+  static InternalVariableConstant k2FCountCompleteConst = InternalVariableConstant<int>(
+    name: 'f_count_complete',
+    explain: '从本次碎片展示前进行计算，当前记忆组中已学习完成的碎片的数量',
+    numericTypeExplain: '单位：个\n例子：0,1,2,3...',
+    isReadFromMemoryInfo: false,
+    isNullable: false,
+    rawStringToDartTypeFunc: (String rawStringResult) {
+      return int.parse(rawStringResult);
+    },
+  );
+  static InternalVariableConstant k2FCountStopConst = InternalVariableConstant<int>(
+    name: 'f_count_stop',
+    explain: '从本次碎片展示前进行计算，当前记忆组中被标记为暂停学习的碎片的数量',
+    numericTypeExplain: '单位：个\n例子：0,1,2,3...',
+    isReadFromMemoryInfo: false,
+    isNullable: false,
+    rawStringToDartTypeFunc: (String rawStringResult) {
+      return int.parse(rawStringResult);
+    },
+  );
+
+  static InternalVariableConstant k3StudiedTimesConst = InternalVariableConstant<int>(
+    name: 'studied_times',
+    explain: '从本次碎片展示前进行计算，该碎片已被学习过多少次',
     numericTypeExplain: '单位：次\n例子：1,2,3...',
     isReadFromMemoryInfo: false,
     isNullable: false,
@@ -189,7 +220,7 @@ class InternalVariableConstantHandler {
     },
   );
 
-  /// 受 [NType.times] 影响，必须把 [k3TimesConst] 放到最后，若放到前面，正则表达式会先识别 times。
+  /// 受 [NType.times] 影响，必须把 [k3StudiedTimesConst] 放到最后，若放到前面，正则表达式会先识别 times。
   static Map<String, InternalVariableConstant> getKVs = {
     InternalVariableConstantHandler.i1ActualShowTimeConst.name: InternalVariableConstantHandler.i1ActualShowTimeConst,
     InternalVariableConstantHandler.i2NextPlanShowTimeConst.name: InternalVariableConstantHandler.i2NextPlanShowTimeConst,
@@ -198,9 +229,12 @@ class InternalVariableConstantHandler {
     InternalVariableConstantHandler.i5ClickTimeConst.name: InternalVariableConstantHandler.i5ClickTimeConst,
     InternalVariableConstantHandler.i6ClickValueConst.name: InternalVariableConstantHandler.i6ClickValueConst,
     InternalVariableConstantHandler.i7ButtonValuesConst.name: InternalVariableConstantHandler.i7ButtonValuesConst,
-    InternalVariableConstantHandler.k1countAllConst.name: InternalVariableConstantHandler.k1countAllConst,
-    InternalVariableConstantHandler.k2CountNewConst.name: InternalVariableConstantHandler.k2CountNewConst,
-    InternalVariableConstantHandler.k3TimesConst.name: InternalVariableConstantHandler.k3TimesConst,
+    InternalVariableConstantHandler.k1FCountAllConst.name: InternalVariableConstantHandler.k1FCountAllConst,
+    InternalVariableConstantHandler.k2FCountNeverConst.name: InternalVariableConstantHandler.k2FCountNeverConst,
+    InternalVariableConstantHandler.k2FCountReviewConst.name: InternalVariableConstantHandler.k2FCountReviewConst,
+    InternalVariableConstantHandler.k2FCountCompleteConst.name: InternalVariableConstantHandler.k2FCountCompleteConst,
+    InternalVariableConstantHandler.k2FCountStopConst.name: InternalVariableConstantHandler.k2FCountStopConst,
+    InternalVariableConstantHandler.k3StudiedTimesConst.name: InternalVariableConstantHandler.k3StudiedTimesConst,
     InternalVariableConstantHandler.k4CurrentShowTimeConst.name: InternalVariableConstantHandler.k4CurrentShowTimeConst,
     InternalVariableConstantHandler.k5CurrentShowFamiliarityConst.name: InternalVariableConstantHandler.k5CurrentShowFamiliarityConst,
     InternalVariableConstantHandler.k6CurrentButtonValuesConst.name: InternalVariableConstantHandler.k6CurrentButtonValuesConst,

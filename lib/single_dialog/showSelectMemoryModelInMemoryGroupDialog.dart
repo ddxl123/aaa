@@ -5,13 +5,14 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 import '../push_page/push_page.dart';
 
-Future<void> showSelectMemoryModelInMemoryGroupDialog({required Ab<MemoryModel?> selectedMemoryModelAb}) async {
-  await showCustomDialog(builder: (_) => SelectMemoryModelInMemoryGroupDialogWidget(selectedMemoryModelAb: selectedMemoryModelAb));
+Future<void> showSelectMemoryModelInMemoryGroupDialog({required Ab<MemoryGroup> mg, required Ab<MemoryModel?> selectedMemoryModelAb}) async {
+  await showCustomDialog(builder: (_) => SelectMemoryModelInMemoryGroupDialogWidget(mg: mg, selectedMemoryModelAb: selectedMemoryModelAb));
 }
 
 class SelectMemoryModelInMemoryGroupDialogWidget extends StatefulWidget {
-  const SelectMemoryModelInMemoryGroupDialogWidget({super.key, required this.selectedMemoryModelAb});
+  const SelectMemoryModelInMemoryGroupDialogWidget({super.key, required this.mg, required this.selectedMemoryModelAb});
 
+  final Ab<MemoryGroup> mg;
   final Ab<MemoryModel?> selectedMemoryModelAb;
 
   @override
@@ -89,10 +90,28 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
 
   Future<void> _onOk() async {
     widget.selectedMemoryModelAb.refreshEasy((oldValue) => _selectedMm);
+    final st = await SyncTag.create();
+    await db.updateDAO.resetMemoryGroupForOnlySave(
+      originalMemoryGroupReset: () async {
+        await widget.mg().reset(
+              creator_user_id: toAbsent(),
+              memory_model_id: (_selectedMm?.id).toValue(),
+              new_display_order: toAbsent(),
+              new_review_display_order: toAbsent(),
+              review_display_order: toAbsent(),
+              review_interval: toAbsent(),
+              start_time: toAbsent(),
+              title: toAbsent(),
+              will_new_learn_count: toAbsent(),
+              syncTag: st,
+            );
+      },
+      syncTag: st,
+    );
     if (_selectedMm == null) {
       SmartDialog.showToast('不选择');
     } else {
-      SmartDialog.showToast('添加成功！');
+      SmartDialog.showToast('选择成功！');
     }
     SmartDialog.dismiss();
   }
@@ -104,7 +123,7 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
       topRightAction: _topRightAction(),
       columnChildren: memoryModels.isEmpty ? const [Text('未创建记忆组', style: TextStyle(color: Colors.grey))] : _columnChildren(),
       cancelText: '稍后',
-      okText: '添加',
+      okText: '选择',
       onCancel: () async {
         SmartDialog.dismiss();
       },

@@ -19,6 +19,8 @@ class MemoryGroups extends CloudTableBase  {
 
   IntColumn get new_review_display_order => intEnum<NewReviewDisplayOrder>().named("new_review_display_order")();
 
+  IntColumn get review_display_order => intEnum<ReviewDisplayOrder>().named("review_display_order")();
+
   DateTimeColumn get review_interval => dateTime().named("review_interval")();
 
   DateTimeColumn get start_time => dateTime().named("start_time").nullable()();

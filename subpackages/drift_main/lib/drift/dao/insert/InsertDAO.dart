@@ -118,6 +118,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               next_plan_show_time: "",
               show_familiarity: "",
               button_values: "",
+              study_status: StudyStatus.never,
             );
             if (isRemoveRepeat) {
               final isExist = await db.generalQueryDAO.queryIsExistFragmentInMemoryGroup(fragment: e, memoryGroup: memoryGroup);
@@ -140,6 +141,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 memory_model_id: toAbsent(),
                 new_display_order: toAbsent(),
                 new_review_display_order: toAbsent(),
+                review_display_order: toAbsent(),
                 review_interval: toAbsent(),
                 start_time: toAbsent(),
                 title: toAbsent(),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/stage/InAppStageAbController.dart';
@@ -111,14 +112,14 @@ class PerformerQuery {
 
   /// ========================================================================================
 
-  /// [InternalVariableConstantHandler.k1countAllConst]
+  /// [InternalVariableConstantHandler.k1FCountAllConst]
   Future<int> getCountAll({required MemoryGroup memoryGroup}) async {
     return await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup);
   }
 
   /// [InternalVariableConstantHandler.k2CountNewConst]
-  Future<List<int>> getCountNew({required MemoryGroup memoryGroup}) async {
-    return [await db.generalQueryDAO.queryNewFragmentsCount(memoryGroup: memoryGroup)];
+  Future<int> queryFragmentsCountByStudyStatus({required MemoryGroup memoryGroup, required StudyStatus studyStatus}) async {
+    return await db.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroup, studyStatus: studyStatus);
   }
 
   /// TODO:
@@ -126,62 +127,48 @@ class PerformerQuery {
   //   return [await db.generalQueryDAO.getNewFragmentsCount(memoryGroup: memoryGroup)];
   // }
 
-  /// [InternalVariableConstantHandler.k3TimesConst]
-  Future<List<int>> getTimes({required Performer performer}) async {
-    return [performer.fragmentMemoryInfo.click_time?.split(',').length ?? 0];
+  /// [InternalVariableConstantHandler.k3StudiedTimesConst]
+  Future<int> getStudiedTimes({required Performer performer}) async {
+    return jsonDecode(performer.fragmentMemoryInfo.click_time).length;
+  }
+
+  /// [InternalVariableConstantHandler.k4CurrentShowTimeConst]
+  Future<int> getCurrentShowTime({required MemoryGroup memoryGroup}) async {
+    return timeDifference(target: DateTime.now(), start: memoryGroup.start_time!);
   }
 
   /// [InternalVariableConstantHandler.i1ActualShowTimeConst]
-  Future<List<int>> getCurrentActualShowTimes({
-    required Performer performer,
-    required int currentShowTime,
-  }) async {
-    // 最后一个是当前未写入的数据。
-    return [
-      ...performer.fragmentMemoryInfo.actual_show_time == null ? [] : performer.fragmentMemoryInfo.actual_show_time!.toIntArray(),
-      currentShowTime,
-    ];
+  Future<List<int>> getActualShowTime({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.actual_show_time) as List<dynamic>).cast<int>();
   }
 
   /// [InternalVariableConstantHandler.i2NextPlanShowTimeConst]
-  Future<List<int?>> getNextPlanedShowTime({
-    required Performer performer,
-    required int? currentNextPlanedShowTime,
-  }) async {
-    return [
-      ...performer.fragmentMemoryInfo.next_plan_show_time == null ? [] : performer.fragmentMemoryInfo.next_plan_show_time!.toIntArray(),
-      currentNextPlanedShowTime,
-    ];
+  Future<List<int>> getNextPlanedShowTime({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.next_plan_show_time) as List<dynamic>).cast<int>();
   }
 
-  /// [InternalVariableConstantHandler.k5CurrentShowFamiliarityConst]
-  Future<List<double?>> getShowFamiliar({
-    required Performer performer,
-    required double? currentShowFamiliar,
-  }) async {
-    return [
-      ...performer.fragmentMemoryInfo.show_familiarity == null ? [] : performer.fragmentMemoryInfo.show_familiarity!.toDoubleArray(),
-      currentShowFamiliar,
-    ];
+  /// [InternalVariableConstantHandler.i3ShowFamiliarityConst]
+  Future<List<double>> getShowFamiliarity({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.show_familiarity) as List<dynamic>).cast<double>();
   }
 
-  Future<List<int?>> getClickTime({
-    required Performer performer,
-    required int? currentClickTime,
-  }) async {
-    return [
-      ...performer.fragmentMemoryInfo.click_time == null ? [] : performer.fragmentMemoryInfo.click_time!.toIntArray(),
-      currentClickTime,
-    ];
+  /// [InternalVariableConstantHandler.i4ClickFamiliarityConst]
+  Future<List<double>> getClickFamiliarity({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.click_familiarity) as List<dynamic>).cast<double>();
   }
 
-  Future<List<double?>> getClickValue({
-    required Performer performer,
-    required double? currentClickValue,
-  }) async {
-    return [
-      ...performer.fragmentMemoryInfo.click_value == null ? [] : performer.fragmentMemoryInfo.click_value!.toDoubleArray(),
-      currentClickValue,
-    ];
+  /// [InternalVariableConstantHandler.i5ClickTimeConst]
+  Future<List<int>> getClickTime({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.click_time) as List<dynamic>).cast<int>();
+  }
+
+  /// [InternalVariableConstantHandler.i6ClickValueConst]
+  Future<List<double>> getClickValue({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.click_value) as List<dynamic>).cast<double>();
+  }
+
+  /// [InternalVariableConstantHandler.i7ButtonValuesConst]
+  Future<List<List<double>>> getButtonValues({required Performer performer}) async {
+    return (jsonDecode(performer.fragmentMemoryInfo.button_values) as List<dynamic>).cast<List<dynamic>>().cast<List<double>>();
   }
 }

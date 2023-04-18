@@ -23,7 +23,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   final selectedFragmentCountAb = 0.ab;
 
   /// 当前记忆组剩余未学习的数量。
-  final Ab<int> remainNewFragmentsCount = 0.ab;
+  final Ab<int> remainNeverFragmentsCount = 0.ab;
 
   /// 是否全部展开
   final isExpandAll = false.ab;
@@ -78,8 +78,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     final fsCount = await db.generalQueryDAO.queryFragmentsCountInMemoryGroup(memoryGroup: originalMemoryGroupAb());
     selectedFragmentCountAb.refreshInevitable((obj) => fsCount);
 
-    final count = await DriftDb.instance.generalQueryDAO.queryNewFragmentsCount(memoryGroup: originalMemoryGroupAb());
-    remainNewFragmentsCount.refreshEasy((oldValue) => count);
+    final count = await DriftDb.instance.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: originalMemoryGroupAb(), studyStatus: StudyStatus.never);
+    remainNeverFragmentsCount.refreshEasy((oldValue) => count);
 
     final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: copyMemoryGroupAb());
     selectedMemoryModelAb.refreshInevitable((obj) => mm);

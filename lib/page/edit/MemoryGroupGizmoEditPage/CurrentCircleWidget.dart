@@ -24,7 +24,7 @@ class CurrentCircleWidget extends StatelessWidget {
                 _reviewIntervalWidget(),
                 _newReviewDisplayOrder(),
                 _newDisplayOrder(),
-                Text("复习碎片展示顺序：过期优先、未过期优先、忽略过期、"),
+                _reviewDisplayOrder(),
                 floatingRoundCornerButtonPlaceholderBox(),
               ],
             ),
@@ -50,22 +50,22 @@ class CurrentCircleWidget extends StatelessWidget {
                     builder: (int value, BuildContext context, ResetValue<int> resetValue) {
                       int finallyValue = value;
                       // 不能超过最大值
-                      if (finallyValue > c.remainNewFragmentsCount()) {
-                        resetValue(c.remainNewFragmentsCount(), true);
+                      if (finallyValue > c.remainNeverFragmentsCount()) {
+                        resetValue(c.remainNeverFragmentsCount(), true);
                         return Container();
                       }
                       // 如果没有 space，则 0/300，其中 0 字符长度会动态的变宽成 10 或 100，从而导致刷新的时候滑块抖动。
                       // space 意味着将 0 前面添加两个 0，即 000/300。
-                      int space = c.remainNewFragmentsCount().toString().length - finallyValue.toInt().toString().length;
+                      int space = c.remainNeverFragmentsCount().toString().length - finallyValue.toInt().toString().length;
                       return Row(
                         children: [
                           Expanded(
                             child: Slider(
                               label: finallyValue.toInt().toString(),
                               min: 0,
-                              max: c.remainNewFragmentsCount().toDouble(),
+                              max: c.remainNeverFragmentsCount().toDouble(),
                               value: finallyValue.toDouble(),
-                              divisions: c.remainNewFragmentsCount() == 0 ? null : c.remainNewFragmentsCount(),
+                              divisions: c.remainNeverFragmentsCount() == 0 ? null : c.remainNeverFragmentsCount(),
                               onChanged: (n) {
                                 resetValue(n.toInt(), true);
                               },
@@ -75,7 +75,7 @@ class CurrentCircleWidget extends StatelessWidget {
                               },
                             ),
                           ),
-                          Text('${'0' * space}${finallyValue.toInt()}/${c.remainNewFragmentsCount()}')
+                          Text('${'0' * space}${finallyValue.toInt()}/${c.remainNeverFragmentsCount()}')
                         ],
                       );
                     },
@@ -185,6 +185,35 @@ class CurrentCircleWidget extends StatelessWidget {
                   ],
                   onChanged: (v) {
                     c.copyMemoryGroupAb.refreshInevitable((obj) => obj..new_display_order = v!);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _reviewDisplayOrder() {
+    return AbBuilder<MemoryGroupGizmoEditPageAbController>(
+      builder: (c, abw) {
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Text('复习碎片 展示顺序：'),
+                CustomDropdownBodyButton<ReviewDisplayOrder>(
+                  initValue: c.copyMemoryGroupAb(abw).review_display_order,
+                  items: [
+                    Item(value: ReviewDisplayOrder.random_not_ignore_expire, text: '随机-不忽略过期'),
+                    Item(value: ReviewDisplayOrder.random_ignore_expire, text: '随机-忽略过期'),
+                    Item(value: ReviewDisplayOrder.expire_first, text: '过期优先'),
+                    Item(value: ReviewDisplayOrder.not_expired_first, text: '未过期优先'),
+                  ],
+                  onChanged: (v) {
+                    c.copyMemoryGroupAb.refreshInevitable((obj) => obj..review_display_order = v!);
                   },
                 ),
               ],

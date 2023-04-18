@@ -318,37 +318,20 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   }
 
   /// 获取 [memoryGroup] 内全部碎片数量。
-  ///
-  /// 实际上是查询 [FragmentMemoryInfo] 数量。
   Future<int> queryFragmentsCount({required MemoryGroup memoryGroup}) async {
-    final count = fragmentMemoryInfos.id.count();
-    final sel = selectOnly(fragmentMemoryInfos);
+    final count = rFragment2FragmentGroups.id.count();
+    final sel = selectOnly(rFragment2FragmentGroups);
     sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id));
+    sel.where(rFragment2FragmentGroups.fragment_group_id.equals(memoryGroup.id));
     final result = await sel.getSingle();
     return result.read(count)!;
   }
 
-  /// 获取 [memoryGroup] 内暂未学习过的碎片数量。
-  ///
-  /// 实际上是查询 [FragmentMemoryInfo] 数量。
-  Future<int> queryNewFragmentsCount({required MemoryGroup memoryGroup}) async {
+  Future<int> queryFragmentsCountByStudyStatus({required MemoryGroup memoryGroup, required StudyStatus studyStatus}) async {
     final count = fragmentMemoryInfos.id.count();
     final sel = selectOnly(fragmentMemoryInfos);
     sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.next_plan_show_time.isNull());
-    final result = await sel.getSingle();
-    return result.read(count)!;
-  }
-
-  /// 获取 [memoryGroup] 内已经学习过至少一次的碎片数量。
-  ///
-  /// 实际上是查询 [FragmentMemoryInfo] 数量。
-  Future<int> queryLearnedFragmentsCount({required MemoryGroup memoryGroup}) async {
-    final count = fragmentMemoryInfos.id.count();
-    final sel = selectOnly(fragmentMemoryInfos);
-    sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.next_plan_show_time.isNotNull());
+    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.study_status.equals(studyStatus.index));
     final result = await sel.getSingle();
     return result.read(count)!;
   }

@@ -76,8 +76,11 @@ class ButtonDataState extends ClassificationState {
     return await atom.filter(
       storage: internalVariableStorage,
       k1countAllConst: IvFilter(ivf: () async => 1, isReGet: true),
-      k2CountNewConst: IvFilter(ivf: () async => 1, isReGet: true),
-      k3TimesConst: IvFilter(ivf: () async => math.Random().nextInt(9) + 1, isReGet: true),
+      k2CountStopConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k2CountCompleteConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k2CountReviewConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k2CountNeverConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k3StudiedTimesConst: IvFilter(ivf: () async => math.Random().nextInt(9) + 1, isReGet: true),
       k4CurrentShowTimeConst: IvFilter(ivf: () async => 1, isReGet: true),
       k5CurrentShowFamiliarityConst: IvFilter(ivf: () async => math.Random().nextDouble() * 200, isReGet: true),
       k6CurrentButtonValuesConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),

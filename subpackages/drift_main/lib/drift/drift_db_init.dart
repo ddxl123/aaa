@@ -62,6 +62,10 @@ class DriftDb extends _$DriftDb {
         beforeOpen: (OpeningDetails details) async {
           transform();
           await _insertInitTestData();
+          // if (isLogStatements) {
+          //   final result = await customSelect('SELECT sql FROM sqlite_master WHERE type = \'table\'').get();
+          //   dev.log(result.map((e) => e.data["sql"]).toList().join("\n"));
+          // }
         },
       );
 

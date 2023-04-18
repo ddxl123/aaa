@@ -39,6 +39,18 @@ enum SyncCurdType {
 
 }
         
+enum StudyStatus {
+  
+  never,
+
+  review,
+
+  complete,
+
+  stop,
+
+}
+        
 enum AlgorithmUsageStatus {
   
   a,
@@ -72,6 +84,18 @@ enum NewReviewDisplayOrder {
   new_review,
 
   review_new,
+
+}
+        
+enum ReviewDisplayOrder {
+  
+  random_not_ignore_expire,
+
+  random_ignore_expire,
+
+  expire_first,
+
+  not_expired_first,
 
 }
         

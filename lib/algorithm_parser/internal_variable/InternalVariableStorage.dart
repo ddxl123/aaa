@@ -97,8 +97,11 @@ class InternalVariableAtom<CS extends ClassificationState> {
   Future<AtomResultOrNull<NR>> filter<NR>({
     required InternalVariableStorage storage,
     required IvFilter<int> k1countAllConst,
-    required IvFilter<int> k2CountNewConst,
-    required IvFilter<int> k3TimesConst,
+    required IvFilter<int> k2CountNeverConst,
+    required IvFilter<int> k2CountReviewConst,
+    required IvFilter<int> k2CountCompleteConst,
+    required IvFilter<int> k2CountStopConst,
+    required IvFilter<int> k3StudiedTimesConst,
     required IvFilter<int> k4CurrentShowTimeConst,
     required IvFilter<double> k5CurrentShowFamiliarityConst,
     required IvFilter<List<double>> k6CurrentButtonValuesConst,
@@ -110,44 +113,53 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required IvFilter<List<double>> i6ClickValueConst,
     required IvFilter<List<List<double>>> i7ButtonValuesConst,
   }) async {
-    if (internalVariableConstant == InternalVariableConstantHandler.k1countAllConst) {
+    if (internalVariableConstant == InternalVariableConstantHandler.k1FCountAllConst) {
       return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
     }
-    if (internalVariableConstant == InternalVariableConstantHandler.k2CountNewConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+    if (internalVariableConstant == InternalVariableConstantHandler.k2FCountNeverConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k2CountNeverConst);
     }
-    if (internalVariableConstant == InternalVariableConstantHandler.k3TimesConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+    if (internalVariableConstant == InternalVariableConstantHandler.k2FCountReviewConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k2CountReviewConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.k2FCountCompleteConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k2CountCompleteConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.k2FCountStopConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k2CountStopConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.k3StudiedTimesConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k3StudiedTimesConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k4CurrentShowTimeConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k4CurrentShowTimeConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k5CurrentShowFamiliarityConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k5CurrentShowFamiliarityConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValuesConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: k6CurrentButtonValuesConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i1ActualShowTimeConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i1ActualShowTimeConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i2NextPlanShowTimeConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i2NextPlanShowTimeConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i3ShowFamiliarityConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i3ShowFamiliarityConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i4ClickFamiliarityConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i4ClickFamiliarityConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i5ClickTimeConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i5ClickTimeConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i6ClickValueConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i6ClickValueConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i7ButtonValuesConst) {
-      return await saveAndGet<NR>(storage: storage, ivFilter: k1countAllConst);
+      return await saveAndGet<NR>(storage: storage, ivFilter: i7ButtonValuesConst);
     }
     throw KnownAlgorithmException('filter 未处理变量: $getCombineName');
   }

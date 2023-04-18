@@ -189,6 +189,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               memory_model_id: toAbsent(),
               new_display_order: toAbsent(),
               new_review_display_order: toAbsent(),
+              review_display_order: toAbsent(),
               review_interval: toAbsent(),
               start_time: toAbsent(),
               title: toAbsent(),

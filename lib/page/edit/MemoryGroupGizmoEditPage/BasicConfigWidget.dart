@@ -72,7 +72,7 @@ class BasicConfigWidget extends StatelessWidget {
                     },
                   ),
                   onPressed: () {
-                    showSelectMemoryModelInMemoryGroupDialog(selectedMemoryModelAb: c.selectedMemoryModelAb);
+                    showSelectMemoryModelInMemoryGroupDialog(mg: c.copyMemoryGroupAb, selectedMemoryModelAb: c.selectedMemoryModelAb);
                   },
                 ),
                 Text("模拟(验证模型的准确性)"),
