@@ -69,7 +69,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
       from: algorithmType,
       targets: {
         [ButtonDataState]: buttonDataStateFunc,
-        [FamiliarityState]: buttonDataStateFunc,
+        [FamiliarityState]: familiarityStateFunc,
         [NextShowTimeState]: nextShowTimeStateFunc,
       },
       orElse: null,
