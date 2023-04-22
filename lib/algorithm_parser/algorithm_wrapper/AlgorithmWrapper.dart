@@ -1,6 +1,5 @@
 part of algorithm_parser;
 
-@JsonSerializable()
 class AlgorithmWrapper {
   AlgorithmWrapper({
     required this.customVariables,

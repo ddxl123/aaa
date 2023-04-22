@@ -1,6 +1,5 @@
 part of algorithm_parser;
 
-@JsonSerializable()
 class IfUseElseWrapper {
   IfUseElseWrapper({
     required this.ifers,

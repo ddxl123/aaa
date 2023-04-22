@@ -1,7 +1,6 @@
 part of algorithm_parser;
 
-/// [conditionUse] 和 [ifElseUseWrapper] 二选一。
-@JsonSerializable()
+/// [use] 和 [ifElseUseWrapper] 二选一。
 class Ifer {
   Ifer({
     required this.condition,

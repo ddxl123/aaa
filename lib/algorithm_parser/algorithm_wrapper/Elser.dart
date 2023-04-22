@@ -1,7 +1,6 @@
 part of algorithm_parser;
 
 /// [use] 和 [ifElseUseWrapper] 二选一。
-@JsonSerializable()
 class Elser {
   Elser({
     required this.use,
