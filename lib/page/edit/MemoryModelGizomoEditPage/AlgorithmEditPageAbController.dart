@@ -78,6 +78,8 @@ class AlgorithmEditPageAbController extends AbController {
   void onInit() {
     super.onInit();
     currentAlgorithmWrapper.lateAssign(AlgorithmWrapper.fromJsonString(content()));
+
+    logger.outNormal(print: AlgorithmBidirectionalParsing.parseAlgorithmWrapper(currentAlgorithmWrapper()));
   }
 
   String content() {

@@ -19,6 +19,10 @@ class IfUseElseWrapper {
         "elser": this.elser,
       };
 
+  static IfUseElseWrapper emptyIfUseElseWrapper = IfUseElseWrapper(ifers: [Ifer.emptyIfer], elser: Elser.emptyElser);
+
+  static IfUseElseWrapper emptyIfUseElseWrapperWithInit(Ifer ifer) => IfUseElseWrapper(ifers: [ifer], elser: Elser.emptyElser);
+
   void cancelAllException() {
     ifers.forEach((element) {
       element.cancelAllException();

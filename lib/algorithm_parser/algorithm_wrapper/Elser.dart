@@ -111,6 +111,24 @@ class Elser {
                   SmartDialog.dismiss(status: SmartStatus.dialog);
                 },
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      child: Text("添加子 if-else 语句"),
+                      onPressed: () {
+                        ifElseUseWrapper = IfUseElseWrapper.emptyIfUseElseWrapperWithInit(
+                          Ifer(condition: "throw 未处理", use: use, ifElseUseWrapper: null, explain: explain),
+                        );
+                        use = null;
+                        refresh?.call();
+                        SmartDialog.dismiss(status: SmartStatus.dialog);
+                        SmartDialog.dismiss(status: SmartStatus.dialog);
+                      },
+                    ),
+                  ),
+                ],
+              ),
               TextButton(
                 child: Text("清空当前 else", style: TextStyle(color: Colors.red)),
                 onPressed: () {
