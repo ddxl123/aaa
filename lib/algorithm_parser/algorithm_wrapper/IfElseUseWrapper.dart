@@ -15,8 +15,8 @@ class IfUseElseWrapper {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        "ifers": this.ifers,
-        "elser": this.elser,
+        "ifers": this.ifers.map((e) => e.toJson()).toList(),
+        "elser": this.elser.toJson(),
       };
 
   static IfUseElseWrapper emptyIfUseElseWrapper = IfUseElseWrapper(ifers: [Ifer.emptyIfer], elser: Elser.emptyElser);

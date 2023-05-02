@@ -6,11 +6,15 @@ import 'dart:math' as math;
 
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
 import 'package:aaa/page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPageAbController.dart';
+import 'package:analyzer/dart/analysis/results.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 
 part 'constant/keyword.dart';
 

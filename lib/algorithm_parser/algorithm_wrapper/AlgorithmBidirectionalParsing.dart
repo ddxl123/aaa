@@ -15,10 +15,7 @@ class AlgorithmBidirectionalParsing {
 
     result += _parseIfUseElseWrapper(sonFatherMap, wrapper.ifUseElseWrapper);
 
-
-    final inputString = 'if (a > b) { if (a > c) { return a; } else { return c; } } else { if (b > c) { return b; } else { return c; } }';
-    final r = parseIfElse(inputString);
-    print(r);
+    parseIfElse();
     return result;
   }
 
@@ -107,31 +104,106 @@ class AlgorithmBidirectionalParsing {
   }
 
   // 解析嵌套的 if-else 字符串
-  static String parseIfElse(String input) {
-    // 定义 if 和 else 语句的正则表达式
-    final ifPattern = RegExp(r'if\s*\((.*?)\)\s*\{(.*)\}');
-    final elsePattern = RegExp(r'else\s*\{(.*)\}');
+  static void parseIfElse() {
+    var code = '''
+if (condition1) {
+  if (condition3) {
+    code1;
+  } else if (condition4) {
+    code2;
+  } else {
+    code3;
+  }
+} else if (condition2) {
+  code4;
+} else if (condition7) {
+  if (condition8) {
+    code8;
+  } else {
+    code88;
+  }
+} else {
+  if (condition5) {
+    code5;
+  } else if (condition6) {
+    code6;
+  } else {
+    code7;
+  }
+}
+''';
 
-    // 查找 if 语句的匹配项
-    final ifMatch = ifPattern.firstMatch(input);
-    if (ifMatch != null) {
-      // 解析 true 分支
-      final condition = ifMatch.group(1);
-      final trueBranch = parseIfElse(ifMatch.group(2)!);
-      // 查找 else 分支的匹配项
-      final elseMatch = elsePattern.firstMatch(input.substring(ifMatch.end));
-      if (elseMatch != null) {
-        // 解析 false 分支
-        final falseBranch = parseIfElse(elseMatch.group(1)!);
-        // 构建 if-else 语句
-        return 'if ($condition) { $trueBranch } else { $falseBranch }';
-      } else {
-        // 构建 if 语句
-        return 'if ($condition) { $trueBranch }';
+    final ifUseElseWrapper = _loop(code);
+    print("ifUseElseWrapper");
+    logger.outNormal(print: ifUseElseWrapper.toJson());
+  }
+
+  static IfUseElseWrapper _loop(String fatherStr) {
+    final ifUseElseWrapper = IfUseElseWrapper.emptyIfUseElseWrapper;
+    String? remainStr = fatherStr;
+    while (true) {
+      if (remainStr == null) {
+        break;
       }
-    } else {
-      // 如果没有找到 if 语句，则说明字符串已经被解析到最简形式
-      return input.trim();
+      remainStr = _bodyHandle(remainStr + " ", ifUseElseWrapper);
     }
+    return ifUseElseWrapper;
+  }
+
+  /// 返回剩下的内容，返回 null 表示没有剩下了。
+  static String? _bodyHandle(String loopStr, IfUseElseWrapper fatherIfUseElseWrapper) {
+    // 花括号
+    final braces = <String>[];
+    int? firstBraceIndex;
+    int? leftBraceIndex;
+    int? rightBraceIndex;
+    for (int i = 0; i < loopStr.length; i++) {
+      final current = loopStr[i];
+      if (current == "{") {
+        firstBraceIndex ??= i;
+        leftBraceIndex ??= i;
+        braces.add("{");
+      } else if (current == "}") {
+        if (braces.isEmpty) {
+          throw KnownAlgorithmException("不能没有左花括号！");
+        }
+        braces.removeLast();
+        if (braces.isEmpty) {
+          rightBraceIndex ??= i;
+          break;
+        }
+      }
+    }
+    final ifElseTypeRegExp = RegExp(r"(^if$)|(^else$)|(^else(\s+)if$)");
+
+    // 没有前后花括号
+    if (firstBraceIndex == null || leftBraceIndex == null || rightBraceIndex == null) {
+      return null;
+    }
+
+    final ifElseTypeOrConditionStr = loopStr.substring(0, firstBraceIndex).trim().toLowerCase();
+    print(ifElseTypeOrConditionStr);
+    final ifElseType =
+        ifElseTypeOrConditionStr.contains("(") ? ifElseTypeOrConditionStr.substring(0, ifElseTypeOrConditionStr.indexOf("(")).trim() : ifElseTypeOrConditionStr.trim();
+    late final String condition;
+    if (ifElseType != "else") {
+      condition = ifElseTypeOrConditionStr.substring(ifElseTypeOrConditionStr.indexOf("(") + 1, ifElseTypeOrConditionStr.lastIndexOf(")")).trim();
+    }
+    final body = loopStr.substring(leftBraceIndex + 1, rightBraceIndex);
+
+    // 前面存在 if 或 else if 或 else
+    if (ifElseTypeRegExp.hasMatch(ifElseType)) {
+      if (ifElseType != "else") {
+        if (fatherIfUseElseWrapper.ifers.first == Ifer.emptyIfer) {
+          fatherIfUseElseWrapper.ifers.remove(Ifer.emptyIfer);
+        }
+        fatherIfUseElseWrapper.ifers.add(Ifer(condition: condition, use: body, ifElseUseWrapper: null, explain: null));
+      } else {
+        fatherIfUseElseWrapper.elser.use = body;
+      }
+    }
+
+    // 多一个空格防止 +1 越界
+    return loopStr.substring(rightBraceIndex + 1, loopStr.length);
   }
 }
