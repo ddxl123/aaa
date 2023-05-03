@@ -1,7 +1,7 @@
 part of algorithm_parser;
 
 class AlgorithmBidirectionalParsing {
-  static String parseAlgorithmWrapper(AlgorithmWrapper wrapper) {
+  static String parseFromAlgorithmWrapper(AlgorithmWrapper wrapper) {
     String result = "";
 
     // 解析自定义变量
@@ -15,7 +15,6 @@ class AlgorithmBidirectionalParsing {
 
     result += _parseIfUseElseWrapper(sonFatherMap, wrapper.ifUseElseWrapper);
 
-    parseIfElse();
     return result;
   }
 
@@ -104,42 +103,50 @@ class AlgorithmBidirectionalParsing {
   }
 
   // 解析嵌套的 if-else 字符串
-  static void parseIfElse() {
-    var code = '''
-if (condition1) {
-  if (condition3) {
-    code1;
-  } else if (condition4) {
-    code2;
-  } else {
-    code3;
-  }
-} else if (condition2) {
-  code4;
-} else if (condition7) {
-  if (condition8) {
-    code8;
-  } else {
-    code88;
-  }
-} else {
-  if (condition5) {
-    code5;
-  } else if (condition6) {
-    code6;
-  } else {
-    code7;
-  }
-}
-''';
+  static AlgorithmWrapper parseFromString(String content) {
+//     var code = '''
+// if (condition1) {
+//   if (condition3) {
+//     code1;
+//   } else if (condition4) {
+//     code2;
+//   } else {
+//     code3;
+//   }
+// } else if (condition2) {
+//   code4;
+// } else if (condition7) {
+//   if (condition8) {
+//     code8;
+//   } else {
+//     code88;
+//   }
+// } else {
+//   if (condition5) {
+//     code5;
+//   } else if (condition6) {
+//     code6;
+//   } else {
+//     code7;
+//   }
+// }
+// ''';
 
-    final ifUseElseWrapper = _loop(code);
-    print("ifUseElseWrapper");
-    logger.outNormal(print: ifUseElseWrapper.toJson());
+    final match = RegExp(r'\bif\b').firstMatch(content);
+    final customVariablesContent = match == null ? null : content.substring(0, match.start);
+    final ifUseElseWrapperContent = match == null ? null : content.substring(match.end, content.length);
+
+    final ifUseElseWrapper = _ifUseElseWrapperLoop(ifUseElseWrapperContent ?? "");
+    return AlgorithmWrapper(customVariables: [], ifUseElseWrapper: ifUseElseWrapper ?? IfUseElseWrapper.emptyIfUseElseWrapper);
   }
 
-  static IfUseElseWrapper _loop(String fatherStr) {
-    final ifUseElseWrapper = IfUseElseWrapper.emptyIfUseElseWrapper;
+  static List<CustomVariabler> _customVariablerLoop(String content) {
+    RegExp(r"(\r\n)|(\n)");
+  }
+
+  /// 返回 null 表示不存在 if-else 语句。
+  static IfUseElseWrapper? _ifUseElseWrapperLoop(String fatherStr) {
+    final ifUseElseWrapper = IfUseElseWrapper(ifers: [], elser: Elser(use: "", ifElseUseWrapper: null, explain: null));
     String? remainStr = fatherStr;
     while (true) {
       if (remainStr == null) {
@@ -147,11 +154,12 @@ if (condition1) {
       }
       remainStr = _bodyHandle(remainStr + " ", ifUseElseWrapper);
     }
-    return ifUseElseWrapper;
+
+    return ifUseElseWrapper.ifers.isEmpty ? null : ifUseElseWrapper;
   }
 
   /// 返回剩下的内容，返回 null 表示没有剩下了。
-  static String? _bodyHandle(String loopStr, IfUseElseWrapper fatherIfUseElseWrapper) {
+  static String? _bodyHandle(String loopStr, IfUseElseWrapper ifUseElseWrapper) {
     // 花括号
     final braces = <String>[];
     int? firstBraceIndex;
@@ -182,7 +190,6 @@ if (condition1) {
     }
 
     final ifElseTypeOrConditionStr = loopStr.substring(0, firstBraceIndex).trim().toLowerCase();
-    print(ifElseTypeOrConditionStr);
     final ifElseType =
         ifElseTypeOrConditionStr.contains("(") ? ifElseTypeOrConditionStr.substring(0, ifElseTypeOrConditionStr.indexOf("(")).trim() : ifElseTypeOrConditionStr.trim();
     late final String condition;
@@ -194,12 +201,12 @@ if (condition1) {
     // 前面存在 if 或 else if 或 else
     if (ifElseTypeRegExp.hasMatch(ifElseType)) {
       if (ifElseType != "else") {
-        if (fatherIfUseElseWrapper.ifers.first == Ifer.emptyIfer) {
-          fatherIfUseElseWrapper.ifers.remove(Ifer.emptyIfer);
-        }
-        fatherIfUseElseWrapper.ifers.add(Ifer(condition: condition, use: body, ifElseUseWrapper: null, explain: null));
+        final loopResult = _ifUseElseWrapperLoop(body);
+        ifUseElseWrapper.ifers.add(Ifer(condition: condition, use: loopResult == null ? body.trim() : null, ifElseUseWrapper: loopResult, explain: null));
       } else {
-        fatherIfUseElseWrapper.elser.use = body;
+        final loopResult = _ifUseElseWrapperLoop(body);
+        ifUseElseWrapper.elser.use = loopResult == null ? body.trim() : null;
+        ifUseElseWrapper.elser.ifElseUseWrapper = loopResult;
       }
     }
 

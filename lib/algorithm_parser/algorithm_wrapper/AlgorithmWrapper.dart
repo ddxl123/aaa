@@ -19,8 +19,8 @@ class AlgorithmWrapper {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        "custom_variables": this.customVariables,
-        "if_else_use_wrapper": this.ifUseElseWrapper,
+        "custom_variables": this.customVariables.map((e) => e.toJson()).toList(),
+        "if_else_use_wrapper": this.ifUseElseWrapper.toJson(),
       };
 
   static fromJsonString(String content) => AlgorithmWrapper.fromJson(jsonDecode(content));

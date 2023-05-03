@@ -5,8 +5,8 @@ final Dio dio = Dio(
   BaseOptions(
     baseUrl: HttpPath.BASE_PATH_LOCAL, // 仅本地
     contentType: Headers.jsonContentType,
-    connectTimeout: Duration(seconds: 10),
-    receiveTimeout: Duration(seconds: 10),
+    connectTimeout: Duration(seconds: 20),
+    receiveTimeout: Duration(seconds: 20),
   ),
 );
 

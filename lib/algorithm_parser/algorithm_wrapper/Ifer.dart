@@ -46,7 +46,7 @@ class Ifer {
   Map<String, dynamic> toJson() => <String, dynamic>{
         "condition": this.condition,
         "use": this.use,
-        "if_else_use_wrapper": this.ifElseUseWrapper,
+        "if_else_use_wrapper": this.ifElseUseWrapper?.toJson(),
         "explain": this.explain,
       };
 

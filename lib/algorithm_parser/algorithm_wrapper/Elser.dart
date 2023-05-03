@@ -34,7 +34,7 @@ class Elser {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         "use": this.use,
-        "if_else_use_wrapper": this.ifElseUseWrapper,
+        "if_else_use_wrapper": this.ifElseUseWrapper?.toJson(),
         "explain": this.explain,
       };
 
