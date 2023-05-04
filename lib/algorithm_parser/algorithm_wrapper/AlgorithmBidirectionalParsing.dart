@@ -8,6 +8,7 @@ class AlgorithmBidirectionalParsing {
     for (CustomVariabler v in wrapper.customVariables) {
       result += "${v.name} = ${v.content}\n";
     }
+    result += "\n";
 
     // son-father
     final sonFatherMap = <IfUseElseWrapper, IfUseElseWrapper?>{};
@@ -70,7 +71,7 @@ class AlgorithmBidirectionalParsing {
 
       // 解析使用的变量
       if (ifer.use != null) {
-        result += "${"  " * fatherCount}  return ${ifer.use}";
+        result += "${"  " * fatherCount}  ${ifer.use}";
       }
 
       // 解析if-else语句包装器
@@ -91,7 +92,7 @@ class AlgorithmBidirectionalParsing {
     result += "${"  " * fatherCount}else \n${"  " * fatherCount}{\n";
     // 解析else语句
     if (ifUseElseWrapper.elser.use != null) {
-      result += "${"  " * fatherCount}  return ${ifUseElseWrapper.elser.use}";
+      result += "${"  " * fatherCount}  ${ifUseElseWrapper.elser.use}";
     }
 
     // 解析else内部的if-else语句包装器
@@ -104,44 +105,31 @@ class AlgorithmBidirectionalParsing {
 
   // 解析嵌套的 if-else 字符串
   static AlgorithmWrapper parseFromString(String content) {
-//     var code = '''
-// if (condition1) {
-//   if (condition3) {
-//     code1;
-//   } else if (condition4) {
-//     code2;
-//   } else {
-//     code3;
-//   }
-// } else if (condition2) {
-//   code4;
-// } else if (condition7) {
-//   if (condition8) {
-//     code8;
-//   } else {
-//     code88;
-//   }
-// } else {
-//   if (condition5) {
-//     code5;
-//   } else if (condition6) {
-//     code6;
-//   } else {
-//     code7;
-//   }
-// }
-// ''';
-
     final match = RegExp(r'\bif\b').firstMatch(content);
     final customVariablesContent = match == null ? null : content.substring(0, match.start);
-    final ifUseElseWrapperContent = match == null ? null : content.substring(match.end, content.length);
+    final ifUseElseWrapperContent = match == null ? null : content.substring(match.start, content.length);
 
+    final customVariables = _customVariablerLoop(customVariablesContent ?? "");
     final ifUseElseWrapper = _ifUseElseWrapperLoop(ifUseElseWrapperContent ?? "");
-    return AlgorithmWrapper(customVariables: [], ifUseElseWrapper: ifUseElseWrapper ?? IfUseElseWrapper.emptyIfUseElseWrapper);
+    return AlgorithmWrapper(customVariables: customVariables, ifUseElseWrapper: ifUseElseWrapper ?? IfUseElseWrapper.emptyIfUseElseWrapper);
   }
 
   static List<CustomVariabler> _customVariablerLoop(String content) {
-    RegExp(r"(\r\n)|(\n)");
+    final customVariables = <CustomVariabler>[];
+    RegExp(r"([^\r\n]+)|([^\n]+)").allMatches(content).forEach(
+      (element) {
+        final singleContent = element.group(0)!;
+        final sp = singleContent.split("=");
+        if (sp.length != 2) {
+          if (singleContent.trim().isNotEmpty) {
+            customVariables.add(CustomVariabler(name: element.group(0)!.trim(), content: "", explain: ""));
+          }
+        } else {
+          customVariables.add(CustomVariabler(name: sp.first.trim(), content: sp.last.trim(), explain: ""));
+        }
+      },
+    );
+    return customVariables;
   }
 
   /// 返回 null 表示不存在 if-else 语句。

@@ -25,6 +25,7 @@ class AlgorithmWrapper {
 
   static fromJsonString(String content) => AlgorithmWrapper.fromJson(jsonDecode(content));
 
+  /// 将 Map 格式转换成 jsonString 格式，可以以文本的方式保存到数据库。
   String toJsonString() => jsonEncode(toJson());
 
   AlgorithmWrapper copy() => AlgorithmWrapper.fromJson(this.toJson());

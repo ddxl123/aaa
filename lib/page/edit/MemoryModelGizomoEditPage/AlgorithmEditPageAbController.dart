@@ -1,18 +1,22 @@
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:drift_main/share_common/share_enum.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'MemoryModelGizmoEditPageAbController.dart';
 
 class AlgorithmEditPageAbController extends AbController {
-  AlgorithmEditPageAbController();
-
   final memoryModelGizmoEditPageAbController = Aber.findLast<MemoryModelGizmoEditPageAbController>();
 
   final freeBoxController = FreeBoxController();
   final currentAlgorithmWrapper = Ab<AlgorithmWrapper>.late();
+
+  final isCurrentRaw = false.ab;
+  FreeBoxCamera rawCamera = FreeBoxCamera(expectPosition: Offset(10, 10), expectScale: 1);
+  FreeBoxCamera viewCamera = FreeBoxCamera(expectPosition: Offset(10, 10), expectScale: 1);
+  final rawTextEditingController = TextEditingController();
 
   @override
   Future<bool> backListener(bool hasRoute) async {
@@ -78,7 +82,6 @@ class AlgorithmEditPageAbController extends AbController {
   void onInit() {
     super.onInit();
     currentAlgorithmWrapper.lateAssign(AlgorithmWrapper.fromJsonString(content()));
-    currentAlgorithmWrapper.lateAssign(AlgorithmWrapper(customVariables: [], ifUseElseWrapper: AlgorithmBidirectionalParsing.parseFromString()!));
   }
 
   String content() {
@@ -120,6 +123,7 @@ class AlgorithmEditPageAbController extends AbController {
   }
 
   Future<void> save() async {
+    rawToView();
     final copyMAb = memoryModelGizmoEditPageAbController.copyMemoryModelAb;
     filter(
       from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
@@ -158,6 +162,7 @@ class AlgorithmEditPageAbController extends AbController {
   }
 
   Future<void> analysis() async {
+    rawToView();
     currentAlgorithmWrapper().cancelAllException();
     await filterFuture(
       from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
@@ -205,4 +210,35 @@ class AlgorithmEditPageAbController extends AbController {
       orElse: null,
     );
   }
+
+  /// raw - view 相互切换
+  void changeRawOrView() {
+    rawToView();
+    if (isCurrentRaw()) {
+      rawCamera.changeFrom(freeBoxController.freeBoxCamera);
+      rawTextEditingController.text = "";
+      freeBoxController.targetSlide(targetCamera: viewCamera, rightNow: false);
+    } else {
+      viewCamera.changeFrom(freeBoxController.freeBoxCamera);
+      rawTextEditingController.text = AlgorithmBidirectionalParsing.parseFromAlgorithmWrapper(currentAlgorithmWrapper());
+      freeBoxController.targetSlide(targetCamera: rawCamera, rightNow: false);
+    }
+    isCurrentRaw.refreshEasy((oldValue) => !oldValue);
+  }
+
+  /// raw 转 view，以便模式切换、分析、存储等
+  void rawToView() {
+    if (isCurrentRaw()) {
+      currentAlgorithmWrapper.refreshInevitable((obj) => AlgorithmBidirectionalParsing.parseFromString(rawTextEditingController.text));
+    }
+  }
+
+  /// raw 格式化
+  void rawFormatting() {
+    rawTextEditingController.text = AlgorithmBidirectionalParsing.parseFromAlgorithmWrapper(
+      AlgorithmBidirectionalParsing.parseFromString(rawTextEditingController.text),
+    );
+  }
+
+  /// TODO: 把 raw 模式设置成富文本编辑器模式，来提供撤销功能。
 }

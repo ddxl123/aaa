@@ -43,12 +43,6 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                 ),
                 titleSpacing: 0,
                 actions: [
-                  TextButton(
-                    child: Text("分析"),
-                    onPressed: () {
-                      fc.analysis();
-                    },
-                  ),
                   IconButton(
                     icon: Icon(Icons.save),
                     onPressed: () {
@@ -63,13 +57,29 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                     freeBoxController: fc.freeBoxController,
                     moveScaleLayerWidgets: FreeBoxMoveScaleLayerStack(
                       children: [
-                        FreeBoxMoveScaleLayerPositioned(
-                          expectPosition: Offset(10, 10),
-                          child: SizedBox(
-                            width: 2500,
-                            child: c.currentAlgorithmWrapper(abw).toWidget(),
-                          ),
-                        ),
+                        c.isCurrentRaw(abw)
+                            ? FreeBoxMoveScaleLayerPositioned(
+                                expectPosition: Offset(10, 10),
+                                child: SizedBox(
+                                  width: 1000,
+                                  child: TextField(
+                                    controller: c.rawTextEditingController,
+                                    minLines: 20,
+                                    maxLines: 1000,
+                                    decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : FreeBoxMoveScaleLayerPositioned(
+                                expectPosition: Offset(10, 10),
+                                child: SizedBox(
+                                  width: 2500,
+                                  child: c.currentAlgorithmWrapper(abw).toWidget(),
+                                ),
+                              ),
                       ],
                     ),
                     fixedLayerWidgets: [
@@ -94,6 +104,69 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                           ],
                         ),
                       ),
+                    ],
+                  );
+                },
+              ),
+              bottomNavigationBar: AbBuilder<AlgorithmEditPageAbController>(
+                builder: (AlgorithmEditPageAbController bnC, Abw bnAbw) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              child: Text("内置成员"),
+                              onPressed: () {},
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("预置"),
+                              onPressed: () {},
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("拷贝管理"),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AbBuilder<AlgorithmEditPageAbController>(
+                              builder: (AlgorithmEditPageAbController c, Abw abw) {
+                                return TextButton(
+                                  child: c.isCurrentRaw(abw) ? Text("常规模式") : Text("纯文本模式"),
+                                  onPressed: () {
+                                    c.changeRawOrView();
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("格式化"),
+                              onPressed: () {
+                                bnC.rawFormatting();
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("分析"),
+                              onPressed: () {
+                                bnC.analysis();
+                              },
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   );
                 },

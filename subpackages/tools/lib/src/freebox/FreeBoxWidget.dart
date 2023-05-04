@@ -3,14 +3,19 @@ part of freebox;
 class FreeBoxCamera {
   FreeBoxCamera({required this.expectPosition, required this.expectScale});
 
-  /// 期望缩放值。
-  double expectScale;
-
   /// 期望位置。
   Offset expectPosition;
 
+  /// 期望缩放值。
+  double expectScale;
+
   /// 获取实际位置。
   Offset getActualPosition() => expectPosition - freeBoxTopLeftOffset;
+
+  void changeFrom(FreeBoxCamera freeBoxCamera) {
+    expectPosition = freeBoxCamera.expectPosition;
+    expectScale = freeBoxCamera.expectScale;
+  }
 }
 
 /// 移动缩放层所使用的 [Stack]。
