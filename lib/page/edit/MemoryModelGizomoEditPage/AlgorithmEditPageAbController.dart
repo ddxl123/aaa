@@ -162,6 +162,7 @@ class AlgorithmEditPageAbController extends AbController {
   }
 
   Future<void> analysis() async {
+    changeRawOrView(false);
     rawToView();
     currentAlgorithmWrapper().cancelAllException();
     await filterFuture(
@@ -211,19 +212,38 @@ class AlgorithmEditPageAbController extends AbController {
     );
   }
 
-  /// raw - view 相互切换
-  void changeRawOrView() {
+  /// 若 [isToRaw] 为 null，则 raw - view 自动相互切换
+  void changeRawOrView(bool? isToRaw) {
     rawToView();
-    if (isCurrentRaw()) {
+
+    void toView() {
       rawCamera.changeFrom(freeBoxController.freeBoxCamera);
       rawTextEditingController.text = "";
       freeBoxController.targetSlide(targetCamera: viewCamera, rightNow: false);
-    } else {
+    }
+
+    void toRaw() {
       viewCamera.changeFrom(freeBoxController.freeBoxCamera);
       rawTextEditingController.text = AlgorithmBidirectionalParsing.parseFromAlgorithmWrapper(currentAlgorithmWrapper());
       freeBoxController.targetSlide(targetCamera: rawCamera, rightNow: false);
     }
-    isCurrentRaw.refreshEasy((oldValue) => !oldValue);
+
+    if (isToRaw == null) {
+      if (isCurrentRaw()) {
+        toView();
+      } else {
+        toRaw();
+      }
+      isCurrentRaw.refreshEasy((oldValue) => !oldValue);
+    } else {
+      if (isToRaw) {
+        isCurrentRaw.refreshEasy((oldValue) => true);
+        toRaw();
+      } else {
+        isCurrentRaw.refreshEasy((oldValue) => false);
+        toView();
+      }
+    }
   }
 
   /// raw 转 view，以便模式切换、分析、存储等
@@ -238,6 +258,16 @@ class AlgorithmEditPageAbController extends AbController {
     rawTextEditingController.text = AlgorithmBidirectionalParsing.parseFromAlgorithmWrapper(
       AlgorithmBidirectionalParsing.parseFromString(rawTextEditingController.text),
     );
+  }
+
+  void defaultToPaste(String rawContent) {
+    if (isCurrentRaw()) {
+      rawTextEditingController.text = rawContent;
+    } else {
+      currentAlgorithmWrapper.refreshEasy((oldValue) => AlgorithmBidirectionalParsing.parseFromString(rawContent));
+    }
+    Navigator.pop(context);
+    SmartDialog.showToast("替换成功！");
   }
 
   /// TODO: 把 raw 模式设置成富文本编辑器模式，来提供撤销功能。

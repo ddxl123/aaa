@@ -7,6 +7,8 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   static const nullTag = '_tag_null_tag_';
 
+  static const bool isDebug = true;
+
   /// 计算
   static double calculate(String content) {
     try {
@@ -102,6 +104,9 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
       );
       return await onSuccess(state);
     } catch (o, st) {
+      if (isDebug) {
+        logger.outError(error: o, stackTrace: st);
+      }
       return await onError(UnknownAlgorithmException(o.toString(), st));
     }
   }

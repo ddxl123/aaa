@@ -1,7 +1,8 @@
 import 'package:aaa/algorithm_parser/parser.dart';
 
-class DefaultAlgorithm {
-  DefaultAlgorithm({
+/// 注意接收的是 if-else 原生语句。
+class DefaultAlgorithmOfRaw {
+  DefaultAlgorithmOfRaw({
     required this.title,
     required this.buttonDataContent,
     required this.familiarityContent,
@@ -13,15 +14,33 @@ class DefaultAlgorithm {
   final String familiarityContent;
   final String nextShowTimeContent;
 
-  static final defaultList = <DefaultAlgorithm>[];
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is DefaultAlgorithmOfRaw &&
+        other.title == title &&
+        other.buttonDataContent == buttonDataContent &&
+        other.familiarityContent == familiarityContent &&
+        other.nextShowTimeContent == nextShowTimeContent;
+  }
 
-  static List<DefaultAlgorithm> initDefault() {
-    defaultList.add(default1());
+  @override
+  int get hashCode {
+    return Object.hash(title, buttonDataContent, familiarityContent, nextShowTimeContent);
+  }
+
+  static final defaultList = <DefaultAlgorithmOfRaw>[];
+
+  static List<DefaultAlgorithmOfRaw> getDefaults() {
+    final default1 = DefaultAlgorithmOfRaw.default1();
+    if (!defaultList.contains(default1)) {
+      defaultList.add(default1);
+    }
     return defaultList;
   }
 
-  static DefaultAlgorithm default1() {
-    return DefaultAlgorithm(
+  static DefaultAlgorithmOfRaw default1() {
+    return DefaultAlgorithmOfRaw(
       title: "艾宾浩斯复习周期",
       buttonDataContent: """
       if(true){
@@ -37,11 +56,6 @@ class DefaultAlgorithm {
       StudiedTimes = ${InternalVariableConstantHandler.k3StudiedTimesConst.name}
       if(StudiedTimes == 0){
         5*60
-        if(aa=ddd){
-          dddd
-        }else{
-          zzzzzz
-        }
       }else if(StudiedTimes == 1){
         20*60
       }else if(StudiedTimes == 2){

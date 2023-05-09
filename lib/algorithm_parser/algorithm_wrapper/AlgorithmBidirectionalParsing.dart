@@ -177,7 +177,7 @@ class AlgorithmBidirectionalParsing {
       return null;
     }
 
-    final ifElseTypeOrConditionStr = loopStr.substring(0, firstBraceIndex).trim().toLowerCase();
+    final ifElseTypeOrConditionStr = loopStr.substring(0, firstBraceIndex).trim();
     final ifElseType =
         ifElseTypeOrConditionStr.contains("(") ? ifElseTypeOrConditionStr.substring(0, ifElseTypeOrConditionStr.indexOf("(")).trim() : ifElseTypeOrConditionStr.trim();
     late final String condition;

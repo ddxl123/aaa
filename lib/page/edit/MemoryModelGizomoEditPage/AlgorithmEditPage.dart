@@ -1,7 +1,9 @@
+import 'package:aaa/algorithm_parser/default.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryModelGizomoEditPage/AlgorithmEditPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:tools/tools.dart';
 
 import 'MemoryModelGizmoEditPageAbController.dart';
@@ -116,34 +118,12 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                       Row(
                         children: [
                           Expanded(
-                            child: TextButton(
-                              child: Text("内置成员"),
-                              onPressed: () {},
-                            ),
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              child: Text("预置"),
-                              onPressed: () {},
-                            ),
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              child: Text("拷贝管理"),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
                             child: AbBuilder<AlgorithmEditPageAbController>(
                               builder: (AlgorithmEditPageAbController c, Abw abw) {
                                 return TextButton(
-                                  child: c.isCurrentRaw(abw) ? Text("常规模式") : Text("纯文本模式"),
+                                  child: c.isCurrentRaw(abw) ? Text("切换至常规编辑") : Text("切换至纯文本编辑"),
                                   onPressed: () {
-                                    c.changeRawOrView();
+                                    c.changeRawOrView(null);
                                   },
                                 );
                               },
@@ -166,7 +146,87 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                             ),
                           ),
                         ],
-                      )
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              child: Text("查看内置成员"),
+                              onPressed: () {},
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("预置"),
+                              onPressed: () {
+                                showMaterialModalBottomSheet(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+                                  context: c.context,
+                                  builder: (BuildContext context) {
+                                    return Card(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(height: 10),
+                                          Row(
+                                            children: [
+                                              Text("请选择一个算法预设", style: TextStyle(fontWeight: FontWeight.bold)),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: MediaQuery.of(context).size.height / 2,
+                                            child: ListView(
+                                              children: DefaultAlgorithmOfRaw.getDefaults()
+                                                  .map(
+                                                    (e) => Row(
+                                                      children: [
+                                                        Text(e.title + "："),
+                                                        Expanded(
+                                                          child: TextButton(
+                                                            child: Text("熟悉度变化算法"),
+                                                            onPressed: () {
+                                                              bnC.defaultToPaste(e.familiarityContent);
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          child: TextButton(
+                                                            child: Text("下一次展示时间点算法"),
+                                                            onPressed: () {
+                                                              bnC.defaultToPaste(e.nextShowTimeContent);
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          child: TextButton(
+                                                            child: Text("按钮数据算法"),
+                                                            onPressed: () {
+                                                              bnC.defaultToPaste(e.buttonDataContent);
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("帮助"),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   );
                 },
