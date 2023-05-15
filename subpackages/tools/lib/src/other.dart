@@ -135,7 +135,6 @@ String? time2TextTime({required int longSeconds}) {
   return result == '' ? null : result;
 }
 
-
 /// 若 [bs] 全为 true，则返回 true。
 bool boolAllTrue(List<bool> bs) {
   return !bs.contains(false);
@@ -159,25 +158,12 @@ bool boolExistFalse(List<bool> bs) {
 extension ArrayStringInsert on String {
   /// 添加 [newValue] 到 '[1,2,3]' 中。
   String arrayAdd<T>(T newValue) {
-    if (newValue == '') throw '添加的元素不能为空字符！';
-    if (!trim().contains(RegExp(r'^(\[)(.*)(\])$'))) throw '不能对非数组的字符串添加元素！${this}';
-    if (trim() == '[]') return '${split(']').first}$newValue]';
-    return '${split(']').first},$newValue]';
+    return jsonEncode((jsonDecode(this) as List<dynamic>)..add(newValue));
   }
+}
 
-  /// 将 '[1,2,3]' 解析成 [1,2,3]。
-  List<int> toIntArray() {
-    if (!trim().contains(RegExp(r'^(\[)(.*)(\])$'))) throw '不能对非数组的字符串进行 List<int> 转换！${this}';
-    if (trim() == '[]') return [];
-    return replaceAll(RegExp(r'(\[)|(\])'), '').split(',').map((e) => int.parse(e)).toList();
-  }
-
-  /// 将 '[1.1,2.2,3.3]' 解析成 [1.1,2.2,3.3]。
-  List<double> toDoubleArray() {
-    if (!trim().contains(RegExp(r'^(\[)(.*)(\])$'))) throw '不能对非数组的字符串进行 List<double> 转换！${this}';
-    if (trim() == '[]') return [];
-    return replaceAll(RegExp(r'(\[)|(\])'), '').split(',').map((e) => double.parse(e)).toList();
-  }
+List<T> strToList<T>(String str) {
+  return (jsonDecode(str) as List<dynamic>).cast<T>();
 }
 
 VisualDensity get kMinVisualDensity => const VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity);

@@ -120,23 +120,12 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
 
   /// 评估自定义变量。
   String _evalCustomVariables({required String content}) {
-    String replaceResult = content;
-    int i = 100;
-    while (true) {
-      i = i - 1;
-      if (i == 0) {
-        throw KnownAlgorithmException("评估自定义变量时循环超过100次");
-      }
-      final newReplaceResult = content.replaceAllMapped(
-        RegExper.variableMatching('(${_state.algorithmWrapper.customVariablesMap.keys.map((e) => '($e)').join('|').nothingMatches()})'),
-        (match) {
-          return '(${_state.algorithmWrapper.customVariablesMap[match.group(0)!]!})';
-        },
-      );
-      if (newReplaceResult == replaceResult) {
-        return newReplaceResult;
-      }
-    }
+    return content.replaceAllMapped(
+      RegExper.variableMatching('(${_state.algorithmWrapper.customVariablesMap.keys.map((e) => '($e)').join('|').nothingMatches()})'),
+      (match) {
+        return '(${_state.algorithmWrapper.customVariablesMap[match.group(0)!]!})';
+      },
+    );
   }
 
   /// 评估内置变量。

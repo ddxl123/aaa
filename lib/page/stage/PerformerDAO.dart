@@ -9,51 +9,41 @@ import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
 
 class PerformerQuery {
-  /// 获取新的表演者，获取到的碎片信息是该碎片的最后一次记录。
+  /// 获取新的表演者。
   ///
-  /// [Fragment] 表示当前新展示的碎片。
-  ///
-  /// [FragmentMemoryInfo]s 为当前记忆组当前碎片的全部记忆信息（不包含当前新展示的信息，因为当前新展示的信息未被创建）。
-  /// 按照时间顺序排序，last 为 [FragmentMemoryInfo.isLatestRecord] 为 true 的记录。
-  ///
-  /// 若 [FragmentMemoryInfo]s 数组为空，则当前碎片是新碎片。
-  ///
-  /// 为 null 时表示没有下一个了，即已完成学习。
-  Future<Performer?> getNewPerformer({required MemoryGroup mg}) async {
-    final newPerformer = await getOneNewFragment(mg: mg);
-    final learnedFragment = await getOneLearnedFragment(mg: mg);
+  /// return null 时表示没有检索到下一个。
+  Future<Performer?> getPerformer({required MemoryGroup mg}) async {
+    final newPerformer = await getOneNewPerformer(mg: mg);
+    final reviewPerformer = await getOneReviewPerformer(mg: mg);
 
-    logger.outNormal(print: '获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}');
-    logger.outNormal(print: '获取到的复习碎片：\n${learnedFragment?.fragmentMemoryInfo}\n${learnedFragment?.fragment}');
-
-    if (newPerformer == null && learnedFragment == null) return null;
+    logger.outNormal(
+        print: "获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}"
+            "\n"
+            "获取到的复习碎片：\n${reviewPerformer?.fragmentMemoryInfo}\n${reviewPerformer?.fragment}");
 
     late final Performer? performer;
     if (mg.new_review_display_order == NewReviewDisplayOrder.mix) {
-      performer = Random().nextBool() == true ? (newPerformer ?? learnedFragment) : (learnedFragment ?? newPerformer);
+      performer = Random().nextBool() == true ? (newPerformer ?? reviewPerformer) : (reviewPerformer ?? newPerformer);
     } else if (mg.new_review_display_order == NewReviewDisplayOrder.review_new) {
-      performer = learnedFragment ?? newPerformer;
+      performer = reviewPerformer ?? newPerformer;
     } else if (mg.new_review_display_order == NewReviewDisplayOrder.new_review) {
-      performer = newPerformer ?? learnedFragment;
+      performer = newPerformer ?? reviewPerformer;
     } else {
       throw '未处理 ${mg.new_review_display_order}';
-    }
-    if (performer!.fragmentMemoryInfo.next_plan_show_time == null) {
-      logger.outNormal(print: '最终展示了新碎片！');
-    } else {
-      logger.outNormal(print: '最终展示了复习碎片！');
     }
     return performer;
   }
 
   /// 获取新碎片。
-  Future<Performer?> getOneNewFragment({required MemoryGroup mg}) async {
+  ///
+  /// 若没有新碎片了，则返回 null。
+  Future<Performer?> getOneNewPerformer({required MemoryGroup mg}) async {
     // 识别是否还需要学习新碎片。
     if (mg.will_new_learn_count == 0) {
       return null;
     }
     final selInfo = db.select(db.fragmentMemoryInfos);
-    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.next_plan_show_time.isNull());
+    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.next_plan_show_time.jsonArrayLength().equals(0));
     if (mg.new_display_order == NewDisplayOrder.random) {
       selInfo.orderBy([(_) => OrderingTerm.random()]);
     } else {
@@ -66,28 +56,63 @@ class PerformerQuery {
 
     final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragment_id));
     final fResult = await selF.getSingleOrNull();
-    if (fResult == null) throw '碎片已经被删除，但是仍然残留了记忆信息！';
+    if (fResult == null) {
+      logger.outNormal(print: "碎片已经被删除，但是仍然残留了记忆信息！");
+      return null;
+    }
 
     return Performer(fragment: fResult, fragmentMemoryInfo: infoResult);
   }
 
   /// 获取要复习的碎片。
-  Future<Performer?> getOneLearnedFragment({required MemoryGroup mg}) async {
-    final lastNextShowTime = db.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[#-1]');
-    final selInfo = db.select(db.fragmentMemoryInfos);
-    selInfo.addColumns([lastNextShowTime]);
-    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.next_plan_show_time.isNotNull());
-    selInfo.orderBy([(o) => OrderingTerm(expression: lastNextShowTime, mode: OrderingMode.asc)]);
-    selInfo.limit(1);
+  ///
+  /// 若没有复习碎片了，则返回 null。
+  Future<Performer?> getOneReviewPerformer({required MemoryGroup mg}) async {
+    final lastNextPlanedShowTimeExpr = db.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[-1]');
+    final reviewIntervalDiff = timeDifference(target: mg.review_interval, start: mg.start_time!);
+    // [isExpire] 查询的是否为过期类型。
+    Future<FragmentMemoryInfo?> query(bool isExpire) async {
+      final selInfo = db.select(db.fragmentMemoryInfos);
+      selInfo.addColumns([lastNextPlanedShowTimeExpr]);
+      selInfo.where(
+        (tbl) {
+          final expr = tbl.memory_group_id.equals(mg.id) &
+              tbl.next_plan_show_time.jsonArrayLength().isBiggerThanValue(0) &
+              lastNextPlanedShowTimeExpr.isSmallerOrEqualValue(reviewIntervalDiff);
+          if (isExpire) {
+            return expr & lastNextPlanedShowTimeExpr.isSmallerThanValue(timeDifference(target: DateTime.now(), start: mg.start_time!));
+          } else {
+            return expr & lastNextPlanedShowTimeExpr.isBiggerOrEqualValue(timeDifference(target: DateTime.now(), start: mg.start_time!));
+          }
+        },
+      );
+      selInfo.orderBy([(o) => OrderingTerm(expression: lastNextPlanedShowTimeExpr, mode: OrderingMode.asc)]);
+      selInfo.limit(1);
+      return await selInfo.getSingleOrNull();
+    }
 
-    final infoResult = await selInfo.getSingleOrNull();
-    if (infoResult == null) return null;
+    late final FragmentMemoryInfo? finalResult;
+    final resultExpire = await query(true);
+    final resultNoExpire = await query(false);
+    if (mg.review_display_order == ReviewDisplayOrder.expire_first) {
+      finalResult = resultExpire ?? resultNoExpire;
+    } else if (mg.review_display_order == ReviewDisplayOrder.no_expire_first) {
+      finalResult = resultNoExpire ?? resultExpire;
+    } else if (mg.review_display_order == ReviewDisplayOrder.ignore_expire) {
+      finalResult = resultNoExpire;
+    } else {
+      throw "未处理 ${mg.review_display_order}";
+    }
+    if (finalResult == null) return null;
 
-    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragment_id));
+    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(finalResult!.fragment_id));
     final fResult = await selF.getSingleOrNull();
-    if (fResult == null) throw '碎片已经被删除，但是仍然残留了记忆信息！';
+    if (fResult == null) {
+      logger.outNormal(print: "碎片已经被删除，但是仍然残留了记忆信息！");
+      return null;
+    }
 
-    return Performer(fragment: fResult, fragmentMemoryInfo: infoResult);
+    return Performer(fragment: fResult, fragmentMemoryInfo: finalResult);
   }
 
   /// ========================================================================================
@@ -129,7 +154,7 @@ class PerformerQuery {
 
   /// [InternalVariableConstantHandler.k3StudiedTimesConst]
   Future<int> getStudiedTimes({required Performer performer}) async {
-    return jsonDecode(performer.fragmentMemoryInfo.click_time).length;
+    return strToList(performer.fragmentMemoryInfo.click_time).length;
   }
 
   /// [InternalVariableConstantHandler.k4CurrentShowTimeConst]
@@ -139,36 +164,36 @@ class PerformerQuery {
 
   /// [InternalVariableConstantHandler.i1ActualShowTimeConst]
   Future<List<int>> getActualShowTime({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.actual_show_time) as List<dynamic>).cast<int>();
+    return strToList(performer.fragmentMemoryInfo.actual_show_time);
   }
 
   /// [InternalVariableConstantHandler.i2NextPlanShowTimeConst]
   Future<List<int>> getNextPlanedShowTime({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.next_plan_show_time) as List<dynamic>).cast<int>();
+    return strToList(performer.fragmentMemoryInfo.next_plan_show_time);
   }
 
   /// [InternalVariableConstantHandler.i3ShowFamiliarityConst]
   Future<List<double>> getShowFamiliarity({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.show_familiarity) as List<dynamic>).cast<double>();
+    return strToList(performer.fragmentMemoryInfo.show_familiarity);
   }
 
   /// [InternalVariableConstantHandler.i4ClickFamiliarityConst]
   Future<List<double>> getClickFamiliarity({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.click_familiarity) as List<dynamic>).cast<double>();
+    return strToList(performer.fragmentMemoryInfo.click_familiarity);
   }
 
   /// [InternalVariableConstantHandler.i5ClickTimeConst]
   Future<List<int>> getClickTime({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.click_time) as List<dynamic>).cast<int>();
+    return strToList(performer.fragmentMemoryInfo.click_time);
   }
 
   /// [InternalVariableConstantHandler.i6ClickValueConst]
   Future<List<double>> getClickValue({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.click_value) as List<dynamic>).cast<double>();
+    return strToList(performer.fragmentMemoryInfo.click_value);
   }
 
   /// [InternalVariableConstantHandler.i7ButtonValuesConst]
   Future<List<List<double>>> getButtonValues({required Performer performer}) async {
-    return (jsonDecode(performer.fragmentMemoryInfo.button_values) as List<dynamic>).cast<List<dynamic>>().cast<List<double>>();
+    return strToList<List<dynamic>>(performer.fragmentMemoryInfo.button_values).cast<List<double>>();
   }
 }

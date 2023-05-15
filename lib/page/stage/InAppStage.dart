@@ -58,9 +58,9 @@ class _InAppStageState extends State<InAppStage> {
     return AbBuilder<InAppStageAbController>(
       builder: (c, abw) {
         if (c.currentPerformer(abw) == null) return const SizedBox(height: 0);
-        if (c.currentButtonDataState(abw) == null) return Row(children: const [Expanded(child: Text('获取按钮数据异常！'))]);
+        if (c.currentButtonDatas(abw).isEmpty) return Row(children: const [Expanded(child: Text('获取按钮数据分配为空！'))]);
         return Row(
-          children: c.currentButtonDataState()!.resultButtonValues.map(
+          children: c.currentButtonDatas().map(
             (e) {
               final parseTime = e.parseTime();
               if (parseTime == null) {

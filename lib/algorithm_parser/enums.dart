@@ -11,8 +11,8 @@ enum SimulationType {
 
 enum NType {
   /// 第 n 次
-  times,
+  ntimes,
 
   /// 上 n 次
-  last,
+  nlast,
 }

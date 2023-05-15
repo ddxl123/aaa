@@ -24,7 +24,7 @@ class InternalVariableConstant<R> {
   ///
   /// 若为 true，则可带后缀 _n
   ///
-  /// 若为 true，则 [isNullable] 无效
+  /// 若为 true，则 [isNullable] 必然为 true
   final bool isReadFromMemoryInfo;
 
   /// 是否可为空
@@ -125,8 +125,20 @@ class InternalVariableConstantHandler {
   /// [FragmentMemoryInfos.button_values]
   static InternalVariableConstant k6CurrentButtonValuesConst = InternalVariableConstant<List<double>>(
     name: 'current_button_values',
-    explain: '本次展示所分配的按钮数据',
+    explain: '本次展示所分配的全部按钮数据',
     numericTypeExplain: '数组类型，例如：[1,2,3]',
+    isReadFromMemoryInfo: false,
+    isNullable: true,
+    rawStringToDartTypeFunc: (String rawStringResult) {
+      return jsonDecode(rawStringResult);
+    },
+  );
+
+  /// [FragmentMemoryInfos.button_values]
+  static InternalVariableConstant k6CurrentButtonValueConst = InternalVariableConstant<double>(
+    name: 'current_button_value',
+    explain: '本次展示时所点击的按钮数值',
+    numericTypeExplain: '数组类型，例如：1',
     isReadFromMemoryInfo: false,
     isNullable: true,
     rawStringToDartTypeFunc: (String rawStringResult) {
@@ -220,7 +232,7 @@ class InternalVariableConstantHandler {
     },
   );
 
-  /// 受 [NType.times] 影响，必须把 [k3StudiedTimesConst] 放到最后，若放到前面，正则表达式会先识别 times。
+  /// TODO: 受 [NType.ntimes] 影响，必须把 [k3StudiedTimesConst] 放到最后，若放到前面，正则表达式会先识别 times。
   static Map<String, InternalVariableConstant> getKVs = {
     InternalVariableConstantHandler.i1ActualShowTimeConst.name: InternalVariableConstantHandler.i1ActualShowTimeConst,
     InternalVariableConstantHandler.i2NextPlanShowTimeConst.name: InternalVariableConstantHandler.i2NextPlanShowTimeConst,
@@ -238,6 +250,7 @@ class InternalVariableConstantHandler {
     InternalVariableConstantHandler.k4CurrentShowTimeConst.name: InternalVariableConstantHandler.k4CurrentShowTimeConst,
     InternalVariableConstantHandler.k5CurrentShowFamiliarityConst.name: InternalVariableConstantHandler.k5CurrentShowFamiliarityConst,
     InternalVariableConstantHandler.k6CurrentButtonValuesConst.name: InternalVariableConstantHandler.k6CurrentButtonValuesConst,
+    InternalVariableConstantHandler.k6CurrentButtonValueConst.name: InternalVariableConstantHandler.k6CurrentButtonValueConst,
   };
 
   static Set<String> get getNames => getKVs.keys.toSet();

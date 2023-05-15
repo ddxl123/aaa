@@ -89,13 +89,11 @@ enum NewReviewDisplayOrder {
         
 enum ReviewDisplayOrder {
   
-  random_not_ignore_expire,
-
-  random_ignore_expire,
-
   expire_first,
 
-  not_expired_first,
+  no_expire_first,
+
+  ignore_expire,
 
 }
         

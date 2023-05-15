@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
+import 'package:aaa/algorithm_parser/internal_variable/EachVariableWrapper.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:drift_main/share_common/share_enum.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'PerformerDAO.dart';
 
@@ -37,17 +39,17 @@ class InAppStageAbController extends AbController {
   final isButtonDataShowValue = false.ab;
 
   /// 每展示碎片时都会被重置。
-  /// [PerformerQuery.getNewPerformer]
+  /// [PerformerQuery.getPerformer]
   final currentPerformer = Ab<Performer?>(null);
 
   /// 每展示碎片时都会被重置。
-  int? currentActualShowTime;
+  final currentShowTime = Ab<int?>(null);
 
   /// 每展示碎片时都会被重置。
-  double? currentShowFamiliar;
+  final currentButtonDatas = <ButtonDataValue2NextShowTime>[].ab;
 
   /// 每展示碎片时都会被重置。
-  final currentButtonDataState = Ab<ButtonDataState?>(null);
+  final currentShowFamiliarity = Ab<double?>(null);
 
   @override
   bool get isEnableLoading => true;
@@ -63,35 +65,40 @@ class InAppStageAbController extends AbController {
 
   @override
   Future<void> loadingFuture() async {
-    await Future.delayed(const Duration(milliseconds: 500));
     await _init();
   }
 
   Future<void> _init() async {
     final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
-    memoryModelAb = mm!.ab;
+    if (mm == null) {
+      SmartDialog.showToast("未对该碎片组分配算法模型！");
+      Navigator.pop(context);
+      return;
+    }
+    memoryModelAb = mm.ab;
 
     await _next();
   }
 
   /// 仅获取下一个 [Performer]。
   Future<void> _next() async {
-    final performer = await performerQuery.getNewPerformer(mg: memoryGroupAb());
+    final performer = await performerQuery.getPerformer(mg: memoryGroupAb());
     currentPerformer.refreshInevitable((obj) => performer);
     // 说明没有下一个了。
     if (currentPerformer() == null) return;
 
     // 必须按照顺序进行获取，否则要么没有对应的值，要么可能会使用上一次的值。
-    currentActualShowTime = timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!);
-    currentShowFamiliar = await _parseCurrentFamiliarity();
+    currentShowTime.refreshEasy((oldValue) => timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!));
+    await _parseStartFamiliarity();
 
-    final pbd = await _parseButtonData();
+    final pbd = await _parseStartButtonDatas();
     for (var element in pbd.resultButtonValues) {
-      await _parseNextShowTime(buttonDataValue2NextShowTime: element);
+      await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: element);
     }
-
+    currentButtonDatas.refreshEasy((oldValue) => oldValue
+      ..clear()
+      ..addAll(pbd.resultButtonValues));
     quillController.document = q.Document.fromJson(jsonDecode(currentPerformer()!.fragment.content));
-    currentButtonDataState.refreshEasy((oldValue) => pbd);
   }
 
   /// 仅完成当前表演。
@@ -102,46 +109,43 @@ class InAppStageAbController extends AbController {
       throw '没有下一个碎片了，却仍然请求了下一个碎片！';
     }
 
-    final buttonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: "临时");
-    await _parseNextShowTime(buttonDataValue2NextShowTime: buttonDataValue2NextShowTime);
+    final targetButtonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: null);
+    await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: targetButtonDataValue2NextShowTime);
+
+    final currentClickFamiliarity = await _parseClickFamiliarity(targetButtonDataValue2NextShowTime);
 
     final info = currentPerformer()!.fragmentMemoryInfo;
 
-    final isNew = info.next_plan_show_time == null ? true : false;
+    final isNew = (jsonDecode(info.next_plan_show_time) as List<dynamic>).isEmpty;
     final st = await SyncTag.create();
     await performerQuery.finish(
       originalFragmentMemoryInfoReset: () async {
-        await currentPerformer()!.fragmentMemoryInfo.reset(
-              creator_user_id: toAbsent(),
-              fragment_id: toAbsent(),
-              memory_group_id: toAbsent(),
-              click_time: info.click_time.arrayAdd(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
-              click_value: info.click_value.arrayAdd(clickValue).toValue(),
-              actual_show_time: info.actual_show_time.arrayAdd(currentActualShowTime).toValue(),
-              next_plan_show_time: info.next_plan_show_time.arrayAdd(buttonDataValue2NextShowTime.nextShowTime).toValue(),
-              show_familiarity: info.show_familiarity.arrayAdd(currentShowFamiliar).toValue(),
-              // TODO: currentActualShowTime 改成 show_familiarity
-              click_familiarity: info.show_familiarity.arrayAdd(currentActualShowTime).toValue(),
-              // TODO:
-              button_values: "".toValue(),
-              study_status: toAbsent(),
-              syncTag: st,
-            );
+        await info.reset(
+          creator_user_id: toAbsent(),
+          fragment_id: toAbsent(),
+          memory_group_id: toAbsent(),
+          click_time: info.click_time.arrayAdd<int>(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
+          click_value: info.click_value.arrayAdd<double>(clickValue).toValue(),
+          actual_show_time: info.actual_show_time.arrayAdd<int>(currentShowTime()!).toValue(),
+          next_plan_show_time: info.next_plan_show_time.arrayAdd<int>(targetButtonDataValue2NextShowTime.nextShowTime!).toValue(),
+          show_familiarity: info.show_familiarity.arrayAdd<double>(currentShowFamiliarity()!).toValue(),
+          click_familiarity: info.click_familiarity.arrayAdd<double>(currentClickFamiliarity).toValue(),
+          button_values: info.button_values.arrayAdd<List<double>>(currentButtonDatas().map((e) => e.value).toList()).toValue(),
+          study_status: toAbsent(),
+          syncTag: st,
+        );
       },
+      // 若为新的，则会自动将 [MemoryGroup.willNewLearnCount] 减去 1。
       originalMemoryGroup: memoryGroupAb(),
       isNew: isNew,
       syncTag: st,
     );
-    currentShowFamiliar = null;
-    currentActualShowTime = null;
-    currentButtonDataState.refreshEasy((oldValue) => null);
+    currentButtonDatas.refreshInevitable((obj) => obj..clear());
+    currentShowFamiliarity.refreshEasy((oldValue) => null);
+    currentShowTime.refreshEasy((oldValue) => null);
     currentPerformer.refreshEasy((oldValue) => null);
-    if (isNew) {
-      Aber.findOrNull<MemoryGroupGizmoEditPageAbController>()?.copyMemoryGroupAb.refreshInevitable(
-            (oldValue) => oldValue..will_new_learn_count = oldValue.will_new_learn_count - 1,
-          );
-    }
-    memoryGroupAb.refreshForce();
+
+    memoryGroupAb.refreshInevitable((obj) => obj..will_new_learn_count = obj.will_new_learn_count - 1);
   }
 
   /// 完成当前表演，并进行下一次表演。
@@ -151,7 +155,96 @@ class InAppStageAbController extends AbController {
   }
 
   /// 解析出当前展示熟练度。
-  Future<double> _parseCurrentFamiliarity() async {
+  Future<void> _parseStartFamiliarity() async {
+    await AlgorithmParser.parse<FamiliarityState, void>(
+      state: FamiliarityState(
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
+        simulationType: SimulationType.external,
+        externalResultHandler: (InternalVariableAtom atom) async {
+          return await atom.filter(
+            storage: InternalVariableStorage(),
+            k1countAllConst: IvFilter(
+              ivf: () async => await performerQuery.getCountAll(memoryGroup: memoryGroupAb()),
+              isReGet: false,
+            ),
+            k2CountNeverConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.never),
+              isReGet: false,
+            ),
+            k2CountReviewConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.review),
+              isReGet: false,
+            ),
+            k2CountCompleteConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.complete),
+              isReGet: false,
+            ),
+            k2CountStopConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.stop),
+              isReGet: false,
+            ),
+            k3StudiedTimesConst: IvFilter(
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            k4CurrentShowTimeConst: IvFilter(
+              ivf: () async => performerQuery.getCurrentShowTime(memoryGroup: memoryGroupAb()),
+              isReGet: false,
+            ),
+            k5CurrentShowFamiliarityConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析当前展示时的熟练度时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
+            k6CurrentButtonValuesConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析当前展示时的熟练度时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
+            k6CurrentButtonValueConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析当前展示时的熟练度时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
+            i1ActualShowTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i2NextPlanShowTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i3ShowFamiliarityConst: IvFilter(
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i4ClickFamiliarityConst: IvFilter(
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i5ClickTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i6ClickValueConst: IvFilter(
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i7ButtonValuesConst: IvFilter(
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+          );
+        },
+      ),
+      onSuccess: (FamiliarityState state) async {
+        currentShowFamiliarity.refreshEasy((oldValue) => state.result);
+      },
+      onError: (AlgorithmException ec) async {
+        throw ec;
+      },
+    );
+  }
+
+  /// 解析出指定按钮的展示熟练度。
+  Future<double> _parseClickFamiliarity(ButtonDataValue2NextShowTime buttonDataValue2NextShowTime) async {
     return await AlgorithmParser.parse<FamiliarityState, double>(
       state: FamiliarityState(
         algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
@@ -188,11 +281,15 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k5CurrentShowFamiliarityConst: IvFilter(
-              ivf: () => throw KnownAlgorithmException("获取当前展示时的熟练度时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              ivf: () async => currentShowFamiliarity()!,
               isReGet: false,
             ),
             k6CurrentButtonValuesConst: IvFilter(
-              ivf: () => throw KnownAlgorithmException("获取当前展示时的按钮数据时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              ivf: () async => currentButtonDatas().map((e) => e.value).toList(),
+              isReGet: false,
+            ),
+            k6CurrentButtonValueConst: IvFilter(
+              ivf: () async => buttonDataValue2NextShowTime.value,
               isReGet: false,
             ),
             i1ActualShowTimeConst: IvFilter(
@@ -235,52 +332,86 @@ class InAppStageAbController extends AbController {
     );
   }
 
-  /// 解析按钮的数值数据。
-  Future<ButtonDataState> _parseButtonData() async {
+  /// 解析全部按钮的原始数值，并非解析的时间。
+  Future<ButtonDataState> _parseStartButtonDatas() async {
     return await AlgorithmParser.parse<ButtonDataState, ButtonDataState>(
       state: ButtonDataState(
-          algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm_a!),
-          simulationType: SimulationType.external,
-          // externalResultHandler: (InternalVariableAtom atom) async {
-          //   return await atom.filter(
-          //     storage: InternalVariableStorage(),
-          //     countAllIF: IvFilter(
-          //       ivf: () async => await performerQuery.getCountAll(memoryGroup: memoryGroupAb()),
-          //       isReGet: false,
-          //     ),
-          //     countNewIF: IvFilter(
-          //       ivf: () async => await performerQuery.getCountNew(memoryGroup: memoryGroupAb()),
-          //       isReGet: false,
-          //     ),
-          //     timesIF: IvFilter(
-          //       ivf: () async => await performerQuery.getTimes(performer: currentPerformer()!),
-          //       isReGet: false,
-          //     ),
-          //     currentActualShowTimeIF: IvFilter(
-          //       ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime!),
-          //       isReGet: false,
-          //     ),
-          //     nextPlanedShowTimeIF: IvFilter(
-          //       ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!, currentNextPlanedShowTime: null),
-          //       isReGet: false,
-          //     ),
-          //     showFamiliarIF: IvFilter(
-          //       ivf: () async => await performerQuery.getShowFamiliar(performer: currentPerformer()!, currentShowFamiliar: currentShowFamiliar),
-          //       isReGet: false,
-          //     ),
-          //     clickTimeIF: IvFilter(
-          //       ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!, currentClickTime: null),
-          //       isReGet: false,
-          //     ),
-          //     clickValueIF: IvFilter(
-          //       ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!, currentClickValue: null),
-          //       isReGet: false,
-          //     ),
-          //   );
-          // },
-          externalResultHandler: (InternalVariableAtom atom) async {
-            return AtomResultOrNull(null);
-          }),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm_a!),
+        simulationType: SimulationType.external,
+        externalResultHandler: (InternalVariableAtom atom) async {
+          return await atom.filter(
+            storage: InternalVariableStorage(),
+            k1countAllConst: IvFilter(
+              ivf: () async => await performerQuery.getCountAll(memoryGroup: memoryGroupAb()),
+              isReGet: false,
+            ),
+            k2CountNeverConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.never),
+              isReGet: false,
+            ),
+            k2CountReviewConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.review),
+              isReGet: false,
+            ),
+            k2CountCompleteConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.complete),
+              isReGet: false,
+            ),
+            k2CountStopConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.stop),
+              isReGet: false,
+            ),
+            k3StudiedTimesConst: IvFilter(
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            k4CurrentShowTimeConst: IvFilter(
+              ivf: () async => performerQuery.getCurrentShowTime(memoryGroup: memoryGroupAb()),
+              isReGet: false,
+            ),
+            k5CurrentShowFamiliarityConst: IvFilter(
+              ivf: () async => currentShowFamiliarity()!,
+              isReGet: false,
+            ),
+            k6CurrentButtonValuesConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析全部按钮的原始数值时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
+            k6CurrentButtonValueConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析全部按钮的原始数值时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
+            i1ActualShowTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i2NextPlanShowTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i3ShowFamiliarityConst: IvFilter(
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i4ClickFamiliarityConst: IvFilter(
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i5ClickTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i6ClickValueConst: IvFilter(
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i7ButtonValuesConst: IvFilter(
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+          );
+        },
+      ),
       onSuccess: (ButtonDataState state) async {
         return state;
       },
@@ -290,59 +421,94 @@ class InAppStageAbController extends AbController {
     );
   }
 
-  /// 解析每个按钮的下一次展示时间。
+  /// 根据已解析过的全部按钮数据，解析单个按钮的下一次展示时间。
   ///
   /// 解析出的值存放到 [buttonDataValue2NextShowTime] 中。
-  Future<void> _parseNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
-    // await AlgorithmParser.parse<NextShowTimeState, void>(
-    //   state: NextShowTimeState(
-    //     algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm_a!),
-    //     simulationType: SimulationType.external,
-    //     externalResultHandler: (InternalVariableAtom atom) async {
-    //       return await atom.filter(
-    //         storage: InternalVariableStorage(),
-    //         countAllIF: IvFilter(
-    //           ivf: () async => await performerQuery.getCountAll(memoryGroup: memoryGroupAb()),
-    //           isReGet: false,
-    //         ),
-    //         countNewIF: IvFilter(
-    //           ivf: () async => await performerQuery.getCountNew(memoryGroup: memoryGroupAb()),
-    //           isReGet: false,
-    //         ),
-    //         timesIF: IvFilter(
-    //           ivf: () async => await performerQuery.getTimes(performer: currentPerformer()!),
-    //           isReGet: false,
-    //         ),
-    //         currentActualShowTimeIF: IvFilter(
-    //           ivf: () async => await performerQuery.getCurrentActualShowTimes(performer: currentPerformer()!, currentShowTime: currentActualShowTime!),
-    //           isReGet: false,
-    //         ),
-    //         nextPlanedShowTimeIF: IvFilter(
-    //           ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!, currentNextPlanedShowTime: null),
-    //           isReGet: false,
-    //         ),
-    //         showFamiliarIF: IvFilter(
-    //           ivf: () async => await performerQuery.getShowFamiliar(performer: currentPerformer()!, currentShowFamiliar: currentShowFamiliar),
-    //           isReGet: false,
-    //         ),
-    //         clickTimeIF: IvFilter(
-    //           // TODO: 如何提示用户 currentClickTime 为 currentActualShowTime
-    //           ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!, currentClickTime: currentActualShowTime),
-    //           isReGet: false,
-    //         ),
-    //         clickValueIF: IvFilter(
-    //           ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!, currentClickValue: buttonDataValue2NextShowTime.value),
-    //           isReGet: false,
-    //         ),
-    //       );
-    //     },
-    //   ),
-    //   onSuccess: (NextShowTimeState state) async {
-    //     buttonDataValue2NextShowTime.nextShowTime = state.result;
-    //   },
-    //   onError: (AlgorithmException ec) async {
-    //     throw ec;
-    //   },
-    // );
+  Future<void> _parseSingleButtonNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
+    await AlgorithmParser.parse<NextShowTimeState, void>(
+      state: NextShowTimeState(
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm_a!),
+        simulationType: SimulationType.external,
+        externalResultHandler: (InternalVariableAtom atom) async {
+          return await atom.filter(
+            storage: InternalVariableStorage(),
+            k1countAllConst: IvFilter(
+              ivf: () async => await performerQuery.getCountAll(memoryGroup: memoryGroupAb()),
+              isReGet: false,
+            ),
+            k2CountNeverConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.never),
+              isReGet: false,
+            ),
+            k2CountReviewConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.review),
+              isReGet: false,
+            ),
+            k2CountCompleteConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.complete),
+              isReGet: false,
+            ),
+            k2CountStopConst: IvFilter(
+              ivf: () async => await performerQuery.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.stop),
+              isReGet: false,
+            ),
+            k3StudiedTimesConst: IvFilter(
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            k4CurrentShowTimeConst: IvFilter(
+              ivf: () async => performerQuery.getCurrentShowTime(memoryGroup: memoryGroupAb()),
+              isReGet: false,
+            ),
+            k5CurrentShowFamiliarityConst: IvFilter(
+              ivf: () async => currentShowFamiliarity()!,
+              isReGet: false,
+            ),
+            k6CurrentButtonValuesConst: IvFilter(
+              ivf: () async => currentButtonDatas().map((e) => e.value).toList(),
+              isReGet: false,
+            ),
+            k6CurrentButtonValueConst: IvFilter(
+              ivf: () async => buttonDataValue2NextShowTime.value,
+              isReGet: false,
+            ),
+            i1ActualShowTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i2NextPlanShowTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i3ShowFamiliarityConst: IvFilter(
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i4ClickFamiliarityConst: IvFilter(
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i5ClickTimeConst: IvFilter(
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i6ClickValueConst: IvFilter(
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+            i7ButtonValuesConst: IvFilter(
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              isReGet: false,
+            ),
+          );
+        },
+      ),
+      onSuccess: (NextShowTimeState state) async {
+        buttonDataValue2NextShowTime.nextShowTime = state.result;
+      },
+      onError: (AlgorithmException ec) async {
+        throw ec;
+      },
+    );
   }
 }

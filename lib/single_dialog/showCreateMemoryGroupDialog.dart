@@ -34,7 +34,7 @@ Future<void> showCreateMemoryGroupDialog() async {
               review_interval: DateTime.now(),
               new_review_display_order: NewReviewDisplayOrder.mix,
               new_display_order: NewDisplayOrder.random,
-              review_display_order: ReviewDisplayOrder.random_not_ignore_expire,
+              review_display_order: ReviewDisplayOrder.expire_first,
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
             ),
             syncTag: await SyncTag.create(),

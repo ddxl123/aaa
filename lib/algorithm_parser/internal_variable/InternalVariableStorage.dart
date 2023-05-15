@@ -55,7 +55,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
         throw KnownAlgorithmException("$getCombineName 内置变量必然不为空，请去掉空合并运算符！");
       }
       if (nTypeNumber == null) {
-        throw KnownAlgorithmException("$getCombineName 内置变量缺少 _${NType.last}n 或 _${NType.times}n 后缀！");
+        throw KnownAlgorithmException("$getCombineName 内置变量缺少 _${NType.nlast}n 或 _${NType.ntimes}n 后缀！");
       }
 
       if (nTypeNumber!.suffixNumber <= 0) {
@@ -63,7 +63,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
       }
     } else {
       if (nTypeNumber != null) {
-        throw KnownAlgorithmException('$getCombineName 内置变量不支持 _${NType.last}n 或 _${NType.times}n 后缀！');
+        throw KnownAlgorithmException('$getCombineName 内置变量不支持 _${NType.nlast}n 或 _${NType.ntimes}n 后缀！');
       }
     }
   }
@@ -105,6 +105,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required IvFilter<int> k4CurrentShowTimeConst,
     required IvFilter<double> k5CurrentShowFamiliarityConst,
     required IvFilter<List<double>> k6CurrentButtonValuesConst,
+    required IvFilter<double> k6CurrentButtonValueConst,
     required IvFilter<List<int>> i1ActualShowTimeConst,
     required IvFilter<List<int>> i2NextPlanShowTimeConst,
     required IvFilter<List<double>> i3ShowFamiliarityConst,
@@ -139,6 +140,9 @@ class InternalVariableAtom<CS extends ClassificationState> {
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValuesConst) {
       return await saveAndGet<NR>(storage: storage, ivFilter: k6CurrentButtonValuesConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValueConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k6CurrentButtonValueConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i1ActualShowTimeConst) {
       return await saveAndGet<NR>(storage: storage, ivFilter: i1ActualShowTimeConst);
@@ -198,9 +202,9 @@ class InternalVariableWithResults {
       if (nTypeNumber.suffixNumber > (rawTypeResult as List).length) {
         return AtomResultOrNull(null);
       }
-      if (nTypeNumber.nType == NType.times) {
+      if (nTypeNumber.nType == NType.ntimes) {
         return rawTypeResult[nTypeNumber.suffixNumber - 1];
-      } else if (nTypeNumber.nType == NType.last) {
+      } else if (nTypeNumber.nType == NType.nlast) {
         return (rawTypeResult as List).reversed.toList()[nTypeNumber.suffixNumber - 1];
       } else {
         throw KnownAlgorithmException("未处理 ${nTypeNumber.nType}");

@@ -44,7 +44,7 @@ class DefaultAlgorithmOfRaw {
       title: "艾宾浩斯复习周期",
       buttonDataContent: """
       if(true){
-        1,下一个
+        1;下一个
       }
       """,
       familiarityContent: """

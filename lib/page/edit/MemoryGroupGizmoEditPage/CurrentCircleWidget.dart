@@ -207,10 +207,9 @@ class CurrentCircleWidget extends StatelessWidget {
                 CustomDropdownBodyButton<ReviewDisplayOrder>(
                   initValue: c.copyMemoryGroupAb(abw).review_display_order,
                   items: [
-                    Item(value: ReviewDisplayOrder.random_not_ignore_expire, text: '随机-不忽略过期'),
-                    Item(value: ReviewDisplayOrder.random_ignore_expire, text: '随机-忽略过期'),
                     Item(value: ReviewDisplayOrder.expire_first, text: '过期优先'),
-                    Item(value: ReviewDisplayOrder.not_expired_first, text: '未过期优先'),
+                    Item(value: ReviewDisplayOrder.no_expire_first, text: '未过期优先'),
+                    Item(value: ReviewDisplayOrder.ignore_expire, text: '忽略过期'),
                   ],
                   onChanged: (v) {
                     c.copyMemoryGroupAb.refreshInevitable((obj) => obj..review_display_order = v!);
