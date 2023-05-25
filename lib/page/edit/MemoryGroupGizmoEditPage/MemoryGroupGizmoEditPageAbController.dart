@@ -85,7 +85,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     selectedMemoryModelAb.refreshInevitable((obj) => mm);
   }
 
-  /// 返回是否保存成功。
+  /// 只进行存储。
   Future<bool> save() async {
     if (copyMemoryGroupAb().title.trim() == "") {
       SmartDialog.showToast("名称不能为空");
@@ -102,12 +102,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     return true;
   }
 
-  /// 模拟记忆模型的准确性。
-  Future<void> simulate() async {
-    // TODO:
-  }
-
-  Future<void> start() async {
+  Future<void> clickContinue() async {
     final isSavedSuccess = await save();
     // TODO: 提示是否模拟。
     if (copyMemoryGroupAb().review_interval.difference(DateTime.now()).inSeconds < 600) {
@@ -118,5 +113,24 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       return;
     }
     Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: originalMemoryGroupAb)));
+  }
+
+  Future<void> clickStart() async {
+    copyMemoryGroupAb.refreshEasy((oldValue) => oldValue..start_time = DateTime.now());
+    final isSavedSuccess = await save();
+    // TODO: 提示是否模拟。
+    if (copyMemoryGroupAb().review_interval.difference(DateTime.now()).inSeconds < 600) {
+      SmartDialog.showToast("复习区间至少10分钟(600秒)以上哦~");
+      return;
+    }
+    if (!isSavedSuccess) {
+      return;
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (_) => InAppStage(memoryGroupGizmo: originalMemoryGroupAb)));
+  }
+
+  /// 模拟记忆模型的准确性。
+  Future<void> simulate() async {
+    // TODO:
   }
 }

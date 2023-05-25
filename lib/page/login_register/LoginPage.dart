@@ -18,7 +18,7 @@ class LoginPage extends StatelessWidget {
             leading: IconButton(
               icon: const FaIcon(FontAwesomeIcons.chevronLeft),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(c.context);
               },
             ),
             actions: [
@@ -28,7 +28,11 @@ class LoginPage extends StatelessWidget {
               ),
             ],
           ),
-          body: _body(context: context),
+          body: Builder(
+            builder: (b) {
+              return _body(context: b);
+            },
+          ),
         );
       },
     );

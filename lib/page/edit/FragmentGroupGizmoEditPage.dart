@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:tools/tools.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 class DemoEmbed extends q.CustomBlockEmbed {
   DemoEmbed(String data) : super(demo, data);
@@ -19,7 +17,7 @@ class DemoEmbed extends q.CustomBlockEmbed {
 
 class DemoEmbedBuilder extends q.EmbedBuilder {
   @override
-  Widget build(BuildContext context, q.QuillController controller, q.Embed node, bool readOnly) {
+  Widget build(BuildContext context, q.QuillController controller, q.Embed node, bool readOnly, bool inline) {
     return TextButton(
       child: Text("data"),
       onPressed: () {

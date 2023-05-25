@@ -58,16 +58,16 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return c.originalMemoryGroupAb().start_time == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
-                text: const Text('保存并执行', style: TextStyle(color: Colors.white)),
+                text: const Text('开始', style: TextStyle(color: Colors.white)),
                 onPressed: () {
-                  c.start();
+                  c.clickStart();
                 },
               )
             : FloatingRoundCornerButton(
                 color: Colors.greenAccent,
                 text: const Text(' 继续 ', style: TextStyle(color: Colors.white)),
                 onPressed: () {
-                  c.start();
+                  c.clickContinue();
                 },
               );
       },
