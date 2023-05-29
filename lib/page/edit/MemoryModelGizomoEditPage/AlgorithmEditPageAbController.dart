@@ -169,7 +169,7 @@ class AlgorithmEditPageAbController extends AbController {
       from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
       targets: {
         [FamiliarityState]: () async => await AlgorithmParser.parse(
-              state: FamiliarityState(
+              stateFunc: () => FamiliarityState(
                 algorithmWrapper: currentAlgorithmWrapper(),
                 simulationType: SimulationType.syntaxCheck,
                 externalResultHandler: null,
@@ -182,7 +182,7 @@ class AlgorithmEditPageAbController extends AbController {
               },
             ),
         [ButtonDataState]: () async => await AlgorithmParser.parse(
-              state: ButtonDataState(
+              stateFunc: () => ButtonDataState(
                 algorithmWrapper: currentAlgorithmWrapper(),
                 simulationType: SimulationType.syntaxCheck,
                 externalResultHandler: null,
@@ -195,7 +195,7 @@ class AlgorithmEditPageAbController extends AbController {
               },
             ),
         [NextShowTimeState]: () async => await AlgorithmParser.parse(
-              state: NextShowTimeState(
+              stateFunc: () => NextShowTimeState(
                 algorithmWrapper: currentAlgorithmWrapper(),
                 simulationType: SimulationType.syntaxCheck,
                 externalResultHandler: null,

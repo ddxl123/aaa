@@ -19,20 +19,20 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
   }
 
   static Future<R> parse<CS extends ClassificationState, R>({
-    required CS state,
+    required CS Function() stateFunc,
     required Future<R> Function(CS state) onSuccess,
     required Future<R> Function(AlgorithmException ec) onError,
   }) async {
-    return await AlgorithmParser<CS>._()._parse<R>(state: state, onSuccess: onSuccess, onError: onError);
+    return await AlgorithmParser<CS>._()._parse<R>(stateFunc: stateFunc, onSuccess: onSuccess, onError: onError);
   }
 
   Future<R> _parse<R>({
-    required CS state,
+    required CS Function() stateFunc,
     required Future<R> Function(CS state) onSuccess,
     required Future<R> Function(AlgorithmException algorithmException) onError,
   }) async {
-    _state = state;
     try {
+      _state = stateFunc();
       AlgorithmWrapper algorithmWrapper = _state.algorithmWrapper;
 
       _state.algorithmWrapper.customVariablesMap.clear();
@@ -102,7 +102,7 @@ class AlgorithmParser<CS extends ClassificationState> with Explain {
           }
         },
       );
-      return await onSuccess(state);
+      return await onSuccess(_state);
     } catch (o, st) {
       if (isDebug) {
         logger.outError(error: o, stackTrace: st);

@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
-import 'package:aaa/algorithm_parser/internal_variable/EachVariableWrapper.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
-import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPageAbController.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
@@ -24,9 +22,11 @@ class Performer {
 }
 
 class InAppStageAbController extends AbController {
-  InAppStageAbController({required this.memoryGroupAb});
+  InAppStageAbController({required this.memoryGroupId});
 
-  final Ab<MemoryGroup> memoryGroupAb;
+  final String memoryGroupId;
+
+  late final Ab<MemoryGroup> memoryGroupAb;
 
   late final Ab<MemoryModel> memoryModelAb;
 
@@ -69,6 +69,9 @@ class InAppStageAbController extends AbController {
   }
 
   Future<void> _init() async {
+    final mg = await db.generalQueryDAO.queryMemoryGroupById(id: memoryGroupId);
+    memoryGroupAb = mg!.ab;
+
     final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
     if (mm == null) {
       SmartDialog.showToast("未对该碎片组分配算法模型！");
@@ -92,13 +95,17 @@ class InAppStageAbController extends AbController {
     await _parseStartFamiliarity();
 
     final pbd = await _parseStartButtonDatas();
-    for (var element in pbd.resultButtonValues) {
-      await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: element);
+    if (pbd != null) {
+      for (var element in pbd.resultButtonValues) {
+        await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: element);
+      }
+      currentButtonDatas.refreshEasy((oldValue) => oldValue
+        ..clear()
+        ..addAll(pbd.resultButtonValues));
+      quillController.document = q.Document.fromJson(jsonDecode(currentPerformer()!.fragment.content));
+    } else {
+      quillController.document = q.Document.fromDelta(q.Delta()..insert("解析按钮数据失败！\n"));
     }
-    currentButtonDatas.refreshEasy((oldValue) => oldValue
-      ..clear()
-      ..addAll(pbd.resultButtonValues));
-    quillController.document = q.Document.fromJson(jsonDecode(currentPerformer()!.fragment.content));
   }
 
   /// 仅完成当前表演。
@@ -106,17 +113,21 @@ class InAppStageAbController extends AbController {
   /// 点击数值按钮后进行调用。
   Future<void> _finish({required double clickValue}) async {
     if (currentPerformer() == null) {
-      throw '没有下一个碎片了，却仍然请求了下一个碎片！';
+      quillController.document = q.Document.fromDelta(q.Delta()..insert("没有下一个碎片了，却仍然请求了下一个碎片！\n"));
+      return;
     }
 
     final targetButtonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: null);
     await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: targetButtonDataValue2NextShowTime);
 
     final currentClickFamiliarity = await _parseClickFamiliarity(targetButtonDataValue2NextShowTime);
+    if (currentClickFamiliarity == null) {
+      quillController.document = q.Document.fromDelta(q.Delta()..insert("解析熟悉度失败！\n"));
+      return;
+    }
 
     final info = currentPerformer()!.fragmentMemoryInfo;
 
-    final isNew = (jsonDecode(info.next_plan_show_time) as List<dynamic>).isEmpty;
     final st = await SyncTag.create();
     await performerQuery.finish(
       originalFragmentMemoryInfoReset: () async {
@@ -131,13 +142,13 @@ class InAppStageAbController extends AbController {
           show_familiarity: info.show_familiarity.arrayAdd<double>(currentShowFamiliarity()!).toValue(),
           click_familiarity: info.click_familiarity.arrayAdd<double>(currentClickFamiliarity).toValue(),
           button_values: info.button_values.arrayAdd<List<double>>(currentButtonDatas().map((e) => e.value).toList()).toValue(),
-          study_status: toAbsent(),
+          study_status: StudyStatus.review.toValue(),
           syncTag: st,
         );
       },
       // 若为新的，则会自动将 [MemoryGroup.willNewLearnCount] 减去 1。
       originalMemoryGroup: memoryGroupAb(),
-      isNew: isNew,
+      fragmentMemoryInfo: info,
       syncTag: st,
     );
     currentButtonDatas.refreshInevitable((obj) => obj..clear());
@@ -157,7 +168,7 @@ class InAppStageAbController extends AbController {
   /// 解析出当前展示熟练度。
   Future<void> _parseStartFamiliarity() async {
     await AlgorithmParser.parse<FamiliarityState, void>(
-      state: FamiliarityState(
+      stateFunc: () => FamiliarityState(
         algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
@@ -203,6 +214,10 @@ class InAppStageAbController extends AbController {
               ivf: () => throw KnownAlgorithmException("解析当前展示时的熟练度时，不能使用 ${atom.internalVariableConstant.name} 变量"),
               isReGet: false,
             ),
+            k7CurrentClickTimeConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析当前展示时的熟练度时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
             i1ActualShowTimeConst: IvFilter(
               ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
               isReGet: false,
@@ -238,15 +253,17 @@ class InAppStageAbController extends AbController {
         currentShowFamiliarity.refreshEasy((oldValue) => state.result);
       },
       onError: (AlgorithmException ec) async {
-        throw ec;
+        // throw ec;
       },
     );
   }
 
   /// 解析出指定按钮的展示熟练度。
-  Future<double> _parseClickFamiliarity(ButtonDataValue2NextShowTime buttonDataValue2NextShowTime) async {
-    return await AlgorithmParser.parse<FamiliarityState, double>(
-      state: FamiliarityState(
+  ///
+  /// 返回 null 表示发生异常。
+  Future<double?> _parseClickFamiliarity(ButtonDataValue2NextShowTime buttonDataValue2NextShowTime) async {
+    return await AlgorithmParser.parse<FamiliarityState, double?>(
+      stateFunc: () => FamiliarityState(
         algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
@@ -292,6 +309,10 @@ class InAppStageAbController extends AbController {
               ivf: () async => buttonDataValue2NextShowTime.value,
               isReGet: false,
             ),
+            k7CurrentClickTimeConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析每个按钮的展示熟练度，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
             i1ActualShowTimeConst: IvFilter(
               ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
               isReGet: false,
@@ -327,15 +348,18 @@ class InAppStageAbController extends AbController {
         return state.result;
       },
       onError: (AlgorithmException ec) async {
-        throw ec;
+        // throw ec;
+        return null;
       },
     );
   }
 
   /// 解析全部按钮的原始数值，并非解析的时间。
-  Future<ButtonDataState> _parseStartButtonDatas() async {
-    return await AlgorithmParser.parse<ButtonDataState, ButtonDataState>(
-      state: ButtonDataState(
+  ///
+  /// 返回 null 表示发生异常。
+  Future<ButtonDataState?> _parseStartButtonDatas() async {
+    return await AlgorithmParser.parse<ButtonDataState, ButtonDataState?>(
+      stateFunc: () => ButtonDataState(
         algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
@@ -381,6 +405,10 @@ class InAppStageAbController extends AbController {
               ivf: () => throw KnownAlgorithmException("解析全部按钮的原始数值时，不能使用 ${atom.internalVariableConstant.name} 变量"),
               isReGet: false,
             ),
+            k7CurrentClickTimeConst: IvFilter(
+              ivf: () => throw KnownAlgorithmException("解析全部按钮的原始数值时，不能使用 ${atom.internalVariableConstant.name} 变量"),
+              isReGet: false,
+            ),
             i1ActualShowTimeConst: IvFilter(
               ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
               isReGet: false,
@@ -416,7 +444,8 @@ class InAppStageAbController extends AbController {
         return state;
       },
       onError: (AlgorithmException ec) async {
-        throw ec;
+        // throw ec;
+        return null;
       },
     );
   }
@@ -426,7 +455,7 @@ class InAppStageAbController extends AbController {
   /// 解析出的值存放到 [buttonDataValue2NextShowTime] 中。
   Future<void> _parseSingleButtonNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     await AlgorithmParser.parse<NextShowTimeState, void>(
-      state: NextShowTimeState(
+      stateFunc: () => NextShowTimeState(
         algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm_a!),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
@@ -472,6 +501,10 @@ class InAppStageAbController extends AbController {
               ivf: () async => buttonDataValue2NextShowTime.value,
               isReGet: false,
             ),
+            k7CurrentClickTimeConst: IvFilter(
+              ivf: () async => timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!),
+              isReGet: false,
+            ),
             i1ActualShowTimeConst: IvFilter(
               ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
               isReGet: false,
@@ -507,7 +540,7 @@ class InAppStageAbController extends AbController {
         buttonDataValue2NextShowTime.nextShowTime = state.result;
       },
       onError: (AlgorithmException ec) async {
-        throw ec;
+        // throw ec;
       },
     );
   }

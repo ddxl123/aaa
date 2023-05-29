@@ -44,7 +44,7 @@ class BasicConfigWidget extends StatelessWidget {
                     controller: c.titleTextEditingController,
                     decoration: const InputDecoration(border: InputBorder.none, hintText: '请输入...'),
                     onChanged: (v) {
-                      c.copyMemoryGroupAb.refreshInevitable((obj) => obj..title = v);
+                      c.memoryGroupAb.refreshInevitable((obj) => obj..title = v);
                     },
                   ),
                 ),
@@ -72,7 +72,7 @@ class BasicConfigWidget extends StatelessWidget {
                     },
                   ),
                   onPressed: () {
-                    showSelectMemoryModelInMemoryGroupDialog(mg: c.copyMemoryGroupAb, selectedMemoryModelAb: c.selectedMemoryModelAb);
+                    showSelectMemoryModelInMemoryGroupDialog(mg: c.memoryGroupAb, selectedMemoryModelAb: c.selectedMemoryModelAb);
                   },
                 ),
                 Text("模拟(验证模型的准确性)"),

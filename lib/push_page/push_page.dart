@@ -1,5 +1,6 @@
 import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
+import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -25,14 +26,14 @@ Future<void> pushToMemoryModelGizmoEditPage({
 
 Future<void> pushToMemoryGroupGizmoEditPageOfModify({
   required BuildContext context,
-  required Ab<MemoryGroup> memoryGroupAb,
+  required String memoryGroupId,
 }) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => MemoryGroupGizmoEditPage(
         editPageType: MemoryGroupGizmoEditPageType.modify,
-        memoryGroupAb: memoryGroupAb,
+        memoryGroupId: memoryGroupId,
       ),
     ),
   );
@@ -75,6 +76,18 @@ Future<void> pushToShorthandGizmoEditPage({
     context,
     MaterialPageRoute(
       builder: (_) => ShorthandGizmoEditPage(initShorthand: initShorthand),
+    ),
+  );
+}
+
+Future<void> pushToInAppStage({
+  required BuildContext context,
+  required String memoryGroupId,
+}) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => InAppStage(memoryGroupId: memoryGroupId),
     ),
   );
 }

@@ -42,6 +42,7 @@ class NextShowTimeState extends ClassificationState {
       k5CurrentShowFamiliarityConst: IvFilter(ivf: () async => math.Random().nextDouble() * 200, isReGet: true),
       k6CurrentButtonValuesConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
       k6CurrentButtonValueConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k7CurrentClickTimeConst: IvFilter(ivf: () async => 1, isReGet: true),
       i1ActualShowTimeConst: IvFilter(ivf: () async => [1, 1, 1], isReGet: true),
       i2NextPlanShowTimeConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
       i3ShowFamiliarityConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),

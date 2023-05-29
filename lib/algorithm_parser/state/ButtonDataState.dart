@@ -20,15 +20,18 @@ class ButtonDataValue2NextShowTime {
 
   /// 从 [NextShowTimeState] 解析结果中获取。
   ///
+  /// 从碎片组开始时间到下一次展示时间的时间差。
+  ///
   /// 真正的下次展示时间。
   int? nextShowTime;
 
-  /// 将 [nextShowTime] 转换为以 天、时、分、秒 为单位的结果。
+  /// 将 [nextShowTime] (从碎片组开始时间到下一次展示时间的时间差)转换成从现在到下一次展示时间的时间差，为以 天、时、分、秒 为单位的结果。
   ///
   /// 返回 null 表示时间小于等于 0。
-  String? parseTime() {
-    final t = nextShowTime;
+  String? parseTimeToFixView(DateTime startTime) {
+    int? t = nextShowTime;
     if (t == null) throw '时间值为空！';
+    t = t - timeDifference(target: DateTime.now(), start: startTime);
     final result = time2TextTime(longSeconds: t);
     return result == null ? null : '$result后';
   }
@@ -85,6 +88,7 @@ class ButtonDataState extends ClassificationState {
       k5CurrentShowFamiliarityConst: IvFilter(ivf: () async => math.Random().nextDouble() * 200, isReGet: true),
       k6CurrentButtonValuesConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
       k6CurrentButtonValueConst: IvFilter(ivf: () async => 1, isReGet: true),
+      k7CurrentClickTimeConst: IvFilter(ivf: () async => 1, isReGet: true),
       i1ActualShowTimeConst: IvFilter(ivf: () async => [1, 1, 1], isReGet: true),
       i2NextPlanShowTimeConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),
       i3ShowFamiliarityConst: IvFilter(ivf: () async => [1, 2, 3], isReGet: true),

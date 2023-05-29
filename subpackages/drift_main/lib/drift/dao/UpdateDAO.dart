@@ -175,14 +175,14 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   Future<void> resetFragmentMemoryInfoForFinishPerform({
     required FutureFunction originalFragmentMemoryInfoReset,
     required MemoryGroup originalMemoryGroup,
-    required bool isNew,
+    required FragmentMemoryInfo fragmentMemoryInfo,
     required SyncTag syncTag,
   }) async {
     await RefFragmentMemoryInfos(
       self: originalFragmentMemoryInfoReset,
       memoryGroups: RefMemoryGroups(
         self: () async {
-          if (isNew) {
+          if (fragmentMemoryInfo.study_status == StudyStatus.never) {
             // 需要 willNewLearnCount -1。
             await originalMemoryGroup.reset(
               creator_user_id: toAbsent(),

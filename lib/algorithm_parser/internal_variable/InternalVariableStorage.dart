@@ -105,6 +105,7 @@ class InternalVariableAtom<CS extends ClassificationState> {
     required IvFilter<int> k4CurrentShowTimeConst,
     required IvFilter<double> k5CurrentShowFamiliarityConst,
     required IvFilter<List<double>> k6CurrentButtonValuesConst,
+    required IvFilter<int> k7CurrentClickTimeConst,
     required IvFilter<double> k6CurrentButtonValueConst,
     required IvFilter<List<int>> i1ActualShowTimeConst,
     required IvFilter<List<int>> i2NextPlanShowTimeConst,
@@ -143,6 +144,9 @@ class InternalVariableAtom<CS extends ClassificationState> {
     }
     if (internalVariableConstant == InternalVariableConstantHandler.k6CurrentButtonValueConst) {
       return await saveAndGet<NR>(storage: storage, ivFilter: k6CurrentButtonValueConst);
+    }
+    if (internalVariableConstant == InternalVariableConstantHandler.k7CurrentClickTimeConst) {
+      return await saveAndGet<NR>(storage: storage, ivFilter: k7CurrentClickTimeConst);
     }
     if (internalVariableConstant == InternalVariableConstantHandler.i1ActualShowTimeConst) {
       return await saveAndGet<NR>(storage: storage, ivFilter: i1ActualShowTimeConst);

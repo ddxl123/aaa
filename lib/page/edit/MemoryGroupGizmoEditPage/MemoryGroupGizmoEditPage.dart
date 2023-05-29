@@ -9,15 +9,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'MemoryGroupGizmoEditPageAbController.dart';
 
 class MemoryGroupGizmoEditPage extends StatelessWidget {
-  const MemoryGroupGizmoEditPage({Key? key, required this.editPageType, required this.memoryGroupAb}) : super(key: key);
+  const MemoryGroupGizmoEditPage({Key? key, required this.editPageType, required this.memoryGroupId}) : super(key: key);
 
-  final Ab<MemoryGroup> memoryGroupAb;
+  final String memoryGroupId;
   final MemoryGroupGizmoEditPageType editPageType;
 
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
-      putController: MemoryGroupGizmoEditPageAbController(originalMemoryGroupAb: memoryGroupAb),
+      putController: MemoryGroupGizmoEditPageAbController(memoryGroupId: memoryGroupId),
       builder: (putController, putAbw) {
         return Scaffold(
           appBar: _appBar(),
@@ -55,7 +55,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return c.originalMemoryGroupAb().start_time == null
+        return c.memoryGroupAb().start_time == null
             ? FloatingRoundCornerButton(
                 color: Colors.amberAccent,
                 text: const Text('开始', style: TextStyle(color: Colors.white)),
@@ -77,7 +77,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _appBarTitleWidget() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return Text(c.copyMemoryGroupAb(abw).title);
+        return Text(c.memoryGroupAb(abw).title);
       },
     );
   }

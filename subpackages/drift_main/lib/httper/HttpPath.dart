@@ -5,7 +5,7 @@ part of httper;
 
 class HttpPath {
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://10.11.80.130:2814';
+  static const String BASE_PATH_LOCAL = 'http://10.11.110.203:2814';
   
   static const String LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_FRAGMENT_GROUP = '/login_required/data_download/for_fragment_group';
 

@@ -43,7 +43,7 @@ class PerformerQuery {
       return null;
     }
     final selInfo = db.select(db.fragmentMemoryInfos);
-    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.next_plan_show_time.jsonArrayLength().equals(0));
+    selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.study_status.equalsValue(StudyStatus.never));
     if (mg.new_display_order == NewDisplayOrder.random) {
       selInfo.orderBy([(_) => OrderingTerm.random()]);
     } else {
@@ -68,7 +68,7 @@ class PerformerQuery {
   ///
   /// 若没有复习碎片了，则返回 null。
   Future<Performer?> getOneReviewPerformer({required MemoryGroup mg}) async {
-    final lastNextPlanedShowTimeExpr = db.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[-1]');
+    final lastNextPlanedShowTimeExpr = db.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[#-1]');
     final reviewIntervalDiff = timeDifference(target: mg.review_interval, start: mg.start_time!);
     // [isExpire] 查询的是否为过期类型。
     Future<FragmentMemoryInfo?> query(bool isExpire) async {
@@ -76,9 +76,7 @@ class PerformerQuery {
       selInfo.addColumns([lastNextPlanedShowTimeExpr]);
       selInfo.where(
         (tbl) {
-          final expr = tbl.memory_group_id.equals(mg.id) &
-              tbl.next_plan_show_time.jsonArrayLength().isBiggerThanValue(0) &
-              lastNextPlanedShowTimeExpr.isSmallerOrEqualValue(reviewIntervalDiff);
+          final expr = tbl.memory_group_id.equals(mg.id) & tbl.study_status.equalsValue(StudyStatus.review) & lastNextPlanedShowTimeExpr.isSmallerOrEqualValue(reviewIntervalDiff);
           if (isExpire) {
             return expr & lastNextPlanedShowTimeExpr.isSmallerThanValue(timeDifference(target: DateTime.now(), start: mg.start_time!));
           } else {
@@ -124,13 +122,13 @@ class PerformerQuery {
   Future<void> finish({
     required FutureFunction originalFragmentMemoryInfoReset,
     required MemoryGroup originalMemoryGroup,
-    required bool isNew,
+    required FragmentMemoryInfo fragmentMemoryInfo,
     required SyncTag syncTag,
   }) async {
     await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
       originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
       originalMemoryGroup: originalMemoryGroup,
-      isNew: isNew,
+      fragmentMemoryInfo: fragmentMemoryInfo,
       syncTag: syncTag,
     );
   }

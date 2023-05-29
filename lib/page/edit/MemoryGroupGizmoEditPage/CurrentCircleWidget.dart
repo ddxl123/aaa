@@ -46,36 +46,37 @@ class CurrentCircleWidget extends StatelessWidget {
                 Expanded(
                   child: StfBuilder1<int>(
                     // 保留上一次的设置
-                    initValue: c.copyMemoryGroupAb(abw).will_new_learn_count,
+                    initValue: c.memoryGroupAb(abw).will_new_learn_count,
                     builder: (int value, BuildContext context, ResetValue<int> resetValue) {
-                      int finallyValue = value;
+                      int changeValue = value;
+
+                      logger.outNormal(print: "changeValue: $changeValue - value: ${c.remainNeverFragmentsCount(abw)}");
                       // 不能超过最大值
-                      if (finallyValue > c.remainNeverFragmentsCount()) {
-                        resetValue(c.remainNeverFragmentsCount(), true);
-                        return Container();
+                      if (changeValue > c.remainNeverFragmentsCount(abw)) {
+                        changeValue = c.remainNeverFragmentsCount(abw);
                       }
                       // 如果没有 space，则 0/300，其中 0 字符长度会动态的变宽成 10 或 100，从而导致刷新的时候滑块抖动。
                       // space 意味着将 0 前面添加两个 0，即 000/300。
-                      int space = c.remainNeverFragmentsCount().toString().length - finallyValue.toInt().toString().length;
+                      int space = c.remainNeverFragmentsCount().toString().length - changeValue.toInt().toString().length;
                       return Row(
                         children: [
                           Expanded(
                             child: Slider(
-                              label: finallyValue.toInt().toString(),
+                              label: changeValue.toInt().toString(),
                               min: 0,
                               max: c.remainNeverFragmentsCount().toDouble(),
-                              value: finallyValue.toDouble(),
+                              value: changeValue.toDouble(),
                               divisions: c.remainNeverFragmentsCount() == 0 ? null : c.remainNeverFragmentsCount(),
                               onChanged: (n) {
                                 resetValue(n.toInt(), true);
                               },
                               onChangeEnd: (n) {
-                                c.copyMemoryGroupAb().will_new_learn_count = n.floor();
-                                c.copyMemoryGroupAb.refreshForce();
+                                c.memoryGroupAb().will_new_learn_count = n.floor();
+                                c.memoryGroupAb.refreshForce();
                               },
                             ),
                           ),
-                          Text('${'0' * space}${finallyValue.toInt()}/${c.remainNeverFragmentsCount()}')
+                          Text('${'0' * space}${changeValue.toInt()}/${c.remainNeverFragmentsCount()}')
                         ],
                       );
                     },
@@ -110,7 +111,7 @@ class CurrentCircleWidget extends StatelessWidget {
                               maxLength: 9,
                               keyboardType: TextInputType.number,
                               onChanged: (v) {
-                                c.copyMemoryGroupAb.refreshInevitable(
+                                c.memoryGroupAb.refreshInevitable(
                                   (obj) => obj..review_interval = DateTime.now().add(Duration(seconds: int.tryParse(v) ?? 0)),
                                 );
                               },
@@ -123,7 +124,7 @@ class CurrentCircleWidget extends StatelessWidget {
                         children: [
                           AbwBuilder(
                             builder: (abwT) {
-                              return Text('${c.copyMemoryGroupAb(abw).review_interval}前');
+                              return Text('${c.memoryGroupAb(abw).review_interval}前');
                             },
                           ),
                         ],
@@ -149,14 +150,14 @@ class CurrentCircleWidget extends StatelessWidget {
               children: [
                 const Text('新 | 复习 碎片展示顺序：'),
                 CustomDropdownBodyButton<NewReviewDisplayOrder>(
-                  initValue: c.copyMemoryGroupAb(abw).new_review_display_order,
+                  initValue: c.memoryGroupAb(abw).new_review_display_order,
                   items: [
                     Item(value: NewReviewDisplayOrder.mix, text: '混合'),
                     Item(value: NewReviewDisplayOrder.new_review, text: '优先新碎片'),
                     Item(value: NewReviewDisplayOrder.review_new, text: '优先复习碎片'),
                   ],
                   onChanged: (v) {
-                    c.copyMemoryGroupAb.refreshInevitable((obj) => obj..new_review_display_order = v!);
+                    c.memoryGroupAb.refreshInevitable((obj) => obj..new_review_display_order = v!);
                   },
                 ),
               ],
@@ -177,14 +178,14 @@ class CurrentCircleWidget extends StatelessWidget {
               children: [
                 const Text('新碎片 展示顺序：'),
                 CustomDropdownBodyButton<NewDisplayOrder>(
-                  initValue: c.copyMemoryGroupAb(abw).new_display_order,
+                  initValue: c.memoryGroupAb(abw).new_display_order,
                   items: [
                     Item(value: NewDisplayOrder.random, text: '随机'),
                     Item(value: NewDisplayOrder.title_a_2_z, text: '标题首字母A~Z顺序'),
                     Item(value: NewDisplayOrder.create_early_2_late, text: '创建时间'),
                   ],
                   onChanged: (v) {
-                    c.copyMemoryGroupAb.refreshInevitable((obj) => obj..new_display_order = v!);
+                    c.memoryGroupAb.refreshInevitable((obj) => obj..new_display_order = v!);
                   },
                 ),
               ],
@@ -205,14 +206,14 @@ class CurrentCircleWidget extends StatelessWidget {
               children: [
                 const Text('复习碎片 展示顺序：'),
                 CustomDropdownBodyButton<ReviewDisplayOrder>(
-                  initValue: c.copyMemoryGroupAb(abw).review_display_order,
+                  initValue: c.memoryGroupAb(abw).review_display_order,
                   items: [
                     Item(value: ReviewDisplayOrder.expire_first, text: '过期优先'),
                     Item(value: ReviewDisplayOrder.no_expire_first, text: '未过期优先'),
                     Item(value: ReviewDisplayOrder.ignore_expire, text: '忽略过期'),
                   ],
                   onChanged: (v) {
-                    c.copyMemoryGroupAb.refreshInevitable((obj) => obj..review_display_order = v!);
+                    c.memoryGroupAb.refreshInevitable((obj) => obj..review_display_order = v!);
                   },
                 ),
               ],

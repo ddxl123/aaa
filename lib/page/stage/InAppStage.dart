@@ -1,23 +1,23 @@
 import 'package:aaa/page/stage/InAppStageAbController.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
-import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 
 class InAppStage extends StatefulWidget {
-  const InAppStage({Key? key, required this.memoryGroupGizmo}) : super(key: key);
+  const InAppStage({Key? key, required this.memoryGroupId}) : super(key: key);
 
-  final Ab<MemoryGroup> memoryGroupGizmo;
+  final String memoryGroupId;
 
   @override
   State<InAppStage> createState() => _InAppStageState();
 }
+
 // Dart
 class _InAppStageState extends State<InAppStage> {
   @override
   Widget build(BuildContext context) {
     return AbBuilder<InAppStageAbController>(
-      putController: InAppStageAbController(memoryGroupAb: widget.memoryGroupGizmo),
+      putController: InAppStageAbController(memoryGroupId: widget.memoryGroupId),
       builder: (c, abw) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -62,7 +62,7 @@ class _InAppStageState extends State<InAppStage> {
         return Row(
           children: c.currentButtonDatas().map(
             (e) {
-              final parseTime = e.parseTime();
+              final parseTime = e.parseTimeToFixView(c.memoryGroupAb().start_time!);
               if (parseTime == null) {
                 return const SizedBox(height: 0);
               }

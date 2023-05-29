@@ -122,7 +122,6 @@ class InternalVariableConstantHandler {
     },
   );
 
-  /// [FragmentMemoryInfos.button_values]
   static InternalVariableConstant k6CurrentButtonValuesConst = InternalVariableConstant<List<double>>(
     name: 'current_button_values',
     explain: '本次展示所分配的全部按钮数据',
@@ -134,11 +133,21 @@ class InternalVariableConstantHandler {
     },
   );
 
-  /// [FragmentMemoryInfos.button_values]
   static InternalVariableConstant k6CurrentButtonValueConst = InternalVariableConstant<double>(
     name: 'current_button_value',
     explain: '本次展示时所点击的按钮数值',
     numericTypeExplain: '数组类型，例如：1',
+    isReadFromMemoryInfo: false,
+    isNullable: true,
+    rawStringToDartTypeFunc: (String rawStringResult) {
+      return jsonDecode(rawStringResult);
+    },
+  );
+
+  static InternalVariableConstant k7CurrentClickTimeConst = InternalVariableConstant<int>(
+    name: 'current_click_time',
+    explain: '本次展示时所点击按钮的时间',
+    numericTypeExplain: '距离记忆组启动时的时间间隔秒数',
     isReadFromMemoryInfo: false,
     isNullable: true,
     rawStringToDartTypeFunc: (String rawStringResult) {
@@ -251,6 +260,7 @@ class InternalVariableConstantHandler {
     InternalVariableConstantHandler.k5CurrentShowFamiliarityConst.name: InternalVariableConstantHandler.k5CurrentShowFamiliarityConst,
     InternalVariableConstantHandler.k6CurrentButtonValuesConst.name: InternalVariableConstantHandler.k6CurrentButtonValuesConst,
     InternalVariableConstantHandler.k6CurrentButtonValueConst.name: InternalVariableConstantHandler.k6CurrentButtonValueConst,
+    InternalVariableConstantHandler.k7CurrentClickTimeConst.name: InternalVariableConstantHandler.k7CurrentClickTimeConst,
   };
 
   static Set<String> get getNames => getKVs.keys.toSet();

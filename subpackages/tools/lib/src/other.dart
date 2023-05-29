@@ -121,18 +121,53 @@ int timeDifference({required DateTime target, required DateTime start}) {
 /// x秒 转换成 x天x时x分x秒。
 ///
 /// 例如，601秒 转化成 1时0分1秒。
-String? time2TextTime({required int longSeconds}) {
-  int days = 0;
-  int hours = 0;
-  int minutes = 0;
-  int seconds = 0;
-  final d = Duration(seconds: longSeconds);
-  days = d.inDays;
-  hours = days == 0 ? d.inHours : d.inHours % 24;
-  minutes = hours == 0 ? d.inMinutes : d.inMinutes % 60;
-  seconds = minutes == 0 ? d.inSeconds : d.inSeconds % 60;
-  final result = '${days == 0 ? '' : '$days天'}${hours == 0 ? '' : '$hours时'}${minutes == 0 ? '' : '$minutes分'}${seconds == 0 ? '' : '$seconds秒'}';
-  return result == '' ? null : result;
+String time2TextTime({required int longSeconds}) {
+  // 如果参数小于0，抛出异常
+  if (longSeconds < 0) {
+    throw ArgumentError('longSeconds must be non-negative');
+  }
+  // 计算年、月、天、小时、分钟和秒数
+  // 假设一个月有30天，也就是2592000秒
+  // 假设一年有365天，也就是31536000秒
+  int years = longSeconds ~/ 31536000; // 整除运算符
+  int months = (longSeconds % 31536000) ~/ 2592000; // 取余运算符
+  int days = (longSeconds % 2592000) ~/ 86400; // 取余运算符，一天有86400秒
+  int hours = (longSeconds % 86400) ~/ 3600; // 取余运算符，一小时有3600秒
+  int minutes = (longSeconds % 3600) ~/ 60;
+  int seconds = longSeconds % 60;
+  // 根据条件拼接字符串
+  String result = '';
+  if (years > 0) {
+    result += '${years}年'; // 字符串插值
+    result += months > 0 ? '${months}月' : '';
+    return result;
+  }
+  if (months > 0) {
+    result += '${months}月';
+    result += days > 0 ? '${days}天' : '';
+    return result;
+  }
+  if (days > 0) {
+    result += '${days}天';
+    result += hours > 0 ? '${hours}时' : '';
+    return result;
+  }
+  if (hours > 0) {
+    result += '${hours}时';
+    result += minutes > 0 ? '${minutes}分' : '';
+    return result;
+  }
+  if (minutes > 0) {
+    result += '${minutes}分';
+    result += seconds > 0 ? '${seconds}秒' : '';
+    return result;
+  }
+  if (seconds > 0) {
+    result += '${seconds}秒';
+    return result;
+  }
+
+  return '0秒';
 }
 
 /// 若 [bs] 全为 true，则返回 true。

@@ -1,3 +1,4 @@
+import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
@@ -16,15 +17,8 @@ class MemoryGroupListPageAbController extends AbController {
     memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
   }
 
-  void onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MemoryGroupGizmoEditPage(
-          editPageType: MemoryGroupGizmoEditPageType.modify,
-          memoryGroupAb: memoryGroupGizmo,
-        ),
-      ),
-    );
+  Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {
+    await pushToMemoryGroupGizmoEditPageOfModify(context: context, memoryGroupId: memoryGroupGizmo().id);
+    await refreshPage();
   }
 }

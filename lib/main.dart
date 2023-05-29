@@ -29,7 +29,7 @@ void main() {
     )
     ..custom = SmartConfigCustom(animationType: SmartAnimationType.centerScale_otherSlide, animationTime: const Duration(milliseconds: 100));
 
-  runMockApp(const KeyboardRootWidget(child: MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

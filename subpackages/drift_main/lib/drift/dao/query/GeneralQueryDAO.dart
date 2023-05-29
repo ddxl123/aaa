@@ -270,6 +270,10 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await select(memoryGroups).get();
   }
 
+  Future<MemoryGroup?> queryMemoryGroupById({required String id}) async {
+    return await (select(memoryGroups)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
   /// 获取全部记忆模型。
   Future<List<MemoryModel>> queryMemoryModels() async {
     return await select(memoryModels).get();
@@ -331,7 +335,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final count = fragmentMemoryInfos.id.count();
     final sel = selectOnly(fragmentMemoryInfos);
     sel.addColumns([count]);
-    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.study_status.equals(studyStatus.index));
+    sel.where(fragmentMemoryInfos.memory_group_id.equals(memoryGroup.id) & fragmentMemoryInfos.study_status.equalsValue(studyStatus));
     final result = await sel.getSingle();
     return result.read(count)!;
   }

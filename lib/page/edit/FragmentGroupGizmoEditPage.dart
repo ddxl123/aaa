@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPageAbController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:tools/tools.dart';
 
 class DemoEmbed extends q.CustomBlockEmbed {
@@ -17,7 +16,7 @@ class DemoEmbed extends q.CustomBlockEmbed {
 
 class DemoEmbedBuilder extends q.EmbedBuilder {
   @override
-  Widget build(BuildContext context, q.QuillController controller, q.Embed node, bool readOnly, bool inline) {
+  Widget build(BuildContext context, q.QuillController controller, q.Embed node, bool readOnly, bool inline, TextStyle textStyle) {
     return TextButton(
       child: Text("data"),
       onPressed: () {
@@ -49,13 +48,11 @@ class FragmentGroupGizmoEditPage extends StatelessWidget {
                   child: q.QuillEditor.basic(
                     controller: c.quillController,
                     readOnly: false,
-                    embedBuilders: FlutterQuillEmbeds.builders()..add(DemoEmbedBuilder()),
                   ),
                 ),
               ),
               q.QuillToolbar.basic(
                 controller: c.quillController,
-                embedButtons: FlutterQuillEmbeds.buttons(),
               ),
             ],
           ),

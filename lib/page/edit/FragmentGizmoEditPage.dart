@@ -58,10 +58,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
         },
       ),
       actions: [
-        // UnconstrainedBox(
-        //   child: TextButton(onPressed: () {}, child: const Text('存草稿')),
-        // ),
-        // const SizedBox(width: 10),
+        TextButton(onPressed: () {}, child: const Text('存草稿')),
       ],
     );
   }

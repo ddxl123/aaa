@@ -53,25 +53,26 @@ class DefaultAlgorithmOfRaw {
       }
       """,
       nextShowTimeContent: """
-      StudiedTimes = ${InternalVariableConstantHandler.k3StudiedTimesConst.name}
-      if(StudiedTimes == 0){
-        5*60
-      }else if(StudiedTimes == 1){
-        20*60
-      }else if(StudiedTimes == 2){
-        60*60*8
-      }else if(StudiedTimes == 3){
-        60*60*24
-      }else if(StudiedTimes == 4){
-        60*60*24*2
-      }else if(StudiedTimes == 5){
-        60*60*24*4
-      }else if(StudiedTimes == 6){
-        60*60*24*7
-      }else if(StudiedTimes == 7){
-        60*60*24*16
+      sts = ${InternalVariableConstantHandler.k3StudiedTimesConst.name}
+      cct = ${InternalVariableConstantHandler.k7CurrentClickTimeConst.name}
+      if(sts == 0){
+        cct + 5 * 60
+      }else if(sts == 1){
+        cct + 20 * 60
+      }else if(sts == 2){
+        cct + 60 * 60 * 8
+      }else if(sts == 3){
+        cct + 60 * 60 * 24
+      }else if(sts == 4){
+        cct + 60 * 60 * 24 * 2
+      }else if(sts == 5){
+        cct + 60 * 60 * 24 * 4
+      }else if(sts == 6){
+        cct + 60 * 60 * 24 * 7
+      }else if(sts == 7){
+        cct + 60 * 60 * 24 * 16
       }else{
-        60*60*24*30
+        cct + 60 * 60 * 24 * 30
       }
       """,
     );
