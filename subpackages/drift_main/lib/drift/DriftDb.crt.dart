@@ -17,13 +17,13 @@ class Crt {
   static KnowledgeBaseCategorysCompanion knowledgeBaseCategorysCompanion({
     required String categorys,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return KnowledgeBaseCategorysCompanion(
       categorys: Value(categorys),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -33,7 +33,7 @@ class Crt {
     required Value<DateTime?> recent_sync_time,
     required Value<String?> token,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return ClientSyncInfosCompanion(
@@ -41,7 +41,7 @@ class Crt {
       recent_sync_time: recent_sync_time,
       token: token,
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -52,7 +52,7 @@ class Crt {
     required String sync_table_name,
     required int tag,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return SyncsCompanion(
@@ -61,7 +61,7 @@ class Crt {
       sync_table_name: Value(sync_table_name),
       tag: Value(tag),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -100,24 +100,6 @@ class Crt {
     );
   }
 
-  static RDocument2DocumentGroupsCompanion rDocument2DocumentGroupsCompanion({
-    required int creator_user_id,
-    required Value<String?> document_group_id,
-    required String document_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return RDocument2DocumentGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      document_group_id: document_group_id,
-      document_id: Value(document_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
     required int creator_user_id,
     required Value<String?> fragment_group_id,
@@ -136,34 +118,16 @@ class Crt {
     );
   }
 
-  static RNote2NoteGroupsCompanion rNote2NoteGroupsCompanion({
-    required int creator_user_id,
-    required Value<String?> note_group_id,
-    required String note_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return RNote2NoteGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      note_group_id: note_group_id,
-      note_id: Value(note_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static Test2sCompanion test2sCompanion({
     required String client_content,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return Test2sCompanion(
       client_content: Value(client_content),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -172,28 +136,12 @@ class Crt {
     required String client_a,
     required String client_content,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return TestsCompanion(
       client_a: Value(client_a),
       client_content: Value(client_content),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
-  static DocumentsCompanion documentsCompanion({
-    required String content,
-    required int creator_user_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return DocumentsCompanion(
-      content: Value(content),
-      creator_user_id: Value(creator_user_id),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
@@ -225,7 +173,6 @@ class Crt {
     required int creator_user_id,
     required Value<String?> father_fragment_id,
     required Value<String?> fragment_template_id,
-    required Value<String?> note_id,
     required String tags,
     required String title,
     DateTime? created_at,
@@ -239,7 +186,6 @@ class Crt {
       creator_user_id: Value(creator_user_id),
       father_fragment_id: father_fragment_id,
       fragment_template_id: fragment_template_id,
-      note_id: note_id,
       tags: Value(tags),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
@@ -327,26 +273,6 @@ class Crt {
     );
   }
 
-  static NotesCompanion notesCompanion({
-    required String content,
-    required int creator_user_id,
-    required Value<String?> document_id,
-    required Value<String?> father_note_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return NotesCompanion(
-      content: Value(content),
-      creator_user_id: Value(creator_user_id),
-      document_id: document_id,
-      father_note_id: father_note_id,
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static ShorthandsCompanion shorthandsCompanion({
     required String content,
     required int creator_user_id,
@@ -357,24 +283,6 @@ class Crt {
     return ShorthandsCompanion(
       content: Value(content),
       creator_user_id: Value(creator_user_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
-  static DocumentGroupsCompanion documentGroupsCompanion({
-    required int creator_user_id,
-    required Value<String?> father_document_groups_id,
-    required String title,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return DocumentGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      father_document_groups_id: father_document_groups_id,
-      title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
@@ -407,31 +315,13 @@ class Crt {
     );
   }
 
-  static NoteGroupsCompanion noteGroupsCompanion({
-    required int creator_user_id,
-    required Value<String?> father_note_groups_id,
-    required String title,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return NoteGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      father_note_groups_id: father_note_groups_id,
-      title: Value(title),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static UserCommentsCompanion userCommentsCompanion({
     required String comment_content,
     required int commentator_user_id,
     required Value<String?> fragment_group_id,
     required Value<String?> fragment_id,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return UserCommentsCompanion(
@@ -440,7 +330,7 @@ class Crt {
       fragment_group_id: fragment_group_id,
       fragment_id: fragment_id,
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -450,7 +340,7 @@ class Crt {
     required Value<String?> fragment_id,
     required int liker_user_id,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return UserLikesCompanion(
@@ -458,7 +348,7 @@ class Crt {
       fragment_id: fragment_id,
       liker_user_id: Value(liker_user_id),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -470,7 +360,7 @@ class Crt {
     required Value<String?> phone,
     required String username,
     DateTime? created_at,
-    Value<int>? id,
+    int? id,
     DateTime? updated_at,
   }) {
     return UsersCompanion(
@@ -480,7 +370,7 @@ class Crt {
       phone: phone,
       username: Value(username),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -531,35 +421,12 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
   }
 }
 
-extension RDocument2DocumentGroupsCompanionExt
-    on RDocument2DocumentGroupsCompanion {
-  Future<RDocument2DocumentGroup> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.rDocument2DocumentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
 extension RFragment2FragmentGroupsCompanionExt
     on RFragment2FragmentGroupsCompanion {
   Future<RFragment2FragmentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.rFragment2FragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension RNote2NoteGroupsCompanionExt on RNote2NoteGroupsCompanion {
-  Future<RNote2NoteGroup> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.rNote2NoteGroups,
       entity: this,
       syncTag: syncTag,
     );
@@ -582,17 +449,6 @@ extension TestsCompanionExt on TestsCompanion {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.tests,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension DocumentsCompanionExt on DocumentsCompanion {
-  Future<Document> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.documents,
       entity: this,
       syncTag: syncTag,
     );
@@ -643,17 +499,6 @@ extension MemoryModelsCompanionExt on MemoryModelsCompanion {
   }
 }
 
-extension NotesCompanionExt on NotesCompanion {
-  Future<Note> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.notes,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
 extension ShorthandsCompanionExt on ShorthandsCompanion {
   Future<Shorthand> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
@@ -665,33 +510,11 @@ extension ShorthandsCompanionExt on ShorthandsCompanion {
   }
 }
 
-extension DocumentGroupsCompanionExt on DocumentGroupsCompanion {
-  Future<DocumentGroup> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.documentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
 extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
   Future<FragmentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension NoteGroupsCompanionExt on NoteGroupsCompanion {
-  Future<NoteGroup> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.noteGroups,
       entity: this,
       syncTag: syncTag,
     );

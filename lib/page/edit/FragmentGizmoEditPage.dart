@@ -71,12 +71,17 @@ class FragmentGizmoEditPage extends StatelessWidget {
             Expanded(
               child: AbwBuilder(
                 builder: (abw) {
-                  return Padding(
+                  return q.QuillEditor(
+                    scrollController: c.contentScrollController,
+                    scrollPhysics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                    controller: c.quillController,
+                    readOnly: !c.isEditable(abw),
+                    showCursor: c.isEditable(abw),
+                    autoFocus: true,
+                    expands: true,
+                    focusNode: FocusNode(),
                     padding: const EdgeInsets.all(10),
-                    child: q.QuillEditor.basic(
-                      controller: c.quillController,
-                      readOnly: !c.isEditable(abw), // true for view only mode
-                    ),
+                    scrollable: true,
                   );
                 },
               ),

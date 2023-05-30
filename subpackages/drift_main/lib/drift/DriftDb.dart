@@ -51,17 +51,11 @@ part 'table/entity/client/Syncs.dart';
 
 part 'table/entity/info/FragmentMemoryInfos.dart';
 
-part 'table/entity/r/RDocument2DocumentGroups.dart';
-
 part 'table/entity/r/RFragment2FragmentGroups.dart';
-
-part 'table/entity/r/RNote2NoteGroups.dart';
 
 part 'table/entity/test/Test2s.dart';
 
 part 'table/entity/test/Tests.dart';
-
-part 'table/entity/unit/Documents.dart';
 
 part 'table/entity/unit/FragmentTemplates.dart';
 
@@ -71,15 +65,9 @@ part 'table/entity/unit/MemoryGroups.dart';
 
 part 'table/entity/unit/MemoryModels.dart';
 
-part 'table/entity/unit/Notes.dart';
-
 part 'table/entity/unit/Shorthands.dart';
 
-part 'table/entity/unit_group/DocumentGroups.dart';
-
 part 'table/entity/unit_group/FragmentGroups.dart';
-
-part 'table/entity/unit_group/NoteGroups.dart';
 
 part 'table/entity/user/UserComments.dart';
 
@@ -97,17 +85,11 @@ const List<Type> tableClasses = [
 
   FragmentMemoryInfos,
 
-  RDocument2DocumentGroups,
-
   RFragment2FragmentGroups,
-
-  RNote2NoteGroups,
 
   Test2s,
 
   Tests,
-
-  Documents,
 
   FragmentTemplates,
 
@@ -117,15 +99,9 @@ const List<Type> tableClasses = [
 
   MemoryModels,
 
-  Notes,
-
   Shorthands,
 
-  DocumentGroups,
-
   FragmentGroups,
-
-  NoteGroups,
 
   UserComments,
 

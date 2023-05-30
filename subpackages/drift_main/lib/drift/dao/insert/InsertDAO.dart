@@ -189,4 +189,20 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     ).run();
     return newShorthand;
   }
+
+
+  /// 创建一个新的文章。
+  Future<Shorthand> insertArticle({
+    required ShorthandsCompanion shorthandsCompanion,
+    required SyncTag syncTag,
+  }) async {
+    late final Shorthand newShorthand;
+    await RefShorthands(
+      self: () async {
+        newShorthand = await shorthandsCompanion.insert(syncTag: syncTag);
+      },
+      order: 0,
+    ).run();
+    return newShorthand;
+  }
 }

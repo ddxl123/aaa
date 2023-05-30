@@ -27,12 +27,6 @@ class _FragmentHomeState extends State<FragmentHome> {
               Tab(
                 text: '速记',
               ),
-              Tab(
-                text: '文章',
-              ),
-              Tab(
-                text: '文档',
-              ),
             ],
           ),
           body: TabBarView(
@@ -43,12 +37,6 @@ class _FragmentHomeState extends State<FragmentHome> {
               ),
               KeepStateWidget(
                 child: ShorthandListPage(),
-              ),
-              KeepStateWidget(
-                child: const Text('文章'),
-              ),
-              KeepStateWidget(
-                child: const Text('文档'),
               ),
             ],
           ),

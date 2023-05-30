@@ -34,26 +34,6 @@ class MemoryModeListPage extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _appBar({required BuildContext context}) {
-    return CustomNarrowAppBar(
-      actions: [
-        CustomDropdownBodyButton(
-          initValue: 0,
-          primaryButton: const Icon(Icons.more_horiz),
-          itemAlignment: Alignment.centerLeft,
-          items: [
-            Item(value: 0, text: '添加记忆算法'),
-          ],
-          onChanged: (v) {
-            if (v == 0) {
-              showCreateMemoryModelDialog();
-            }
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _body() {
     return AbBuilder<MemoryModeListPageAbController>(
       tag: Aber.single,

@@ -27,20 +27,20 @@ class TestHomeAbController extends AbController {
   }
 
   Future<void> insertTests() async {
-    for (int i = 0; i < 5; i++) {
-      final t = await db.into(db.tests).insertReturning(
-            TestsCompanion.insert(client_content: Random().nextInt(10).toString(), created_at: DateTime.now(), updated_at: DateTime.now(), client_a: ''),
-          );
-      // await Future.delayed(const Duration(milliseconds: 1000));
-      print(t);
-    }
-    for (int i = 0; i < 5; i++) {
-      final t = await db.into(db.test2s).insertReturning(
-            Test2sCompanion.insert(client_content: Random().nextInt(10).toString(), created_at: DateTime.now(), updated_at: DateTime.now()),
-          );
-      // await Future.delayed(const Duration(milliseconds: 1000));
-      print(t);
-    }
+    // for (int i = 0; i < 5; i++) {
+    //   final t = await db.into(db.tests).insertReturning(
+    //         TestsCompanion.insert(client_content: Random().nextInt(10).toString(), created_at: DateTime.now(), updated_at: DateTime.now(), client_a: ''),
+    //       );
+    //   // await Future.delayed(const Duration(milliseconds: 1000));
+    //   print(t);
+    // }
+    // for (int i = 0; i < 5; i++) {
+    //   final t = await db.into(db.test2s).insertReturning(
+    //         Test2sCompanion.insert(client_content: Random().nextInt(10).toString(), created_at: DateTime.now(), updated_at: DateTime.now()),
+    //       );
+    //   // await Future.delayed(const Duration(milliseconds: 1000));
+    //   print(t);
+    // }
     print('-------------');
     // final selOnly = db.select(db.tests)
     //   ..groupBy([db.tests.client_content]);

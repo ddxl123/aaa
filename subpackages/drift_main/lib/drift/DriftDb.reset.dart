@@ -296,61 +296,6 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   }
 }
 
-/// [RDocument2DocumentGroups]
-extension RDocument2DocumentGroupExt on RDocument2DocumentGroup {
-  Future<void> resetByEntity({
-    required RDocument2DocumentGroup rDocument2DocumentGroup,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      creator_user_id: rDocument2DocumentGroup.creator_user_id.toValue(),
-      document_group_id: rDocument2DocumentGroup.document_group_id.toValue(),
-      document_id: rDocument2DocumentGroup.document_id.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<RDocument2DocumentGroup> reset({
-    required Value<int> creator_user_id,
-    required Value<String?> document_group_id,
-    required Value<String> document_id,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (document_group_id.present &&
-        this.document_group_id != document_group_id.value) {
-      isCloudModify = true;
-      this.document_group_id = document_group_id.value;
-    }
-
-    if (document_id.present && this.document_id != document_id.value) {
-      isCloudModify = true;
-      this.document_id = document_id.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rDocument2DocumentGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [RFragment2FragmentGroups]
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   Future<void> resetByEntity({
@@ -400,60 +345,6 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rFragment2FragmentGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [RNote2NoteGroups]
-extension RNote2NoteGroupExt on RNote2NoteGroup {
-  Future<void> resetByEntity({
-    required RNote2NoteGroup rNote2NoteGroup,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      creator_user_id: rNote2NoteGroup.creator_user_id.toValue(),
-      note_group_id: rNote2NoteGroup.note_group_id.toValue(),
-      note_id: rNote2NoteGroup.note_id.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<RNote2NoteGroup> reset({
-    required Value<int> creator_user_id,
-    required Value<String?> note_group_id,
-    required Value<String> note_id,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (note_group_id.present && this.note_group_id != note_group_id.value) {
-      isCloudModify = true;
-      this.note_group_id = note_group_id.value;
-    }
-
-    if (note_id.present && this.note_id != note_id.value) {
-      isCloudModify = true;
-      this.note_id = note_id.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rNote2NoteGroups,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -545,53 +436,6 @@ extension TestExt on Test {
   }
 }
 
-/// [Documents]
-extension DocumentExt on Document {
-  Future<void> resetByEntity({
-    required Document document,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      content: document.content.toValue(),
-      creator_user_id: document.creator_user_id.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<Document> reset({
-    required Value<String> content,
-    required Value<int> creator_user_id,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (content.present && this.content != content.value) {
-      isCloudModify = true;
-      this.content = content.value;
-    }
-
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.documents,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [FragmentTemplates]
 extension FragmentTemplateExt on FragmentTemplate {
   Future<void> resetByEntity({
@@ -658,7 +502,6 @@ extension FragmentExt on Fragment {
       creator_user_id: fragment.creator_user_id.toValue(),
       father_fragment_id: fragment.father_fragment_id.toValue(),
       fragment_template_id: fragment.fragment_template_id.toValue(),
-      note_id: fragment.note_id.toValue(),
       tags: fragment.tags.toValue(),
       title: fragment.title.toValue(),
       syncTag: syncTag,
@@ -679,7 +522,6 @@ extension FragmentExt on Fragment {
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_id,
     required Value<String?> fragment_template_id,
-    required Value<String?> note_id,
     required Value<String> tags,
     required Value<String> title,
     required SyncTag syncTag,
@@ -718,11 +560,6 @@ extension FragmentExt on Fragment {
         this.fragment_template_id != fragment_template_id.value) {
       isCloudModify = true;
       this.fragment_template_id = fragment_template_id.value;
-    }
-
-    if (note_id.present && this.note_id != note_id.value) {
-      isCloudModify = true;
-      this.note_id = note_id.value;
     }
 
     if (tags.present && this.tags != tags.value) {
@@ -1032,67 +869,6 @@ extension MemoryModelExt on MemoryModel {
   }
 }
 
-/// [Notes]
-extension NoteExt on Note {
-  Future<void> resetByEntity({
-    required Note note,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      content: note.content.toValue(),
-      creator_user_id: note.creator_user_id.toValue(),
-      document_id: note.document_id.toValue(),
-      father_note_id: note.father_note_id.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<Note> reset({
-    required Value<String> content,
-    required Value<int> creator_user_id,
-    required Value<String?> document_id,
-    required Value<String?> father_note_id,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (content.present && this.content != content.value) {
-      isCloudModify = true;
-      this.content = content.value;
-    }
-
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (document_id.present && this.document_id != document_id.value) {
-      isCloudModify = true;
-      this.document_id = document_id.value;
-    }
-
-    if (father_note_id.present && this.father_note_id != father_note_id.value) {
-      isCloudModify = true;
-      this.father_note_id = father_note_id.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.notes,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [Shorthands]
 extension ShorthandExt on Shorthand {
   Future<void> resetByEntity({
@@ -1134,62 +910,6 @@ extension ShorthandExt on Shorthand {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.shorthands,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [DocumentGroups]
-extension DocumentGroupExt on DocumentGroup {
-  Future<void> resetByEntity({
-    required DocumentGroup documentGroup,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      creator_user_id: documentGroup.creator_user_id.toValue(),
-      father_document_groups_id:
-          documentGroup.father_document_groups_id.toValue(),
-      title: documentGroup.title.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<DocumentGroup> reset({
-    required Value<int> creator_user_id,
-    required Value<String?> father_document_groups_id,
-    required Value<String> title,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (father_document_groups_id.present &&
-        this.father_document_groups_id != father_document_groups_id.value) {
-      isCloudModify = true;
-      this.father_document_groups_id = father_document_groups_id.value;
-    }
-
-    if (title.present && this.title != title.value) {
-      isCloudModify = true;
-      this.title = title.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.documentGroups,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -1275,61 +995,6 @@ extension FragmentGroupExt on FragmentGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [NoteGroups]
-extension NoteGroupExt on NoteGroup {
-  Future<void> resetByEntity({
-    required NoteGroup noteGroup,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      creator_user_id: noteGroup.creator_user_id.toValue(),
-      father_note_groups_id: noteGroup.father_note_groups_id.toValue(),
-      title: noteGroup.title.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<NoteGroup> reset({
-    required Value<int> creator_user_id,
-    required Value<String?> father_note_groups_id,
-    required Value<String> title,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (father_note_groups_id.present &&
-        this.father_note_groups_id != father_note_groups_id.value) {
-      isCloudModify = true;
-      this.father_note_groups_id = father_note_groups_id.value;
-    }
-
-    if (title.present && this.title != title.value) {
-      isCloudModify = true;
-      this.title = title.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.noteGroups,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;

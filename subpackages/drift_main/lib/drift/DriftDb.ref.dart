@@ -112,38 +112,26 @@ class RefSyncs extends Ref {
 class RefUsers extends Ref {
   Future<void> Function() self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
-  RefRDocument2DocumentGroups? rDocument2DocumentGroups;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefRNote2NoteGroups? rNote2NoteGroups;
-  RefDocuments? documents;
   RefFragmentTemplates? fragmentTemplates;
   RefFragments? fragments;
   RefMemoryGroups? memoryGroups;
   RefMemoryModels? memoryModels;
-  RefNotes? notes;
   RefShorthands? shorthands;
-  RefDocumentGroups? documentGroups;
   RefFragmentGroups? fragmentGroups;
-  RefNoteGroups? noteGroups;
   RefUserComments? userComments;
   RefUserLikes? userLikes;
 
   RefUsers({
     required this.self,
     required this.fragmentMemoryInfos,
-    required this.rDocument2DocumentGroups,
     required this.rFragment2FragmentGroups,
-    required this.rNote2NoteGroups,
-    required this.documents,
     required this.fragmentTemplates,
     required this.fragments,
     required this.memoryGroups,
     required this.memoryModels,
-    required this.notes,
     required this.shorthands,
-    required this.documentGroups,
     required this.fragmentGroups,
-    required this.noteGroups,
     required this.userComments,
     required this.userLikes,
     required super.order,
@@ -156,19 +144,13 @@ class RefUsers extends Ref {
         final list = <Ref?>[
           this,
           fragmentMemoryInfos,
-          rDocument2DocumentGroups,
           rFragment2FragmentGroups,
-          rNote2NoteGroups,
-          documents,
           fragmentTemplates,
           fragments,
           memoryGroups,
           memoryModels,
-          notes,
           shorthands,
-          documentGroups,
           fragmentGroups,
-          noteGroups,
           userComments,
           userLikes,
         ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
@@ -304,111 +286,6 @@ class RefFragmentMemoryInfos extends Ref {
   }
 }
 
-/// [DocumentGroups]
-class RefDocumentGroups extends Ref {
-  Future<void> Function() self;
-  RefRDocument2DocumentGroups? rDocument2DocumentGroups;
-  RefDocumentGroups? child_documentGroups;
-
-  RefDocumentGroups({
-    required this.self,
-    required this.rDocument2DocumentGroups,
-    required this.child_documentGroups,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-          rDocument2DocumentGroups,
-          child_documentGroups,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// [Documents]
-class RefDocuments extends Ref {
-  Future<void> Function() self;
-  RefRDocument2DocumentGroups? rDocument2DocumentGroups;
-  RefNotes? notes;
-
-  RefDocuments({
-    required this.self,
-    required this.rDocument2DocumentGroups,
-    required this.notes,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-          rDocument2DocumentGroups,
-          notes,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// [RDocument2DocumentGroups]
-class RefRDocument2DocumentGroups extends Ref {
-  Future<void> Function() self;
-
-  RefRDocument2DocumentGroups({
-    required this.self,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
 /// [FragmentGroups]
 class RefFragmentGroups extends Ref {
   Future<void> Function() self;
@@ -457,114 +334,6 @@ class RefRFragment2FragmentGroups extends Ref {
   Future<void> Function() self;
 
   RefRFragment2FragmentGroups({
-    required this.self,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// [NoteGroups]
-class RefNoteGroups extends Ref {
-  Future<void> Function() self;
-  RefRNote2NoteGroups? rNote2NoteGroups;
-  RefNoteGroups? child_noteGroups;
-
-  RefNoteGroups({
-    required this.self,
-    required this.rNote2NoteGroups,
-    required this.child_noteGroups,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-          rNote2NoteGroups,
-          child_noteGroups,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// [Notes]
-class RefNotes extends Ref {
-  Future<void> Function() self;
-  RefRNote2NoteGroups? rNote2NoteGroups;
-  RefFragments? fragments;
-  RefNotes? child_notes;
-
-  RefNotes({
-    required this.self,
-    required this.rNote2NoteGroups,
-    required this.fragments,
-    required this.child_notes,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-          rNote2NoteGroups,
-          fragments,
-          child_notes,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// [RNote2NoteGroups]
-class RefRNote2NoteGroups extends Ref {
-  Future<void> Function() self;
-
-  RefRNote2NoteGroups({
     required this.self,
     required super.order,
   });

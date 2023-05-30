@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/single_dialog/showSelectFragmentGroupsDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -84,7 +85,6 @@ class FragmentPerformer {
           father_fragment_id: null.toValue(),
           fragment_template_id: (fragmentTemplate?.id).toValue(),
           client_be_selected: false,
-          note_id: null.toValue(),
           title: fragmentGizmoEditPageAbController.parseTitle(),
           tags: fragmentTag.join(","),
           be_sep_publish: false,
@@ -102,7 +102,6 @@ class FragmentPerformer {
             father_fragment_id: toAbsent(),
             fragment_template_id: (fragmentTemplate?.id).toValue(),
             client_be_selected: toAbsent(),
-            note_id: toAbsent(),
             title: fragmentGizmoEditPageAbController.parseTitle().toValue(),
             tags: "".toValue(),
             syncTag: st,
@@ -208,6 +207,8 @@ class FragmentGizmoEditPageAbController extends AbController {
   /// 根据 [records] 跳动。
   final currentPerformer = Ab<FragmentPerformer>.late();
   final q.QuillController quillController = q.QuillController.basic();
+
+  final contentScrollController = ScrollController();
 
   final isEditable = false.ab;
 

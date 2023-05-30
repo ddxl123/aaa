@@ -24,9 +24,6 @@ class Fragments extends CloudTableBase  {
   @ReferenceTo([FragmentTemplates])
   TextColumn get fragment_template_id => text().named("fragment_template_id").nullable()();
 
-  @ReferenceTo([Notes])
-  TextColumn get note_id => text().named("note_id").nullable()();
-
   TextColumn get tags => text().named("tags")();
 
   TextColumn get title => text().named("title")();

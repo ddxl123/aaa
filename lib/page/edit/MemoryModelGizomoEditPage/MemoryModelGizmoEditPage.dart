@@ -20,49 +20,47 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
       putController: MemoryModelGizmoEditPageAbController(originalMemoryModelAb: memoryModelAb),
       tag: Aber.single,
       builder: (c, abw) {
-        return KeyboardRootWidget(
-          child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left_outlined),
-                onPressed: () {
-                  c.abBack();
-                },
-              ),
-              title: _appBarTitleWidget(),
-              actions: [
-                _appBarRightAnalyzeWidget(),
-                _appBarRightButtonWidget(),
-              ],
-            ),
-            body: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-              slivers: [
-                SliverToBoxAdapter(child: SizedBox(height: 10)),
-                SliverToBoxAdapter(child: _titleWidget()),
-                SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
-                SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
-                SliverToBoxAdapter(child: _buttonDataWidget()),
-              ],
-            ),
-            floatingActionButton: AbwBuilder(
-              builder: (fAbw) {
-                return c.isAlgorithmKeyboard(fAbw)
-                    ? FloatingRoundCornerButton(
-                        text: const FaIcon(FontAwesomeIcons.keyboard),
-                        onPressed: () {
-                          c.changeKeyword();
-                        },
-                        border: const CircleBorder(),
-                      )
-                    : FloatingRoundCornerButton(
-                        text: const Text('算法键盘'),
-                        onPressed: () {
-                          c.changeKeyword();
-                        },
-                      );
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.chevron_left_outlined),
+              onPressed: () {
+                c.abBack();
               },
             ),
+            title: _appBarTitleWidget(),
+            actions: [
+              _appBarRightAnalyzeWidget(),
+              _appBarRightButtonWidget(),
+            ],
+          ),
+          body: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            slivers: [
+              SliverToBoxAdapter(child: SizedBox(height: 10)),
+              SliverToBoxAdapter(child: _titleWidget()),
+              SliverToBoxAdapter(child: _familiarityAlgorithmWidget()),
+              SliverToBoxAdapter(child: _nextTimeAlgorithmWidget()),
+              SliverToBoxAdapter(child: _buttonDataWidget()),
+            ],
+          ),
+          floatingActionButton: AbwBuilder(
+            builder: (fAbw) {
+              return c.isAlgorithmKeyboard(fAbw)
+                  ? FloatingRoundCornerButton(
+                      text: const FaIcon(FontAwesomeIcons.keyboard),
+                      onPressed: () {
+                        c.changeKeyword();
+                      },
+                      border: const CircleBorder(),
+                    )
+                  : FloatingRoundCornerButton(
+                      text: const Text('算法键盘'),
+                      onPressed: () {
+                        c.changeKeyword();
+                      },
+                    );
+            },
           ),
         );
       },

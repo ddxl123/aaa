@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of httper;
+part of 'httper.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

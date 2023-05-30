@@ -8,25 +8,17 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
-      attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RNote2NoteGroupsTable get rNote2NoteGroups =>
-      attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $NotesTable get notes => attachedDatabase.notes;
   $ShorthandsTable get shorthands => attachedDatabase.shorthands;
-  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
@@ -38,25 +30,17 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
-      attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RNote2NoteGroupsTable get rNote2NoteGroups =>
-      attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $NotesTable get notes => attachedDatabase.notes;
   $ShorthandsTable get shorthands => attachedDatabase.shorthands;
-  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
@@ -68,25 +52,17 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
-      attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RNote2NoteGroupsTable get rNote2NoteGroups =>
-      attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $NotesTable get notes => attachedDatabase.notes;
   $ShorthandsTable get shorthands => attachedDatabase.shorthands;
-  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
@@ -98,25 +74,17 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
-      attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RNote2NoteGroupsTable get rNote2NoteGroups =>
-      attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $NotesTable get notes => attachedDatabase.notes;
   $ShorthandsTable get shorthands => attachedDatabase.shorthands;
-  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
@@ -128,25 +96,17 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
-      attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RNote2NoteGroupsTable get rNote2NoteGroups =>
-      attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $NotesTable get notes => attachedDatabase.notes;
   $ShorthandsTable get shorthands => attachedDatabase.shorthands;
-  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
@@ -158,25 +118,17 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
       attachedDatabase.fragmentMemoryInfos;
-  $RDocument2DocumentGroupsTable get rDocument2DocumentGroups =>
-      attachedDatabase.rDocument2DocumentGroups;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RNote2NoteGroupsTable get rNote2NoteGroups =>
-      attachedDatabase.rNote2NoteGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $DocumentsTable get documents => attachedDatabase.documents;
   $FragmentTemplatesTable get fragmentTemplates =>
       attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
-  $NotesTable get notes => attachedDatabase.notes;
   $ShorthandsTable get shorthands => attachedDatabase.shorthands;
-  $DocumentGroupsTable get documentGroups => attachedDatabase.documentGroups;
   $FragmentGroupsTable get fragmentGroups => attachedDatabase.fragmentGroups;
-  $NoteGroupsTable get noteGroups => attachedDatabase.noteGroups;
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
@@ -204,7 +156,7 @@ class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -239,6 +191,8 @@ class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -272,6 +226,9 @@ class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
   $KnowledgeBaseCategorysTable createAlias(String alias) {
     return $KnowledgeBaseCategorysTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class KnowledgeBaseCategory extends DataClass
@@ -374,10 +331,11 @@ class KnowledgeBaseCategorysCompanion
   KnowledgeBaseCategorysCompanion.insert({
     required String categorys,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : categorys = Value(categorys),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<KnowledgeBaseCategory> custom({
     Expression<String>? categorys,
@@ -471,7 +429,7 @@ class $ClientSyncInfosTable extends ClientSyncInfos
       'id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
-      requiredDuringInsert: false,
+      requiredDuringInsert: true,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _updated_atMeta =
@@ -520,6 +478,8 @@ class $ClientSyncInfosTable extends ClientSyncInfos
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -557,6 +517,9 @@ class $ClientSyncInfosTable extends ClientSyncInfos
   $ClientSyncInfosTable createAlias(String alias) {
     return $ClientSyncInfosTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
@@ -694,10 +657,11 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
     this.recent_sync_time = const Value.absent(),
     this.token = const Value.absent(),
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : device_info = Value(device_info),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<ClientSyncInfo> custom({
     Expression<String>? device_info,
@@ -813,7 +777,7 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       'id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
-      requiredDuringInsert: false,
+      requiredDuringInsert: true,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _updated_atMeta =
@@ -872,6 +836,8 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -915,6 +881,8 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
 
   static JsonTypeConverter2<SyncCurdType, int, int> $convertersync_curd_type =
       const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
+  @override
+  bool get withoutRowId => true;
 }
 
 class Sync extends DataClass implements Insertable<Sync> {
@@ -1060,13 +1028,14 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     required String sync_table_name,
     required int tag,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : row_id = Value(row_id),
         sync_curd_type = Value(sync_curd_type),
         sync_table_name = Value(sync_table_name),
         tag = Value(tag),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Sync> custom({
     Expression<String>? row_id,
@@ -1418,6 +1387,8 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
 
   static JsonTypeConverter2<StudyStatus, int, int> $converterstudy_status =
       const EnumIndexConverter<StudyStatus>(StudyStatus.values);
+  @override
+  bool get withoutRowId => true;
 }
 
 class FragmentMemoryInfo extends DataClass
@@ -1825,354 +1796,6 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   }
 }
 
-class $RDocument2DocumentGroupsTable extends RDocument2DocumentGroups
-    with TableInfo<$RDocument2DocumentGroupsTable, RDocument2DocumentGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RDocument2DocumentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _document_group_idMeta =
-      const VerificationMeta('document_group_id');
-  @override
-  late final GeneratedColumn<String> document_group_id =
-      GeneratedColumn<String>('document_group_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _document_idMeta =
-      const VerificationMeta('document_id');
-  @override
-  late final GeneratedColumn<String> document_id = GeneratedColumn<String>(
-      'document_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        creator_user_id,
-        document_group_id,
-        document_id,
-        created_at,
-        id,
-        updated_at
-      ];
-  @override
-  String get aliasedName => _alias ?? 'r_document2_document_groups';
-  @override
-  String get actualTableName => 'r_document2_document_groups';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<RDocument2DocumentGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('document_group_id')) {
-      context.handle(
-          _document_group_idMeta,
-          document_group_id.isAcceptableOrUnknown(
-              data['document_group_id']!, _document_group_idMeta));
-    }
-    if (data.containsKey('document_id')) {
-      context.handle(
-          _document_idMeta,
-          document_id.isAcceptableOrUnknown(
-              data['document_id']!, _document_idMeta));
-    } else if (isInserting) {
-      context.missing(_document_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RDocument2DocumentGroup map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RDocument2DocumentGroup(
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      document_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}document_group_id']),
-      document_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}document_id'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $RDocument2DocumentGroupsTable createAlias(String alias) {
-    return $RDocument2DocumentGroupsTable(attachedDatabase, alias);
-  }
-}
-
-class RDocument2DocumentGroup extends DataClass
-    implements Insertable<RDocument2DocumentGroup> {
-  int creator_user_id;
-  String? document_group_id;
-  String document_id;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  RDocument2DocumentGroup(
-      {required this.creator_user_id,
-      this.document_group_id,
-      required this.document_id,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || document_group_id != null) {
-      map['document_group_id'] = Variable<String>(document_group_id);
-    }
-    map['document_id'] = Variable<String>(document_id);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  RDocument2DocumentGroupsCompanion toCompanion(bool nullToAbsent) {
-    return RDocument2DocumentGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      document_group_id: document_group_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(document_group_id),
-      document_id: Value(document_id),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory RDocument2DocumentGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RDocument2DocumentGroup(
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      document_group_id:
-          serializer.fromJson<String?>(json['document_group_id']),
-      document_id: serializer.fromJson<String>(json['document_id']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'document_group_id': serializer.toJson<String?>(document_group_id),
-      'document_id': serializer.toJson<String>(document_id),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  RDocument2DocumentGroup copyWith(
-          {int? creator_user_id,
-          Value<String?> document_group_id = const Value.absent(),
-          String? document_id,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      RDocument2DocumentGroup(
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        document_group_id: document_group_id.present
-            ? document_group_id.value
-            : this.document_group_id,
-        document_id: document_id ?? this.document_id,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RDocument2DocumentGroup(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('document_group_id: $document_group_id, ')
-          ..write('document_id: $document_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(creator_user_id, document_group_id,
-      document_id, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RDocument2DocumentGroup &&
-          other.creator_user_id == this.creator_user_id &&
-          other.document_group_id == this.document_group_id &&
-          other.document_id == this.document_id &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class RDocument2DocumentGroupsCompanion
-    extends UpdateCompanion<RDocument2DocumentGroup> {
-  Value<int> creator_user_id;
-  Value<String?> document_group_id;
-  Value<String> document_id;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  RDocument2DocumentGroupsCompanion({
-    this.creator_user_id = const Value.absent(),
-    this.document_group_id = const Value.absent(),
-    this.document_id = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  RDocument2DocumentGroupsCompanion.insert({
-    required int creator_user_id,
-    this.document_group_id = const Value.absent(),
-    required String document_id,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
-        document_id = Value(document_id),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<RDocument2DocumentGroup> custom({
-    Expression<int>? creator_user_id,
-    Expression<String>? document_group_id,
-    Expression<String>? document_id,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (document_group_id != null) 'document_group_id': document_group_id,
-      if (document_id != null) 'document_id': document_id,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  RDocument2DocumentGroupsCompanion copyWith(
-      {Value<int>? creator_user_id,
-      Value<String?>? document_group_id,
-      Value<String>? document_id,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return RDocument2DocumentGroupsCompanion(
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      document_group_id: document_group_id ?? this.document_group_id,
-      document_id: document_id ?? this.document_id,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (document_group_id.present) {
-      map['document_group_id'] = Variable<String>(document_group_id.value);
-    }
-    if (document_id.present) {
-      map['document_id'] = Variable<String>(document_id.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RDocument2DocumentGroupsCompanion(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('document_group_id: $document_group_id, ')
-          ..write('document_id: $document_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
     with TableInfo<$RFragment2FragmentGroupsTable, RFragment2FragmentGroup> {
   @override
@@ -2305,6 +1928,9 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   $RFragment2FragmentGroupsTable createAlias(String alias) {
     return $RFragment2FragmentGroupsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class RFragment2FragmentGroup extends DataClass
@@ -2521,340 +2147,6 @@ class RFragment2FragmentGroupsCompanion
   }
 }
 
-class $RNote2NoteGroupsTable extends RNote2NoteGroups
-    with TableInfo<$RNote2NoteGroupsTable, RNote2NoteGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RNote2NoteGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _note_group_idMeta =
-      const VerificationMeta('note_group_id');
-  @override
-  late final GeneratedColumn<String> note_group_id = GeneratedColumn<String>(
-      'note_group_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _note_idMeta =
-      const VerificationMeta('note_id');
-  @override
-  late final GeneratedColumn<String> note_id = GeneratedColumn<String>(
-      'note_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [creator_user_id, note_group_id, note_id, created_at, id, updated_at];
-  @override
-  String get aliasedName => _alias ?? 'r_note2_note_groups';
-  @override
-  String get actualTableName => 'r_note2_note_groups';
-  @override
-  VerificationContext validateIntegrity(Insertable<RNote2NoteGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('note_group_id')) {
-      context.handle(
-          _note_group_idMeta,
-          note_group_id.isAcceptableOrUnknown(
-              data['note_group_id']!, _note_group_idMeta));
-    }
-    if (data.containsKey('note_id')) {
-      context.handle(_note_idMeta,
-          note_id.isAcceptableOrUnknown(data['note_id']!, _note_idMeta));
-    } else if (isInserting) {
-      context.missing(_note_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RNote2NoteGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RNote2NoteGroup(
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      note_group_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}note_group_id']),
-      note_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}note_id'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $RNote2NoteGroupsTable createAlias(String alias) {
-    return $RNote2NoteGroupsTable(attachedDatabase, alias);
-  }
-}
-
-class RNote2NoteGroup extends DataClass implements Insertable<RNote2NoteGroup> {
-  int creator_user_id;
-  String? note_group_id;
-  String note_id;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  RNote2NoteGroup(
-      {required this.creator_user_id,
-      this.note_group_id,
-      required this.note_id,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || note_group_id != null) {
-      map['note_group_id'] = Variable<String>(note_group_id);
-    }
-    map['note_id'] = Variable<String>(note_id);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  RNote2NoteGroupsCompanion toCompanion(bool nullToAbsent) {
-    return RNote2NoteGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      note_group_id: note_group_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(note_group_id),
-      note_id: Value(note_id),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory RNote2NoteGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RNote2NoteGroup(
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      note_group_id: serializer.fromJson<String?>(json['note_group_id']),
-      note_id: serializer.fromJson<String>(json['note_id']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'note_group_id': serializer.toJson<String?>(note_group_id),
-      'note_id': serializer.toJson<String>(note_id),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  RNote2NoteGroup copyWith(
-          {int? creator_user_id,
-          Value<String?> note_group_id = const Value.absent(),
-          String? note_id,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      RNote2NoteGroup(
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        note_group_id:
-            note_group_id.present ? note_group_id.value : this.note_group_id,
-        note_id: note_id ?? this.note_id,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RNote2NoteGroup(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('note_group_id: $note_group_id, ')
-          ..write('note_id: $note_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      creator_user_id, note_group_id, note_id, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RNote2NoteGroup &&
-          other.creator_user_id == this.creator_user_id &&
-          other.note_group_id == this.note_group_id &&
-          other.note_id == this.note_id &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class RNote2NoteGroupsCompanion extends UpdateCompanion<RNote2NoteGroup> {
-  Value<int> creator_user_id;
-  Value<String?> note_group_id;
-  Value<String> note_id;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  RNote2NoteGroupsCompanion({
-    this.creator_user_id = const Value.absent(),
-    this.note_group_id = const Value.absent(),
-    this.note_id = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  RNote2NoteGroupsCompanion.insert({
-    required int creator_user_id,
-    this.note_group_id = const Value.absent(),
-    required String note_id,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
-        note_id = Value(note_id),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<RNote2NoteGroup> custom({
-    Expression<int>? creator_user_id,
-    Expression<String>? note_group_id,
-    Expression<String>? note_id,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (note_group_id != null) 'note_group_id': note_group_id,
-      if (note_id != null) 'note_id': note_id,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  RNote2NoteGroupsCompanion copyWith(
-      {Value<int>? creator_user_id,
-      Value<String?>? note_group_id,
-      Value<String>? note_id,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return RNote2NoteGroupsCompanion(
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      note_group_id: note_group_id ?? this.note_group_id,
-      note_id: note_id ?? this.note_id,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (note_group_id.present) {
-      map['note_group_id'] = Variable<String>(note_group_id.value);
-    }
-    if (note_id.present) {
-      map['note_id'] = Variable<String>(note_id.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RNote2NoteGroupsCompanion(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('note_group_id: $note_group_id, ')
-          ..write('note_id: $note_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2876,7 +2168,7 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -2913,6 +2205,8 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -2946,6 +2240,9 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   $Test2sTable createAlias(String alias) {
     return $Test2sTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class Test2 extends DataClass implements Insertable<Test2> {
@@ -3046,10 +2343,11 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
   Test2sCompanion.insert({
     required String client_content,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : client_content = Value(client_content),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Test2> custom({
     Expression<String>? client_content,
@@ -3135,7 +2433,7 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -3178,6 +2476,8 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -3213,6 +2513,9 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   $TestsTable createAlias(String alias) {
     return $TestsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class Test extends DataClass implements Insertable<Test> {
@@ -3327,11 +2630,12 @@ class TestsCompanion extends UpdateCompanion<Test> {
     required String client_a,
     required String client_content,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : client_a = Value(client_a),
         client_content = Value(client_content),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Test> custom({
     Expression<String>? client_a,
@@ -3390,300 +2694,6 @@ class TestsCompanion extends UpdateCompanion<Test> {
     return (StringBuffer('TestsCompanion(')
           ..write('client_a: $client_a, ')
           ..write('client_content: $client_content, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $DocumentsTable extends Documents
-    with TableInfo<$DocumentsTable, Document> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $DocumentsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _contentMeta =
-      const VerificationMeta('content');
-  @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-      'content', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [content, creator_user_id, created_at, id, updated_at];
-  @override
-  String get aliasedName => _alias ?? 'documents';
-  @override
-  String get actualTableName => 'documents';
-  @override
-  VerificationContext validateIntegrity(Insertable<Document> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('content')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Document map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Document(
-      content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $DocumentsTable createAlias(String alias) {
-    return $DocumentsTable(attachedDatabase, alias);
-  }
-}
-
-class Document extends DataClass implements Insertable<Document> {
-  String content;
-  int creator_user_id;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  Document(
-      {required this.content,
-      required this.creator_user_id,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['content'] = Variable<String>(content);
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  DocumentsCompanion toCompanion(bool nullToAbsent) {
-    return DocumentsCompanion(
-      content: Value(content),
-      creator_user_id: Value(creator_user_id),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory Document.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Document(
-      content: serializer.fromJson<String>(json['content']),
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'content': serializer.toJson<String>(content),
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  Document copyWith(
-          {String? content,
-          int? creator_user_id,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      Document(
-        content: content ?? this.content,
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Document(')
-          ..write('content: $content, ')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(content, creator_user_id, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Document &&
-          other.content == this.content &&
-          other.creator_user_id == this.creator_user_id &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class DocumentsCompanion extends UpdateCompanion<Document> {
-  Value<String> content;
-  Value<int> creator_user_id;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  DocumentsCompanion({
-    this.content = const Value.absent(),
-    this.creator_user_id = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  DocumentsCompanion.insert({
-    required String content,
-    required int creator_user_id,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : content = Value(content),
-        creator_user_id = Value(creator_user_id),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<Document> custom({
-    Expression<String>? content,
-    Expression<int>? creator_user_id,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (content != null) 'content': content,
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  DocumentsCompanion copyWith(
-      {Value<String>? content,
-      Value<int>? creator_user_id,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return DocumentsCompanion(
-      content: content ?? this.content,
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('DocumentsCompanion(')
-          ..write('content: $content, ')
-          ..write('creator_user_id: $creator_user_id, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
           ..write('updated_at: $updated_at')
@@ -3815,6 +2825,8 @@ class $FragmentTemplatesTable extends FragmentTemplates
   static JsonTypeConverter2<FragmentTemplateType, int, int> $convertertype =
       const EnumIndexConverter<FragmentTemplateType>(
           FragmentTemplateType.values);
+  @override
+  bool get withoutRowId => true;
 }
 
 class FragmentTemplate extends DataClass
@@ -4084,12 +3096,6 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> fragment_template_id =
       GeneratedColumn<String>('fragment_template_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _note_idMeta =
-      const VerificationMeta('note_id');
-  @override
-  late final GeneratedColumn<String> note_id = GeneratedColumn<String>(
-      'note_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
   @override
   late final GeneratedColumn<String> tags = GeneratedColumn<String>(
@@ -4125,7 +3131,6 @@ class $FragmentsTable extends Fragments
         creator_user_id,
         father_fragment_id,
         fragment_template_id,
-        note_id,
         tags,
         title,
         created_at,
@@ -4183,10 +3188,6 @@ class $FragmentsTable extends Fragments
           fragment_template_id.isAcceptableOrUnknown(
               data['fragment_template_id']!, _fragment_template_idMeta));
     }
-    if (data.containsKey('note_id')) {
-      context.handle(_note_idMeta,
-          note_id.isAcceptableOrUnknown(data['note_id']!, _note_idMeta));
-    }
     if (data.containsKey('tags')) {
       context.handle(
           _tagsMeta, tags.isAcceptableOrUnknown(data['tags']!, _tagsMeta));
@@ -4241,8 +3242,6 @@ class $FragmentsTable extends Fragments
           DriftSqlType.string, data['${effectivePrefix}father_fragment_id']),
       fragment_template_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}fragment_template_id']),
-      note_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}note_id']),
       tags: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tags'])!,
       title: attachedDatabase.typeMapping
@@ -4260,6 +3259,9 @@ class $FragmentsTable extends Fragments
   $FragmentsTable createAlias(String alias) {
     return $FragmentsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
@@ -4269,7 +3271,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   int creator_user_id;
   String? father_fragment_id;
   String? fragment_template_id;
-  String? note_id;
   String tags;
   String title;
   DateTime created_at;
@@ -4282,7 +3283,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       required this.creator_user_id,
       this.father_fragment_id,
       this.fragment_template_id,
-      this.note_id,
       required this.tags,
       required this.title,
       required this.created_at,
@@ -4300,9 +3300,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     }
     if (!nullToAbsent || fragment_template_id != null) {
       map['fragment_template_id'] = Variable<String>(fragment_template_id);
-    }
-    if (!nullToAbsent || note_id != null) {
-      map['note_id'] = Variable<String>(note_id);
     }
     map['tags'] = Variable<String>(tags);
     map['title'] = Variable<String>(title);
@@ -4324,9 +3321,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       fragment_template_id: fragment_template_id == null && nullToAbsent
           ? const Value.absent()
           : Value(fragment_template_id),
-      note_id: note_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(note_id),
       tags: Value(tags),
       title: Value(title),
       created_at: Value(created_at),
@@ -4347,7 +3341,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           serializer.fromJson<String?>(json['father_fragment_id']),
       fragment_template_id:
           serializer.fromJson<String?>(json['fragment_template_id']),
-      note_id: serializer.fromJson<String?>(json['note_id']),
       tags: serializer.fromJson<String>(json['tags']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
@@ -4365,7 +3358,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'father_fragment_id': serializer.toJson<String?>(father_fragment_id),
       'fragment_template_id': serializer.toJson<String?>(fragment_template_id),
-      'note_id': serializer.toJson<String?>(note_id),
       'tags': serializer.toJson<String>(tags),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
@@ -4381,7 +3373,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           int? creator_user_id,
           Value<String?> father_fragment_id = const Value.absent(),
           Value<String?> fragment_template_id = const Value.absent(),
-          Value<String?> note_id = const Value.absent(),
           String? tags,
           String? title,
           DateTime? created_at,
@@ -4398,7 +3389,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
         fragment_template_id: fragment_template_id.present
             ? fragment_template_id.value
             : this.fragment_template_id,
-        note_id: note_id.present ? note_id.value : this.note_id,
         tags: tags ?? this.tags,
         title: title ?? this.title,
         created_at: created_at ?? this.created_at,
@@ -4414,7 +3404,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_id: $father_fragment_id, ')
           ..write('fragment_template_id: $fragment_template_id, ')
-          ..write('note_id: $note_id, ')
           ..write('tags: $tags, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
@@ -4432,7 +3421,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       creator_user_id,
       father_fragment_id,
       fragment_template_id,
-      note_id,
       tags,
       title,
       created_at,
@@ -4448,7 +3436,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           other.creator_user_id == this.creator_user_id &&
           other.father_fragment_id == this.father_fragment_id &&
           other.fragment_template_id == this.fragment_template_id &&
-          other.note_id == this.note_id &&
           other.tags == this.tags &&
           other.title == this.title &&
           other.created_at == this.created_at &&
@@ -4463,7 +3450,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<int> creator_user_id;
   Value<String?> father_fragment_id;
   Value<String?> fragment_template_id;
-  Value<String?> note_id;
   Value<String> tags;
   Value<String> title;
   Value<DateTime> created_at;
@@ -4476,7 +3462,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.creator_user_id = const Value.absent(),
     this.father_fragment_id = const Value.absent(),
     this.fragment_template_id = const Value.absent(),
-    this.note_id = const Value.absent(),
     this.tags = const Value.absent(),
     this.title = const Value.absent(),
     this.created_at = const Value.absent(),
@@ -4490,7 +3475,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     required int creator_user_id,
     this.father_fragment_id = const Value.absent(),
     this.fragment_template_id = const Value.absent(),
-    this.note_id = const Value.absent(),
     required String tags,
     required String title,
     required DateTime created_at,
@@ -4512,7 +3496,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<int>? creator_user_id,
     Expression<String>? father_fragment_id,
     Expression<String>? fragment_template_id,
-    Expression<String>? note_id,
     Expression<String>? tags,
     Expression<String>? title,
     Expression<DateTime>? created_at,
@@ -4527,7 +3510,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       if (father_fragment_id != null) 'father_fragment_id': father_fragment_id,
       if (fragment_template_id != null)
         'fragment_template_id': fragment_template_id,
-      if (note_id != null) 'note_id': note_id,
       if (tags != null) 'tags': tags,
       if (title != null) 'title': title,
       if (created_at != null) 'created_at': created_at,
@@ -4543,7 +3525,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_id,
       Value<String?>? fragment_template_id,
-      Value<String?>? note_id,
       Value<String>? tags,
       Value<String>? title,
       Value<DateTime>? created_at,
@@ -4556,7 +3537,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       creator_user_id: creator_user_id ?? this.creator_user_id,
       father_fragment_id: father_fragment_id ?? this.father_fragment_id,
       fragment_template_id: fragment_template_id ?? this.fragment_template_id,
-      note_id: note_id ?? this.note_id,
       tags: tags ?? this.tags,
       title: title ?? this.title,
       created_at: created_at ?? this.created_at,
@@ -4587,9 +3567,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       map['fragment_template_id'] =
           Variable<String>(fragment_template_id.value);
     }
-    if (note_id.present) {
-      map['note_id'] = Variable<String>(note_id.value);
-    }
     if (tags.present) {
       map['tags'] = Variable<String>(tags.value);
     }
@@ -4617,7 +3594,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_id: $father_fragment_id, ')
           ..write('fragment_template_id: $fragment_template_id, ')
-          ..write('note_id: $note_id, ')
           ..write('tags: $tags, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
@@ -4860,6 +3836,8 @@ class $MemoryGroupsTable extends MemoryGroups
   static JsonTypeConverter2<ReviewDisplayOrder, int, int>
       $converterreview_display_order =
       const EnumIndexConverter<ReviewDisplayOrder>(ReviewDisplayOrder.values);
+  @override
+  bool get withoutRowId => true;
 }
 
 class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
@@ -5630,6 +4608,8 @@ class $MemoryModelsTable extends MemoryModels
       $converternext_time_algorithm_usage_status =
       const EnumIndexConverter<AlgorithmUsageStatus>(
           AlgorithmUsageStatus.values);
+  @override
+  bool get withoutRowId => true;
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
@@ -6379,385 +5359,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   }
 }
 
-class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $NotesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _contentMeta =
-      const VerificationMeta('content');
-  @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-      'content', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _document_idMeta =
-      const VerificationMeta('document_id');
-  @override
-  late final GeneratedColumn<String> document_id = GeneratedColumn<String>(
-      'document_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _father_note_idMeta =
-      const VerificationMeta('father_note_id');
-  @override
-  late final GeneratedColumn<String> father_note_id = GeneratedColumn<String>(
-      'father_note_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        content,
-        creator_user_id,
-        document_id,
-        father_note_id,
-        created_at,
-        id,
-        updated_at
-      ];
-  @override
-  String get aliasedName => _alias ?? 'notes';
-  @override
-  String get actualTableName => 'notes';
-  @override
-  VerificationContext validateIntegrity(Insertable<Note> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('content')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('document_id')) {
-      context.handle(
-          _document_idMeta,
-          document_id.isAcceptableOrUnknown(
-              data['document_id']!, _document_idMeta));
-    }
-    if (data.containsKey('father_note_id')) {
-      context.handle(
-          _father_note_idMeta,
-          father_note_id.isAcceptableOrUnknown(
-              data['father_note_id']!, _father_note_idMeta));
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Note map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Note(
-      content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      document_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}document_id']),
-      father_note_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}father_note_id']),
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $NotesTable createAlias(String alias) {
-    return $NotesTable(attachedDatabase, alias);
-  }
-}
-
-class Note extends DataClass implements Insertable<Note> {
-  String content;
-  int creator_user_id;
-  String? document_id;
-  String? father_note_id;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  Note(
-      {required this.content,
-      required this.creator_user_id,
-      this.document_id,
-      this.father_note_id,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['content'] = Variable<String>(content);
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || document_id != null) {
-      map['document_id'] = Variable<String>(document_id);
-    }
-    if (!nullToAbsent || father_note_id != null) {
-      map['father_note_id'] = Variable<String>(father_note_id);
-    }
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  NotesCompanion toCompanion(bool nullToAbsent) {
-    return NotesCompanion(
-      content: Value(content),
-      creator_user_id: Value(creator_user_id),
-      document_id: document_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(document_id),
-      father_note_id: father_note_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(father_note_id),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory Note.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Note(
-      content: serializer.fromJson<String>(json['content']),
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      document_id: serializer.fromJson<String?>(json['document_id']),
-      father_note_id: serializer.fromJson<String?>(json['father_note_id']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'content': serializer.toJson<String>(content),
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'document_id': serializer.toJson<String?>(document_id),
-      'father_note_id': serializer.toJson<String?>(father_note_id),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  Note copyWith(
-          {String? content,
-          int? creator_user_id,
-          Value<String?> document_id = const Value.absent(),
-          Value<String?> father_note_id = const Value.absent(),
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      Note(
-        content: content ?? this.content,
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        document_id: document_id.present ? document_id.value : this.document_id,
-        father_note_id:
-            father_note_id.present ? father_note_id.value : this.father_note_id,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Note(')
-          ..write('content: $content, ')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('document_id: $document_id, ')
-          ..write('father_note_id: $father_note_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(content, creator_user_id, document_id,
-      father_note_id, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Note &&
-          other.content == this.content &&
-          other.creator_user_id == this.creator_user_id &&
-          other.document_id == this.document_id &&
-          other.father_note_id == this.father_note_id &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class NotesCompanion extends UpdateCompanion<Note> {
-  Value<String> content;
-  Value<int> creator_user_id;
-  Value<String?> document_id;
-  Value<String?> father_note_id;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  NotesCompanion({
-    this.content = const Value.absent(),
-    this.creator_user_id = const Value.absent(),
-    this.document_id = const Value.absent(),
-    this.father_note_id = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  NotesCompanion.insert({
-    required String content,
-    required int creator_user_id,
-    this.document_id = const Value.absent(),
-    this.father_note_id = const Value.absent(),
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : content = Value(content),
-        creator_user_id = Value(creator_user_id),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<Note> custom({
-    Expression<String>? content,
-    Expression<int>? creator_user_id,
-    Expression<String>? document_id,
-    Expression<String>? father_note_id,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (content != null) 'content': content,
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (document_id != null) 'document_id': document_id,
-      if (father_note_id != null) 'father_note_id': father_note_id,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  NotesCompanion copyWith(
-      {Value<String>? content,
-      Value<int>? creator_user_id,
-      Value<String?>? document_id,
-      Value<String?>? father_note_id,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return NotesCompanion(
-      content: content ?? this.content,
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      document_id: document_id ?? this.document_id,
-      father_note_id: father_note_id ?? this.father_note_id,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (document_id.present) {
-      map['document_id'] = Variable<String>(document_id.value);
-    }
-    if (father_note_id.present) {
-      map['father_note_id'] = Variable<String>(father_note_id.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('NotesCompanion(')
-          ..write('content: $content, ')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('document_id: $document_id, ')
-          ..write('father_note_id: $father_note_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $ShorthandsTable extends Shorthands
     with TableInfo<$ShorthandsTable, Shorthand> {
   @override
@@ -6866,6 +5467,9 @@ class $ShorthandsTable extends Shorthands
   $ShorthandsTable createAlias(String alias) {
     return $ShorthandsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class Shorthand extends DataClass implements Insertable<Shorthand> {
@@ -7044,355 +5648,6 @@ class ShorthandsCompanion extends UpdateCompanion<Shorthand> {
     return (StringBuffer('ShorthandsCompanion(')
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $DocumentGroupsTable extends DocumentGroups
-    with TableInfo<$DocumentGroupsTable, DocumentGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $DocumentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _father_document_groups_idMeta =
-      const VerificationMeta('father_document_groups_id');
-  @override
-  late final GeneratedColumn<String> father_document_groups_id =
-      GeneratedColumn<String>('father_document_groups_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        creator_user_id,
-        father_document_groups_id,
-        title,
-        created_at,
-        id,
-        updated_at
-      ];
-  @override
-  String get aliasedName => _alias ?? 'document_groups';
-  @override
-  String get actualTableName => 'document_groups';
-  @override
-  VerificationContext validateIntegrity(Insertable<DocumentGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('father_document_groups_id')) {
-      context.handle(
-          _father_document_groups_idMeta,
-          father_document_groups_id.isAcceptableOrUnknown(
-              data['father_document_groups_id']!,
-              _father_document_groups_idMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  DocumentGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DocumentGroup(
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      father_document_groups_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}father_document_groups_id']),
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $DocumentGroupsTable createAlias(String alias) {
-    return $DocumentGroupsTable(attachedDatabase, alias);
-  }
-}
-
-class DocumentGroup extends DataClass implements Insertable<DocumentGroup> {
-  int creator_user_id;
-  String? father_document_groups_id;
-  String title;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  DocumentGroup(
-      {required this.creator_user_id,
-      this.father_document_groups_id,
-      required this.title,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || father_document_groups_id != null) {
-      map['father_document_groups_id'] =
-          Variable<String>(father_document_groups_id);
-    }
-    map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  DocumentGroupsCompanion toCompanion(bool nullToAbsent) {
-    return DocumentGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      father_document_groups_id:
-          father_document_groups_id == null && nullToAbsent
-              ? const Value.absent()
-              : Value(father_document_groups_id),
-      title: Value(title),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory DocumentGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return DocumentGroup(
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      father_document_groups_id:
-          serializer.fromJson<String?>(json['father_document_groups_id']),
-      title: serializer.fromJson<String>(json['title']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'father_document_groups_id':
-          serializer.toJson<String?>(father_document_groups_id),
-      'title': serializer.toJson<String>(title),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  DocumentGroup copyWith(
-          {int? creator_user_id,
-          Value<String?> father_document_groups_id = const Value.absent(),
-          String? title,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      DocumentGroup(
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        father_document_groups_id: father_document_groups_id.present
-            ? father_document_groups_id.value
-            : this.father_document_groups_id,
-        title: title ?? this.title,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('DocumentGroup(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('father_document_groups_id: $father_document_groups_id, ')
-          ..write('title: $title, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(creator_user_id, father_document_groups_id,
-      title, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is DocumentGroup &&
-          other.creator_user_id == this.creator_user_id &&
-          other.father_document_groups_id == this.father_document_groups_id &&
-          other.title == this.title &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class DocumentGroupsCompanion extends UpdateCompanion<DocumentGroup> {
-  Value<int> creator_user_id;
-  Value<String?> father_document_groups_id;
-  Value<String> title;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  DocumentGroupsCompanion({
-    this.creator_user_id = const Value.absent(),
-    this.father_document_groups_id = const Value.absent(),
-    this.title = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  DocumentGroupsCompanion.insert({
-    required int creator_user_id,
-    this.father_document_groups_id = const Value.absent(),
-    required String title,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
-        title = Value(title),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<DocumentGroup> custom({
-    Expression<int>? creator_user_id,
-    Expression<String>? father_document_groups_id,
-    Expression<String>? title,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (father_document_groups_id != null)
-        'father_document_groups_id': father_document_groups_id,
-      if (title != null) 'title': title,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  DocumentGroupsCompanion copyWith(
-      {Value<int>? creator_user_id,
-      Value<String?>? father_document_groups_id,
-      Value<String>? title,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return DocumentGroupsCompanion(
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      father_document_groups_id:
-          father_document_groups_id ?? this.father_document_groups_id,
-      title: title ?? this.title,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (father_document_groups_id.present) {
-      map['father_document_groups_id'] =
-          Variable<String>(father_document_groups_id.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('DocumentGroupsCompanion(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('father_document_groups_id: $father_document_groups_id, ')
-          ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
           ..write('updated_at: $updated_at')
@@ -7613,6 +5868,9 @@ class $FragmentGroupsTable extends FragmentGroups
   $FragmentGroupsTable createAlias(String alias) {
     return $FragmentGroupsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
@@ -7930,351 +6188,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   }
 }
 
-class $NoteGroupsTable extends NoteGroups
-    with TableInfo<$NoteGroupsTable, NoteGroup> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $NoteGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _father_note_groups_idMeta =
-      const VerificationMeta('father_note_groups_id');
-  @override
-  late final GeneratedColumn<String> father_note_groups_id =
-      GeneratedColumn<String>('father_note_groups_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        creator_user_id,
-        father_note_groups_id,
-        title,
-        created_at,
-        id,
-        updated_at
-      ];
-  @override
-  String get aliasedName => _alias ?? 'note_groups';
-  @override
-  String get actualTableName => 'note_groups';
-  @override
-  VerificationContext validateIntegrity(Insertable<NoteGroup> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('father_note_groups_id')) {
-      context.handle(
-          _father_note_groups_idMeta,
-          father_note_groups_id.isAcceptableOrUnknown(
-              data['father_note_groups_id']!, _father_note_groups_idMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  NoteGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return NoteGroup(
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      father_note_groups_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}father_note_groups_id']),
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $NoteGroupsTable createAlias(String alias) {
-    return $NoteGroupsTable(attachedDatabase, alias);
-  }
-}
-
-class NoteGroup extends DataClass implements Insertable<NoteGroup> {
-  int creator_user_id;
-  String? father_note_groups_id;
-  String title;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  NoteGroup(
-      {required this.creator_user_id,
-      this.father_note_groups_id,
-      required this.title,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || father_note_groups_id != null) {
-      map['father_note_groups_id'] = Variable<String>(father_note_groups_id);
-    }
-    map['title'] = Variable<String>(title);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  NoteGroupsCompanion toCompanion(bool nullToAbsent) {
-    return NoteGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
-      father_note_groups_id: father_note_groups_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(father_note_groups_id),
-      title: Value(title),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory NoteGroup.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return NoteGroup(
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      father_note_groups_id:
-          serializer.fromJson<String?>(json['father_note_groups_id']),
-      title: serializer.fromJson<String>(json['title']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'father_note_groups_id':
-          serializer.toJson<String?>(father_note_groups_id),
-      'title': serializer.toJson<String>(title),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  NoteGroup copyWith(
-          {int? creator_user_id,
-          Value<String?> father_note_groups_id = const Value.absent(),
-          String? title,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      NoteGroup(
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        father_note_groups_id: father_note_groups_id.present
-            ? father_note_groups_id.value
-            : this.father_note_groups_id,
-        title: title ?? this.title,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('NoteGroup(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('father_note_groups_id: $father_note_groups_id, ')
-          ..write('title: $title, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(creator_user_id, father_note_groups_id, title,
-      created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is NoteGroup &&
-          other.creator_user_id == this.creator_user_id &&
-          other.father_note_groups_id == this.father_note_groups_id &&
-          other.title == this.title &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class NoteGroupsCompanion extends UpdateCompanion<NoteGroup> {
-  Value<int> creator_user_id;
-  Value<String?> father_note_groups_id;
-  Value<String> title;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  NoteGroupsCompanion({
-    this.creator_user_id = const Value.absent(),
-    this.father_note_groups_id = const Value.absent(),
-    this.title = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  NoteGroupsCompanion.insert({
-    required int creator_user_id,
-    this.father_note_groups_id = const Value.absent(),
-    required String title,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
-        title = Value(title),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<NoteGroup> custom({
-    Expression<int>? creator_user_id,
-    Expression<String>? father_note_groups_id,
-    Expression<String>? title,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (father_note_groups_id != null)
-        'father_note_groups_id': father_note_groups_id,
-      if (title != null) 'title': title,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  NoteGroupsCompanion copyWith(
-      {Value<int>? creator_user_id,
-      Value<String?>? father_note_groups_id,
-      Value<String>? title,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return NoteGroupsCompanion(
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      father_note_groups_id:
-          father_note_groups_id ?? this.father_note_groups_id,
-      title: title ?? this.title,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (father_note_groups_id.present) {
-      map['father_note_groups_id'] =
-          Variable<String>(father_note_groups_id.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('NoteGroupsCompanion(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('father_note_groups_id: $father_note_groups_id, ')
-          ..write('title: $title, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $UserCommentsTable extends UserComments
     with TableInfo<$UserCommentsTable, UserComment> {
   @override
@@ -8315,7 +6228,7 @@ class $UserCommentsTable extends UserComments
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -8379,6 +6292,8 @@ class $UserCommentsTable extends UserComments
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -8418,6 +6333,9 @@ class $UserCommentsTable extends UserComments
   $UserCommentsTable createAlias(String alias) {
     return $UserCommentsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class UserComment extends DataClass implements Insertable<UserComment> {
@@ -8570,11 +6488,12 @@ class UserCommentsCompanion extends UpdateCompanion<UserComment> {
     this.fragment_group_id = const Value.absent(),
     this.fragment_id = const Value.absent(),
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : comment_content = Value(comment_content),
         commentator_user_id = Value(commentator_user_id),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<UserComment> custom({
     Expression<String>? comment_content,
@@ -8692,7 +6611,7 @@ class $UserLikesTable extends UserLikes
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -8747,6 +6666,8 @@ class $UserLikesTable extends UserLikes
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -8784,6 +6705,9 @@ class $UserLikesTable extends UserLikes
   $UserLikesTable createAlias(String alias) {
     return $UserLikesTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class UserLike extends DataClass implements Insertable<UserLike> {
@@ -8922,10 +6846,11 @@ class UserLikesCompanion extends UpdateCompanion<UserLike> {
     this.fragment_id = const Value.absent(),
     required int liker_user_id,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : liker_user_id = Value(liker_user_id),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<UserLike> custom({
     Expression<String>? fragment_group_id,
@@ -9042,7 +6967,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -9093,6 +7018,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -9134,6 +7061,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   $UsersTable createAlias(String alias) {
     return $UsersTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class User extends DataClass implements Insertable<User> {
@@ -9299,10 +7229,11 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.phone = const Value.absent(),
     required String username,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required int id,
     required DateTime updated_at,
   })  : username = Value(username),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<User> custom({
     Expression<int>? age,
@@ -9402,25 +7333,17 @@ abstract class _$DriftDb extends GeneratedDatabase {
   late final $SyncsTable syncs = $SyncsTable(this);
   late final $FragmentMemoryInfosTable fragmentMemoryInfos =
       $FragmentMemoryInfosTable(this);
-  late final $RDocument2DocumentGroupsTable rDocument2DocumentGroups =
-      $RDocument2DocumentGroupsTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
-  late final $RNote2NoteGroupsTable rNote2NoteGroups =
-      $RNote2NoteGroupsTable(this);
   late final $Test2sTable test2s = $Test2sTable(this);
   late final $TestsTable tests = $TestsTable(this);
-  late final $DocumentsTable documents = $DocumentsTable(this);
   late final $FragmentTemplatesTable fragmentTemplates =
       $FragmentTemplatesTable(this);
   late final $FragmentsTable fragments = $FragmentsTable(this);
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
-  late final $NotesTable notes = $NotesTable(this);
   late final $ShorthandsTable shorthands = $ShorthandsTable(this);
-  late final $DocumentGroupsTable documentGroups = $DocumentGroupsTable(this);
   late final $FragmentGroupsTable fragmentGroups = $FragmentGroupsTable(this);
-  late final $NoteGroupsTable noteGroups = $NoteGroupsTable(this);
   late final $UserCommentsTable userComments = $UserCommentsTable(this);
   late final $UserLikesTable userLikes = $UserLikesTable(this);
   late final $UsersTable users = $UsersTable(this);
@@ -9440,21 +7363,15 @@ abstract class _$DriftDb extends GeneratedDatabase {
         clientSyncInfos,
         syncs,
         fragmentMemoryInfos,
-        rDocument2DocumentGroups,
         rFragment2FragmentGroups,
-        rNote2NoteGroups,
         test2s,
         tests,
-        documents,
         fragmentTemplates,
         fragments,
         memoryGroups,
         memoryModels,
-        notes,
         shorthands,
-        documentGroups,
         fragmentGroups,
-        noteGroups,
         userComments,
         userLikes,
         users
