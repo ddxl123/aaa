@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart' as m;
 import 'package:flutter_quill/flutter_quill.dart';
+
 class CustomBlockEmbed extends BlockEmbed {
   const CustomBlockEmbed(String type, String data) : super(type, data);
 
@@ -65,7 +66,7 @@ class _DemoToolBarState extends m.State<DemoToolBar> {
       onPressed: () {
         final index = widget.quillController.selection.baseOffset;
         final length = widget.quillController.selection.extentOffset - index;
-        widget.quillController.replaceText(index, length, BlockEmbed.custom(DemoBlockEmbed.fromDocument(widget.quillController.document)), null);
+        widget.quillController.replaceText(index, length, DemoBlockEmbed.fromDocument(widget.quillController.document), null);
         widget.quillController.moveCursorToEnd();
       },
     );
