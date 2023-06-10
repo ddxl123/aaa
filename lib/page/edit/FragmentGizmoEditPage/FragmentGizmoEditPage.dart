@@ -1,11 +1,14 @@
-import 'package:aaa/page/edit/FragmentGizmoEditPageAbController.dart';
-import 'package:aaa/single_dialog/showPrivatePublishDialog.dart';
+import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
+import 'FragmentGizmoEditPageAbController.dart';
+import 'custom_embeds/DemoEmbed.dart';
 
 /// 创建或编辑。
 class FragmentGizmoEditPage extends StatelessWidget {
@@ -82,6 +85,10 @@ class FragmentGizmoEditPage extends StatelessWidget {
                     focusNode: FocusNode(),
                     padding: const EdgeInsets.all(10),
                     scrollable: true,
+                    embedBuilders: [
+                      ...FlutterQuillEmbeds.builders(),
+                      DemoEmbedBuilder(),
+                    ],
                   );
                 },
               ),
@@ -180,6 +187,10 @@ class FragmentGizmoEditPage extends StatelessWidget {
                     ? q.QuillToolbar.basic(
                         multiRowsDisplay: false,
                         controller: c.quillController,
+                        embedButtons: [
+                          ...FlutterQuillEmbeds.buttons(),
+                          (controller, toolbarIconSize, iconTheme, dialogTheme) => DemoToolBar(controller),
+                        ],
                       )
                     : Container();
               },

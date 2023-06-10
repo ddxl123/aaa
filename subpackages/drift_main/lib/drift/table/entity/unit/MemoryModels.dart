@@ -9,6 +9,10 @@ class MemoryModels extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  @override
+  bool get withoutRowId => true;
+
+
   TextColumn get button_algorithm_a => text().named("button_algorithm_a").nullable()();
 
   TextColumn get button_algorithm_b => text().named("button_algorithm_b").nullable()();

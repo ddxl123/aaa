@@ -9,6 +9,7 @@ class Tests extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+
   TextColumn get client_a => text().named("client_a")();
 
   TextColumn get client_content => text().named("client_content")();

@@ -9,6 +9,10 @@ class FragmentTemplates extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  @override
+  bool get withoutRowId => true;
+
+
   TextColumn get content => text().named("content")();
 
   @ReferenceTo([Users])

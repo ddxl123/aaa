@@ -9,6 +9,7 @@ class UserComments extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+
   TextColumn get comment_content => text().named("comment_content")();
 
   @ReferenceTo([Users])

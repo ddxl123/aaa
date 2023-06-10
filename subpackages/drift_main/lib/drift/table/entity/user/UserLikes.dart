@@ -9,6 +9,7 @@ class UserLikes extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+
   @ReferenceTo([FragmentGroups])
   TextColumn get fragment_group_id => text().named("fragment_group_id").nullable()();
 

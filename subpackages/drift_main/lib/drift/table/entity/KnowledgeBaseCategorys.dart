@@ -9,6 +9,7 @@ class KnowledgeBaseCategorys extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+
   TextColumn get categorys => text().named("categorys")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();

@@ -9,6 +9,7 @@ class Test2s extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+
   TextColumn get client_content => text().named("client_content")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();

@@ -5,7 +5,7 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
-import '../page/edit/FragmentGizmoEditPage.dart';
+import '../page/edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
 import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import '../page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPage.dart';
 import '../page/edit/edit_page_type.dart';

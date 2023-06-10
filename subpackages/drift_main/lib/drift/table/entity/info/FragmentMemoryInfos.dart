@@ -9,6 +9,10 @@ class FragmentMemoryInfos extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  @override
+  bool get withoutRowId => true;
+
+
   TextColumn get actual_show_time => text().named("actual_show_time")();
 
   TextColumn get button_values => text().named("button_values")();

@@ -17,13 +17,13 @@ class Crt {
   static KnowledgeBaseCategorysCompanion knowledgeBaseCategorysCompanion({
     required String categorys,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return KnowledgeBaseCategorysCompanion(
       categorys: Value(categorys),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -33,7 +33,7 @@ class Crt {
     required Value<DateTime?> recent_sync_time,
     required Value<String?> token,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return ClientSyncInfosCompanion(
@@ -41,7 +41,7 @@ class Crt {
       recent_sync_time: recent_sync_time,
       token: token,
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -52,7 +52,7 @@ class Crt {
     required String sync_table_name,
     required int tag,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return SyncsCompanion(
@@ -61,7 +61,7 @@ class Crt {
       sync_table_name: Value(sync_table_name),
       tag: Value(tag),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -121,13 +121,13 @@ class Crt {
   static Test2sCompanion test2sCompanion({
     required String client_content,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return Test2sCompanion(
       client_content: Value(client_content),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -136,14 +136,14 @@ class Crt {
     required String client_a,
     required String client_content,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return TestsCompanion(
       client_a: Value(client_a),
       client_content: Value(client_content),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -321,7 +321,7 @@ class Crt {
     required Value<String?> fragment_group_id,
     required Value<String?> fragment_id,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return UserCommentsCompanion(
@@ -330,7 +330,7 @@ class Crt {
       fragment_group_id: fragment_group_id,
       fragment_id: fragment_id,
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -340,7 +340,7 @@ class Crt {
     required Value<String?> fragment_id,
     required int liker_user_id,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return UserLikesCompanion(
@@ -348,7 +348,7 @@ class Crt {
       fragment_id: fragment_id,
       liker_user_id: Value(liker_user_id),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -360,7 +360,7 @@ class Crt {
     required Value<String?> phone,
     required String username,
     DateTime? created_at,
-    int? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return UsersCompanion(
@@ -370,7 +370,7 @@ class Crt {
       phone: phone,
       username: Value(username),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }

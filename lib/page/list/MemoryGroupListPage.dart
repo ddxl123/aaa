@@ -26,6 +26,7 @@ class MemoryGroupListPage extends StatelessWidget {
               slivers: [
                 SliverToBoxAdapter(child: SizedBox(height: 30)),
                 _memoryGroupGizmoList(c.context),
+                SliverToBoxAdapter(child: SizedBox(height: 80)),
               ],
             ),
             onRefresh: () async {

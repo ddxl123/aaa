@@ -156,7 +156,7 @@ class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -191,8 +191,6 @@ class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -226,9 +224,6 @@ class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
   $KnowledgeBaseCategorysTable createAlias(String alias) {
     return $KnowledgeBaseCategorysTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class KnowledgeBaseCategory extends DataClass
@@ -331,11 +326,10 @@ class KnowledgeBaseCategorysCompanion
   KnowledgeBaseCategorysCompanion.insert({
     required String categorys,
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : categorys = Value(categorys),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<KnowledgeBaseCategory> custom({
     Expression<String>? categorys,
@@ -429,7 +423,7 @@ class $ClientSyncInfosTable extends ClientSyncInfos
       'id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _updated_atMeta =
@@ -478,8 +472,6 @@ class $ClientSyncInfosTable extends ClientSyncInfos
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -517,9 +509,6 @@ class $ClientSyncInfosTable extends ClientSyncInfos
   $ClientSyncInfosTable createAlias(String alias) {
     return $ClientSyncInfosTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
@@ -657,11 +646,10 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
     this.recent_sync_time = const Value.absent(),
     this.token = const Value.absent(),
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : device_info = Value(device_info),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<ClientSyncInfo> custom({
     Expression<String>? device_info,
@@ -777,7 +765,7 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
       'id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _updated_atMeta =
@@ -836,8 +824,6 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -881,8 +867,6 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
 
   static JsonTypeConverter2<SyncCurdType, int, int> $convertersync_curd_type =
       const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
-  @override
-  bool get withoutRowId => true;
 }
 
 class Sync extends DataClass implements Insertable<Sync> {
@@ -1028,14 +1012,13 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     required String sync_table_name,
     required int tag,
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : row_id = Value(row_id),
         sync_curd_type = Value(sync_curd_type),
         sync_table_name = Value(sync_table_name),
         tag = Value(tag),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Sync> custom({
     Expression<String>? row_id,
@@ -2168,7 +2151,7 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -2205,8 +2188,6 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -2240,9 +2221,6 @@ class $Test2sTable extends Test2s with TableInfo<$Test2sTable, Test2> {
   $Test2sTable createAlias(String alias) {
     return $Test2sTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class Test2 extends DataClass implements Insertable<Test2> {
@@ -2343,11 +2321,10 @@ class Test2sCompanion extends UpdateCompanion<Test2> {
   Test2sCompanion.insert({
     required String client_content,
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : client_content = Value(client_content),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Test2> custom({
     Expression<String>? client_content,
@@ -2433,7 +2410,7 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -2476,8 +2453,6 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -2513,9 +2488,6 @@ class $TestsTable extends Tests with TableInfo<$TestsTable, Test> {
   $TestsTable createAlias(String alias) {
     return $TestsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class Test extends DataClass implements Insertable<Test> {
@@ -2630,12 +2602,11 @@ class TestsCompanion extends UpdateCompanion<Test> {
     required String client_a,
     required String client_content,
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : client_a = Value(client_a),
         client_content = Value(client_content),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Test> custom({
     Expression<String>? client_a,
@@ -6228,7 +6199,7 @@ class $UserCommentsTable extends UserComments
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -6292,8 +6263,6 @@ class $UserCommentsTable extends UserComments
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -6333,9 +6302,6 @@ class $UserCommentsTable extends UserComments
   $UserCommentsTable createAlias(String alias) {
     return $UserCommentsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class UserComment extends DataClass implements Insertable<UserComment> {
@@ -6488,12 +6454,11 @@ class UserCommentsCompanion extends UpdateCompanion<UserComment> {
     this.fragment_group_id = const Value.absent(),
     this.fragment_id = const Value.absent(),
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : comment_content = Value(comment_content),
         commentator_user_id = Value(commentator_user_id),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<UserComment> custom({
     Expression<String>? comment_content,
@@ -6611,7 +6576,7 @@ class $UserLikesTable extends UserLikes
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -6666,8 +6631,6 @@ class $UserLikesTable extends UserLikes
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -6705,9 +6668,6 @@ class $UserLikesTable extends UserLikes
   $UserLikesTable createAlias(String alias) {
     return $UserLikesTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class UserLike extends DataClass implements Insertable<UserLike> {
@@ -6846,11 +6806,10 @@ class UserLikesCompanion extends UpdateCompanion<UserLike> {
     this.fragment_id = const Value.absent(),
     required int liker_user_id,
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : liker_user_id = Value(liker_user_id),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<UserLike> custom({
     Expression<String>? fragment_group_id,
@@ -6967,7 +6926,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -7018,8 +6977,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -7061,9 +7018,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   $UsersTable createAlias(String alias) {
     return $UsersTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class User extends DataClass implements Insertable<User> {
@@ -7229,11 +7183,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.phone = const Value.absent(),
     required String username,
     required DateTime created_at,
-    required int id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : username = Value(username),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<User> custom({
     Expression<int>? age,

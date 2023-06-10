@@ -9,6 +9,10 @@ class FragmentGroups extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  @override
+  bool get withoutRowId => true;
+
+
   BoolColumn get be_private => boolean().named("be_private")();
 
   BoolColumn get be_publish => boolean().named("be_publish")();
