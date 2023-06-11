@@ -1,73 +1,57 @@
-import 'dart:convert';
+import 'dart:math';
 
-import 'package:flutter/material.dart' as m;
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
-class CustomBlockEmbed extends BlockEmbed {
-  const CustomBlockEmbed(String type, String data) : super(type, data);
-
-  String toJsonString() => jsonEncode(toJson());
-
-  static CustomBlockEmbed fromJsonString(String data) {
-    final embeddable = Embeddable.fromJson(jsonDecode(data));
-    return CustomBlockEmbed(embeddable.type, embeddable.data);
-  }
-}
-
-class DemoBlockEmbed extends CustomBlockEmbed {
-  const DemoBlockEmbed(String data) : super(demoType, data);
+class DemoBlockEmbed extends q.Embeddable {
+  const DemoBlockEmbed(Map<String, dynamic> data) : super(demoType, data);
 
   static const String demoType = 'demo';
-
-  static DemoBlockEmbed fromDocument(Document document) => DemoBlockEmbed(jsonEncode(document.toDelta().toJson()));
-
-  Document get document => Document.fromJson(jsonDecode(data));
 }
 
-class DemoEmbedBuilder extends EmbedBuilder {
+class DemoEmbedBuilder extends q.EmbedBuilder {
   @override
-  String get key => 'demo';
+  String get key => DemoBlockEmbed.demoType;
 
   @override
-  m.Widget build(
-    m.BuildContext context,
-    QuillController controller,
-    Embed node,
-    bool readOnly,
-    bool inline,
-    m.TextStyle textStyle,
-  ) {
-    return m.Row(
-      mainAxisAlignment: m.MainAxisAlignment.center,
+  Widget build(BuildContext context, q.QuillController controller, q.Embed node, bool readOnly, bool inline, TextStyle textStyle) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        m.TextButton(
-          onPressed: () {},
-          child: m.Text("aaaaaaaaaaaaa"),
-        )
+        RawMaterialButton(
+          child: Text(node.value.data["name"]),
+          onPressed: () {
+            controller.replaceText(node.offset, node.length, DemoBlockEmbed({"name": Random().nextInt(100).toString()}), null);
+            controller.moveCursorToEnd();
+          },
+        ),
       ],
     );
   }
 }
 
-class DemoToolBar extends m.StatefulWidget {
+class DemoToolBar extends StatefulWidget {
   DemoToolBar(this.quillController);
 
-  final QuillController quillController;
+  final q.QuillController quillController;
 
   @override
-  m.State<DemoToolBar> createState() => _DemoToolBarState();
+  State<DemoToolBar> createState() => _DemoToolBarState();
 }
 
-class _DemoToolBarState extends m.State<DemoToolBar> {
+class _DemoToolBarState extends State<DemoToolBar> {
   @override
-  m.Widget build(m.BuildContext context) {
-    return m.TextButton(
-      child: m.Text("data"),
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: Text("data"),
       onPressed: () {
         final index = widget.quillController.selection.baseOffset;
         final length = widget.quillController.selection.extentOffset - index;
-        widget.quillController.replaceText(index, length, DemoBlockEmbed.fromDocument(widget.quillController.document), null);
-        widget.quillController.moveCursorToEnd();
+        final block = DemoBlockEmbed({
+          "name": "顶顶顶",
+        });
+        widget.quillController.replaceText(index, length, block, null);
       },
     );
   }
