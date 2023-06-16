@@ -19,6 +19,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     ).run();
   }
 
+  /// TODO: 所有 reset 不再使用这样的函数，而是直接使用 [RefXXX]，例如直接使用 [RefFragments]。
   /// 修改 [originalFragmentReset]。
   Future<void> resetFragment({
     required FutureFunction originalFragmentReset,

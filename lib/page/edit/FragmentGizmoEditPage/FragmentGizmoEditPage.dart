@@ -32,7 +32,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGizmoEditPageAbController>(
       putController: FragmentGizmoEditPageAbController(
-        initFragmentAb: initFragmentAb,
+        initFragment: initFragmentAb,
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
         initFragmentGroupChain: initFragmentGroupChain,
@@ -52,7 +52,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
       leading: IconButton(
         icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
         onPressed: () async {
-          final result = await c.currentPerformer().isExistModified(fragmentGizmoEditPageAbController: c);
+          final result = await c.currentPerformerAb().isExistModified(fragmentGizmoEditPageAbController: c);
           if (result != null) {
             SmartDialog.showToast(result);
           } else {
@@ -107,7 +107,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                           AbwBuilder(
                             builder: (abwSingle) {
                               return IconButton(
-                                style: c.currentPerformer(abwSingle).fragmentGroupChains.isEmpty
+                                style: c.currentPerformerAb(abwSingle).fragmentGroupChains.isEmpty
                                     ? const ButtonStyle(
                                         backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
                                       )

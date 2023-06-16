@@ -8,31 +8,136 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
+enum FragmentPerformerType {
+  editable,
+  readonly,
+  perform,
+}
+
+enum LastOrNext {
+  last,
+  next,
+}
+
 class FragmentPerformer {
-  FragmentPerformer({required this.fragmentAb});
+  FragmentPerformer({required this.fragment});
 
-  /// 为 null 表示创建模式，否则为阅读或修改模式。
-  Ab<Fragment>? fragmentAb;
-
-  static const String richContent = '[{"insert":"\\n"}]';
-
-  /// 当前操作碎片的内容，只是用来存储创建模式时的内容，其他模式都是用 document 中提取。
-  String content = richContent;
+  /// 为 null 表示为创建碎片。
+  Fragment? fragment;
 
   /// 当前操作碎片所存放的碎片组位置，root 组无需存放。
   ///
   /// 使用嵌套数组的原因：一个碎片可能被存放、拷贝到多个碎片组内。
-  List<List<FragmentGroup>> fragmentGroupChains = [];
+  final List<List<FragmentGroup>> fragmentGroupChains = [];
 
   /// 当前操作碎片所使用的模板。
   FragmentTemplate? fragmentTemplate;
 
-  final fragmentTag = <String>[];
+  // static const String richContent = '[{"insert":"\\n"}]';
+  //
+  // /// 当前操作碎片的内容，只是用来存储创建模式时的内容，其他模式都是用 document 中提取。
+  // String content = richContent;
 
+  // final fragmentTag = <String>[];
+
+  /// 从本地数据库中重新加载当前 [fragment]。
+  ///
+  /// [recent] 表示最近一个操作的 [FragmentPerformer]，若为 null，则表示没有最近的。
+  ///
+  /// 返回是否存在变动。
+  Future<bool> reload({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController, required FragmentPerformer? recent}) async {
+    if (fragment == null) {
+      // 保留上一次设置。
+      if (recent != null) {
+        fragmentGroupChains.addAll(recent.fragmentGroupChains);
+        fragmentTemplate = recent.fragmentTemplate;
+        return true;
+      }
+      return false;
+    } else {
+      final newFragment = await db.generalQueryDAO.queryFragmentById(id: fragment!.id);
+      if (fragment == newFragment) {
+        return false;
+      }
+
+      fragment = newFragment;
+      fragmentGizmoEditPageAbController.quillController.clear();
+      fragmentGizmoEditPageAbController.quillController.document = q.Document.fromJson(jsonDecode(fragment!.content));
+
+      final chains = await db.generalQueryDAO.queryFragmentInWhichFragmentGroupChain(fragment: fragment!);
+      fragmentGroupChains.clear();
+      fragmentGroupChains.addAll(chains);
+
+      if (fragment!.fragment_template_id == null) {
+        fragmentTemplate = null;
+      } else {
+        fragmentTemplate = await db.generalQueryDAO.queryFragmentTemplateById(fragmentTemplateId: fragment!.fragment_template_id!);
+      }
+      return true;
+    }
+  }
+
+  /// 将当前 [fragment]、[fragmentTemplate] 等进行插入、更新。
+  ///
+  /// 如果 [fragment] 为 null，则插入。
+  ///
+  /// 如果存在修改，则更新。
+  ///
+  /// 如果不存在修改，则不修改。
+  ///
+  /// 返回是否存在修改。
+  Future<bool> save({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
+    final modifyMessage = await isExistModified(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
+    if (modifyMessage == null) {
+      return false;
+    }
+    final st = await SyncTag.create();
+    if (fragment == null) {
+      final newFragment = await db.insertDAO.insertFragment(
+        willFragmentsCompanion: Crt.fragmentsCompanion(
+          content: jsonEncode(fragmentGizmoEditPageAbController.quillController.document.toDelta().toJson()),
+          creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+          father_fragment_id: null.toValue(),
+          fragment_template_id: (fragmentTemplate?.id).toValue(),
+          client_be_selected: false,
+          title: fragmentGizmoEditPageAbController.parseTitle(),
+          tags: jsonEncode([]),
+          be_sep_publish: false,
+        ),
+        whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
+        syncTag: st,
+      );
+      fragment = newFragment;
+      return true;
+    } else {
+      await db.updateDAO.resetFragment(
+        originalFragmentReset: () async {
+          await fragment!.reset(
+            content: jsonEncode(fragmentGizmoEditPageAbController.quillController.document.toDelta().toJson()).toValue(),
+            creator_user_id: toAbsent(),
+            father_fragment_id: toAbsent(),
+            fragment_template_id: (fragmentTemplate?.id).toValue(),
+            client_be_selected: toAbsent(),
+            title: fragmentGizmoEditPageAbController.parseTitle().toValue(),
+            tags: jsonEncode([]).toValue(),
+            syncTag: st,
+            be_sep_publish: false.toValue(),
+          );
+        },
+        syncTag: st,
+      );
+      fragment!.refreshForce();
+      return fragment!();
+    }
+  }
+
+  /// 如果存在修改，则返回"xxx存在修改"。
+  ///
+  /// 如果不存在修改，则返回 null。
   Future<String?> isExistModified({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
-    final isEqualContentOk = isEqualContent(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    final isEqualFragmentGroupChainsOk = await isEqualFragmentGroupChains(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    final isEqualFragmentTemplateOk = await isEqualFragmentTemplate();
+    final isEqualContentOk = equalContent(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
+    final isEqualFragmentGroupChainsOk = await equalFragmentGroupChains(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
+    final isEqualFragmentTemplateOk = await equalFragmentTemplate();
     if (!isEqualContentOk) {
       return "内容存在修改！";
     }
@@ -45,102 +150,27 @@ class FragmentPerformer {
     return null;
   }
 
-  Future<void> reload({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController, required FragmentPerformer? recent}) async {
-    if (fragmentAb == null) {
-      // 保留上一次设置(当全为空时才会保留)
-      if (fragmentGroupChains.isEmpty && fragmentTemplate == null) {
-        if (recent != null) {
-          fragmentGroupChains.addAll(recent.fragmentGroupChains);
-          fragmentTemplate = recent.fragmentTemplate;
-        }
-      }
+  bool equalContent({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) {
+    final String now = jsonEncode(fragmentGizmoEditPageAbController.quillController.document.toDelta().toJson());
+    late final String saved;
+    if (fragment != null) {
+      saved = fragment!.content;
     } else {
-      content = fragmentAb!().content;
-      fragmentGizmoEditPageAbController.quillController.document = q.Document.fromJson(jsonDecode(content));
-
-      final chains = await db.generalQueryDAO.queryFragmentInWhichFragmentGroupChain(fragment: fragmentAb!());
-      fragmentGroupChains.clear();
-      fragmentGroupChains.addAll(chains);
-
-      fragmentTemplate = fragmentAb!().fragment_template_id == null
-          ? null
-          : await db.generalQueryDAO.queryFragmentTemplateById(
-              fragmentTemplateId: fragmentAb!().fragment_template_id!,
-            );
+      saved = jsonEncode(q.Delta().toJson());
     }
+    return now == saved;
   }
 
-  /// 若返回空表示数据没有变化。
-  Future<Fragment?> save({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
-    final modifyMessage = await isExistModified(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    if (modifyMessage == null) {
-      return null;
-    }
-    final st = await SyncTag.create();
-    if (fragmentAb == null) {
-      final newFragment = await db.insertDAO.insertFragment(
-        willFragmentsCompanion: Crt.fragmentsCompanion(
-          content: fragmentGizmoEditPageAbController.richToJson(),
-          creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-          father_fragment_id: null.toValue(),
-          fragment_template_id: (fragmentTemplate?.id).toValue(),
-          client_be_selected: false,
-          title: fragmentGizmoEditPageAbController.parseTitle(),
-          tags: fragmentTag.join(","),
-          be_sep_publish: false,
-        ),
-        whichFragmentGroups: fragmentGroupChains.map((e) => e.isEmpty ? null : e.last).toList(),
-        syncTag: st,
-      );
-      return newFragment;
-    } else {
-      await db.updateDAO.resetFragment(
-        originalFragmentReset: () async {
-          await fragmentAb!().reset(
-            content: fragmentGizmoEditPageAbController.richToJson().toValue(),
-            creator_user_id: toAbsent(),
-            father_fragment_id: toAbsent(),
-            fragment_template_id: (fragmentTemplate?.id).toValue(),
-            client_be_selected: toAbsent(),
-            title: fragmentGizmoEditPageAbController.parseTitle().toValue(),
-            tags: "".toValue(),
-            syncTag: st,
-            be_sep_publish: false.toValue(),
-          );
-        },
-        syncTag: st,
-      );
-      fragmentAb!.refreshForce();
-      return fragmentAb!();
-    }
-  }
-
-  bool isEqualContent({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) {
-    final String now;
-    final String saved;
-    if (fragmentAb != null) {
-      now = fragmentGizmoEditPageAbController.richToJson();
-      saved = fragmentAb!().content;
-    } else {
-      now = fragmentGizmoEditPageAbController.richToJson();
-      saved = '';
-    }
-
-    final nowT = now == '' ? richContent : now;
-    final savedT = saved == '' ? richContent : saved;
-    return nowT == savedT;
-  }
-
-  Future<bool> isEqualFragmentTemplate() async {
+  Future<bool> equalFragmentTemplate() async {
     final FragmentTemplate? now;
     final FragmentTemplate? saved;
-    if (fragmentAb != null) {
+    if (fragment != null) {
       now = fragmentTemplate;
-      saved = fragmentAb!().fragment_template_id == null
-          ? null
-          : await db.generalQueryDAO.queryFragmentTemplateById(
-              fragmentTemplateId: fragmentAb!().fragment_template_id!,
-            );
+      if (fragment!.fragment_template_id == null) {
+        saved = null;
+      } else {
+        saved = await db.generalQueryDAO.queryFragmentTemplateById(fragmentTemplateId: fragment!.fragment_template_id!);
+      }
     } else {
       now = fragmentTemplate;
       saved = null;
@@ -148,12 +178,12 @@ class FragmentPerformer {
     return now?.id == saved?.id;
   }
 
-  Future<bool> isEqualFragmentGroupChains({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
+  Future<bool> equalFragmentGroupChains({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
     final List<List<FragmentGroup?>> now;
     final List<List<FragmentGroup?>> saved;
-    if (fragmentAb != null) {
+    if (fragment != null) {
       now = fragmentGroupChains;
-      saved = await db.generalQueryDAO.queryFragmentInWhichFragmentGroupChain(fragment: fragmentAb!());
+      saved = await db.generalQueryDAO.queryFragmentInWhichFragmentGroupChain(fragment: fragment!);
     } else {
       now = fragmentGroupChains;
       saved = [];
@@ -178,65 +208,64 @@ class FragmentPerformer {
 
 class FragmentGizmoEditPageAbController extends AbController {
   FragmentGizmoEditPageAbController({
-    required this.initFragmentAb,
+    required this.fragmentPerformerTypeAb,
+    required this.initFragment,
     required this.initSomeBefore,
     required this.initSomeAfter,
     required this.initFragmentGroupChain,
   });
 
-  /// 仅用来初始化赋值，若没有的话为 []。
-  final List<Ab<Fragment>> initSomeBefore;
+  final Ab<FragmentPerformerType> fragmentPerformerTypeAb;
 
   /// 仅用来初始化赋值，若没有的话为 []。
-  final List<Ab<Fragment>> initSomeAfter;
+  final List<Fragment> initSomeBefore;
+
+  /// 仅用来初始化赋值，若没有的话为 []。
+  final List<Fragment> initSomeAfter;
 
   /// 仅用来初始化赋值，若为 null，则初始化时为创建。
-  final Ab<Fragment>? initFragmentAb;
+  final Fragment? initFragment;
 
-  /// 为 null 表示没有选择组。
+  /// 当在碎片组中创建碎片时，会将当前所在碎片组设为初始化碎片组。
+  ///
+  /// 为 null 表示当 [initFragment] 为 null 时，即没有分配初始化选择组。
+  ///
+  /// 当 [initFragment] 不为 null 时，这个字段无效。
   final List<FragmentGroup>? initFragmentGroupChain;
 
-  /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragmentAb]、[initSomeAfter] 的对象。
+  /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragment]、[initSomeAfter] 的对象。
   ///
-  /// 只允许存在一个元素为 null，否则检索 index 时只会检索到第一个 null。
-  /// 而相同的 [Fragment] 并不是同一个 [FragmentAbAndFragmentGroupAb] 对象，所有不需要关心对象是否相同。
-  final records = <FragmentPerformer>[].ab;
+  /// 若为新建碎片(即没有如何内容)，则 [FragmentPerformer.fragment] 为 null。
+  final records = <FragmentPerformer>[];
 
-  /// 当前碎片的数据仓库。
+  /// 当前碎片表演者。
   ///
-  /// 根据 [records] 跳动。
-  final currentPerformer = Ab<FragmentPerformer>.late();
+  /// 它属于 [records] 中的某个元素，会在 [records] 集合上跳动。
+  ///
+  /// 必然不为空，因此使用 [Ab.late] 进行初始化。
+  final currentPerformerAb = Ab<FragmentPerformer>.late();
+
   final q.QuillController quillController = q.QuillController.basic();
 
   final contentScrollController = ScrollController();
-
-  final isEditable = false.ab;
 
   @override
   bool get isEnableLoading => true;
 
   @override
   Future<void> loadingFuture() async {
-    final current = FragmentPerformer(fragmentAb: initFragmentAb);
-    if (initFragmentGroupChain != null) {
-      current.fragmentGroupChains.add(initFragmentGroupChain!);
+    final initPerformer = FragmentPerformer(fragment: initFragment);
+    if (initFragment == null && initFragmentGroupChain != null) {
+      initPerformer.fragmentGroupChains.add(initFragmentGroupChain!);
     }
-    await current.reload(fragmentGizmoEditPageAbController: this, recent: null);
+    await initPerformer.reload(fragmentGizmoEditPageAbController: this, recent: null);
 
-    records().addAll(initSomeBefore.map((e) => FragmentPerformer(fragmentAb: e)));
-    records().add(current);
-    records().addAll(initSomeAfter.map((e) => FragmentPerformer(fragmentAb: e)));
+    records.addAll(initSomeBefore.map((e) => FragmentPerformer(fragment: e)));
+    records.add(initPerformer);
+    records.addAll(initSomeAfter.map((e) => FragmentPerformer(fragment: e)));
 
-    currentPerformer.lateAssign(current);
-    records.refreshForce();
-    if (initFragmentAb == null) {
-      isEditable.refreshEasy((oldValue) => true);
-    } else {
-      isEditable.refreshEasy((oldValue) => false);
-    }
+    currentPerformerAb.lateAssign(initPerformer);
   }
-
-  String richToJson() => jsonEncode(quillController.document.toDelta().toJson());
 
   String parseTitle() {
     final text = quillController.document.toPlainText().trim();
@@ -244,7 +273,7 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   bool isExistLast([Abw? abw]) {
-    final currentIndex = records(abw).indexOf(currentPerformer(abw));
+    final currentIndex = records(abw).indexOf(currentPerformerAb(abw));
     if (currentIndex == 0) {
       return false;
     }
@@ -252,83 +281,82 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   bool isExistNext([Abw? abw]) {
-    final currentIndex = records(abw).indexOf(currentPerformer(abw));
+    final currentIndex = records(abw).indexOf(currentPerformerAb(abw));
     if (currentIndex == records().length - 1) {
       return false;
     }
     return true;
   }
 
-  /// 当 [lastOrNext] 为 0 时，进入到上一个，否则进入到下一个。
-  Future<void> goTo({required int lastOrNext}) async {
-    if (!records().contains(currentPerformer())) {
+  Future<void> goTo({required LastOrNext lastOrNext}) async {
+    if (!records().contains(currentPerformerAb())) {
       throw '记录不包含当前碎片，无法获取 index！';
     }
-    final currentIndex = records().indexOf(currentPerformer());
-    if (lastOrNext == 0) {
+    final currentIndex = records().indexOf(currentPerformerAb());
+    if (lastOrNext == LastOrNext.last) {
       if (currentIndex == 0) return;
       // 先检查当前
-      final modifyMessage = await currentPerformer().isExistModified(fragmentGizmoEditPageAbController: this);
+      final modifyMessage = await currentPerformerAb().isExistModified(fragmentGizmoEditPageAbController: this);
       if (modifyMessage != null) {
-        if (currentPerformer().fragmentAb != null) {
+        if (currentPerformerAb().fragment != null) {
           SmartDialog.showToast(modifyMessage);
           return;
         } else {
-          currentPerformer().content = richToJson();
+          currentPerformerAb().content = richToJson();
         }
       }
       // 再加载下一个
       final last = records()[currentIndex - 1];
-      await last.reload(fragmentGizmoEditPageAbController: this, recent: currentPerformer());
+      await last.reload(fragmentGizmoEditPageAbController: this, recent: currentPerformerAb());
       // 后构建下一个
-      if (last.fragmentAb == null) {
+      if (last.fragment == null) {
         quillController.document = q.Document.fromJson(jsonDecode(last.content));
         isEditable.refreshEasy((oldValue) => true);
       } else {
         isEditable.refreshEasy((oldValue) => false);
       }
-      currentPerformer.refreshEasy((oldValue) => last);
+      currentPerformerAb.refreshEasy((oldValue) => last);
     } else {
       if (currentIndex == records().length - 1) return;
       // 先检查当前
-      final modifyMessage = await currentPerformer().isExistModified(fragmentGizmoEditPageAbController: this);
+      final modifyMessage = await currentPerformerAb().isExistModified(fragmentGizmoEditPageAbController: this);
       if (modifyMessage != null) {
-        if (currentPerformer().fragmentAb != null) {
+        if (currentPerformerAb().fragment != null) {
           SmartDialog.showToast(modifyMessage);
           return;
         } else {
-          currentPerformer().content = richToJson();
+          currentPerformerAb().content = richToJson();
         }
       }
       // 再加载下一个
       final next = records()[currentIndex + 1];
-      await next.reload(fragmentGizmoEditPageAbController: this, recent: currentPerformer());
+      await next.reload(fragmentGizmoEditPageAbController: this, recent: currentPerformerAb());
       // 后构建下一个
-      if (next.fragmentAb == null) {
+      if (next.fragment == null) {
         quillController.document = q.Document.fromJson(jsonDecode(next.content));
         isEditable.refreshEasy((oldValue) => true);
       } else {
         isEditable.refreshEasy((oldValue) => false);
       }
-      currentPerformer.refreshEasy((oldValue) => next);
+      currentPerformerAb.refreshEasy((oldValue) => next);
     }
   }
 
   Future<void> saveOrNext() async {
-    if (currentPerformer().fragmentGroupChains.isEmpty) {
+    if (currentPerformerAb().fragmentGroupChains.isEmpty) {
       SmartDialog.showToast('未选择存放位置！');
       return;
     }
-    final result = await currentPerformer().save(fragmentGizmoEditPageAbController: this);
+    final result = await currentPerformerAb().save(fragmentGizmoEditPageAbController: this);
     if (result == null) {
       SmartDialog.showToast('没有修改内容！');
       isEditable.refreshEasy((oldValue) => false);
       return;
     }
-    if (currentPerformer().fragmentAb == null) {
+    if (currentPerformerAb().fragment == null) {
       final resultAb = result.ab;
-      currentPerformer().fragmentAb = resultAb;
-      records.refreshEasy((oldValue) => oldValue..add(FragmentPerformer(fragmentAb: null)));
+      currentPerformerAb().fragment = resultAb;
+      records.refreshEasy((oldValue) => oldValue..add(FragmentPerformer(fragment: null)));
       await goTo(lastOrNext: 1);
       SmartDialog.showToast('保存成功！');
     } else {
@@ -338,7 +366,7 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   Future<void> showSaveGroup() async {
-    await showSelectFragmentGroupsDialog(selectedFragmentGroupChainsAb: currentPerformer().fragmentGroupChains.ab);
-    currentPerformer.refreshForce();
+    await showSelectFragmentGroupsDialog(selectedFragmentGroupChainsAb: currentPerformerAb().fragmentGroupChains.ab);
+    currentPerformerAb.refreshForce();
   }
 }
