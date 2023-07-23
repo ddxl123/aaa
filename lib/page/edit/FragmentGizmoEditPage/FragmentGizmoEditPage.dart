@@ -52,7 +52,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
       leading: IconButton(
         icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
         onPressed: () async {
-          final result = await c.currentPerformerAb().isExistModified(fragmentGizmoEditPageAbController: c);
+          final result = await c.currentPerformerAb().equalAll(fragmentGizmoEditPageAbController: c);
           if (result != null) {
             SmartDialog.showToast(result);
           } else {
