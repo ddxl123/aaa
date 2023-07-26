@@ -73,16 +73,6 @@ extension QuickLog<T> on T {
   }
 }
 
-class Tuple2<T1, T2> {
-  final T1 t1;
-  final T2 t2;
-
-  Tuple2({required this.t1, required this.t2});
-
-  @override
-  String toString() => '($t1, $t2)';
-}
-
 /// ===
 /// TODO: 在函数未调用玩前，函数不能再被调用，除非函数调用完成。
 /// 创建一个全局 map
@@ -223,5 +213,12 @@ extension ArrayToJson on List {
 extension ContainReturn<A, B> on Map<A, B> {
   B? containReturn(A a) {
     return containsKey(a) ? this[a] : null;
+  }
+}
+
+extension EnumExt on Enum {
+  /// 只要 [list] 中存在一个与 [this] 相同的，则返回 ture。
+  bool isOrTrue<E>(List<E> list) {
+    return list.any((element) => element == this);
   }
 }

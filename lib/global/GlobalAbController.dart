@@ -156,8 +156,8 @@ class GlobalAbController extends AbController {
       dtoDataList: result
           .map(
             (e) => DataUploadDto(
-              sync_entity: e.t1,
-              row_map: e.t2.toJson(),
+              sync_entity: e.$1,
+              row_map: e.$2.toJson(),
             ),
           )
           .toList(),
@@ -168,7 +168,7 @@ class GlobalAbController extends AbController {
         logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
       },
       code20101: (String showMessage) async {
-        await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.t1).toList());
+        await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.$1).toList());
         await uploadSingleGroupSync();
       },
     );

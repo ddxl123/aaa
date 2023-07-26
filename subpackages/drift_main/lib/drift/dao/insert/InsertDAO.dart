@@ -34,17 +34,31 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return returnFragmentGroup;
   }
 
-  /// 向多个 [whichFragmentGroups] 中，插入相同的 [willFragmentsCompanion]。
+  /// 向多个 [whichFragmentGroupChains] 中，插入相同的 [willFragmentsCompanion]。
   ///
-  /// 当元素为 null 时，表示插入到 root 组内。
-  ///
-  /// [whichFragmentGroups] 为空数组时，会抛出异常。
+  /// 当 [whichFragmentGroupChains] 为空数组时，表示插入到 root 组内。
   Future<Fragment> insertFragment({
     required FragmentsCompanion willFragmentsCompanion,
-    required List<FragmentGroup?> whichFragmentGroups,
+    required List<List<FragmentGroup>> whichFragmentGroupChains,
     required SyncTag syncTag,
   }) async {
-    if (whichFragmentGroups.isEmpty) {
+    // 为空表示根
+    final List<FragmentGroup?> whichFragmentGroup = [];
+    whichFragmentGroupChains.forEach(
+      (element) {
+        if (element.isEmpty) {
+          if (!whichFragmentGroup.contains(null)) {
+            whichFragmentGroup.add(null);
+          }
+        } else {
+          if (!whichFragmentGroup.any((e) => e?.id == element.last.id)) {
+            whichFragmentGroup.add(element.last);
+          }
+        }
+      },
+    );
+
+    if (whichFragmentGroup.isEmpty) {
       throw '要插入的碎片组不能为空！';
     }
     late Fragment newFragment;
@@ -55,7 +69,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
         self: () async {
           await Future.forEach<FragmentGroup?>(
-            whichFragmentGroups,
+            whichFragmentGroup,
             (whichFragmentGroup) async {
               await Crt.rFragment2FragmentGroupsCompanion(
                 creator_user_id: willFragmentsCompanion.creator_user_id.value,
@@ -189,7 +203,6 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     ).run();
     return newShorthand;
   }
-
 
   /// 创建一个新的文章。
   Future<Shorthand> insertArticle({

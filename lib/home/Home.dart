@@ -3,6 +3,7 @@ import 'package:aaa/home/findhome/FindHome.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPageAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -118,12 +119,14 @@ class Home extends StatelessWidget {
                               ],
                             ),
                             onPressed: () async {
-                              await pushToFragmentEditPage(
+                              await pushToFragmentPerformerPage(
                                 context: context,
                                 initSomeBefore: [],
                                 initSomeAfter: [],
                                 initFragmentAb: null,
                                 initFragmentGroupChain: null,
+                                fragmentPerformerTypeAb: FragmentPerformerType.editable.ab,
+                                isTailNew: true,
                               );
                             },
                           ),

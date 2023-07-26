@@ -104,19 +104,19 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   /// [Tuple2.t2] 为 [Group.allUnitCount]
   ///
   /// 可以不用等待异步。
-  Future<Tuple2<int, int>> needRefreshCount(G? whichGroupEntity);
+  Future<(int, int)> needRefreshCount(G? whichGroupEntity);
 
   Future<void> refreshCount({required Ab<Group<G, U>> whichGroup, bool isRootRefreshCount = true}) async {
     final count = await needRefreshCount(whichGroup().entity());
-    whichGroup().selectedUnitCount.refreshEasy((oldValue) => count.t1);
-    whichGroup().allUnitCount.refreshEasy((oldValue) => count.t2);
+    whichGroup().selectedUnitCount.refreshEasy((oldValue) => count.$1);
+    whichGroup().allUnitCount.refreshEasy((oldValue) => count.$2);
 
     await Future.forEach<Ab<Group<G, U>>>(
       whichGroup().groups(),
       (element) async {
         final eCount = await needRefreshCount(element().entity());
-        element().selectedUnitCount.refreshEasy((oldValue) => eCount.t1);
-        element().allUnitCount.refreshEasy((oldValue) => eCount.t2);
+        element().selectedUnitCount.refreshEasy((oldValue) => eCount.$1);
+        element().allUnitCount.refreshEasy((oldValue) => eCount.$2);
       },
     );
     if (isRootRefreshCount) {

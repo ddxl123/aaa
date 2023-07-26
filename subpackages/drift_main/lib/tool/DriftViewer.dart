@@ -167,12 +167,12 @@ class _DriftViewerState extends State<DriftViewer> {
                   ...add(
                     title: 'test3',
                     onPressed: () async {
-                      await DriftDb.instance.deleteWith<Users, User, UsersCompanion>(
-                        DriftDb.instance.users,
-                        filter: (tbl) => tbl.id.equals(2),
-                        syncTag: await SyncTag.create(),
-                      );
-                      Navigator.pop(context);
+                      // await DriftDb.instance.deleteWith<Users, User, UsersCompanion>(
+                      //   DriftDb.instance.users,
+                      //   filter: (tbl) => tbl.id.equals(2),
+                      //   syncTag: await SyncTag.create(),
+                      // );
+                      // Navigator.pop(context);
                     },
                   ),
                 ],

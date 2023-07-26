@@ -147,40 +147,24 @@ extension DriftSyncExt on DatabaseConnectionUser {
     );
   }
 
-  /// TODO: 删除一条数据。
-  ///
-  /// 必须搭配 [withRefs] 与 [DriftSyncExt.deleteWith] 使用。
-  ///
   /// 如果[T] 是 [CloudTableBase] 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// 返回已被删除的行，返回 null 表示将删除的行不存在。
   ///
   /// 如果外部没有事务，内部会自动创建事务。
   ///
-  /// [filter] - 删除 row 时的 where 语句
-  ///
   /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  Future<DC?> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
+  Future<void> deleteWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
-    required Expression<bool> Function(T tbl) filter,
+    required E entity,
     required SyncTag syncTag,
   }) async {
     return await transaction(
       () async {
-        // 查询要删除的行
-        final selectEntities = await (select(table)..where(filter)).get();
-        if (selectEntities.isEmpty) {
-          return null;
-        } else if (selectEntities.length == 1) {
-        } else {
-          throw '单次操作只能删除零行或一行!';
-        }
-        final dynamic selectEntity = selectEntities.first;
-
         // 执行删除操作
-        final int deleteCount = await (delete(table).delete(selectEntity));
+        final int deleteCount = await (delete(table).delete(entity));
         if (deleteCount != 1) {
-          throw '获取到的将删除的行数不为1!';
+          return null;
         }
 
         // 增加一条 sync 记录 - 仅对 cloud
@@ -189,14 +173,13 @@ extension DriftSyncExt on DatabaseConnectionUser {
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
               sync_table_name: table.actualTableName.toValue(),
-              row_id: (selectEntity.id as String).toValue(),
+              row_id: ((entity as dynamic).id as String).toValue(),
               sync_curd_type: SyncCurdType.d.toValue(),
               tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
           );
         }
-        return selectEntity;
       },
     );
   }

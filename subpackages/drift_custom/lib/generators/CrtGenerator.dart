@@ -50,6 +50,14 @@ class CrtGenerator extends Generator {
                 syncTag: syncTag,
               );
             }
+            Future<void> delete({required SyncTag syncTag}) async {
+              final ins = DriftDb.instance;
+              await ins.deleteWith(
+                ins.${classWithSName.toCamelCase},
+                entity: this,
+                syncTag: syncTag,
+              );
+            }
           }
           ''';
 

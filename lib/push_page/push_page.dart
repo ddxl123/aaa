@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 import '../page/edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
+import '../page/edit/FragmentGizmoEditPage/FragmentGizmoEditPageAbController.dart';
 import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import '../page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPage.dart';
 import '../page/edit/edit_page_type.dart';
@@ -39,12 +40,14 @@ Future<void> pushToMemoryGroupGizmoEditPageOfModify({
   );
 }
 
-Future<void> pushToFragmentEditPage({
+Future<void> pushToFragmentPerformerPage({
   required BuildContext context,
-  required List<Ab<Fragment>> initSomeBefore,
-  required List<Ab<Fragment>> initSomeAfter,
-  required Ab<Fragment>? initFragmentAb,
+  required List<Fragment> initSomeBefore,
+  required List<Fragment> initSomeAfter,
+  required Fragment? initFragmentAb,
   required List<FragmentGroup>? initFragmentGroupChain,
+  required Ab<FragmentPerformerType> fragmentPerformerTypeAb,
+  required bool isTailNew,
 }) async {
   await Navigator.push(
     context,
@@ -52,8 +55,10 @@ Future<void> pushToFragmentEditPage({
       builder: (ctx) => FragmentGizmoEditPage(
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
-        initFragmentAb: initFragmentAb,
+        initFragment: initFragmentAb,
         initFragmentGroupChain: initFragmentGroupChain,
+        fragmentPerformerTypeAb: fragmentPerformerTypeAb,
+        isTailNew: isTailNew,
       ),
     ),
   );

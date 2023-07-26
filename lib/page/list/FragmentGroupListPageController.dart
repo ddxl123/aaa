@@ -14,7 +14,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   }
 
   @override
-  Future<Tuple2<int, int>> needRefreshCount(FragmentGroup? whichGroupEntity) async {
+  Future<(int, int)> needRefreshCount(FragmentGroup? whichGroupEntity) async {
     final selectedCount = await DriftDb.instance.generalQueryDAO.querySubFragmentsCountInFragmentGroup(
       targetFragmentGroupId: whichGroupEntity?.id,
       queryFragmentWhereType: QueryFragmentWhereType.selected,
@@ -43,7 +43,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
         syncTag: st,
       );
     }
-    return Tuple2(t1: selectedCount, t2: allCount);
+    return (selectedCount, allCount);
   }
 
   Future<void> resetFragmentIsSelected({required Ab<Fragment> fragmentAb, required bool isSelected}) async {

@@ -1,7 +1,5 @@
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryModelGizomoEditPage/AlgorithmEditPage.dart';
-import 'package:aaa/page/edit/edit_page_type.dart';
-import 'package:cool_ui/cool_ui.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';

@@ -7,13 +7,13 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
-Future<void> showSelectFragmentGroupsDialog({required Ab<List<List<FragmentGroup>>> selectedFragmentGroupChainsAb}) async {
-  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedFragmentGroupChainsAb: selectedFragmentGroupChainsAb));
+Future<void> showSelectFragmentGroupsDialog({required List<List<FragmentGroup>> selectedFragmentGroupChains}) async {
+  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedFragmentGroupChains: selectedFragmentGroupChains));
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {
-  const SelectFragmentGroupDialogWidget({Key? key, required this.selectedFragmentGroupChainsAb}) : super(key: key);
-  final Ab<List<List<FragmentGroup>>> selectedFragmentGroupChainsAb;
+  const SelectFragmentGroupDialogWidget({Key? key, required this.selectedFragmentGroupChains}) : super(key: key);
+  final List<List<FragmentGroup>> selectedFragmentGroupChains;
 
   @override
   State<SelectFragmentGroupDialogWidget> createState() => _SelectFragmentGroupDialogWidgetState();
@@ -21,7 +21,7 @@ class SelectFragmentGroupDialogWidget extends StatefulWidget {
 
 class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDialogWidget> {
   List<Widget> _columnChildren() {
-    return widget.selectedFragmentGroupChainsAb().isEmpty
+    return widget.selectedFragmentGroupChains.isEmpty
         ? [
             Row(
               children: [
@@ -35,41 +35,41 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
             )
           ]
         : [
-            ...widget.selectedFragmentGroupChainsAb().map(
-                  (e) => Row(
-                    children: [
-                      Expanded(
-                        child: MaterialButton(
-                          padding: EdgeInsets.zero,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text('~ > ${e.map((e) => e.title).join(' > ')}', style: const TextStyle(color: Colors.blue)),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.edit, color: Colors.blue),
-                            ],
+            ...widget.selectedFragmentGroupChains.map(
+              (e) => Row(
+                children: [
+                  Expanded(
+                    child: MaterialButton(
+                      padding: EdgeInsets.zero,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                              scrollDirection: Axis.horizontal,
+                              child: Text('~ > ${e.map((e) => e.title).join(' > ')}', style: const TextStyle(color: Colors.blue)),
+                            ),
                           ),
-                          onPressed: () async {
-                            await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: Ab<List<FragmentGroup>?>(e));
-                            if (mounted) setState(() {});
-                          },
-                        ),
+                          const SizedBox(width: 10),
+                          const Icon(Icons.edit, color: Colors.blue),
+                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.red),
-                        onPressed: () {
-                          widget.selectedFragmentGroupChainsAb().remove(e);
-                          if (mounted) setState(() {});
-                        },
-                      ),
-                    ],
+                      onPressed: () async {
+                        await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: Ab<List<FragmentGroup>?>(e));
+                        if (mounted) setState(() {});
+                      },
+                    ),
                   ),
-                ),
+                  IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.red),
+                    onPressed: () {
+                      widget.selectedFragmentGroupChains.remove(e);
+                      if (mounted) setState(() {});
+                    },
+                  ),
+                ],
+              ),
+            ),
           ];
   }
 
@@ -101,7 +101,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
           await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: result);
           if (result() == null) {
           } else {
-            widget.selectedFragmentGroupChainsAb.refreshEasy((oldValue) => oldValue..add(result()!));
+            widget.selectedFragmentGroupChains.add(result()!);
             if (mounted) setState(() {});
           }
         },
