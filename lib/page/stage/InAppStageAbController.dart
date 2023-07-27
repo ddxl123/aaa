@@ -111,7 +111,7 @@ class InAppStageAbController extends AbController {
   /// 仅完成当前表演。
   ///
   /// 点击数值按钮后进行调用。
-  Future<void> _finish({required double clickValue}) async {
+  Future<void> _finish({required double clickValue, required List<String> contentValue}) async {
     if (currentPerformer() == null) {
       quillController.document = q.Document.fromDelta(q.Delta()..insert("没有下一个碎片了，却仍然请求了下一个碎片！\n"));
       return;
@@ -142,6 +142,7 @@ class InAppStageAbController extends AbController {
           show_familiarity: info.show_familiarity.arrayAdd<double>(currentShowFamiliarity()!).toValue(),
           click_familiarity: info.click_familiarity.arrayAdd<double>(currentClickFamiliarity).toValue(),
           button_values: info.button_values.arrayAdd<List<double>>(currentButtonDatas().map((e) => e.value).toList()).toValue(),
+          content_value: info.content_value.arrayAdd<List<String>>(contentValue).toValue(),
           study_status: StudyStatus.review.toValue(),
           syncTag: st,
         );
@@ -160,8 +161,8 @@ class InAppStageAbController extends AbController {
   }
 
   /// 完成当前表演，并进行下一次表演。
-  Future<void> finishAndNext({required double clickValue}) async {
-    await _finish(clickValue: clickValue);
+  Future<void> finishAndNext({required double clickValue, required List<String> contentValue}) async {
+    await _finish(clickValue: clickValue, contentValue: contentValue);
     await _next();
   }
 

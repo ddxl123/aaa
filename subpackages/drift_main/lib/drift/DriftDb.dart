@@ -57,8 +57,6 @@ part 'table/entity/test/Test2s.dart';
 
 part 'table/entity/test/Tests.dart';
 
-part 'table/entity/unit/FragmentTemplates.dart';
-
 part 'table/entity/unit/Fragments.dart';
 
 part 'table/entity/unit/MemoryGroups.dart';
@@ -90,8 +88,6 @@ const List<Type> tableClasses = [
   Test2s,
 
   Tests,
-
-  FragmentTemplates,
 
   Fragments,
 

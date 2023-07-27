@@ -110,7 +110,6 @@ class RawDAO extends DatabaseAccessor<DriftDb> with _$RawDAOMixin {
                   content: e.content,
                   creator_user_id: e.creator_user_id,
                   father_fragment_id: e.father_fragment_id.toValue(),
-                  fragment_template_id: e.fragment_template_id.toValue(),
                   tags: e.tags,
                   title: e.title,
                   created_at: e.created_at,

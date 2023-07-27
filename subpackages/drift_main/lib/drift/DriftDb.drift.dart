@@ -12,8 +12,6 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $FragmentTemplatesTable get fragmentTemplates =>
-      attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
@@ -34,8 +32,6 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $FragmentTemplatesTable get fragmentTemplates =>
-      attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
@@ -56,8 +52,6 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $FragmentTemplatesTable get fragmentTemplates =>
-      attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
@@ -78,8 +72,6 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $FragmentTemplatesTable get fragmentTemplates =>
-      attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
@@ -100,8 +92,6 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $FragmentTemplatesTable get fragmentTemplates =>
-      attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
@@ -122,8 +112,6 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.rFragment2FragmentGroups;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
-  $FragmentTemplatesTable get fragmentTemplates =>
-      attachedDatabase.fragmentTemplates;
   $FragmentsTable get fragments => attachedDatabase.fragments;
   $MemoryGroupsTable get memoryGroups => attachedDatabase.memoryGroups;
   $MemoryModelsTable get memoryModels => attachedDatabase.memoryModels;
@@ -1139,6 +1127,12 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   late final GeneratedColumn<String> click_value = GeneratedColumn<String>(
       'click_value', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _content_valueMeta =
+      const VerificationMeta('content_value');
+  @override
+  late final GeneratedColumn<String> content_value = GeneratedColumn<String>(
+      'content_value', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _creator_user_idMeta =
       const VerificationMeta('creator_user_id');
   @override
@@ -1201,6 +1195,7 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
         click_familiarity,
         click_time,
         click_value,
+        content_value,
         creator_user_id,
         fragment_id,
         memory_group_id,
@@ -1259,6 +1254,14 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
               data['click_value']!, _click_valueMeta));
     } else if (isInserting) {
       context.missing(_click_valueMeta);
+    }
+    if (data.containsKey('content_value')) {
+      context.handle(
+          _content_valueMeta,
+          content_value.isAcceptableOrUnknown(
+              data['content_value']!, _content_valueMeta));
+    } else if (isInserting) {
+      context.missing(_content_valueMeta);
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
@@ -1341,6 +1344,8 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
           .read(DriftSqlType.string, data['${effectivePrefix}click_time'])!,
       click_value: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}click_value'])!,
+      content_value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content_value'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       fragment_id: attachedDatabase.typeMapping
@@ -1381,6 +1386,7 @@ class FragmentMemoryInfo extends DataClass
   String click_familiarity;
   String click_time;
   String click_value;
+  String content_value;
   int creator_user_id;
   String fragment_id;
   String memory_group_id;
@@ -1396,6 +1402,7 @@ class FragmentMemoryInfo extends DataClass
       required this.click_familiarity,
       required this.click_time,
       required this.click_value,
+      required this.content_value,
       required this.creator_user_id,
       required this.fragment_id,
       required this.memory_group_id,
@@ -1413,6 +1420,7 @@ class FragmentMemoryInfo extends DataClass
     map['click_familiarity'] = Variable<String>(click_familiarity);
     map['click_time'] = Variable<String>(click_time);
     map['click_value'] = Variable<String>(click_value);
+    map['content_value'] = Variable<String>(content_value);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     map['fragment_id'] = Variable<String>(fragment_id);
     map['memory_group_id'] = Variable<String>(memory_group_id);
@@ -1435,6 +1443,7 @@ class FragmentMemoryInfo extends DataClass
       click_familiarity: Value(click_familiarity),
       click_time: Value(click_time),
       click_value: Value(click_value),
+      content_value: Value(content_value),
       creator_user_id: Value(creator_user_id),
       fragment_id: Value(fragment_id),
       memory_group_id: Value(memory_group_id),
@@ -1456,6 +1465,7 @@ class FragmentMemoryInfo extends DataClass
       click_familiarity: serializer.fromJson<String>(json['click_familiarity']),
       click_time: serializer.fromJson<String>(json['click_time']),
       click_value: serializer.fromJson<String>(json['click_value']),
+      content_value: serializer.fromJson<String>(json['content_value']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       fragment_id: serializer.fromJson<String>(json['fragment_id']),
       memory_group_id: serializer.fromJson<String>(json['memory_group_id']),
@@ -1478,6 +1488,7 @@ class FragmentMemoryInfo extends DataClass
       'click_familiarity': serializer.toJson<String>(click_familiarity),
       'click_time': serializer.toJson<String>(click_time),
       'click_value': serializer.toJson<String>(click_value),
+      'content_value': serializer.toJson<String>(content_value),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'fragment_id': serializer.toJson<String>(fragment_id),
       'memory_group_id': serializer.toJson<String>(memory_group_id),
@@ -1498,6 +1509,7 @@ class FragmentMemoryInfo extends DataClass
           String? click_familiarity,
           String? click_time,
           String? click_value,
+          String? content_value,
           int? creator_user_id,
           String? fragment_id,
           String? memory_group_id,
@@ -1513,6 +1525,7 @@ class FragmentMemoryInfo extends DataClass
         click_familiarity: click_familiarity ?? this.click_familiarity,
         click_time: click_time ?? this.click_time,
         click_value: click_value ?? this.click_value,
+        content_value: content_value ?? this.content_value,
         creator_user_id: creator_user_id ?? this.creator_user_id,
         fragment_id: fragment_id ?? this.fragment_id,
         memory_group_id: memory_group_id ?? this.memory_group_id,
@@ -1531,6 +1544,7 @@ class FragmentMemoryInfo extends DataClass
           ..write('click_familiarity: $click_familiarity, ')
           ..write('click_time: $click_time, ')
           ..write('click_value: $click_value, ')
+          ..write('content_value: $content_value, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('fragment_id: $fragment_id, ')
           ..write('memory_group_id: $memory_group_id, ')
@@ -1551,6 +1565,7 @@ class FragmentMemoryInfo extends DataClass
       click_familiarity,
       click_time,
       click_value,
+      content_value,
       creator_user_id,
       fragment_id,
       memory_group_id,
@@ -1569,6 +1584,7 @@ class FragmentMemoryInfo extends DataClass
           other.click_familiarity == this.click_familiarity &&
           other.click_time == this.click_time &&
           other.click_value == this.click_value &&
+          other.content_value == this.content_value &&
           other.creator_user_id == this.creator_user_id &&
           other.fragment_id == this.fragment_id &&
           other.memory_group_id == this.memory_group_id &&
@@ -1586,6 +1602,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<String> click_familiarity;
   Value<String> click_time;
   Value<String> click_value;
+  Value<String> content_value;
   Value<int> creator_user_id;
   Value<String> fragment_id;
   Value<String> memory_group_id;
@@ -1601,6 +1618,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     this.click_familiarity = const Value.absent(),
     this.click_time = const Value.absent(),
     this.click_value = const Value.absent(),
+    this.content_value = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.fragment_id = const Value.absent(),
     this.memory_group_id = const Value.absent(),
@@ -1617,6 +1635,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     required String click_familiarity,
     required String click_time,
     required String click_value,
+    required String content_value,
     required int creator_user_id,
     required String fragment_id,
     required String memory_group_id,
@@ -1631,6 +1650,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
         click_familiarity = Value(click_familiarity),
         click_time = Value(click_time),
         click_value = Value(click_value),
+        content_value = Value(content_value),
         creator_user_id = Value(creator_user_id),
         fragment_id = Value(fragment_id),
         memory_group_id = Value(memory_group_id),
@@ -1646,6 +1666,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     Expression<String>? click_familiarity,
     Expression<String>? click_time,
     Expression<String>? click_value,
+    Expression<String>? content_value,
     Expression<int>? creator_user_id,
     Expression<String>? fragment_id,
     Expression<String>? memory_group_id,
@@ -1662,6 +1683,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       if (click_familiarity != null) 'click_familiarity': click_familiarity,
       if (click_time != null) 'click_time': click_time,
       if (click_value != null) 'click_value': click_value,
+      if (content_value != null) 'content_value': content_value,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (fragment_id != null) 'fragment_id': fragment_id,
       if (memory_group_id != null) 'memory_group_id': memory_group_id,
@@ -1681,6 +1703,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       Value<String>? click_familiarity,
       Value<String>? click_time,
       Value<String>? click_value,
+      Value<String>? content_value,
       Value<int>? creator_user_id,
       Value<String>? fragment_id,
       Value<String>? memory_group_id,
@@ -1696,6 +1719,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       click_familiarity: click_familiarity ?? this.click_familiarity,
       click_time: click_time ?? this.click_time,
       click_value: click_value ?? this.click_value,
+      content_value: content_value ?? this.content_value,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       fragment_id: fragment_id ?? this.fragment_id,
       memory_group_id: memory_group_id ?? this.memory_group_id,
@@ -1725,6 +1749,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     }
     if (click_value.present) {
       map['click_value'] = Variable<String>(click_value.value);
+    }
+    if (content_value.present) {
+      map['content_value'] = Variable<String>(content_value.value);
     }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
@@ -1765,6 +1792,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
           ..write('click_familiarity: $click_familiarity, ')
           ..write('click_time: $click_time, ')
           ..write('click_value: $click_value, ')
+          ..write('content_value: $content_value, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('fragment_id: $fragment_id, ')
           ..write('memory_group_id: $memory_group_id, ')
@@ -2673,346 +2701,6 @@ class TestsCompanion extends UpdateCompanion<Test> {
   }
 }
 
-class $FragmentTemplatesTable extends FragmentTemplates
-    with TableInfo<$FragmentTemplatesTable, FragmentTemplate> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $FragmentTemplatesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _contentMeta =
-      const VerificationMeta('content');
-  @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-      'content', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _owner_user_idMeta =
-      const VerificationMeta('owner_user_id');
-  @override
-  late final GeneratedColumn<int> owner_user_id = GeneratedColumn<int>(
-      'owner_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
-  @override
-  late final GeneratedColumnWithTypeConverter<FragmentTemplateType, int> type =
-      GeneratedColumn<int>('type', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<FragmentTemplateType>(
-              $FragmentTemplatesTable.$convertertype);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [content, owner_user_id, type, created_at, id, updated_at];
-  @override
-  String get aliasedName => _alias ?? 'fragment_templates';
-  @override
-  String get actualTableName => 'fragment_templates';
-  @override
-  VerificationContext validateIntegrity(Insertable<FragmentTemplate> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('content')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('owner_user_id')) {
-      context.handle(
-          _owner_user_idMeta,
-          owner_user_id.isAcceptableOrUnknown(
-              data['owner_user_id']!, _owner_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_owner_user_idMeta);
-    }
-    context.handle(_typeMeta, const VerificationResult.success());
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  FragmentTemplate map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return FragmentTemplate(
-      content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      owner_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}owner_user_id'])!,
-      type: $FragmentTemplatesTable.$convertertype.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $FragmentTemplatesTable createAlias(String alias) {
-    return $FragmentTemplatesTable(attachedDatabase, alias);
-  }
-
-  static JsonTypeConverter2<FragmentTemplateType, int, int> $convertertype =
-      const EnumIndexConverter<FragmentTemplateType>(
-          FragmentTemplateType.values);
-  @override
-  bool get withoutRowId => true;
-}
-
-class FragmentTemplate extends DataClass
-    implements Insertable<FragmentTemplate> {
-  String content;
-  int owner_user_id;
-  FragmentTemplateType type;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  FragmentTemplate(
-      {required this.content,
-      required this.owner_user_id,
-      required this.type,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['content'] = Variable<String>(content);
-    map['owner_user_id'] = Variable<int>(owner_user_id);
-    {
-      final converter = $FragmentTemplatesTable.$convertertype;
-      map['type'] = Variable<int>(converter.toSql(type));
-    }
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  FragmentTemplatesCompanion toCompanion(bool nullToAbsent) {
-    return FragmentTemplatesCompanion(
-      content: Value(content),
-      owner_user_id: Value(owner_user_id),
-      type: Value(type),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory FragmentTemplate.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FragmentTemplate(
-      content: serializer.fromJson<String>(json['content']),
-      owner_user_id: serializer.fromJson<int>(json['owner_user_id']),
-      type: $FragmentTemplatesTable.$convertertype
-          .fromJson(serializer.fromJson<int>(json['type'])),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'content': serializer.toJson<String>(content),
-      'owner_user_id': serializer.toJson<int>(owner_user_id),
-      'type': serializer
-          .toJson<int>($FragmentTemplatesTable.$convertertype.toJson(type)),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  FragmentTemplate copyWith(
-          {String? content,
-          int? owner_user_id,
-          FragmentTemplateType? type,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      FragmentTemplate(
-        content: content ?? this.content,
-        owner_user_id: owner_user_id ?? this.owner_user_id,
-        type: type ?? this.type,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('FragmentTemplate(')
-          ..write('content: $content, ')
-          ..write('owner_user_id: $owner_user_id, ')
-          ..write('type: $type, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(content, owner_user_id, type, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is FragmentTemplate &&
-          other.content == this.content &&
-          other.owner_user_id == this.owner_user_id &&
-          other.type == this.type &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class FragmentTemplatesCompanion extends UpdateCompanion<FragmentTemplate> {
-  Value<String> content;
-  Value<int> owner_user_id;
-  Value<FragmentTemplateType> type;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  FragmentTemplatesCompanion({
-    this.content = const Value.absent(),
-    this.owner_user_id = const Value.absent(),
-    this.type = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  FragmentTemplatesCompanion.insert({
-    required String content,
-    required int owner_user_id,
-    required FragmentTemplateType type,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : content = Value(content),
-        owner_user_id = Value(owner_user_id),
-        type = Value(type),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<FragmentTemplate> custom({
-    Expression<String>? content,
-    Expression<int>? owner_user_id,
-    Expression<int>? type,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (content != null) 'content': content,
-      if (owner_user_id != null) 'owner_user_id': owner_user_id,
-      if (type != null) 'type': type,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  FragmentTemplatesCompanion copyWith(
-      {Value<String>? content,
-      Value<int>? owner_user_id,
-      Value<FragmentTemplateType>? type,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return FragmentTemplatesCompanion(
-      content: content ?? this.content,
-      owner_user_id: owner_user_id ?? this.owner_user_id,
-      type: type ?? this.type,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (owner_user_id.present) {
-      map['owner_user_id'] = Variable<int>(owner_user_id.value);
-    }
-    if (type.present) {
-      final converter = $FragmentTemplatesTable.$convertertype;
-      map['type'] = Variable<int>(converter.toSql(type.value));
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FragmentTemplatesCompanion(')
-          ..write('content: $content, ')
-          ..write('owner_user_id: $owner_user_id, ')
-          ..write('type: $type, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $FragmentsTable extends Fragments
     with TableInfo<$FragmentsTable, Fragment> {
   @override
@@ -3061,12 +2749,6 @@ class $FragmentsTable extends Fragments
   late final GeneratedColumn<String> father_fragment_id =
       GeneratedColumn<String>('father_fragment_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fragment_template_idMeta =
-      const VerificationMeta('fragment_template_id');
-  @override
-  late final GeneratedColumn<String> fragment_template_id =
-      GeneratedColumn<String>('fragment_template_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
   @override
   late final GeneratedColumn<String> tags = GeneratedColumn<String>(
@@ -3101,7 +2783,6 @@ class $FragmentsTable extends Fragments
         content,
         creator_user_id,
         father_fragment_id,
-        fragment_template_id,
         tags,
         title,
         created_at,
@@ -3152,12 +2833,6 @@ class $FragmentsTable extends Fragments
           _father_fragment_idMeta,
           father_fragment_id.isAcceptableOrUnknown(
               data['father_fragment_id']!, _father_fragment_idMeta));
-    }
-    if (data.containsKey('fragment_template_id')) {
-      context.handle(
-          _fragment_template_idMeta,
-          fragment_template_id.isAcceptableOrUnknown(
-              data['fragment_template_id']!, _fragment_template_idMeta));
     }
     if (data.containsKey('tags')) {
       context.handle(
@@ -3211,8 +2886,6 @@ class $FragmentsTable extends Fragments
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       father_fragment_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}father_fragment_id']),
-      fragment_template_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}fragment_template_id']),
       tags: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tags'])!,
       title: attachedDatabase.typeMapping
@@ -3241,7 +2914,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
   String content;
   int creator_user_id;
   String? father_fragment_id;
-  String? fragment_template_id;
   String tags;
   String title;
   DateTime created_at;
@@ -3253,7 +2925,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       required this.content,
       required this.creator_user_id,
       this.father_fragment_id,
-      this.fragment_template_id,
       required this.tags,
       required this.title,
       required this.created_at,
@@ -3268,9 +2939,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || father_fragment_id != null) {
       map['father_fragment_id'] = Variable<String>(father_fragment_id);
-    }
-    if (!nullToAbsent || fragment_template_id != null) {
-      map['fragment_template_id'] = Variable<String>(fragment_template_id);
     }
     map['tags'] = Variable<String>(tags);
     map['title'] = Variable<String>(title);
@@ -3289,9 +2957,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       father_fragment_id: father_fragment_id == null && nullToAbsent
           ? const Value.absent()
           : Value(father_fragment_id),
-      fragment_template_id: fragment_template_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fragment_template_id),
       tags: Value(tags),
       title: Value(title),
       created_at: Value(created_at),
@@ -3310,8 +2975,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       father_fragment_id:
           serializer.fromJson<String?>(json['father_fragment_id']),
-      fragment_template_id:
-          serializer.fromJson<String?>(json['fragment_template_id']),
       tags: serializer.fromJson<String>(json['tags']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
@@ -3328,7 +2991,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       'content': serializer.toJson<String>(content),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'father_fragment_id': serializer.toJson<String?>(father_fragment_id),
-      'fragment_template_id': serializer.toJson<String?>(fragment_template_id),
       'tags': serializer.toJson<String>(tags),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
@@ -3343,7 +3005,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           String? content,
           int? creator_user_id,
           Value<String?> father_fragment_id = const Value.absent(),
-          Value<String?> fragment_template_id = const Value.absent(),
           String? tags,
           String? title,
           DateTime? created_at,
@@ -3357,9 +3018,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
         father_fragment_id: father_fragment_id.present
             ? father_fragment_id.value
             : this.father_fragment_id,
-        fragment_template_id: fragment_template_id.present
-            ? fragment_template_id.value
-            : this.fragment_template_id,
         tags: tags ?? this.tags,
         title: title ?? this.title,
         created_at: created_at ?? this.created_at,
@@ -3374,7 +3032,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_id: $father_fragment_id, ')
-          ..write('fragment_template_id: $fragment_template_id, ')
           ..write('tags: $tags, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
@@ -3391,7 +3048,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       content,
       creator_user_id,
       father_fragment_id,
-      fragment_template_id,
       tags,
       title,
       created_at,
@@ -3406,7 +3062,6 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           other.content == this.content &&
           other.creator_user_id == this.creator_user_id &&
           other.father_fragment_id == this.father_fragment_id &&
-          other.fragment_template_id == this.fragment_template_id &&
           other.tags == this.tags &&
           other.title == this.title &&
           other.created_at == this.created_at &&
@@ -3420,7 +3075,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<String> content;
   Value<int> creator_user_id;
   Value<String?> father_fragment_id;
-  Value<String?> fragment_template_id;
   Value<String> tags;
   Value<String> title;
   Value<DateTime> created_at;
@@ -3432,7 +3086,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.content = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.father_fragment_id = const Value.absent(),
-    this.fragment_template_id = const Value.absent(),
     this.tags = const Value.absent(),
     this.title = const Value.absent(),
     this.created_at = const Value.absent(),
@@ -3445,7 +3098,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     required String content,
     required int creator_user_id,
     this.father_fragment_id = const Value.absent(),
-    this.fragment_template_id = const Value.absent(),
     required String tags,
     required String title,
     required DateTime created_at,
@@ -3466,7 +3118,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     Expression<String>? content,
     Expression<int>? creator_user_id,
     Expression<String>? father_fragment_id,
-    Expression<String>? fragment_template_id,
     Expression<String>? tags,
     Expression<String>? title,
     Expression<DateTime>? created_at,
@@ -3479,8 +3130,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       if (content != null) 'content': content,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (father_fragment_id != null) 'father_fragment_id': father_fragment_id,
-      if (fragment_template_id != null)
-        'fragment_template_id': fragment_template_id,
       if (tags != null) 'tags': tags,
       if (title != null) 'title': title,
       if (created_at != null) 'created_at': created_at,
@@ -3495,7 +3144,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       Value<String>? content,
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_id,
-      Value<String?>? fragment_template_id,
       Value<String>? tags,
       Value<String>? title,
       Value<DateTime>? created_at,
@@ -3507,7 +3155,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       content: content ?? this.content,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       father_fragment_id: father_fragment_id ?? this.father_fragment_id,
-      fragment_template_id: fragment_template_id ?? this.fragment_template_id,
       tags: tags ?? this.tags,
       title: title ?? this.title,
       created_at: created_at ?? this.created_at,
@@ -3533,10 +3180,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     }
     if (father_fragment_id.present) {
       map['father_fragment_id'] = Variable<String>(father_fragment_id.value);
-    }
-    if (fragment_template_id.present) {
-      map['fragment_template_id'] =
-          Variable<String>(fragment_template_id.value);
     }
     if (tags.present) {
       map['tags'] = Variable<String>(tags.value);
@@ -3564,7 +3207,6 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
           ..write('content: $content, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_id: $father_fragment_id, ')
-          ..write('fragment_template_id: $fragment_template_id, ')
           ..write('tags: $tags, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
@@ -7290,8 +6932,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $RFragment2FragmentGroupsTable(this);
   late final $Test2sTable test2s = $Test2sTable(this);
   late final $TestsTable tests = $TestsTable(this);
-  late final $FragmentTemplatesTable fragmentTemplates =
-      $FragmentTemplatesTable(this);
   late final $FragmentsTable fragments = $FragmentsTable(this);
   late final $MemoryGroupsTable memoryGroups = $MemoryGroupsTable(this);
   late final $MemoryModelsTable memoryModels = $MemoryModelsTable(this);
@@ -7319,7 +6959,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
         rFragment2FragmentGroups,
         test2s,
         tests,
-        fragmentTemplates,
         fragments,
         memoryGroups,
         memoryModels,

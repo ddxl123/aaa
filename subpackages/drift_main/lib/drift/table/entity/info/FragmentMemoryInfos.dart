@@ -23,6 +23,8 @@ class FragmentMemoryInfos extends CloudTableBase  {
 
   TextColumn get click_value => text().named("click_value")();
 
+  TextColumn get content_value => text().named("content_value")();
+
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 

@@ -72,6 +72,7 @@ class Crt {
     required String click_familiarity,
     required String click_time,
     required String click_value,
+    required String content_value,
     required int creator_user_id,
     required String fragment_id,
     required String memory_group_id,
@@ -88,6 +89,7 @@ class Crt {
       click_familiarity: Value(click_familiarity),
       click_time: Value(click_time),
       click_value: Value(click_value),
+      content_value: Value(content_value),
       creator_user_id: Value(creator_user_id),
       fragment_id: Value(fragment_id),
       memory_group_id: Value(memory_group_id),
@@ -148,31 +150,12 @@ class Crt {
     );
   }
 
-  static FragmentTemplatesCompanion fragmentTemplatesCompanion({
-    required String content,
-    required int owner_user_id,
-    required FragmentTemplateType type,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return FragmentTemplatesCompanion(
-      content: Value(content),
-      owner_user_id: Value(owner_user_id),
-      type: Value(type),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static FragmentsCompanion fragmentsCompanion({
     required bool be_sep_publish,
     required bool client_be_selected,
     required String content,
     required int creator_user_id,
     required Value<String?> father_fragment_id,
-    required Value<String?> fragment_template_id,
     required String tags,
     required String title,
     DateTime? created_at,
@@ -185,7 +168,6 @@ class Crt {
       content: Value(content),
       creator_user_id: Value(creator_user_id),
       father_fragment_id: father_fragment_id,
-      fragment_template_id: fragment_template_id,
       tags: Value(tags),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
@@ -512,26 +494,6 @@ extension TestsCompanionExt on TestsCompanion {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.tests,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension FragmentTemplatesCompanionExt on FragmentTemplatesCompanion {
-  Future<FragmentTemplate> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.fragmentTemplates,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.fragmentTemplates,
       entity: this,
       syncTag: syncTag,
     );

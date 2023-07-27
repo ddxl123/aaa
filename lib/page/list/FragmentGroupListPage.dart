@@ -1,5 +1,5 @@
 import 'package:aaa/home/HomeAbController.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPageAbController.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/FragmentTemplate.dart';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
@@ -10,11 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:tools/tools.dart';
-import '../edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
 import 'FragmentGroupListPageController.dart';
 
 class FragmentGroupListPage extends StatelessWidget {
-  FragmentGroupListPage({Key? key}) : super(key: key);
+  const FragmentGroupListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,15 +169,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
                   },
                   onPressed: () async {
-                    await pushToFragmentPerformerPage(
-                      context: c.context,
-                      initSomeBefore: [],
-                      initSomeAfter: [],
-                      initFragmentAb: unit().unitEntity(),
-                      initFragmentGroupChain: c.getCurrentFragmentGroupChain(),
-                      fragmentPerformerTypeAb: FragmentPerformerType.readonly.ab,
-                      isTailNew: false,
-                    );
+                    await pushToMultiFragmentTemplateView(context: context, fragmentTemplate: FragmentTemplate.newInstanceFromContent(unit().unitEntity().content));
                   },
                 ),
               ),
@@ -217,17 +208,21 @@ class FragmentGroupListPage extends StatelessWidget {
                 Item(value: 0, text: '添加碎片'),
                 Item(value: 1, text: '添加碎片组'),
               ],
-              onChanged: (v) {
+              onChanged: (v) async {
                 if (v == 0) {
-                  pushToFragmentPerformerPage(
-                    context: context,
-                    initSomeBefore: [],
-                    initSomeAfter: [],
-                    initFragmentAb: null,
-                    initFragmentGroupChain: c.getCurrentFragmentGroupChain(),
-                    fragmentPerformerTypeAb: FragmentPerformerType.editable.ab,
-                    isTailNew: true,
-                  );
+                  final result = await pushToTemplateChoice(context: context);
+                  if (result != null) {
+                    await pushToFragmentPerformerPage(
+                      context: context,
+                      initFragmentAb: null,
+                      initFragmentTemplate: result,
+                      initSomeBefore: [],
+                      initSomeAfter: [],
+                      initFragmentGroupChain: c.getCurrentFragmentGroupChain(),
+                      isEditableAb: true.ab,
+                      isTailNew: true,
+                    );
+                  }
                 } else if (v == 1) {
                   showCreateFragmentGroupDialog(fragmentGroup: c.getCurrentGroupAb()().entity());
                 }

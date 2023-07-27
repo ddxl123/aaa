@@ -61,12 +61,6 @@ enum AlgorithmUsageStatus {
 
 }
         
-enum FragmentTemplateType {
-  
-  rich_any,
-
-}
-        
 enum NewDisplayOrder {
   
   random,

@@ -132,6 +132,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
               next_plan_show_time: "[]",
               show_familiarity: "[]",
               button_values: "[]",
+              content_value: "[]",
               study_status: StudyStatus.never,
             );
             if (isRemoveRepeat) {

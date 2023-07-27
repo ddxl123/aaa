@@ -72,7 +72,8 @@ class _InAppStageState extends State<InAppStage> {
                     return TextButton(
                       child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
                       onPressed: () async {
-                        await c.finishAndNext(clickValue: e.value);
+                        // TODO:
+                        await c.finishAndNext(clickValue: e.value, contentValue: []);
                       },
                     );
                   },

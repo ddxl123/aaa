@@ -340,14 +340,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.read(count)!;
   }
 
-  /// 通过 [fragmentTemplateId] 查询 [FragmentTemplate]。
-  Future<FragmentTemplate> queryFragmentTemplateById({required String fragmentTemplateId}) async {
-    final sel = select(fragmentTemplates);
-    sel.where((tbl) => tbl.id.equals(fragmentTemplateId));
-    final result = await sel.getSingle();
-    return result;
-  }
-
   Future<bool> queryFragmentGroupIsSynced({required String fragmentGroupId}) async {
     final sel = select(syncs);
     sel.where((tbl) => tbl.sync_table_name.equals(fragmentGroups.actualTableName) & tbl.row_id.equals(fragmentGroupId));

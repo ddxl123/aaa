@@ -2,7 +2,6 @@ import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/findhome/FindHome.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPageAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -119,15 +118,19 @@ class Home extends StatelessWidget {
                               ],
                             ),
                             onPressed: () async {
-                              await pushToFragmentPerformerPage(
-                                context: context,
-                                initSomeBefore: [],
-                                initSomeAfter: [],
-                                initFragmentAb: null,
-                                initFragmentGroupChain: null,
-                                fragmentPerformerTypeAb: FragmentPerformerType.editable.ab,
-                                isTailNew: true,
-                              );
+                              final result = await pushToTemplateChoice(context: context);
+                              if (result != null) {
+                                await pushToFragmentPerformerPage(
+                                  context: context,
+                                  initFragmentAb: null,
+                                  initFragmentTemplate: result,
+                                  initSomeBefore: [],
+                                  initSomeAfter: [],
+                                  initFragmentGroupChain: null,
+                                  isEditableAb: true.ab,
+                                  isTailNew: true,
+                                );
+                              }
                             },
                           ),
                           MaterialButton(

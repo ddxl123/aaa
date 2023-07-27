@@ -59,7 +59,7 @@ dependencies:
   # 返回键拦截器
   back_button_interceptor: ^6.0.2
   # 自定义键盘
-#  cool_ui: ^1.3.0
+  #  cool_ui: ^1.3.0
 
   # 富文本编辑器
   flutter_quill: ^7.2.18
@@ -93,6 +93,12 @@ dependencies:
   logger: ^1.4.0
 
   analyzer: ^6.0.0
+
+  # 前后翻转
+  flip_card: ^0.7.0
+
+  # 左右滑动
+  carousel_slider: ^4.2.1
 
   drift_main:
     path: ./subpackages/drift_main

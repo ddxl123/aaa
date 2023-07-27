@@ -113,7 +113,6 @@ class RefUsers extends Ref {
   Future<void> Function() self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefFragmentTemplates? fragmentTemplates;
   RefFragments? fragments;
   RefMemoryGroups? memoryGroups;
   RefMemoryModels? memoryModels;
@@ -126,7 +125,6 @@ class RefUsers extends Ref {
     required this.self,
     required this.fragmentMemoryInfos,
     required this.rFragment2FragmentGroups,
-    required this.fragmentTemplates,
     required this.fragments,
     required this.memoryGroups,
     required this.memoryModels,
@@ -145,7 +143,6 @@ class RefUsers extends Ref {
           this,
           fragmentMemoryInfos,
           rFragment2FragmentGroups,
-          fragmentTemplates,
           fragments,
           memoryGroups,
           memoryModels,
@@ -406,40 +403,6 @@ class RefTests extends Ref {
       () async {
         final list = <Ref?>[
           this,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// [FragmentTemplates]
-class RefFragmentTemplates extends Ref {
-  Future<void> Function() self;
-  RefFragments? fragments;
-
-  RefFragmentTemplates({
-    required this.self,
-    required this.fragments,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-          fragments,
         ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
         await Future.forEach<Ref?>(
           list,

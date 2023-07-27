@@ -1,5 +1,17 @@
-import 'dart:convert';
+import 'package:json_diff/json_diff.dart';
+import 'package:collection/collection.dart';
 
 void main() async {
-  print((json.decode('["1",false,null]') as List).last.runtimeType);
+  print(
+    DeepCollectionEquality().equals(
+      {
+        "a": 1,
+        "b": {"cc": 111, "c": "aaa"},
+      },
+      {
+        "b": {"c": "aaa", "cc": 111},
+        "a": 1,
+      },
+    ),
+  );
 }

@@ -1,36 +1,38 @@
-import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/FragmentTemplate.dart';
+import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
-import 'package:flutter_quill/flutter_quill.dart' as q;
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'FragmentGizmoEditPageAbController.dart';
-import 'custom_embeds/DemoEmbed.dart';
+import 'FragmentTemplate/QAFragmentTemplate.dart';
 
 /// 创建或编辑。
 class FragmentGizmoEditPage extends StatelessWidget {
   const FragmentGizmoEditPage({
     Key? key,
+    required this.initFragment,
+    required this.initFragmentTemplate,
     required this.initSomeBefore,
     required this.initSomeAfter,
-    required this.initFragment,
     required this.initFragmentGroupChain,
-    required this.fragmentPerformerTypeAb,
+    required this.isEditableAb,
     required this.isTailNew,
   }) : super(key: key);
+
+  final Fragment? initFragment;
+
+  final FragmentTemplate initFragmentTemplate;
 
   final List<Fragment> initSomeBefore;
 
   final List<Fragment> initSomeAfter;
 
-  final Fragment? initFragment;
-
   final List<FragmentGroup>? initFragmentGroupChain;
 
-  final Ab<FragmentPerformerType> fragmentPerformerTypeAb;
+  final Ab<bool> isEditableAb;
 
   final bool isTailNew;
 
@@ -39,10 +41,11 @@ class FragmentGizmoEditPage extends StatelessWidget {
     return AbBuilder<FragmentGizmoEditPageAbController>(
       putController: FragmentGizmoEditPageAbController(
         initFragment: initFragment,
+        initFragmentTemplate: initFragmentTemplate,
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
         initFragmentGroupChain: initFragmentGroupChain,
-        fragmentPerformerTypeAb: fragmentPerformerTypeAb,
+        isEditable: isEditableAb,
       ),
       builder: (controller, abw) {
         return Scaffold(
@@ -68,8 +71,30 @@ class FragmentGizmoEditPage extends StatelessWidget {
         },
       ),
       actions: [
-        TextButton(onPressed: () {}, child: const Icon(Icons.remove_red_eye_outlined)),
-        TextButton(onPressed: () {}, child: const Text('存草稿')),
+        TextButton(
+          child: const Icon(Icons.remove_red_eye_outlined),
+          onPressed: () {
+            pushToSingleFragmentTemplateView(context: c.context, fragmentTemplate: c.currentPerformerAb().fragmentTemplate);
+          },
+        ),
+        CustomDropdownBodyButton(
+          initValue: 0,
+          primaryButton: const IconButton(
+            onPressed: null,
+            icon: Icon(Icons.more_horiz, color: Colors.blue),
+          ),
+          itemAlignment: Alignment.centerLeft,
+          items: [
+            Item(value: 0, text: "存草稿"),
+            Item(value: 1, text: "恢复至未修改前"),
+          ],
+          onChanged: (v) {
+            if (v == 1) {
+              c.currentPerformerAb().reload(fragmentGizmoEditPageAbController: c, recent: null);
+              c.currentPerformerAb.refreshForce();
+            }
+          },
+        ),
       ],
     );
   }
@@ -80,41 +105,36 @@ class FragmentGizmoEditPage extends StatelessWidget {
         return Column(
           children: [
             Expanded(
-              child: AbwBuilder(
-                builder: (abw) {
-                  return q.QuillEditor(
-                    scrollController: c.contentScrollController,
-                    scrollPhysics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                    controller: c.quillController,
-                    readOnly: c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.readonly || c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.perform,
-                    showCursor: c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.editable,
-                    autoFocus: true,
-                    expands: true,
-                    focusNode: FocusNode(),
-                    padding: const EdgeInsets.all(10),
-                    scrollable: true,
-                    embedBuilders: [
-                      ...FlutterQuillEmbeds.builders(),
-                      DemoEmbedBuilder(),
-                    ],
-                  );
-                },
+              child: SingleChildScrollView(
+                child: AbwBuilder(
+                  builder: (abw) {
+                    return FragmentTemplate.templateSwitch(
+                      c.currentPerformerAb(abw).fragmentTemplate.fragmentTemplateType,
+                      qa: () {
+                        return QAFragmentTemplateEditWidget(
+                          qaFragmentTemplater: c.currentPerformerAb(abw).fragmentTemplate as QAFragmentTemplate,
+                          isEditable: c.isEditable(abw),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-            AbwBuilder(
-              builder: (abw) {
-                return c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.editable
-                    ? q.QuillToolbar.basic(
-                        multiRowsDisplay: false,
-                        controller: c.quillController,
-                        embedButtons: [
-                          ...FlutterQuillEmbeds.buttons(),
-                          (controller, toolbarIconSize, iconTheme, dialogTheme) => DemoToolBar(controller),
-                        ],
-                      )
-                    : Container();
-              },
-            ),
+            // AbwBuilder(
+            //   builder: (abw) {
+            //     return c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.editable
+            //         ? q.QuillToolbar.basic(
+            //             multiRowsDisplay: false,
+            //             controller: c.quillController,
+            //             embedButtons: [
+            //               ...FlutterQuillEmbeds.buttons(),
+            //               (controller, toolbarIconSize, iconTheme, dialogTheme) => DemoToolBar(controller),
+            //             ],
+            //           )
+            //         : Container();
+            //   },
+            // ),
             Row(
               children: [
                 Expanded(
@@ -182,7 +202,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                 const SizedBox(width: 5),
                 AbwBuilder(
                   builder: (abw) {
-                    if (c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.editable) {
+                    if (c.isEditable(abw)) {
                       return TextButton(
                         style: const ButtonStyle(
                           backgroundColor: MaterialStatePropertyAll(Colors.amber),
@@ -199,7 +219,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                       ),
                       child: const Text('修改'),
                       onPressed: () {
-                        c.fragmentPerformerTypeAb.refreshEasy((oldValue) => FragmentPerformerType.editable);
+                        c.isEditable.refreshEasy((oldValue) => true);
                       },
                     );
                   },

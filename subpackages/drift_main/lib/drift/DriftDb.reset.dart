@@ -193,6 +193,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
       click_familiarity: fragmentMemoryInfo.click_familiarity.toValue(),
       click_time: fragmentMemoryInfo.click_time.toValue(),
       click_value: fragmentMemoryInfo.click_value.toValue(),
+      content_value: fragmentMemoryInfo.content_value.toValue(),
       creator_user_id: fragmentMemoryInfo.creator_user_id.toValue(),
       fragment_id: fragmentMemoryInfo.fragment_id.toValue(),
       memory_group_id: fragmentMemoryInfo.memory_group_id.toValue(),
@@ -216,6 +217,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> click_familiarity,
     required Value<String> click_time,
     required Value<String> click_value,
+    required Value<String> content_value,
     required Value<int> creator_user_id,
     required Value<String> fragment_id,
     required Value<String> memory_group_id,
@@ -251,6 +253,11 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     if (click_value.present && this.click_value != click_value.value) {
       isCloudModify = true;
       this.click_value = click_value.value;
+    }
+
+    if (content_value.present && this.content_value != content_value.value) {
+      isCloudModify = true;
+      this.content_value = content_value.value;
     }
 
     if (creator_user_id.present &&
@@ -436,59 +443,6 @@ extension TestExt on Test {
   }
 }
 
-/// [FragmentTemplates]
-extension FragmentTemplateExt on FragmentTemplate {
-  Future<void> resetByEntity({
-    required FragmentTemplate fragmentTemplate,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      content: fragmentTemplate.content.toValue(),
-      owner_user_id: fragmentTemplate.owner_user_id.toValue(),
-      type: fragmentTemplate.type.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<FragmentTemplate> reset({
-    required Value<String> content,
-    required Value<int> owner_user_id,
-    required Value<FragmentTemplateType> type,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (content.present && this.content != content.value) {
-      isCloudModify = true;
-      this.content = content.value;
-    }
-
-    if (owner_user_id.present && this.owner_user_id != owner_user_id.value) {
-      isCloudModify = true;
-      this.owner_user_id = owner_user_id.value;
-    }
-
-    if (type.present && this.type != type.value) {
-      isCloudModify = true;
-      this.type = type.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.fragmentTemplates,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [Fragments]
 extension FragmentExt on Fragment {
   Future<void> resetByEntity({
@@ -501,7 +455,6 @@ extension FragmentExt on Fragment {
       content: fragment.content.toValue(),
       creator_user_id: fragment.creator_user_id.toValue(),
       father_fragment_id: fragment.father_fragment_id.toValue(),
-      fragment_template_id: fragment.fragment_template_id.toValue(),
       tags: fragment.tags.toValue(),
       title: fragment.title.toValue(),
       syncTag: syncTag,
@@ -521,7 +474,6 @@ extension FragmentExt on Fragment {
     required Value<String> content,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_id,
-    required Value<String?> fragment_template_id,
     required Value<String> tags,
     required Value<String> title,
     required SyncTag syncTag,
@@ -554,12 +506,6 @@ extension FragmentExt on Fragment {
         this.father_fragment_id != father_fragment_id.value) {
       isCloudModify = true;
       this.father_fragment_id = father_fragment_id.value;
-    }
-
-    if (fragment_template_id.present &&
-        this.fragment_template_id != fragment_template_id.value) {
-      isCloudModify = true;
-      this.fragment_template_id = fragment_template_id.value;
     }
 
     if (tags.present && this.tags != tags.value) {

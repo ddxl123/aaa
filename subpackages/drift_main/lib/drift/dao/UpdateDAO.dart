@@ -24,8 +24,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   Future<void> resetFragment({
     required FutureFunction originalFragmentReset,
     required SyncTag syncTag,
-  }) async {
-  }
+  }) async {}
 
   /// 修改 [FragmentGroup]。
   Future<void> resetFragmentGroup({
@@ -53,7 +52,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         await originalFragment.reset(
           creator_user_id: toAbsent(),
           father_fragment_id: toAbsent(),
-          fragment_template_id: toAbsent(),
           title: toAbsent(),
           content: toAbsent(),
           client_be_selected: isSelected.toValue(),
@@ -98,7 +96,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             await element.reset(
               creator_user_id: toAbsent(),
               father_fragment_id: toAbsent(),
-              fragment_template_id: toAbsent(),
               title: toAbsent(),
               content: toAbsent(),
               client_be_selected: isSelected.toValue(),
