@@ -1,4 +1,5 @@
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/FragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/ChoiceFragmentTemplate.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
@@ -7,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'FragmentGizmoEditPageAbController.dart';
-import 'FragmentTemplate/QAFragmentTemplate.dart';
+import 'FragmentTemplate/template/QAFragmentTemplate.dart';
 
 /// 创建或编辑。
 class FragmentGizmoEditPage extends StatelessWidget {
@@ -86,7 +87,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
           itemAlignment: Alignment.centerLeft,
           items: [
             Item(value: 0, text: "存草稿"),
-            Item(value: 1, text: "恢复至未修改前"),
+            Item(value: 1, text: "恢复至修改前"),
           ],
           onChanged: (v) {
             if (v == 1) {
@@ -105,36 +106,26 @@ class FragmentGizmoEditPage extends StatelessWidget {
         return Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: AbwBuilder(
-                  builder: (abw) {
-                    return FragmentTemplate.templateSwitch(
-                      c.currentPerformerAb(abw).fragmentTemplate.fragmentTemplateType,
-                      qa: () {
-                        return QAFragmentTemplateEditWidget(
-                          qaFragmentTemplater: c.currentPerformerAb(abw).fragmentTemplate as QAFragmentTemplate,
-                          isEditable: c.isEditable(abw),
-                        );
-                      },
-                    );
-                  },
-                ),
+              child: AbwBuilder(
+                builder: (abw) {
+                  return FragmentTemplate.templateSwitch(
+                    c.currentPerformerAb(abw).fragmentTemplate.fragmentTemplateType,
+                    questionAnswer: () {
+                      return QAFragmentTemplateEditWidget(
+                        qaFragmentTemplate: c.currentPerformerAb(abw).fragmentTemplate as QAFragmentTemplate,
+                        isEditable: c.isEditable(abw),
+                      );
+                    },
+                    choice: () {
+                      return ChoiceFragmentTemplateEditWidget(
+                        choiceFragmentTemplate: c.currentPerformerAb(abw).fragmentTemplate as ChoiceFragmentTemplate,
+                        isEditable: c.isEditable(abw),
+                      );
+                    },
+                  );
+                },
               ),
             ),
-            // AbwBuilder(
-            //   builder: (abw) {
-            //     return c.fragmentPerformerTypeAb(abw) == FragmentPerformerType.editable
-            //         ? q.QuillToolbar.basic(
-            //             multiRowsDisplay: false,
-            //             controller: c.quillController,
-            //             embedButtons: [
-            //               ...FlutterQuillEmbeds.buttons(),
-            //               (controller, toolbarIconSize, iconTheme, dialogTheme) => DemoToolBar(controller),
-            //             ],
-            //           )
-            //         : Container();
-            //   },
-            // ),
             Row(
               children: [
                 Expanded(

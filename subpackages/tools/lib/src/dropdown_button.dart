@@ -34,7 +34,6 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
   void initState() {
     super.initState();
     for (var value in widget.items) {
-      print(value.text);
       maxWidth = max(maxWidth, value.text.length * 20 + 60);
     }
   }

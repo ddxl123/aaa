@@ -120,7 +120,7 @@ class Home extends StatelessWidget {
                             onPressed: () async {
                               final result = await pushToTemplateChoice(context: context);
                               if (result != null) {
-                                await pushToFragmentPerformerPage(
+                                await pushToFragmentTemplateEditView(
                                   context: context,
                                   initFragmentAb: null,
                                   initFragmentTemplate: result,

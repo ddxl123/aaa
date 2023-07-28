@@ -1,6 +1,30 @@
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/ChoiceFragmentTemplate.dart';
 import 'package:flutter/material.dart';
 
-import '../edit/FragmentGizmoEditPage/FragmentTemplate/QAFragmentTemplate.dart';
+import '../edit/FragmentGizmoEditPage/FragmentTemplate/template/QAFragmentTemplate.dart';
+
+class SingleTemplateChoice extends StatelessWidget {
+  const SingleTemplateChoice({super.key, required this.title, required this.onPressed});
+
+  final String title;
+  final void Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Card(
+            child: TextButton(
+              onPressed: onPressed,
+              child: Text(title),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class TemplateChoice extends StatelessWidget {
   const TemplateChoice({super.key});
@@ -9,39 +33,25 @@ class TemplateChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("选择碎片制作模板"),
-        actions: [TextButton(onPressed: () {}, child: Text("请求制作"))],
+        title: const Text("选择碎片制作模板"),
+        actions: [TextButton(onPressed: () {}, child: const Text("请求制作"))],
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: TextButton(
-                      child: Text("问答"),
-                      onPressed: () {
-                        Navigator.pop(context, QAFragmentTemplate());
-                      },
-                    ),
-                  ),
-                ),
-              ],
+            SingleTemplateChoice(
+              title: "问答",
+              onPressed: () {
+                Navigator.pop(context, QAFragmentTemplate());
+              },
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: TextButton(
-                      child: Text("选择"),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-              ],
+            SingleTemplateChoice(
+              title: "选择",
+              onPressed: () {
+                Navigator.pop(context, ChoiceFragmentTemplate());
+              },
             ),
           ],
         ),

@@ -6,7 +6,7 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-import 'FragmentTemplate/FragmentTemplate.dart';
+import 'FragmentTemplate/base/FragmentTemplate.dart';
 
 enum LastOrNext {
   last,
@@ -349,15 +349,15 @@ class FragmentGizmoEditPageAbController extends AbController {
       return;
     }
 
-    if (currentPerformerAb().fragment == null && currentPerformerAb().fragmentTemplate.isContentEmpty()) {
-      SmartDialog.showToast('内容不能为空！');
+    final isMustContentEmpty = currentPerformerAb().fragmentTemplate.isMustContentEmpty();
+    if (currentPerformerAb().fragment == null && isMustContentEmpty.$1) {
+      SmartDialog.showToast(isMustContentEmpty.$2);
       return;
     }
 
     final st = await SyncTag.create();
     final saveResult = await currentPerformerAb().saveAll(fragmentGizmoEditPageAbController: this, syncTag: st);
     if (saveResult) {
-      print("objec11111t");
       SmartDialog.showToast('保存成功！');
     }
     if (isGotoNext) {

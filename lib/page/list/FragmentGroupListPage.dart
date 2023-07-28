@@ -1,5 +1,4 @@
 import 'package:aaa/home/HomeAbController.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/FragmentTemplate.dart';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
@@ -24,13 +23,13 @@ class FragmentGroupListPage extends StatelessWidget {
         child: g(abw).entity(abw) == null
             ? Container()
             : Card(
-                margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
                 color: Colors.greenAccent,
                 elevation: 0,
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: Column(
                         children: [
                           Row(
@@ -108,7 +107,7 @@ class FragmentGroupListPage extends StatelessWidget {
             children: [
               Expanded(
                 child: TextButton(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                     padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -163,19 +162,33 @@ class FragmentGroupListPage extends StatelessWidget {
                 child: MaterialButton(
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  child: Row(children: [Expanded(child: Text(unit(abw).unitEntity().title))]),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          unit(abw).unitEntity().title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                   onLongPress: () {
                     c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
                     Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
                   },
                   onPressed: () async {
-                    await pushToMultiFragmentTemplateView(context: context, fragmentTemplate: FragmentTemplate.newInstanceFromContent(unit().unitEntity().content));
+                    await pushToMultiFragmentTemplateView(
+                      context: context,
+                      allFragments: c.getCurrentGroupAb()().units().map((e) => e().unitEntity()).toList(),
+                      fragment: unit().unitEntity(),
+                    );
                   },
                 ),
               ),
               c.isUnitSelecting(abw)
                   ? IconButton(
-                      style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                      style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       icon: FaIcon(
                         FontAwesomeIcons.solidCircle,
                         color: unit(abw).unitEntity(abw).client_be_selected ? Colors.amber : Colors.grey,
@@ -212,7 +225,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 if (v == 0) {
                   final result = await pushToTemplateChoice(context: context);
                   if (result != null) {
-                    await pushToFragmentPerformerPage(
+                    await pushToFragmentTemplateEditView(
                       context: context,
                       initFragmentAb: null,
                       initFragmentTemplate: result,
