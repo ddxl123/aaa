@@ -9,16 +9,20 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
+import '../edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'PerformerDAO.dart';
 
 class Performer {
   final Fragment fragment;
   final FragmentMemoryInfo fragmentMemoryInfo;
+  late final FragmentTemplate fragmentTemplate;
 
   Performer({
     required this.fragment,
     required this.fragmentMemoryInfo,
-  });
+  }) {
+    fragmentTemplate = FragmentTemplate.newInstanceFromContent(fragment.content);
+  }
 }
 
 class InAppStageAbController extends AbController {
@@ -31,8 +35,6 @@ class InAppStageAbController extends AbController {
   late final Ab<MemoryModel> memoryModelAb;
 
   final performerQuery = PerformerQuery();
-
-  final quillController = q.QuillController.basic();
 
   /// 若为 true，则展示按钮数据值；
   /// 若为 false，则表示按钮天数值。
@@ -102,9 +104,8 @@ class InAppStageAbController extends AbController {
       currentButtonDatas.refreshEasy((oldValue) => oldValue
         ..clear()
         ..addAll(pbd.resultButtonValues));
-      quillController.document = q.Document.fromJson(jsonDecode(currentPerformer()!.fragment.content));
     } else {
-      quillController.document = q.Document.fromDelta(q.Delta()..insert("解析按钮数据失败！\n"));
+      throw "解析按钮数据失败！";
     }
   }
 
@@ -113,8 +114,7 @@ class InAppStageAbController extends AbController {
   /// 点击数值按钮后进行调用。
   Future<void> _finish({required double clickValue, required List<String> contentValue}) async {
     if (currentPerformer() == null) {
-      quillController.document = q.Document.fromDelta(q.Delta()..insert("没有下一个碎片了，却仍然请求了下一个碎片！\n"));
-      return;
+      throw "没有下一个碎片了，却仍然请求了下一个碎片！";
     }
 
     final targetButtonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: null);
@@ -122,8 +122,7 @@ class InAppStageAbController extends AbController {
 
     final currentClickFamiliarity = await _parseClickFamiliarity(targetButtonDataValue2NextShowTime);
     if (currentClickFamiliarity == null) {
-      quillController.document = q.Document.fromDelta(q.Delta()..insert("解析熟悉度失败！\n"));
-      return;
+      throw "解析熟悉度失败！";
     }
 
     final info = currentPerformer()!.fragmentMemoryInfo;

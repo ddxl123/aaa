@@ -1,7 +1,7 @@
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/ChoiceFragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplate.dart';
 import 'package:flutter/material.dart';
 
-import '../edit/FragmentGizmoEditPage/FragmentTemplate/template/QAFragmentTemplate.dart';
+import '../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
 
 class SingleTemplateChoice extends StatelessWidget {
   const SingleTemplateChoice({super.key, required this.title, required this.onPressed});

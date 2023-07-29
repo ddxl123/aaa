@@ -32,13 +32,14 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required SyncTag syncTag,
   }) async {
     await RefFragmentGroups(
-      self: originalFragmentGroupReset ?? () async {},
-      rFragment2FragmentGroups: null,
-      child_fragmentGroups: null,
-      userComments: null,
-      userLikes: null,
-      order: 0,
-    ).run();
+            self: originalFragmentGroupReset ?? () async {},
+            rFragment2FragmentGroups: null,
+            child_fragmentGroups: null,
+            userComments: null,
+            userLikes: null,
+            rFragmentGroup2FragmentGroupTags: null,
+            order: 0)
+        .run();
   }
 
   /// 修改 [Fragment]，仅修改 [isSelected]
@@ -55,7 +56,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           title: toAbsent(),
           content: toAbsent(),
           client_be_selected: isSelected.toValue(),
-          tags: toAbsent(),
           be_sep_publish: toAbsent(),
           syncTag: syncTag,
         );
@@ -83,9 +83,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           father_fragment_groups_id: toAbsent(),
           client_be_selected: isSelected.toValue(),
           title: toAbsent(),
+          profile: toAbsent(),
           be_private: toAbsent(),
           be_publish: toAbsent(),
-          tags: toAbsent(),
           syncTag: syncTag,
         );
         final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
@@ -100,7 +100,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               content: toAbsent(),
               client_be_selected: isSelected.toValue(),
               syncTag: syncTag,
-              tags: toAbsent(),
               be_sep_publish: toAbsent(),
             );
           },
@@ -113,9 +112,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               father_fragment_groups_id: toAbsent(),
               client_be_selected: isSelected.toValue(),
               title: toAbsent(),
+              profile: toAbsent(),
               be_private: toAbsent(),
               be_publish: toAbsent(),
-              tags: toAbsent(),
               syncTag: syncTag,
             );
           },
@@ -125,6 +124,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       child_fragmentGroups: null,
       userComments: null,
       userLikes: null,
+      rFragmentGroup2FragmentGroupTags: null,
       order: 0,
     ).run();
   }

@@ -303,6 +303,45 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
   }
 }
 
+/// [FragmentGroupTags]
+extension FragmentGroupTagExt on FragmentGroupTag {
+  Future<void> resetByEntity({
+    required FragmentGroupTag fragmentGroupTag,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      tag: fragmentGroupTag.tag.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  FutureOr<FragmentGroupTag> reset({
+    required Value<String> tag,
+    required SyncTag syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (tag.present && this.tag != tag.value) {
+      isCloudModify = true;
+      this.tag = tag.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.fragmentGroupTags,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
 /// [RFragment2FragmentGroups]
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   Future<void> resetByEntity({
@@ -352,6 +391,64 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rFragment2FragmentGroups,
+          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+    }
+    return this;
+  }
+}
+
+/// [RFragmentGroup2FragmentGroupTags]
+extension RFragmentGroup2FragmentGroupTagExt
+    on RFragmentGroup2FragmentGroupTag {
+  Future<void> resetByEntity({
+    required RFragmentGroup2FragmentGroupTag rFragmentGroup2FragmentGroupTag,
+    required SyncTag syncTag,
+  }) async {
+    await reset(
+      creator_user_id:
+          rFragmentGroup2FragmentGroupTag.creator_user_id.toValue(),
+      fragment_group_id:
+          rFragmentGroup2FragmentGroupTag.fragment_group_id.toValue(),
+      tag_id: rFragmentGroup2FragmentGroupTag.tag_id.toValue(),
+      syncTag: syncTag,
+    );
+  }
+
+  /// 将传入的新数据覆盖掉旧数据类实例。
+  ///
+  /// 值覆写方式：[DriftValueExt]
+  ///
+  /// 只能修改当前 id 的行。
+  ///
+  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
+  FutureOr<RFragmentGroup2FragmentGroupTag> reset({
+    required Value<int> creator_user_id,
+    required Value<String?> fragment_group_id,
+    required Value<String> tag_id,
+    required SyncTag syncTag,
+  }) async {
+    bool isCloudModify = false;
+    bool isLocalModify = false;
+    if (creator_user_id.present &&
+        this.creator_user_id != creator_user_id.value) {
+      isCloudModify = true;
+      this.creator_user_id = creator_user_id.value;
+    }
+
+    if (fragment_group_id.present &&
+        this.fragment_group_id != fragment_group_id.value) {
+      isCloudModify = true;
+      this.fragment_group_id = fragment_group_id.value;
+    }
+
+    if (tag_id.present && this.tag_id != tag_id.value) {
+      isCloudModify = true;
+      this.tag_id = tag_id.value;
+    }
+
+    if (isCloudModify || isLocalModify) {
+      final ins = DriftDb.instance;
+      await ins.updateReturningWith(ins.rFragmentGroup2FragmentGroupTags,
           entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
     }
     return this;
@@ -455,7 +552,6 @@ extension FragmentExt on Fragment {
       content: fragment.content.toValue(),
       creator_user_id: fragment.creator_user_id.toValue(),
       father_fragment_id: fragment.father_fragment_id.toValue(),
-      tags: fragment.tags.toValue(),
       title: fragment.title.toValue(),
       syncTag: syncTag,
     );
@@ -474,7 +570,6 @@ extension FragmentExt on Fragment {
     required Value<String> content,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_id,
-    required Value<String> tags,
     required Value<String> title,
     required SyncTag syncTag,
   }) async {
@@ -506,11 +601,6 @@ extension FragmentExt on Fragment {
         this.father_fragment_id != father_fragment_id.value) {
       isCloudModify = true;
       this.father_fragment_id = father_fragment_id.value;
-    }
-
-    if (tags.present && this.tags != tags.value) {
-      isCloudModify = true;
-      this.tags = tags.value;
     }
 
     if (title.present && this.title != title.value) {
@@ -875,7 +965,7 @@ extension FragmentGroupExt on FragmentGroup {
       creator_user_id: fragmentGroup.creator_user_id.toValue(),
       father_fragment_groups_id:
           fragmentGroup.father_fragment_groups_id.toValue(),
-      tags: fragmentGroup.tags.toValue(),
+      profile: fragmentGroup.profile.toValue(),
       title: fragmentGroup.title.toValue(),
       syncTag: syncTag,
     );
@@ -894,7 +984,7 @@ extension FragmentGroupExt on FragmentGroup {
     required Value<bool> client_be_selected,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
-    required Value<String> tags,
+    required Value<String> profile,
     required Value<String> title,
     required SyncTag syncTag,
   }) async {
@@ -928,9 +1018,9 @@ extension FragmentGroupExt on FragmentGroup {
       this.father_fragment_groups_id = father_fragment_groups_id.value;
     }
 
-    if (tags.present && this.tags != tags.value) {
+    if (profile.present && this.profile != profile.value) {
       isCloudModify = true;
-      this.tags = tags.value;
+      this.profile = profile.value;
     }
 
     if (title.present && this.title != title.value) {

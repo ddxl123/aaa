@@ -1,5 +1,5 @@
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/ChoiceFragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplate.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
@@ -8,7 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'FragmentGizmoEditPageAbController.dart';
-import 'FragmentTemplate/template/QAFragmentTemplate.dart';
+import 'FragmentTemplate/template/choice/ChoiceFragmentTemplateEditWidget.dart';
+import 'FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
+import 'FragmentTemplate/template/question_answer/QAFragmentTemplateEditWidget.dart';
 
 /// 创建或编辑。
 class FragmentGizmoEditPage extends StatelessWidget {
@@ -87,14 +89,8 @@ class FragmentGizmoEditPage extends StatelessWidget {
           itemAlignment: Alignment.centerLeft,
           items: [
             Item(value: 0, text: "存草稿"),
-            Item(value: 1, text: "恢复至修改前"),
           ],
-          onChanged: (v) {
-            if (v == 1) {
-              c.currentPerformerAb().reload(fragmentGizmoEditPageAbController: c, recent: null);
-              c.currentPerformerAb.refreshForce();
-            }
-          },
+          onChanged: (v) {},
         ),
       ],
     );
@@ -163,6 +159,23 @@ class FragmentGizmoEditPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
+                // 上一个
+                AbwBuilder(
+                  builder: (abw) {
+                    return IconButton(
+                      icon: Icon(Icons.u_turn_left),
+                      onPressed: () async {
+                        final result = await c.currentPerformerAb().reload(fragmentGizmoEditPageAbController: c, recent: null);
+                        c.currentPerformerAb.refreshForce();
+                        if (result) {
+                          logger.outNormal(show: "已恢复至修改前");
+                        } else {
+                          logger.outNormal(show: "无修改，无需恢复");
+                        }
+                      },
+                    );
+                  },
                 ),
                 // 上一个
                 AbwBuilder(

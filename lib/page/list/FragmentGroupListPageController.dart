@@ -34,10 +34,10 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   creator_user_id: toAbsent(),
                   father_fragment_groups_id: toAbsent(),
                   title: toAbsent(),
+                  profile: toAbsent(),
                   syncTag: st,
                   be_private: toAbsent(),
                   be_publish: toAbsent(),
-                  tags: toAbsent(),
                 );
               },
         syncTag: st,

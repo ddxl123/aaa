@@ -29,6 +29,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       rFragment2FragmentGroups: null,
       userComments: null,
       userLikes: null,
+      rFragmentGroup2FragmentGroupTags: null,
       order: 0,
     ).run();
     return returnFragmentGroup;

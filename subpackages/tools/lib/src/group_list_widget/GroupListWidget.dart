@@ -267,7 +267,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                                       onPressed: () async {
                                         await c.backGroup();
                                       },
-                                      child: const Text('back'),
+                                      child: const Text('返回'),
                                     ),
                                   ),
                                 ],

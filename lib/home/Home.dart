@@ -2,7 +2,6 @@ import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/home/findhome/FindHome.dart';
 import 'package:aaa/home/memoryhome/MemoryHome.dart';
 import 'package:aaa/home/minehome/MineHome.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPageAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -75,7 +74,7 @@ class Home extends StatelessWidget {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: Text("速记", style: TextStyle(fontWeight: FontWeight.bold)),
+                                          child: Text("笔记", style: TextStyle(fontWeight: FontWeight.bold)),
                                         )
                                       ],
                                     ),
@@ -84,7 +83,7 @@ class Home extends StatelessWidget {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: Text("在这里快速记下知识点...", style: TextStyle(color: Colors.grey)),
+                                          child: Text("在这里快速写下知识点...", style: TextStyle(color: Colors.grey)),
                                         ),
                                       ],
                                     ),

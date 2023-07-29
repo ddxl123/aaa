@@ -1,4 +1,4 @@
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/ChoiceFragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplate.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:drift_main/drift/DriftDb.dart';
@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
-import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/QAFragmentTemplate.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplateViewWidget.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplateViewWidget.dart';
 
-class MultiFragmentTemplateView extends StatefulWidget {
-  const MultiFragmentTemplateView({
+class MultiFragmentTemplatePage extends StatefulWidget {
+  const MultiFragmentTemplatePage({
     super.key,
     required this.allFragments,
     required this.fragment,
@@ -19,10 +21,10 @@ class MultiFragmentTemplateView extends StatefulWidget {
   final Fragment fragment;
 
   @override
-  State<MultiFragmentTemplateView> createState() => _MultiFragmentTemplateViewState();
+  State<MultiFragmentTemplatePage> createState() => _MultiFragmentTemplatePageState();
 }
 
-class _MultiFragmentTemplateViewState extends State<MultiFragmentTemplateView> {
+class _MultiFragmentTemplatePageState extends State<MultiFragmentTemplatePage> {
   final carouselController = CarouselController();
 
   int currentIndex = 0;

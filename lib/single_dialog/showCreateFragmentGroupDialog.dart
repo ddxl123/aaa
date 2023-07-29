@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:aaa/page/list/FragmentGroupListPageController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -32,15 +35,16 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
                 father_fragment_groups_id: (fragmentGroup?.id).toValue(),
                 client_be_selected: false,
                 title: tec.text,
+                profile: jsonEncode(Document().toDelta().toJson()),
                 be_private: false,
                 be_publish: false,
-                tags: "[]",
               ).insert(syncTag: st);
             },
             rFragment2FragmentGroups: null,
             child_fragmentGroups: null,
             userComments: null,
             userLikes: null,
+            rFragmentGroup2FragmentGroupTags: null,
             order: 0,
           ).run();
 

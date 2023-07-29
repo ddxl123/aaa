@@ -102,6 +102,20 @@ class Crt {
     );
   }
 
+  static FragmentGroupTagsCompanion fragmentGroupTagsCompanion({
+    required String tag,
+    DateTime? created_at,
+    String? id,
+    DateTime? updated_at,
+  }) {
+    return FragmentGroupTagsCompanion(
+      tag: Value(tag),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : Value(id),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
     required int creator_user_id,
     required Value<String?> fragment_group_id,
@@ -114,6 +128,25 @@ class Crt {
       creator_user_id: Value(creator_user_id),
       fragment_group_id: fragment_group_id,
       fragment_id: Value(fragment_id),
+      created_at: created_at == null ? const Value.absent() : Value(created_at),
+      id: id == null ? const Value.absent() : Value(id),
+      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    );
+  }
+
+  static RFragmentGroup2FragmentGroupTagsCompanion
+      rFragmentGroup2FragmentGroupTagsCompanion({
+    required int creator_user_id,
+    required Value<String?> fragment_group_id,
+    required String tag_id,
+    DateTime? created_at,
+    String? id,
+    DateTime? updated_at,
+  }) {
+    return RFragmentGroup2FragmentGroupTagsCompanion(
+      creator_user_id: Value(creator_user_id),
+      fragment_group_id: fragment_group_id,
+      tag_id: Value(tag_id),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
@@ -156,7 +189,6 @@ class Crt {
     required String content,
     required int creator_user_id,
     required Value<String?> father_fragment_id,
-    required String tags,
     required String title,
     DateTime? created_at,
     String? id,
@@ -168,7 +200,6 @@ class Crt {
       content: Value(content),
       creator_user_id: Value(creator_user_id),
       father_fragment_id: father_fragment_id,
-      tags: Value(tags),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
@@ -277,7 +308,7 @@ class Crt {
     required bool client_be_selected,
     required int creator_user_id,
     required Value<String?> father_fragment_groups_id,
-    required String tags,
+    required String profile,
     required String title,
     DateTime? created_at,
     String? id,
@@ -289,7 +320,7 @@ class Crt {
       client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id: father_fragment_groups_id,
-      tags: Value(tags),
+      profile: Value(profile),
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
@@ -439,6 +470,26 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
   }
 }
 
+extension FragmentGroupTagsCompanionExt on FragmentGroupTagsCompanion {
+  Future<FragmentGroupTag> insert({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.fragmentGroupTags,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.fragmentGroupTags,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
 extension RFragment2FragmentGroupsCompanionExt
     on RFragment2FragmentGroupsCompanion {
   Future<RFragment2FragmentGroup> insert({required SyncTag syncTag}) async {
@@ -454,6 +505,28 @@ extension RFragment2FragmentGroupsCompanionExt
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.rFragment2FragmentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+}
+
+extension RFragmentGroup2FragmentGroupTagsCompanionExt
+    on RFragmentGroup2FragmentGroupTagsCompanion {
+  Future<RFragmentGroup2FragmentGroupTag> insert(
+      {required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    return await ins.insertReturningWith(
+      ins.rFragmentGroup2FragmentGroupTags,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.rFragmentGroup2FragmentGroupTags,
       entity: this,
       syncTag: syncTag,
     );

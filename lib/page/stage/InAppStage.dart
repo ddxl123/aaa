@@ -1,3 +1,8 @@
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplateInAppStageWidget.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplateInAppStageWidget.dart';
 import 'package:aaa/page/stage/InAppStageAbController.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
@@ -31,8 +36,8 @@ class _InAppStageState extends State<InAppStage> {
             actions: [_moreButtonWidget()],
           ),
           body: _body(),
-          bottomSheet: _bottomWidget(),
-        );
+          bottomNavigationBar: _bottomWidget(),
+         );
       },
     );
   }
@@ -89,17 +94,23 @@ class _InAppStageState extends State<InAppStage> {
   Widget _body() {
     return AbBuilder<InAppStageAbController>(
       builder: (c, abw) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          child: c.currentPerformer(abw) == null
-              ? const Center(
-                  child: Text('任务已全部完成！'),
-                )
-              : q.QuillEditor.basic(
-                  controller: c.quillController,
-                  readOnly: true,
-                ),
-        );
+        return c.currentPerformer(abw) == null
+            ? const Center(
+                child: Text('任务已全部完成！'),
+              )
+            : FragmentTemplate.templateSwitch(
+                c.currentPerformer(abw)!.fragmentTemplate.fragmentTemplateType,
+                questionAnswer: () {
+                  return QAFragmentTemplateInAppStageWidget(
+                    qaFragmentTemplate: c.currentPerformer(abw)!.fragmentTemplate as QAFragmentTemplate,
+                  );
+                },
+                choice: () {
+                  return ChoiceFragmentTemplateInAppStageWidget(
+                    choiceFragmentTemplate: c.currentPerformer(abw)!.fragmentTemplate as ChoiceFragmentTemplate,
+                  );
+                },
+              );
       },
     );
   }

@@ -100,7 +100,6 @@ class FragmentPerformer {
           father_fragment_id: null.toValue(),
           client_be_selected: false,
           title: fragmentTemplate.getTitle(),
-          tags: jsonEncode([]),
           be_sep_publish: false,
         ),
         whichFragmentGroupChains: fragmentGroupChains,
@@ -118,7 +117,6 @@ class FragmentPerformer {
             client_be_selected: toAbsent(),
             // 因为本身就是 now
             title: fragmentTemplate.getTitle().toValue(),
-            tags: toAbsent(),
             syncTag: syncTag,
             be_sep_publish: false.toValue(),
           );
@@ -350,7 +348,7 @@ class FragmentGizmoEditPageAbController extends AbController {
     }
 
     final isMustContentEmpty = currentPerformerAb().fragmentTemplate.isMustContentEmpty();
-    if (currentPerformerAb().fragment == null && isMustContentEmpty.$1) {
+    if (isMustContentEmpty.$1) {
       SmartDialog.showToast(isMustContentEmpty.$2);
       return;
     }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/push_page/push_page.dart';
@@ -6,6 +8,7 @@ import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
 import 'package:aaa/single_dialog/showPrivatePublishDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:tools/tools.dart';
@@ -67,10 +70,23 @@ class FragmentGroupListPage extends StatelessWidget {
                               ),
                             ],
                           ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText(),
+                                    style: TextStyle(color: Colors.grey),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Row(
-                            children: [
-                              Text("【超全】448百科知识选择、填空(含刘军平第二勘误版)"),
-                            ],
+                            children: [Text("#四级英语")],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -82,8 +98,11 @@ class FragmentGroupListPage extends StatelessWidget {
                               SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
                               TextButton(
                                 child: Text("编辑"),
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => FragmentGroupGizmoEditPage()));
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => FragmentGroupGizmoEditPage(fragmentGroupAb: g(abw).entity)),
+                                  );
                                 },
                               ),
                               SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),

@@ -81,7 +81,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                   child: Row(
                     children: [
                       ...c.categories(abw).map(
-                            (e) {
+                        (e) {
                           return TextButton(
                             child: AbwBuilder(
                               builder: (abw) {
@@ -114,10 +114,7 @@ class KnowledgeBaseHome extends StatelessWidget {
     return AbBuilder<KnowledgeBaseHomeAbController>(
       builder: (c, abw) {
         return Container(
-          height: MediaQuery
-              .of(c.context)
-              .size
-              .height,
+          height: MediaQuery.of(c.context).size.height,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
@@ -127,31 +124,28 @@ class KnowledgeBaseHome extends StatelessWidget {
             physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             child: Column(
               children: [
-                ...c
-                    .getSelectedMainCategory(abw)
-                    ?.subCategories
-                    .map(
+                ...c.getSelectedMainCategory(abw)?.subCategories.map(
                       (e) {
-                    var text = e.name;
-                    if (e.name.length == 5 || e.name.length == 6) {
-                      text = e.name.substring(0, 3) + "\n" + e.name.substring(3);
-                    } else if (e.name.length > 8) {
-                      text = e.name.substring(0, 4) + "\n" + e.name.substring(4, 7) + "...";
-                    } else if (e.name.length > 4) {
-                      text = e.name.substring(0, 4) + "\n" + e.name.substring(4);
-                    }
-                    return MaterialButton(
-                      visualDensity: VisualDensity(horizontal: -3),
-                      child: Text(
-                        text,
-                        style: TextStyle(color: c.getSelectedSubCategory(abw) == e ? Colors.black : Colors.grey),
-                      ),
-                      onPressed: () {
-                        c.changeTo(mainCategory: null, subCategory: e, currentKnowledgeBaseContentSortType: null);
+                        var text = e.name;
+                        if (e.name.length == 5 || e.name.length == 6) {
+                          text = e.name.substring(0, 3) + "\n" + e.name.substring(3);
+                        } else if (e.name.length > 8) {
+                          text = e.name.substring(0, 4) + "\n" + e.name.substring(4, 7) + "...";
+                        } else if (e.name.length > 4) {
+                          text = e.name.substring(0, 4) + "\n" + e.name.substring(4);
+                        }
+                        return MaterialButton(
+                          visualDensity: VisualDensity(horizontal: -3),
+                          child: Text(
+                            text,
+                            style: TextStyle(color: c.getSelectedSubCategory(abw) == e ? Colors.black : Colors.grey),
+                          ),
+                          onPressed: () {
+                            c.changeTo(mainCategory: null, subCategory: e, currentKnowledgeBaseContentSortType: null);
+                          },
+                        );
                       },
-                    );
-                  },
-                ) ??
+                    ) ??
                     [],
               ],
             ),
@@ -231,7 +225,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                     ],
                   ),
                   ...c.knowledgeBaseContentListAb(abw).map(
-                        (e) {
+                    (e) {
                       return AbwBuilder(
                         builder: (abw) {
                           return Card(
@@ -242,10 +236,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(e(abw).fragment_group.title, style: Theme
-                                            .of(c.context)
-                                            .textTheme
-                                            .titleLarge),
+                                        child: Text(e(abw).fragment_group.title, style: Theme.of(c.context).textTheme.titleLarge),
                                       ),
                                     ],
                                   ),
@@ -345,7 +336,6 @@ class KnowledgeBaseHome extends StatelessWidget {
                                               padding: EdgeInsets.all(2),
                                               decoration: BoxDecoration(color: Color.fromARGB(255, 230, 230, 230), borderRadius: BorderRadius.circular(3)),
                                             ),
-                                            ...e(abw).fragment_group.tags.jsonToArray().map((e) => Text(e)),
                                           ],
                                         ),
                                       ),

@@ -25,7 +25,7 @@ class _FragmentHomeState extends State<FragmentHome> {
                 text: '碎片',
               ),
               Tab(
-                text: '速记',
+                text: '笔记',
               ),
             ],
           ),

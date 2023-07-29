@@ -51,7 +51,11 @@ part 'table/entity/client/Syncs.dart';
 
 part 'table/entity/info/FragmentMemoryInfos.dart';
 
+part 'table/entity/other/FragmentGroupTags.dart';
+
 part 'table/entity/r/RFragment2FragmentGroups.dart';
+
+part 'table/entity/r/RFragmentGroup2FragmentGroupTags.dart';
 
 part 'table/entity/test/Test2s.dart';
 
@@ -83,7 +87,11 @@ const List<Type> tableClasses = [
 
   FragmentMemoryInfos,
 
+  FragmentGroupTags,
+
   RFragment2FragmentGroups,
+
+  RFragmentGroup2FragmentGroupTags,
 
   Test2s,
 

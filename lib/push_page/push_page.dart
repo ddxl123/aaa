@@ -1,18 +1,15 @@
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentGizmoEditPageAbController.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:aaa/page/other/TemplateChoice.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
-import 'package:aaa/page/stage/fragment_template_views/MultiFragmentTemplateView.dart';
-import 'package:aaa/page/stage/fragment_template_views/SingleFragmentTemplateView.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:aaa/page/stage/fragment_template_pages/MultiFragmentTemplatePage.dart';
+import 'package:aaa/page/stage/fragment_template_pages/SingleFragmentTemplatePage.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 import '../page/edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
-import '../page/edit/FragmentGizmoEditPage/FragmentTemplate/template/QAFragmentTemplate.dart';
 import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import '../page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPage.dart';
 import '../page/edit/edit_page_type.dart';
@@ -122,7 +119,7 @@ Future<void> pushToSingleFragmentTemplateView({
   await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (ctx) => SingleFragmentTemplateView(fragmentTemplate: fragmentTemplate),
+      builder: (ctx) => SingleFragmentTemplatePage(fragmentTemplate: fragmentTemplate),
     ),
   );
 }
@@ -135,7 +132,7 @@ Future<void> pushToMultiFragmentTemplateView({
   await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (ctx) => MultiFragmentTemplateView(
+      builder: (ctx) => MultiFragmentTemplatePage(
         allFragments: allFragments,
         fragment: fragment,
       ),

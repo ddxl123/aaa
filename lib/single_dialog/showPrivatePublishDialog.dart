@@ -30,8 +30,8 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                                 client_be_selected: 0.toAbsent(),
                                 creator_user_id: 0.toAbsent(),
                                 father_fragment_groups_id: 0.toAbsent(),
-                                tags: 0.toAbsent(),
                                 title: 0.toAbsent(),
+                                profile: 0.toAbsent(),
                                 syncTag: st,
                               );
                             },
@@ -61,8 +61,8 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                                 client_be_selected: 0.toAbsent(),
                                 creator_user_id: 0.toAbsent(),
                                 father_fragment_groups_id: 0.toAbsent(),
-                                tags: 0.toAbsent(),
                                 title: 0.toAbsent(),
+                                profile: 0.toAbsent(),
                                 syncTag: st,
                               );
                             },
