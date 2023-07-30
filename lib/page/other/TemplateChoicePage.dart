@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
 
-class SingleTemplateChoice extends StatelessWidget {
-  const SingleTemplateChoice({super.key, required this.title, required this.onPressed});
+class SingleTemplateChoicePage extends StatelessWidget {
+  const SingleTemplateChoicePage({super.key, required this.title, required this.onPressed});
 
   final String title;
   final void Function() onPressed;
@@ -41,13 +41,13 @@ class TemplateChoice extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SingleTemplateChoice(
+            SingleTemplateChoicePage(
               title: "问答",
               onPressed: () {
                 Navigator.pop(context, QAFragmentTemplate());
               },
             ),
-            SingleTemplateChoice(
+            SingleTemplateChoicePage(
               title: "选择",
               onPressed: () {
                 Navigator.pop(context, ChoiceFragmentTemplate());

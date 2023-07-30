@@ -1,4 +1,16 @@
 
+enum RegisterOrLoginType {
+  
+  email_send,
+
+  email_verify,
+
+  phone_send,
+
+  phone_verify,
+
+}
+        
 enum KnowledgeBaseContentSortType {
   
   by_random,
@@ -14,18 +26,6 @@ enum KnowledgeBaseContentSortType {
   by_like_count,
 
   by_save_count,
-
-}
-        
-enum RegisterOrLoginType {
-  
-  email_send,
-
-  email_verify,
-
-  phone_send,
-
-  phone_verify,
 
 }
         

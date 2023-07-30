@@ -1,7 +1,7 @@
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
-import 'package:aaa/page/other/TemplateChoice.dart';
+import 'package:aaa/page/other/TemplateChoicePage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:aaa/page/stage/fragment_template_pages/MultiFragmentTemplatePage.dart';
 import 'package:aaa/page/stage/fragment_template_pages/SingleFragmentTemplatePage.dart';

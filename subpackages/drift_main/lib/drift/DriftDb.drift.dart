@@ -1850,9 +1850,9 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -1886,8 +1886,6 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -1911,7 +1909,7 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -1921,16 +1919,13 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   $FragmentGroupTagsTable createAlias(String alias) {
     return $FragmentGroupTagsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class FragmentGroupTag extends DataClass
     implements Insertable<FragmentGroupTag> {
   String tag;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   FragmentGroupTag(
       {required this.tag,
@@ -1942,7 +1937,7 @@ class FragmentGroupTag extends DataClass
     final map = <String, Expression>{};
     map['tag'] = Variable<String>(tag);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -1962,7 +1957,7 @@ class FragmentGroupTag extends DataClass
     return FragmentGroupTag(
       tag: serializer.fromJson<String>(json['tag']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -1972,16 +1967,13 @@ class FragmentGroupTag extends DataClass
     return <String, dynamic>{
       'tag': serializer.toJson<String>(tag),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   FragmentGroupTag copyWith(
-          {String? tag,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
+          {String? tag, DateTime? created_at, int? id, DateTime? updated_at}) =>
       FragmentGroupTag(
         tag: tag ?? this.tag,
         created_at: created_at ?? this.created_at,
@@ -2014,7 +2006,7 @@ class FragmentGroupTag extends DataClass
 class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   Value<String> tag;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   FragmentGroupTagsCompanion({
     this.tag = const Value.absent(),
@@ -2025,16 +2017,15 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   FragmentGroupTagsCompanion.insert({
     required String tag,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : tag = Value(tag),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentGroupTag> custom({
     Expression<String>? tag,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -2048,7 +2039,7 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   FragmentGroupTagsCompanion copyWith(
       {Value<String>? tag,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return FragmentGroupTagsCompanion(
       tag: tag ?? this.tag,
@@ -2068,7 +2059,7 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -2462,9 +2453,9 @@ class $RFragmentGroup2FragmentGroupTagsTable
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _tag_idMeta = const VerificationMeta('tag_id');
   @override
-  late final GeneratedColumn<String> tag_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> tag_id = GeneratedColumn<int>(
       'tag_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _created_atMeta =
       const VerificationMeta('created_at');
   @override
@@ -2551,7 +2542,7 @@ class $RFragmentGroup2FragmentGroupTagsTable
       fragment_group_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}fragment_group_id']),
       tag_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}tag_id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}tag_id'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
@@ -2574,7 +2565,7 @@ class RFragmentGroup2FragmentGroupTag extends DataClass
     implements Insertable<RFragmentGroup2FragmentGroupTag> {
   int creator_user_id;
   String? fragment_group_id;
-  String tag_id;
+  int tag_id;
   DateTime created_at;
   String id;
   DateTime updated_at;
@@ -2592,7 +2583,7 @@ class RFragmentGroup2FragmentGroupTag extends DataClass
     if (!nullToAbsent || fragment_group_id != null) {
       map['fragment_group_id'] = Variable<String>(fragment_group_id);
     }
-    map['tag_id'] = Variable<String>(tag_id);
+    map['tag_id'] = Variable<int>(tag_id);
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
@@ -2619,7 +2610,7 @@ class RFragmentGroup2FragmentGroupTag extends DataClass
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       fragment_group_id:
           serializer.fromJson<String?>(json['fragment_group_id']),
-      tag_id: serializer.fromJson<String>(json['tag_id']),
+      tag_id: serializer.fromJson<int>(json['tag_id']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
@@ -2631,7 +2622,7 @@ class RFragmentGroup2FragmentGroupTag extends DataClass
     return <String, dynamic>{
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
-      'tag_id': serializer.toJson<String>(tag_id),
+      'tag_id': serializer.toJson<int>(tag_id),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
@@ -2641,7 +2632,7 @@ class RFragmentGroup2FragmentGroupTag extends DataClass
   RFragmentGroup2FragmentGroupTag copyWith(
           {int? creator_user_id,
           Value<String?> fragment_group_id = const Value.absent(),
-          String? tag_id,
+          int? tag_id,
           DateTime? created_at,
           String? id,
           DateTime? updated_at}) =>
@@ -2687,7 +2678,7 @@ class RFragmentGroup2FragmentGroupTagsCompanion
     extends UpdateCompanion<RFragmentGroup2FragmentGroupTag> {
   Value<int> creator_user_id;
   Value<String?> fragment_group_id;
-  Value<String> tag_id;
+  Value<int> tag_id;
   Value<DateTime> created_at;
   Value<String> id;
   Value<DateTime> updated_at;
@@ -2702,7 +2693,7 @@ class RFragmentGroup2FragmentGroupTagsCompanion
   RFragmentGroup2FragmentGroupTagsCompanion.insert({
     required int creator_user_id,
     this.fragment_group_id = const Value.absent(),
-    required String tag_id,
+    required int tag_id,
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
@@ -2714,7 +2705,7 @@ class RFragmentGroup2FragmentGroupTagsCompanion
   static Insertable<RFragmentGroup2FragmentGroupTag> custom({
     Expression<int>? creator_user_id,
     Expression<String>? fragment_group_id,
-    Expression<String>? tag_id,
+    Expression<int>? tag_id,
     Expression<DateTime>? created_at,
     Expression<String>? id,
     Expression<DateTime>? updated_at,
@@ -2732,7 +2723,7 @@ class RFragmentGroup2FragmentGroupTagsCompanion
   RFragmentGroup2FragmentGroupTagsCompanion copyWith(
       {Value<int>? creator_user_id,
       Value<String?>? fragment_group_id,
-      Value<String>? tag_id,
+      Value<int>? tag_id,
       Value<DateTime>? created_at,
       Value<String>? id,
       Value<DateTime>? updated_at}) {
@@ -2756,7 +2747,7 @@ class RFragmentGroup2FragmentGroupTagsCompanion
       map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
     }
     if (tag_id.present) {
-      map['tag_id'] = Variable<String>(tag_id.value);
+      map['tag_id'] = Variable<int>(tag_id.value);
     }
     if (created_at.present) {
       map['created_at'] = Variable<DateTime>(created_at.value);

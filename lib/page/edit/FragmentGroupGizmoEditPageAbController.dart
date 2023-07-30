@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aaa/single_dialog/showFragmentGroupTagSearchDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:tools/tools.dart';
@@ -7,9 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class FragmentGroupGizmoEditPageAbController extends AbController {
-  FragmentGroupGizmoEditPageAbController({required this.fragmentGroupAb});
+  FragmentGroupGizmoEditPageAbController({
+    required this.fragmentGroupAb,
+  });
 
   final Ab<FragmentGroup?> fragmentGroupAb;
+
+  final fragmentGroupTagAb = <FragmentGroupTag>[].ab;
   final titleTextEditingController = TextEditingController();
   final titleFocusNode = FocusNode();
   final profileQuillController = QuillController.basic();
@@ -20,6 +25,10 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
   @override
   void onInit() {
     super.onInit();
+    _init();
+  }
+
+  Future<void> _init() async {
     titleFocusNode.addListener(() {
       if (titleFocusNode.hasFocus) {
         isShowToolBar.refreshEasy((oldValue) => false);
@@ -34,6 +43,15 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
     titleTextEditingController.text = fragmentGroupAb()!.title;
     profileQuillController.document =
         Document.fromJson(jsonDecode(fragmentGroupAb()!.profile.trim() == "" ? jsonEncode(Document().toDelta().toJson()) : fragmentGroupAb()!.profile));
+
+    final tags = await db.generalQueryDAO.queryFragmentGroupTagByFragmentGroupId(fragmentGroupId: fragmentGroupAb()!.id);
+    fragmentGroupTagAb.refreshEasy((oldValue) => oldValue
+      ..clear()
+      ..addAll(tags));
+  }
+
+  Future<void> addTag() async {
+    await showFragmentGroupTagSearchDialog(initTags: fragmentGroupTagAb, fragmentGroup: fragmentGroupAb()!);
   }
 
   /// 返回是否被修改。

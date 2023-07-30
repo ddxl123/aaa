@@ -424,7 +424,7 @@ extension RFragmentGroup2FragmentGroupTagExt
   FutureOr<RFragmentGroup2FragmentGroupTag> reset({
     required Value<int> creator_user_id,
     required Value<String?> fragment_group_id,
-    required Value<String> tag_id,
+    required Value<int> tag_id,
     required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;

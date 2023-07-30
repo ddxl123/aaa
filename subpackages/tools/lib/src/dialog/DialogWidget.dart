@@ -43,6 +43,53 @@ class DialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inner = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: allCrossAxisAlignment ?? CrossAxisAlignment.center,
+      children: [
+        title == null
+            ? Container()
+            : Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Builder(
+                builder: (_) {
+                  return Text(
+                    title!,
+                    style: TextStyle(fontSize: Theme.of(_).textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
+                  );
+                },
+              ),
+            ),
+            topRightAction == null ? Container() : topRightAction!,
+          ],
+        ),
+        topKeepWidget == null ? Container() : const SizedBox(height: 5),
+        topKeepWidget == null ? Container() : topKeepWidget!,
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: mainVerticalWidgetsAlignment ?? CrossAxisAlignment.start,
+              // 文字部分
+              children: mainVerticalWidgets,
+            ),
+          ),
+        ),
+        bottomKeepWidget == null ? Container() : const SizedBox(height: 5),
+        bottomKeepWidget == null ? Container() : bottomKeepWidget!,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          // 按钮部分
+          children: [
+            bottomLiftAction == null ? Container() : bottomLiftAction!,
+            ...bottomHorizontalButtonWidgets,
+          ],
+        ),
+      ],
+    );
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets + MediaQuery.of(context).padding,
       duration: const Duration(milliseconds: 100),
@@ -66,53 +113,7 @@ class DialogWidget extends StatelessWidget {
         ),
         child: IntrinsicHeight(
           child: IntrinsicWidth(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: allCrossAxisAlignment ?? CrossAxisAlignment.center,
-              children: [
-                title == null
-                    ? Container()
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Builder(
-                              builder: (_) {
-                                return Text(
-                                  title!,
-                                  style: TextStyle(fontSize: Theme.of(_).textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
-                                );
-                              },
-                            ),
-                          ),
-                          topRightAction == null ? Container() : topRightAction!,
-                        ],
-                      ),
-                topKeepWidget == null ? Container() : const SizedBox(height: 5),
-                topKeepWidget == null ? Container() : topKeepWidget!,
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: mainVerticalWidgetsAlignment ?? CrossAxisAlignment.start,
-                      // 文字部分
-                      children: mainVerticalWidgets,
-                    ),
-                  ),
-                ),
-                bottomKeepWidget == null ? Container() : const SizedBox(height: 5),
-                bottomKeepWidget == null ? Container() : bottomKeepWidget!,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  // 按钮部分
-                  children: [
-                    bottomLiftAction == null ? Container() : bottomLiftAction!,
-                    ...bottomHorizontalButtonWidgets,
-                  ],
-                ),
-              ],
-            ),
+            child: inner,
           ),
         ),
       ),

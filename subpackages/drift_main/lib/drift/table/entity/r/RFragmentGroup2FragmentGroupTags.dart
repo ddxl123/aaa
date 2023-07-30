@@ -20,7 +20,7 @@ class RFragmentGroup2FragmentGroupTags extends CloudTableBase  {
   TextColumn get fragment_group_id => text().named("fragment_group_id").nullable()();
 
   @ReferenceTo([FragmentGroupTags])
-  TextColumn get tag_id => text().named("tag_id")();
+  IntColumn get tag_id => integer().named("tag_id")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 

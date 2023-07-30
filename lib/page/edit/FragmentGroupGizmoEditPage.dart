@@ -84,29 +84,38 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
                 builder: (abw) {
                   return Row(
                     children: [
-                      Card(
-                        margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Row(
-                            children: [
-                              Text("#四级英语", style: TextStyle(color: Colors.blue)),
-                            ],
-                          ),
-                        ),
+                      ...c.fragmentGroupTagAb(abw).map(
+                        (e) {
+                          return Card(
+                            margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
+                            child: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Row(
+                                children: [
+                                  Text("#四级英语", style: TextStyle(color: Colors.blue)),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      Card(
-                        color: Colors.greenAccent,
-                        margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Row(
-                            children: [
-                              Text("+ ", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-                              Text("标签", style: TextStyle(color: Colors.blue)),
-                            ],
+                      GestureDetector(
+                        child: Card(
+                          color: Colors.greenAccent,
+                          margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Row(
+                              children: [
+                                Text("+ ", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                                Text("标签", style: TextStyle(color: Colors.blue)),
+                              ],
+                            ),
                           ),
                         ),
+                        onTap: () {
+                          c.addTag();
+                        },
                       ),
                     ],
                   );

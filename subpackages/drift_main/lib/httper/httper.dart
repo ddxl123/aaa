@@ -26,6 +26,18 @@ part 'dto_vo_bo/dto_vo/CheckLoginDto.dart';
 part 'dto_vo_bo/dto_vo/CheckLoginVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/LogoutDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/LogoutVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/SendOrVerifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SendOrVerifyVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupDto.dart';
 
 
@@ -38,21 +50,27 @@ part 'dto_vo_bo/dto_vo/DataUploadDto.dart';
 part 'dto_vo_bo/dto_vo/DataUploadVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/KnowledgeBaseQueryDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/KnowledgeBaseQueryVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/LogoutDto.dart';
+part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByFragmentGroupIdDto.dart';
 
 
-part 'dto_vo_bo/dto_vo/LogoutVo.dart';
+part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByFragmentGroupIdVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/SendOrVerifyDto.dart';
+part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByLikeDto.dart';
 
 
-part 'dto_vo_bo/dto_vo/SendOrVerifyVo.dart';
+part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByLikeVo.dart';
 
 

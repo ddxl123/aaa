@@ -220,4 +220,29 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     ).run();
     return newShorthand;
   }
+
+  Future<FragmentGroupTag> insertFragmentGroupTag({
+    required FragmentGroupsCompanion fragmentGroupsCompanion,
+    required FragmentGroupTagsCompanion fragmentGroupTagsCompanion,
+    required SyncTag syncTag,
+  }) async {
+    late final FragmentGroupTag newFragmentGroupTag;
+    await RefFragmentGroupTags(
+      self: () async {
+        newFragmentGroupTag = await fragmentGroupTagsCompanion.insert(syncTag: syncTag);
+      },
+      rFragmentGroup2FragmentGroupTags: RefRFragmentGroup2FragmentGroupTags(
+        self: () async {
+          await Crt.rFragmentGroup2FragmentGroupTagsCompanion(
+            creator_user_id: fragmentGroupsCompanion.creator_user_id.value,
+            fragment_group_id: fragmentGroupsCompanion.id,
+            tag_id: fragmentGroupTagsCompanion.id.value,
+          ).insert(syncTag: syncTag);
+        },
+        order: 0,
+      ),
+      order: 0,
+    ).run();
+    return newFragmentGroupTag;
+  }
 }

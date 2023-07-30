@@ -105,13 +105,13 @@ class Crt {
   static FragmentGroupTagsCompanion fragmentGroupTagsCompanion({
     required String tag,
     DateTime? created_at,
-    String? id,
+    Value<int>? id,
     DateTime? updated_at,
   }) {
     return FragmentGroupTagsCompanion(
       tag: Value(tag),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
+      id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -138,7 +138,7 @@ class Crt {
       rFragmentGroup2FragmentGroupTagsCompanion({
     required int creator_user_id,
     required Value<String?> fragment_group_id,
-    required String tag_id,
+    required int tag_id,
     DateTime? created_at,
     String? id,
     DateTime? updated_at,

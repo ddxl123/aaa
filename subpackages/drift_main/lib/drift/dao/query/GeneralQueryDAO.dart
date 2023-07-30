@@ -363,4 +363,16 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
           ))
         .get();
   }
+
+  Future<List<FragmentGroupTag>> queryFragmentGroupTagByFragmentGroupId({required String fragmentGroupId}) async {
+    final result = await select(fragmentGroupTags).join(
+      [
+        leftOuterJoin(
+          rFragmentGroup2FragmentGroupTags,
+          rFragmentGroup2FragmentGroupTags.fragment_group_id.equals(fragmentGroupId),
+        ),
+      ],
+    ).get();
+    return result.map((e) => e.readTable(fragmentGroupTags)).toList();
+  }
 }
