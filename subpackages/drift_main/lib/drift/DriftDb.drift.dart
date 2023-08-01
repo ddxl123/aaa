@@ -12,8 +12,6 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentGroupTags;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupTagsTable get rFragmentGroup2FragmentGroupTags =>
-      attachedDatabase.rFragmentGroup2FragmentGroupTags;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -36,8 +34,6 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentGroupTags;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupTagsTable get rFragmentGroup2FragmentGroupTags =>
-      attachedDatabase.rFragmentGroup2FragmentGroupTags;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -60,8 +56,6 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentGroupTags;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupTagsTable get rFragmentGroup2FragmentGroupTags =>
-      attachedDatabase.rFragmentGroup2FragmentGroupTags;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -84,8 +78,6 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentGroupTags;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupTagsTable get rFragmentGroup2FragmentGroupTags =>
-      attachedDatabase.rFragmentGroup2FragmentGroupTags;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -108,8 +100,6 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentGroupTags;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupTagsTable get rFragmentGroup2FragmentGroupTags =>
-      attachedDatabase.rFragmentGroup2FragmentGroupTags;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -132,8 +122,6 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
       attachedDatabase.fragmentGroupTags;
   $RFragment2FragmentGroupsTable get rFragment2FragmentGroups =>
       attachedDatabase.rFragment2FragmentGroups;
-  $RFragmentGroup2FragmentGroupTagsTable get rFragmentGroup2FragmentGroupTags =>
-      attachedDatabase.rFragmentGroup2FragmentGroupTags;
   $Test2sTable get test2s => attachedDatabase.test2s;
   $TestsTable get tests => attachedDatabase.tests;
   $FragmentsTable get fragments => attachedDatabase.fragments;
@@ -1837,6 +1825,12 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentGroupTagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _fragment_group_idMeta =
+      const VerificationMeta('fragment_group_id');
+  @override
+  late final GeneratedColumn<String> fragment_group_id =
+      GeneratedColumn<String>('fragment_group_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _tagMeta = const VerificationMeta('tag');
   @override
   late final GeneratedColumn<String> tag = GeneratedColumn<String>(
@@ -1850,9 +1844,9 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -1860,7 +1854,8 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [tag, created_at, id, updated_at];
+  List<GeneratedColumn> get $columns =>
+      [fragment_group_id, tag, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'fragment_group_tags';
   @override
@@ -1870,6 +1865,14 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('fragment_group_id')) {
+      context.handle(
+          _fragment_group_idMeta,
+          fragment_group_id.isAcceptableOrUnknown(
+              data['fragment_group_id']!, _fragment_group_idMeta));
+    } else if (isInserting) {
+      context.missing(_fragment_group_idMeta);
+    }
     if (data.containsKey('tag')) {
       context.handle(
           _tagMeta, tag.isAcceptableOrUnknown(data['tag']!, _tagMeta));
@@ -1886,6 +1889,8 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -1904,12 +1909,14 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   FragmentGroupTag map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentGroupTag(
+      fragment_group_id: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}fragment_group_id'])!,
       tag: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tag'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -1919,31 +1926,38 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   $FragmentGroupTagsTable createAlias(String alias) {
     return $FragmentGroupTagsTable(attachedDatabase, alias);
   }
+
+  @override
+  bool get withoutRowId => true;
 }
 
 class FragmentGroupTag extends DataClass
     implements Insertable<FragmentGroupTag> {
+  String fragment_group_id;
   String tag;
   DateTime created_at;
-  int id;
+  String id;
   DateTime updated_at;
   FragmentGroupTag(
-      {required this.tag,
+      {required this.fragment_group_id,
+      required this.tag,
       required this.created_at,
       required this.id,
       required this.updated_at});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['fragment_group_id'] = Variable<String>(fragment_group_id);
     map['tag'] = Variable<String>(tag);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
 
   FragmentGroupTagsCompanion toCompanion(bool nullToAbsent) {
     return FragmentGroupTagsCompanion(
+      fragment_group_id: Value(fragment_group_id),
       tag: Value(tag),
       created_at: Value(created_at),
       id: Value(id),
@@ -1955,9 +1969,10 @@ class FragmentGroupTag extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentGroupTag(
+      fragment_group_id: serializer.fromJson<String>(json['fragment_group_id']),
       tag: serializer.fromJson<String>(json['tag']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -1965,16 +1980,22 @@ class FragmentGroupTag extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'fragment_group_id': serializer.toJson<String>(fragment_group_id),
       'tag': serializer.toJson<String>(tag),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   FragmentGroupTag copyWith(
-          {String? tag, DateTime? created_at, int? id, DateTime? updated_at}) =>
+          {String? fragment_group_id,
+          String? tag,
+          DateTime? created_at,
+          String? id,
+          DateTime? updated_at}) =>
       FragmentGroupTag(
+        fragment_group_id: fragment_group_id ?? this.fragment_group_id,
         tag: tag ?? this.tag,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
@@ -1983,6 +2004,7 @@ class FragmentGroupTag extends DataClass
   @override
   String toString() {
     return (StringBuffer('FragmentGroupTag(')
+          ..write('fragment_group_id: $fragment_group_id, ')
           ..write('tag: $tag, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -1992,11 +2014,13 @@ class FragmentGroupTag extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(tag, created_at, id, updated_at);
+  int get hashCode =>
+      Object.hash(fragment_group_id, tag, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentGroupTag &&
+          other.fragment_group_id == this.fragment_group_id &&
           other.tag == this.tag &&
           other.created_at == this.created_at &&
           other.id == this.id &&
@@ -2004,31 +2028,38 @@ class FragmentGroupTag extends DataClass
 }
 
 class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
+  Value<String> fragment_group_id;
   Value<String> tag;
   Value<DateTime> created_at;
-  Value<int> id;
+  Value<String> id;
   Value<DateTime> updated_at;
   FragmentGroupTagsCompanion({
+    this.fragment_group_id = const Value.absent(),
     this.tag = const Value.absent(),
     this.created_at = const Value.absent(),
     this.id = const Value.absent(),
     this.updated_at = const Value.absent(),
   });
   FragmentGroupTagsCompanion.insert({
+    required String fragment_group_id,
     required String tag,
     required DateTime created_at,
-    this.id = const Value.absent(),
+    required String id,
     required DateTime updated_at,
-  })  : tag = Value(tag),
+  })  : fragment_group_id = Value(fragment_group_id),
+        tag = Value(tag),
         created_at = Value(created_at),
+        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentGroupTag> custom({
+    Expression<String>? fragment_group_id,
     Expression<String>? tag,
     Expression<DateTime>? created_at,
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
+      if (fragment_group_id != null) 'fragment_group_id': fragment_group_id,
       if (tag != null) 'tag': tag,
       if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
@@ -2037,11 +2068,13 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   }
 
   FragmentGroupTagsCompanion copyWith(
-      {Value<String>? tag,
+      {Value<String>? fragment_group_id,
+      Value<String>? tag,
       Value<DateTime>? created_at,
-      Value<int>? id,
+      Value<String>? id,
       Value<DateTime>? updated_at}) {
     return FragmentGroupTagsCompanion(
+      fragment_group_id: fragment_group_id ?? this.fragment_group_id,
       tag: tag ?? this.tag,
       created_at: created_at ?? this.created_at,
       id: id ?? this.id,
@@ -2052,6 +2085,9 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (fragment_group_id.present) {
+      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
+    }
     if (tag.present) {
       map['tag'] = Variable<String>(tag.value);
     }
@@ -2059,7 +2095,7 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -2070,6 +2106,7 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   @override
   String toString() {
     return (StringBuffer('FragmentGroupTagsCompanion(')
+          ..write('fragment_group_id: $fragment_group_id, ')
           ..write('tag: $tag, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -2422,351 +2459,6 @@ class RFragment2FragmentGroupsCompanion
           ..write('creator_user_id: $creator_user_id, ')
           ..write('fragment_group_id: $fragment_group_id, ')
           ..write('fragment_id: $fragment_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $RFragmentGroup2FragmentGroupTagsTable
-    extends RFragmentGroup2FragmentGroupTags
-    with
-        TableInfo<$RFragmentGroup2FragmentGroupTagsTable,
-            RFragmentGroup2FragmentGroupTag> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $RFragmentGroup2FragmentGroupTagsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _creator_user_idMeta =
-      const VerificationMeta('creator_user_id');
-  @override
-  late final GeneratedColumn<int> creator_user_id = GeneratedColumn<int>(
-      'creator_user_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _fragment_group_idMeta =
-      const VerificationMeta('fragment_group_id');
-  @override
-  late final GeneratedColumn<String> fragment_group_id =
-      GeneratedColumn<String>('fragment_group_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _tag_idMeta = const VerificationMeta('tag_id');
-  @override
-  late final GeneratedColumn<int> tag_id = GeneratedColumn<int>(
-      'tag_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [creator_user_id, fragment_group_id, tag_id, created_at, id, updated_at];
-  @override
-  String get aliasedName => _alias ?? 'r_fragment_group2_fragment_group_tags';
-  @override
-  String get actualTableName => 'r_fragment_group2_fragment_group_tags';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<RFragmentGroup2FragmentGroupTag> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('creator_user_id')) {
-      context.handle(
-          _creator_user_idMeta,
-          creator_user_id.isAcceptableOrUnknown(
-              data['creator_user_id']!, _creator_user_idMeta));
-    } else if (isInserting) {
-      context.missing(_creator_user_idMeta);
-    }
-    if (data.containsKey('fragment_group_id')) {
-      context.handle(
-          _fragment_group_idMeta,
-          fragment_group_id.isAcceptableOrUnknown(
-              data['fragment_group_id']!, _fragment_group_idMeta));
-    }
-    if (data.containsKey('tag_id')) {
-      context.handle(_tag_idMeta,
-          tag_id.isAcceptableOrUnknown(data['tag_id']!, _tag_idMeta));
-    } else if (isInserting) {
-      context.missing(_tag_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  RFragmentGroup2FragmentGroupTag map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RFragmentGroup2FragmentGroupTag(
-      creator_user_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fragment_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}fragment_group_id']),
-      tag_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}tag_id'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $RFragmentGroup2FragmentGroupTagsTable createAlias(String alias) {
-    return $RFragmentGroup2FragmentGroupTagsTable(attachedDatabase, alias);
-  }
-
-  @override
-  bool get withoutRowId => true;
-}
-
-class RFragmentGroup2FragmentGroupTag extends DataClass
-    implements Insertable<RFragmentGroup2FragmentGroupTag> {
-  int creator_user_id;
-  String? fragment_group_id;
-  int tag_id;
-  DateTime created_at;
-  String id;
-  DateTime updated_at;
-  RFragmentGroup2FragmentGroupTag(
-      {required this.creator_user_id,
-      this.fragment_group_id,
-      required this.tag_id,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['creator_user_id'] = Variable<int>(creator_user_id);
-    if (!nullToAbsent || fragment_group_id != null) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id);
-    }
-    map['tag_id'] = Variable<int>(tag_id);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  RFragmentGroup2FragmentGroupTagsCompanion toCompanion(bool nullToAbsent) {
-    return RFragmentGroup2FragmentGroupTagsCompanion(
-      creator_user_id: Value(creator_user_id),
-      fragment_group_id: fragment_group_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fragment_group_id),
-      tag_id: Value(tag_id),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory RFragmentGroup2FragmentGroupTag.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RFragmentGroup2FragmentGroupTag(
-      creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      fragment_group_id:
-          serializer.fromJson<String?>(json['fragment_group_id']),
-      tag_id: serializer.fromJson<int>(json['tag_id']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
-      'tag_id': serializer.toJson<int>(tag_id),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  RFragmentGroup2FragmentGroupTag copyWith(
-          {int? creator_user_id,
-          Value<String?> fragment_group_id = const Value.absent(),
-          int? tag_id,
-          DateTime? created_at,
-          String? id,
-          DateTime? updated_at}) =>
-      RFragmentGroup2FragmentGroupTag(
-        creator_user_id: creator_user_id ?? this.creator_user_id,
-        fragment_group_id: fragment_group_id.present
-            ? fragment_group_id.value
-            : this.fragment_group_id,
-        tag_id: tag_id ?? this.tag_id,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('RFragmentGroup2FragmentGroupTag(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('fragment_group_id: $fragment_group_id, ')
-          ..write('tag_id: $tag_id, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      creator_user_id, fragment_group_id, tag_id, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is RFragmentGroup2FragmentGroupTag &&
-          other.creator_user_id == this.creator_user_id &&
-          other.fragment_group_id == this.fragment_group_id &&
-          other.tag_id == this.tag_id &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class RFragmentGroup2FragmentGroupTagsCompanion
-    extends UpdateCompanion<RFragmentGroup2FragmentGroupTag> {
-  Value<int> creator_user_id;
-  Value<String?> fragment_group_id;
-  Value<int> tag_id;
-  Value<DateTime> created_at;
-  Value<String> id;
-  Value<DateTime> updated_at;
-  RFragmentGroup2FragmentGroupTagsCompanion({
-    this.creator_user_id = const Value.absent(),
-    this.fragment_group_id = const Value.absent(),
-    this.tag_id = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  RFragmentGroup2FragmentGroupTagsCompanion.insert({
-    required int creator_user_id,
-    this.fragment_group_id = const Value.absent(),
-    required int tag_id,
-    required DateTime created_at,
-    required String id,
-    required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
-        tag_id = Value(tag_id),
-        created_at = Value(created_at),
-        id = Value(id),
-        updated_at = Value(updated_at);
-  static Insertable<RFragmentGroup2FragmentGroupTag> custom({
-    Expression<int>? creator_user_id,
-    Expression<String>? fragment_group_id,
-    Expression<int>? tag_id,
-    Expression<DateTime>? created_at,
-    Expression<String>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (creator_user_id != null) 'creator_user_id': creator_user_id,
-      if (fragment_group_id != null) 'fragment_group_id': fragment_group_id,
-      if (tag_id != null) 'tag_id': tag_id,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  RFragmentGroup2FragmentGroupTagsCompanion copyWith(
-      {Value<int>? creator_user_id,
-      Value<String?>? fragment_group_id,
-      Value<int>? tag_id,
-      Value<DateTime>? created_at,
-      Value<String>? id,
-      Value<DateTime>? updated_at}) {
-    return RFragmentGroup2FragmentGroupTagsCompanion(
-      creator_user_id: creator_user_id ?? this.creator_user_id,
-      fragment_group_id: fragment_group_id ?? this.fragment_group_id,
-      tag_id: tag_id ?? this.tag_id,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (creator_user_id.present) {
-      map['creator_user_id'] = Variable<int>(creator_user_id.value);
-    }
-    if (fragment_group_id.present) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
-    }
-    if (tag_id.present) {
-      map['tag_id'] = Variable<int>(tag_id.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RFragmentGroup2FragmentGroupTagsCompanion(')
-          ..write('creator_user_id: $creator_user_id, ')
-          ..write('fragment_group_id: $fragment_group_id, ')
-          ..write('tag_id: $tag_id, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
           ..write('updated_at: $updated_at')
@@ -7505,9 +7197,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
       $FragmentGroupTagsTable(this);
   late final $RFragment2FragmentGroupsTable rFragment2FragmentGroups =
       $RFragment2FragmentGroupsTable(this);
-  late final $RFragmentGroup2FragmentGroupTagsTable
-      rFragmentGroup2FragmentGroupTags =
-      $RFragmentGroup2FragmentGroupTagsTable(this);
   late final $Test2sTable test2s = $Test2sTable(this);
   late final $TestsTable tests = $TestsTable(this);
   late final $FragmentsTable fragments = $FragmentsTable(this);
@@ -7536,7 +7225,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
         fragmentMemoryInfos,
         fragmentGroupTags,
         rFragment2FragmentGroups,
-        rFragmentGroup2FragmentGroupTags,
         test2s,
         tests,
         fragments,

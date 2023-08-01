@@ -134,11 +134,24 @@ class GlobalAbController extends AbController {
       if (isShowToast) {
         logger.outNormal(show: "上传全部数据成功！");
       }
-      // 当全部上传成功后，每5秒监听一次是否有新的数据需要上传。
-      await Future.delayed(Duration(seconds: 5));
-      await uploadSingleGroupSync(isShowToast: false);
+      // TODO: 当全部上传成功后，每5秒监听一次是否有新的数据需要上传。
+      // await Future.delayed(Duration(seconds: 5));
+      // await uploadSingleGroupSync(isShowToast: false);
       return;
     }
+    // 当 c 没被上传就 d 时，之后进行上传会导致 c 找不到对应的实体，造成服务端出现没有实体的异常。
+    // 因此当 c 找不到对应实体时，直接删除该条 c 的 sync 记录。
+    final willRemove = <(Sync, dynamic)>[];
+    for (var r in result) {
+      if (r.$1.sync_curd_type == SyncCurdType.c && r.$2 == null) {
+        await db.deleteDAO.deleteSingleSync(sync: r.$1);
+        willRemove.add(r);
+      }
+    }
+    for (var wr in willRemove) {
+      result.remove(wr);
+    }
+
     final requestResult = await request(
       path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS,
       dtoData: DataUploadDto(
@@ -157,7 +170,7 @@ class GlobalAbController extends AbController {
           .map(
             (e) => DataUploadDto(
               sync_entity: e.$1,
-              row_map: e.$2.toJson(),
+              row_map: e.$2?.toJson(),
             ),
           )
           .toList(),
@@ -169,7 +182,8 @@ class GlobalAbController extends AbController {
       },
       code20101: (String showMessage) async {
         await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.$1).toList());
-        await uploadSingleGroupSync();
+        // TODO: 当上传成功后，是否立即进入下一次上传。
+        // await uploadSingleGroupSync();
       },
     );
   }

@@ -55,8 +55,6 @@ part 'table/entity/other/FragmentGroupTags.dart';
 
 part 'table/entity/r/RFragment2FragmentGroups.dart';
 
-part 'table/entity/r/RFragmentGroup2FragmentGroupTags.dart';
-
 part 'table/entity/test/Test2s.dart';
 
 part 'table/entity/test/Tests.dart';
@@ -90,8 +88,6 @@ const List<Type> tableClasses = [
   FragmentGroupTags,
 
   RFragment2FragmentGroups,
-
-  RFragmentGroup2FragmentGroupTags,
 
   Test2s,
 

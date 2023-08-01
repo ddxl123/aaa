@@ -174,7 +174,7 @@ Map<String, dynamic> _$DataDownloadForFragmentGroupVoToJson(
 DataUploadDto _$DataUploadDtoFromJson(Map<String, dynamic> json) =>
     DataUploadDto(
       sync_entity: Sync.fromJson(json['sync_entity'] as Map<String, dynamic>),
-      row_map: json['row_map'] as Map<String, dynamic>,
+      row_map: json['row_map'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$DataUploadDtoToJson(DataUploadDto instance) =>

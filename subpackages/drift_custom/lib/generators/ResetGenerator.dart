@@ -26,6 +26,15 @@ class ResetGenerator extends Generator {
         /// [${className}s]
         extension ${className}Ext on $className {
 
+          Future<void> delete({required SyncTag syncTag}) async {
+            final ins = DriftDb.instance;
+            await ins.deleteWith(
+              ins.${camelClassName}s,
+              entity: this,
+              syncTag: syncTag,
+            );
+          }
+            
           Future<void> resetByEntity({
             required $className $camelClassName,
             required SyncTag syncTag,

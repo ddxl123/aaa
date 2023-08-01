@@ -15,7 +15,9 @@ enum QueryFragmentWhereType {
 class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMixin {
   GeneralQueryDAO(DriftDb attachedDatabase) : super(attachedDatabase);
 
-  /// 查询 [Syncs.tag] 最小的一组 [Syncs]，以及对应的 row 实体。
+  /// 查询 [Syncs.tag] 最小的一组 [Syncs]，以及对应的 row [dynamic] 实体。
+  ///
+  /// 如果对应的 row 不存在，则 [dynamic] 返回 null。
   ///
   /// 返回空数组表示已经全部上传完成。
   Future<List<(Sync, dynamic)>> querySameSyncTagWithRow() async {
@@ -33,7 +35,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
       (element) async {
         dynamic ti = db.getTableInfoFromTableActualName(tableActualName: element.sync_table_name);
         final fSel = select(ti)..where((tbl) => (tbl as dynamic).id.equals(element.row_id));
-        final result = await fSel.getSingle();
+        final result = await fSel.getSingleOrNull();
         returnResult.add((element, result));
       },
     );
@@ -364,15 +366,13 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
         .get();
   }
 
-  Future<List<FragmentGroupTag>> queryFragmentGroupTagByFragmentGroupId({required String fragmentGroupId}) async {
-    final result = await select(fragmentGroupTags).join(
-      [
-        leftOuterJoin(
-          rFragmentGroup2FragmentGroupTags,
-          rFragmentGroup2FragmentGroupTags.fragment_group_id.equals(fragmentGroupId),
-        ),
-      ],
-    ).get();
-    return result.map((e) => e.readTable(fragmentGroupTags)).toList();
+  Future<List<FragmentGroupTag>> queryFragmentGroupTagsByFragmentGroupId({required String fragmentGroupId}) async {
+    final sel = select(fragmentGroupTags);
+    sel.where((tbl) => tbl.fragment_group_id.equals(fragmentGroupId));
+    return await sel.get();
   }
+
+// Future<FragmentGroupTag?> queryFragmentGroupTagOrNullById({required int fragmentGroupTagId}) async {
+//   return await (select(fragmentGroupTags)..where((tbl) => tbl.id.equals(fragmentGroupTagId))).getSingleOrNull();
+// }
 }

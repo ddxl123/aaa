@@ -32,14 +32,14 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required SyncTag syncTag,
   }) async {
     await RefFragmentGroups(
-            self: originalFragmentGroupReset ?? () async {},
-            rFragment2FragmentGroups: null,
-            child_fragmentGroups: null,
-            userComments: null,
-            userLikes: null,
-            rFragmentGroup2FragmentGroupTags: null,
-            order: 0)
-        .run();
+      self: originalFragmentGroupReset ?? () async {},
+      fragmentGroupTags: null,
+      rFragment2FragmentGroups: null,
+      child_fragmentGroups: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
   }
 
   /// 修改 [Fragment]，仅修改 [isSelected]
@@ -120,11 +120,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           },
         );
       },
+      fragmentGroupTags: null,
       rFragment2FragmentGroups: null,
       child_fragmentGroups: null,
       userComments: null,
       userLikes: null,
-      rFragmentGroup2FragmentGroupTags: null,
       order: 0,
     ).run();
   }

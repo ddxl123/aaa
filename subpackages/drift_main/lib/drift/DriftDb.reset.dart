@@ -29,6 +29,15 @@ extension DriftValueExt<T> on T {
 
 /// [KnowledgeBaseCategorys]
 extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.knowledgeBaseCategorys,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required KnowledgeBaseCategory knowledgeBaseCategory,
     required SyncTag syncTag,
@@ -68,6 +77,15 @@ extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
 
 /// [ClientSyncInfos]
 extension ClientSyncInfoExt on ClientSyncInfo {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.clientSyncInfos,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required ClientSyncInfo clientSyncInfo,
     required SyncTag syncTag,
@@ -122,6 +140,15 @@ extension ClientSyncInfoExt on ClientSyncInfo {
 
 /// [Syncs]
 extension SyncExt on Sync {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.syncs,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required Sync sync,
     required SyncTag syncTag,
@@ -183,6 +210,15 @@ extension SyncExt on Sync {
 
 /// [FragmentMemoryInfos]
 extension FragmentMemoryInfoExt on FragmentMemoryInfo {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.fragmentMemoryInfos,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required FragmentMemoryInfo fragmentMemoryInfo,
     required SyncTag syncTag,
@@ -305,11 +341,21 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
 
 /// [FragmentGroupTags]
 extension FragmentGroupTagExt on FragmentGroupTag {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.fragmentGroupTags,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required FragmentGroupTag fragmentGroupTag,
     required SyncTag syncTag,
   }) async {
     await reset(
+      fragment_group_id: fragmentGroupTag.fragment_group_id.toValue(),
       tag: fragmentGroupTag.tag.toValue(),
       syncTag: syncTag,
     );
@@ -323,11 +369,18 @@ extension FragmentGroupTagExt on FragmentGroupTag {
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<FragmentGroupTag> reset({
+    required Value<String> fragment_group_id,
     required Value<String> tag,
     required SyncTag syncTag,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (fragment_group_id.present &&
+        this.fragment_group_id != fragment_group_id.value) {
+      isCloudModify = true;
+      this.fragment_group_id = fragment_group_id.value;
+    }
+
     if (tag.present && this.tag != tag.value) {
       isCloudModify = true;
       this.tag = tag.value;
@@ -344,6 +397,15 @@ extension FragmentGroupTagExt on FragmentGroupTag {
 
 /// [RFragment2FragmentGroups]
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.rFragment2FragmentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required RFragment2FragmentGroup rFragment2FragmentGroup,
     required SyncTag syncTag,
@@ -397,66 +459,17 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   }
 }
 
-/// [RFragmentGroup2FragmentGroupTags]
-extension RFragmentGroup2FragmentGroupTagExt
-    on RFragmentGroup2FragmentGroupTag {
-  Future<void> resetByEntity({
-    required RFragmentGroup2FragmentGroupTag rFragmentGroup2FragmentGroupTag,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      creator_user_id:
-          rFragmentGroup2FragmentGroupTag.creator_user_id.toValue(),
-      fragment_group_id:
-          rFragmentGroup2FragmentGroupTag.fragment_group_id.toValue(),
-      tag_id: rFragmentGroup2FragmentGroupTag.tag_id.toValue(),
+/// [Test2s]
+extension Test2Ext on Test2 {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.test2s,
+      entity: this,
       syncTag: syncTag,
     );
   }
 
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<RFragmentGroup2FragmentGroupTag> reset({
-    required Value<int> creator_user_id,
-    required Value<String?> fragment_group_id,
-    required Value<int> tag_id,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (creator_user_id.present &&
-        this.creator_user_id != creator_user_id.value) {
-      isCloudModify = true;
-      this.creator_user_id = creator_user_id.value;
-    }
-
-    if (fragment_group_id.present &&
-        this.fragment_group_id != fragment_group_id.value) {
-      isCloudModify = true;
-      this.fragment_group_id = fragment_group_id.value;
-    }
-
-    if (tag_id.present && this.tag_id != tag_id.value) {
-      isCloudModify = true;
-      this.tag_id = tag_id.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.rFragmentGroup2FragmentGroupTags,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
-/// [Test2s]
-extension Test2Ext on Test2 {
   Future<void> resetByEntity({
     required Test2 test2,
     required SyncTag syncTag,
@@ -496,6 +509,15 @@ extension Test2Ext on Test2 {
 
 /// [Tests]
 extension TestExt on Test {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.tests,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required Test test,
     required SyncTag syncTag,
@@ -542,6 +564,15 @@ extension TestExt on Test {
 
 /// [Fragments]
 extension FragmentExt on Fragment {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.fragments,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required Fragment fragment,
     required SyncTag syncTag,
@@ -619,6 +650,15 @@ extension FragmentExt on Fragment {
 
 /// [MemoryGroups]
 extension MemoryGroupExt on MemoryGroup {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.memoryGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required MemoryGroup memoryGroup,
     required SyncTag syncTag,
@@ -721,6 +761,15 @@ extension MemoryGroupExt on MemoryGroup {
 
 /// [MemoryModels]
 extension MemoryModelExt on MemoryModel {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.memoryModels,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required MemoryModel memoryModel,
     required SyncTag syncTag,
@@ -907,6 +956,15 @@ extension MemoryModelExt on MemoryModel {
 
 /// [Shorthands]
 extension ShorthandExt on Shorthand {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.shorthands,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required Shorthand shorthand,
     required SyncTag syncTag,
@@ -954,6 +1012,15 @@ extension ShorthandExt on Shorthand {
 
 /// [FragmentGroups]
 extension FragmentGroupExt on FragmentGroup {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.fragmentGroups,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required FragmentGroup fragmentGroup,
     required SyncTag syncTag,
@@ -1039,6 +1106,15 @@ extension FragmentGroupExt on FragmentGroup {
 
 /// [UserComments]
 extension UserCommentExt on UserComment {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.userComments,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required UserComment userComment,
     required SyncTag syncTag,
@@ -1102,6 +1178,15 @@ extension UserCommentExt on UserComment {
 
 /// [UserLikes]
 extension UserLikeExt on UserLike {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.userLikes,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required UserLike userLike,
     required SyncTag syncTag,
@@ -1156,6 +1241,15 @@ extension UserLikeExt on UserLike {
 
 /// [Users]
 extension UserExt on User {
+  Future<void> delete({required SyncTag syncTag}) async {
+    final ins = DriftDb.instance;
+    await ins.deleteWith(
+      ins.users,
+      entity: this,
+      syncTag: syncTag,
+    );
+  }
+
   Future<void> resetByEntity({
     required User user,
     required SyncTag syncTag,

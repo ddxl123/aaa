@@ -9,12 +9,18 @@ class FragmentGroupTags extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  @override
+  bool get withoutRowId => true;
+
+
+  @ReferenceTo([FragmentGroups])
+  TextColumn get fragment_group_id => text().named("fragment_group_id")();
 
   TextColumn get tag => text().named("tag")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  IntColumn get id => integer().named("id")();
+  TextColumn get id => text().named("id")();
 
   DateTimeColumn get updated_at => dateTime().named("updated_at")();
 

@@ -32,6 +32,7 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
             ],
           ),
           body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -63,6 +64,7 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
                               Text("简介", style: TextStyle(color: Colors.grey)),
                               SizedBox(height: 10),
                               q.QuillEditor(
+                                placeholder: "请输入...",
                                 controller: c.profileQuillController,
                                 focusNode: c.profileFocusNode,
                                 scrollController: ScrollController(),
@@ -80,44 +82,59 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
                   ),
                 ),
               ),
-              AbwBuilder(
-                builder: (abw) {
-                  return Row(
-                    children: [
-                      ...c.fragmentGroupTagAb(abw).map(
-                        (e) {
-                          return Card(
+              AbBuilder<FragmentGroupGizmoEditPageAbController>(
+                builder: (tc, tAbw) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                    reverse: true,
+                    child: Row(
+                      children: [
+                        Row(
+                          children: [
+                            ...tc.fragmentGroupTagsAb(tAbw).map(
+                              (e) {
+                                return GestureDetector(
+                                  child: Card(
+                                    margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Row(
+                                        children: [
+                                          Text("#${e.tag}", style: TextStyle(color: Colors.blue)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    c.addTag();
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          child: Card(
+                            color: Colors.greenAccent,
                             margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
                             child: Padding(
                               padding: EdgeInsets.all(5),
                               child: Row(
                                 children: [
-                                  Text("#四级英语", style: TextStyle(color: Colors.blue)),
+                                  Text("+ ", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                                  Text("标签", style: TextStyle(color: Colors.blue)),
                                 ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      GestureDetector(
-                        child: Card(
-                          color: Colors.greenAccent,
-                          margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Row(
-                              children: [
-                                Text("+ ", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-                                Text("标签", style: TextStyle(color: Colors.blue)),
-                              ],
-                            ),
                           ),
+                          onTap: () {
+                            c.addTag();
+                          },
                         ),
-                        onTap: () {
-                          c.addTag();
-                        },
-                      ),
-                    ],
+                        SizedBox(width: 10),
+                      ],
+                    ),
                   );
                 },
               ),

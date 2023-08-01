@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aaa/single_dialog/showFragmentGroupTagSearchDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
 
   final Ab<FragmentGroup?> fragmentGroupAb;
 
-  final fragmentGroupTagAb = <FragmentGroupTag>[].ab;
+  final fragmentGroupTagsAb = <FragmentGroupTag>[].ab;
   final titleTextEditingController = TextEditingController();
   final titleFocusNode = FocusNode();
   final profileQuillController = QuillController.basic();
@@ -44,26 +45,51 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
     profileQuillController.document =
         Document.fromJson(jsonDecode(fragmentGroupAb()!.profile.trim() == "" ? jsonEncode(Document().toDelta().toJson()) : fragmentGroupAb()!.profile));
 
-    final tags = await db.generalQueryDAO.queryFragmentGroupTagByFragmentGroupId(fragmentGroupId: fragmentGroupAb()!.id);
-    fragmentGroupTagAb.refreshEasy((oldValue) => oldValue
+    final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: fragmentGroupAb()!.id);
+    fragmentGroupTagsAb.refreshInevitable((oldValue) => oldValue
       ..clear()
       ..addAll(tags));
   }
 
   Future<void> addTag() async {
-    await showFragmentGroupTagSearchDialog(initTags: fragmentGroupTagAb, fragmentGroup: fragmentGroupAb()!);
+    await showFragmentGroupTagSearchDialog(initTags: fragmentGroupTagsAb, fragmentGroup: fragmentGroupAb()!);
   }
 
   /// 返回是否被修改。
-  Future<bool> isModifyContent() async {
+  Future<
+      ({
+        bool isModify,
+        ({bool isTitleModify, String now}) title,
+        ({bool isProfileModify, String now}) profile,
+        ({bool isFragmentGroupTagModify, List<FragmentGroupTag> now, List<FragmentGroupTag> saved}) fragmentGroupTag,
+      })> isModifyContent() async {
     final saved = await db.generalQueryDAO.queryFragmentGroupById(id: fragmentGroupAb()!.id);
-    if (saved!.title != titleTextEditingController.text) {
-      return true;
+    final nowTitle = titleTextEditingController.text;
+    final nowProfile = jsonEncode(profileQuillController.document.toDelta().toJson());
+    bool isTitleModify = false;
+    bool isProfileModify = false;
+    bool isFragmentGroupTagModify = false;
+
+    if (saved!.title != nowTitle) {
+      isTitleModify = true;
     }
-    if (saved.profile != jsonEncode(profileQuillController.document.toDelta().toJson())) {
-      return true;
+    if (saved.profile != nowProfile) {
+      isProfileModify = true;
     }
-    return false;
+
+    final savedTags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: fragmentGroupAb()!.id);
+    savedTags.sort((a, b) => a.tag.compareTo(b.tag));
+    fragmentGroupTagsAb().sort((a, b) => a.tag.compareTo(b.tag));
+    if (!listEquals(savedTags, fragmentGroupTagsAb())) {
+      isFragmentGroupTagModify = true;
+    }
+
+    return (
+      isModify: isTitleModify || isProfileModify || isFragmentGroupTagModify,
+      title: (isTitleModify: isTitleModify, now: nowTitle),
+      profile: (isProfileModify: isProfileModify, now: nowProfile),
+      fragmentGroupTag: (isFragmentGroupTagModify: isFragmentGroupTagModify, now: fragmentGroupTagsAb(), saved: savedTags),
+    );
   }
 
   Future<void> save() async {
@@ -71,19 +97,43 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       SmartDialog.showToast("标题不能为空！");
       return;
     }
-    final isModified = await isModifyContent();
-    if (isModified) {
+    final modify = await isModifyContent();
+    if (modify.isModify) {
       final st = await SyncTag.create();
-      await fragmentGroupAb()!.reset(
-        be_private: toAbsent(),
-        be_publish: toAbsent(),
-        client_be_selected: toAbsent(),
-        creator_user_id: toAbsent(),
-        father_fragment_groups_id: toAbsent(),
-        title: titleTextEditingController.text.toValue(),
-        profile: jsonEncode(profileQuillController.document.toDelta().toJson()).toValue(),
-        syncTag: st,
-      );
+      await RefFragmentGroups(
+        self: () async {
+          if (modify.title.isTitleModify || modify.profile.isProfileModify) {
+            await fragmentGroupAb()!.reset(
+              be_private: toAbsent(),
+              be_publish: toAbsent(),
+              client_be_selected: toAbsent(),
+              creator_user_id: toAbsent(),
+              father_fragment_groups_id: toAbsent(),
+              title: modify.title.now.toValue(),
+              profile: modify.profile.now.toValue(),
+              syncTag: st,
+            );
+          }
+        },
+        fragmentGroupTags: RefFragmentGroupTags(
+          self: () async {
+            if (modify.fragmentGroupTag.isFragmentGroupTagModify) {
+              for (var fTag in modify.fragmentGroupTag.saved) {
+                await fTag.delete(syncTag: st);
+              }
+              for (var fTag in modify.fragmentGroupTag.now) {
+                await fTag.toCompanion(false).insert(syncTag: st);
+              }
+            }
+          },
+          order: 0,
+        ),
+        rFragment2FragmentGroups: null,
+        child_fragmentGroups: null,
+        userComments: null,
+        userLikes: null,
+        order: 0,
+      ).run();
       SmartDialog.showToast("更新成功！");
     }
     abBack();

@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 
 class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment> {
+  final fragmentGroupTagsAb = <FragmentGroupTag>[].ab;
+
   @override
   Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
     // 若 whichGroupEntity 不为 null，则必然存在 whichGroupEntity。father_fragment_groups_id!。
@@ -64,5 +68,15 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     );
     fragmentGroupAb.refreshForce();
     await refreshCount(whichGroup: getCurrentGroupAb());
+  }
+
+  @override
+  FutureOr<void> refreshExtra() async {
+    if (getCurrentGroupAb()().entity() != null) {
+      final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: getCurrentGroupAb()().entity()!.id);
+      fragmentGroupTagsAb.refreshInevitable((obj) => obj
+        ..clear()
+        ..addAll(tags));
+    }
   }
 }

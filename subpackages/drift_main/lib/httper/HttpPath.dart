@@ -21,8 +21,6 @@ class HttpPath {
 
   static const String LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = '/login_required/data_upload/once_syncs';
 
-  static const String LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_NEW_FRAGMENT_GROUP_TAG = '/login_required/fragment_group_tag/new_fragment_group_tag';
-
   static const String NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_FRAGMENT_GROUP_ID = '/no_login_required/fragment_group_tag/by_fragment_group_id';
 
   static const String NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE = '/no_login_required/fragment_group_tag/by_like';

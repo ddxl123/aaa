@@ -15,26 +15,6 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return newClientSyncInfoCompanion.insert(syncTag: syncTag);
   }
 
-  /// 插入一个碎片组，会同时插入碎片组配置。
-  Future<FragmentGroup> insertFragmentGroup({
-    required FragmentGroupsCompanion willFragmentGroupsCompanion,
-    required SyncTag syncTag,
-  }) async {
-    late FragmentGroup returnFragmentGroup;
-    await RefFragmentGroups(
-      self: () async {
-        returnFragmentGroup = await willFragmentGroupsCompanion.insert(syncTag: syncTag);
-      },
-      child_fragmentGroups: null,
-      rFragment2FragmentGroups: null,
-      userComments: null,
-      userLikes: null,
-      rFragmentGroup2FragmentGroupTags: null,
-      order: 0,
-    ).run();
-    return returnFragmentGroup;
-  }
-
   /// 向多个 [whichFragmentGroupChains] 中，插入相同的 [willFragmentsCompanion]。
   ///
   /// 当 [whichFragmentGroupChains] 为空数组时，表示插入到 root 组内。
@@ -221,28 +201,4 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     return newShorthand;
   }
 
-  Future<FragmentGroupTag> insertFragmentGroupTag({
-    required FragmentGroupsCompanion fragmentGroupsCompanion,
-    required FragmentGroupTagsCompanion fragmentGroupTagsCompanion,
-    required SyncTag syncTag,
-  }) async {
-    late final FragmentGroupTag newFragmentGroupTag;
-    await RefFragmentGroupTags(
-      self: () async {
-        newFragmentGroupTag = await fragmentGroupTagsCompanion.insert(syncTag: syncTag);
-      },
-      rFragmentGroup2FragmentGroupTags: RefRFragmentGroup2FragmentGroupTags(
-        self: () async {
-          await Crt.rFragmentGroup2FragmentGroupTagsCompanion(
-            creator_user_id: fragmentGroupsCompanion.creator_user_id.value,
-            fragment_group_id: fragmentGroupsCompanion.id,
-            tag_id: fragmentGroupTagsCompanion.id.value,
-          ).insert(syncTag: syncTag);
-        },
-        order: 0,
-      ),
-      order: 0,
-    ).run();
-    return newFragmentGroupTag;
-  }
 }

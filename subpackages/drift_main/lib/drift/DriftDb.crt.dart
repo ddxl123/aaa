@@ -103,15 +103,17 @@ class Crt {
   }
 
   static FragmentGroupTagsCompanion fragmentGroupTagsCompanion({
+    required String fragment_group_id,
     required String tag,
     DateTime? created_at,
-    Value<int>? id,
+    String? id,
     DateTime? updated_at,
   }) {
     return FragmentGroupTagsCompanion(
+      fragment_group_id: Value(fragment_group_id),
       tag: Value(tag),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
+      id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
     );
   }
@@ -128,25 +130,6 @@ class Crt {
       creator_user_id: Value(creator_user_id),
       fragment_group_id: fragment_group_id,
       fragment_id: Value(fragment_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
-  static RFragmentGroup2FragmentGroupTagsCompanion
-      rFragmentGroup2FragmentGroupTagsCompanion({
-    required int creator_user_id,
-    required Value<String?> fragment_group_id,
-    required int tag_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
-  }) {
-    return RFragmentGroup2FragmentGroupTagsCompanion(
-      creator_user_id: Value(creator_user_id),
-      fragment_group_id: fragment_group_id,
-      tag_id: Value(tag_id),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
@@ -399,30 +382,12 @@ extension KnowledgeBaseCategorysCompanionExt
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.knowledgeBaseCategorys,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
   Future<ClientSyncInfo> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.clientSyncInfos,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.clientSyncInfos,
       entity: this,
       syncTag: syncTag,
@@ -439,15 +404,6 @@ extension SyncsCompanionExt on SyncsCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.syncs,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
@@ -459,30 +415,12 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.fragmentMemoryInfos,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension FragmentGroupTagsCompanionExt on FragmentGroupTagsCompanion {
   Future<FragmentGroupTag> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.fragmentGroupTags,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.fragmentGroupTags,
       entity: this,
       syncTag: syncTag,
@@ -500,52 +438,12 @@ extension RFragment2FragmentGroupsCompanionExt
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.rFragment2FragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-}
-
-extension RFragmentGroup2FragmentGroupTagsCompanionExt
-    on RFragmentGroup2FragmentGroupTagsCompanion {
-  Future<RFragmentGroup2FragmentGroupTag> insert(
-      {required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.rFragmentGroup2FragmentGroupTags,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.rFragmentGroup2FragmentGroupTags,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension Test2sCompanionExt on Test2sCompanion {
   Future<Test2> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.test2s,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.test2s,
       entity: this,
       syncTag: syncTag,
@@ -562,30 +460,12 @@ extension TestsCompanionExt on TestsCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.tests,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension FragmentsCompanionExt on FragmentsCompanion {
   Future<Fragment> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.fragments,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.fragments,
       entity: this,
       syncTag: syncTag,
@@ -602,30 +482,12 @@ extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.memoryGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension MemoryModelsCompanionExt on MemoryModelsCompanion {
   Future<MemoryModel> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.memoryModels,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.memoryModels,
       entity: this,
       syncTag: syncTag,
@@ -642,30 +504,12 @@ extension ShorthandsCompanionExt on ShorthandsCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.shorthands,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
   Future<FragmentGroup> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.fragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.fragmentGroups,
       entity: this,
       syncTag: syncTag,
@@ -682,15 +526,6 @@ extension UserCommentsCompanionExt on UserCommentsCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.userComments,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension UserLikesCompanionExt on UserLikesCompanion {
@@ -702,30 +537,12 @@ extension UserLikesCompanionExt on UserLikesCompanion {
       syncTag: syncTag,
     );
   }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.userLikes,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
 }
 
 extension UsersCompanionExt on UsersCompanion {
   Future<User> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
-      ins.users,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
       ins.users,
       entity: this,
       syncTag: syncTag,

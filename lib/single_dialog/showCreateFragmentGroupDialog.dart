@@ -40,11 +40,11 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
                 be_publish: false,
               ).insert(syncTag: st);
             },
+            fragmentGroupTags: null,
             rFragment2FragmentGroups: null,
             child_fragmentGroups: null,
             userComments: null,
             userLikes: null,
-            rFragmentGroup2FragmentGroupTags: null,
             order: 0,
           ).run();
 

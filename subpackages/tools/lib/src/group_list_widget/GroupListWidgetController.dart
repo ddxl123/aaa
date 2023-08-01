@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
@@ -75,7 +77,6 @@ class Group<G, U> with AbBroken {
 ///
 /// [GC] 组配置。
 abstract class GroupListWidgetController<G, U> extends AbController {
-  final refreshController = RefreshController(initialRefresh: true);
   final groupChainScrollController = ScrollController();
   final group = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
   late final groupChain = <Ab<Group<G, U>>>[group].ab;
@@ -83,7 +84,6 @@ abstract class GroupListWidgetController<G, U> extends AbController {
 
   @override
   void onDispose() {
-    refreshController.dispose();
     groupChainScrollController.dispose();
   }
 
@@ -136,7 +136,10 @@ abstract class GroupListWidgetController<G, U> extends AbController {
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutCirc,
     );
+    await refreshExtra();
   }
+
+  FutureOr<void> refreshExtra();
 
   /// 进入哪个 [groupChain] 或进入新的 [whichGroup]。
   ///

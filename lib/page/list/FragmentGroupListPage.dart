@@ -76,7 +76,10 @@ class FragmentGroupListPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText(),
+                                    () {
+                                      final text = q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText().trim();
+                                      return text.isEmpty ? "无简介" : text;
+                                    }(),
                                     style: TextStyle(color: Colors.grey),
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
@@ -85,9 +88,24 @@ class FragmentGroupListPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Row(
-                            children: [Text("#四级英语")],
-                          ),
+                          c.fragmentGroupTagsAb(abw).isEmpty ? Container() : SizedBox(height: 10),
+                          c.fragmentGroupTagsAb(abw).isEmpty
+                              ? Container()
+                              : Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          c.fragmentGroupTagsAb().map((e) => "#${e.tag}").join("  "),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                          SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [

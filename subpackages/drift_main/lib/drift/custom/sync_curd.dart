@@ -153,8 +153,8 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// 如果外部没有事务，内部会自动创建事务。
   ///
-  /// [entity] - 要替换的 [User]/[UsersCompanion] 的实体
-  Future<void> deleteWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
+  /// [entity] - 要替换的 [User] 的实体，不能是 [UsersCompanion]。
+  Future<void> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
@@ -164,7 +164,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // 执行删除操作
         final int deleteCount = await (delete(table).delete(entity));
         if (deleteCount != 1) {
-          return null;
+          return;
         }
 
         // 增加一条 sync 记录 - 仅对 cloud

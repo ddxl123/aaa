@@ -10,7 +10,7 @@ class DataUploadDto extends BaseObject{
     Sync sync_entity;
 
     /// 
-    Map<String, dynamic> row_map;
+    Map<String, dynamic>? row_map;
 
 
 DataUploadDto({

@@ -22,16 +22,25 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
     );
   }
 
+  // 批量删除已同步的 sync
+  // TODO: 是否需要 [SyncTag]
   Future<void> rowDeleteUploadedSync({required List<Sync> syncs}) async {
     if (syncs.isEmpty) return;
     await transaction(
       () async {
         await db.batch(
           (batch) {
+            // TODO: 是 delete 还是 deleteAll
             batch.delete(db.syncs, syncs.first);
           },
         );
       },
     );
+  }
+
+  // 删除一条 sync
+  // TODO: 是否需要 [SyncTag]
+  Future<void> deleteSingleSync({required Sync sync}) async {
+    await sync.delete(syncTag: await SyncTag.create());
   }
 }

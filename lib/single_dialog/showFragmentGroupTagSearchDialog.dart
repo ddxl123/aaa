@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as q;
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
@@ -37,16 +38,23 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
   /// 为空数组时，提示请输入。
   ///
   /// 为非空数组时，第一个元素必然为新增标签的按钮。
-  final searchedTags = <String>[];
+  final searchedTags = <FragmentGroupTag>[];
+
+  /// TODO: 检验标签，比如不能出现 # 等符号
+  String get editText => textEditingController.text.trim();
 
   /// [target] 是否已被添加到其碎片组中。
   bool isAdded(String target) {
     return widget.initTags().map((e) => e.tag).contains(target);
   }
 
-  /// [textEditingController.text] 是否存在于 [searchedTags] 中。
+  /// [editText] 是否存在于 [searchedTags] 中。
   bool isValueInSearchedTags() {
-    return searchedTags.contains(textEditingController.text.trim());
+    return searchedTags.map((e) => e.tag).contains(editText);
+  }
+
+  bool isValueInInitTags() {
+    return widget.initTags().map((e) => e.tag).contains(searchedTags.first.tag.split("：").last);
   }
 
   @override
@@ -64,21 +72,38 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
     }
 
     searchedTags.clear();
-    searchedTags.add("创建新标签：$valueTrim");
+    searchedTags.add(FragmentGroupTag(
+      id: '-1',
+      fragment_group_id: widget.fragmentGroup.id,
+      tag: "创建新标签：$valueTrim",
+      created_at: DateTime.now(),
+      updated_at: DateTime.now(),
+    ));
+
     final result = await request(
       path: HttpPath.NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE,
       dtoData: QueryFragmentGroupTagByLikeDto(
-        like: textEditingController.text,
+        like: editText,
         dto_padding_1: null,
       ),
       parseResponseVoData: QueryFragmentGroupTagByLikeVo.fromJson,
     );
     await result.handleCode(
       code50201: (String showMessage, QueryFragmentGroupTagByLikeVo vo) async {
-        searchedTags.addAll(vo.fragment_group_tag_list.map((e) => e.tag));
+        searchedTags.addAll(vo.fragment_group_tag_list.map((e) => e));
         // 让完全相同的放在第二位。
-        if (searchedTags.remove(valueTrim)) {
-          searchedTags.insert(1, valueTrim);
+        FragmentGroupTag? willRemoveFragmentGroupTag;
+        searchedTags.removeWhere(
+          (element) {
+            if (element.tag == valueTrim) {
+              willRemoveFragmentGroupTag = element;
+              return true;
+            }
+            return false;
+          },
+        );
+        if (willRemoveFragmentGroupTag != null) {
+          searchedTags.insert(1, willRemoveFragmentGroupTag!);
         }
         setState(() {});
       },
@@ -96,6 +121,8 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text("已添加：", style: TextStyle(color: Colors.grey)),
+              SizedBox(height: 10),
               Wrap(
                 runSpacing: 10,
                 children: widget.initTags().map((FragmentGroupTag fTag) {
@@ -118,12 +145,15 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                           ),
                         ],
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        widget.initTags.refreshInevitable((oldValue) => oldValue..remove(fTag));
+                        setState(() {});
+                      },
                     ),
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextField(
                 maxLength: 10,
                 controller: textEditingController,
@@ -149,7 +179,7 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                 children: [
                   for (int i = 0; i < searchedTags.length; i++)
                     if (i == 0)
-                      isValueInSearchedTags()
+                      isValueInSearchedTags() || isValueInInitTags()
                           ? Container()
                           : GestureDetector(
                               child: FragmentGroupTagWidget(
@@ -159,46 +189,35 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      searchedTags[i],
+                                      searchedTags[i].tag,
                                       style: const TextStyle(color: Colors.white),
                                     ),
                                   ],
                                 ),
                               ),
                               onTap: () async {
-                                /// TODO: 创建新标签需要联网，并且需要登录状态。
-                                final result = await request(
-                                  path: HttpPath.LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_NEW_FRAGMENT_GROUP_TAG,
-                                  dtoData: FragmentGroupTagNewFragmentGroupTagDto(
-                                    tag: textEditingController.text,
-                                    dto_padding_1: null,
-                                  ),
-                                  parseResponseVoData: FragmentGroupTagNewFragmentGroupTagVo.fromJson,
-                                );
-                                await result.handleCode(
-                                  code60101: (String showMessage, FragmentGroupTagNewFragmentGroupTagVo vo) async {
-                                    print(showMessage);
+                                final st = await SyncTag.create();
+                                late final FragmentGroupTag newTag;
+                                await RefFragmentGroupTags(
+                                  self: () async {
+                                    newTag = await searchedTags[i].copyWith(tag: searchedTags[i].tag.split("：").last).toCompanion(false).insert(syncTag: st);
+                                    print(newTag.tag);
                                   },
-                                  otherException: (int? code, HttperException httperException, StackTrace st) async {
-                                    logger.outError(show: httperException.showMessage, error: httperException.debugMessage);
-                                  },
-                                );
+                                  order: 0,
+                                ).run();
+                                widget.initTags.refreshInevitable((obj) => obj..add(newTag));
+                                setState(() {});
                               },
                             )
                     else
                       FragmentGroupTagWidget(
-                        backgroundColor: isAdded(searchedTags[i]) ? Colors.grey : Colors.white,
+                        backgroundColor: isAdded(searchedTags[i].tag) ? Colors.grey : Colors.indigoAccent,
                         child: GestureDetector(
-                          onTap: isAdded(searchedTags[i])
+                          onTap: isAdded(searchedTags[i].tag)
                               ? null
                               : () {
-                                  widget.initTags.refreshEasy(
-                                    (oldValue) => oldValue
-                                      ..add(
-                                        FragmentGroupTag.fromJson(
-                                          Crt.fragmentGroupTagsCompanion(tag: searchedTags[i]).toColumns(false),
-                                        ),
-                                      ),
+                                  widget.initTags.refreshInevitable(
+                                    (oldValue) => oldValue..add(searchedTags[i]),
                                   );
                                   setState(() {});
                                 },
@@ -207,14 +226,8 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                searchedTags[i],
+                                "#${searchedTags[i].tag}",
                                 style: const TextStyle(color: Colors.white),
-                              ),
-                              const SizedBox(width: 4.0),
-                              const Icon(
-                                Icons.cancel,
-                                size: 14.0,
-                                color: Color.fromARGB(255, 233, 233, 233),
                               ),
                             ],
                           ),
@@ -222,7 +235,7 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                       ),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
             ],
           ),
         ),
