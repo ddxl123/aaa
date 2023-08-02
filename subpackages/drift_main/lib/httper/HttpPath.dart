@@ -25,7 +25,9 @@ class HttpPath {
 
   static const String NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE = '/no_login_required/fragment_group_tag/by_like';
 
-  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_CATEGORYS = '/no_login_required/knowledge_base/query_categorys';
+  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_MODIFY_KNOWLEDGE_BASE_CATEGORYS = '/no_login_required/knowledge_base/modify_knowledge_base_categorys';
+
+  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS = '/no_login_required/knowledge_base/query_knowledge_base_categorys';
 
 }
 

@@ -19,18 +19,34 @@ DeviceAndTokenBo({
 }
 
 @JsonSerializable()
-class KnowledgeBaseContent {
-    FragmentGroup fragment_group;
-    String publisher_username;
+class ModifyKnowledgeBaseBigCategory {
+    String big_category;
+    List<String> sub_categories;
 
-KnowledgeBaseContent({
-    required this.fragment_group,
-    required this.publisher_username,
+ModifyKnowledgeBaseBigCategory({
+    required this.big_category,
+    required this.sub_categories,
 
 });
 
-  factory KnowledgeBaseContent.fromJson(Map<String, dynamic> json) => _$KnowledgeBaseContentFromJson(json);
+  factory ModifyKnowledgeBaseBigCategory.fromJson(Map<String, dynamic> json) => _$ModifyKnowledgeBaseBigCategoryFromJson(json);
   
-  Map<String, dynamic> toJson() => _$KnowledgeBaseContentToJson(this);
+  Map<String, dynamic> toJson() => _$ModifyKnowledgeBaseBigCategoryToJson(this);
+}
+
+@JsonSerializable()
+class ModifyKnowledgeBaseCategory {
+    List<ModifyKnowledgeBaseBigCategory> modify_knowledge_base_big_categories;
+    List<String> selected_sub_categorys;
+
+ModifyKnowledgeBaseCategory({
+    required this.modify_knowledge_base_big_categories,
+    required this.selected_sub_categorys,
+
+});
+
+  factory ModifyKnowledgeBaseCategory.fromJson(Map<String, dynamic> json) => _$ModifyKnowledgeBaseCategoryFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$ModifyKnowledgeBaseCategoryToJson(this);
 }
 

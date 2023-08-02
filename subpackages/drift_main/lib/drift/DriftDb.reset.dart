@@ -27,54 +27,6 @@ extension DriftValueExt<T> on T {
   }
 }
 
-/// [KnowledgeBaseCategorys]
-extension KnowledgeBaseCategoryExt on KnowledgeBaseCategory {
-  Future<void> delete({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    await ins.deleteWith(
-      ins.knowledgeBaseCategorys,
-      entity: this,
-      syncTag: syncTag,
-    );
-  }
-
-  Future<void> resetByEntity({
-    required KnowledgeBaseCategory knowledgeBaseCategory,
-    required SyncTag syncTag,
-  }) async {
-    await reset(
-      categorys: knowledgeBaseCategory.categorys.toValue(),
-      syncTag: syncTag,
-    );
-  }
-
-  /// 将传入的新数据覆盖掉旧数据类实例。
-  ///
-  /// 值覆写方式：[DriftValueExt]
-  ///
-  /// 只能修改当前 id 的行。
-  ///
-  /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
-  FutureOr<KnowledgeBaseCategory> reset({
-    required Value<String> categorys,
-    required SyncTag syncTag,
-  }) async {
-    bool isCloudModify = false;
-    bool isLocalModify = false;
-    if (categorys.present && this.categorys != categorys.value) {
-      isCloudModify = true;
-      this.categorys = categorys.value;
-    }
-
-    if (isCloudModify || isLocalModify) {
-      final ins = DriftDb.instance;
-      await ins.updateReturningWith(ins.knowledgeBaseCategorys,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
-    }
-    return this;
-  }
-}
-
 /// [ClientSyncInfos]
 extension ClientSyncInfoExt on ClientSyncInfo {
   Future<void> delete({required SyncTag syncTag}) async {

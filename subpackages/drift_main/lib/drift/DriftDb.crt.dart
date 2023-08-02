@@ -14,20 +14,6 @@ part of drift_db;
 /// 使用方式查看 [withRefs]。
 class Crt {
   Crt._();
-  static KnowledgeBaseCategorysCompanion knowledgeBaseCategorysCompanion({
-    required String categorys,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
-  }) {
-    return KnowledgeBaseCategorysCompanion(
-      categorys: Value(categorys),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-
   static ClientSyncInfosCompanion clientSyncInfosCompanion({
     required String device_info,
     required Value<DateTime?> recent_sync_time,
@@ -368,18 +354,6 @@ class Crt {
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : id,
       updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-}
-
-extension KnowledgeBaseCategorysCompanionExt
-    on KnowledgeBaseCategorysCompanion {
-  Future<KnowledgeBaseCategory> insert({required SyncTag syncTag}) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.knowledgeBaseCategorys,
-      entity: this,
-      syncTag: syncTag,
     );
   }
 }

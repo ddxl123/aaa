@@ -2,8 +2,6 @@
 part of 'DriftDb.dart';
 
 mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
-  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
-      attachedDatabase.knowledgeBaseCategorys;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -24,8 +22,6 @@ mixin _$GeneralQueryDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
 }
 mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
-  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
-      attachedDatabase.knowledgeBaseCategorys;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -46,8 +42,6 @@ mixin _$InsertDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
 }
 mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
-  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
-      attachedDatabase.knowledgeBaseCategorys;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -68,8 +62,6 @@ mixin _$RawDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
 }
 mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
-  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
-      attachedDatabase.knowledgeBaseCategorys;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -90,8 +82,6 @@ mixin _$RegisterOrLoginDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
 }
 mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
-  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
-      attachedDatabase.knowledgeBaseCategorys;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -112,8 +102,6 @@ mixin _$UpdateDAOMixin on DatabaseAccessor<DriftDb> {
   $UsersTable get users => attachedDatabase.users;
 }
 mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
-  $KnowledgeBaseCategorysTable get knowledgeBaseCategorys =>
-      attachedDatabase.knowledgeBaseCategorys;
   $ClientSyncInfosTable get clientSyncInfos => attachedDatabase.clientSyncInfos;
   $SyncsTable get syncs => attachedDatabase.syncs;
   $FragmentMemoryInfosTable get fragmentMemoryInfos =>
@@ -132,260 +120,6 @@ mixin _$DeleteDAOMixin on DatabaseAccessor<DriftDb> {
   $UserCommentsTable get userComments => attachedDatabase.userComments;
   $UserLikesTable get userLikes => attachedDatabase.userLikes;
   $UsersTable get users => attachedDatabase.users;
-}
-
-class $KnowledgeBaseCategorysTable extends KnowledgeBaseCategorys
-    with TableInfo<$KnowledgeBaseCategorysTable, KnowledgeBaseCategory> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $KnowledgeBaseCategorysTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _categorysMeta =
-      const VerificationMeta('categorys');
-  @override
-  late final GeneratedColumn<String> categorys = GeneratedColumn<String>(
-      'categorys', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [categorys, created_at, id, updated_at];
-  @override
-  String get aliasedName => _alias ?? 'knowledge_base_categorys';
-  @override
-  String get actualTableName => 'knowledge_base_categorys';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<KnowledgeBaseCategory> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('categorys')) {
-      context.handle(_categorysMeta,
-          categorys.isAcceptableOrUnknown(data['categorys']!, _categorysMeta));
-    } else if (isInserting) {
-      context.missing(_categorysMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
-    } else if (isInserting) {
-      context.missing(_created_atMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
-    } else if (isInserting) {
-      context.missing(_updated_atMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  KnowledgeBaseCategory map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return KnowledgeBaseCategory(
-      categorys: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}categorys'])!,
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
-    );
-  }
-
-  @override
-  $KnowledgeBaseCategorysTable createAlias(String alias) {
-    return $KnowledgeBaseCategorysTable(attachedDatabase, alias);
-  }
-}
-
-class KnowledgeBaseCategory extends DataClass
-    implements Insertable<KnowledgeBaseCategory> {
-  String categorys;
-  DateTime created_at;
-  int id;
-  DateTime updated_at;
-  KnowledgeBaseCategory(
-      {required this.categorys,
-      required this.created_at,
-      required this.id,
-      required this.updated_at});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['categorys'] = Variable<String>(categorys);
-    map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<int>(id);
-    map['updated_at'] = Variable<DateTime>(updated_at);
-    return map;
-  }
-
-  KnowledgeBaseCategorysCompanion toCompanion(bool nullToAbsent) {
-    return KnowledgeBaseCategorysCompanion(
-      categorys: Value(categorys),
-      created_at: Value(created_at),
-      id: Value(id),
-      updated_at: Value(updated_at),
-    );
-  }
-
-  factory KnowledgeBaseCategory.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return KnowledgeBaseCategory(
-      categorys: serializer.fromJson<String>(json['categorys']),
-      created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<int>(json['id']),
-      updated_at: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'categorys': serializer.toJson<String>(categorys),
-      'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<int>(id),
-      'updated_at': serializer.toJson<DateTime>(updated_at),
-    };
-  }
-
-  KnowledgeBaseCategory copyWith(
-          {String? categorys,
-          DateTime? created_at,
-          int? id,
-          DateTime? updated_at}) =>
-      KnowledgeBaseCategory(
-        categorys: categorys ?? this.categorys,
-        created_at: created_at ?? this.created_at,
-        id: id ?? this.id,
-        updated_at: updated_at ?? this.updated_at,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('KnowledgeBaseCategory(')
-          ..write('categorys: $categorys, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(categorys, created_at, id, updated_at);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is KnowledgeBaseCategory &&
-          other.categorys == this.categorys &&
-          other.created_at == this.created_at &&
-          other.id == this.id &&
-          other.updated_at == this.updated_at);
-}
-
-class KnowledgeBaseCategorysCompanion
-    extends UpdateCompanion<KnowledgeBaseCategory> {
-  Value<String> categorys;
-  Value<DateTime> created_at;
-  Value<int> id;
-  Value<DateTime> updated_at;
-  KnowledgeBaseCategorysCompanion({
-    this.categorys = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.id = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  KnowledgeBaseCategorysCompanion.insert({
-    required String categorys,
-    required DateTime created_at,
-    this.id = const Value.absent(),
-    required DateTime updated_at,
-  })  : categorys = Value(categorys),
-        created_at = Value(created_at),
-        updated_at = Value(updated_at);
-  static Insertable<KnowledgeBaseCategory> custom({
-    Expression<String>? categorys,
-    Expression<DateTime>? created_at,
-    Expression<int>? id,
-    Expression<DateTime>? updated_at,
-  }) {
-    return RawValuesInsertable({
-      if (categorys != null) 'categorys': categorys,
-      if (created_at != null) 'created_at': created_at,
-      if (id != null) 'id': id,
-      if (updated_at != null) 'updated_at': updated_at,
-    });
-  }
-
-  KnowledgeBaseCategorysCompanion copyWith(
-      {Value<String>? categorys,
-      Value<DateTime>? created_at,
-      Value<int>? id,
-      Value<DateTime>? updated_at}) {
-    return KnowledgeBaseCategorysCompanion(
-      categorys: categorys ?? this.categorys,
-      created_at: created_at ?? this.created_at,
-      id: id ?? this.id,
-      updated_at: updated_at ?? this.updated_at,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (categorys.present) {
-      map['categorys'] = Variable<String>(categorys.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('KnowledgeBaseCategorysCompanion(')
-          ..write('categorys: $categorys, ')
-          ..write('created_at: $created_at, ')
-          ..write('id: $id, ')
-          ..write('updated_at: $updated_at')
-          ..write(')'))
-        .toString();
-  }
 }
 
 class $ClientSyncInfosTable extends ClientSyncInfos
@@ -7186,8 +6920,6 @@ class UsersCompanion extends UpdateCompanion<User> {
 
 abstract class _$DriftDb extends GeneratedDatabase {
   _$DriftDb(QueryExecutor e) : super(e);
-  late final $KnowledgeBaseCategorysTable knowledgeBaseCategorys =
-      $KnowledgeBaseCategorysTable(this);
   late final $ClientSyncInfosTable clientSyncInfos =
       $ClientSyncInfosTable(this);
   late final $SyncsTable syncs = $SyncsTable(this);
@@ -7219,7 +6951,6 @@ abstract class _$DriftDb extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-        knowledgeBaseCategorys,
         clientSyncInfos,
         syncs,
         fragmentMemoryInfos,

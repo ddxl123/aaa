@@ -43,8 +43,6 @@ part 'DriftDb.crt.dart';
 part 'DriftDb.reset.dart';
 
 
-part 'table/entity/KnowledgeBaseCategorys.dart';
-
 part 'table/entity/client/ClientSyncInfos.dart';
 
 part 'table/entity/client/Syncs.dart';
@@ -76,8 +74,6 @@ part 'table/entity/user/UserLikes.dart';
 part 'table/entity/user/Users.dart';
 
 const List<Type> tableClasses = [
-
-  KnowledgeBaseCategorys,
 
   ClientSyncInfos,
 

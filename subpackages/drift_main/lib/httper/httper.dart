@@ -56,10 +56,10 @@ part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
 part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/KnowledgeBaseQueryDto.dart';
+part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryDto.dart';
 
 
-part 'dto_vo_bo/dto_vo/KnowledgeBaseQueryVo.dart';
+part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByFragmentGroupIdDto.dart';

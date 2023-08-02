@@ -18,19 +18,41 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
       'token': instance.token,
     };
 
-KnowledgeBaseContent _$KnowledgeBaseContentFromJson(
+ModifyKnowledgeBaseBigCategory _$ModifyKnowledgeBaseBigCategoryFromJson(
         Map<String, dynamic> json) =>
-    KnowledgeBaseContent(
-      fragment_group: FragmentGroup.fromJson(
-          json['fragment_group'] as Map<String, dynamic>),
-      publisher_username: json['publisher_username'] as String,
+    ModifyKnowledgeBaseBigCategory(
+      big_category: json['big_category'] as String,
+      sub_categories: (json['sub_categories'] as List<dynamic>)
+          .map((e) => e as String?)
+          .toList(),
     );
 
-Map<String, dynamic> _$KnowledgeBaseContentToJson(
-        KnowledgeBaseContent instance) =>
+Map<String, dynamic> _$ModifyKnowledgeBaseBigCategoryToJson(
+        ModifyKnowledgeBaseBigCategory instance) =>
     <String, dynamic>{
-      'fragment_group': instance.fragment_group,
-      'publisher_username': instance.publisher_username,
+      'big_category': instance.big_category,
+      'sub_categories': instance.sub_categories,
+    };
+
+ModifyKnowledgeBaseCategory _$ModifyKnowledgeBaseCategoryFromJson(
+        Map<String, dynamic> json) =>
+    ModifyKnowledgeBaseCategory(
+      modify_knowledge_base_big_categories:
+          (json['modify_knowledge_base_big_categories'] as List<dynamic>)
+              .map((e) => ModifyKnowledgeBaseBigCategory.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
+      selected_sub_categorys: (json['selected_sub_categorys'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+    );
+
+Map<String, dynamic> _$ModifyKnowledgeBaseCategoryToJson(
+        ModifyKnowledgeBaseCategory instance) =>
+    <String, dynamic>{
+      'modify_knowledge_base_big_categories':
+          instance.modify_knowledge_base_big_categories,
+      'selected_sub_categorys': instance.selected_sub_categorys,
     };
 
 CheckLoginDto _$CheckLoginDtoFromJson(Map<String, dynamic> json) =>
@@ -221,54 +243,41 @@ Map<String, dynamic> _$FragmentGroupTagNewFragmentGroupTagVoToJson(
       'fragment_group_tag_entity': instance.fragment_group_tag_entity,
     };
 
-KnowledgeBaseQueryDto _$KnowledgeBaseQueryDtoFromJson(
+KnowledgeBaseCategoryQueryDto _$KnowledgeBaseCategoryQueryDtoFromJson(
         Map<String, dynamic> json) =>
-    KnowledgeBaseQueryDto(
-      main_category: json['main_category'] as String?,
-      sub_category: json['sub_category'] as String?,
-      knowledge_base_content_sort_type: $enumDecodeNullable(
-          _$KnowledgeBaseContentSortTypeEnumMap,
-          json['knowledge_base_content_sort_type']),
-      size: json['size'] as int?,
-      page: json['page'] as int?,
+    KnowledgeBaseCategoryQueryDto(
+      big_category: json['big_category'] as bool?,
+      dto_padding_1: json['dto_padding_1'] as bool?,
     );
 
-Map<String, dynamic> _$KnowledgeBaseQueryDtoToJson(
-        KnowledgeBaseQueryDto instance) =>
+Map<String, dynamic> _$KnowledgeBaseCategoryQueryDtoToJson(
+        KnowledgeBaseCategoryQueryDto instance) =>
     <String, dynamic>{
-      'main_category': instance.main_category,
-      'sub_category': instance.sub_category,
-      'knowledge_base_content_sort_type': _$KnowledgeBaseContentSortTypeEnumMap[
-          instance.knowledge_base_content_sort_type],
-      'size': instance.size,
-      'page': instance.page,
+      'big_category': instance.big_category,
+      'dto_padding_1': instance.dto_padding_1,
     };
 
-const _$KnowledgeBaseContentSortTypeEnumMap = {
-  KnowledgeBaseContentSortType.by_random: 'by_random',
-  KnowledgeBaseContentSortType.by_hot: 'by_hot',
-  KnowledgeBaseContentSortType.by_create_time: 'by_create_time',
-  KnowledgeBaseContentSortType.by_publish_time: 'by_publish_time',
-  KnowledgeBaseContentSortType.by_update_time: 'by_update_time',
-  KnowledgeBaseContentSortType.by_like_count: 'by_like_count',
-  KnowledgeBaseContentSortType.by_save_count: 'by_save_count',
-};
-
-KnowledgeBaseQueryVo _$KnowledgeBaseQueryVoFromJson(
+KnowledgeBaseCategoryQueryVo _$KnowledgeBaseCategoryQueryVoFromJson(
         Map<String, dynamic> json) =>
-    KnowledgeBaseQueryVo(
-      category_names: json['category_names'] as String?,
-      knowledge_base_content_list: (json['knowledge_base_content_list']
-              as List<dynamic>?)
-          ?.map((e) => KnowledgeBaseContent.fromJson(e as Map<String, dynamic>))
+    KnowledgeBaseCategoryQueryVo(
+      selected_sub_categorys_list:
+          (json['selected_sub_categorys_list'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
+      big_categorys_list: (json['big_categorys_list'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      sub_categorys_list: (json['sub_categorys_list'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
     );
 
-Map<String, dynamic> _$KnowledgeBaseQueryVoToJson(
-        KnowledgeBaseQueryVo instance) =>
+Map<String, dynamic> _$KnowledgeBaseCategoryQueryVoToJson(
+        KnowledgeBaseCategoryQueryVo instance) =>
     <String, dynamic>{
-      'category_names': instance.category_names,
-      'knowledge_base_content_list': instance.knowledge_base_content_list,
+      'selected_sub_categorys_list': instance.selected_sub_categorys_list,
+      'big_categorys_list': instance.big_categorys_list,
+      'sub_categorys_list': instance.sub_categorys_list,
     };
 
 QueryFragmentGroupTagByFragmentGroupIdDto

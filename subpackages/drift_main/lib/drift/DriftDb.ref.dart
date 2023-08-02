@@ -15,37 +15,6 @@ abstract class Ref {
   Future<void> run();
 }
 
-/// [KnowledgeBaseCategorys]
-class RefKnowledgeBaseCategorys extends Ref {
-  Future<void> Function() self;
-
-  RefKnowledgeBaseCategorys({
-    required this.self,
-    required super.order,
-  });
-
-  @override
-  Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[
-          this,
-        ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
 /// [ClientSyncInfos]
 class RefClientSyncInfos extends Ref {
   Future<void> Function() self;
