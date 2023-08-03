@@ -22,22 +22,31 @@ class KnowledgeBaseHome extends StatelessWidget {
               SizedBox(height: 5),
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    GestureDetector(
-                      child: Row(
-                        children: [
-                          Icon(Icons.filter_list, size: 18, color: Colors.grey),
-                          Text(
-                            "分类",
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                    Expanded(
+                      child: GestureDetector(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: AbwBuilder(
+                            builder: (cAbw) {
+                              return Row(
+                                children: [
+                                  Icon(Icons.filter_list, size: 18, color: Colors.grey),
+                                  Text(
+                                    c.selectedCategories(cAbw).isEmpty ? "分类" : c.selectedCategories(cAbw).join(","),
+                                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                        ],
+                        ),
+                        onTap: () {
+                          c.categorySelect();
+                        },
                       ),
-                      onTap: () {
-                        showKnowledgeBaseCategory(context: context);
-                      },
                     ),
                     Spacer(),
                     GestureDetector(
@@ -64,6 +73,9 @@ class KnowledgeBaseHome extends StatelessWidget {
                       Text("data"),
                     ],
                   ),
+                  onRefresh: () {
+                    c.refresh();
+                  },
                 ),
               ),
             ],

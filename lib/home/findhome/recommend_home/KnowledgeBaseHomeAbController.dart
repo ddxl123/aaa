@@ -1,8 +1,25 @@
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
+import 'package:collection/collection.dart';
+
+import '../../../single_dialog/showKnowledgeBaseCategory.dart';
 
 class KnowledgeBaseHomeAbController extends AbController {
-  final refreshController = RefreshController();
+  final refreshController = RefreshController(initialRefresh: true);
+  final selectedCategories = <String>[].ab;
+
+  Future<void> refresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    refreshController.refreshCompleted();
+  }
+
+  Future<void> categorySelect() async {
+    final init = [...selectedCategories()];
+    await showKnowledgeBaseCategory(context: context, initSelectedSubCategories: selectedCategories);
+    if (!const DeepCollectionEquality.unordered().equals(init, selectedCategories())) {
+      refreshController.requestRefresh();
+    }
+  }
 }
 
 // import 'package:aaa/data/DataDownload.dart';

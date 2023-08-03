@@ -167,16 +167,71 @@ class TestHome extends StatelessWidget {
                               },
                             ),
                             ElevatedButton(
-                              child: Text("chatgpt"),
-                              onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (_) {
-                                //       // return InAppWebView(initialUrlRequest: URLRequest(url: Uri.parse("https://www.baidu.com")));
-                                //     },
-                                //   ),
-                                // );
+                              child: Text("插入初始知识库标签"),
+                              onPressed: () async {
+                                final modifyResult = await request(
+                                  path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_MODIFY_KNOWLEDGE_BASE_CATEGORYS,
+                                  dtoData: KnowledgeBaseCategoryModifyDto(
+                                    modify_knowledge_base_category: ModifyKnowledgeBaseCategory(
+                                      selected_sub_categorys: ["英语四级", "考研英语", "高考古诗300首"],
+                                      modify_knowledge_base_big_categories: [
+                                        ModifyKnowledgeBaseBigCategory(
+                                          big_category: "英语",
+                                          sub_categories: ["英语四级", "英语A级", "英语B级"],
+                                        ),
+                                        ModifyKnowledgeBaseBigCategory(
+                                          big_category: "数学",
+                                          sub_categories: ["三角函数", "勾股定理"],
+                                        ),
+                                      ],
+                                    ),
+                                    dto_padding_1: null,
+                                  ),
+                                  parseResponseVoData: KnowledgeBaseCategoryModifyVo.fromJson,
+                                );
+                                await modifyResult.handleCode(
+                                  code30201: (String showMessage) async {
+                                    logger.outNormal(show: showMessage);
+                                    final queryResult = await request(
+                                      path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
+                                      dtoData: KnowledgeBaseCategoryQueryDto(
+                                        big_category: null,
+                                        dto_padding_1: null,
+                                      ),
+                                      parseResponseVoData: KnowledgeBaseCategoryQueryVo.fromJson,
+                                    );
+                                    await queryResult.handleCode(
+                                      code30101: (String showMessage, KnowledgeBaseCategoryQueryVo vo) async {
+                                        logger.outNormal(show: showMessage, print: vo.toJson());
+                                      },
+                                      code30102: (String showMessage, KnowledgeBaseCategoryQueryVo vo) async {},
+                                      otherException: (int? code, HttperException httperException, StackTrace st) async {
+                                        logger.outError(show: httperException.showMessage, error: httperException.debugMessage);
+                                      },
+                                    );
+
+                                    final querySubResult = await request(
+                                      path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
+                                      dtoData: KnowledgeBaseCategoryQueryDto(
+                                        big_category: "英语",
+                                        dto_padding_1: null,
+                                      ),
+                                      parseResponseVoData: KnowledgeBaseCategoryQueryVo.fromJson,
+                                    );
+                                    await querySubResult.handleCode(
+                                      code30101: (String showMessage, KnowledgeBaseCategoryQueryVo vo) async {
+                                        logger.outNormal(show: showMessage, print: vo.toJson());
+                                      },
+                                      code30102: (String showMessage, KnowledgeBaseCategoryQueryVo vo) async {},
+                                      otherException: (int? code, HttperException httperException, StackTrace st) async {
+                                        logger.outError(show: httperException.showMessage, error: httperException.debugMessage);
+                                      },
+                                    );
+                                  },
+                                  otherException: (int? code, HttperException httperException, StackTrace st) async {
+                                    logger.outError(show: httperException.showMessage, error: httperException.debugMessage);
+                                  },
+                                );
                               },
                             ),
                           ],

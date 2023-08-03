@@ -18,12 +18,29 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
       'token': instance.token,
     };
 
+KnowledgeBaseFragmentGroupWrapperBo
+    _$KnowledgeBaseFragmentGroupWrapperBoFromJson(Map<String, dynamic> json) =>
+        KnowledgeBaseFragmentGroupWrapperBo(
+          fragment_group: FragmentGroup.fromJson(
+              json['fragment_group'] as Map<String, dynamic>),
+          fragment_group_tags: (json['fragment_group_tags'] as List<dynamic>)
+              .map((e) => FragmentGroupTag.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$KnowledgeBaseFragmentGroupWrapperBoToJson(
+        KnowledgeBaseFragmentGroupWrapperBo instance) =>
+    <String, dynamic>{
+      'fragment_group': instance.fragment_group,
+      'fragment_group_tags': instance.fragment_group_tags,
+    };
+
 ModifyKnowledgeBaseBigCategory _$ModifyKnowledgeBaseBigCategoryFromJson(
         Map<String, dynamic> json) =>
     ModifyKnowledgeBaseBigCategory(
       big_category: json['big_category'] as String,
       sub_categories: (json['sub_categories'] as List<dynamic>)
-          .map((e) => e as String?)
+          .map((e) => e as String)
           .toList(),
     );
 
@@ -243,10 +260,37 @@ Map<String, dynamic> _$FragmentGroupTagNewFragmentGroupTagVoToJson(
       'fragment_group_tag_entity': instance.fragment_group_tag_entity,
     };
 
+KnowledgeBaseCategoryModifyDto _$KnowledgeBaseCategoryModifyDtoFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseCategoryModifyDto(
+      modify_knowledge_base_category: ModifyKnowledgeBaseCategory.fromJson(
+          json['modify_knowledge_base_category'] as Map<String, dynamic>),
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$KnowledgeBaseCategoryModifyDtoToJson(
+        KnowledgeBaseCategoryModifyDto instance) =>
+    <String, dynamic>{
+      'modify_knowledge_base_category': instance.modify_knowledge_base_category,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+KnowledgeBaseCategoryModifyVo _$KnowledgeBaseCategoryModifyVoFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseCategoryModifyVo(
+      vo_padding_1: json['vo_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$KnowledgeBaseCategoryModifyVoToJson(
+        KnowledgeBaseCategoryModifyVo instance) =>
+    <String, dynamic>{
+      'vo_padding_1': instance.vo_padding_1,
+    };
+
 KnowledgeBaseCategoryQueryDto _$KnowledgeBaseCategoryQueryDtoFromJson(
         Map<String, dynamic> json) =>
     KnowledgeBaseCategoryQueryDto(
-      big_category: json['big_category'] as bool?,
+      big_category: json['big_category'] as String?,
       dto_padding_1: json['dto_padding_1'] as bool?,
     );
 
@@ -278,6 +322,55 @@ Map<String, dynamic> _$KnowledgeBaseCategoryQueryVoToJson(
       'selected_sub_categorys_list': instance.selected_sub_categorys_list,
       'big_categorys_list': instance.big_categorys_list,
       'sub_categorys_list': instance.sub_categorys_list,
+    };
+
+KnowledgeBaseFragmentGroupQueryDto _$KnowledgeBaseFragmentGroupQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseFragmentGroupQueryDto(
+      sub_categories_list: (json['sub_categories_list'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      knowledge_base_content_sort_type: $enumDecode(
+          _$KnowledgeBaseContentSortTypeEnumMap,
+          json['knowledge_base_content_sort_type']),
+      page: json['page'] as int,
+      size: json['size'] as int,
+    );
+
+Map<String, dynamic> _$KnowledgeBaseFragmentGroupQueryDtoToJson(
+        KnowledgeBaseFragmentGroupQueryDto instance) =>
+    <String, dynamic>{
+      'sub_categories_list': instance.sub_categories_list,
+      'knowledge_base_content_sort_type': _$KnowledgeBaseContentSortTypeEnumMap[
+          instance.knowledge_base_content_sort_type]!,
+      'page': instance.page,
+      'size': instance.size,
+    };
+
+const _$KnowledgeBaseContentSortTypeEnumMap = {
+  KnowledgeBaseContentSortType.by_random: 'by_random',
+  KnowledgeBaseContentSortType.by_hot: 'by_hot',
+  KnowledgeBaseContentSortType.by_create_time: 'by_create_time',
+  KnowledgeBaseContentSortType.by_publish_time: 'by_publish_time',
+  KnowledgeBaseContentSortType.by_update_time: 'by_update_time',
+  KnowledgeBaseContentSortType.by_like_count: 'by_like_count',
+  KnowledgeBaseContentSortType.by_save_count: 'by_save_count',
+};
+
+KnowledgeBaseFragmentGroupQueryVo _$KnowledgeBaseFragmentGroupQueryVoFromJson(
+        Map<String, dynamic> json) =>
+    KnowledgeBaseFragmentGroupQueryVo(
+      fragment_group_wrapper_list:
+          (json['fragment_group_wrapper_list'] as List<dynamic>)
+              .map((e) => KnowledgeBaseFragmentGroupWrapperBo.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
+    );
+
+Map<String, dynamic> _$KnowledgeBaseFragmentGroupQueryVoToJson(
+        KnowledgeBaseFragmentGroupQueryVo instance) =>
+    <String, dynamic>{
+      'fragment_group_wrapper_list': instance.fragment_group_wrapper_list,
     };
 
 QueryFragmentGroupTagByFragmentGroupIdDto

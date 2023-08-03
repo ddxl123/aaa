@@ -36,7 +36,6 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
     if (otherCodeResult != null) {
       throw otherCodeResult;
     }
-    print(result.headers);
     return (dtoData as dynamic)
       ..code = parseCode
       ..httperException = HttperException(showMessage: parseMessage, debugMessage: '')

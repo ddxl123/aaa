@@ -56,10 +56,22 @@ part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
 part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryModifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryModifyVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByFragmentGroupIdDto.dart';

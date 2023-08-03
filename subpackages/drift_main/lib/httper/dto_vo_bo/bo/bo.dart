@@ -19,6 +19,22 @@ DeviceAndTokenBo({
 }
 
 @JsonSerializable()
+class KnowledgeBaseFragmentGroupWrapperBo {
+    FragmentGroup fragment_group;
+    List<FragmentGroupTag> fragment_group_tags;
+
+KnowledgeBaseFragmentGroupWrapperBo({
+    required this.fragment_group,
+    required this.fragment_group_tags,
+
+});
+
+  factory KnowledgeBaseFragmentGroupWrapperBo.fromJson(Map<String, dynamic> json) => _$KnowledgeBaseFragmentGroupWrapperBoFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$KnowledgeBaseFragmentGroupWrapperBoToJson(this);
+}
+
+@JsonSerializable()
 class ModifyKnowledgeBaseBigCategory {
     String big_category;
     List<String> sub_categories;

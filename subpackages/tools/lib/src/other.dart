@@ -50,7 +50,13 @@ class CustomLogger {
     dynamic error,
     StackTrace? stackTrace,
   }) {
-    _out(show: show, print: print, error: error, stackTrace: stackTrace, level: LogLevel.normal);
+    _out(
+      show: show,
+      print: print,
+      error: error,
+      stackTrace: stackTrace,
+      level: LogLevel.normal,
+    );
   }
 
   void outError({
@@ -59,7 +65,32 @@ class CustomLogger {
     dynamic error,
     StackTrace? stackTrace,
   }) {
-    _out(show: show, print: print, error: error, stackTrace: stackTrace, level: LogLevel.error);
+    _out(
+      show: show,
+      print: print,
+      error: error,
+      stackTrace: stackTrace,
+      level: LogLevel.error,
+    );
+  }
+
+  void outErrorHttp({
+    required int? code,
+    required String showMessage,
+    required String debugMessage,
+    required StackTrace st,
+  }) {
+    _out(
+      show: showMessage,
+      print: code,
+      error: debugMessage,
+      stackTrace: st,
+      level: LogLevel.error,
+    );
+  }
+
+  void outErrorShouldNot() {
+    _out(print: "不应该执行到这里！");
   }
 }
 
