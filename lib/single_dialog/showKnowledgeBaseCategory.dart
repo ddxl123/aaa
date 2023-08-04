@@ -84,7 +84,6 @@ class _KnowledgeBaseCategoryWidgetState extends State<KnowledgeBaseCategoryWidge
         ),
       ),
       onWillPop: () async {
-        print("object");
         final canPop = nKey.currentState?.canPop();
         if (canPop ?? false) {
           nKey.currentState?.pop();

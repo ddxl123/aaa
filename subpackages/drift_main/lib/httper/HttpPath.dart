@@ -5,7 +5,7 @@ part of httper;
 
 class HttpPath {
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://192.168.1.3:2814';
+  static const String BASE_PATH_LOCAL = 'http://192.168.1.4:2814';
   
   static const String LOGIN_REQUIRED_TEST_GET = '/login_required/test/get';
 
@@ -28,6 +28,8 @@ class HttpPath {
   static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_MODIFY_KNOWLEDGE_BASE_CATEGORYS = '/no_login_required/knowledge_base/modify_knowledge_base_categorys';
 
   static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS = '/no_login_required/knowledge_base/query_knowledge_base_categorys';
+
+  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUPS = '/no_login_required/knowledge_base/query_knowledge_base_fragment_groups';
 
 }
 

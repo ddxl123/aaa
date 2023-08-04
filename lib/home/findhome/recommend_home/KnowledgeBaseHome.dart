@@ -35,7 +35,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                                 children: [
                                   Icon(Icons.filter_list, size: 18, color: Colors.grey),
                                   Text(
-                                    c.selectedCategories(cAbw).isEmpty ? "分类" : c.selectedCategories(cAbw).join(","),
+                                    c.selectedCategoriesAb(cAbw).isEmpty ? "分类" : c.selectedCategoriesAb(cAbw).join(","),
                                     style: TextStyle(fontSize: 14, color: Colors.grey),
                                   ),
                                 ],
