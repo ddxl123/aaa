@@ -28,11 +28,15 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [syncTag] - 只有 [table] 为 [CloudTableBase] 类型时才会生效，否则将其置为 null（意味着为 local类型）。
   ///
+  /// [isCloudTableWithSync] - 需要同步的行是否需要进行同步。
+  ///   - 在下载别人的碎片组等时，子碎片组不会再次上传到云端，而只会下载到本地，但是其表是带 cloud 表，因此增加 [isCloudTableWithSync] 来解决这个问题。
+  ///
   /// 必须搭配 [withRefs] 使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     return await transaction(
       () async {
@@ -41,6 +45,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         }
         // 设置时间 - 每个插入语句都要设置（local/cloud）
         final dynamic entityDynamic = entity;
+        // TODO: 如果是初始化下载，则时间必须保存下载的默认，而不能修改它。
         entityDynamic.created_at = DateTime.now().toValue();
         entityDynamic.updated_at = DateTime.now().toValue();
 
@@ -64,7 +69,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         // CloudTableBase 类型表需要添加一条 sync 记录。
         //
         // LocalTableBase 类型表不需要添加 sync。
-        if (table is CloudTableBase) {
+        if ((table is CloudTableBase) && isCloudTableWithSync) {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
@@ -74,6 +79,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
               tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
+            isCloudTableWithSync: false,
           );
         }
 
@@ -84,7 +90,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
   /// 根据 [entity] 的 id，修改一条数据，并自动修改 updated_at。
   ///
-  /// 如果 [T] 是 [CloudTableBase] 且 [isSync] 为 true 的话，还会自动插入一条对应的 [Sync]。
+  /// 如果 [T] 是 [CloudTableBase] 且 [isCloudTableWithSync] 为 true 的话，还会自动插入一条对应的 [Sync]。
   ///
   /// TODO: 测试：返回已被更新的行，返回 null 表示将更新的行不存在，或新旧值相同未发生更新。
   ///
@@ -98,13 +104,15 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///
   /// [syncTag] - 若为空，则内部将自动创建一个。
   ///
-  /// [isSync] - 是否进行同步。当新旧实体只有本地字段被修改时，应设为 false，当新旧实体存在同步字段被修改，因设为 true。
+  /// [isCloudTableWithSync]
+  ///   - 1. 当新旧实体只有本地字段被修改时，应设为 false，当新旧实体存在同步字段被修改，因设为 true。
+  ///   - 2. 在下载别人的碎片组等时，子碎片组不会再次上传到云端，而只会下载到本地，但是其表是带 cloud 表，因此增加 [isCloudTableWithSync] 来解决这个问题。
   ///
   /// 必须搭配 [withRefs] 与 [UserExt.reset] 使用。
   Future<DC?> updateReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
-    required bool isSync,
+    required bool isCloudTableWithSync,
     required SyncTag syncTag,
   }) async {
     return await transaction(
@@ -128,7 +136,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         final DC returningEntity = await (select(table)..where((tbl) => (tbl as dynamic).id.equals(entityDynamic.id.value))).getSingle();
 
         // 增加一条 sync 记录 - 仅对 cloud
-        if ((table is CloudTableBase) && isSync == true) {
+        if ((table is CloudTableBase) && isCloudTableWithSync) {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
@@ -139,6 +147,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
               tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
+            isCloudTableWithSync: false,
           );
         }
 
@@ -154,10 +163,15 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// 如果外部没有事务，内部会自动创建事务。
   ///
   /// [entity] - 要替换的 [User] 的实体，不能是 [UsersCompanion]。
+  ///
+  /// [isCloudTableWithSync]
+  ///   - 在下载别人的碎片组等时，子碎片组不会再次上传到云端，而只会下载到本地，但是其表是带 cloud 表，因此增加 [isCloudTableWithSync] 来解决这个问题。
+  ///
   Future<void> deleteWith<T extends Table, DC extends DataClass, E extends Insertable<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     return await transaction(
       () async {
@@ -168,7 +182,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
         }
 
         // 增加一条 sync 记录 - 仅对 cloud
-        if (table is CloudTableBase) {
+        if ((table is CloudTableBase) && isCloudTableWithSync) {
           await insertReturningWith(
             DriftDb.instance.syncs,
             entity: SyncsCompanion(
@@ -178,6 +192,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
               tag: syncTag.tag.toValue(),
             ),
             syncTag: syncTag,
+            isCloudTableWithSync: false,
           );
         }
       },

@@ -6,10 +6,12 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
 /// 当 [selectedFragmentGroupChainAb] 为空时，表示取消选择。
+///
+/// 当 [selectedFragmentGroupChainAb] 初始值为 null 时，会默认分配为 []。
 Future<void> showSelectFragmentGroupDialog({
   required Ab<List<FragmentGroup>?> selectedFragmentGroupChainAb,
-  bool isWithFragments = true,
-  bool isOnlySelectSynced = true,
+  required bool isWithFragments,
+  required bool isOnlySelectSynced,
 }) async {
   await showCustomDialog(
     builder: (_) => SelectFragmentGroupDialogWidget(

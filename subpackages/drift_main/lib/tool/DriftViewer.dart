@@ -131,12 +131,12 @@ class _DriftViewerState extends State<DriftViewer> {
                   ...add(
                     title: 'test1',
                     onPressed: () async {
-                      await DriftDb.instance.insertReturningWith(
-                        DriftDb.instance.users,
-                        entity: UsersCompanion(username: '啊啊啊'.toValue()),
-                        syncTag: await SyncTag.create(),
-                      );
-                      Navigator.pop(context);
+                      // await DriftDb.instance.insertReturningWith(
+                      //   DriftDb.instance.users,
+                      //   entity: UsersCompanion(username: '啊啊啊'.toValue()),
+                      //   syncTag: await SyncTag.create(),
+                      // );
+                      // Navigator.pop(context);
                     },
                   ),
                   ...add(
@@ -150,7 +150,7 @@ class _DriftViewerState extends State<DriftViewer> {
                           username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
-                        isSync: true,
+                        isCloudTableWithSync: true,
                       );
                       await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
                         DriftDb.instance.users,
@@ -159,7 +159,7 @@ class _DriftViewerState extends State<DriftViewer> {
                           username: '顶顶顶'.toValue(),
                         ),
                         syncTag: st,
-                        isSync: true,
+                        isCloudTableWithSync: true,
                       );
                       Navigator.pop(context);
                     },

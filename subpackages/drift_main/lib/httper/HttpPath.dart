@@ -19,6 +19,8 @@ class HttpPath {
 
   static const String LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_FRAGMENT_GROUP = '/login_required/data_download/for_fragment_group';
 
+  static const String LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_KNOWLEDGE_BASE = '/login_required/data_download/for_knowledge_base';
+
   static const String LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = '/login_required/data_upload/once_syncs';
 
   static const String NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_FRAGMENT_GROUP_ID = '/no_login_required/fragment_group_tag/by_fragment_group_id';

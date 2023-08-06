@@ -17,6 +17,8 @@ class FragmentGroups extends CloudTableBase  {
 
   BoolColumn get be_publish => boolean().named("be_publish")();
 
+  BoolColumn get be_self => boolean().named("be_self")();
+
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
 
   @ReferenceTo([Users])

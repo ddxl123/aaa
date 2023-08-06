@@ -12,7 +12,7 @@ class ResetGenerator extends Generator {
     final localTableClasses = <String>[];
     try {
       for (var value in library.classes) {
-        if (value.allSupertypes.first.getDisplayString(withNullability: false).contains('LocalTableBase')) {
+        if (value.allSupertypes.first.getDisplayString(withNullability: false).contains('ClientTableBase')) {
           localTableClasses.add(value.displayName.substring(0, value.displayName.length - 1));
         }
       }
@@ -26,18 +26,20 @@ class ResetGenerator extends Generator {
         /// [${className}s]
         extension ${className}Ext on $className {
 
-          Future<void> delete({required SyncTag syncTag}) async {
+          Future<void> delete({required SyncTag syncTag${localTableClasses.contains(className) ? "" : ", required bool isCloudTableWithSync"}}) async {
             final ins = DriftDb.instance;
             await ins.deleteWith(
               ins.${camelClassName}s,
               entity: this,
               syncTag: syncTag,
+              isCloudTableWithSync: ${localTableClasses.contains(className) ? "false" : "isCloudTableWithSync"},
             );
           }
             
           Future<void> resetByEntity({
             required $className $camelClassName,
             required SyncTag syncTag,
+            ${localTableClasses.contains(className) ? "" : "required bool isCloudTableWithSync,"}
           }) async {
             await reset(
             ${params.map(
@@ -49,6 +51,7 @@ class ResetGenerator extends Generator {
                     (element) => element != '',
                   ).join(',')},
               syncTag: syncTag,
+              ${localTableClasses.contains(className) ? "" : "isCloudTableWithSync: isCloudTableWithSync"}
             );
           }
           
@@ -69,6 +72,7 @@ class ResetGenerator extends Generator {
                     (element) => element != '',
                   ).join(',')}, 
             required SyncTag syncTag,
+            ${localTableClasses.contains(className) ? "" : "required bool isCloudTableWithSync,"}
             }) async {
            bool isCloudModify = false;
            bool isLocalModify = false;
@@ -89,7 +93,7 @@ class ResetGenerator extends Generator {
                   ).join('\n')}
           if (isCloudModify || isLocalModify) {
             final ins = DriftDb.instance;
-            await ins.updateReturningWith(ins.${camelClassName}s, entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+            await ins.updateReturningWith(ins.${camelClassName}s, entity: toCompanion(false), syncTag: syncTag, isCloudTableWithSync: ${localTableClasses.contains(className) ? "false" : "isCloudTableWithSync && isCloudModify"});
           }
             return this;
           }

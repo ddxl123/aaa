@@ -55,7 +55,11 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
                         ],
                       ),
                       onPressed: () async {
-                        await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: Ab<List<FragmentGroup>?>(e));
+                        await showSelectFragmentGroupDialog(
+                          selectedFragmentGroupChainAb: Ab<List<FragmentGroup>?>(e),
+                          isWithFragments: false,
+                          isOnlySelectSynced: true,
+                        );
                         if (mounted) setState(() {});
                       },
                     ),
@@ -98,7 +102,11 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
         ),
         onPressed: () async {
           final result = Ab<List<FragmentGroup>?>(null);
-          await showSelectFragmentGroupDialog(selectedFragmentGroupChainAb: result);
+          await showSelectFragmentGroupDialog(
+            selectedFragmentGroupChainAb: result,
+            isWithFragments: false,
+            isOnlySelectSynced: true,
+          );
           if (result() == null) {
           } else {
             widget.selectedFragmentGroupChains.add(result()!);

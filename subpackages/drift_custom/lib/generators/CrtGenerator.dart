@@ -9,13 +9,20 @@ class CrtGenerator extends Generator {
     final allContent = StringBuffer();
     final allExtContent = StringBuffer();
     try {
+      // 不带 s
+      final localTableClasses = <String>[];
+      for (var value in library.classes) {
+        if (value.allSupertypes.first.getDisplayString(withNullability: false).contains('ClientTableBase')) {
+          localTableClasses.add(value.displayName.substring(0, value.displayName.length - 1));
+        }
+      }
+
       for (var cls in library.classes) {
         if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('UpdateCompanion')) {
           final companionName = cls.displayName;
           final classNoSName = companionName.replaceAll(RegExp(r'(sCompanion)$'), '');
           final classWithSName = '${classNoSName}s';
           final params = cls.getNamedConstructor('insert')!.parameters;
-
           final singleContent = '''
           static $companionName ${companionName.toCamelCase}({${params.map(
                     (e) {
@@ -42,12 +49,13 @@ class CrtGenerator extends Generator {
 
           final singleExtContent = '''
           extension ${companionName}Ext on $companionName {
-            Future<$classNoSName> insert({required SyncTag syncTag}) async {
+            Future<$classNoSName> insert({required SyncTag syncTag${localTableClasses.contains(classNoSName) ? "" : ", required bool isCloudTableWithSync"}}) async {
               final ins = DriftDb.instance;
               return await ins.insertReturningWith(
                 ins.${classWithSName.toCamelCase},
                 entity: this,
                 syncTag: syncTag,
+                isCloudTableWithSync: ${localTableClasses.contains(classNoSName) ? "false" : "isCloudTableWithSync,"}
               );
             }
           }

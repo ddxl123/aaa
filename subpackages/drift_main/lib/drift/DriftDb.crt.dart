@@ -274,6 +274,7 @@ class Crt {
   static FragmentGroupsCompanion fragmentGroupsCompanion({
     required bool be_private,
     required bool be_publish,
+    required bool be_self,
     required bool client_be_selected,
     required int creator_user_id,
     required Value<String?> father_fragment_groups_id,
@@ -286,6 +287,7 @@ class Crt {
     return FragmentGroupsCompanion(
       be_private: Value(be_private),
       be_publish: Value(be_publish),
+      be_self: Value(be_self),
       client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id: father_fragment_groups_id,
@@ -361,165 +363,185 @@ class Crt {
 extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
   Future<ClientSyncInfo> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.clientSyncInfos,
-      entity: this,
-      syncTag: syncTag,
-    );
+    return await ins.insertReturningWith(ins.clientSyncInfos,
+        entity: this, syncTag: syncTag, isCloudTableWithSync: false);
   }
 }
 
 extension SyncsCompanionExt on SyncsCompanion {
   Future<Sync> insert({required SyncTag syncTag}) async {
     final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.syncs,
-      entity: this,
-      syncTag: syncTag,
-    );
+    return await ins.insertReturningWith(ins.syncs,
+        entity: this, syncTag: syncTag, isCloudTableWithSync: false);
   }
 }
 
 extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
-  Future<FragmentMemoryInfo> insert({required SyncTag syncTag}) async {
+  Future<FragmentMemoryInfo> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentMemoryInfos,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension FragmentGroupTagsCompanionExt on FragmentGroupTagsCompanion {
-  Future<FragmentGroupTag> insert({required SyncTag syncTag}) async {
+  Future<FragmentGroupTag> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentGroupTags,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension RFragment2FragmentGroupsCompanionExt
     on RFragment2FragmentGroupsCompanion {
-  Future<RFragment2FragmentGroup> insert({required SyncTag syncTag}) async {
+  Future<RFragment2FragmentGroup> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.rFragment2FragmentGroups,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension Test2sCompanionExt on Test2sCompanion {
-  Future<Test2> insert({required SyncTag syncTag}) async {
+  Future<Test2> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.test2s,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension TestsCompanionExt on TestsCompanion {
-  Future<Test> insert({required SyncTag syncTag}) async {
+  Future<Test> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.tests,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension FragmentsCompanionExt on FragmentsCompanion {
-  Future<Fragment> insert({required SyncTag syncTag}) async {
+  Future<Fragment> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragments,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
-  Future<MemoryGroup> insert({required SyncTag syncTag}) async {
+  Future<MemoryGroup> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.memoryGroups,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension MemoryModelsCompanionExt on MemoryModelsCompanion {
-  Future<MemoryModel> insert({required SyncTag syncTag}) async {
+  Future<MemoryModel> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.memoryModels,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension ShorthandsCompanionExt on ShorthandsCompanion {
-  Future<Shorthand> insert({required SyncTag syncTag}) async {
+  Future<Shorthand> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.shorthands,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
-  Future<FragmentGroup> insert({required SyncTag syncTag}) async {
+  Future<FragmentGroup> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.fragmentGroups,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension UserCommentsCompanionExt on UserCommentsCompanion {
-  Future<UserComment> insert({required SyncTag syncTag}) async {
+  Future<UserComment> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.userComments,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension UserLikesCompanionExt on UserLikesCompanion {
-  Future<UserLike> insert({required SyncTag syncTag}) async {
+  Future<UserLike> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.userLikes,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }
 
 extension UsersCompanionExt on UsersCompanion {
-  Future<User> insert({required SyncTag syncTag}) async {
+  Future<User> insert(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
       ins.users,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 }

@@ -210,6 +210,36 @@ Map<String, dynamic> _$DataDownloadForFragmentGroupVoToJson(
       'fragment_list': instance.fragment_list,
     };
 
+DataDownloadForKnowledgeBaseDto _$DataDownloadForKnowledgeBaseDtoFromJson(
+        Map<String, dynamic> json) =>
+    DataDownloadForKnowledgeBaseDto(
+      fragment_group_id: json['fragment_group_id'] as String?,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$DataDownloadForKnowledgeBaseDtoToJson(
+        DataDownloadForKnowledgeBaseDto instance) =>
+    <String, dynamic>{
+      'fragment_group_id': instance.fragment_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+DataDownloadForKnowledgeBaseVo _$DataDownloadForKnowledgeBaseVoFromJson(
+        Map<String, dynamic> json) =>
+    DataDownloadForKnowledgeBaseVo(
+      fragment_group_self_and_subs_list:
+          (json['fragment_group_self_and_subs_list'] as List<dynamic>?)
+              ?.map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
+              .toList(),
+    );
+
+Map<String, dynamic> _$DataDownloadForKnowledgeBaseVoToJson(
+        DataDownloadForKnowledgeBaseVo instance) =>
+    <String, dynamic>{
+      'fragment_group_self_and_subs_list':
+          instance.fragment_group_self_and_subs_list,
+    };
+
 DataUploadDto _$DataUploadDtoFromJson(Map<String, dynamic> json) =>
     DataUploadDto(
       sync_entity: Sync.fromJson(json['sync_entity'] as Map<String, dynamic>),

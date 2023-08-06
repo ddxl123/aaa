@@ -35,6 +35,7 @@ extension ClientSyncInfoExt on ClientSyncInfo {
       ins.clientSyncInfos,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: false,
     );
   }
 
@@ -66,25 +67,27 @@ extension ClientSyncInfoExt on ClientSyncInfo {
     bool isCloudModify = false;
     bool isLocalModify = false;
     if (device_info.present && this.device_info != device_info.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.device_info = device_info.value;
     }
 
     if (recent_sync_time.present &&
         this.recent_sync_time != recent_sync_time.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.recent_sync_time = recent_sync_time.value;
     }
 
     if (token.present && this.token != token.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.token = token.value;
     }
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.clientSyncInfos,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: false);
     }
     return this;
   }
@@ -98,6 +101,7 @@ extension SyncExt on Sync {
       ins.syncs,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: false,
     );
   }
 
@@ -131,30 +135,32 @@ extension SyncExt on Sync {
     bool isCloudModify = false;
     bool isLocalModify = false;
     if (row_id.present && this.row_id != row_id.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.row_id = row_id.value;
     }
 
     if (sync_curd_type.present && this.sync_curd_type != sync_curd_type.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.sync_curd_type = sync_curd_type.value;
     }
 
     if (sync_table_name.present &&
         this.sync_table_name != sync_table_name.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.sync_table_name = sync_table_name.value;
     }
 
     if (tag.present && this.tag != tag.value) {
-      isCloudModify = true;
+      isLocalModify = true;
       this.tag = tag.value;
     }
 
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.syncs,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: false);
     }
     return this;
   }
@@ -162,34 +168,37 @@ extension SyncExt on Sync {
 
 /// [FragmentMemoryInfos]
 extension FragmentMemoryInfoExt on FragmentMemoryInfo {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.fragmentMemoryInfos,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required FragmentMemoryInfo fragmentMemoryInfo,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      actual_show_time: fragmentMemoryInfo.actual_show_time.toValue(),
-      button_values: fragmentMemoryInfo.button_values.toValue(),
-      click_familiarity: fragmentMemoryInfo.click_familiarity.toValue(),
-      click_time: fragmentMemoryInfo.click_time.toValue(),
-      click_value: fragmentMemoryInfo.click_value.toValue(),
-      content_value: fragmentMemoryInfo.content_value.toValue(),
-      creator_user_id: fragmentMemoryInfo.creator_user_id.toValue(),
-      fragment_id: fragmentMemoryInfo.fragment_id.toValue(),
-      memory_group_id: fragmentMemoryInfo.memory_group_id.toValue(),
-      next_plan_show_time: fragmentMemoryInfo.next_plan_show_time.toValue(),
-      show_familiarity: fragmentMemoryInfo.show_familiarity.toValue(),
-      study_status: fragmentMemoryInfo.study_status.toValue(),
-      syncTag: syncTag,
-    );
+        actual_show_time: fragmentMemoryInfo.actual_show_time.toValue(),
+        button_values: fragmentMemoryInfo.button_values.toValue(),
+        click_familiarity: fragmentMemoryInfo.click_familiarity.toValue(),
+        click_time: fragmentMemoryInfo.click_time.toValue(),
+        click_value: fragmentMemoryInfo.click_value.toValue(),
+        content_value: fragmentMemoryInfo.content_value.toValue(),
+        creator_user_id: fragmentMemoryInfo.creator_user_id.toValue(),
+        fragment_id: fragmentMemoryInfo.fragment_id.toValue(),
+        memory_group_id: fragmentMemoryInfo.memory_group_id.toValue(),
+        next_plan_show_time: fragmentMemoryInfo.next_plan_show_time.toValue(),
+        show_familiarity: fragmentMemoryInfo.show_familiarity.toValue(),
+        study_status: fragmentMemoryInfo.study_status.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -213,6 +222,7 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     required Value<String> show_familiarity,
     required Value<StudyStatus> study_status,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -285,7 +295,9 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentMemoryInfos,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -293,24 +305,27 @@ extension FragmentMemoryInfoExt on FragmentMemoryInfo {
 
 /// [FragmentGroupTags]
 extension FragmentGroupTagExt on FragmentGroupTag {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.fragmentGroupTags,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required FragmentGroupTag fragmentGroupTag,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      fragment_group_id: fragmentGroupTag.fragment_group_id.toValue(),
-      tag: fragmentGroupTag.tag.toValue(),
-      syncTag: syncTag,
-    );
+        fragment_group_id: fragmentGroupTag.fragment_group_id.toValue(),
+        tag: fragmentGroupTag.tag.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -324,6 +339,7 @@ extension FragmentGroupTagExt on FragmentGroupTag {
     required Value<String> fragment_group_id,
     required Value<String> tag,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -341,7 +357,9 @@ extension FragmentGroupTagExt on FragmentGroupTag {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentGroupTags,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -349,25 +367,28 @@ extension FragmentGroupTagExt on FragmentGroupTag {
 
 /// [RFragment2FragmentGroups]
 extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.rFragment2FragmentGroups,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required RFragment2FragmentGroup rFragment2FragmentGroup,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      creator_user_id: rFragment2FragmentGroup.creator_user_id.toValue(),
-      fragment_group_id: rFragment2FragmentGroup.fragment_group_id.toValue(),
-      fragment_id: rFragment2FragmentGroup.fragment_id.toValue(),
-      syncTag: syncTag,
-    );
+        creator_user_id: rFragment2FragmentGroup.creator_user_id.toValue(),
+        fragment_group_id: rFragment2FragmentGroup.fragment_group_id.toValue(),
+        fragment_id: rFragment2FragmentGroup.fragment_id.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -382,6 +403,7 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
     required Value<String?> fragment_group_id,
     required Value<String> fragment_id,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -405,7 +427,9 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.rFragment2FragmentGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -413,23 +437,26 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
 
 /// [Test2s]
 extension Test2Ext on Test2 {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.test2s,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required Test2 test2,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      client_content: test2.client_content.toValue(),
-      syncTag: syncTag,
-    );
+        client_content: test2.client_content.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -442,6 +469,7 @@ extension Test2Ext on Test2 {
   FutureOr<Test2> reset({
     required Value<String> client_content,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -453,7 +481,9 @@ extension Test2Ext on Test2 {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.test2s,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -461,24 +491,27 @@ extension Test2Ext on Test2 {
 
 /// [Tests]
 extension TestExt on Test {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.tests,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required Test test,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      client_a: test.client_a.toValue(),
-      client_content: test.client_content.toValue(),
-      syncTag: syncTag,
-    );
+        client_a: test.client_a.toValue(),
+        client_content: test.client_content.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -492,6 +525,7 @@ extension TestExt on Test {
     required Value<String> client_a,
     required Value<String> client_content,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -508,7 +542,9 @@ extension TestExt on Test {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.tests,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -516,28 +552,31 @@ extension TestExt on Test {
 
 /// [Fragments]
 extension FragmentExt on Fragment {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.fragments,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required Fragment fragment,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      be_sep_publish: fragment.be_sep_publish.toValue(),
-      client_be_selected: fragment.client_be_selected.toValue(),
-      content: fragment.content.toValue(),
-      creator_user_id: fragment.creator_user_id.toValue(),
-      father_fragment_id: fragment.father_fragment_id.toValue(),
-      title: fragment.title.toValue(),
-      syncTag: syncTag,
-    );
+        be_sep_publish: fragment.be_sep_publish.toValue(),
+        client_be_selected: fragment.client_be_selected.toValue(),
+        content: fragment.content.toValue(),
+        creator_user_id: fragment.creator_user_id.toValue(),
+        father_fragment_id: fragment.father_fragment_id.toValue(),
+        title: fragment.title.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -555,6 +594,7 @@ extension FragmentExt on Fragment {
     required Value<String?> father_fragment_id,
     required Value<String> title,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -594,7 +634,9 @@ extension FragmentExt on Fragment {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragments,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -602,31 +644,35 @@ extension FragmentExt on Fragment {
 
 /// [MemoryGroups]
 extension MemoryGroupExt on MemoryGroup {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.memoryGroups,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required MemoryGroup memoryGroup,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      creator_user_id: memoryGroup.creator_user_id.toValue(),
-      memory_model_id: memoryGroup.memory_model_id.toValue(),
-      new_display_order: memoryGroup.new_display_order.toValue(),
-      new_review_display_order: memoryGroup.new_review_display_order.toValue(),
-      review_display_order: memoryGroup.review_display_order.toValue(),
-      review_interval: memoryGroup.review_interval.toValue(),
-      start_time: memoryGroup.start_time.toValue(),
-      title: memoryGroup.title.toValue(),
-      will_new_learn_count: memoryGroup.will_new_learn_count.toValue(),
-      syncTag: syncTag,
-    );
+        creator_user_id: memoryGroup.creator_user_id.toValue(),
+        memory_model_id: memoryGroup.memory_model_id.toValue(),
+        new_display_order: memoryGroup.new_display_order.toValue(),
+        new_review_display_order:
+            memoryGroup.new_review_display_order.toValue(),
+        review_display_order: memoryGroup.review_display_order.toValue(),
+        review_interval: memoryGroup.review_interval.toValue(),
+        start_time: memoryGroup.start_time.toValue(),
+        title: memoryGroup.title.toValue(),
+        will_new_learn_count: memoryGroup.will_new_learn_count.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -647,6 +693,7 @@ extension MemoryGroupExt on MemoryGroup {
     required Value<String> title,
     required Value<int> will_new_learn_count,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -705,7 +752,9 @@ extension MemoryGroupExt on MemoryGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -713,45 +762,48 @@ extension MemoryGroupExt on MemoryGroup {
 
 /// [MemoryModels]
 extension MemoryModelExt on MemoryModel {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.memoryModels,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required MemoryModel memoryModel,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      button_algorithm_a: memoryModel.button_algorithm_a.toValue(),
-      button_algorithm_b: memoryModel.button_algorithm_b.toValue(),
-      button_algorithm_c: memoryModel.button_algorithm_c.toValue(),
-      button_algorithm_remark: memoryModel.button_algorithm_remark.toValue(),
-      button_algorithm_usage_status:
-          memoryModel.button_algorithm_usage_status.toValue(),
-      creator_user_id: memoryModel.creator_user_id.toValue(),
-      familiarity_algorithm_a: memoryModel.familiarity_algorithm_a.toValue(),
-      familiarity_algorithm_b: memoryModel.familiarity_algorithm_b.toValue(),
-      familiarity_algorithm_c: memoryModel.familiarity_algorithm_c.toValue(),
-      familiarity_algorithm_remark:
-          memoryModel.familiarity_algorithm_remark.toValue(),
-      familiarity_algorithm_usage_status:
-          memoryModel.familiarity_algorithm_usage_status.toValue(),
-      father_memory_model_id: memoryModel.father_memory_model_id.toValue(),
-      next_time_algorithm_a: memoryModel.next_time_algorithm_a.toValue(),
-      next_time_algorithm_b: memoryModel.next_time_algorithm_b.toValue(),
-      next_time_algorithm_c: memoryModel.next_time_algorithm_c.toValue(),
-      next_time_algorithm_remark:
-          memoryModel.next_time_algorithm_remark.toValue(),
-      next_time_algorithm_usage_status:
-          memoryModel.next_time_algorithm_usage_status.toValue(),
-      title: memoryModel.title.toValue(),
-      syncTag: syncTag,
-    );
+        button_algorithm_a: memoryModel.button_algorithm_a.toValue(),
+        button_algorithm_b: memoryModel.button_algorithm_b.toValue(),
+        button_algorithm_c: memoryModel.button_algorithm_c.toValue(),
+        button_algorithm_remark: memoryModel.button_algorithm_remark.toValue(),
+        button_algorithm_usage_status:
+            memoryModel.button_algorithm_usage_status.toValue(),
+        creator_user_id: memoryModel.creator_user_id.toValue(),
+        familiarity_algorithm_a: memoryModel.familiarity_algorithm_a.toValue(),
+        familiarity_algorithm_b: memoryModel.familiarity_algorithm_b.toValue(),
+        familiarity_algorithm_c: memoryModel.familiarity_algorithm_c.toValue(),
+        familiarity_algorithm_remark:
+            memoryModel.familiarity_algorithm_remark.toValue(),
+        familiarity_algorithm_usage_status:
+            memoryModel.familiarity_algorithm_usage_status.toValue(),
+        father_memory_model_id: memoryModel.father_memory_model_id.toValue(),
+        next_time_algorithm_a: memoryModel.next_time_algorithm_a.toValue(),
+        next_time_algorithm_b: memoryModel.next_time_algorithm_b.toValue(),
+        next_time_algorithm_c: memoryModel.next_time_algorithm_c.toValue(),
+        next_time_algorithm_remark:
+            memoryModel.next_time_algorithm_remark.toValue(),
+        next_time_algorithm_usage_status:
+            memoryModel.next_time_algorithm_usage_status.toValue(),
+        title: memoryModel.title.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -781,6 +833,7 @@ extension MemoryModelExt on MemoryModel {
     required Value<AlgorithmUsageStatus> next_time_algorithm_usage_status,
     required Value<String> title,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -900,7 +953,9 @@ extension MemoryModelExt on MemoryModel {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.memoryModels,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -908,24 +963,27 @@ extension MemoryModelExt on MemoryModel {
 
 /// [Shorthands]
 extension ShorthandExt on Shorthand {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.shorthands,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required Shorthand shorthand,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      content: shorthand.content.toValue(),
-      creator_user_id: shorthand.creator_user_id.toValue(),
-      syncTag: syncTag,
-    );
+        content: shorthand.content.toValue(),
+        creator_user_id: shorthand.creator_user_id.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -939,6 +997,7 @@ extension ShorthandExt on Shorthand {
     required Value<String> content,
     required Value<int> creator_user_id,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -956,7 +1015,9 @@ extension ShorthandExt on Shorthand {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.shorthands,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -964,30 +1025,34 @@ extension ShorthandExt on Shorthand {
 
 /// [FragmentGroups]
 extension FragmentGroupExt on FragmentGroup {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.fragmentGroups,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required FragmentGroup fragmentGroup,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      be_private: fragmentGroup.be_private.toValue(),
-      be_publish: fragmentGroup.be_publish.toValue(),
-      client_be_selected: fragmentGroup.client_be_selected.toValue(),
-      creator_user_id: fragmentGroup.creator_user_id.toValue(),
-      father_fragment_groups_id:
-          fragmentGroup.father_fragment_groups_id.toValue(),
-      profile: fragmentGroup.profile.toValue(),
-      title: fragmentGroup.title.toValue(),
-      syncTag: syncTag,
-    );
+        be_private: fragmentGroup.be_private.toValue(),
+        be_publish: fragmentGroup.be_publish.toValue(),
+        be_self: fragmentGroup.be_self.toValue(),
+        client_be_selected: fragmentGroup.client_be_selected.toValue(),
+        creator_user_id: fragmentGroup.creator_user_id.toValue(),
+        father_fragment_groups_id:
+            fragmentGroup.father_fragment_groups_id.toValue(),
+        profile: fragmentGroup.profile.toValue(),
+        title: fragmentGroup.title.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -1000,12 +1065,14 @@ extension FragmentGroupExt on FragmentGroup {
   FutureOr<FragmentGroup> reset({
     required Value<bool> be_private,
     required Value<bool> be_publish,
+    required Value<bool> be_self,
     required Value<bool> client_be_selected,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
     required Value<String> profile,
     required Value<String> title,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1017,6 +1084,11 @@ extension FragmentGroupExt on FragmentGroup {
     if (be_publish.present && this.be_publish != be_publish.value) {
       isCloudModify = true;
       this.be_publish = be_publish.value;
+    }
+
+    if (be_self.present && this.be_self != be_self.value) {
+      isCloudModify = true;
+      this.be_self = be_self.value;
     }
 
     if (client_be_selected.present &&
@@ -1050,7 +1122,9 @@ extension FragmentGroupExt on FragmentGroup {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.fragmentGroups,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -1058,26 +1132,29 @@ extension FragmentGroupExt on FragmentGroup {
 
 /// [UserComments]
 extension UserCommentExt on UserComment {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.userComments,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required UserComment userComment,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      comment_content: userComment.comment_content.toValue(),
-      commentator_user_id: userComment.commentator_user_id.toValue(),
-      fragment_group_id: userComment.fragment_group_id.toValue(),
-      fragment_id: userComment.fragment_id.toValue(),
-      syncTag: syncTag,
-    );
+        comment_content: userComment.comment_content.toValue(),
+        commentator_user_id: userComment.commentator_user_id.toValue(),
+        fragment_group_id: userComment.fragment_group_id.toValue(),
+        fragment_id: userComment.fragment_id.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -1093,6 +1170,7 @@ extension UserCommentExt on UserComment {
     required Value<String?> fragment_group_id,
     required Value<String?> fragment_id,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1122,7 +1200,9 @@ extension UserCommentExt on UserComment {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.userComments,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -1130,25 +1210,28 @@ extension UserCommentExt on UserComment {
 
 /// [UserLikes]
 extension UserLikeExt on UserLike {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.userLikes,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required UserLike userLike,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      fragment_group_id: userLike.fragment_group_id.toValue(),
-      fragment_id: userLike.fragment_id.toValue(),
-      liker_user_id: userLike.liker_user_id.toValue(),
-      syncTag: syncTag,
-    );
+        fragment_group_id: userLike.fragment_group_id.toValue(),
+        fragment_id: userLike.fragment_id.toValue(),
+        liker_user_id: userLike.liker_user_id.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -1163,6 +1246,7 @@ extension UserLikeExt on UserLike {
     required Value<String?> fragment_id,
     required Value<int> liker_user_id,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1185,7 +1269,9 @@ extension UserLikeExt on UserLike {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.userLikes,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }
@@ -1193,27 +1279,30 @@ extension UserLikeExt on UserLike {
 
 /// [Users]
 extension UserExt on User {
-  Future<void> delete({required SyncTag syncTag}) async {
+  Future<void> delete(
+      {required SyncTag syncTag, required bool isCloudTableWithSync}) async {
     final ins = DriftDb.instance;
     await ins.deleteWith(
       ins.users,
       entity: this,
       syncTag: syncTag,
+      isCloudTableWithSync: isCloudTableWithSync,
     );
   }
 
   Future<void> resetByEntity({
     required User user,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await reset(
-      age: user.age.toValue(),
-      email: user.email.toValue(),
-      password: user.password.toValue(),
-      phone: user.phone.toValue(),
-      username: user.username.toValue(),
-      syncTag: syncTag,
-    );
+        age: user.age.toValue(),
+        email: user.email.toValue(),
+        password: user.password.toValue(),
+        phone: user.phone.toValue(),
+        username: user.username.toValue(),
+        syncTag: syncTag,
+        isCloudTableWithSync: isCloudTableWithSync);
   }
 
   /// 将传入的新数据覆盖掉旧数据类实例。
@@ -1230,6 +1319,7 @@ extension UserExt on User {
     required Value<String?> phone,
     required Value<String> username,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
@@ -1261,7 +1351,9 @@ extension UserExt on User {
     if (isCloudModify || isLocalModify) {
       final ins = DriftDb.instance;
       await ins.updateReturningWith(ins.users,
-          entity: toCompanion(false), isSync: isCloudModify, syncTag: syncTag);
+          entity: toCompanion(false),
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync && isCloudModify);
     }
     return this;
   }

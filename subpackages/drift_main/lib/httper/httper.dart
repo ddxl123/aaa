@@ -44,6 +44,12 @@ part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupDto.dart';
 part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/DataDownloadForKnowledgeBaseDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/DataDownloadForKnowledgeBaseVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/DataUploadDto.dart';
 
 
