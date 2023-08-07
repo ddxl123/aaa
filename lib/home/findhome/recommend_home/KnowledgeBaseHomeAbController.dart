@@ -1,18 +1,38 @@
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../../../single_dialog/showKnowledgeBaseCategory.dart';
 import '../../../single_dialog/showSelectFragmentGroupDialog.dart';
+
+class FragmentGroupDownloadWrapper {
+  /// 自身组以及其全部子孙组
+  final fgs = <FragmentGroup>[];
+
+  /// [fgs] 中的全部碎片以及对应的关联表。
+  final fs = <DataDownloadForKnowledgeBaseFragmentWrapperBO>[];
+
+  final fgTags = <FragmentGroupTag>[];
+
+  void clearAll() {
+    fgs.clear();
+    fs.clear();
+    fgTags.clear();
+  }
+}
 
 class KnowledgeBaseHomeAbController extends AbController {
   final refreshController = RefreshController(initialRefresh: true);
   final knowledgeBaseContentSortTypeAb = KnowledgeBaseContentSortType.by_random.ab;
   final selectedCategoriesAb = <String>[].ab;
   final fragmentGroupsAb = <KnowledgeBaseFragmentGroupWrapperBo>[].ab;
+
+  final fragmentGroupDownloadWrapper = FragmentGroupDownloadWrapper();
 
   Future<void> refresh() async {
     final result = await request(
@@ -51,7 +71,16 @@ class KnowledgeBaseHomeAbController extends AbController {
     }
   }
 
-  Future<void> downloadFragment({required FragmentGroup fragmentGroup}) async {
+  Future<void> download({required FragmentGroup willDownloadFragmentGroup}) async {
+    if (willDownloadFragmentGroup.creator_user_id == Aber.find<GlobalAbController>().loggedInUser()!.id) {
+      SmartDialog.showToast("不能下载自己创建的！");
+      return;
+    }
+    final hasSaved = await db.generalQueryDAO.queryFragmentGroupById(id: willDownloadFragmentGroup.id);
+    if (hasSaved != null) {
+      SmartDialog.showToast("该碎片组已被保存过！");
+      return;
+    }
     final selectGroup = Ab<List<FragmentGroup>?>(null);
     await showSelectFragmentGroupDialog(
       selectedFragmentGroupChainAb: selectGroup,
@@ -59,22 +88,161 @@ class KnowledgeBaseHomeAbController extends AbController {
       isWithFragments: false,
     );
     if (selectGroup.isAbNotEmpty()) {
-      final result = await request(
-        path: HttpPath.LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_KNOWLEDGE_BASE,
-        dtoData: DataDownloadForKnowledgeBaseDto(
-          fragment_group_id: fragmentGroup.id,
-          dto_padding_1: null,
-        ),
-        parseResponseVoData: DataDownloadForKnowledgeBaseVo.fromJson,
-      );
-      await result.handleCode(
-        code40201: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
-          print(vo.fragment_group_self_and_subs_list!.length);
-        },
-        otherException: (int? code, HttperException httperException, StackTrace st) async {
-          logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
-        },
+      await _downloadFgs(
+        willDownloadFragmentGroup: willDownloadFragmentGroup,
+        toFragmentGroup: selectGroup()!.lastOrNull,
       );
     }
+  }
+
+  Future<void> _downloadFgs({
+    required FragmentGroup willDownloadFragmentGroup,
+    required FragmentGroup? toFragmentGroup,
+  }) async {
+    final result = await request(
+      path: HttpPath.LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_KNOWLEDGE_BASE,
+      dtoData: DataDownloadForKnowledgeBaseDto(
+        fragment_group_id: willDownloadFragmentGroup.id,
+        fragment_group_ids_for_fragments_list: null,
+        fragment_group_ids_for_tags_list: null,
+      ),
+      parseResponseVoData: DataDownloadForKnowledgeBaseVo.fromJson,
+    );
+    await result.handleCode(
+      code40201: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        fragmentGroupDownloadWrapper.fgs.addAll(vo.fragment_group_self_and_subs_list!);
+        await _downloadFs(
+          willDownloadFragmentGroup: willDownloadFragmentGroup,
+          toFragmentGroup: toFragmentGroup,
+        );
+      },
+      code40202: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        logger.outErrorShouldNot();
+      },
+      code40203: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        logger.outErrorShouldNot();
+      },
+      otherException: (int? code, HttperException httperException, StackTrace st) async {
+        logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
+      },
+    );
+  }
+
+  Future<void> _downloadFs({
+    required FragmentGroup willDownloadFragmentGroup,
+    required FragmentGroup? toFragmentGroup,
+  }) async {
+    final result = await request(
+      path: HttpPath.LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_KNOWLEDGE_BASE,
+      dtoData: DataDownloadForKnowledgeBaseDto(
+        fragment_group_id: null,
+        fragment_group_ids_for_fragments_list: fragmentGroupDownloadWrapper.fgs.map((e) => e.id).toList(),
+        fragment_group_ids_for_tags_list: null,
+      ),
+      parseResponseVoData: DataDownloadForKnowledgeBaseVo.fromJson,
+    );
+    await result.handleCode(
+      code40201: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        logger.outErrorShouldNot();
+      },
+      code40202: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        fragmentGroupDownloadWrapper.fs.addAll(vo.fragment_wrappers_list!);
+        await _downloadFTags(
+          willDownloadFragmentGroup: willDownloadFragmentGroup,
+          toFragmentGroup: toFragmentGroup,
+        );
+      },
+      code40203: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        logger.outErrorShouldNot();
+      },
+      otherException: (int? code, HttperException httperException, StackTrace st) async {
+        logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
+      },
+    );
+  }
+
+  Future<void> _downloadFTags({
+    required FragmentGroup willDownloadFragmentGroup,
+    required FragmentGroup? toFragmentGroup,
+  }) async {
+    final result = await request(
+      path: HttpPath.LOGIN_REQUIRED_DATA_DOWNLOAD_FOR_KNOWLEDGE_BASE,
+      dtoData: DataDownloadForKnowledgeBaseDto(
+        fragment_group_id: null,
+        fragment_group_ids_for_fragments_list: null,
+        fragment_group_ids_for_tags_list: fragmentGroupDownloadWrapper.fgs.map((e) => e.id).toList(),
+      ),
+      parseResponseVoData: DataDownloadForKnowledgeBaseVo.fromJson,
+    );
+    await result.handleCode(
+      code40201: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        logger.outErrorShouldNot();
+      },
+      code40202: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        logger.outErrorShouldNot();
+      },
+      code40203: (String showMessage, DataDownloadForKnowledgeBaseVo vo) async {
+        fragmentGroupDownloadWrapper.fgTags.addAll(vo.fragment_group_tags_list!);
+        await _insertToSqlite(
+          willDownloadFragmentGroup: willDownloadFragmentGroup,
+          toFragmentGroup: toFragmentGroup,
+        );
+      },
+      otherException: (int? code, HttperException httperException, StackTrace st) async {
+        logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
+      },
+    );
+  }
+
+  Future<void> _insertToSqlite({
+    required FragmentGroup willDownloadFragmentGroup,
+    required FragmentGroup? toFragmentGroup,
+  }) async {
+    await db.transaction(
+      () async {
+        final syncTag = await SyncTag.create();
+        for (int i = 0; i < fragmentGroupDownloadWrapper.fgs.length; i++) {
+          final fgs = fragmentGroupDownloadWrapper.fgs[i];
+          if (fgs.father_fragment_groups_id == willDownloadFragmentGroup.father_fragment_groups_id) {
+            // 重置 father_fragment_groups_id
+            fgs.father_fragment_groups_id = toFragmentGroup?.father_fragment_groups_id;
+            await fgs.toCompanion(false).insert(
+                  syncTag: syncTag,
+                  isCloudTableWithSync: true,
+                  // 重置 id
+                  isCloudTableAutoId: true,
+                );
+          } else {
+            await fgs.toCompanion(false).insert(
+                  syncTag: syncTag,
+                  isCloudTableWithSync: false,
+                  isCloudTableAutoId: false,
+                );
+          }
+        }
+        for (int i = 0; i < fragmentGroupDownloadWrapper.fs.length; i++) {
+          final fs = fragmentGroupDownloadWrapper.fs[i];
+          await fs.fragments.toCompanion(false).insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: false,
+                isCloudTableAutoId: false,
+              );
+          for (int n = 0; n < fs.r_fragment_2_fragment_groups.length; n++) {
+            await fs.r_fragment_2_fragment_groups[n].toCompanion(false).insert(
+                  syncTag: syncTag,
+                  isCloudTableWithSync: false,
+                  isCloudTableAutoId: false,
+                );
+          }
+        }
+        for (int i = 0; i < fragmentGroupDownloadWrapper.fgTags.length; i++) {
+          await fragmentGroupDownloadWrapper.fgTags[i].toCompanion(false).insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: false,
+                isCloudTableAutoId: false,
+              );
+        }
+      },
+    );
   }
 }

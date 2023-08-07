@@ -58,6 +58,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           client_be_selected: isSelected.toValue(),
           be_sep_publish: toAbsent(),
           syncTag: syncTag,
+          isCloudTableWithSync: false,
         );
       },
       fragmentMemoryInfos: null,
@@ -87,6 +88,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           be_private: toAbsent(),
           be_publish: toAbsent(),
           syncTag: syncTag,
+          isCloudTableWithSync: false,
         );
         final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
         final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(targetFragmentGroupId: fragmentGroup?.id);
@@ -101,6 +103,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               client_be_selected: isSelected.toValue(),
               syncTag: syncTag,
               be_sep_publish: toAbsent(),
+              isCloudTableWithSync: false,
             );
           },
         );
@@ -116,6 +119,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               be_private: toAbsent(),
               be_publish: toAbsent(),
               syncTag: syncTag,
+              isCloudTableWithSync: false,
             );
           },
         );
@@ -181,6 +185,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               title: toAbsent(),
               will_new_learn_count: (originalMemoryGroup.will_new_learn_count - 1).toValue(),
               syncTag: syncTag,
+              isCloudTableWithSync: true,
             );
           }
         },

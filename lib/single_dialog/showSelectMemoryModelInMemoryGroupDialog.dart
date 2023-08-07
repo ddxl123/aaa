@@ -104,6 +104,7 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
               title: toAbsent(),
               will_new_learn_count: toAbsent(),
               syncTag: st,
+              isCloudTableWithSync: true,
             );
       },
       syncTag: st,

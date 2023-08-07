@@ -100,7 +100,11 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       return true;
     }
     final st = await SyncTag.create();
-    oMemoryGroup.resetByEntity(memoryGroup: memoryGroupAb(), syncTag: st);
+    await oMemoryGroup.resetByEntity(
+      memoryGroup: memoryGroupAb(),
+      syncTag: st,
+      isCloudTableWithSync: true,
+    );
     SmartDialog.showToast("保存成功");
     return true;
   }

@@ -54,6 +54,12 @@ class SyncTag {
     return syncTag;
   }
 
+  /// 解析出 userId。
+  static int parseToUserId(String id) {
+    final userId36 = id.substring(8, 15);
+    return int.parse(userId36, radix: 36);
+  }
+
   @override
   bool operator ==(Object other) {
     return (other is SyncTag) ? tag == other.tag : false;

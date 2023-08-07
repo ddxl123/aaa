@@ -34,45 +34,46 @@ class RawDAO extends DatabaseAccessor<DriftDb> with _$RawDAOMixin {
                   (e) {
                     final newId = st.createCloudId(userId: user.id);
                     fragmentGroupMap[e.id] = newId;
-
-                    return Crt.fragmentGroupsCompanion(
-                      be_private: false,
-                      be_publish: false,
-                      client_be_selected: false,
-                      creator_user_id: user.id,
-                      father_fragment_groups_id: e.father_fragment_groups_id.toValue(),
-                      title: e.title,
-                      profile: e.profile,
-                      id: newId,
-                      created_at: now,
-                      updated_at: now,
-                    );
+                    throw "未处理";
+                    // return Crt.fragmentGroupsCompanion(
+                    //   be_private: false,
+                    //   be_publish: false,
+                    //   client_be_selected: false,
+                    //   creator_user_id: user.id,
+                    //   father_fragment_groups_id: e.father_fragment_groups_id.toValue(),
+                    //   title: e.title,
+                    //   profile: e.profile,
+                    //   id: newId,
+                    //   created_at: now,
+                    //   updated_at: now,
+                    // );
                   },
                 )
                 .toList() // 必须 toList，不然调用下面的 map 时会再调用一次上面的 map。
                 .map(
                   (e) {
                     // 修改 fatherId
-                    var nowFatherId = fragmentGroupMap[e.father_fragment_groups_id.value];
-                    if (nowFatherId == null) {
-                      if (isRootFragmentGroupIdAssigned) {
-                        throw "存在多个 root";
-                      }
-                      nowFatherId = saveFragmentGroup?.id;
-                      isRootFragmentGroupIdAssigned = true;
-                    }
-
-                    fragmentGroupSyncsResult.add(
-                      Crt.syncsCompanion(
-                        row_id: e.id.value,
-                        sync_curd_type: SyncCurdType.c,
-                        sync_table_name: fragmentGroups.actualTableName,
-                        tag: st.tag,
-                        created_at: now,
-                        updated_at: now,
-                      ),
-                    );
-                    return e..father_fragment_groups_id = nowFatherId.toValue();
+                    // var nowFatherId = fragmentGroupMap[e.father_fragment_groups_id.value];
+                    // if (nowFatherId == null) {
+                    //   if (isRootFragmentGroupIdAssigned) {
+                    //     throw "存在多个 root";
+                    //   }
+                    //   nowFatherId = saveFragmentGroup?.id;
+                    //   isRootFragmentGroupIdAssigned = true;
+                    // }
+                    //
+                    // fragmentGroupSyncsResult.add(
+                    //   Crt.syncsCompanion(
+                    //     row_id: e.id.value,
+                    //     sync_curd_type: SyncCurdType.c,
+                    //     sync_table_name: fragmentGroups.actualTableName,
+                    //     tag: st.tag,
+                    //     created_at: now,
+                    //     updated_at: now,
+                    //   ),
+                    // );
+                    // return e..father_fragment_groups_id = nowFatherId.toValue();
+                    throw "未处理";
                   },
                 )
                 .toList(); // 必须 toList，不然调用下面的 map 时会再调用一次上面的 map。

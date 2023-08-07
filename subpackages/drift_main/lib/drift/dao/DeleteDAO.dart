@@ -43,4 +43,50 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
   Future<void> deleteSingleSync({required Sync sync}) async {
     await sync.delete(syncTag: await SyncTag.create());
   }
+
+  Future<void> deleteSelected({required int userId}) async {
+    final fgs = await db.generalQueryDAO.querySelectedFragmentGroups();
+    final fTags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupIds(fragmentGroupIds: fgs.map((e) => e.id).toList());
+
+    final fs = await db.generalQueryDAO.querySelectedFragments();
+    final rFs = await db.generalQueryDAO.queryRFragment2FragmentGroups(fragmentIds: fs.map((e) => e.id).toList());
+
+    final st = await SyncTag.create();
+    await RefFragmentGroups(
+      self: () async {
+        for (var element in fgs) {
+          await element.delete(syncTag: st, isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId);
+        }
+      },
+      fragmentGroupTags: RefFragmentGroupTags(
+        self: () async {
+          for (var fTag in fTags) {
+            await fTag.delete(syncTag: st, isCloudTableWithSync: SyncTag.parseToUserId(fTag.id) == userId);
+          }
+        },
+        order: 0,
+      ),
+      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+        self: () async {
+          for (var element in fs) {
+            await element.delete(
+              syncTag: st,
+              isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,
+            );
+          }
+          for (var element in rFs) {
+            await element.delete(
+              syncTag: st,
+              isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,
+            );
+          }
+        },
+        order: 1,
+      ),
+      child_fragmentGroups: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
+  }
 }

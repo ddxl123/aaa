@@ -38,6 +38,7 @@ Future<void> showCreateMemoryGroupDialog() async {
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
             ),
             syncTag: await SyncTag.create(),
+            isCloudTableWithSync: true,
           );
 
           Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();

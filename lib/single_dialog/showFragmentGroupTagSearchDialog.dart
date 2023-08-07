@@ -200,8 +200,11 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                                 late final FragmentGroupTag newTag;
                                 await RefFragmentGroupTags(
                                   self: () async {
-                                    newTag = await searchedTags[i].copyWith(tag: searchedTags[i].tag.split("：").last).toCompanion(false).insert(syncTag: st);
-                                    print(newTag.tag);
+                                    newTag = await searchedTags[i].copyWith(tag: searchedTags[i].tag.split("：").last).toCompanion(false).insert(
+                                          syncTag: st,
+                                          isCloudTableWithSync: true,
+                                          isCloudTableAutoId: true,
+                                        );
                                   },
                                   order: 0,
                                 ).run();

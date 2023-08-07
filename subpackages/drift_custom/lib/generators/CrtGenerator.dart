@@ -46,16 +46,22 @@ class CrtGenerator extends Generator {
           ''';
 
           allContent.writeln(singleContent);
-
+          final requiredContent = """{
+              required SyncTag syncTag,
+              ${localTableClasses.contains(classNoSName) ? "" : "required bool isCloudTableWithSync,"}
+              ${localTableClasses.contains(classNoSName) ? "" : "required bool isCloudTableAutoId,"}
+          }""";
           final singleExtContent = '''
           extension ${companionName}Ext on $companionName {
-            Future<$classNoSName> insert({required SyncTag syncTag${localTableClasses.contains(classNoSName) ? "" : ", required bool isCloudTableWithSync"}}) async {
+            Future<$classNoSName> insert($requiredContent) 
+            async {
               final ins = DriftDb.instance;
               return await ins.insertReturningWith(
                 ins.${classWithSName.toCamelCase},
                 entity: this,
                 syncTag: syncTag,
-                isCloudTableWithSync: ${localTableClasses.contains(classNoSName) ? "false" : "isCloudTableWithSync,"}
+                isCloudTableWithSync: ${localTableClasses.contains(classNoSName) ? "false," : "isCloudTableWithSync,"}
+                isCloudTableAutoId: ${localTableClasses.contains(classNoSName) ? "false," : "isCloudTableAutoId,"}
               );
             }
           }

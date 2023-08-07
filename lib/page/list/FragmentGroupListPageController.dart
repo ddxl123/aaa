@@ -42,6 +42,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   syncTag: st,
                   be_private: toAbsent(),
                   be_publish: toAbsent(),
+                  isCloudTableWithSync: false,
                 );
               },
         syncTag: st,
@@ -78,5 +79,12 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
         ..clear()
         ..addAll(tags));
     }
+  }
+
+  Future<void> deleteSelected() async {
+    final r = await db.generalQueryDAO.querySelectedFragmentGroups();
+    await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupIds(fragmentGroupIds: r.map((e) => e.id).toList());
+
+    // await db.deleteDAO.deleteSingleSync(sync: sync)
   }
 }

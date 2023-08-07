@@ -103,6 +103,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
         memoryGroup: selectedMg!,
         isRemoveRepeat: isRemoveDuplication,
         syncTag: await SyncTag.create(),
+        isCloudTableWithSync: true,
       );
       SmartDialog.dismiss();
       SmartDialog.showToast('添加成功！');

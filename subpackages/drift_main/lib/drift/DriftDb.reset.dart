@@ -1044,7 +1044,6 @@ extension FragmentGroupExt on FragmentGroup {
     await reset(
         be_private: fragmentGroup.be_private.toValue(),
         be_publish: fragmentGroup.be_publish.toValue(),
-        be_self: fragmentGroup.be_self.toValue(),
         client_be_selected: fragmentGroup.client_be_selected.toValue(),
         creator_user_id: fragmentGroup.creator_user_id.toValue(),
         father_fragment_groups_id:
@@ -1065,7 +1064,6 @@ extension FragmentGroupExt on FragmentGroup {
   FutureOr<FragmentGroup> reset({
     required Value<bool> be_private,
     required Value<bool> be_publish,
-    required Value<bool> be_self,
     required Value<bool> client_be_selected,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
@@ -1084,11 +1082,6 @@ extension FragmentGroupExt on FragmentGroup {
     if (be_publish.present && this.be_publish != be_publish.value) {
       isCloudModify = true;
       this.be_publish = be_publish.value;
-    }
-
-    if (be_self.present && this.be_self != be_self.value) {
-      isCloudModify = true;
-      this.be_self = be_self.value;
     }
 
     if (client_be_selected.present &&

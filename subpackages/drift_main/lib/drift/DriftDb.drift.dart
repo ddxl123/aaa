@@ -5297,18 +5297,6 @@ class $FragmentGroupsTable extends FragmentGroups
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
-  static const VerificationMeta _be_selfMeta =
-      const VerificationMeta('be_self');
-  @override
-  late final GeneratedColumn<bool> be_self =
-      GeneratedColumn<bool>('be_self', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("be_self" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
   static const VerificationMeta _client_be_selectedMeta =
       const VerificationMeta('client_be_selected');
   @override
@@ -5365,7 +5353,6 @@ class $FragmentGroupsTable extends FragmentGroups
   List<GeneratedColumn> get $columns => [
         be_private,
         be_publish,
-        be_self,
         client_be_selected,
         creator_user_id,
         father_fragment_groups_id,
@@ -5399,12 +5386,6 @@ class $FragmentGroupsTable extends FragmentGroups
               data['be_publish']!, _be_publishMeta));
     } else if (isInserting) {
       context.missing(_be_publishMeta);
-    }
-    if (data.containsKey('be_self')) {
-      context.handle(_be_selfMeta,
-          be_self.isAcceptableOrUnknown(data['be_self']!, _be_selfMeta));
-    } else if (isInserting) {
-      context.missing(_be_selfMeta);
     }
     if (data.containsKey('client_be_selected')) {
       context.handle(
@@ -5475,8 +5456,6 @@ class $FragmentGroupsTable extends FragmentGroups
           .read(DriftSqlType.bool, data['${effectivePrefix}be_private'])!,
       be_publish: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
-      be_self: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}be_self'])!,
       client_be_selected: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       creator_user_id: attachedDatabase.typeMapping
@@ -5509,7 +5488,6 @@ class $FragmentGroupsTable extends FragmentGroups
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   bool be_private;
   bool be_publish;
-  bool be_self;
   bool client_be_selected;
   int creator_user_id;
   String? father_fragment_groups_id;
@@ -5521,7 +5499,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   FragmentGroup(
       {required this.be_private,
       required this.be_publish,
-      required this.be_self,
       required this.client_be_selected,
       required this.creator_user_id,
       this.father_fragment_groups_id,
@@ -5535,7 +5512,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     final map = <String, Expression>{};
     map['be_private'] = Variable<bool>(be_private);
     map['be_publish'] = Variable<bool>(be_publish);
-    map['be_self'] = Variable<bool>(be_self);
     map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || father_fragment_groups_id != null) {
@@ -5554,7 +5530,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     return FragmentGroupsCompanion(
       be_private: Value(be_private),
       be_publish: Value(be_publish),
-      be_self: Value(be_self),
       client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id:
@@ -5575,7 +5550,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     return FragmentGroup(
       be_private: serializer.fromJson<bool>(json['be_private']),
       be_publish: serializer.fromJson<bool>(json['be_publish']),
-      be_self: serializer.fromJson<bool>(json['be_self']),
       client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       father_fragment_groups_id:
@@ -5593,7 +5567,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     return <String, dynamic>{
       'be_private': serializer.toJson<bool>(be_private),
       'be_publish': serializer.toJson<bool>(be_publish),
-      'be_self': serializer.toJson<bool>(be_self),
       'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'father_fragment_groups_id':
@@ -5609,7 +5582,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   FragmentGroup copyWith(
           {bool? be_private,
           bool? be_publish,
-          bool? be_self,
           bool? client_be_selected,
           int? creator_user_id,
           Value<String?> father_fragment_groups_id = const Value.absent(),
@@ -5621,7 +5593,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       FragmentGroup(
         be_private: be_private ?? this.be_private,
         be_publish: be_publish ?? this.be_publish,
-        be_self: be_self ?? this.be_self,
         client_be_selected: client_be_selected ?? this.client_be_selected,
         creator_user_id: creator_user_id ?? this.creator_user_id,
         father_fragment_groups_id: father_fragment_groups_id.present
@@ -5638,7 +5609,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     return (StringBuffer('FragmentGroup(')
           ..write('be_private: $be_private, ')
           ..write('be_publish: $be_publish, ')
-          ..write('be_self: $be_self, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
@@ -5655,7 +5625,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   int get hashCode => Object.hash(
       be_private,
       be_publish,
-      be_self,
       client_be_selected,
       creator_user_id,
       father_fragment_groups_id,
@@ -5670,7 +5639,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       (other is FragmentGroup &&
           other.be_private == this.be_private &&
           other.be_publish == this.be_publish &&
-          other.be_self == this.be_self &&
           other.client_be_selected == this.client_be_selected &&
           other.creator_user_id == this.creator_user_id &&
           other.father_fragment_groups_id == this.father_fragment_groups_id &&
@@ -5684,7 +5652,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<bool> be_private;
   Value<bool> be_publish;
-  Value<bool> be_self;
   Value<bool> client_be_selected;
   Value<int> creator_user_id;
   Value<String?> father_fragment_groups_id;
@@ -5696,7 +5663,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   FragmentGroupsCompanion({
     this.be_private = const Value.absent(),
     this.be_publish = const Value.absent(),
-    this.be_self = const Value.absent(),
     this.client_be_selected = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.father_fragment_groups_id = const Value.absent(),
@@ -5709,7 +5675,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   FragmentGroupsCompanion.insert({
     required bool be_private,
     required bool be_publish,
-    required bool be_self,
     required bool client_be_selected,
     required int creator_user_id,
     this.father_fragment_groups_id = const Value.absent(),
@@ -5720,7 +5685,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     required DateTime updated_at,
   })  : be_private = Value(be_private),
         be_publish = Value(be_publish),
-        be_self = Value(be_self),
         client_be_selected = Value(client_be_selected),
         creator_user_id = Value(creator_user_id),
         profile = Value(profile),
@@ -5731,7 +5695,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   static Insertable<FragmentGroup> custom({
     Expression<bool>? be_private,
     Expression<bool>? be_publish,
-    Expression<bool>? be_self,
     Expression<bool>? client_be_selected,
     Expression<int>? creator_user_id,
     Expression<String>? father_fragment_groups_id,
@@ -5744,7 +5707,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     return RawValuesInsertable({
       if (be_private != null) 'be_private': be_private,
       if (be_publish != null) 'be_publish': be_publish,
-      if (be_self != null) 'be_self': be_self,
       if (client_be_selected != null) 'client_be_selected': client_be_selected,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (father_fragment_groups_id != null)
@@ -5760,7 +5722,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   FragmentGroupsCompanion copyWith(
       {Value<bool>? be_private,
       Value<bool>? be_publish,
-      Value<bool>? be_self,
       Value<bool>? client_be_selected,
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_groups_id,
@@ -5772,7 +5733,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     return FragmentGroupsCompanion(
       be_private: be_private ?? this.be_private,
       be_publish: be_publish ?? this.be_publish,
-      be_self: be_self ?? this.be_self,
       client_be_selected: client_be_selected ?? this.client_be_selected,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       father_fragment_groups_id:
@@ -5793,9 +5753,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     }
     if (be_publish.present) {
       map['be_publish'] = Variable<bool>(be_publish.value);
-    }
-    if (be_self.present) {
-      map['be_self'] = Variable<bool>(be_self.value);
     }
     if (client_be_selected.present) {
       map['client_be_selected'] = Variable<bool>(client_be_selected.value);
@@ -5830,7 +5787,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     return (StringBuffer('FragmentGroupsCompanion(')
           ..write('be_private: $be_private, ')
           ..write('be_publish: $be_publish, ')
-          ..write('be_self: $be_self, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')

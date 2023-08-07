@@ -144,6 +144,7 @@ class InAppStageAbController extends AbController {
           content_value: info.content_value.arrayAdd<List<String>>(contentValue).toValue(),
           study_status: StudyStatus.review.toValue(),
           syncTag: st,
+          isCloudTableWithSync: true,
         );
       },
       // 若为新的，则会自动将 [MemoryGroup.willNewLearnCount] 减去 1。

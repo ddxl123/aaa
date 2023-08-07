@@ -46,6 +46,7 @@ Future<void> showCreateArticleDialog() async {
               next_time_algorithm_usage_status: AlgorithmUsageStatus.a,
             ),
             syncTag: await SyncTag.create(),
+            isCloudTableWithSync: true,
           );
           Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshMemoryModels();
 

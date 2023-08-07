@@ -46,7 +46,6 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
           extendBody: true,
           primary: false,
           body: _body(),
-          bottomNavigationBar: _bottomNavigationBar(),
           floatingActionButton: c.isUnitSelecting(abw) ? _floatingActionButton() : null,
         );
       },
@@ -78,56 +77,6 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                   ),
           ],
         );
-      },
-    );
-  }
-
-  Widget _bottomNavigationBar() {
-    return AbwBuilder(
-      builder: (hAbw) {
-        if (groupListWidgetController.isUnitSelecting(hAbw)) {
-          Widget button({
-            required IconData iconData,
-            required String label,
-            required Function() onPressed,
-            Color? color,
-          }) {
-            return MaterialButton(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-              onPressed: onPressed,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FaIcon(iconData, size: 22, color: color),
-                  const SizedBox(height: 5),
-                  Text(label, style: TextStyle(fontSize: 12, color: color)),
-                ],
-              ),
-            );
-          }
-
-          return Card(
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 20),
-            child: Container(
-              decoration: BoxDecoration(border: Border.all(color: Colors.amber)),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    button(iconData: FontAwesomeIcons.copy, label: '克隆', onPressed: () {}),
-                    button(iconData: FontAwesomeIcons.clone, label: '复用', onPressed: () {}),
-                    button(iconData: FontAwesomeIcons.penToSquare, label: '修改', onPressed: () {}),
-                    button(iconData: FontAwesomeIcons.arrowRightFromBracket, label: '移动', onPressed: () {}),
-                    button(iconData: FontAwesomeIcons.trashCan, label: '删除', color: Colors.red, onPressed: () {}),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-        return const SizedBox();
       },
     );
   }

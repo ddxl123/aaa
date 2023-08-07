@@ -193,7 +193,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                                                     ),
                                                   ),
                                                   onTap: () {
-                                                    c.downloadFragment(fragmentGroup: e.fragment_group);
+                                                    c.download(willDownloadFragmentGroup: e.fragment_group);
                                                   },
                                                 ),
                                               ],

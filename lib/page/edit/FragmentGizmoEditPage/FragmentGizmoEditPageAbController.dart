@@ -104,6 +104,7 @@ class FragmentPerformer {
         ),
         whichFragmentGroupChains: fragmentGroupChains,
         syncTag: syncTag,
+        isCloudTableWithSync: true,
       );
       fragment = newFragment;
     } else {
@@ -119,6 +120,7 @@ class FragmentPerformer {
             title: fragmentTemplate.getTitle().toValue(),
             syncTag: syncTag,
             be_sep_publish: false.toValue(),
+            isCloudTableWithSync: true,
           );
         },
         fragmentMemoryInfos: null,

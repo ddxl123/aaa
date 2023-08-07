@@ -31,12 +31,17 @@ extension DriftSyncExt on DatabaseConnectionUser {
   /// [isCloudTableWithSync] - 需要同步的行是否需要进行同步。
   ///   - 在下载别人的碎片组等时，子碎片组不会再次上传到云端，而只会下载到本地，但是其表是带 cloud 表，因此增加 [isCloudTableWithSync] 来解决这个问题。
   ///
+  /// [isCloudTableAutoId] - 在 [entity] 为 [CloudTableBase] 的前提下，是否根据 [syncTag] 自动生成 [entity] 的 id。
+  ///   - 若为 true，则根据 [syncTag] 自动生成 [entity] 的 id。
+  ///   - 若为 false，则根据 [entity] 的 id 进行插入。
+  ///
   /// 必须搭配 [withRefs] 使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
     required E entity,
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
+    required bool isCloudTableAutoId,
   }) async {
     return await transaction(
       () async {
@@ -53,13 +58,15 @@ extension DriftSyncExt on DatabaseConnectionUser {
         //
         // LocalTableBase 类型表全部都是自增主键，不需要手动配置。
         if (table is CloudTableBase) {
-          // TODO: 可以使用全局获取 user。
-          final mulUsers = await select(DriftDb.instance.users).get();
-          if (mulUsers.length != 1) {
-            throw 'users 行数不为1';
-          }
+          if (isCloudTableAutoId) {
+            // TODO: 可以使用全局获取 user。
+            final mulUsers = await select(DriftDb.instance.users).get();
+            if (mulUsers.length != 1) {
+              throw 'users 行数不为1';
+            }
 
-          entityDynamic.id = syncTag.createCloudId(userId: mulUsers.first.id).toValue();
+            entityDynamic.id = syncTag.createCloudId(userId: mulUsers.first.id).toValue();
+          }
         }
 
         // 插入
@@ -80,6 +87,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
             ),
             syncTag: syncTag,
             isCloudTableWithSync: false,
+            isCloudTableAutoId: false,
           );
         }
 
@@ -148,6 +156,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
             ),
             syncTag: syncTag,
             isCloudTableWithSync: false,
+            isCloudTableAutoId: false,
           );
         }
 
@@ -193,6 +202,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
             ),
             syncTag: syncTag,
             isCloudTableWithSync: false,
+            isCloudTableAutoId: false,
           );
         }
       },

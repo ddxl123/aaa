@@ -19,6 +19,22 @@ DeviceAndTokenBo({
 }
 
 @JsonSerializable()
+class DataDownloadForKnowledgeBaseFragmentWrapperBO {
+    Fragment fragments;
+    List<RFragment2FragmentGroup> r_fragment_2_fragment_groups;
+
+DataDownloadForKnowledgeBaseFragmentWrapperBO({
+    required this.fragments,
+    required this.r_fragment_2_fragment_groups,
+
+});
+
+  factory DataDownloadForKnowledgeBaseFragmentWrapperBO.fromJson(Map<String, dynamic> json) => _$DataDownloadForKnowledgeBaseFragmentWrapperBOFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$DataDownloadForKnowledgeBaseFragmentWrapperBOToJson(this);
+}
+
+@JsonSerializable()
 class KnowledgeBaseFragmentGroupWrapperBo {
     FragmentGroup fragment_group;
     List<FragmentGroupTag> fragment_group_tags;

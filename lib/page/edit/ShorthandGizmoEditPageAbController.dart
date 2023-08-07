@@ -40,6 +40,7 @@ class ShorthandGizmoEditPageAbController extends AbController {
           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
         ),
         syncTag: st,
+        isCloudTableWithSync: true,
       );
       await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
       SmartDialog.showToast("创建成功！");
@@ -52,6 +53,7 @@ class ShorthandGizmoEditPageAbController extends AbController {
               content: getCurrentContent().toValue(),
               creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id.toValue(),
               syncTag: st,
+              isCloudTableWithSync: true,
             );
           },
         );

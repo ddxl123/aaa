@@ -32,7 +32,6 @@ class DataDownload {
           saveFragmentGroup: saveFragmentGroup,
           dataDownloadForFragmentGroupVo: vo,
         );
-
       },
     );
   }

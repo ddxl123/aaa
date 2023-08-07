@@ -112,6 +112,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
               title: modify.title.now.toValue(),
               profile: modify.profile.now.toValue(),
               syncTag: st,
+              isCloudTableWithSync: true,
             );
           }
         },
@@ -119,10 +120,17 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
           self: () async {
             if (modify.fragmentGroupTag.isFragmentGroupTagModify) {
               for (var fTag in modify.fragmentGroupTag.saved) {
-                await fTag.delete(syncTag: st);
+                await fTag.delete(
+                  syncTag: st,
+                  isCloudTableWithSync: true,
+                );
               }
               for (var fTag in modify.fragmentGroupTag.now) {
-                await fTag.toCompanion(false).insert(syncTag: st);
+                await fTag.toCompanion(false).insert(
+                      syncTag: st,
+                      isCloudTableWithSync: true,
+                      isCloudTableAutoId: true,
+                    );
               }
             }
           },

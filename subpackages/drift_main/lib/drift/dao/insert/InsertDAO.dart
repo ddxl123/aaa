@@ -22,6 +22,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     required FragmentsCompanion willFragmentsCompanion,
     required List<List<FragmentGroup>> whichFragmentGroupChains,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     // 为空表示根
     final List<FragmentGroup?> whichFragmentGroup = [];
@@ -45,7 +46,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     late Fragment newFragment;
     await RefFragments(
       self: () async {
-        newFragment = await willFragmentsCompanion.insert(syncTag: syncTag);
+        newFragment = await willFragmentsCompanion.insert(
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync,
+          isCloudTableAutoId: true,
+        );
       },
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
         self: () async {
@@ -56,7 +61,11 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 creator_user_id: willFragmentsCompanion.creator_user_id.value,
                 fragment_group_id: (whichFragmentGroup?.id).toValue(),
                 fragment_id: willFragmentsCompanion.id.value,
-              ).insert(syncTag: syncTag);
+              ).insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: isCloudTableWithSync,
+                isCloudTableAutoId: true,
+              );
             },
           );
         },
@@ -76,11 +85,16 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   Future<MemoryGroup> insertMemoryGroup({
     required MemoryGroupsCompanion newMemoryGroupsCompanion,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     late final MemoryGroup newMg;
     await RefMemoryGroups(
       self: () async {
-        newMg = await newMemoryGroupsCompanion.insert(syncTag: syncTag);
+        newMg = await newMemoryGroupsCompanion.insert(
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync,
+          isCloudTableAutoId: true,
+        );
       },
       fragmentMemoryInfos: null,
       order: 0,
@@ -93,6 +107,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     required MemoryGroup memoryGroup,
     required bool isRemoveRepeat,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     await RefFragmentMemoryInfos(
       self: () async {
@@ -119,10 +134,18 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
             if (isRemoveRepeat) {
               final isExist = await db.generalQueryDAO.queryIsExistFragmentInMemoryGroup(fragment: e, memoryGroup: memoryGroup);
               if (!isExist) {
-                await newFmInfo.insert(syncTag: syncTag);
+                await newFmInfo.insert(
+                  syncTag: syncTag,
+                  isCloudTableWithSync: isCloudTableWithSync,
+                  isCloudTableAutoId: true,
+                );
               }
             } else {
-              await newFmInfo.insert(syncTag: syncTag);
+              await newFmInfo.insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: isCloudTableWithSync,
+                isCloudTableAutoId: true,
+              );
             }
           },
         );
@@ -143,6 +166,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 title: toAbsent(),
                 will_new_learn_count: (memoryGroup.will_new_learn_count + 1).toValue(),
                 syncTag: syncTag,
+                isCloudTableWithSync: isCloudTableWithSync,
               );
             },
             syncTag: syncTag,
@@ -159,11 +183,16 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   Future<MemoryModel> insertMemoryModel({
     required MemoryModelsCompanion memoryModelsCompanion,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     late final MemoryModel newMemoryModel;
     await RefMemoryModels(
       self: () async {
-        newMemoryModel = await memoryModelsCompanion.insert(syncTag: syncTag);
+        newMemoryModel = await memoryModelsCompanion.insert(
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync,
+          isCloudTableAutoId: true,
+        );
       },
       memoryGroups: null,
       order: 0,
@@ -175,11 +204,16 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   Future<Shorthand> insertShorthand({
     required ShorthandsCompanion shorthandsCompanion,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     late final Shorthand newShorthand;
     await RefShorthands(
       self: () async {
-        newShorthand = await shorthandsCompanion.insert(syncTag: syncTag);
+        newShorthand = await shorthandsCompanion.insert(
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync,
+          isCloudTableAutoId: true,
+        );
       },
       order: 0,
     ).run();
@@ -190,15 +224,19 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   Future<Shorthand> insertArticle({
     required ShorthandsCompanion shorthandsCompanion,
     required SyncTag syncTag,
+    required bool isCloudTableWithSync,
   }) async {
     late final Shorthand newShorthand;
     await RefShorthands(
       self: () async {
-        newShorthand = await shorthandsCompanion.insert(syncTag: syncTag);
+        newShorthand = await shorthandsCompanion.insert(
+          syncTag: syncTag,
+          isCloudTableWithSync: isCloudTableWithSync,
+          isCloudTableAutoId: true,
+        );
       },
       order: 0,
     ).run();
     return newShorthand;
   }
-
 }

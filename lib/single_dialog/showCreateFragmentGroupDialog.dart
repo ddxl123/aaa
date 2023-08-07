@@ -38,7 +38,11 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
                 profile: jsonEncode(Document().toDelta().toJson()),
                 be_private: false,
                 be_publish: false,
-              ).insert(syncTag: st);
+              ).insert(
+                syncTag: st,
+                isCloudTableWithSync: true,
+                isCloudTableAutoId: true,
+              );
             },
             fragmentGroupTags: null,
             rFragment2FragmentGroups: null,

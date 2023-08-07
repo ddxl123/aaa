@@ -105,7 +105,11 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     final st = await SyncTag.create();
     await db.updateDAO.resetMemoryModel(
       originalMemoryModelReset: () async {
-        await originalMemoryModelAb().resetByEntity(memoryModel: copyMemoryModelAb(), syncTag: st);
+        await originalMemoryModelAb().resetByEntity(
+          memoryModel: copyMemoryModelAb(),
+          syncTag: st,
+          isCloudTableWithSync: true,
+        );
       },
       syncTag: st,
     );

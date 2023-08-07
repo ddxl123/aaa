@@ -247,6 +247,24 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result;
   }
 
+  /// 通过 [fragmentIds] 查询 [RFragment2FragmentGroups]
+  Future<List<RFragment2FragmentGroup>> queryRFragment2FragmentGroups({required List<String> fragmentIds}) async {
+    final j = select(rFragment2FragmentGroups).join(
+      [
+        innerJoin(fragments, fragments.id.equalsExp(rFragment2FragmentGroups.fragment_id)),
+      ],
+    )..where(fragments.id.isIn(fragmentIds));
+    return (await j.get()).map((e) => e.readTable(rFragment2FragmentGroups)).toList();
+  }
+
+  /// 查询全部已选的碎片组
+  Future<List<FragmentGroup>> querySelectedFragmentGroups() async {
+    final sel = select(fragmentGroups);
+    sel.where((tbl) => tbl.client_be_selected.equals(true));
+    final result = await sel.get();
+    return result;
+  }
+
   /// 查询全部已选的碎片数量。
   Future<int> querySelectedFragmentCount() async {
     final count = fragments.id.count();
@@ -370,6 +388,17 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final sel = select(fragmentGroupTags);
     sel.where((tbl) => tbl.fragment_group_id.equals(fragmentGroupId));
     return await sel.get();
+  }
+
+  /// 每个 tag 都有唯一的 id，因此无需去重。
+  Future<List<FragmentGroupTag>> queryFragmentGroupTagsByFragmentGroupIds({
+    required List<String> fragmentGroupIds,
+  }) async {
+    final j = select(fragmentGroupTags)..where((tbl) => tbl.fragment_group_id.isIn(fragmentGroupIds));
+
+    final result = await j.get();
+
+    return result;
   }
 
 // Future<FragmentGroupTag?> queryFragmentGroupTagOrNullById({required int fragmentGroupTagId}) async {

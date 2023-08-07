@@ -18,6 +18,26 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
       'token': instance.token,
     };
 
+DataDownloadForKnowledgeBaseFragmentWrapperBO
+    _$DataDownloadForKnowledgeBaseFragmentWrapperBOFromJson(
+            Map<String, dynamic> json) =>
+        DataDownloadForKnowledgeBaseFragmentWrapperBO(
+          fragments:
+              Fragment.fromJson(json['fragments'] as Map<String, dynamic>),
+          r_fragment_2_fragment_groups: (json['r_fragment_2_fragment_groups']
+                  as List<dynamic>)
+              .map((e) =>
+                  RFragment2FragmentGroup.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$DataDownloadForKnowledgeBaseFragmentWrapperBOToJson(
+        DataDownloadForKnowledgeBaseFragmentWrapperBO instance) =>
+    <String, dynamic>{
+      'fragments': instance.fragments,
+      'r_fragment_2_fragment_groups': instance.r_fragment_2_fragment_groups,
+    };
+
 KnowledgeBaseFragmentGroupWrapperBo
     _$KnowledgeBaseFragmentGroupWrapperBoFromJson(Map<String, dynamic> json) =>
         KnowledgeBaseFragmentGroupWrapperBo(
@@ -214,14 +234,24 @@ DataDownloadForKnowledgeBaseDto _$DataDownloadForKnowledgeBaseDtoFromJson(
         Map<String, dynamic> json) =>
     DataDownloadForKnowledgeBaseDto(
       fragment_group_id: json['fragment_group_id'] as String?,
-      dto_padding_1: json['dto_padding_1'] as bool?,
+      fragment_group_ids_for_fragments_list:
+          (json['fragment_group_ids_for_fragments_list'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
+      fragment_group_ids_for_tags_list:
+          (json['fragment_group_ids_for_tags_list'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
     );
 
 Map<String, dynamic> _$DataDownloadForKnowledgeBaseDtoToJson(
         DataDownloadForKnowledgeBaseDto instance) =>
     <String, dynamic>{
       'fragment_group_id': instance.fragment_group_id,
-      'dto_padding_1': instance.dto_padding_1,
+      'fragment_group_ids_for_fragments_list':
+          instance.fragment_group_ids_for_fragments_list,
+      'fragment_group_ids_for_tags_list':
+          instance.fragment_group_ids_for_tags_list,
     };
 
 DataDownloadForKnowledgeBaseVo _$DataDownloadForKnowledgeBaseVoFromJson(
@@ -231,6 +261,14 @@ DataDownloadForKnowledgeBaseVo _$DataDownloadForKnowledgeBaseVoFromJson(
           (json['fragment_group_self_and_subs_list'] as List<dynamic>?)
               ?.map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
               .toList(),
+      fragment_wrappers_list: (json['fragment_wrappers_list'] as List<dynamic>?)
+          ?.map((e) => DataDownloadForKnowledgeBaseFragmentWrapperBO.fromJson(
+              e as Map<String, dynamic>))
+          .toList(),
+      fragment_group_tags_list:
+          (json['fragment_group_tags_list'] as List<dynamic>?)
+              ?.map((e) => FragmentGroupTag.fromJson(e as Map<String, dynamic>))
+              .toList(),
     );
 
 Map<String, dynamic> _$DataDownloadForKnowledgeBaseVoToJson(
@@ -238,6 +276,8 @@ Map<String, dynamic> _$DataDownloadForKnowledgeBaseVoToJson(
     <String, dynamic>{
       'fragment_group_self_and_subs_list':
           instance.fragment_group_self_and_subs_list,
+      'fragment_wrappers_list': instance.fragment_wrappers_list,
+      'fragment_group_tags_list': instance.fragment_group_tags_list,
     };
 
 DataUploadDto _$DataUploadDtoFromJson(Map<String, dynamic> json) =>
