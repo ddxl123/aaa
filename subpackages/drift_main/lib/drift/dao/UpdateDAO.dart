@@ -87,6 +87,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           profile: toAbsent(),
           be_private: toAbsent(),
           be_publish: toAbsent(),
+          save_original_id: toAbsent(),
           syncTag: syncTag,
           isCloudTableWithSync: false,
         );
@@ -118,6 +119,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               profile: toAbsent(),
               be_private: toAbsent(),
               be_publish: toAbsent(),
+              save_original_id: toAbsent(),
               syncTag: syncTag,
               isCloudTableWithSync: false,
             );

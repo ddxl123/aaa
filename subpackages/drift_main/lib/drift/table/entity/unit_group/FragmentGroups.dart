@@ -27,6 +27,8 @@ class FragmentGroups extends CloudTableBase  {
 
   TextColumn get profile => text().named("profile")();
 
+  TextColumn get save_original_id => text().named("save_original_id").nullable()();
+
   TextColumn get title => text().named("title")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();

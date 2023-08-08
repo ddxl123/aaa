@@ -112,6 +112,12 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.map((e) => e.readTable(fragments)).toList();
   }
 
+  Future<FragmentGroup?> queryFragmentGroupBySaveOriginalId({required String id}) async {
+    final sel = select(fragmentGroups);
+    sel.where((tbl) => tbl.save_original_id.equals(id));
+    return await sel.getSingleOrNull();
+  }
+
   Future<FragmentGroup?> queryFragmentGroupById({required String id}) async {
     final sel = select(fragmentGroups);
     sel.where((tbl) => tbl.id.equals(id));

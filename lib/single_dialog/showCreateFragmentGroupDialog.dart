@@ -36,6 +36,7 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
                 client_be_selected: false,
                 title: tec.text,
                 profile: jsonEncode(Document().toDelta().toJson()),
+                save_original_id: null.toValue(),
                 be_private: false,
                 be_publish: false,
               ).insert(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 
@@ -42,6 +43,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   syncTag: st,
                   be_private: toAbsent(),
                   be_publish: toAbsent(),
+                  save_original_id: toAbsent(),
                   isCloudTableWithSync: false,
                 );
               },
@@ -82,9 +84,6 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   }
 
   Future<void> deleteSelected() async {
-    final r = await db.generalQueryDAO.querySelectedFragmentGroups();
-    await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupIds(fragmentGroupIds: r.map((e) => e.id).toList());
-
-    // await db.deleteDAO.deleteSingleSync(sync: sync)
+    await db.deleteDAO.deleteSelected(userId: Aber.find<GlobalAbController>().loggedInUser()!.id);
   }
 }

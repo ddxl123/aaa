@@ -111,6 +111,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
               father_fragment_groups_id: toAbsent(),
               title: modify.title.now.toValue(),
               profile: modify.profile.now.toValue(),
+              save_original_id: toAbsent(),
               syncTag: st,
               isCloudTableWithSync: true,
             );

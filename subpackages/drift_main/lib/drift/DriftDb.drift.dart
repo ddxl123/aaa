@@ -5327,6 +5327,12 @@ class $FragmentGroupsTable extends FragmentGroups
   late final GeneratedColumn<String> profile = GeneratedColumn<String>(
       'profile', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _save_original_idMeta =
+      const VerificationMeta('save_original_id');
+  @override
+  late final GeneratedColumn<String> save_original_id = GeneratedColumn<String>(
+      'save_original_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -5357,6 +5363,7 @@ class $FragmentGroupsTable extends FragmentGroups
         creator_user_id,
         father_fragment_groups_id,
         profile,
+        save_original_id,
         title,
         created_at,
         id,
@@ -5416,6 +5423,12 @@ class $FragmentGroupsTable extends FragmentGroups
     } else if (isInserting) {
       context.missing(_profileMeta);
     }
+    if (data.containsKey('save_original_id')) {
+      context.handle(
+          _save_original_idMeta,
+          save_original_id.isAcceptableOrUnknown(
+              data['save_original_id']!, _save_original_idMeta));
+    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
@@ -5465,6 +5478,8 @@ class $FragmentGroupsTable extends FragmentGroups
           data['${effectivePrefix}father_fragment_groups_id']),
       profile: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}profile'])!,
+      save_original_id: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}save_original_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       created_at: attachedDatabase.typeMapping
@@ -5492,6 +5507,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   int creator_user_id;
   String? father_fragment_groups_id;
   String profile;
+  String? save_original_id;
   String title;
   DateTime created_at;
   String id;
@@ -5503,6 +5519,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       required this.creator_user_id,
       this.father_fragment_groups_id,
       required this.profile,
+      this.save_original_id,
       required this.title,
       required this.created_at,
       required this.id,
@@ -5519,6 +5536,9 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           Variable<String>(father_fragment_groups_id);
     }
     map['profile'] = Variable<String>(profile);
+    if (!nullToAbsent || save_original_id != null) {
+      map['save_original_id'] = Variable<String>(save_original_id);
+    }
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<String>(id);
@@ -5537,6 +5557,9 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
               ? const Value.absent()
               : Value(father_fragment_groups_id),
       profile: Value(profile),
+      save_original_id: save_original_id == null && nullToAbsent
+          ? const Value.absent()
+          : Value(save_original_id),
       title: Value(title),
       created_at: Value(created_at),
       id: Value(id),
@@ -5555,6 +5578,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       father_fragment_groups_id:
           serializer.fromJson<String?>(json['father_fragment_groups_id']),
       profile: serializer.fromJson<String>(json['profile']),
+      save_original_id: serializer.fromJson<String?>(json['save_original_id']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<String>(json['id']),
@@ -5572,6 +5596,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       'father_fragment_groups_id':
           serializer.toJson<String?>(father_fragment_groups_id),
       'profile': serializer.toJson<String>(profile),
+      'save_original_id': serializer.toJson<String?>(save_original_id),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<String>(id),
@@ -5586,6 +5611,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           int? creator_user_id,
           Value<String?> father_fragment_groups_id = const Value.absent(),
           String? profile,
+          Value<String?> save_original_id = const Value.absent(),
           String? title,
           DateTime? created_at,
           String? id,
@@ -5599,6 +5625,9 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
             ? father_fragment_groups_id.value
             : this.father_fragment_groups_id,
         profile: profile ?? this.profile,
+        save_original_id: save_original_id.present
+            ? save_original_id.value
+            : this.save_original_id,
         title: title ?? this.title,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
@@ -5613,6 +5642,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
           ..write('profile: $profile, ')
+          ..write('save_original_id: $save_original_id, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -5629,6 +5659,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       creator_user_id,
       father_fragment_groups_id,
       profile,
+      save_original_id,
       title,
       created_at,
       id,
@@ -5643,6 +5674,7 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           other.creator_user_id == this.creator_user_id &&
           other.father_fragment_groups_id == this.father_fragment_groups_id &&
           other.profile == this.profile &&
+          other.save_original_id == this.save_original_id &&
           other.title == this.title &&
           other.created_at == this.created_at &&
           other.id == this.id &&
@@ -5656,6 +5688,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<int> creator_user_id;
   Value<String?> father_fragment_groups_id;
   Value<String> profile;
+  Value<String?> save_original_id;
   Value<String> title;
   Value<DateTime> created_at;
   Value<String> id;
@@ -5667,6 +5700,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     this.creator_user_id = const Value.absent(),
     this.father_fragment_groups_id = const Value.absent(),
     this.profile = const Value.absent(),
+    this.save_original_id = const Value.absent(),
     this.title = const Value.absent(),
     this.created_at = const Value.absent(),
     this.id = const Value.absent(),
@@ -5679,6 +5713,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     required int creator_user_id,
     this.father_fragment_groups_id = const Value.absent(),
     required String profile,
+    this.save_original_id = const Value.absent(),
     required String title,
     required DateTime created_at,
     required String id,
@@ -5699,6 +5734,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     Expression<int>? creator_user_id,
     Expression<String>? father_fragment_groups_id,
     Expression<String>? profile,
+    Expression<String>? save_original_id,
     Expression<String>? title,
     Expression<DateTime>? created_at,
     Expression<String>? id,
@@ -5712,6 +5748,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       if (father_fragment_groups_id != null)
         'father_fragment_groups_id': father_fragment_groups_id,
       if (profile != null) 'profile': profile,
+      if (save_original_id != null) 'save_original_id': save_original_id,
       if (title != null) 'title': title,
       if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
@@ -5726,6 +5763,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_groups_id,
       Value<String>? profile,
+      Value<String?>? save_original_id,
       Value<String>? title,
       Value<DateTime>? created_at,
       Value<String>? id,
@@ -5738,6 +5776,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       father_fragment_groups_id:
           father_fragment_groups_id ?? this.father_fragment_groups_id,
       profile: profile ?? this.profile,
+      save_original_id: save_original_id ?? this.save_original_id,
       title: title ?? this.title,
       created_at: created_at ?? this.created_at,
       id: id ?? this.id,
@@ -5767,6 +5806,9 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     if (profile.present) {
       map['profile'] = Variable<String>(profile.value);
     }
+    if (save_original_id.present) {
+      map['save_original_id'] = Variable<String>(save_original_id.value);
+    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
@@ -5791,6 +5833,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
           ..write('profile: $profile, ')
+          ..write('save_original_id: $save_original_id, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')

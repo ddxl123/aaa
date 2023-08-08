@@ -76,11 +76,12 @@ class KnowledgeBaseHomeAbController extends AbController {
       SmartDialog.showToast("不能下载自己创建的！");
       return;
     }
-    final hasSaved = await db.generalQueryDAO.queryFragmentGroupById(id: willDownloadFragmentGroup.id);
+    final hasSaved = await db.generalQueryDAO.queryFragmentGroupBySaveOriginalId(id: willDownloadFragmentGroup.id);
     if (hasSaved != null) {
       SmartDialog.showToast("该碎片组已被保存过！");
       return;
     }
+    fragmentGroupDownloadWrapper.clearAll();
     final selectGroup = Ab<List<FragmentGroup>?>(null);
     await showSelectFragmentGroupDialog(
       selectedFragmentGroupChainAb: selectGroup,
@@ -201,25 +202,41 @@ class KnowledgeBaseHomeAbController extends AbController {
     await db.transaction(
       () async {
         final syncTag = await SyncTag.create();
-        for (int i = 0; i < fragmentGroupDownloadWrapper.fgs.length; i++) {
-          final fgs = fragmentGroupDownloadWrapper.fgs[i];
-          if (fgs.father_fragment_groups_id == willDownloadFragmentGroup.father_fragment_groups_id) {
-            // 重置 father_fragment_groups_id
-            fgs.father_fragment_groups_id = toFragmentGroup?.father_fragment_groups_id;
-            await fgs.toCompanion(false).insert(
-                  syncTag: syncTag,
-                  isCloudTableWithSync: true,
-                  // 重置 id
-                  isCloudTableAutoId: true,
-                );
-          } else {
-            await fgs.toCompanion(false).insert(
-                  syncTag: syncTag,
-                  isCloudTableWithSync: false,
-                  isCloudTableAutoId: false,
-                );
-          }
+        // 处理碎片组
+        final willDownloadRoot = fragmentGroupDownloadWrapper.fgs.singleWhere((element) => element.id == willDownloadFragmentGroup.id);
+        final beforeModifyRootId = willDownloadRoot.id;
+        // 重置 father_fragment_groups_id
+        willDownloadRoot.father_fragment_groups_id = toFragmentGroup?.id;
+        willDownloadRoot.save_original_id = beforeModifyRootId;
+        final newRoot = await willDownloadRoot.toCompanion(false).insert(
+              syncTag: syncTag,
+              isCloudTableWithSync: true,
+              // 重置 id
+              isCloudTableAutoId: true,
+            );
+        fragmentGroupDownloadWrapper.fgs.remove(willDownloadRoot);
+        final rootOneSubs = fragmentGroupDownloadWrapper.fgs.where((element) => element.father_fragment_groups_id == beforeModifyRootId).toList();
+        for (var value in rootOneSubs) {
+          // 重置 father_fragment_groups_id
+          value.father_fragment_groups_id = newRoot.id;
+          await value.toCompanion(false).insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: false,
+                isCloudTableAutoId: false,
+              );
+          fragmentGroupDownloadWrapper.fgs.remove(value);
         }
+        for (var fg in fragmentGroupDownloadWrapper.fgs) {
+          await fg.toCompanion(false).insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: false,
+                isCloudTableAutoId: false,
+              );
+        }
+
+        //=========================================
+
+        // 处理碎片
         for (int i = 0; i < fragmentGroupDownloadWrapper.fs.length; i++) {
           final fs = fragmentGroupDownloadWrapper.fs[i];
           await fs.fragments.toCompanion(false).insert(
@@ -227,16 +244,25 @@ class KnowledgeBaseHomeAbController extends AbController {
                 isCloudTableWithSync: false,
                 isCloudTableAutoId: false,
               );
-          for (int n = 0; n < fs.r_fragment_2_fragment_groups.length; n++) {
-            await fs.r_fragment_2_fragment_groups[n].toCompanion(false).insert(
+          for (var element in fs.r_fragment_2_fragment_groups) {
+            if (element.fragment_group_id == beforeModifyRootId) {
+              element.fragment_group_id = newRoot.id;
+            }
+            await element.toCompanion(false).insert(
                   syncTag: syncTag,
                   isCloudTableWithSync: false,
                   isCloudTableAutoId: false,
                 );
           }
         }
-        for (int i = 0; i < fragmentGroupDownloadWrapper.fgTags.length; i++) {
-          await fragmentGroupDownloadWrapper.fgTags[i].toCompanion(false).insert(
+        //=========================================
+
+        // 处理碎片组标签
+        for (var element in fragmentGroupDownloadWrapper.fgTags) {
+          if (element.fragment_group_id == beforeModifyRootId) {
+            element.fragment_group_id = newRoot.id;
+          }
+          await element.toCompanion(false).insert(
                 syncTag: syncTag,
                 isCloudTableWithSync: false,
                 isCloudTableAutoId: false,

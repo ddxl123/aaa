@@ -1049,6 +1049,7 @@ extension FragmentGroupExt on FragmentGroup {
         father_fragment_groups_id:
             fragmentGroup.father_fragment_groups_id.toValue(),
         profile: fragmentGroup.profile.toValue(),
+        save_original_id: fragmentGroup.save_original_id.toValue(),
         title: fragmentGroup.title.toValue(),
         syncTag: syncTag,
         isCloudTableWithSync: isCloudTableWithSync);
@@ -1068,6 +1069,7 @@ extension FragmentGroupExt on FragmentGroup {
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
     required Value<String> profile,
+    required Value<String?> save_original_id,
     required Value<String> title,
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
@@ -1105,6 +1107,12 @@ extension FragmentGroupExt on FragmentGroup {
     if (profile.present && this.profile != profile.value) {
       isCloudModify = true;
       this.profile = profile.value;
+    }
+
+    if (save_original_id.present &&
+        this.save_original_id != save_original_id.value) {
+      isCloudModify = true;
+      this.save_original_id = save_original_id.value;
     }
 
     if (title.present && this.title != title.value) {

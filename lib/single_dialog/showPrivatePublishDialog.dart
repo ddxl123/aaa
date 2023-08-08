@@ -32,6 +32,7 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                                 father_fragment_groups_id: 0.toAbsent(),
                                 title: 0.toAbsent(),
                                 profile: 0.toAbsent(),
+                                save_original_id: 0.toAbsent(),
                                 syncTag: st,
                                 isCloudTableWithSync: true,
                               );
@@ -64,6 +65,7 @@ Future<void> showPrivatePublishDialog({required Ab<FragmentGroup?> currentFragme
                                 father_fragment_groups_id: 0.toAbsent(),
                                 title: 0.toAbsent(),
                                 profile: 0.toAbsent(),
+                                save_original_id: 0.toAbsent(),
                                 syncTag: st,
                                 isCloudTableWithSync: true,
                               );
