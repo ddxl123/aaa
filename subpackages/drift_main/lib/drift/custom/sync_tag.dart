@@ -56,7 +56,7 @@ class SyncTag {
 
   /// 解析出 userId。
   static int parseToUserId(String id) {
-    final userId36 = id.substring(8, 15);
+    final userId36 = id.substring(7, 14);
     return int.parse(userId36, radix: 36);
   }
 

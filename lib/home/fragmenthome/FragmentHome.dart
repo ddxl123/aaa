@@ -20,14 +20,11 @@ class _FragmentHomeState extends State<FragmentHome> {
         return Scaffold(
           appBar: CustomTabAppBar(
             tabController: putController.tabController,
-            tabs: const [
-              Tab(
-                text: '碎片',
-              ),
-              Tab(
-                text: '笔记',
-              ),
-            ],
+            tabs: FragmentPageType.values.map(
+              (e) {
+                return Tab(text: e.text);
+              },
+            ).toList(),
           ),
           body: TabBarView(
             controller: putController.tabController,

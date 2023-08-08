@@ -1,5 +1,6 @@
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
+import 'package:aaa/page/fragment_group_view/FragmentGroupListView.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:aaa/page/other/TemplateChoicePage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
@@ -136,6 +137,18 @@ Future<void> pushToMultiFragmentTemplateView({
         allFragments: allFragments,
         fragment: fragment,
       ),
+    ),
+  );
+}
+
+Future<void> pushToFragmentGroupListView({
+  required BuildContext context,
+  required FragmentGroup enterFragmentGroup,
+}) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (ctx) => FragmentGroupListView(enterFragmentGroup: enterFragmentGroup),
     ),
   );
 }

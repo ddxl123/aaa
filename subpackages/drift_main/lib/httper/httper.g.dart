@@ -38,6 +38,25 @@ Map<String, dynamic> _$DataDownloadForKnowledgeBaseFragmentWrapperBOToJson(
       'r_fragment_2_fragment_groups': instance.r_fragment_2_fragment_groups,
     };
 
+KnowledgeBaseFragmentGroupInnerForFragmentBo
+    _$KnowledgeBaseFragmentGroupInnerForFragmentBoFromJson(
+            Map<String, dynamic> json) =>
+        KnowledgeBaseFragmentGroupInnerForFragmentBo(
+          fragment: Fragment.fromJson(json['fragment'] as Map<String, dynamic>),
+          r_fragment_2_fragment_groups: (json['r_fragment_2_fragment_groups']
+                  as List<dynamic>)
+              .map((e) =>
+                  RFragment2FragmentGroup.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$KnowledgeBaseFragmentGroupInnerForFragmentBoToJson(
+        KnowledgeBaseFragmentGroupInnerForFragmentBo instance) =>
+    <String, dynamic>{
+      'fragment': instance.fragment,
+      'r_fragment_2_fragment_groups': instance.r_fragment_2_fragment_groups,
+    };
+
 KnowledgeBaseFragmentGroupWrapperBo
     _$KnowledgeBaseFragmentGroupWrapperBoFromJson(Map<String, dynamic> json) =>
         KnowledgeBaseFragmentGroupWrapperBo(
@@ -392,6 +411,46 @@ Map<String, dynamic> _$KnowledgeBaseCategoryQueryVoToJson(
       'selected_sub_categorys_list': instance.selected_sub_categorys_list,
       'big_categorys_list': instance.big_categorys_list,
       'sub_categorys_list': instance.sub_categorys_list,
+    };
+
+KnowledgeBaseFragmentGroupInnerQueryDto
+    _$KnowledgeBaseFragmentGroupInnerQueryDtoFromJson(
+            Map<String, dynamic> json) =>
+        KnowledgeBaseFragmentGroupInnerQueryDto(
+          fragment_group_id: json['fragment_group_id'] as String,
+          dto_padding_1: json['dto_padding_1'] as bool?,
+        );
+
+Map<String, dynamic> _$KnowledgeBaseFragmentGroupInnerQueryDtoToJson(
+        KnowledgeBaseFragmentGroupInnerQueryDto instance) =>
+    <String, dynamic>{
+      'fragment_group_id': instance.fragment_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+KnowledgeBaseFragmentGroupInnerQueryVo
+    _$KnowledgeBaseFragmentGroupInnerQueryVoFromJson(
+            Map<String, dynamic> json) =>
+        KnowledgeBaseFragmentGroupInnerQueryVo(
+          fragment_groups_list: (json['fragment_groups_list'] as List<dynamic>)
+              .map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
+              .toList(),
+          fragment_group_self_tags_list: (json['fragment_group_self_tags_list']
+                  as List<dynamic>)
+              .map((e) => FragmentGroupTag.fromJson(e as Map<String, dynamic>))
+              .toList(),
+          fragments_list: (json['fragments_list'] as List<dynamic>)
+              .map((e) => KnowledgeBaseFragmentGroupInnerForFragmentBo.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$KnowledgeBaseFragmentGroupInnerQueryVoToJson(
+        KnowledgeBaseFragmentGroupInnerQueryVo instance) =>
+    <String, dynamic>{
+      'fragment_groups_list': instance.fragment_groups_list,
+      'fragment_group_self_tags_list': instance.fragment_group_self_tags_list,
+      'fragments_list': instance.fragments_list,
     };
 
 KnowledgeBaseFragmentGroupQueryDto _$KnowledgeBaseFragmentGroupQueryDtoFromJson(

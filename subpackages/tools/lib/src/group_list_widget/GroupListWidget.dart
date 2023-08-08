@@ -112,7 +112,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                                         visualDensity: kMinVisualDensity,
                                       ),
                                       child: Text(
-                                        c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null ? '~' : '${widget.groupChainStrings(c.groupChain(abw)[index], innerAbw)}',
+                                        c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null ? '~' : widget.groupChainStrings(c.groupChain(abw)[index], innerAbw),
                                       ),
                                       onPressed: () async {
                                         await c.enterGroup(c.groupChain(abw)[index]);
@@ -127,30 +127,6 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                           separatorBuilder: (BuildContext context, int index) {
                             return Icon(Icons.chevron_right);
                           },
-                        );
-                        return SingleChildScrollView(
-                          controller: c.groupChainScrollController,
-                          scrollDirection: Axis.horizontal,
-                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                          child: Row(
-                            children: [
-                              ...c.groupChain(abw).map(
-                                    (e) => AbwBuilder(
-                                      builder: (innerAbw) {
-                                        return TextButton(
-                                          child: Text(
-                                            e(innerAbw).entity(innerAbw) == null ? '~ >' : '${widget.groupChainStrings(e, innerAbw)} >',
-                                          ),
-                                          onPressed: () async {
-                                            await c.enterGroup(e);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                              SizedBox(width: MediaQuery.of(c.context).size.width / 3),
-                            ],
-                          ),
                         );
                       },
                     ),
@@ -249,15 +225,6 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
             ],
           ),
         );
-        return SliverList(
-          delegate: SliverChildListDelegate(
-            c.getCurrentGroupAb()(abw).groups(abw).map(
-              (e) {
-                return AbwBuilder(builder: (abw) => widget.groupBuilder(c, e, abw));
-              },
-            ).toList(),
-          ),
-        );
       },
     );
   }
@@ -271,41 +238,6 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
             c.getCurrentGroupAb()(abw).units(abw).map(
               (e) {
                 return AbwBuilder(builder: (abw) => widget.unitBuilder(c, e, abw));
-                // return Row(
-                //   children: [
-                // Expanded(
-                //   child: MaterialButton(
-                //     child: Text(e().currentGroupEntity().toString()),
-                //     onPressed: () {},
-                //     // onLongPress: () {
-                //     //   Aber.find<HomeAbController>().isFragmentSelecting.refreshEasy((oldValue) => !oldValue);
-                //     // },
-                //   ),
-                // ),
-                // AbBuilder<HomeAbController>(
-                //   builder: (hController, hAwb) {
-                //     if (hController.isFragmentSelecting(hAwb)) {
-                //       return AbBuilder<GroupListWidgetController>(
-                //         tag: Aber.single,
-                //         builder: (selectController, selectAbw) {
-                //           return IconButton(
-                //             icon: FaIcon(
-                //               FontAwesomeIcons.solidCircle,
-                //               color: selectController.currentPart().indexIsSelectedForFragment(index, selectAbw) ? Colors.amber : Colors.grey,
-                //               size: 14,
-                //             ),
-                //             onPressed: () async {
-                //               selectController.currentPart().selectFragment(selectController.currentPart().indexFragment(index).id);
-                //             },
-                //           );
-                //         },
-                //       );
-                //     }
-                //     return Container();
-                //   },
-                // ),
-                //   ],
-                // );
               },
             ).toList(),
           ),

@@ -135,6 +135,52 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     ).run();
   }
 
+  Future<void> resetAllSelectFragmentAndFragmentGroup() async {
+    final st = await SyncTag.create();
+    await RefFragmentGroups(
+      self: () async {
+        final fgs = await db.generalQueryDAO.querySelectedFragmentGroups();
+        for (var element in fgs) {
+          await element.reset(
+            be_private: toAbsent(),
+            be_publish: toAbsent(),
+            client_be_selected: false.toValue(),
+            creator_user_id: toAbsent(),
+            father_fragment_groups_id: toAbsent(),
+            profile: toAbsent(),
+            save_original_id: toAbsent(),
+            title: toAbsent(),
+            syncTag: st,
+            isCloudTableWithSync: false,
+          );
+        }
+      },
+      fragmentGroupTags: null,
+      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+        self: () async {
+          final fs = await db.generalQueryDAO.querySelectedFragments();
+          for (var element in fs) {
+            await element.reset(
+              be_sep_publish: toAbsent(),
+              client_be_selected: false.toValue(),
+              content: toAbsent(),
+              creator_user_id: toAbsent(),
+              father_fragment_id: toAbsent(),
+              title: toAbsent(),
+              syncTag: st,
+              isCloudTableWithSync: false,
+            );
+          }
+        },
+        order: 0,
+      ),
+      child_fragmentGroups: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
+  }
+
   /// 修改 [MemoryGroup]，仅进行修改后的存储，不影响 [FragmentMemoryInfo]。
   Future<void> resetMemoryGroupForOnlySave({
     required FutureFunction originalMemoryGroupReset,

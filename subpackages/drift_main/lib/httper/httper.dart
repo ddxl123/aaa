@@ -74,6 +74,12 @@ part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryDto.dart';
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupInnerQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupInnerQueryVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryDto.dart';
 
 

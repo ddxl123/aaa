@@ -31,6 +31,8 @@ class HttpPath {
 
   static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS = '/no_login_required/knowledge_base/query_knowledge_base_categorys';
 
+  static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUP_INNER = '/no_login_required/knowledge_base/query_knowledge_base_fragment_group_inner';
+
   static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUPS = '/no_login_required/knowledge_base/query_knowledge_base_fragment_groups';
 
 }

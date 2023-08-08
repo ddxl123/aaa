@@ -223,7 +223,7 @@ class Home extends StatelessWidget {
             const MineHome(),
           ],
           onPageChanged: (int toIndex) {
-            controller.currentPageIndex.refreshEasy((oldValue) => toIndex);
+            controller.currentPageType.refreshEasy((oldValue) => PageType.values[toIndex]);
           },
         );
       },
@@ -235,7 +235,7 @@ class Home extends StatelessWidget {
       builder: (c, abw) {
         return AnimatedBottomNavigationBar.builder(
           itemCount: 4,
-          activeIndex: c.currentPageIndex(abw),
+          activeIndex: c.currentPageType(abw).index,
           gapLocation: GapLocation.center,
           splashColor: Colors.blue,
           tabBuilder: (index, isActive) {
@@ -244,13 +244,13 @@ class Home extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  c.iconDatas[index],
+                  PageType.values[index].icon,
                   size: isActive ? 24 : 20,
                   color: isActive ? Colors.blue : Colors.black,
                 ),
                 isActive
                     ? Text(
-                        c.labels[index],
+                        PageType.values[index].text,
                         style: TextStyle(fontSize: 12, color: isActive ? Colors.blue : Colors.black),
                       )
                     : Container(),
@@ -258,7 +258,7 @@ class Home extends StatelessWidget {
             );
           },
           onTap: (value) {
-            c.currentPageIndex.refreshEasy((oldValue) => value);
+            c.currentPageType.refreshEasy((oldValue) => PageType.values[value]);
             c.pageController.jumpToPage(value);
           },
         );

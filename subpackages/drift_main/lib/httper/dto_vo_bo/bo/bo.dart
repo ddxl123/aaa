@@ -35,6 +35,22 @@ DataDownloadForKnowledgeBaseFragmentWrapperBO({
 }
 
 @JsonSerializable()
+class KnowledgeBaseFragmentGroupInnerForFragmentBo {
+    Fragment fragment;
+    List<RFragment2FragmentGroup> r_fragment_2_fragment_groups;
+
+KnowledgeBaseFragmentGroupInnerForFragmentBo({
+    required this.fragment,
+    required this.r_fragment_2_fragment_groups,
+
+});
+
+  factory KnowledgeBaseFragmentGroupInnerForFragmentBo.fromJson(Map<String, dynamic> json) => _$KnowledgeBaseFragmentGroupInnerForFragmentBoFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$KnowledgeBaseFragmentGroupInnerForFragmentBoToJson(this);
+}
+
+@JsonSerializable()
 class KnowledgeBaseFragmentGroupWrapperBo {
     FragmentGroup fragment_group;
     List<FragmentGroupTag> fragment_group_tags;

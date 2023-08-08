@@ -5,7 +5,7 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 
 class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment> {
-  final fragmentGroupTagsAb = <FragmentGroupTag>[].ab;
+  final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
 
   @override
   Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
@@ -77,13 +77,104 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   FutureOr<void> refreshExtra() async {
     if (getCurrentGroupAb()().entity() != null) {
       final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: getCurrentGroupAb()().entity()!.id);
-      fragmentGroupTagsAb.refreshInevitable((obj) => obj
+      currentFragmentGroupTagsAb.refreshInevitable((obj) => obj
         ..clear()
         ..addAll(tags));
     }
   }
 
+  /// 对当前页面全选
+  Future<void> selectAll() async {
+    await db.transaction(
+      () async {
+        final st = await SyncTag.create();
+
+        for (var value in getCurrentGroupAb()().groups()) {
+          await db.updateDAO.resetFragmentGroupAndSubIsSelected(
+            fragmentGroup: value().entity()!,
+            isSelected: true,
+            syncTag: st,
+          );
+        }
+        for (var value in getCurrentGroupAb()().units()) {
+          await db.updateDAO.resetFragmentIsSelected(
+            originalFragment: value().unitEntity(),
+            isSelected: true,
+            syncTag: st,
+          );
+        }
+      },
+    );
+    await refreshCurrentGroup();
+  }
+
+  /// 对当前页面全不选
+  Future<void> deselectAll() async {
+    await db.transaction(
+      () async {
+        final st = await SyncTag.create();
+
+        for (var value in getCurrentGroupAb()().groups()) {
+          await db.updateDAO.resetFragmentGroupAndSubIsSelected(
+            fragmentGroup: value().entity()!,
+            isSelected: false,
+            syncTag: st,
+          );
+        }
+        for (var value in getCurrentGroupAb()().units()) {
+          await db.updateDAO.resetFragmentIsSelected(
+            originalFragment: value().unitEntity(),
+            isSelected: false,
+            syncTag: st,
+          );
+        }
+      },
+    );
+    await refreshCurrentGroup();
+  }
+
+  /// 对当前页面反选
+  Future<void> invertSelect() async {
+    await db.transaction(
+      () async {
+        final st = await SyncTag.create();
+
+        for (var value in getCurrentGroupAb()().groups()) {
+          await db.updateDAO.resetFragmentGroupAndSubIsSelected(
+            fragmentGroup: value().entity()!,
+            isSelected: !value().entity()!.client_be_selected,
+            syncTag: st,
+          );
+        }
+        for (var value in getCurrentGroupAb()().units()) {
+          await db.updateDAO.resetFragmentIsSelected(
+            originalFragment: value().unitEntity(),
+            isSelected: !value().unitEntity().client_be_selected,
+            syncTag: st,
+          );
+        }
+      },
+    );
+    await refreshCurrentGroup();
+  }
+
+  /// 清空全部已选
+  Future<void> clearAllSelected() async {
+    await db.updateDAO.resetAllSelectFragmentAndFragmentGroup();
+    await refreshCurrentGroup();
+  }
+
+  /// 删除已选
   Future<void> deleteSelected() async {
     await db.deleteDAO.deleteSelected(userId: Aber.find<GlobalAbController>().loggedInUser()!.id);
+  }
+
+  /// [fg] 是否属于自己的。
+  bool isSelfOfFragmentGroup({required FragmentGroup fg}) {
+    if (fg.save_original_id != null) return false;
+    if (SyncTag.parseToUserId(fg.id) != Aber.find<GlobalAbController>().loggedInUser()!.id) {
+      return false;
+    }
+    return true;
   }
 }
