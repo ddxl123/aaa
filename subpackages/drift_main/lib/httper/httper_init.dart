@@ -33,12 +33,12 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
     final parseMessage = result.data["message"];
     final parseVo = result.data["data"] == null ? null : parseResponseVoData(result.data["data"]);
     final otherCodeResult = await otherCodeHandle(code: parseCode);
-    if (otherCodeResult != null) {
-      throw otherCodeResult;
+    if (otherCodeResult) {
+      throw HttperException(showMessage: parseMessage, debugMessage: "拦截到 otherCode 异常，code: $parseCode");
     }
     return (dtoData as dynamic)
       ..code = parseCode
-      ..httperException = HttperException(showMessage: parseMessage, debugMessage: '')
+      ..httperException = HttperException(showMessage: parseMessage, debugMessage: '无异常')
       ..vo = parseVo;
   } catch (e, st) {
     if (e is DioError) {
@@ -54,6 +54,13 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
           ..st = st;
       }
     }
+    if (e is HttperException) {
+      return (dtoData as dynamic)
+        ..code = null
+        ..httperException = e
+        ..vo = null
+        ..st = st;
+    }
     return (dtoData as dynamic)
       ..code = null
       ..httperException = HttperException(
@@ -65,32 +72,36 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   }
 }
 
-/// 返回值如果为 null，则未被拦截，否则被拦截。
-Future<String?> otherCodeHandle({required int code}) async {
-  return await OtherResponseCode.handleCode<String?>(
+/// 返回值如果为 true，则被拦截，否则未被拦截。
+Future<bool> otherCodeHandle({required int code}) async {
+  final result = await OtherResponseCode.handleCode<bool>(
     inputCode: code,
     code1000000: (String showMessage) async {
-      return showMessage;
+      return true;
     },
     code1000001: (String showMessage) async {
-      return showMessage;
+      return true;
     },
     code1000101: (String showMessage) async {
-      return showMessage;
+      return true;
     },
     code1000102: (String showMessage) async {
-      return showMessage;
+      return true;
     },
     code1000103: (String showMessage) async {
-      return showMessage;
+      return true;
     },
     code1000104: (String showMessage) async {
-      return showMessage;
+      return true;
     },
     code1000105: (String showMessage) async {
-      return showMessage;
+      return true;
+    },
+    code1000106: (String showMessage) async {
+      return true;
     },
   );
+  return result ?? false;
 }
 
 Future<void> requestDownload() async {

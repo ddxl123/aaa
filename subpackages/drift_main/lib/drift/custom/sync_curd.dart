@@ -35,6 +35,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
   ///   - 若为 true，则根据 [syncTag] 自动生成 [entity] 的 id。
   ///   - 若为 false，则根据 [entity] 的 id 进行插入。
   ///
+  /// [isReplaceWhenIdSame] - 如果遇到 id 相同时，是否进行覆盖。
+  ///   - 如果为 false，且遇到 id 相同，则会抛出异常并回滚。
+  ///   - 如果为 true，且遇到 id 相同，则会覆盖掉。
+  ///
   /// 必须搭配 [withRefs] 使用。
   Future<DC> insertReturningWith<T extends Table, DC extends DataClass, E extends UpdateCompanion<DC>>(
     TableInfo<T, DC> table, {
@@ -42,6 +46,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     return await transaction(
       () async {
@@ -71,7 +76,10 @@ extension DriftSyncExt on DatabaseConnectionUser {
 
         // 插入
         final newInto = into(table);
-        final dynamic returningEntityDynamic = await newInto.insertReturning(entityDynamic);
+        final dynamic returningEntityDynamic = await newInto.insertReturning(
+          entityDynamic,
+          mode: isReplaceWhenIdSame ? InsertMode.replace : InsertMode.insert,
+        );
 
         // CloudTableBase 类型表需要添加一条 sync 记录。
         //
@@ -88,6 +96,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
             syncTag: syncTag,
             isCloudTableWithSync: false,
             isCloudTableAutoId: false,
+            isReplaceWhenIdSame: false,
           );
         }
 
@@ -157,6 +166,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
             syncTag: syncTag,
             isCloudTableWithSync: false,
             isCloudTableAutoId: false,
+            isReplaceWhenIdSame: false,
           );
         }
 
@@ -203,6 +213,7 @@ extension DriftSyncExt on DatabaseConnectionUser {
             syncTag: syncTag,
             isCloudTableWithSync: false,
             isCloudTableAutoId: false,
+            isReplaceWhenIdSame: false,
           );
         }
       },

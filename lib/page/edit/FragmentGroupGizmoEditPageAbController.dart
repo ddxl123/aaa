@@ -131,6 +131,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
                       syncTag: st,
                       isCloudTableWithSync: true,
                       isCloudTableAutoId: true,
+                      isReplaceWhenIdSame: false,
                     );
               }
             }

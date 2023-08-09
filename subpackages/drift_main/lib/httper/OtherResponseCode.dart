@@ -11,6 +11,7 @@ class OtherResponseCode {
         required Future<T> Function(String showMessage) code1000103,
         required Future<T> Function(String showMessage) code1000104,
         required Future<T> Function(String showMessage) code1000105,
+        required Future<T> Function(String showMessage) code1000106,
     }) async {
         if (inputCode == 1000000) {
             return await code1000000("服务器出现未知异常！1000000");
@@ -32,6 +33,9 @@ class OtherResponseCode {
         }
         if (inputCode == 1000105) {
             return await code1000105("用户未登录！");
+        }
+        if (inputCode == 1000106) {
+            return await code1000106("文本长度太长！");
         }
         return null;
     }

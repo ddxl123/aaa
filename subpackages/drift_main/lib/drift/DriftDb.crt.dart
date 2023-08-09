@@ -363,6 +363,7 @@ class Crt {
 extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
   Future<ClientSyncInfo> insert({
     required SyncTag syncTag,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -371,6 +372,7 @@ extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: false,
       isCloudTableAutoId: false,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -378,6 +380,7 @@ extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
 extension SyncsCompanionExt on SyncsCompanion {
   Future<Sync> insert({
     required SyncTag syncTag,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -386,6 +389,7 @@ extension SyncsCompanionExt on SyncsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: false,
       isCloudTableAutoId: false,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -395,6 +399,7 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -403,6 +408,7 @@ extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -412,6 +418,7 @@ extension FragmentGroupTagsCompanionExt on FragmentGroupTagsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -420,6 +427,7 @@ extension FragmentGroupTagsCompanionExt on FragmentGroupTagsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -430,6 +438,7 @@ extension RFragment2FragmentGroupsCompanionExt
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -438,6 +447,7 @@ extension RFragment2FragmentGroupsCompanionExt
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -447,6 +457,7 @@ extension Test2sCompanionExt on Test2sCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -455,6 +466,7 @@ extension Test2sCompanionExt on Test2sCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -464,6 +476,7 @@ extension TestsCompanionExt on TestsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -472,6 +485,7 @@ extension TestsCompanionExt on TestsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -481,6 +495,7 @@ extension FragmentsCompanionExt on FragmentsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -489,6 +504,7 @@ extension FragmentsCompanionExt on FragmentsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -498,6 +514,7 @@ extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -506,6 +523,7 @@ extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -515,6 +533,7 @@ extension MemoryModelsCompanionExt on MemoryModelsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -523,6 +542,7 @@ extension MemoryModelsCompanionExt on MemoryModelsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -532,6 +552,7 @@ extension ShorthandsCompanionExt on ShorthandsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -540,6 +561,7 @@ extension ShorthandsCompanionExt on ShorthandsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -549,6 +571,7 @@ extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -557,6 +580,7 @@ extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -566,6 +590,7 @@ extension UserCommentsCompanionExt on UserCommentsCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -574,6 +599,7 @@ extension UserCommentsCompanionExt on UserCommentsCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -583,6 +609,7 @@ extension UserLikesCompanionExt on UserLikesCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -591,6 +618,7 @@ extension UserLikesCompanionExt on UserLikesCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }
@@ -600,6 +628,7 @@ extension UsersCompanionExt on UsersCompanion {
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
     required bool isCloudTableAutoId,
+    required bool isReplaceWhenIdSame,
   }) async {
     final ins = DriftDb.instance;
     return await ins.insertReturningWith(
@@ -608,6 +637,7 @@ extension UsersCompanionExt on UsersCompanion {
       syncTag: syncTag,
       isCloudTableWithSync: isCloudTableWithSync,
       isCloudTableAutoId: isCloudTableAutoId,
+      isReplaceWhenIdSame: isReplaceWhenIdSame,
     );
   }
 }

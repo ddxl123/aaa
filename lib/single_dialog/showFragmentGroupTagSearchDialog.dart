@@ -204,6 +204,7 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                                           syncTag: st,
                                           isCloudTableWithSync: true,
                                           isCloudTableAutoId: true,
+                                          isReplaceWhenIdSame: false,
                                         );
                                   },
                                   order: 0,

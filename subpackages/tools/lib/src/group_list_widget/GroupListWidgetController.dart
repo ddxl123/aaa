@@ -78,13 +78,17 @@ class Group<G, U> with AbBroken {
 /// [GC] 组配置。
 abstract class GroupListWidgetController<G, U> extends AbController {
   final groupChainScrollController = ScrollController();
-  final group = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
-  late final groupChain = <Ab<Group<G, U>>>[group].ab;
+  final rootGroup = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
+  late final groupChain = <Ab<Group<G, U>>>[rootGroup].ab;
   final isUnitSelecting = false.ab;
 
   @override
   void onDispose() {
     groupChainScrollController.dispose();
+  }
+
+  void setRootGroupEntity(G entity) {
+    rootGroup().entity.refreshEasy((oldValue) => entity);
   }
 
   Ab<Group<G, U>> getCurrentGroupAb() {
@@ -137,9 +141,12 @@ abstract class GroupListWidgetController<G, U> extends AbController {
       curve: Curves.easeOutCirc,
     );
     await refreshExtra();
+    await refreshDone();
   }
 
   FutureOr<void> refreshExtra();
+
+  FutureOr<void> refreshDone();
 
   /// 进入哪个 [groupChain] 或进入新的 [whichGroup]。
   ///
@@ -157,7 +164,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
 
     refreshCount(whichGroup: whichGroup);
 
-    group.refreshForce();
+    rootGroup.refreshForce();
     groupChain.refreshForce();
   }
 

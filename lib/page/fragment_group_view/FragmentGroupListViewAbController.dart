@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:tools/tools.dart';
 
 class FragmentGroupListViewAbController extends GroupListWidgetController<FragmentGroup, Fragment> {
@@ -10,6 +13,7 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
   final FragmentGroup enterFragmentGroup;
 
   final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
+
 
   @override
   Future<bool> backListener(bool hasRoute) async {
@@ -37,14 +41,11 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
           ..clear()
           ..addAll(vo.fragment_group_self_tags_list);
 
-        // if (whichGroupEntity == null) {
-        //   return GroupsAndUnitEntities<FragmentGroup, Fragment>(
-        //     groupEntities: vo.fragment_groups_list.where((element) => element.id == enterFragmentGroup.id).toList(),
-        //     unitEntities: [],
-        //   );
-        // }
-
+        if (whichGroupEntity == null) {
+          setRootGroupEntity(vo.fragment_groups_list.singleWhere((element) => element.id == enterFragmentGroup.id));
+        }
         return GroupsAndUnitEntities<FragmentGroup, Fragment>(
+          // 因为查询的包含 whichGroupEntity 自身，因此排除掉。
           groupEntities: vo.fragment_groups_list.where((element) => element.id != (whichGroupEntity?.id ?? enterFragmentGroup.id)).toList(),
           unitEntities: vo.fragments_list.map((e) => e.fragment).toList(),
         );
@@ -65,4 +66,12 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
 
   @override
   FutureOr<void> refreshExtra() {}
+
+  @override
+  FutureOr<void> refreshDone() {
+    refreshQuill(fragmentGroup: getCurrentGroupAb()().entity()!);
+  }
+
+  void refreshQuill({required FragmentGroup fragmentGroup}) {
+  }
 }

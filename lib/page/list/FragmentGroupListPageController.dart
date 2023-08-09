@@ -177,4 +177,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     }
     return true;
   }
+
+  @override
+  FutureOr<void> refreshDone() {}
 }

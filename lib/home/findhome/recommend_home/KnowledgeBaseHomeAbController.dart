@@ -201,6 +201,7 @@ class KnowledgeBaseHomeAbController extends AbController {
   }) async {
     await db.transaction(
       () async {
+        // TODO: 下载多次与更新。
         final syncTag = await SyncTag.create();
         // 处理碎片组
         final willDownloadRoot = fragmentGroupDownloadWrapper.fgs.singleWhere((element) => element.id == willDownloadFragmentGroup.id);
@@ -213,6 +214,8 @@ class KnowledgeBaseHomeAbController extends AbController {
               isCloudTableWithSync: true,
               // 重置 id
               isCloudTableAutoId: true,
+              // 不可替换更新，因为每次都要重新分配 id
+              isReplaceWhenIdSame: false,
             );
         fragmentGroupDownloadWrapper.fgs.remove(willDownloadRoot);
         final rootOneSubs = fragmentGroupDownloadWrapper.fgs.where((element) => element.father_fragment_groups_id == beforeModifyRootId).toList();
@@ -223,6 +226,8 @@ class KnowledgeBaseHomeAbController extends AbController {
                 syncTag: syncTag,
                 isCloudTableWithSync: false,
                 isCloudTableAutoId: false,
+                // 不可替换更新，因为修改了父碎片组，如果下载重复的，得需要再重新修改父碎片组。
+                isReplaceWhenIdSame: false,
               );
           fragmentGroupDownloadWrapper.fgs.remove(value);
         }
@@ -231,6 +236,8 @@ class KnowledgeBaseHomeAbController extends AbController {
                 syncTag: syncTag,
                 isCloudTableWithSync: false,
                 isCloudTableAutoId: false,
+                // 可替换更新，因为没有进行如何更改，以防下载了相同的碎片组但在不同的碎片组下。
+                isReplaceWhenIdSame: true,
               );
         }
 
@@ -243,16 +250,28 @@ class KnowledgeBaseHomeAbController extends AbController {
                 syncTag: syncTag,
                 isCloudTableWithSync: false,
                 isCloudTableAutoId: false,
+                // 可替换更新，以防下载了相同的碎片但在不同的碎片组下。
+                isReplaceWhenIdSame: true,
               );
           for (var element in fs.r_fragment_2_fragment_groups) {
             if (element.fragment_group_id == beforeModifyRootId) {
               element.fragment_group_id = newRoot.id;
+              await element.toCompanion(false).insert(
+                    syncTag: syncTag,
+                    isCloudTableWithSync: false,
+                    isCloudTableAutoId: false,
+                    // 不可替换更新，因为需要修改碎片组 id。
+                    isReplaceWhenIdSame: false,
+                  );
+            } else {
+              await element.toCompanion(false).insert(
+                    syncTag: syncTag,
+                    isCloudTableWithSync: false,
+                    isCloudTableAutoId: false,
+                    // 可替换更新，以防下载了相同的碎片但在不同的碎片组下。
+                    isReplaceWhenIdSame: true,
+                  );
             }
-            await element.toCompanion(false).insert(
-                  syncTag: syncTag,
-                  isCloudTableWithSync: false,
-                  isCloudTableAutoId: false,
-                );
           }
         }
         //=========================================
@@ -261,12 +280,23 @@ class KnowledgeBaseHomeAbController extends AbController {
         for (var element in fragmentGroupDownloadWrapper.fgTags) {
           if (element.fragment_group_id == beforeModifyRootId) {
             element.fragment_group_id = newRoot.id;
+
+            await element.toCompanion(false).insert(
+                  syncTag: syncTag,
+                  isCloudTableWithSync: false,
+                  isCloudTableAutoId: false,
+                  // 不可替换更新，因为需要修改碎片组 id。
+                  isReplaceWhenIdSame: false,
+                );
+          } else {
+            await element.toCompanion(false).insert(
+                  syncTag: syncTag,
+                  isCloudTableWithSync: false,
+                  isCloudTableAutoId: true,
+                  // 可替换更新
+                  isReplaceWhenIdSame: true,
+                );
           }
-          await element.toCompanion(false).insert(
-                syncTag: syncTag,
-                isCloudTableWithSync: false,
-                isCloudTableAutoId: false,
-              );
         }
       },
     );

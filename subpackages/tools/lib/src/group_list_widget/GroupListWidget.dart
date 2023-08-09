@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
@@ -6,12 +7,13 @@ import 'package:tools/tools.dart';
 class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatefulWidget {
   const GroupListWidget({
     Key? key,
-    this.headSliver,
+    required this.headSliver,
     required this.groupListWidgetController,
     required this.groupChainStrings,
     required this.groupBuilder,
     required this.unitBuilder,
-    required this.oneActionBuilder,
+    this.leftActionBuilder,
+    this.rightActionBuilder,
     required this.floatingButtonOnPressed,
   }) : super(key: key);
   final C groupListWidgetController;
@@ -20,7 +22,8 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
   final String Function(Ab<Group<G, U>> group, Abw abw) groupChainStrings;
   final Widget Function(C c, Ab<Group<G, U>> group, Abw abw) groupBuilder;
   final Widget Function(C c, Ab<Unit<U>> unit, Abw abw) unitBuilder;
-  final Widget Function(C c, Abw abw) oneActionBuilder;
+  final Widget Function(C c, Abw abw)? leftActionBuilder;
+  final Widget Function(C c, Abw abw)? rightActionBuilder;
   final void Function(C c) floatingButtonOnPressed;
 
   @override
@@ -92,6 +95,12 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
               height: kMinInteractiveDimension,
               child: Row(
                 children: [
+                  AbBuilder<C>(
+                    tag: Aber.single,
+                    builder: (c, abw) {
+                      return widget.leftActionBuilder?.call(c, abw) ?? Container();
+                    },
+                  ),
                   Expanded(
                     child: AbBuilder<C>(
                       tag: Aber.single,
@@ -111,9 +120,11 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                                       style: ButtonStyle(
                                         visualDensity: kMinVisualDensity,
                                       ),
-                                      child: Text(
-                                        c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null ? '~' : widget.groupChainStrings(c.groupChain(abw)[index], innerAbw),
-                                      ),
+                                      child: c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null
+                                          ? Icon(Icons.circle, size: 5)
+                                          : Text(
+                                              widget.groupChainStrings(c.groupChain(abw)[index], innerAbw),
+                                            ),
                                       onPressed: () async {
                                         await c.enterGroup(c.groupChain(abw)[index]);
                                       },
@@ -134,7 +145,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                   AbBuilder<C>(
                     tag: Aber.single,
                     builder: (c, abw) {
-                      return widget.oneActionBuilder(c, abw);
+                      return widget.rightActionBuilder?.call(c, abw) ?? Container();
                     },
                   ),
                 ],
@@ -155,7 +166,13 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                               controller: e(abw).refreshController,
                               child: CustomScrollView(
                                 slivers: [
-                                  e(abw).entity(abw) == null ? SliverToBoxAdapter() : (widget.headSliver?.call(c, e, abw) ?? SliverToBoxAdapter()),
+                                  widget.headSliver == null
+                                      ? SliverToBoxAdapter()
+                                      : _Head<G, U, C>(
+                                          mainState: this,
+                                          c: c,
+                                          e: e,
+                                        ),
                                   (e().groups().isEmpty && e().units().isEmpty)
                                       ? SliverToBoxAdapter(
                                           child: Row(
@@ -240,6 +257,66 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                 return AbwBuilder(builder: (abw) => widget.unitBuilder(c, e, abw));
               },
             ).toList(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _Head<G, U, C extends GroupListWidgetController<G, U>> extends StatefulWidget {
+  const _Head({super.key, required this.mainState, required this.c, required this.e});
+
+  final _GroupListWidgetState<G, U, C> mainState;
+  final C c;
+  final Ab<Group<G, U>> e;
+
+  @override
+  State<_Head<G, U, C>> createState() => _HeadState<G, U, C>();
+}
+
+class _HeadState<G, U, C extends GroupListWidgetController<G, U>> extends State<_Head<G, U, C>> {
+  double _expandedHeight = double.maxFinite;
+  GlobalKey _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        final RenderBox? renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
+        final height = renderBox?.size.height;
+        if (height != _expandedHeight) {
+          setState(() {
+            _expandedHeight = height ?? 0;
+          });
+        }
+      },
+    );
+    return AbwBuilder(
+      builder: (abw) {
+        return SliverAppBar(
+          expandedHeight: _expandedHeight,
+          collapsedHeight: _expandedHeight > MediaQuery.of(context).size.height ? _expandedHeight : null,
+          floating: false,
+          snap: false,
+          toolbarHeight: 0,
+          flexibleSpace: FlexibleSpaceBar(
+            background: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    key: _key,
+                    child: widget.mainState.widget.headSliver?.call(widget.c, widget.e, abw),
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },

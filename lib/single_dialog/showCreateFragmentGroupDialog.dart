@@ -43,6 +43,7 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
                 syncTag: st,
                 isCloudTableWithSync: true,
                 isCloudTableAutoId: true,
+                isReplaceWhenIdSame: false,
               );
             },
             fragmentGroupTags: null,

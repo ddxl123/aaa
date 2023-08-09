@@ -12,7 +12,10 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }) async {
     final find = await db.generalQueryDAO.queryClientSyncInfoOrNull();
     if (find != null) throw "本地已存在客户端同步信息！";
-    return newClientSyncInfoCompanion.insert(syncTag: syncTag);
+    return newClientSyncInfoCompanion.insert(
+      syncTag: syncTag,
+      isReplaceWhenIdSame: false,
+    );
   }
 
   /// 向多个 [whichFragmentGroupChains] 中，插入相同的 [willFragmentsCompanion]。
@@ -50,6 +53,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
           syncTag: syncTag,
           isCloudTableWithSync: isCloudTableWithSync,
           isCloudTableAutoId: true,
+          isReplaceWhenIdSame: false,
         );
       },
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
@@ -65,6 +69,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 syncTag: syncTag,
                 isCloudTableWithSync: isCloudTableWithSync,
                 isCloudTableAutoId: true,
+                isReplaceWhenIdSame: false,
               );
             },
           );
@@ -94,6 +99,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
           syncTag: syncTag,
           isCloudTableWithSync: isCloudTableWithSync,
           isCloudTableAutoId: true,
+          isReplaceWhenIdSame: false,
         );
       },
       fragmentMemoryInfos: null,
@@ -138,6 +144,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                   syncTag: syncTag,
                   isCloudTableWithSync: isCloudTableWithSync,
                   isCloudTableAutoId: true,
+                  isReplaceWhenIdSame: false,
                 );
               }
             } else {
@@ -145,6 +152,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 syncTag: syncTag,
                 isCloudTableWithSync: isCloudTableWithSync,
                 isCloudTableAutoId: true,
+                isReplaceWhenIdSame: false,
               );
             }
           },
@@ -192,6 +200,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
           syncTag: syncTag,
           isCloudTableWithSync: isCloudTableWithSync,
           isCloudTableAutoId: true,
+          isReplaceWhenIdSame: false,
         );
       },
       memoryGroups: null,
@@ -213,6 +222,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
           syncTag: syncTag,
           isCloudTableWithSync: isCloudTableWithSync,
           isCloudTableAutoId: true,
+          isReplaceWhenIdSame: false,
         );
       },
       order: 0,
@@ -233,6 +243,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
           syncTag: syncTag,
           isCloudTableWithSync: isCloudTableWithSync,
           isCloudTableAutoId: true,
+          isReplaceWhenIdSame: false,
         );
       },
       order: 0,

@@ -50,6 +50,7 @@ class CrtGenerator extends Generator {
               required SyncTag syncTag,
               ${localTableClasses.contains(classNoSName) ? "" : "required bool isCloudTableWithSync,"}
               ${localTableClasses.contains(classNoSName) ? "" : "required bool isCloudTableAutoId,"}
+              required bool isReplaceWhenIdSame,
           }""";
           final singleExtContent = '''
           extension ${companionName}Ext on $companionName {
@@ -62,6 +63,7 @@ class CrtGenerator extends Generator {
                 syncTag: syncTag,
                 isCloudTableWithSync: ${localTableClasses.contains(classNoSName) ? "false," : "isCloudTableWithSync,"}
                 isCloudTableAutoId: ${localTableClasses.contains(classNoSName) ? "false," : "isCloudTableAutoId,"}
+                isReplaceWhenIdSame: isReplaceWhenIdSame,
               );
             }
           }

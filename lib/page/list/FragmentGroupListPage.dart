@@ -23,140 +23,131 @@ class FragmentGroupListPage extends StatelessWidget {
       body: GroupListWidget<FragmentGroup, Fragment, FragmentGroupListPageController>(
         groupListWidgetController: FragmentGroupListPageController(),
         groupChainStrings: (group, abw) => group(abw).entity(abw)!.title,
-        headSliver: (c, g, abw) => SliverAppBar(
-          // automaticallyImplyLeading: true,
-          expandedHeight: 190,
-          floating: false,
-          snap: false,
-          toolbarHeight: 0,
-          flexibleSpace: FlexibleSpaceBar(
-            background: g(abw).entity(abw) == null
-                ? Container()
-                : Card(
-                    margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                    color: Colors.white,
-                    elevation: 0,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                          child: Column(
+        headSliver: (c, g, abw) => g(abw).entity(abw) == null
+            ? Container()
+            : Card(
+                margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                color: Colors.white,
+                elevation: 0,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: Column(
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Wrap(
-                                      spacing: 10,
-                                      runSpacing: 10,
-                                      children: [
-                                        Icon(
-                                          LineIcons.book,
-                                          size: 34,
-                                          color: c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!) ? Colors.blue : Colors.orange,
-                                        ),
-                                        Text(g(abw).entity(abw)!.title, style: Theme.of(context).textTheme.titleLarge),
-                                      ],
-                                    ),
-                                  ),
-                                  // 公开/私密/发布
-                                  c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
-                                      ? IconButton(
-                                          icon: AbwBuilder(
-                                            builder: (abw) {
-                                              final bePrivate = g(abw).entity(abw)!.be_private;
-                                              final bePublish = g(abw).entity(abw)!.be_publish;
-                                              final privateColor = bePrivate ? Colors.amber : Colors.green;
-                                              final publishColor = bePublish ? Colors.green : Colors.amber;
-                                              return Row(
-                                                children: [
-                                                  Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
-                                                  Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
-                                                  Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                          onPressed: () {
-                                            showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
-                                          },
-                                        )
-                                      : TextButton(
-                                          child: Text("查看源"),
-                                          onPressed: () {},
-                                        ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                child: Row(
+                              Expanded(
+                                child: Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        () {
-                                          final text = q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText().trim();
-                                          return text.isEmpty ? "无简介" : text;
-                                        }(),
-                                        style: TextStyle(color: Colors.grey),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                    Icon(
+                                      LineIcons.book,
+                                      size: 34,
+                                      color: c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!) ? Colors.blue : Colors.orange,
                                     ),
+                                    Text(g(abw).entity(abw)!.title, style: Theme.of(context).textTheme.titleLarge),
                                   ],
                                 ),
                               ),
-                              c.currentFragmentGroupTagsAb(abw).isEmpty ? Container() : SizedBox(height: 10),
-                              c.currentFragmentGroupTagsAb(abw).isEmpty
-                                  ? Container()
-                                  : Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              c.currentFragmentGroupTagsAb().map((e) => "#${e.tag}").join("  "),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(color: Colors.blue),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                              SizedBox(height: 10),
+                              // 公开/私密/发布
                               c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
-                                  ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        TextButton(
-                                          child: Text("发布数据"),
-                                          onPressed: () {},
-                                        ),
-                                        SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
-                                        TextButton(
-                                          child: Text("编辑"),
-                                          onPressed: () async {
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (_) => FragmentGroupGizmoEditPage(fragmentGroupAb: g(abw).entity)),
-                                            );
-                                          },
-                                        ),
-                                        SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
-                                        TextButton(
-                                          child: Text("查看详情"),
-                                          onPressed: () {},
-                                        ),
-                                      ],
+                                  ? IconButton(
+                                      icon: AbwBuilder(
+                                        builder: (abw) {
+                                          final bePrivate = g(abw).entity(abw)!.be_private;
+                                          final bePublish = g(abw).entity(abw)!.be_publish;
+                                          final privateColor = bePrivate ? Colors.amber : Colors.green;
+                                          final publishColor = bePublish ? Colors.green : Colors.amber;
+                                          return Row(
+                                            children: [
+                                              Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
+                                              Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
+                                              Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                      onPressed: () {
+                                        showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
+                                      },
                                     )
-                                  : Container(),
+                                  : TextButton(
+                                      child: Text("查看源"),
+                                      onPressed: () {},
+                                    ),
                             ],
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    () {
+                                      final text = q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText().trim();
+                                      return text.isEmpty ? "无简介" : text;
+                                    }(),
+                                    style: TextStyle(color: Colors.grey),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          c.currentFragmentGroupTagsAb(abw).isEmpty ? Container() : SizedBox(height: 10),
+                          c.currentFragmentGroupTagsAb(abw).isEmpty
+                              ? Container()
+                              : Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          c.currentFragmentGroupTagsAb().map((e) => "#${e.tag}").join("  "),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                          SizedBox(height: 10),
+                          c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    TextButton(
+                                      child: Text("发布数据"),
+                                      onPressed: () {},
+                                    ),
+                                    SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
+                                    TextButton(
+                                      child: Text("编辑"),
+                                      onPressed: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => FragmentGroupGizmoEditPage(fragmentGroupAb: g(abw).entity)),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
+                                    TextButton(
+                                      child: Text("查看详情"),
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                        ],
+                      ),
                     ),
-                  ),
-          ),
-        ),
+                  ],
+                ),
+              ),
         groupBuilder: (c, group, abw) {
           return Card(
             elevation: 0,
@@ -263,7 +254,7 @@ class FragmentGroupListPage extends StatelessWidget {
             ),
           );
         },
-        oneActionBuilder: (c, abw) {
+        rightActionBuilder: (c, abw) {
           return Row(
             children: [
               CustomDropdownBodyButton(
