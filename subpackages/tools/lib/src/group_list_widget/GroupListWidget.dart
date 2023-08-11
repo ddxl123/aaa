@@ -49,7 +49,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
           extendBody: true,
           primary: false,
           body: _body(),
-          floatingActionButton: c.isUnitSelecting(abw) ? _floatingActionButton() : null,
+          floatingActionButton: c.isSelecting(abw) ? _floatingActionButton() : null,
         );
       },
     );
@@ -301,7 +301,7 @@ class _HeadState<G, U, C extends GroupListWidgetController<G, U>> extends State<
       builder: (abw) {
         return SliverAppBar(
           expandedHeight: _expandedHeight,
-          collapsedHeight: _expandedHeight > MediaQuery.of(context).size.height ? _expandedHeight : null,
+          collapsedHeight: _expandedHeight > MediaQuery.of(context).size.height-100 ? _expandedHeight : null,
           floating: false,
           snap: false,
           toolbarHeight: 0,

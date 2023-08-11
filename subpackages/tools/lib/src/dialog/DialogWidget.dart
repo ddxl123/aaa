@@ -50,21 +50,21 @@ class DialogWidget extends StatelessWidget {
         title == null
             ? Container()
             : Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Builder(
-                builder: (_) {
-                  return Text(
-                    title!,
-                    style: TextStyle(fontSize: Theme.of(_).textTheme.titleMedium!.fontSize, fontWeight: FontWeight.bold),
-                  );
-                },
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Builder(
+                      builder: (_) {
+                        return Text(
+                          title!,
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        );
+                      },
+                    ),
+                  ),
+                  topRightAction == null ? Container() : topRightAction!,
+                ],
               ),
-            ),
-            topRightAction == null ? Container() : topRightAction!,
-          ],
-        ),
         topKeepWidget == null ? Container() : const SizedBox(height: 5),
         topKeepWidget == null ? Container() : topKeepWidget!,
         Expanded(

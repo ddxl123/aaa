@@ -105,6 +105,7 @@ class Crt {
   }
 
   static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
+    required bool client_be_selected,
     required int creator_user_id,
     required Value<String?> fragment_group_id,
     required String fragment_id,
@@ -113,6 +114,7 @@ class Crt {
     DateTime? updated_at,
   }) {
     return RFragment2FragmentGroupsCompanion(
+      client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       fragment_group_id: fragment_group_id,
       fragment_id: Value(fragment_id),

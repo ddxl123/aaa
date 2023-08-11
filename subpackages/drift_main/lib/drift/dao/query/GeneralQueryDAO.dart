@@ -246,14 +246,53 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   }
 
   /// 查询全部已选的碎片。
-  Future<List<Fragment>> querySelectedFragments() async {
+  Future<(List<Fragment>, List<RFragment2FragmentGroup>)> queryAllSelectedFragments() async {
     final sel = select(fragments);
     sel.where((tbl) => tbl.client_be_selected.equals(true));
     final result = await sel.get();
+
+    final sel2 = select(rFragment2FragmentGroups);
+    sel.where((tbl) => tbl.client_be_selected.equals(true));
+    final result2 = await sel2.get();
+    return (result, result2);
+  }
+
+  /// 查询全部已选的碎片，且其碎片存在于多个。
+  ///
+  /// 返回的第一个值 - 只存在于一组的碎片
+  /// 返回的第二个值 - 存在于多个组的碎片
+  Future<(List<Fragment>, List<Fragment>)> querySelectedFragmentsSeparate() async {
+    final count = rFragment2FragmentGroups.id.count();
+    final sel = select(fragments).join([
+      innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragment_id.equalsExp(fragments.id)),
+    ]);
+    sel.where(fragments.client_be_selected.equals(true));
+    sel.addColumns([count]);
+    sel.groupBy([fragments.id]);
+    final r = await sel.get();
+    final result = (<Fragment>[], <Fragment>[]);
+
+    r.map(
+      (e) {
+        print("==========");
+        print(e.read(count));
+        print(e.readTable(fragments));
+        print(e.readTable(rFragment2FragmentGroups));
+        print("==========");
+        final c = e.read(count)!;
+        if (c == 1) {
+          result.$1.add(e.readTable(fragments));
+        } else if (c > 1) {
+          result.$2.add(e.readTable(fragments));
+        } else {
+          throw "出现异常！";
+        }
+      },
+    ).toList();
     return result;
   }
 
-  /// 通过 [fragmentIds] 查询 [RFragment2FragmentGroups]
+  /// 通过 [fragmentIds] 查询 [RFragment2FragmentGroups]，若碎片存在于多个碎片组中，则全都查询出来。
   Future<List<RFragment2FragmentGroup>> queryRFragment2FragmentGroups({required List<String> fragmentIds}) async {
     final j = select(rFragment2FragmentGroups).join(
       [
@@ -263,8 +302,24 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return (await j.get()).map((e) => e.readTable(rFragment2FragmentGroups)).toList();
   }
 
+  Future<RFragment2FragmentGroup> queryRFragment2FragmentGroupsBy({
+    required Fragment fragment,
+    required FragmentGroup? fragmentGroup,
+  }) async {
+    final j = select(rFragment2FragmentGroups);
+    j.where(
+      (tbl) => tbl.fragment_id.equals(fragment.id) & (fragmentGroup == null ? tbl.fragment_group_id.isNull() : tbl.fragment_group_id.equals(fragmentGroup.id)),
+    );
+    return await j.getSingle();
+  }
+
+  Future<List<RFragment2FragmentGroup>> querySelectedRFragment2FragmentGroups({required List<String> fragmentIds}) async {
+    final j = select(rFragment2FragmentGroups)..where((tbl) => tbl.fragment_id.isIn(fragmentIds) & tbl.client_be_selected.equals(true));
+    return await j.get();
+  }
+
   /// 查询全部已选的碎片组
-  Future<List<FragmentGroup>> querySelectedFragmentGroups() async {
+  Future<List<FragmentGroup>> queryAllSelectedFragmentGroups() async {
     final sel = select(fragmentGroups);
     sel.where((tbl) => tbl.client_be_selected.equals(true));
     final result = await sel.get();
@@ -406,8 +461,4 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
 
     return result;
   }
-
-// Future<FragmentGroupTag?> queryFragmentGroupTagOrNullById({required int fragmentGroupTagId}) async {
-//   return await (select(fragmentGroupTags)..where((tbl) => tbl.id.equals(fragmentGroupTagId))).getSingleOrNull();
-// }
 }

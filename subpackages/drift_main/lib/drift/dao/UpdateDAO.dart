@@ -45,6 +45,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   /// 修改 [Fragment]，仅修改 [isSelected]
   Future<void> resetFragmentIsSelected({
     required Fragment originalFragment,
+    required RFragment2FragmentGroup originalRFragment2FragmentGroup,
     required bool isSelected,
     required SyncTag syncTag,
   }) async {
@@ -62,7 +63,19 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         );
       },
       fragmentMemoryInfos: null,
-      rFragment2FragmentGroups: null,
+      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+        self: () async {
+          await originalRFragment2FragmentGroup.reset(
+            client_be_selected: isSelected.toValue(),
+            creator_user_id: toAbsent(),
+            fragment_group_id: toAbsent(),
+            fragment_id: toAbsent(),
+            syncTag: syncTag,
+            isCloudTableWithSync: false,
+          );
+        },
+        order: 0,
+      ),
       child_fragments: null,
       memoryModels: null,
       userComments: null,
@@ -135,11 +148,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     ).run();
   }
 
-  Future<void> resetAllSelectFragmentAndFragmentGroup() async {
+  Future<void> resetAllSelectFragmentAndFragmentGroupToClear() async {
     final st = await SyncTag.create();
     await RefFragmentGroups(
       self: () async {
-        final fgs = await db.generalQueryDAO.querySelectedFragmentGroups();
+        final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
         for (var element in fgs) {
           await element.reset(
             be_private: toAbsent(),
@@ -158,8 +171,8 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       fragmentGroupTags: null,
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
         self: () async {
-          final fs = await db.generalQueryDAO.querySelectedFragments();
-          for (var element in fs) {
+          final fs = await db.generalQueryDAO.queryAllSelectedFragments();
+          for (var element in fs.$1) {
             await element.reset(
               be_sep_publish: toAbsent(),
               client_be_selected: false.toValue(),
@@ -167,6 +180,16 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
               creator_user_id: toAbsent(),
               father_fragment_id: toAbsent(),
               title: toAbsent(),
+              syncTag: st,
+              isCloudTableWithSync: false,
+            );
+          }
+          for (var element in fs.$2) {
+            await element.reset(
+              client_be_selected: false.toValue(),
+              creator_user_id: toAbsent(),
+              fragment_group_id: toAbsent(),
+              fragment_id: toAbsent(),
               syncTag: st,
               isCloudTableWithSync: false,
             );

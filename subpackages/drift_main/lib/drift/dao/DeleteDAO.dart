@@ -44,12 +44,18 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
     await sync.delete(syncTag: await SyncTag.create());
   }
 
+  /// 如果碎片存在于多个组中，则只删除其 RFragment2FragmentGroup。
+  /// 如果碎片只存在于一个组中，则 Fragment 和 RFragment2FragmentGroup 都删除。
   Future<void> deleteSelected({required int userId}) async {
-    final fgs = await db.generalQueryDAO.querySelectedFragmentGroups();
+    final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
     final fTags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupIds(fragmentGroupIds: fgs.map((e) => e.id).toList());
 
-    final fs = await db.generalQueryDAO.querySelectedFragments();
-    final rFs = await db.generalQueryDAO.queryRFragment2FragmentGroups(fragmentIds: fs.map((e) => e.id).toList());
+    final fsSep = await db.generalQueryDAO.querySelectedFragmentsSeparate();
+    // 将删除 $1 与 onRFs
+    // 每个 $1 只对应一个 oneRF
+    final oneRFs = await db.generalQueryDAO.queryRFragment2FragmentGroups(fragmentIds: fsSep.$1.map((e) => e.id).toList());
+    // 将仅删除 manyRFs
+    final manyRFs = await db.generalQueryDAO.querySelectedRFragment2FragmentGroups(fragmentIds: fsSep.$2.map((e) => e.id).toList());
 
     final st = await SyncTag.create();
     await RefFragmentGroups(
@@ -68,13 +74,21 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
       ),
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
         self: () async {
-          for (var element in fs) {
+          // fs
+          for (var element in fsSep.$1) {
             await element.delete(
               syncTag: st,
               isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,
             );
           }
-          for (var element in rFs) {
+          // rfs
+          for (var element in oneRFs) {
+            await element.delete(
+              syncTag: st,
+              isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,
+            );
+          }
+          for (var element in manyRFs) {
             await element.delete(
               syncTag: st,
               isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,

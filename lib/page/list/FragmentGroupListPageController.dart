@@ -2,7 +2,11 @@ import 'dart:async';
 
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
+import '../edit/FragmentGroupGizmoEditPage.dart';
 
 class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment> {
   final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
@@ -53,9 +57,18 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     return (selectedCount, allCount);
   }
 
-  Future<void> resetFragmentIsSelected({required Ab<Fragment> fragmentAb, required bool isSelected}) async {
+  Future<void> resetFragmentIsSelected({
+    required Ab<Fragment> fragmentAb,
+    required bool isSelected,
+  }) async {
+    final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
+      fragment: fragmentAb(),
+      fragmentGroup: getCurrentGroupAb()().entity(),
+    );
+
     await db.updateDAO.resetFragmentIsSelected(
       originalFragment: fragmentAb(),
+      originalRFragment2FragmentGroup: rF2Fg,
       isSelected: isSelected,
       syncTag: await SyncTag.create(),
     );
@@ -63,7 +76,10 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     await refreshCount(whichGroup: getCurrentGroupAb());
   }
 
-  Future<void> resetFragmentGroupAndSubIsSelected({required Ab<FragmentGroup?> fragmentGroupAb, required bool isSelected}) async {
+  Future<void> resetFragmentGroupAndSubIsSelected({
+    required Ab<FragmentGroup?> fragmentGroupAb,
+    required bool isSelected,
+  }) async {
     await db.updateDAO.resetFragmentGroupAndSubIsSelected(
       fragmentGroup: fragmentGroupAb(),
       isSelected: isSelected,
@@ -76,7 +92,9 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   @override
   FutureOr<void> refreshExtra() async {
     if (getCurrentGroupAb()().entity() != null) {
-      final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: getCurrentGroupAb()().entity()!.id);
+      final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(
+        fragmentGroupId: getCurrentGroupAb()().entity()!.id,
+      );
       currentFragmentGroupTagsAb.refreshInevitable((obj) => obj
         ..clear()
         ..addAll(tags));
@@ -97,7 +115,12 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
           );
         }
         for (var value in getCurrentGroupAb()().units()) {
+          final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
+            fragment: value().unitEntity(),
+            fragmentGroup: getCurrentGroupAb()().entity(),
+          );
           await db.updateDAO.resetFragmentIsSelected(
+            originalRFragment2FragmentGroup: rF2Fg,
             originalFragment: value().unitEntity(),
             isSelected: true,
             syncTag: st,
@@ -122,7 +145,12 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
           );
         }
         for (var value in getCurrentGroupAb()().units()) {
+          final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
+            fragment: value().unitEntity(),
+            fragmentGroup: getCurrentGroupAb()().entity(),
+          );
           await db.updateDAO.resetFragmentIsSelected(
+            originalRFragment2FragmentGroup: rF2Fg,
             originalFragment: value().unitEntity(),
             isSelected: false,
             syncTag: st,
@@ -147,7 +175,12 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
           );
         }
         for (var value in getCurrentGroupAb()().units()) {
+          final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
+            fragment: value().unitEntity(),
+            fragmentGroup: getCurrentGroupAb()().entity(),
+          );
           await db.updateDAO.resetFragmentIsSelected(
+            originalRFragment2FragmentGroup: rF2Fg,
             originalFragment: value().unitEntity(),
             isSelected: !value().unitEntity().client_be_selected,
             syncTag: st,
@@ -160,13 +193,40 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
 
   /// 清空全部已选
   Future<void> clearAllSelected() async {
-    await db.updateDAO.resetAllSelectFragmentAndFragmentGroup();
+    await db.updateDAO.resetAllSelectFragmentAndFragmentGroupToClear();
     await refreshCurrentGroup();
+  }
+
+  /// 移动已选
+  Future<void> moveSelected() async {
+    final currentFragmentGroupChain = getCurrentFragmentGroupChain();
+    final currentFragmentGroup = getCurrentGroupAb()().entity();
+    final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
+    final fs = await db.generalQueryDAO.queryAllSelectedFragments();
+    final isExist = currentFragmentGroupChain.any((chain) => fgs.any((fg) => chain.id == fg.id));
+    if (isExist) {
+      SmartDialog.showToast("不能将自身移动到自身上面！");
+      return;
+    }
+
   }
 
   /// 删除已选
   Future<void> deleteSelected() async {
-    await db.deleteDAO.deleteSelected(userId: Aber.find<GlobalAbController>().loggedInUser()!.id);
+    await showCustomDialog(
+      builder: (ctx) {
+        return OkAndCancelDialogWidget(
+          text: "删除后将不可恢复，确定要删除？",
+          okText: "删除",
+          cancelText: "返回",
+          onOk: () async {
+            await db.deleteDAO.deleteSelected(userId: Aber.find<GlobalAbController>().loggedInUser()!.id);
+            await refreshCurrentGroup();
+            SmartDialog.dismiss(status: SmartStatus.dialog);
+          },
+        );
+      },
+    );
   }
 
   /// [fg] 是否属于自己的。

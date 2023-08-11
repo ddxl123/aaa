@@ -112,8 +112,17 @@ class KnowledgeBaseHome extends StatelessWidget {
                                             children: [
                                               Row(
                                                 children: [
-                                                  Text(e.fragment_group.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                                  Spacer(),
+                                                  Expanded(
+                                                    child: Text(
+                                                      e.fragment_group.title,
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10),
                                                   Text("热度333", style: TextStyle(color: Colors.orange)),
                                                 ],
                                               ),

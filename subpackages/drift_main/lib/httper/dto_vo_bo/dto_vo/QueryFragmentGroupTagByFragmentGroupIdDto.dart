@@ -7,7 +7,7 @@ part of httper;
 class QueryFragmentGroupTagByFragmentGroupIdDto extends BaseObject{
 
     /// 
-    int fragment_group_id;
+    String fragment_group_id;
 
     /// 填充字段1
     bool? dto_padding_1;

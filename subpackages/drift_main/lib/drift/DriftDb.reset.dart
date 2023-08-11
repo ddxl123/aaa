@@ -384,6 +384,8 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
     required bool isCloudTableWithSync,
   }) async {
     await reset(
+        client_be_selected:
+            rFragment2FragmentGroup.client_be_selected.toValue(),
         creator_user_id: rFragment2FragmentGroup.creator_user_id.toValue(),
         fragment_group_id: rFragment2FragmentGroup.fragment_group_id.toValue(),
         fragment_id: rFragment2FragmentGroup.fragment_id.toValue(),
@@ -399,6 +401,7 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<RFragment2FragmentGroup> reset({
+    required Value<bool> client_be_selected,
     required Value<int> creator_user_id,
     required Value<String?> fragment_group_id,
     required Value<String> fragment_id,
@@ -407,6 +410,12 @@ extension RFragment2FragmentGroupExt on RFragment2FragmentGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
+    if (client_be_selected.present &&
+        this.client_be_selected != client_be_selected.value) {
+      isCloudModify = true;
+      this.client_be_selected = client_be_selected.value;
+    }
+
     if (creator_user_id.present &&
         this.creator_user_id != creator_user_id.value) {
       isCloudModify = true;

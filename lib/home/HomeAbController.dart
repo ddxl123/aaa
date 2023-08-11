@@ -43,14 +43,14 @@ class HomeAbController extends AbController {
 
     if (currentPageType() == PageType.fragment && FragmentPageType.values[Aber.find<FragmentHomeAbController>().tabController.index] == FragmentPageType.fragment) {
       final groupChainC = Aber.findOrNullLast<FragmentGroupListPageController>();
-      if (groupChainC != null && groupChainC.groupChain().length > 1) {
+      if (groupChainC != null && groupChainC.getCurrentFragmentGroupChain().isNotEmpty) {
         await groupChainC.backGroup();
         return true;
       }
 
-      if (groupChainC?.isUnitSelecting() == true) {
+      if (groupChainC?.isSelecting() == true) {
         timerCancel();
-        groupChainC?.isUnitSelecting.refreshEasy((oldValue) => false);
+        groupChainC?.isSelecting.refreshEasy((oldValue) => false);
         isShowFloating.refreshEasy((oldValue) => true);
         return true;
       }

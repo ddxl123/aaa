@@ -72,28 +72,36 @@ class KnowledgeBaseHomeAbController extends AbController {
   }
 
   Future<void> download({required FragmentGroup willDownloadFragmentGroup}) async {
-    if (willDownloadFragmentGroup.creator_user_id == Aber.find<GlobalAbController>().loggedInUser()!.id) {
-      SmartDialog.showToast("不能下载自己创建的！");
-      return;
-    }
+    final isSelf = willDownloadFragmentGroup.creator_user_id == Aber.find<GlobalAbController>().loggedInUser()!.id;
     final hasSaved = await db.generalQueryDAO.queryFragmentGroupBySaveOriginalId(id: willDownloadFragmentGroup.id);
-    if (hasSaved != null) {
-      SmartDialog.showToast("该碎片组已被保存过！");
-      return;
-    }
-    fragmentGroupDownloadWrapper.clearAll();
-    final selectGroup = Ab<List<FragmentGroup>?>(null);
-    await showSelectFragmentGroupDialog(
-      selectedFragmentGroupChainAb: selectGroup,
-      isOnlySelectSynced: false,
-      isWithFragments: false,
+    // TODO:
+    await showCustomDialog(
+      builder: (ctx) {
+        return OkAndCancelDialogWidget(
+          title: "下载说明",
+          text: "${isSelf ? "若当前组的子组或碎片 在您的知识库中存在，则会进行覆盖\n"
+              "· 该碎片组是您自己创建的，是否" : ""}\n"
+              "${hasSaved != null ? "· 您已经下载过该碎片组了，是否进行更新下载？" : ""}",
+          okText: "下载",
+          cancelText: "返回",
+          onOk: () async {
+            fragmentGroupDownloadWrapper.clearAll();
+            final selectGroup = Ab<List<FragmentGroup>?>(null);
+            await showSelectFragmentGroupDialog(
+              selectedFragmentGroupChainAb: selectGroup,
+              isOnlySelectSynced: false,
+              isWithFragments: false,
+            );
+            if (selectGroup.isAbNotEmpty()) {
+              await _downloadFgs(
+                willDownloadFragmentGroup: willDownloadFragmentGroup,
+                toFragmentGroup: selectGroup()!.lastOrNull,
+              );
+            }
+          },
+        );
+      },
     );
-    if (selectGroup.isAbNotEmpty()) {
-      await _downloadFgs(
-        willDownloadFragmentGroup: willDownloadFragmentGroup,
-        toFragmentGroup: selectGroup()!.lastOrNull,
-      );
-    }
   }
 
   Future<void> _downloadFgs({

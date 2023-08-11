@@ -65,6 +65,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
                 creator_user_id: willFragmentsCompanion.creator_user_id.value,
                 fragment_group_id: (whichFragmentGroup?.id).toValue(),
                 fragment_id: willFragmentsCompanion.id.value,
+                client_be_selected: willFragmentsCompanion.client_be_selected.value,
               ).insert(
                 syncTag: syncTag,
                 isCloudTableWithSync: isCloudTableWithSync,
@@ -119,9 +120,9 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       self: () async {
         // TODO: user 为 null 时的处理。
         final user = (await db.generalQueryDAO.queryUserOrNull())!;
-        final fs = await db.generalQueryDAO.querySelectedFragments();
+        final fs = await db.generalQueryDAO.queryAllSelectedFragments();
         await Future.forEach<Fragment>(
-          fs,
+          fs.$1,
           (e) async {
             final newFmInfo = Crt.fragmentMemoryInfosCompanion(
               creator_user_id: user.id,

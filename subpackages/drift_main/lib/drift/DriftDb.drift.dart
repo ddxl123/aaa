@@ -1856,6 +1856,18 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $RFragment2FragmentGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _client_be_selectedMeta =
+      const VerificationMeta('client_be_selected');
+  @override
+  late final GeneratedColumn<bool> client_be_selected =
+      GeneratedColumn<bool>('client_be_selected', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("client_be_selected" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _creator_user_idMeta =
       const VerificationMeta('creator_user_id');
   @override
@@ -1893,6 +1905,7 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
+        client_be_selected,
         creator_user_id,
         fragment_group_id,
         fragment_id,
@@ -1910,6 +1923,14 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('client_be_selected')) {
+      context.handle(
+          _client_be_selectedMeta,
+          client_be_selected.isAcceptableOrUnknown(
+              data['client_be_selected']!, _client_be_selectedMeta));
+    } else if (isInserting) {
+      context.missing(_client_be_selectedMeta);
+    }
     if (data.containsKey('creator_user_id')) {
       context.handle(
           _creator_user_idMeta,
@@ -1963,6 +1984,8 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return RFragment2FragmentGroup(
+      client_be_selected: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       fragment_group_id: attachedDatabase.typeMapping.read(
@@ -1989,6 +2012,7 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
 
 class RFragment2FragmentGroup extends DataClass
     implements Insertable<RFragment2FragmentGroup> {
+  bool client_be_selected;
   int creator_user_id;
   String? fragment_group_id;
   String fragment_id;
@@ -1996,7 +2020,8 @@ class RFragment2FragmentGroup extends DataClass
   String id;
   DateTime updated_at;
   RFragment2FragmentGroup(
-      {required this.creator_user_id,
+      {required this.client_be_selected,
+      required this.creator_user_id,
       this.fragment_group_id,
       required this.fragment_id,
       required this.created_at,
@@ -2005,6 +2030,7 @@ class RFragment2FragmentGroup extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || fragment_group_id != null) {
       map['fragment_group_id'] = Variable<String>(fragment_group_id);
@@ -2018,6 +2044,7 @@ class RFragment2FragmentGroup extends DataClass
 
   RFragment2FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return RFragment2FragmentGroupsCompanion(
+      client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       fragment_group_id: fragment_group_id == null && nullToAbsent
           ? const Value.absent()
@@ -2033,6 +2060,7 @@ class RFragment2FragmentGroup extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RFragment2FragmentGroup(
+      client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       fragment_group_id:
           serializer.fromJson<String?>(json['fragment_group_id']),
@@ -2046,6 +2074,7 @@ class RFragment2FragmentGroup extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
       'fragment_id': serializer.toJson<String>(fragment_id),
@@ -2056,13 +2085,15 @@ class RFragment2FragmentGroup extends DataClass
   }
 
   RFragment2FragmentGroup copyWith(
-          {int? creator_user_id,
+          {bool? client_be_selected,
+          int? creator_user_id,
           Value<String?> fragment_group_id = const Value.absent(),
           String? fragment_id,
           DateTime? created_at,
           String? id,
           DateTime? updated_at}) =>
       RFragment2FragmentGroup(
+        client_be_selected: client_be_selected ?? this.client_be_selected,
         creator_user_id: creator_user_id ?? this.creator_user_id,
         fragment_group_id: fragment_group_id.present
             ? fragment_group_id.value
@@ -2075,6 +2106,7 @@ class RFragment2FragmentGroup extends DataClass
   @override
   String toString() {
     return (StringBuffer('RFragment2FragmentGroup(')
+          ..write('client_be_selected: $client_be_selected, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('fragment_group_id: $fragment_group_id, ')
           ..write('fragment_id: $fragment_id, ')
@@ -2086,12 +2118,13 @@ class RFragment2FragmentGroup extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(creator_user_id, fragment_group_id,
-      fragment_id, created_at, id, updated_at);
+  int get hashCode => Object.hash(client_be_selected, creator_user_id,
+      fragment_group_id, fragment_id, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is RFragment2FragmentGroup &&
+          other.client_be_selected == this.client_be_selected &&
           other.creator_user_id == this.creator_user_id &&
           other.fragment_group_id == this.fragment_group_id &&
           other.fragment_id == this.fragment_id &&
@@ -2102,6 +2135,7 @@ class RFragment2FragmentGroup extends DataClass
 
 class RFragment2FragmentGroupsCompanion
     extends UpdateCompanion<RFragment2FragmentGroup> {
+  Value<bool> client_be_selected;
   Value<int> creator_user_id;
   Value<String?> fragment_group_id;
   Value<String> fragment_id;
@@ -2109,6 +2143,7 @@ class RFragment2FragmentGroupsCompanion
   Value<String> id;
   Value<DateTime> updated_at;
   RFragment2FragmentGroupsCompanion({
+    this.client_be_selected = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.fragment_group_id = const Value.absent(),
     this.fragment_id = const Value.absent(),
@@ -2117,18 +2152,21 @@ class RFragment2FragmentGroupsCompanion
     this.updated_at = const Value.absent(),
   });
   RFragment2FragmentGroupsCompanion.insert({
+    required bool client_be_selected,
     required int creator_user_id,
     this.fragment_group_id = const Value.absent(),
     required String fragment_id,
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
+  })  : client_be_selected = Value(client_be_selected),
+        creator_user_id = Value(creator_user_id),
         fragment_id = Value(fragment_id),
         created_at = Value(created_at),
         id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<RFragment2FragmentGroup> custom({
+    Expression<bool>? client_be_selected,
     Expression<int>? creator_user_id,
     Expression<String>? fragment_group_id,
     Expression<String>? fragment_id,
@@ -2137,6 +2175,7 @@ class RFragment2FragmentGroupsCompanion
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
+      if (client_be_selected != null) 'client_be_selected': client_be_selected,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (fragment_group_id != null) 'fragment_group_id': fragment_group_id,
       if (fragment_id != null) 'fragment_id': fragment_id,
@@ -2147,13 +2186,15 @@ class RFragment2FragmentGroupsCompanion
   }
 
   RFragment2FragmentGroupsCompanion copyWith(
-      {Value<int>? creator_user_id,
+      {Value<bool>? client_be_selected,
+      Value<int>? creator_user_id,
       Value<String?>? fragment_group_id,
       Value<String>? fragment_id,
       Value<DateTime>? created_at,
       Value<String>? id,
       Value<DateTime>? updated_at}) {
     return RFragment2FragmentGroupsCompanion(
+      client_be_selected: client_be_selected ?? this.client_be_selected,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       fragment_group_id: fragment_group_id ?? this.fragment_group_id,
       fragment_id: fragment_id ?? this.fragment_id,
@@ -2166,6 +2207,9 @@ class RFragment2FragmentGroupsCompanion
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (client_be_selected.present) {
+      map['client_be_selected'] = Variable<bool>(client_be_selected.value);
+    }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
@@ -2190,6 +2234,7 @@ class RFragment2FragmentGroupsCompanion
   @override
   String toString() {
     return (StringBuffer('RFragment2FragmentGroupsCompanion(')
+          ..write('client_be_selected: $client_be_selected, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('fragment_group_id: $fragment_group_id, ')
           ..write('fragment_id: $fragment_id, ')

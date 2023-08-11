@@ -506,7 +506,7 @@ QueryFragmentGroupTagByFragmentGroupIdDto
     _$QueryFragmentGroupTagByFragmentGroupIdDtoFromJson(
             Map<String, dynamic> json) =>
         QueryFragmentGroupTagByFragmentGroupIdDto(
-          fragment_group_id: json['fragment_group_id'] as int,
+          fragment_group_id: json['fragment_group_id'] as String,
           dto_padding_1: json['dto_padding_1'] as bool?,
         );
 

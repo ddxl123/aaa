@@ -1,17 +1,15 @@
 import 'dart:convert';
 
 import 'package:aaa/home/HomeAbController.dart';
-import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
-import 'package:aaa/single_dialog/showPrivatePublishDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:tools/tools.dart';
+import '../../single_dialog/showFragmentGroupConfigDialog.dart';
 import 'FragmentGroupListPageController.dart';
 
 class FragmentGroupListPage extends StatelessWidget {
@@ -23,160 +21,66 @@ class FragmentGroupListPage extends StatelessWidget {
       body: GroupListWidget<FragmentGroup, Fragment, FragmentGroupListPageController>(
         groupListWidgetController: FragmentGroupListPageController(),
         groupChainStrings: (group, abw) => group(abw).entity(abw)!.title,
-        headSliver: (c, g, abw) => g(abw).entity(abw) == null
-            ? Container()
-            : Card(
-                margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                color: Colors.white,
-                elevation: 0,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  children: [
-                                    Icon(
-                                      LineIcons.book,
-                                      size: 34,
-                                      color: c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!) ? Colors.blue : Colors.orange,
-                                    ),
-                                    Text(g(abw).entity(abw)!.title, style: Theme.of(context).textTheme.titleLarge),
-                                  ],
-                                ),
-                              ),
-                              // 公开/私密/发布
-                              c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
-                                  ? IconButton(
-                                      icon: AbwBuilder(
-                                        builder: (abw) {
-                                          final bePrivate = g(abw).entity(abw)!.be_private;
-                                          final bePublish = g(abw).entity(abw)!.be_publish;
-                                          final privateColor = bePrivate ? Colors.amber : Colors.green;
-                                          final publishColor = bePublish ? Colors.green : Colors.amber;
-                                          return Row(
-                                            children: [
-                                              Text(bePrivate ? "已私密 " : "已公开 ", style: TextStyle(color: privateColor)),
-                                              Icon(Icons.circle, size: 8, color: (!bePrivate && bePublish) ? Colors.green : Colors.grey),
-                                              Text(bePublish ? " 已发布" : " 未发布", style: TextStyle(color: publishColor)),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                      onPressed: () {
-                                        showPrivatePublishDialog(currentFragmentGroupAb: g().entity);
-                                      },
-                                    )
-                                  : TextButton(
-                                      child: Text("查看源"),
-                                      onPressed: () {},
-                                    ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    () {
-                                      final text = q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText().trim();
-                                      return text.isEmpty ? "无简介" : text;
-                                    }(),
-                                    style: TextStyle(color: Colors.grey),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          c.currentFragmentGroupTagsAb(abw).isEmpty ? Container() : SizedBox(height: 10),
-                          c.currentFragmentGroupTagsAb(abw).isEmpty
-                              ? Container()
-                              : Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          c.currentFragmentGroupTagsAb().map((e) => "#${e.tag}").join("  "),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(color: Colors.blue),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                          SizedBox(height: 10),
-                          c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    TextButton(
-                                      child: Text("发布数据"),
-                                      onPressed: () {},
-                                    ),
-                                    SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
-                                    TextButton(
-                                      child: Text("编辑"),
-                                      onPressed: () async {
-                                        await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (_) => FragmentGroupGizmoEditPage(fragmentGroupAb: g(abw).entity)),
-                                        );
-                                      },
-                                    ),
-                                    SizedBox(height: 15, child: VerticalDivider(color: Colors.grey)),
-                                    TextButton(
-                                      child: Text("查看详情"),
-                                      onPressed: () {},
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        headSliver: (c, g, abw) => g(abw).entity(abw) == null ? Container() : _Head(c: c, g: g, abw: abw),
         groupBuilder: (c, group, abw) {
           return Card(
             elevation: 0,
             child: Row(
               children: [
                 Expanded(
-                  child: TextButton(
-                    style: const ButtonStyle(
-                      padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(LineIcons.book, color: c.isSelfOfFragmentGroup(fg: group().entity()!) ? Colors.blue : Colors.orange),
-                        SizedBox(width: 20),
-                        Expanded(child: Text(group(abw).entity()!.title, style: TextStyle(color: Colors.black))),
-                      ],
+                  child: MaterialButton(
+                    visualDensity: kMinVisualDensity,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(c.isSelfOfFragmentGroup(fg: group().entity()!) ? 20 : 10, 15, 10, 15),
+                      child: Row(
+                        children: [
+                          c.isSelfOfFragmentGroup(fg: group().entity()!)
+                              ? Container()
+                              : Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: Transform.scale(
+                                    scaleY: -1,
+                                    child: Icon(Icons.turn_slight_right, color: Colors.green),
+                                  ),
+                                ),
+                          Expanded(
+                            child: Text(
+                              group(abw).entity()!.title,
+                              style: TextStyle(color: Colors.black, fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: group().entity()!.be_publish ? Colors.green : Colors.grey),
+                        ],
+                      ),
                     ),
                     onPressed: () async {
                       await c.enterGroup(group);
                     },
                     onLongPress: () async {
-                      c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
+                      await c.clearAllSelected();
+                      c.isSelecting.refreshEasy((oldValue) => !oldValue);
+                      if (c.isSelecting()) {
+                        c.longPressedTarget.refreshEasy((oldValue) => group().entity()!);
+                      } else {
+                        c.longPressedTarget.refreshEasy((oldValue) => null);
+                      }
                       Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
                     },
                   ),
                 ),
-                c.isUnitSelecting(abw) ? Text('${group(abw).selectedUnitCount(abw)}/${group(abw).allUnitCount(abw)}') : Container(),
-                c.isUnitSelecting(abw)
+                c.longPressedTarget(abw) == group().entity()!
+                    ? MaterialButton(
+                        visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity),
+                        child: Text("编辑", style: TextStyle(color: Colors.blue)),
+                        onPressed: () {
+                          pushToFragmentGroupGizmoEditPage(context: context, fragmentGroupAb: group().entity);
+                        },
+                      )
+                    : Container(),
+                c.isSelecting(abw) ? Text('${group(abw).selectedUnitCount(abw)}/${group(abw).allUnitCount(abw)}') : Container(),
+                c.isSelecting(abw)
                     ? IconButton(
                         icon: () {
                           if (group(abw).entity(abw)!.client_be_selected) {
@@ -208,21 +112,28 @@ class FragmentGroupListPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: MaterialButton(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            unit(abw).unitEntity().title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                    visualDensity: kMinVisualDensity,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      // decoration: BoxDecoration(border: Border(left: BorderSide(color: Colors.amber, width: 10))),
+                      child: Row(
+                        children: [
+                          Icon(Icons.brightness_1_outlined, size: 12, color: Colors.green),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              unit(abw).unitEntity().title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    onLongPress: () {
-                      c.isUnitSelecting.refreshEasy((oldValue) => !oldValue);
+                    onLongPress: () async {
+                      await c.clearAllSelected();
+                      c.isSelecting.refreshEasy((oldValue) => !oldValue);
                       Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => !oldValue);
                     },
                     onPressed: () async {
@@ -234,7 +145,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     },
                   ),
                 ),
-                c.isUnitSelecting(abw)
+                c.isSelecting(abw)
                     ? IconButton(
                         style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                         icon: FaIcon(
@@ -304,7 +215,7 @@ class FragmentGroupListPage extends StatelessWidget {
     return AbBuilder<FragmentGroupListPageController>(
       tag: Aber.single,
       builder: (c, abw) {
-        if (c.isUnitSelecting(abw)) {
+        if (c.isSelecting(abw)) {
           Widget button({
             required IconData iconData,
             required String label,
@@ -335,7 +246,7 @@ class FragmentGroupListPage extends StatelessWidget {
                     label: "关闭",
                     color: Colors.orange,
                     onPressed: () {
-                      c.isUnitSelecting.refreshEasy((oldValue) => false);
+                      c.isSelecting.refreshEasy((oldValue) => false);
                       Aber.find<HomeAbController>().isShowFloating.refreshEasy((oldValue) => true);
                     },
                   ),
@@ -377,7 +288,9 @@ class FragmentGroupListPage extends StatelessWidget {
                           button(
                             iconData: Icons.exit_to_app,
                             label: '移动',
-                            onPressed: () {},
+                            onPressed: () async{
+                              await c.moveSelected();
+                            },
                           ),
                           button(
                             iconData: Icons.delete_forever,
@@ -399,5 +312,158 @@ class FragmentGroupListPage extends StatelessWidget {
         return const SizedBox();
       },
     );
+  }
+}
+
+class _Head extends StatelessWidget {
+  const _Head({super.key, required this.abw, required this.c, required this.g});
+
+  final FragmentGroupListPageController c;
+  final Ab<Group<FragmentGroup, Fragment>> g;
+  final Abw abw;
+
+  bool hasFatherFragmentGroupBePublish() {
+    final result = c.getCurrentFragmentGroupChain().where((element) => element.id != g().entity()!.id && element.be_publish);
+    return result.isNotEmpty;
+  }
+
+  Widget publishWidget({required String text, required Color color}) {
+    return Row(
+      children: [
+        Icon(Icons.settings, color: color, size: 20),
+        SizedBox(width: 5),
+        Text(text, style: TextStyle(color: color)),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bePublish = g(abw).entity(abw)!.be_publish;
+
+    final small = Row(
+      children: [
+        Spacer(),
+        Card(
+          child: MaterialButton(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: kMinVisualDensity,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              child: hasFatherFragmentGroupBePublish() ? publishWidget(text: "已随父组发布", color: Colors.green) : publishWidget(text: "未发布", color: Colors.amber),
+            ),
+            onPressed: () async {
+              await showFragmentGroupConfigDialog(c: c, currentFragmentGroupAb: g().entity);
+            },
+          ),
+        ),
+      ],
+    );
+    final big = Card(
+      margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+      color: Colors.white,
+      elevation: 0,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+        child: Column(
+          children: [
+            c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
+                ? Row(
+                    children: [
+                      Spacer(),
+                      Card(
+                        child: MaterialButton(
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          visualDensity: kMinVisualDensity,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: publishWidget(text: hasFatherFragmentGroupBePublish() ? "已随父组发布 · 并单独发布" : "已发布", color: Colors.green),
+                          ),
+                          onPressed: () async {
+                            await showFragmentGroupConfigDialog(c: c, currentFragmentGroupAb: g().entity);
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Spacer(),
+                      TextButton(
+                        child: Text("查看源"),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+            Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(width: 90, height: 130, color: Colors.grey),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  g(abw).entity(abw)!.title,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          c.currentFragmentGroupTagsAb(abw).isEmpty
+                              ? Container()
+                              : Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    ...c.currentFragmentGroupTagsAb(abw).map(
+                                      (e) {
+                                        return Container(
+                                          padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(color: Colors.grey),
+                                          ),
+                                          child: Text(e.tag, style: TextStyle(color: Colors.grey, fontSize: 14)),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  () {
+                                    final text = q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText().trim();
+                                    return text.isEmpty ? "无简介" : text;
+                                  }(),
+                                  style: TextStyle(color: Colors.grey),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+    return bePublish ? big : small;
   }
 }

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 import '../page/edit/FragmentGizmoEditPage/FragmentGizmoEditPage.dart';
+import '../page/edit/FragmentGroupGizmoEditPage.dart';
 import '../page/edit/MemoryGroupGizmoEditPage/MemoryGroupGizmoEditPage.dart';
 import '../page/edit/MemoryModelGizomoEditPage/MemoryModelGizmoEditPage.dart';
 import '../page/edit/edit_page_type.dart';
@@ -149,6 +150,18 @@ Future<void> pushToFragmentGroupListView({
     context,
     MaterialPageRoute(
       builder: (ctx) => FragmentGroupListView(enterFragmentGroup: enterFragmentGroup),
+    ),
+  );
+}
+
+Future<void> pushToFragmentGroupGizmoEditPage({
+  required BuildContext context,
+  required Ab<FragmentGroup?> fragmentGroupAb,
+}) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (ctx) => FragmentGroupGizmoEditPage(fragmentGroupAb: fragmentGroupAb),
     ),
   );
 }

@@ -13,6 +13,8 @@ class RFragment2FragmentGroups extends CloudTableBase  {
   bool get withoutRowId => true;
 
 
+  BoolColumn get client_be_selected => boolean().named("client_be_selected")();
+
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 

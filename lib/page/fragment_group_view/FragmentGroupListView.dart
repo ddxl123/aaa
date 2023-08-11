@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:aaa/page/fragment_group_view/FragmentGroupListViewAbController.dart';
+import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
 class FragmentGroupListView extends StatelessWidget {
@@ -32,186 +34,247 @@ class FragmentGroupListView extends StatelessWidget {
           );
         },
         headSliver: (c, group, abw) {
-          return Card(
-            margin: EdgeInsets.all(10),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(color: Colors.grey, width: 90, height: 130),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    group(abw).entity(abw)?.title ?? "发生异常！",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ),
-                                Text("热度999"),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Wrap(
-                              spacing: 5,
-                              children: [
-                                Container(
-                                  child: Text("的撒旦", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                  padding: EdgeInsets.fromLTRB(2, 1, 2, 1),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                                Container(
-                                  child: Text("的撒旦", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                  padding: EdgeInsets.fromLTRB(2, 1, 2, 1),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                                Container(
-                                  child: Text("的撒旦", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                  padding: EdgeInsets.fromLTRB(2, 1, 2, 1),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Text("创建者"),
-                                ),
-                                InkWell(
-                                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.download_outlined, size: 34, color: Colors.green),
-                                        Text(
-                                          "999+",
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    // c.download(willDownloadFragmentGroup: e.fragment_group);
-                                  },
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
+          return _Head(c: c, g: group, abw: abw);
+        },
+        groupBuilder: (c, group, abw) {
+          return Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Card(
+              elevation: 0,
+              child: InkWell(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(group().entity()!.title, overflow: TextOverflow.ellipsis),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Divider(color: Colors.black12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: MaterialButton(
-                          visualDensity: kMinVisualDensity,
-                          onPressed: () {},
-                          child: Icon(Icons.share, size: 18),
-                        ),
-                      ),
-                      Container(height: 30, child: VerticalDivider(color: Colors.black12)),
-                      Expanded(
-                        child: MaterialButton(
-                          visualDensity: kMinVisualDensity,
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.star, size: 18),
-                              Text("999+", style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(height: 30, child: VerticalDivider(color: Colors.black12)),
-                      Expanded(
-                        child: MaterialButton(
-                          visualDensity: kMinVisualDensity,
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.mode_comment_outlined, size: 18),
-                              Text("999+", style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(height: 30, child: VerticalDivider(color: Colors.black12)),
-                      Expanded(
-                        child: MaterialButton(
-                          visualDensity: kMinVisualDensity,
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.thumb_up_alt_outlined, size: 18),
-                              Text("999+", style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(color: Colors.black12),
-                  SizedBox(height: 10),
-                  _Profile(fragmentGroup: group().entity(), fragmentGroupListViewAbController: c),
-                ],
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  c.enterGroup(group);
+                },
               ),
             ),
           );
         },
-        groupBuilder: (c, group, abw) {
-          return GestureDetector(
-            child: Container(
-              height: 50,
-              child: Text(group().entity()!.title),
+        unitBuilder: (c, group, abw) {
+          return Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Card(
+              elevation: 0,
+              child: InkWell(
+                child: Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Icon(Icons.brightness_1_outlined, size: 12, color: Colors.green),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(group().unitEntity().title, overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  pushToMultiFragmentTemplateView(
+                    context: context,
+                    allFragments: c.getCurrentGroupAb()().units().map((e) => e().unitEntity()).toList(),
+                    fragment: group().unitEntity(),
+                  );
+                },
+              ),
             ),
-            onTap: () {
-              c.enterGroup(group);
-            },
           );
         },
-        unitBuilder: (c, group, abw) => Container(
-          child: Text(group().unitEntity().title),
-        ),
         rightActionBuilder: (group, abw) => Container(),
         floatingButtonOnPressed: (c) {},
       ),
     );
+  }
+}
+
+class _Head extends StatefulWidget {
+  const _Head({super.key, required this.c, required this.g, required this.abw});
+
+  final FragmentGroupListViewAbController c;
+  final Ab<Group<FragmentGroup, Fragment>> g;
+  final Abw abw;
+
+  @override
+  State<_Head> createState() => _HeadState();
+}
+
+class _HeadState extends State<_Head> {
+  @override
+  Widget build(BuildContext context) {
+    final big = Card(
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(FontAwesomeIcons.locationCrosshairs, size: 16),
+                      SizedBox(width: 5),
+                      Text("查看源"),
+                    ],
+                  ),
+                  onPressed: () {},
+                ),
+                Spacer(),
+                Text("热度999+", style: TextStyle(color: Colors.orange)),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(color: Colors.grey, width: 90, height: 130),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.g(widget.abw).entity(widget.abw)?.title ?? "加载中...",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Wrap(
+                        spacing: 5,
+                        children: [
+                          ...widget.c.currentFragmentGroupTagsAb(widget.abw).map(
+                            (e) {
+                              return Container(
+                                child: Text(e.tag, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                                padding: EdgeInsets.fromLTRB(2, 1, 2, 1),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text("创建者"),
+                          ),
+                          InkWell(
+                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.download_outlined, size: 34, color: Colors.green),
+                                  Text(
+                                    "999+",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              // c.download(willDownloadFragmentGroup: e.fragment_group);
+                            },
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Divider(color: Colors.black12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: MaterialButton(
+                    visualDensity: kMinVisualDensity,
+                    onPressed: () {},
+                    child: Icon(Icons.share, size: 18),
+                  ),
+                ),
+                Container(height: 30, child: VerticalDivider(color: Colors.black12)),
+                Expanded(
+                  child: MaterialButton(
+                    visualDensity: kMinVisualDensity,
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.star, size: 18),
+                        Text("999+", style: TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(height: 30, child: VerticalDivider(color: Colors.black12)),
+                Expanded(
+                  child: MaterialButton(
+                    visualDensity: kMinVisualDensity,
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.mode_comment_outlined, size: 18),
+                        Text("999+", style: TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(height: 30, child: VerticalDivider(color: Colors.black12)),
+                Expanded(
+                  child: MaterialButton(
+                    visualDensity: kMinVisualDensity,
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.thumb_up_alt_outlined, size: 18),
+                        Text("999+", style: TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Divider(color: Colors.black12),
+            SizedBox(height: 10),
+            _Profile(fragmentGroup: widget.g().entity(), fragmentGroupListViewAbController: widget.c),
+          ],
+        ),
+      ),
+    );
+
+    return widget.g().entity()?.be_publish == true ? big : Container();
   }
 }
 

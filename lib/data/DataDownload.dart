@@ -27,11 +27,11 @@ class DataDownload {
         logger.outNormal(print: showMessage);
 
         // 存储至本地。
-        await db.rawDAO.rawInsertDownloadForFragmentGroup(
-          user: Aber.find<GlobalAbController>().loggedInUser()!,
-          saveFragmentGroup: saveFragmentGroup,
-          dataDownloadForFragmentGroupVo: vo,
-        );
+        // await db.rawDAO.rawInsertDownloadForFragmentGroup(
+        //   user: Aber.find<GlobalAbController>().loggedInUser()!,
+        //   saveFragmentGroup: saveFragmentGroup,
+        //   dataDownloadForFragmentGroupVo: vo,
+        // );
       },
     );
   }

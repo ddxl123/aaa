@@ -80,7 +80,8 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   final groupChainScrollController = ScrollController();
   final rootGroup = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
   late final groupChain = <Ab<Group<G, U>>>[rootGroup].ab;
-  final isUnitSelecting = false.ab;
+  final isSelecting = false.ab;
+  final longPressedTarget = Ab<G?>(null);
 
   @override
   void onDispose() {
@@ -161,8 +162,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
     } else {
       groupChain().add(whichGroup);
     }
-
-    refreshCount(whichGroup: whichGroup);
+    await refreshCurrentGroup();
 
     rootGroup.refreshForce();
     groupChain.refreshForce();

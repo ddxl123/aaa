@@ -14,11 +14,10 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
 
   final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
 
-
   @override
   Future<bool> backListener(bool hasRoute) async {
     if (hasRoute) return false;
-    if (groupChain().length > 1) {
+    if (getCurrentFragmentGroupChain().isNotEmpty) {
       await backGroup();
       return true;
     }
@@ -72,6 +71,5 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
     refreshQuill(fragmentGroup: getCurrentGroupAb()().entity()!);
   }
 
-  void refreshQuill({required FragmentGroup fragmentGroup}) {
-  }
+  void refreshQuill({required FragmentGroup fragmentGroup}) {}
 }
