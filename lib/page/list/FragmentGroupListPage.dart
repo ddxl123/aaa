@@ -228,7 +228,7 @@ class FragmentGroupListPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(iconData, size: 26, color: color),
+                  FaIcon(iconData, size: 26, color: color),
                   Text(label, style: TextStyle(fontSize: 12, color: color)),
                 ],
               ),
@@ -288,8 +288,23 @@ class FragmentGroupListPage extends StatelessWidget {
                           button(
                             iconData: Icons.exit_to_app,
                             label: '移动',
-                            onPressed: () async{
+                            onPressed: () async {
                               await c.moveSelected();
+                            },
+                          ),
+                          // TODO: 批量克隆
+                          // button(
+                          //   iconData: FontAwesomeIcons.paste,
+                          //   label: '克隆',
+                          //   onPressed: () async {
+                          //     // await c.cloneSelected();
+                          //   },
+                          // ),
+                          button(
+                            iconData: FontAwesomeIcons.clone,
+                            label: '复用',
+                            onPressed: () async {
+                              await c.reuseSelected();
                             },
                           ),
                           button(

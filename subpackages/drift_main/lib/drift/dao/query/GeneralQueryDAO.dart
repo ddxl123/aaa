@@ -124,6 +124,15 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await sel.getSingleOrNull();
   }
 
+  /// 根据 [fragmentGroupIds] 查询是否存在 [fragmentGroups]。
+  ///
+  /// 返回存在的 [fragmentGroups]
+  Future<Set<String>> queryFragmentGroupIsExistIn({required Set<String> fragmentGroupIds}) async {
+    final sel = select(fragmentGroups);
+    sel.where((tbl) => tbl.id.isIn(fragmentGroupIds));
+    return (await sel.get()).map((e) => e.id).toSet();
+  }
+
   /// 查询 [targetFragmentGroupId] 内的全部碎片组和碎片组配置，不包含子碎片组。
   Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroupById({required String? targetFragmentGroupId}) async {
     final sel = select(fragmentGroups);
@@ -252,7 +261,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final result = await sel.get();
 
     final sel2 = select(rFragment2FragmentGroups);
-    sel.where((tbl) => tbl.client_be_selected.equals(true));
+    sel2.where((tbl) => tbl.client_be_selected.equals(true));
     final result2 = await sel2.get();
     return (result, result2);
   }

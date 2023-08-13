@@ -77,7 +77,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         },
         order: 1,
       ),
-      child_fragments: null,
+      fragments_father_fragment_id: null,
       fragmentMemoryInfos: null,
       memoryModels: null,
       userComments: null,

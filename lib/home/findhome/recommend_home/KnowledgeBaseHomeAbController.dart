@@ -79,8 +79,7 @@ class KnowledgeBaseHomeAbController extends AbController {
       builder: (ctx) {
         return OkAndCancelDialogWidget(
           title: "下载说明",
-          text: "${isSelf ? "若当前组的子组或碎片 在您的知识库中存在，则会进行覆盖\n"
-              "· 该碎片组是您自己创建的，是否" : ""}\n"
+          text: "${isSelf ? "这个碎片组是你自己创建的，是否要下载？" : ""}\n"
               "${hasSaved != null ? "· 您已经下载过该碎片组了，是否进行更新下载？" : ""}",
           okText: "下载",
           cancelText: "返回",
@@ -209,49 +208,105 @@ class KnowledgeBaseHomeAbController extends AbController {
   }) async {
     await db.transaction(
       () async {
+        final user = Aber.find<GlobalAbController>().loggedInUser()!;
         // TODO: 下载多次与更新。
         final syncTag = await SyncTag.create();
-        // 处理碎片组
-        final willDownloadRoot = fragmentGroupDownloadWrapper.fgs.singleWhere((element) => element.id == willDownloadFragmentGroup.id);
-        final beforeModifyRootId = willDownloadRoot.id;
-        // 重置 father_fragment_groups_id
-        willDownloadRoot.father_fragment_groups_id = toFragmentGroup?.id;
-        willDownloadRoot.save_original_id = beforeModifyRootId;
-        final newRoot = await willDownloadRoot.toCompanion(false).insert(
-              syncTag: syncTag,
-              isCloudTableWithSync: true,
-              // 重置 id
-              isCloudTableAutoId: true,
-              // 不可替换更新，因为每次都要重新分配 id
-              isReplaceWhenIdSame: false,
-            );
-        fragmentGroupDownloadWrapper.fgs.remove(willDownloadRoot);
-        final rootOneSubs = fragmentGroupDownloadWrapper.fgs.where((element) => element.father_fragment_groups_id == beforeModifyRootId).toList();
-        for (var value in rootOneSubs) {
-          // 重置 father_fragment_groups_id
-          value.father_fragment_groups_id = newRoot.id;
-          await value.toCompanion(false).insert(
-                syncTag: syncTag,
-                isCloudTableWithSync: false,
-                isCloudTableAutoId: false,
-                // 不可替换更新，因为修改了父碎片组，如果下载重复的，得需要再重新修改父碎片组。
-                isReplaceWhenIdSame: false,
-              );
-          fragmentGroupDownloadWrapper.fgs.remove(value);
-        }
-        for (var fg in fragmentGroupDownloadWrapper.fgs) {
-          await fg.toCompanion(false).insert(
-                syncTag: syncTag,
-                isCloudTableWithSync: false,
-                isCloudTableAutoId: false,
-                // 可替换更新，因为没有进行如何更改，以防下载了相同的碎片组但在不同的碎片组下。
-                isReplaceWhenIdSame: true,
-              );
+
+        // 处理碎片组 ============================================================
+
+        // 允许去重，因为如果重复，说明创建者已经将相同的碎片组进行跳转关联了。
+        final fgIdsSet = fragmentGroupDownloadWrapper.fgs.map((e) => e.id).toSet();
+        final hasExistedFgIdsSet = await db.generalQueryDAO.queryFragmentGroupIsExistIn(fragmentGroupIds: fgIdsSet);
+        for (var v in fragmentGroupDownloadWrapper.fgs) {
+          if (hasExistedFgIdsSet.contains(v.id)) {
+            await RefFragmentGroups(
+              self: () async {
+                // 进行 jump 的创建。
+                //
+                // 只要已经存在，便进行创建。使得 jump 的目标碎片组是唯一的。
+                //
+                // 无需担心创建是否 id 冲突，因为只要存在原碎片组，重复下载都会创建一个新的对应的 jump 组，而原碎片组始终保持唯一性。
+                await Crt.fragmentGroupsCompanion(
+                  // 因为是下载的，本身默认就是发布
+                  be_publish: v.be_publish,
+                  client_be_selected: false,
+                  creator_user_id: user.id,
+                  // 处理顶层的
+                  father_fragment_groups_id: willDownloadFragmentGroup.id == v.id ? (toFragmentGroup?.id).toValue() : v.father_fragment_groups_id.toValue(),
+                  // 若 v.jump_to_fragment_groups_id 存在，说明 v 也是个 jump 组，因此要下面这样设置。
+                  jump_to_fragment_groups_id: v.jump_to_fragment_groups_id?.toValue() ?? v.id.toValue(),
+                  profile: v.profile,
+                  save_original_id: null.toValue(),
+                  title: v.title,
+                ).insert(
+                  syncTag: syncTag,
+                  // 因为别人可能会下载你保存的，因此需要同步。
+                  // TODO: 不过会出现一个问题，当原作者删除其跳转的碎片组时，下载者便无法进行跳转。
+                  isCloudTableWithSync: true,
+                  isCloudTableAutoId: true,
+                  isReplaceWhenIdSame: false,
+                );
+
+                // 进行已存在的进行更新
+                await v.toCompanion(false).insert(
+                      syncTag: syncTag,
+                      isCloudTableWithSync: false,
+                      isCloudTableAutoId: false,
+                      isReplaceWhenIdSame: true,
+                    );
+              },
+              fragmentGroupTags: null,
+              rFragment2FragmentGroups: null,
+              fragmentGroups_father_fragment_groups_id: null,
+              fragmentGroups_jump_to_fragment_groups_id: null,
+              userComments: null,
+              userLikes: null,
+              order: 0,
+            ).run();
+          } else {
+            await RefFragmentGroups(
+              self: () async {
+                // 先把不存在的先进行下载
+                await v.toCompanion(false).insert(
+                      syncTag: syncTag,
+                      isCloudTableWithSync: false,
+                      isCloudTableAutoId: false,
+                      // 1. 上面的 if 已经排除了本地已存在了。
+                      // 2. 如果本地不存在，下载的内容重复了，也不用担心，因为原碎片组的复用也已经按照上面 if 一样处理过了，jump 的目标碎片组是唯一的。
+                      isReplaceWhenIdSame: false,
+                    );
+                // 再插入 root 的 jump
+                if (willDownloadFragmentGroup.id == v.id) {
+                  await Crt.fragmentGroupsCompanion(
+                    be_publish: v.be_publish,
+                    client_be_selected: false,
+                    creator_user_id: user.id,
+                    father_fragment_groups_id: willDownloadFragmentGroup.id == v.id ? (toFragmentGroup?.id).toValue() : v.father_fragment_groups_id.toValue(),
+                    jump_to_fragment_groups_id: v.jump_to_fragment_groups_id?.toValue() ?? v.id.toValue(),
+                    profile: v.profile,
+                    save_original_id: null.toValue(),
+                    title: v.title,
+                  ).insert(
+                    syncTag: syncTag,
+                    isCloudTableWithSync: true,
+                    isCloudTableAutoId: true,
+                    isReplaceWhenIdSame: false,
+                  );
+                }
+              },
+              fragmentGroupTags: null,
+              rFragment2FragmentGroups: null,
+              fragmentGroups_father_fragment_groups_id: null,
+              fragmentGroups_jump_to_fragment_groups_id: null,
+              userComments: null,
+              userLikes: null,
+              order: 0,
+            ).run();
+          }
         }
 
-        //=========================================
+        // 处理碎片 ===================================================
 
-        // 处理碎片
         for (int i = 0; i < fragmentGroupDownloadWrapper.fs.length; i++) {
           final fs = fragmentGroupDownloadWrapper.fs[i];
           await fs.fragments.toCompanion(false).insert(
@@ -259,52 +314,29 @@ class KnowledgeBaseHomeAbController extends AbController {
                 isCloudTableWithSync: false,
                 isCloudTableAutoId: false,
                 // 可替换更新，以防下载了相同的碎片但在不同的碎片组下。
+                // 同时可以对碎片进行更新。
                 isReplaceWhenIdSame: true,
               );
           for (var element in fs.r_fragment_2_fragment_groups) {
-            if (element.fragment_group_id == beforeModifyRootId) {
-              element.fragment_group_id = newRoot.id;
-              await element.toCompanion(false).insert(
-                    syncTag: syncTag,
-                    isCloudTableWithSync: false,
-                    isCloudTableAutoId: false,
-                    // 不可替换更新，因为需要修改碎片组 id。
-                    isReplaceWhenIdSame: false,
-                  );
-            } else {
-              await element.toCompanion(false).insert(
-                    syncTag: syncTag,
-                    isCloudTableWithSync: false,
-                    isCloudTableAutoId: false,
-                    // 可替换更新，以防下载了相同的碎片但在不同的碎片组下。
-                    isReplaceWhenIdSame: true,
-                  );
-            }
-          }
-        }
-        //=========================================
-
-        // 处理碎片组标签
-        for (var element in fragmentGroupDownloadWrapper.fgTags) {
-          if (element.fragment_group_id == beforeModifyRootId) {
-            element.fragment_group_id = newRoot.id;
-
             await element.toCompanion(false).insert(
                   syncTag: syncTag,
                   isCloudTableWithSync: false,
                   isCloudTableAutoId: false,
-                  // 不可替换更新，因为需要修改碎片组 id。
-                  isReplaceWhenIdSame: false,
-                );
-          } else {
-            await element.toCompanion(false).insert(
-                  syncTag: syncTag,
-                  isCloudTableWithSync: false,
-                  isCloudTableAutoId: true,
-                  // 可替换更新
+                  // 可替换更新，以防下载了相同的碎片但在不同的碎片组下。
                   isReplaceWhenIdSame: true,
                 );
           }
+        }
+        // 处理碎片组标签 ===============================================
+
+        for (var element in fragmentGroupDownloadWrapper.fgTags) {
+          await element.toCompanion(false).insert(
+                syncTag: syncTag,
+                isCloudTableWithSync: false,
+                isCloudTableAutoId: true,
+                // 可替换更新
+                isReplaceWhenIdSame: true,
+              );
         }
       },
     );

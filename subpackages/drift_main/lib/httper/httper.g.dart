@@ -43,11 +43,8 @@ KnowledgeBaseFragmentGroupInnerForFragmentBo
             Map<String, dynamic> json) =>
         KnowledgeBaseFragmentGroupInnerForFragmentBo(
           fragment: Fragment.fromJson(json['fragment'] as Map<String, dynamic>),
-          r_fragment_2_fragment_groups: (json['r_fragment_2_fragment_groups']
-                  as List<dynamic>)
-              .map((e) =>
-                  RFragment2FragmentGroup.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          r_fragment_2_fragment_groups: RFragment2FragmentGroup.fromJson(
+              json['r_fragment_2_fragment_groups'] as Map<String, dynamic>),
         );
 
 Map<String, dynamic> _$KnowledgeBaseFragmentGroupInnerForFragmentBoToJson(
@@ -417,15 +414,15 @@ KnowledgeBaseFragmentGroupInnerQueryDto
     _$KnowledgeBaseFragmentGroupInnerQueryDtoFromJson(
             Map<String, dynamic> json) =>
         KnowledgeBaseFragmentGroupInnerQueryDto(
-          fragment_group_id: json['fragment_group_id'] as String,
-          dto_padding_1: json['dto_padding_1'] as bool?,
+          fragment_group_id: json['fragment_group_id'] as String?,
+          user_id: json['user_id'] as int?,
         );
 
 Map<String, dynamic> _$KnowledgeBaseFragmentGroupInnerQueryDtoToJson(
         KnowledgeBaseFragmentGroupInnerQueryDto instance) =>
     <String, dynamic>{
       'fragment_group_id': instance.fragment_group_id,
-      'dto_padding_1': instance.dto_padding_1,
+      'user_id': instance.user_id,
     };
 
 KnowledgeBaseFragmentGroupInnerQueryVo
@@ -500,6 +497,66 @@ Map<String, dynamic> _$KnowledgeBaseFragmentGroupQueryVoToJson(
         KnowledgeBaseFragmentGroupQueryVo instance) =>
     <String, dynamic>{
       'fragment_group_wrapper_list': instance.fragment_group_wrapper_list,
+    };
+
+PersonalHomePageForFragmentPageDto _$PersonalHomePageForFragmentPageDtoFromJson(
+        Map<String, dynamic> json) =>
+    PersonalHomePageForFragmentPageDto(
+      user_id: json['user_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$PersonalHomePageForFragmentPageDtoToJson(
+        PersonalHomePageForFragmentPageDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+PersonalHomePageForFragmentPageVo _$PersonalHomePageForFragmentPageVoFromJson(
+        Map<String, dynamic> json) =>
+    PersonalHomePageForFragmentPageVo(
+      fragment_groups_list: (json['fragment_groups_list'] as List<dynamic>)
+          .map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      fragments_list: (json['fragments_list'] as List<dynamic>)
+          .map((e) => Fragment.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$PersonalHomePageForFragmentPageVoToJson(
+        PersonalHomePageForFragmentPageVo instance) =>
+    <String, dynamic>{
+      'fragment_groups_list': instance.fragment_groups_list,
+      'fragments_list': instance.fragments_list,
+    };
+
+PersonalHomePageForPublishPageDto _$PersonalHomePageForPublishPageDtoFromJson(
+        Map<String, dynamic> json) =>
+    PersonalHomePageForPublishPageDto(
+      user_id: json['user_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$PersonalHomePageForPublishPageDtoToJson(
+        PersonalHomePageForPublishPageDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+PersonalHomePageForPublishPageVo _$PersonalHomePageForPublishPageVoFromJson(
+        Map<String, dynamic> json) =>
+    PersonalHomePageForPublishPageVo(
+      fragment_groups_list: (json['fragment_groups_list'] as List<dynamic>)
+          .map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$PersonalHomePageForPublishPageVoToJson(
+        PersonalHomePageForPublishPageVo instance) =>
+    <String, dynamic>{
+      'fragment_groups_list': instance.fragment_groups_list,
     };
 
 QueryFragmentGroupTagByFragmentGroupIdDto

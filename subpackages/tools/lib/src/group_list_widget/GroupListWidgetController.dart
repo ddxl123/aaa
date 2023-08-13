@@ -79,6 +79,9 @@ class Group<G, U> with AbBroken {
 abstract class GroupListWidgetController<G, U> extends AbController {
   final groupChainScrollController = ScrollController();
   final rootGroup = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
+
+  /// 当点击 jump 类型的碎片组时，跳转到的是 jump 类型碎片组本身，因此 [groupChain] 添加的也是 jump 类型碎片组。
+  /// 因此需要手动 find 对应的目标碎片组。
   late final groupChain = <Ab<Group<G, U>>>[rootGroup].ab;
   final isSelecting = false.ab;
   final longPressedTarget = Ab<G?>(null);

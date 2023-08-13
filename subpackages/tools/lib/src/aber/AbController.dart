@@ -39,7 +39,10 @@ abstract class AbController {
   /// 对物理返回键、[abBack] 有效，对 [Navigator.pop] 无效，因此使用 [abBack] 代替 [Navigator.pop]。
   Future<bool> _backListener(bool stopDefaultButtonEvent, RouteInfo routeInfo) async {
     // 如果一个对话框(或任何其他路由)是打开的。
-    final hasRoute = routeInfo.ifRouteChanged(context);
+    var hasRoute = false;
+    if (context.mounted) {
+      hasRoute = routeInfo.ifRouteChanged(context);
+    }
     return await backListener(hasRoute);
   }
 

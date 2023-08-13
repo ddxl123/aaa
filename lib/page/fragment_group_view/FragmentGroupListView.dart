@@ -9,16 +9,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
 class FragmentGroupListView extends StatelessWidget {
-  const FragmentGroupListView({super.key, required this.enterFragmentGroup});
+  const FragmentGroupListView({super.key, required this.enterFragmentGroup, required this.userId});
 
-  final FragmentGroup enterFragmentGroup;
+  final int userId;
+  final FragmentGroup? enterFragmentGroup;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(child: Container(), preferredSize: Size(0, 10)),
       body: GroupListWidget<FragmentGroup, Fragment, FragmentGroupListViewAbController>(
-        groupListWidgetController: FragmentGroupListViewAbController(enterFragmentGroup: enterFragmentGroup),
+        groupListWidgetController: FragmentGroupListViewAbController(enterFragmentGroup: enterFragmentGroup, userId: userId),
         groupChainStrings: (group, abw) => group(abw).entity(abw)!.title,
         leftActionBuilder: (c, abw) {
           return Row(
@@ -29,7 +30,7 @@ class FragmentGroupListView extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-              Icon(Icons.circle, size: 5),
+              // Icon(Icons.circle, size: 5),
             ],
           );
         },
@@ -183,7 +184,7 @@ class _HeadState extends State<_Head> {
                           ),
                           SizedBox(width: 10),
                           Expanded(
-                            child: Text("创建者"),
+                            child: Text(widget.c.userName),
                           ),
                           InkWell(
                             borderRadius: BorderRadius.all(Radius.circular(50)),

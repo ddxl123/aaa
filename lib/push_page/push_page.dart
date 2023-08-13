@@ -1,3 +1,4 @@
+import 'package:aaa/home/personal_home_page/PersonalHomePage.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/fragment_group_view/FragmentGroupListView.dart';
@@ -144,12 +145,16 @@ Future<void> pushToMultiFragmentTemplateView({
 
 Future<void> pushToFragmentGroupListView({
   required BuildContext context,
-  required FragmentGroup enterFragmentGroup,
+  required int userId,
+  required FragmentGroup? enterFragmentGroup,
 }) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (ctx) => FragmentGroupListView(enterFragmentGroup: enterFragmentGroup),
+      builder: (ctx) => FragmentGroupListView(
+        enterFragmentGroup: enterFragmentGroup,
+        userId: userId,
+      ),
     ),
   );
 }
@@ -162,6 +167,18 @@ Future<void> pushToFragmentGroupGizmoEditPage({
     context,
     MaterialPageRoute(
       builder: (ctx) => FragmentGroupGizmoEditPage(fragmentGroupAb: fragmentGroupAb),
+    ),
+  );
+}
+
+Future<void> pushToPersonalHomePage({
+  required BuildContext context,
+  required int userId,
+}) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (ctx) => PersonalHomePage(userId: userId),
     ),
   );
 }

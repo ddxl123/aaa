@@ -6,18 +6,18 @@ part of httper;
 @JsonSerializable()
 class KnowledgeBaseFragmentGroupInnerQueryDto extends BaseObject{
 
-    /// 要查询的碎片组 id
-    String fragment_group_id;
+    /// 要查询的碎片组 id。若为 null，则 user_id 不能为 null，因为需利用 user_id 查询 root
+    String? fragment_group_id;
 
-    /// 填充字段1
-    bool? dto_padding_1;
+    /// 要查询的 root 的 user_id。若为 null，则 fragment_group_id 不能为 null
+    int? user_id;
 
 
 KnowledgeBaseFragmentGroupInnerQueryDto({
 
     required this.fragment_group_id,
 
-    required this.dto_padding_1,
+    required this.user_id,
 
 });
   factory KnowledgeBaseFragmentGroupInnerQueryDto.fromJson(Map<String, dynamic> json) => _$KnowledgeBaseFragmentGroupInnerQueryDtoFromJson(json);
@@ -45,7 +45,7 @@ KnowledgeBaseFragmentGroupInnerQueryDto({
     required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
 
     // message: 获取成功！
-    // explain: 根据单个碎片组id，查询内部的碎片组和碎片成功。
+    // explain: 根据单个碎片组id或者userId，查询内部的碎片组和碎片成功。
     required Future<T> Function(String showMessage, KnowledgeBaseFragmentGroupInnerQueryVo vo) code30401,
     
     }) async {

@@ -140,7 +140,7 @@ class RefFragments extends Ref {
   Future<void> Function() self;
   RefFragmentMemoryInfos? fragmentMemoryInfos;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefFragments? child_fragments;
+  RefFragments? fragments_father_fragment_id;
   RefMemoryModels? memoryModels;
   RefUserComments? userComments;
   RefUserLikes? userLikes;
@@ -149,7 +149,7 @@ class RefFragments extends Ref {
     required this.self,
     required this.fragmentMemoryInfos,
     required this.rFragment2FragmentGroups,
-    required this.child_fragments,
+    required this.fragments_father_fragment_id,
     required this.memoryModels,
     required this.userComments,
     required this.userLikes,
@@ -164,7 +164,7 @@ class RefFragments extends Ref {
           this,
           fragmentMemoryInfos,
           rFragment2FragmentGroups,
-          child_fragments,
+          fragments_father_fragment_id,
           memoryModels,
           userComments,
           userLikes,
@@ -257,7 +257,8 @@ class RefFragmentGroups extends Ref {
   Future<void> Function() self;
   RefFragmentGroupTags? fragmentGroupTags;
   RefRFragment2FragmentGroups? rFragment2FragmentGroups;
-  RefFragmentGroups? child_fragmentGroups;
+  RefFragmentGroups? fragmentGroups_father_fragment_groups_id;
+  RefFragmentGroups? fragmentGroups_jump_to_fragment_groups_id;
   RefUserComments? userComments;
   RefUserLikes? userLikes;
 
@@ -265,7 +266,8 @@ class RefFragmentGroups extends Ref {
     required this.self,
     required this.fragmentGroupTags,
     required this.rFragment2FragmentGroups,
-    required this.child_fragmentGroups,
+    required this.fragmentGroups_father_fragment_groups_id,
+    required this.fragmentGroups_jump_to_fragment_groups_id,
     required this.userComments,
     required this.userLikes,
     required super.order,
@@ -279,7 +281,8 @@ class RefFragmentGroups extends Ref {
           this,
           fragmentGroupTags,
           rFragment2FragmentGroups,
-          child_fragmentGroups,
+          fragmentGroups_father_fragment_groups_id,
+          fragmentGroups_jump_to_fragment_groups_id,
           userComments,
           userLikes,
         ]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));

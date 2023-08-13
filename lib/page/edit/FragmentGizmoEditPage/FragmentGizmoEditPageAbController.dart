@@ -125,7 +125,7 @@ class FragmentPerformer {
         },
         fragmentMemoryInfos: null,
         rFragment2FragmentGroups: null,
-        child_fragments: null,
+        fragments_father_fragment_id: null,
         memoryModels: null,
         userComments: null,
         userLikes: null,

@@ -37,7 +37,7 @@ DataDownloadForKnowledgeBaseFragmentWrapperBO({
 @JsonSerializable()
 class KnowledgeBaseFragmentGroupInnerForFragmentBo {
     Fragment fragment;
-    List<RFragment2FragmentGroup> r_fragment_2_fragment_groups;
+    RFragment2FragmentGroup r_fragment_2_fragment_groups;
 
 KnowledgeBaseFragmentGroupInnerForFragmentBo({
     required this.fragment,

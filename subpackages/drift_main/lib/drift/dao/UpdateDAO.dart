@@ -22,20 +22,36 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
 
   /// 修改 [originalFragmentReset]。
   Future<void> resetFragment({
-    required FutureFunction originalFragmentReset,
+    required FutureFunction? originalFragmentReset,
+    required FutureFunction? originalRFragment2FragmentGroupReset,
     required SyncTag syncTag,
-  }) async {}
+  }) async {
+    await RefFragments(
+      self: originalFragmentReset ?? () async {},
+      fragmentMemoryInfos: null,
+      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+        self: originalRFragment2FragmentGroupReset ?? () async {},
+        order: 0,
+      ),
+      fragments_father_fragment_id: null,
+      memoryModels: null,
+      userComments: null,
+      userLikes: null,
+      order: 0,
+    ).run();
+  }
 
   /// 修改 [FragmentGroup]。
   Future<void> resetFragmentGroup({
-    required FutureFunction? originalFragmentGroupReset,
+    required FutureFunction originalFragmentGroupReset,
     required SyncTag syncTag,
   }) async {
     await RefFragmentGroups(
-      self: originalFragmentGroupReset ?? () async {},
+      self: originalFragmentGroupReset,
       fragmentGroupTags: null,
       rFragment2FragmentGroups: null,
-      child_fragmentGroups: null,
+      fragmentGroups_father_fragment_groups_id: null,
+      fragmentGroups_jump_to_fragment_groups_id: null,
       userComments: null,
       userLikes: null,
       order: 0,
@@ -76,7 +92,7 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         },
         order: 0,
       ),
-      child_fragments: null,
+      fragments_father_fragment_id: null,
       memoryModels: null,
       userComments: null,
       userLikes: null,
@@ -95,10 +111,10 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         await fragmentGroup?.reset(
           creator_user_id: toAbsent(),
           father_fragment_groups_id: toAbsent(),
+          jump_to_fragment_groups_id: toAbsent(),
           client_be_selected: isSelected.toValue(),
           title: toAbsent(),
           profile: toAbsent(),
-          be_private: toAbsent(),
           be_publish: toAbsent(),
           save_original_id: toAbsent(),
           syncTag: syncTag,
@@ -127,10 +143,10 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             await element.reset(
               creator_user_id: toAbsent(),
               father_fragment_groups_id: toAbsent(),
+              jump_to_fragment_groups_id: toAbsent(),
               client_be_selected: isSelected.toValue(),
               title: toAbsent(),
               profile: toAbsent(),
-              be_private: toAbsent(),
               be_publish: toAbsent(),
               save_original_id: toAbsent(),
               syncTag: syncTag,
@@ -141,7 +157,8 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       },
       fragmentGroupTags: null,
       rFragment2FragmentGroups: null,
-      child_fragmentGroups: null,
+      fragmentGroups_father_fragment_groups_id: null,
+      fragmentGroups_jump_to_fragment_groups_id: null,
       userComments: null,
       userLikes: null,
       order: 0,
@@ -155,11 +172,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
         for (var element in fgs) {
           await element.reset(
-            be_private: toAbsent(),
             be_publish: toAbsent(),
             client_be_selected: false.toValue(),
             creator_user_id: toAbsent(),
             father_fragment_groups_id: toAbsent(),
+            jump_to_fragment_groups_id: toAbsent(),
             profile: toAbsent(),
             save_original_id: toAbsent(),
             title: toAbsent(),
@@ -197,7 +214,8 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         },
         order: 0,
       ),
-      child_fragmentGroups: null,
+      fragmentGroups_father_fragment_groups_id: null,
+      fragmentGroups_jump_to_fragment_groups_id: null,
       userComments: null,
       userLikes: null,
       order: 0,

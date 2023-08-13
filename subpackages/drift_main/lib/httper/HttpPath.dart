@@ -35,5 +35,9 @@ class HttpPath {
 
   static const String NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUPS = '/no_login_required/knowledge_base/query_knowledge_base_fragment_groups';
 
+  static const String NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_FRAGMENT_PAGE = '/no_login_required/personal_home_page/fragment_page';
+
+  static const String NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE = '/no_login_required/personal_home_page/publish_page';
+
 }
 

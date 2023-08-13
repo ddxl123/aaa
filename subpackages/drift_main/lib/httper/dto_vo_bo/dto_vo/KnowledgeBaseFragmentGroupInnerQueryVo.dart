@@ -6,13 +6,13 @@ part of httper;
 @JsonSerializable()
 class KnowledgeBaseFragmentGroupInnerQueryVo extends BaseObject{
 
-    /// 获取包括了要查询的碎片组自身
+    /// 获取包括了要查询的碎片组自身。不包含子孙组。
     List<FragmentGroup> fragment_groups_list;
 
-    /// 获取要查询的碎片组自身的标签
+    /// 获取要查询的碎片组自身的标签。不包含子孙组的标签
     List<FragmentGroupTag> fragment_group_self_tags_list;
 
-    /// 获取了碎片组内的碎片，不包括子孙
+    /// 获取了碎片组内的碎片。不包括子孙。
     List<KnowledgeBaseFragmentGroupInnerForFragmentBo> fragments_list;
 
 

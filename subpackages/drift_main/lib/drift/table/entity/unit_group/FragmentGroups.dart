@@ -13,8 +13,6 @@ class FragmentGroups extends CloudTableBase  {
   bool get withoutRowId => true;
 
 
-  BoolColumn get be_private => boolean().named("be_private")();
-
   BoolColumn get be_publish => boolean().named("be_publish")();
 
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
@@ -24,6 +22,9 @@ class FragmentGroups extends CloudTableBase  {
 
   @ReferenceTo([FragmentGroups])
   TextColumn get father_fragment_groups_id => text().named("father_fragment_groups_id").nullable()();
+
+  @ReferenceTo([FragmentGroups])
+  TextColumn get jump_to_fragment_groups_id => text().named("jump_to_fragment_groups_id").nullable()();
 
   TextColumn get profile => text().named("profile")();
 

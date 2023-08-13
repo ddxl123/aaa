@@ -217,7 +217,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                                   ),
                                 ),
                                 onTap: () {
-                                  pushToFragmentGroupListView(context: context, enterFragmentGroup: e.fragment_group);
+                                  pushToFragmentGroupListView(context: context, enterFragmentGroup: e.fragment_group, userId: e.fragment_group.creator_user_id);
                                 },
                               );
                             },

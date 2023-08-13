@@ -33,11 +33,11 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
               Crt.fragmentGroupsCompanion(
                 creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
                 father_fragment_groups_id: (fragmentGroup?.id).toValue(),
+                jump_to_fragment_groups_id: null.toValue(),
                 client_be_selected: false,
                 title: tec.text,
                 profile: jsonEncode(Document().toDelta().toJson()),
                 save_original_id: null.toValue(),
-                be_private: false,
                 be_publish: false,
               ).insert(
                 syncTag: st,
@@ -48,7 +48,8 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? fragmentGrou
             },
             fragmentGroupTags: null,
             rFragment2FragmentGroups: null,
-            child_fragmentGroups: null,
+            fragmentGroups_father_fragment_groups_id: null,
+            fragmentGroups_jump_to_fragment_groups_id: null,
             userComments: null,
             userLikes: null,
             order: 0,

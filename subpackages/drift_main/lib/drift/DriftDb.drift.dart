@@ -5318,18 +5318,6 @@ class $FragmentGroupsTable extends FragmentGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FragmentGroupsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _be_privateMeta =
-      const VerificationMeta('be_private');
-  @override
-  late final GeneratedColumn<bool> be_private =
-      GeneratedColumn<bool>('be_private', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("be_private" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
   static const VerificationMeta _be_publishMeta =
       const VerificationMeta('be_publish');
   @override
@@ -5365,6 +5353,12 @@ class $FragmentGroupsTable extends FragmentGroups
   @override
   late final GeneratedColumn<String> father_fragment_groups_id =
       GeneratedColumn<String>('father_fragment_groups_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _jump_to_fragment_groups_idMeta =
+      const VerificationMeta('jump_to_fragment_groups_id');
+  @override
+  late final GeneratedColumn<String> jump_to_fragment_groups_id =
+      GeneratedColumn<String>('jump_to_fragment_groups_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _profileMeta =
       const VerificationMeta('profile');
@@ -5402,11 +5396,11 @@ class $FragmentGroupsTable extends FragmentGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
-        be_private,
         be_publish,
         client_be_selected,
         creator_user_id,
         father_fragment_groups_id,
+        jump_to_fragment_groups_id,
         profile,
         save_original_id,
         title,
@@ -5423,14 +5417,6 @@ class $FragmentGroupsTable extends FragmentGroups
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('be_private')) {
-      context.handle(
-          _be_privateMeta,
-          be_private.isAcceptableOrUnknown(
-              data['be_private']!, _be_privateMeta));
-    } else if (isInserting) {
-      context.missing(_be_privateMeta);
-    }
     if (data.containsKey('be_publish')) {
       context.handle(
           _be_publishMeta,
@@ -5461,6 +5447,13 @@ class $FragmentGroupsTable extends FragmentGroups
           father_fragment_groups_id.isAcceptableOrUnknown(
               data['father_fragment_groups_id']!,
               _father_fragment_groups_idMeta));
+    }
+    if (data.containsKey('jump_to_fragment_groups_id')) {
+      context.handle(
+          _jump_to_fragment_groups_idMeta,
+          jump_to_fragment_groups_id.isAcceptableOrUnknown(
+              data['jump_to_fragment_groups_id']!,
+              _jump_to_fragment_groups_idMeta));
     }
     if (data.containsKey('profile')) {
       context.handle(_profileMeta,
@@ -5510,8 +5503,6 @@ class $FragmentGroupsTable extends FragmentGroups
   FragmentGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentGroup(
-      be_private: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}be_private'])!,
       be_publish: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
       client_be_selected: attachedDatabase.typeMapping.read(
@@ -5521,6 +5512,9 @@ class $FragmentGroupsTable extends FragmentGroups
       father_fragment_groups_id: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}father_fragment_groups_id']),
+      jump_to_fragment_groups_id: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}jump_to_fragment_groups_id']),
       profile: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}profile'])!,
       save_original_id: attachedDatabase.typeMapping.read(
@@ -5546,11 +5540,11 @@ class $FragmentGroupsTable extends FragmentGroups
 }
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
-  bool be_private;
   bool be_publish;
   bool client_be_selected;
   int creator_user_id;
   String? father_fragment_groups_id;
+  String? jump_to_fragment_groups_id;
   String profile;
   String? save_original_id;
   String title;
@@ -5558,11 +5552,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   String id;
   DateTime updated_at;
   FragmentGroup(
-      {required this.be_private,
-      required this.be_publish,
+      {required this.be_publish,
       required this.client_be_selected,
       required this.creator_user_id,
       this.father_fragment_groups_id,
+      this.jump_to_fragment_groups_id,
       required this.profile,
       this.save_original_id,
       required this.title,
@@ -5572,13 +5566,16 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['be_private'] = Variable<bool>(be_private);
     map['be_publish'] = Variable<bool>(be_publish);
     map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || father_fragment_groups_id != null) {
       map['father_fragment_groups_id'] =
           Variable<String>(father_fragment_groups_id);
+    }
+    if (!nullToAbsent || jump_to_fragment_groups_id != null) {
+      map['jump_to_fragment_groups_id'] =
+          Variable<String>(jump_to_fragment_groups_id);
     }
     map['profile'] = Variable<String>(profile);
     if (!nullToAbsent || save_original_id != null) {
@@ -5593,7 +5590,6 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 
   FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return FragmentGroupsCompanion(
-      be_private: Value(be_private),
       be_publish: Value(be_publish),
       client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
@@ -5601,6 +5597,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           father_fragment_groups_id == null && nullToAbsent
               ? const Value.absent()
               : Value(father_fragment_groups_id),
+      jump_to_fragment_groups_id:
+          jump_to_fragment_groups_id == null && nullToAbsent
+              ? const Value.absent()
+              : Value(jump_to_fragment_groups_id),
       profile: Value(profile),
       save_original_id: save_original_id == null && nullToAbsent
           ? const Value.absent()
@@ -5616,12 +5616,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentGroup(
-      be_private: serializer.fromJson<bool>(json['be_private']),
       be_publish: serializer.fromJson<bool>(json['be_publish']),
       client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       father_fragment_groups_id:
           serializer.fromJson<String?>(json['father_fragment_groups_id']),
+      jump_to_fragment_groups_id:
+          serializer.fromJson<String?>(json['jump_to_fragment_groups_id']),
       profile: serializer.fromJson<String>(json['profile']),
       save_original_id: serializer.fromJson<String?>(json['save_original_id']),
       title: serializer.fromJson<String>(json['title']),
@@ -5634,12 +5635,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'be_private': serializer.toJson<bool>(be_private),
       'be_publish': serializer.toJson<bool>(be_publish),
       'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'father_fragment_groups_id':
           serializer.toJson<String?>(father_fragment_groups_id),
+      'jump_to_fragment_groups_id':
+          serializer.toJson<String?>(jump_to_fragment_groups_id),
       'profile': serializer.toJson<String>(profile),
       'save_original_id': serializer.toJson<String?>(save_original_id),
       'title': serializer.toJson<String>(title),
@@ -5650,11 +5652,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   }
 
   FragmentGroup copyWith(
-          {bool? be_private,
-          bool? be_publish,
+          {bool? be_publish,
           bool? client_be_selected,
           int? creator_user_id,
           Value<String?> father_fragment_groups_id = const Value.absent(),
+          Value<String?> jump_to_fragment_groups_id = const Value.absent(),
           String? profile,
           Value<String?> save_original_id = const Value.absent(),
           String? title,
@@ -5662,13 +5664,15 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           String? id,
           DateTime? updated_at}) =>
       FragmentGroup(
-        be_private: be_private ?? this.be_private,
         be_publish: be_publish ?? this.be_publish,
         client_be_selected: client_be_selected ?? this.client_be_selected,
         creator_user_id: creator_user_id ?? this.creator_user_id,
         father_fragment_groups_id: father_fragment_groups_id.present
             ? father_fragment_groups_id.value
             : this.father_fragment_groups_id,
+        jump_to_fragment_groups_id: jump_to_fragment_groups_id.present
+            ? jump_to_fragment_groups_id.value
+            : this.jump_to_fragment_groups_id,
         profile: profile ?? this.profile,
         save_original_id: save_original_id.present
             ? save_original_id.value
@@ -5681,11 +5685,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   @override
   String toString() {
     return (StringBuffer('FragmentGroup(')
-          ..write('be_private: $be_private, ')
           ..write('be_publish: $be_publish, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
+          ..write('jump_to_fragment_groups_id: $jump_to_fragment_groups_id, ')
           ..write('profile: $profile, ')
           ..write('save_original_id: $save_original_id, ')
           ..write('title: $title, ')
@@ -5698,11 +5702,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 
   @override
   int get hashCode => Object.hash(
-      be_private,
       be_publish,
       client_be_selected,
       creator_user_id,
       father_fragment_groups_id,
+      jump_to_fragment_groups_id,
       profile,
       save_original_id,
       title,
@@ -5713,11 +5717,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FragmentGroup &&
-          other.be_private == this.be_private &&
           other.be_publish == this.be_publish &&
           other.client_be_selected == this.client_be_selected &&
           other.creator_user_id == this.creator_user_id &&
           other.father_fragment_groups_id == this.father_fragment_groups_id &&
+          other.jump_to_fragment_groups_id == this.jump_to_fragment_groups_id &&
           other.profile == this.profile &&
           other.save_original_id == this.save_original_id &&
           other.title == this.title &&
@@ -5727,11 +5731,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 }
 
 class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
-  Value<bool> be_private;
   Value<bool> be_publish;
   Value<bool> client_be_selected;
   Value<int> creator_user_id;
   Value<String?> father_fragment_groups_id;
+  Value<String?> jump_to_fragment_groups_id;
   Value<String> profile;
   Value<String?> save_original_id;
   Value<String> title;
@@ -5739,11 +5743,11 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<String> id;
   Value<DateTime> updated_at;
   FragmentGroupsCompanion({
-    this.be_private = const Value.absent(),
     this.be_publish = const Value.absent(),
     this.client_be_selected = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.father_fragment_groups_id = const Value.absent(),
+    this.jump_to_fragment_groups_id = const Value.absent(),
     this.profile = const Value.absent(),
     this.save_original_id = const Value.absent(),
     this.title = const Value.absent(),
@@ -5752,19 +5756,18 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     this.updated_at = const Value.absent(),
   });
   FragmentGroupsCompanion.insert({
-    required bool be_private,
     required bool be_publish,
     required bool client_be_selected,
     required int creator_user_id,
     this.father_fragment_groups_id = const Value.absent(),
+    this.jump_to_fragment_groups_id = const Value.absent(),
     required String profile,
     this.save_original_id = const Value.absent(),
     required String title,
     required DateTime created_at,
     required String id,
     required DateTime updated_at,
-  })  : be_private = Value(be_private),
-        be_publish = Value(be_publish),
+  })  : be_publish = Value(be_publish),
         client_be_selected = Value(client_be_selected),
         creator_user_id = Value(creator_user_id),
         profile = Value(profile),
@@ -5773,11 +5776,11 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
         id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentGroup> custom({
-    Expression<bool>? be_private,
     Expression<bool>? be_publish,
     Expression<bool>? client_be_selected,
     Expression<int>? creator_user_id,
     Expression<String>? father_fragment_groups_id,
+    Expression<String>? jump_to_fragment_groups_id,
     Expression<String>? profile,
     Expression<String>? save_original_id,
     Expression<String>? title,
@@ -5786,12 +5789,13 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
-      if (be_private != null) 'be_private': be_private,
       if (be_publish != null) 'be_publish': be_publish,
       if (client_be_selected != null) 'client_be_selected': client_be_selected,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (father_fragment_groups_id != null)
         'father_fragment_groups_id': father_fragment_groups_id,
+      if (jump_to_fragment_groups_id != null)
+        'jump_to_fragment_groups_id': jump_to_fragment_groups_id,
       if (profile != null) 'profile': profile,
       if (save_original_id != null) 'save_original_id': save_original_id,
       if (title != null) 'title': title,
@@ -5802,11 +5806,11 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   }
 
   FragmentGroupsCompanion copyWith(
-      {Value<bool>? be_private,
-      Value<bool>? be_publish,
+      {Value<bool>? be_publish,
       Value<bool>? client_be_selected,
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_groups_id,
+      Value<String?>? jump_to_fragment_groups_id,
       Value<String>? profile,
       Value<String?>? save_original_id,
       Value<String>? title,
@@ -5814,12 +5818,13 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       Value<String>? id,
       Value<DateTime>? updated_at}) {
     return FragmentGroupsCompanion(
-      be_private: be_private ?? this.be_private,
       be_publish: be_publish ?? this.be_publish,
       client_be_selected: client_be_selected ?? this.client_be_selected,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       father_fragment_groups_id:
           father_fragment_groups_id ?? this.father_fragment_groups_id,
+      jump_to_fragment_groups_id:
+          jump_to_fragment_groups_id ?? this.jump_to_fragment_groups_id,
       profile: profile ?? this.profile,
       save_original_id: save_original_id ?? this.save_original_id,
       title: title ?? this.title,
@@ -5832,9 +5837,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (be_private.present) {
-      map['be_private'] = Variable<bool>(be_private.value);
-    }
     if (be_publish.present) {
       map['be_publish'] = Variable<bool>(be_publish.value);
     }
@@ -5847,6 +5849,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     if (father_fragment_groups_id.present) {
       map['father_fragment_groups_id'] =
           Variable<String>(father_fragment_groups_id.value);
+    }
+    if (jump_to_fragment_groups_id.present) {
+      map['jump_to_fragment_groups_id'] =
+          Variable<String>(jump_to_fragment_groups_id.value);
     }
     if (profile.present) {
       map['profile'] = Variable<String>(profile.value);
@@ -5872,11 +5878,11 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   @override
   String toString() {
     return (StringBuffer('FragmentGroupsCompanion(')
-          ..write('be_private: $be_private, ')
           ..write('be_publish: $be_publish, ')
           ..write('client_be_selected: $client_be_selected, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
+          ..write('jump_to_fragment_groups_id: $jump_to_fragment_groups_id, ')
           ..write('profile: $profile, ')
           ..write('save_original_id: $save_original_id, ')
           ..write('title: $title, ')

@@ -80,30 +80,28 @@ class MineHome extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('用户名', style: Theme.of(c.context).textTheme.headlineSmall),
+                        Text(c.globalAbController.loggedInUser(abw)!.username, style: Theme.of(c.context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Row(
-                          children: c.info(abw).keys.map(
-                            (e) {
-                              return RichText(
-                                text: TextSpan(
-                                  style: const TextStyle(color: Colors.black),
-                                  children: [
-                                    TextSpan(text: '$e ', style: const TextStyle(color: Colors.grey)),
-                                    TextSpan(text: c.info(abw)[e].toString()),
-                                    c.info(abw).keys.last == e ? const TextSpan() : const TextSpan(text: '  |  ', style: TextStyle(color: Colors.grey)),
-                                  ],
-                                ),
-                              );
-                            },
-                          ).toList(),
-                        )
+                          children: [
+                            Text("关注 ", style: const TextStyle(color: Colors.grey)),
+                            Text(c.follow(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
+                            Text("  |  ", style: TextStyle(color: Colors.grey)),
+                            Text("被关注 ", style: const TextStyle(color: Colors.grey)),
+                            Text(c.beFollowed(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
+                          ],
+                        ),
                       ],
                     );
                   },
                 ),
                 const Spacer(),
-                const Text('个人主页 >', style: TextStyle(color: Colors.grey)),
+                GestureDetector(
+                  child: const Text('个人主页 >', style: TextStyle(color: Colors.grey)),
+                  onTap: () {
+                    pushToPersonalHomePage(context: c.context, userId: c.globalAbController.loggedInUser()!.id);
+                  },
+                ),
               ],
             ),
           );

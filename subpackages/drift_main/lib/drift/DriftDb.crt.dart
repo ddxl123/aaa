@@ -274,11 +274,11 @@ class Crt {
   }
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
-    required bool be_private,
     required bool be_publish,
     required bool client_be_selected,
     required int creator_user_id,
     required Value<String?> father_fragment_groups_id,
+    required Value<String?> jump_to_fragment_groups_id,
     required String profile,
     required Value<String?> save_original_id,
     required String title,
@@ -287,11 +287,11 @@ class Crt {
     DateTime? updated_at,
   }) {
     return FragmentGroupsCompanion(
-      be_private: Value(be_private),
       be_publish: Value(be_publish),
       client_be_selected: Value(client_be_selected),
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id: father_fragment_groups_id,
+      jump_to_fragment_groups_id: jump_to_fragment_groups_id,
       profile: Value(profile),
       save_original_id: save_original_id,
       title: Value(title),

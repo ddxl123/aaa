@@ -1051,12 +1051,13 @@ extension FragmentGroupExt on FragmentGroup {
     required bool isCloudTableWithSync,
   }) async {
     await reset(
-        be_private: fragmentGroup.be_private.toValue(),
         be_publish: fragmentGroup.be_publish.toValue(),
         client_be_selected: fragmentGroup.client_be_selected.toValue(),
         creator_user_id: fragmentGroup.creator_user_id.toValue(),
         father_fragment_groups_id:
             fragmentGroup.father_fragment_groups_id.toValue(),
+        jump_to_fragment_groups_id:
+            fragmentGroup.jump_to_fragment_groups_id.toValue(),
         profile: fragmentGroup.profile.toValue(),
         save_original_id: fragmentGroup.save_original_id.toValue(),
         title: fragmentGroup.title.toValue(),
@@ -1072,11 +1073,11 @@ extension FragmentGroupExt on FragmentGroup {
   ///
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<FragmentGroup> reset({
-    required Value<bool> be_private,
     required Value<bool> be_publish,
     required Value<bool> client_be_selected,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
+    required Value<String?> jump_to_fragment_groups_id,
     required Value<String> profile,
     required Value<String?> save_original_id,
     required Value<String> title,
@@ -1085,11 +1086,6 @@ extension FragmentGroupExt on FragmentGroup {
   }) async {
     bool isCloudModify = false;
     bool isLocalModify = false;
-    if (be_private.present && this.be_private != be_private.value) {
-      isCloudModify = true;
-      this.be_private = be_private.value;
-    }
-
     if (be_publish.present && this.be_publish != be_publish.value) {
       isCloudModify = true;
       this.be_publish = be_publish.value;
@@ -1111,6 +1107,12 @@ extension FragmentGroupExt on FragmentGroup {
         this.father_fragment_groups_id != father_fragment_groups_id.value) {
       isCloudModify = true;
       this.father_fragment_groups_id = father_fragment_groups_id.value;
+    }
+
+    if (jump_to_fragment_groups_id.present &&
+        this.jump_to_fragment_groups_id != jump_to_fragment_groups_id.value) {
+      isCloudModify = true;
+      this.jump_to_fragment_groups_id = jump_to_fragment_groups_id.value;
     }
 
     if (profile.present && this.profile != profile.value) {

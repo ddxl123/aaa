@@ -104,11 +104,11 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
         self: () async {
           if (modify.title.isTitleModify || modify.profile.isProfileModify) {
             await fragmentGroupAb()!.reset(
-              be_private: toAbsent(),
               be_publish: toAbsent(),
               client_be_selected: toAbsent(),
               creator_user_id: toAbsent(),
               father_fragment_groups_id: toAbsent(),
+              jump_to_fragment_groups_id: toAbsent(),
               title: modify.title.now.toValue(),
               profile: modify.profile.now.toValue(),
               save_original_id: toAbsent(),
@@ -139,7 +139,8 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
           order: 0,
         ),
         rFragment2FragmentGroups: null,
-        child_fragmentGroups: null,
+        fragmentGroups_father_fragment_groups_id: null,
+        fragmentGroups_jump_to_fragment_groups_id: null,
         userComments: null,
         userLikes: null,
         order: 0,

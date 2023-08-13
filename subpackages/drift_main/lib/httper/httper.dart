@@ -86,6 +86,18 @@ part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryDto.dart';
 part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/PersonalHomePageForFragmentPageDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/PersonalHomePageForFragmentPageVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/PersonalHomePageForPublishPageDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/PersonalHomePageForPublishPageVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByFragmentGroupIdDto.dart';
 
 
