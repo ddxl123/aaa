@@ -31,7 +31,11 @@ class Group<G, U> with AbBroken {
   final Ab<G?> entity;
 
   /// 在创建元素时，同时创建元素对应的 [selectedUnitCount] 和 [allUnitCount]。
+  ///
+  /// 如果当前 Group 是 jump 类型，[groups] 则是目标组的 list。
   final groups = <Ab<Group<G, U>>>[].ab;
+
+  /// 如果当前 Group 是 jump 类型，[units] 则是目标组的 list。
   final units = <Ab<Unit<U>>>[].ab;
 
   final RefreshController refreshController = RefreshController(initialRefresh: true);
@@ -80,7 +84,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   final groupChainScrollController = ScrollController();
   final rootGroup = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
 
-  /// 当点击 jump 类型的碎片组时，跳转到的是 jump 类型碎片组本身，因此 [groupChain] 添加的也是 jump 类型碎片组。
+  /// 当点击 jump 类型的碎片组时，跳转到的是 jump 类型碎片组本身，而非 jump 目标组，因此 [groupChain] 添加的也是 jump 类型碎片组。
   /// 因此需要手动 find 对应的目标碎片组。
   late final groupChain = <Ab<Group<G, U>>>[rootGroup].ab;
   final isSelecting = false.ab;
@@ -95,6 +99,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
     rootGroup().entity.refreshEasy((oldValue) => entity);
   }
 
+  /// 如果当前 Group 是 jump 类型，那么获取到的也是 jump 类型，而非目标碎片组。
   Ab<Group<G, U>> getCurrentGroupAb() {
     return groupChain().last;
   }
@@ -136,7 +141,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
     final g = getCurrentGroupAb()();
     final newEntities = await findEntities(g.entity());
     g.refreshGroupsAndUnits(c: this, groupsAndUnitEntities: newEntities);
-    refreshCount(whichGroup: getCurrentGroupAb());
+    await refreshCount(whichGroup: getCurrentGroupAb());
     groupChain.refreshForce();
 
     groupChainScrollController.animateTo(

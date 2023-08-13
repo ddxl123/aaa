@@ -122,7 +122,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         final user = (await db.generalQueryDAO.queryUserOrNull())!;
         final fs = await db.generalQueryDAO.queryAllSelectedFragments();
         await Future.forEach<Fragment>(
-          fs.$1,
+          fs.values.map((e) => e.$1),
           (e) async {
             final newFmInfo = Crt.fragmentMemoryInfosCompanion(
               creator_user_id: user.id,

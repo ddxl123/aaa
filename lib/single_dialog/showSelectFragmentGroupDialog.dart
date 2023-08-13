@@ -109,12 +109,11 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
     fragmentGroups.clear();
     fragments.clear();
     fragmentGroups.addAll(
-      await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id),
+      await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroup: groupChain.isEmpty ? null : groupChain.last),
     );
     if (widget.isWithFragments) {
-      fragments.addAll(
-        await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroupId: groupChain.isEmpty ? null : groupChain.last.id),
-      );
+      final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroup: groupChain.isEmpty ? null : groupChain.last, set: {});
+      fragments.addAll(fs.values.map((e) => e.$1));
     }
     _taskIsSynced().ignore();
     if (mounted) setState(() {});

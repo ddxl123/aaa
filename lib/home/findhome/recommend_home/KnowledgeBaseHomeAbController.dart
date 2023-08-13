@@ -322,7 +322,7 @@ class KnowledgeBaseHomeAbController extends AbController {
                   syncTag: syncTag,
                   isCloudTableWithSync: false,
                   isCloudTableAutoId: false,
-                  // 可替换更新，以防下载了相同的碎片但在不同的碎片组下。
+                  // 可替换更新，以防下载了相同的碎片但在不同的碎片组下，将其归为一组，因为它本身就是同一组。
                   isReplaceWhenIdSame: true,
                 );
           }
