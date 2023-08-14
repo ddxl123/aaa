@@ -579,7 +579,6 @@ extension FragmentExt on Fragment {
   }) async {
     await reset(
         be_sep_publish: fragment.be_sep_publish.toValue(),
-        client_be_selected: fragment.client_be_selected.toValue(),
         content: fragment.content.toValue(),
         creator_user_id: fragment.creator_user_id.toValue(),
         father_fragment_id: fragment.father_fragment_id.toValue(),
@@ -597,7 +596,6 @@ extension FragmentExt on Fragment {
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<Fragment> reset({
     required Value<bool> be_sep_publish,
-    required Value<bool> client_be_selected,
     required Value<String> content,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_id,
@@ -610,12 +608,6 @@ extension FragmentExt on Fragment {
     if (be_sep_publish.present && this.be_sep_publish != be_sep_publish.value) {
       isCloudModify = true;
       this.be_sep_publish = be_sep_publish.value;
-    }
-
-    if (client_be_selected.present &&
-        this.client_be_selected != client_be_selected.value) {
-      isCloudModify = true;
-      this.client_be_selected = client_be_selected.value;
     }
 
     if (content.present && this.content != content.value) {
@@ -1059,7 +1051,6 @@ extension FragmentGroupExt on FragmentGroup {
         jump_to_fragment_groups_id:
             fragmentGroup.jump_to_fragment_groups_id.toValue(),
         profile: fragmentGroup.profile.toValue(),
-        save_original_id: fragmentGroup.save_original_id.toValue(),
         title: fragmentGroup.title.toValue(),
         syncTag: syncTag,
         isCloudTableWithSync: isCloudTableWithSync);
@@ -1079,7 +1070,6 @@ extension FragmentGroupExt on FragmentGroup {
     required Value<String?> father_fragment_groups_id,
     required Value<String?> jump_to_fragment_groups_id,
     required Value<String> profile,
-    required Value<String?> save_original_id,
     required Value<String> title,
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
@@ -1118,12 +1108,6 @@ extension FragmentGroupExt on FragmentGroup {
     if (profile.present && this.profile != profile.value) {
       isCloudModify = true;
       this.profile = profile.value;
-    }
-
-    if (save_original_id.present &&
-        this.save_original_id != save_original_id.value) {
-      isCloudModify = true;
-      this.save_original_id = save_original_id.value;
     }
 
     if (title.present && this.title != title.value) {

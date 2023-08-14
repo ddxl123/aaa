@@ -95,7 +95,7 @@ class _MultiFragmentTemplatePageState extends State<MultiFragmentTemplatePage> {
                 initFragmentTemplate: FragmentTemplate.newInstanceFromContent(fragment3[currentIndex]!.content),
                 initSomeBefore: [],
                 initSomeAfter: [],
-                initFragmentGroupChain: null,
+                enterDynamicFragmentGroups: null,
                 isEditableAb: true.ab,
                 isTailNew: false,
               );

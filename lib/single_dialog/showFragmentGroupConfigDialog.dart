@@ -5,22 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:tools/tools.dart';
 
-Future<void> showFragmentGroupConfigDialog({required FragmentGroupListPageController c, required Ab<FragmentGroup?> currentFragmentGroupAb}) async {
+Future<void> showFragmentGroupConfigDialog({required FragmentGroupListPageController c, required Ab<FragmentGroup?> currentDynamicFragmentGroupAb}) async {
   return await showCustomDialog(
     builder: (_) {
       return _PrivatePublishDialogWidget(
         c: c,
-        currentFragmentGroupAb: currentFragmentGroupAb,
+        currentDynamicFragmentGroupAb: currentDynamicFragmentGroupAb,
       );
     },
   );
 }
 
 class _PrivatePublishDialogWidget extends StatefulWidget {
-  const _PrivatePublishDialogWidget({super.key, required this.currentFragmentGroupAb, required this.c});
+  const _PrivatePublishDialogWidget({super.key, required this.currentDynamicFragmentGroupAb, required this.c});
 
   final FragmentGroupListPageController c;
-  final Ab<FragmentGroup?> currentFragmentGroupAb;
+  final Ab<FragmentGroup?> currentDynamicFragmentGroupAb;
 
   @override
   State<_PrivatePublishDialogWidget> createState() => _PrivatePublishDialogWidgetState();
@@ -53,7 +53,7 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => FragmentGroupGizmoEditPage(fragmentGroupAb: widget.currentFragmentGroupAb),
+                    builder: (_) => FragmentGroupGizmoEditPage(currentDynamicFragmentGroupAb: widget.currentDynamicFragmentGroupAb),
                   ),
                 );
               },
@@ -97,9 +97,9 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                 activeColor: Colors.green,
                 inactiveThumbColor: Colors.grey,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: widget.currentFragmentGroupAb()!.be_publish,
+                value: widget.currentDynamicFragmentGroupAb()!.be_publish,
                 onChanged: (v) async {
-                  if (widget.currentFragmentGroupAb()!.be_publish) {
+                  if (widget.currentDynamicFragmentGroupAb()!.be_publish) {
                     await showCustomDialog(
                       builder: (BuildContext context) {
                         return OkAndCancelDialogWidget(
@@ -114,10 +114,9 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                           ],
                           onOk: () async {
                             final st = await SyncTag.create();
-                            await db.updateDAO.resetFragmentGroup(
-                              syncTag: st,
-                              originalFragmentGroupReset: () async {
-                                await widget.currentFragmentGroupAb()!.reset(
+                            await RefFragmentGroups(
+                              self: () async {
+                                await widget.currentDynamicFragmentGroupAb()!.reset(
                                       be_publish: false.toValue(),
                                       client_be_selected: 0.toAbsent(),
                                       creator_user_id: 0.toAbsent(),
@@ -125,14 +124,20 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                                       jump_to_fragment_groups_id: 0.toAbsent(),
                                       title: 0.toAbsent(),
                                       profile: 0.toAbsent(),
-                                      save_original_id: 0.toAbsent(),
                                       syncTag: st,
                                       isCloudTableWithSync: true,
                                     );
                               },
-                            );
+                              fragmentGroupTags: null,
+                              rFragment2FragmentGroups: null,
+                              fragmentGroups_father_fragment_groups_id: null,
+                              fragmentGroups_jump_to_fragment_groups_id: null,
+                              userComments: null,
+                              userLikes: null,
+                              order: 0,
+                            ).run();
                             setState(() {});
-                            widget.currentFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = false);
+                            widget.currentDynamicFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = false);
                             widget.c.thisRefresh();
                             Navigator.pop(context);
                           },
@@ -188,10 +193,9 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                           ],
                           onOk: () async {
                             final st = await SyncTag.create();
-                            await db.updateDAO.resetFragmentGroup(
-                              syncTag: st,
-                              originalFragmentGroupReset: () async {
-                                await widget.currentFragmentGroupAb()!.reset(
+                            await RefFragmentGroups(
+                              self: () async {
+                                await widget.currentDynamicFragmentGroupAb()!.reset(
                                       be_publish: v.toValue(),
                                       client_be_selected: 0.toAbsent(),
                                       creator_user_id: 0.toAbsent(),
@@ -199,14 +203,20 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                                       jump_to_fragment_groups_id: 0.toAbsent(),
                                       title: 0.toAbsent(),
                                       profile: 0.toAbsent(),
-                                      save_original_id: 0.toAbsent(),
                                       syncTag: st,
                                       isCloudTableWithSync: true,
                                     );
                               },
-                            );
+                              fragmentGroupTags: null,
+                              rFragment2FragmentGroups: null,
+                              fragmentGroups_father_fragment_groups_id: null,
+                              fragmentGroups_jump_to_fragment_groups_id: null,
+                              userComments: null,
+                              userLikes: null,
+                              order: 0,
+                            ).run();
                             setState(() {});
-                            widget.currentFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = v);
+                            widget.currentDynamicFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = v);
                             widget.c.thisRefresh();
                             Navigator.pop(context);
                           },

@@ -5,6 +5,7 @@ import 'package:aaa/single_dialog/showSelectFragmentGroupsDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:collection/collection.dart';
 
 import 'FragmentTemplate/base/FragmentTemplate.dart';
 
@@ -19,10 +20,10 @@ class FragmentPerformer {
   /// 为 null 表示为创建碎片。
   Fragment? fragment;
 
-  /// 当前操作碎片所存放的碎片组位置，root 组无需存放。
-  ///
-  /// 使用嵌套数组的原因：一个碎片可能被存放、拷贝到多个碎片组内。
-  final List<List<FragmentGroup>> fragmentGroupChains = [];
+  /// 当前操作碎片所存放的碎片组。
+  ///   - 若为空数组，则没有选择组。
+  ///   - 若元素为 null，则选择了 root。
+  final List<FragmentGroup?> dynamicFragmentGroups = [];
 
   /// [fragmentTemplate] 是根据 [fragment.content] 解析而来。
   ///
@@ -40,9 +41,9 @@ class FragmentPerformer {
     if (fragment == null) {
       // 保留上一次设置。
       if (recent != null) {
-        fragmentGroupChains
+        dynamicFragmentGroups
           ..clear()
-          ..addAll(recent.fragmentGroupChains);
+          ..addAll(recent.dynamicFragmentGroups);
         fragmentTemplate = recent.fragmentTemplate.emptyTransferableInstance();
       } else {
         fragmentTemplate = fragmentTemplate.emptyInitInstance();
@@ -59,8 +60,8 @@ class FragmentPerformer {
         fragmentTemplate.resetFromJson(jsonDecode(fragment!.content));
       }
       if (resultAll.fragmentGroupChains.isModified) {
-        fragmentGroupChains.clear();
-        fragmentGroupChains.addAll(resultAll.fragmentGroupChains.saved);
+        dynamicFragmentGroups.clear();
+        dynamicFragmentGroups.addAll(resultAll.fragmentGroupChains.saved);
       }
       return true;
     }
@@ -98,11 +99,10 @@ class FragmentPerformer {
           content: jsonEncode(resultTemplate.now.toJson()),
           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
           father_fragment_id: null.toValue(),
-          client_be_selected: false,
           title: fragmentTemplate.getTitle(),
           be_sep_publish: false,
         ),
-        whichFragmentGroupChains: fragmentGroupChains,
+        dynamicFragmentGroups: dynamicFragmentGroups,
         syncTag: syncTag,
         isCloudTableWithSync: true,
       );
@@ -115,7 +115,6 @@ class FragmentPerformer {
             content: jsonEncode(resultTemplate.now.toJson()).toValue(),
             creator_user_id: toAbsent(),
             father_fragment_id: toAbsent(),
-            client_be_selected: toAbsent(),
             // 因为本身就是 now
             title: fragmentTemplate.getTitle().toValue(),
             syncTag: syncTag,
@@ -139,7 +138,7 @@ class FragmentPerformer {
   Future<
       ({
         ({bool isModified, FragmentTemplate now, FragmentTemplate saved}) template,
-        ({bool isModified, List<List<FragmentGroup>> now, List<List<FragmentGroup>> saved}) fragmentGroupChains,
+        ({bool isModified, List<FragmentGroup?> now, List<FragmentGroup?> saved}) fragmentGroupChains,
         bool isExistModified,
       })> equalAll({
     required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
@@ -182,15 +181,15 @@ class FragmentPerformer {
   /// 返回值
   ///   - 是否不同
   ///   - 最新结果
-  Future<({bool isModified, List<List<FragmentGroup>> now, List<List<FragmentGroup>> saved})> equalFragmentGroupChains(
+  Future<({bool isModified, List<FragmentGroup?> now, List<FragmentGroup?> saved})> equalFragmentGroupChains(
       {required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
-    final List<List<FragmentGroup>> now;
-    final List<List<FragmentGroup>> saved;
+    final List<FragmentGroup?> now;
+    final List<FragmentGroup?> saved;
     if (fragment != null) {
-      now = fragmentGroupChains;
+      now = dynamicFragmentGroups;
       saved = await db.generalQueryDAO.queryFragmentInWhichFragmentGroupChain(fragment: fragment!);
     } else {
-      now = fragmentGroupChains;
+      now = dynamicFragmentGroups;
       saved = [];
     }
 
@@ -198,23 +197,9 @@ class FragmentPerformer {
     if (fragment == null) {
       return (isModified: false, now: now, saved: saved);
     }
+    final isModified = !const DeepCollectionEquality().equals(now.map((e) => e?.id ?? ""), saved.map((e) => e?.id ?? ""));
 
-    if (now.isEmpty && saved.isEmpty) {
-      return (isModified: false, now: now, saved: saved);
-    }
-    if (now.length != saved.length) {
-      logger.outNormal(print: "equalFragmentGroupChains 存在修改");
-      return (isModified: true, now: now, saved: saved);
-    }
-    for (int i = 0; i < now.length; i++) {
-      final nowResult = now[i].map((e) => e.id).join('');
-      final savedResult = saved[i].map((e) => e.id).join('');
-      if (nowResult != savedResult) {
-        logger.outNormal(print: "equalFragmentGroupChains 存在修改");
-        return (isModified: true, now: now, saved: saved);
-      }
-    }
-    return (isModified: false, now: now, saved: saved);
+    return (isModified: isModified, now: now, saved: saved);
   }
 }
 
@@ -225,7 +210,7 @@ class FragmentGizmoEditPageAbController extends AbController {
     required this.initFragmentTemplate,
     required this.initSomeBefore,
     required this.initSomeAfter,
-    required this.initFragmentGroupChain,
+    required this.enterDynamicFragmentGroups,
   });
 
   final Ab<bool> isEditable;
@@ -244,10 +229,10 @@ class FragmentGizmoEditPageAbController extends AbController {
 
   /// 当在碎片组中创建碎片时，会将当前所在碎片组设为初始化碎片组。
   ///
-  /// 为 null 表示当 [initFragment] 为 null 时，即没有分配初始化选择组。
+  /// Ab 为 null 时，说明没有所在的组，可以在任何地方打开这个页面。
   ///
-  /// 当 [initFragment] 不为 null 时，这个字段无效。
-  final List<FragmentGroup>? initFragmentGroupChain;
+  /// Ab 值为 null 时，说明所在的碎片组是 root。
+  final Ab<FragmentGroup?>? enterDynamicFragmentGroups;
 
   /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragment]、[initSomeAfter] 的对象。
   ///
@@ -267,9 +252,13 @@ class FragmentGizmoEditPageAbController extends AbController {
   @override
   Future<void> loadingFuture() async {
     final initPerformer = FragmentPerformer(fragment: initFragment, fragmentTemplate: initFragmentTemplate);
+
+    initPerformer.dynamicFragmentGroups.clear();
     // 当创建时
-    if (initFragment == null && initFragmentGroupChain != null) {
-      initPerformer.fragmentGroupChains.add(initFragmentGroupChain!);
+    if (initFragment == null) {
+      if (enterDynamicFragmentGroups != null) {
+        initPerformer.dynamicFragmentGroups.add(enterDynamicFragmentGroups!());
+      }
     }
 
     await initPerformer.reload(fragmentGizmoEditPageAbController: this, recent: null);
@@ -344,7 +333,7 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   Future<void> save(bool isGotoNext) async {
-    if (currentPerformerAb().fragmentGroupChains.isEmpty) {
+    if (currentPerformerAb().dynamicFragmentGroups.isEmpty) {
       SmartDialog.showToast('未选择存放位置！');
       return;
     }
@@ -366,7 +355,7 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   Future<void> showSaveGroup() async {
-    await showSelectFragmentGroupsDialog(selectedFragmentGroupChains: currentPerformerAb().fragmentGroupChains);
+    await showSelectFragmentGroupsDialog(selectedDynamicFragmentGroup: currentPerformerAb().dynamicFragmentGroups);
     currentPerformerAb.refreshForce();
   }
 }

@@ -156,7 +156,6 @@ class Crt {
 
   static FragmentsCompanion fragmentsCompanion({
     required bool be_sep_publish,
-    required bool client_be_selected,
     required String content,
     required int creator_user_id,
     required Value<String?> father_fragment_id,
@@ -167,7 +166,6 @@ class Crt {
   }) {
     return FragmentsCompanion(
       be_sep_publish: Value(be_sep_publish),
-      client_be_selected: Value(client_be_selected),
       content: Value(content),
       creator_user_id: Value(creator_user_id),
       father_fragment_id: father_fragment_id,
@@ -280,7 +278,6 @@ class Crt {
     required Value<String?> father_fragment_groups_id,
     required Value<String?> jump_to_fragment_groups_id,
     required String profile,
-    required Value<String?> save_original_id,
     required String title,
     DateTime? created_at,
     String? id,
@@ -293,7 +290,6 @@ class Crt {
       father_fragment_groups_id: father_fragment_groups_id,
       jump_to_fragment_groups_id: jump_to_fragment_groups_id,
       profile: Value(profile),
-      save_original_id: save_original_id,
       title: Value(title),
       created_at: created_at == null ? const Value.absent() : Value(created_at),
       id: id == null ? const Value.absent() : Value(id),

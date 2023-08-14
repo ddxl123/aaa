@@ -7,8 +7,8 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 
 class FragmentGroupGizmoEditPage extends StatefulWidget {
-  const FragmentGroupGizmoEditPage({Key? key, required this.fragmentGroupAb}) : super(key: key);
-  final Ab<FragmentGroup?> fragmentGroupAb;
+  const FragmentGroupGizmoEditPage({Key? key, required this.currentDynamicFragmentGroupAb}) : super(key: key);
+  final Ab<FragmentGroup?> currentDynamicFragmentGroupAb;
 
   @override
   State<FragmentGroupGizmoEditPage> createState() => _FragmentGroupGizmoEditPageState();
@@ -18,7 +18,7 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
   @override
   Widget build(BuildContext context) {
     return AbBuilder<FragmentGroupGizmoEditPageAbController>(
-      putController: FragmentGroupGizmoEditPageAbController(fragmentGroupAb: widget.fragmentGroupAb),
+      putController: FragmentGroupGizmoEditPageAbController(currentDynamicFragmentGroupAb: widget.currentDynamicFragmentGroupAb),
       builder: (c, abw) {
         return Scaffold(
           appBar: AppBar(

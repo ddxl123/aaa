@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
-class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends StatefulWidget {
+class GroupListWidget<G, U, UR, C extends GroupListWidgetController<G, U, UR>> extends StatefulWidget {
   const GroupListWidget({
     Key? key,
     required this.headSliver,
@@ -18,19 +18,19 @@ class GroupListWidget<G, U, C extends GroupListWidgetController<G, U>> extends S
   }) : super(key: key);
   final C groupListWidgetController;
 
-  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw)? headSliver;
-  final String Function(Ab<Group<G, U>> group, Abw abw) groupChainStrings;
-  final Widget Function(C c, Ab<Group<G, U>> group, Abw abw) groupBuilder;
-  final Widget Function(C c, Ab<Unit<U>> unit, Abw abw) unitBuilder;
+  final Widget Function(C c, Ab<Group<G, U, UR>> group, Abw abw)? headSliver;
+  final String Function(Ab<Group<G, U, UR>> group, Abw abw) groupChainStrings;
+  final Widget Function(C c, Ab<Group<G, U, UR>> group, Abw abw) groupBuilder;
+  final Widget Function(C c, Ab<Unit<U, UR>> unit, Abw abw) unitBuilder;
   final Widget Function(C c, Abw abw)? leftActionBuilder;
   final Widget Function(C c, Abw abw)? rightActionBuilder;
   final void Function(C c) floatingButtonOnPressed;
 
   @override
-  State<GroupListWidget<G, U, C>> createState() => _GroupListWidgetState<G, U, C>();
+  State<GroupListWidget<G, U, UR, C>> createState() => _GroupListWidgetState<G, U, UR, C>();
 }
 
-class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> extends State<GroupListWidget<G, U, C>> {
+class _GroupListWidgetState<G, U, UR, C extends GroupListWidgetController<G, U, UR>> extends State<GroupListWidget<G, U, UR, C>> {
   late final C groupListWidgetController;
 
   @override
@@ -41,7 +41,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
 
   @override
   Widget build(BuildContext context) {
-    return AbBuilder<GroupListWidgetController<G, U>>(
+    return AbBuilder<GroupListWidgetController<G, U, UR>>(
       putController: groupListWidgetController,
       tag: Aber.single,
       builder: (c, abw) {
@@ -120,7 +120,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                                       style: ButtonStyle(
                                         visualDensity: kMinVisualDensity,
                                       ),
-                                      child: c.groupChain(abw)[index](innerAbw).entity(innerAbw) == null
+                                      child: c.groupChain(abw)[index](innerAbw).getDynamicGroupEntity(innerAbw) == null
                                           ? Icon(Icons.circle, size: 5)
                                           : Text(
                                               widget.groupChainStrings(c.groupChain(abw)[index], innerAbw),
@@ -168,7 +168,7 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
                                 slivers: [
                                   widget.headSliver == null
                                       ? SliverToBoxAdapter()
-                                      : _Head<G, U, C>(
+                                      : _Head<G, U, UR, C>(
                                           mainState: this,
                                           c: c,
                                           e: e,
@@ -264,18 +264,18 @@ class _GroupListWidgetState<G, U, C extends GroupListWidgetController<G, U>> ext
   }
 }
 
-class _Head<G, U, C extends GroupListWidgetController<G, U>> extends StatefulWidget {
+class _Head<G, U, UR, C extends GroupListWidgetController<G, U, UR>> extends StatefulWidget {
   const _Head({super.key, required this.mainState, required this.c, required this.e});
 
-  final _GroupListWidgetState<G, U, C> mainState;
+  final _GroupListWidgetState<G, U, UR, C> mainState;
   final C c;
-  final Ab<Group<G, U>> e;
+  final Ab<Group<G, U, UR>> e;
 
   @override
-  State<_Head<G, U, C>> createState() => _HeadState<G, U, C>();
+  State<_Head<G, U, UR, C>> createState() => _HeadState<G, U, UR, C>();
 }
 
-class _HeadState<G, U, C extends GroupListWidgetController<G, U>> extends State<_Head<G, U, C>> {
+class _HeadState<G, U, UR, C extends GroupListWidgetController<G, U, UR>> extends State<_Head<G, U, UR, C>> {
   double _expandedHeight = double.maxFinite;
   GlobalKey _key = GlobalKey();
 
@@ -301,7 +301,7 @@ class _HeadState<G, U, C extends GroupListWidgetController<G, U>> extends State<
       builder: (abw) {
         return SliverAppBar(
           expandedHeight: _expandedHeight,
-          collapsedHeight: _expandedHeight > MediaQuery.of(context).size.height-100 ? _expandedHeight : null,
+          collapsedHeight: _expandedHeight > MediaQuery.of(context).size.height - 100 ? _expandedHeight : null,
           floating: false,
           snap: false,
           toolbarHeight: 0,

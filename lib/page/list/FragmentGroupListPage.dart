@@ -18,10 +18,10 @@ class FragmentGroupListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GroupListWidget<FragmentGroup, Fragment, FragmentGroupListPageController>(
+      body: GroupListWidget<FragmentGroup, Fragment, RFragment2FragmentGroup, FragmentGroupListPageController>(
         groupListWidgetController: FragmentGroupListPageController(),
-        groupChainStrings: (group, abw) => group(abw).entity(abw)!.title,
-        headSliver: (c, g, abw) => g(abw).entity(abw) == null ? Container() : _Head(c: c, g: g, abw: abw),
+        groupChainStrings: (group, abw) => group(abw).getDynamicGroupEntity(abw)!.title,
+        headSliver: (c, g, abw) => g(abw).getDynamicGroupEntity(abw) == null ? Container() : _Head(c: c, g: g, abw: abw),
         groupBuilder: (c, group, abw) {
           return Card(
             elevation: 0,
@@ -32,10 +32,10 @@ class FragmentGroupListPage extends StatelessWidget {
                     visualDensity: kMinVisualDensity,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(c.isSelfOfFragmentGroup(fg: group().entity()!) ? 20 : 10, 15, 10, 15),
+                      padding: EdgeInsets.fromLTRB(c.isSelfOfFragmentGroup(dynamicFragmentGroup: group().getDynamicGroupEntity(abw)!) ? 20 : 10, 15, 10, 15),
                       child: Row(
                         children: [
-                          c.isSelfOfFragmentGroup(fg: group().entity()!)
+                          c.isSelfOfFragmentGroup(dynamicFragmentGroup: group().getDynamicGroupEntity()!)
                               ? Container()
                               : Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
@@ -46,12 +46,12 @@ class FragmentGroupListPage extends StatelessWidget {
                                 ),
                           Expanded(
                             child: Text(
-                              group(abw).entity()!.title,
+                              group(abw).getDynamicGroupEntity()!.title,
                               style: TextStyle(color: Colors.black, fontSize: 16),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Icon(Icons.chevron_right, color: group().entity()!.be_publish ? Colors.green : Colors.grey),
+                          Icon(Icons.chevron_right, color: group().getDynamicGroupEntity()!.be_publish ? Colors.green : Colors.grey),
                         ],
                       ),
                     ),
@@ -62,7 +62,7 @@ class FragmentGroupListPage extends StatelessWidget {
                       await c.clearAllSelected();
                       c.isSelecting.refreshEasy((oldValue) => !oldValue);
                       if (c.isSelecting()) {
-                        c.longPressedTarget.refreshEasy((oldValue) => group().entity()!);
+                        c.longPressedTarget.refreshEasy((oldValue) => group());
                       } else {
                         c.longPressedTarget.refreshEasy((oldValue) => null);
                       }
@@ -70,12 +70,12 @@ class FragmentGroupListPage extends StatelessWidget {
                     },
                   ),
                 ),
-                c.longPressedTarget(abw) == group().entity()!
+                c.longPressedTarget(abw) == group()
                     ? MaterialButton(
                         visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity),
                         child: Text("编辑", style: TextStyle(color: Colors.blue)),
                         onPressed: () {
-                          pushToFragmentGroupGizmoEditPage(context: context, fragmentGroupAb: group().entity);
+                          pushToFragmentGroupGizmoEditPage(context: context, fragmentGroupAb: group().getDynamicGroupEntityAb());
                         },
                       )
                     : Container(),
@@ -83,7 +83,7 @@ class FragmentGroupListPage extends StatelessWidget {
                 c.isSelecting(abw)
                     ? IconButton(
                         icon: () {
-                          if (group(abw).entity(abw)!.client_be_selected) {
+                          if (group(abw).getDynamicGroupEntity(abw)!.client_be_selected) {
                             return const SolidCircleIcon();
                           } else {
                             if (group(abw).selectedUnitCount(abw) == 0) {
@@ -95,8 +95,8 @@ class FragmentGroupListPage extends StatelessWidget {
                         }(),
                         onPressed: () async {
                           await c.resetFragmentGroupAndSubIsSelected(
-                            fragmentGroupAb: group().entity,
-                            isSelected: !group().entity()!.client_be_selected,
+                            fragmentGroupAb: group().getDynamicGroupEntityAb(),
+                            isSelected: !group().getDynamicGroupEntity()!.client_be_selected,
                           );
                         },
                       )
@@ -123,7 +123,7 @@ class FragmentGroupListPage extends StatelessWidget {
                           SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              unit(abw).unitEntity().title,
+                              unit(abw).unitEntity.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -139,8 +139,8 @@ class FragmentGroupListPage extends StatelessWidget {
                     onPressed: () async {
                       await pushToMultiFragmentTemplateView(
                         context: context,
-                        allFragments: c.getCurrentGroupAb()().units().map((e) => e().unitEntity()).toList(),
-                        fragment: unit().unitEntity(),
+                        allFragments: c.getCurrentGroupAb()().units().map((e) => e().unitEntity).toList(),
+                        fragment: unit().unitEntity,
                       );
                     },
                   ),
@@ -150,13 +150,13 @@ class FragmentGroupListPage extends StatelessWidget {
                         style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                         icon: FaIcon(
                           FontAwesomeIcons.solidCircle,
-                          color: unit(abw).unitEntity(abw).client_be_selected ? Colors.amber : Colors.grey,
+                          color: unit(abw).unitREntity.client_be_selected ? Colors.amber : Colors.grey,
                           size: 14,
                         ),
                         onPressed: () async {
                           await c.resetFragmentIsSelected(
-                            fragmentAb: unit().unitEntity,
-                            isSelected: !unit().unitEntity().client_be_selected,
+                            unitAb: unit,
+                            isSelected: !unit().unitREntity.client_be_selected,
                           );
                         },
                       )
@@ -190,13 +190,13 @@ class FragmentGroupListPage extends StatelessWidget {
                         initFragmentTemplate: result,
                         initSomeBefore: [],
                         initSomeAfter: [],
-                        initFragmentGroupChain: c.getCurrentFragmentGroupChain(),
+                        enterDynamicFragmentGroups: c.groupChain().last().getDynamicGroupEntityAb(),
                         isEditableAb: true.ab,
                         isTailNew: true,
                       );
                     }
                   } else if (v == 1) {
-                    showCreateFragmentGroupDialog(fragmentGroup: c.getCurrentGroupAb()().entity());
+                    showCreateFragmentGroupDialog(dynamicGroupEntity: c.getCurrentGroupAb()().getDynamicGroupEntity());
                   }
                 },
               ),
@@ -334,12 +334,11 @@ class _Head extends StatelessWidget {
   const _Head({super.key, required this.abw, required this.c, required this.g});
 
   final FragmentGroupListPageController c;
-  final Ab<Group<FragmentGroup, Fragment>> g;
+  final Ab<Group<FragmentGroup, Fragment, RFragment2FragmentGroup>> g;
   final Abw abw;
 
   bool hasFatherFragmentGroupBePublish() {
-    final result = c.getCurrentFragmentGroupChain().where((element) => element.id != g().entity()!.id && element.be_publish);
-    return result.isNotEmpty;
+    return (g().fatherGroup?.jumpTargetEntity()?.be_publish ?? g().fatherGroup?.surfaceEntity()?.be_publish) ?? false;
   }
 
   Widget publishWidget({required String text, required Color color}) {
@@ -354,8 +353,7 @@ class _Head extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bePublish = g(abw).entity(abw)!.be_publish;
-
+    final bePublish = g(abw).getDynamicGroupEntity(abw)!.be_publish;
     final small = Row(
       children: [
         Spacer(),
@@ -368,7 +366,7 @@ class _Head extends StatelessWidget {
               child: hasFatherFragmentGroupBePublish() ? publishWidget(text: "已随父组发布", color: Colors.green) : publishWidget(text: "未发布", color: Colors.amber),
             ),
             onPressed: () async {
-              await showFragmentGroupConfigDialog(c: c, currentFragmentGroupAb: g().entity);
+              await showFragmentGroupConfigDialog(c: c, currentDynamicFragmentGroupAb: g().getDynamicGroupEntityAb());
             },
           ),
         ),
@@ -382,7 +380,7 @@ class _Head extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
         child: Column(
           children: [
-            c.isSelfOfFragmentGroup(fg: g(abw).entity(abw)!)
+            c.isSelfOfFragmentGroup(dynamicFragmentGroup: g(abw).getDynamicGroupEntity(abw)!)
                 ? Row(
                     children: [
                       Spacer(),
@@ -395,7 +393,7 @@ class _Head extends StatelessWidget {
                             child: publishWidget(text: hasFatherFragmentGroupBePublish() ? "已随父组发布 · 并单独发布" : "已发布", color: Colors.green),
                           ),
                           onPressed: () async {
-                            await showFragmentGroupConfigDialog(c: c, currentFragmentGroupAb: g().entity);
+                            await showFragmentGroupConfigDialog(c: c, currentDynamicFragmentGroupAb: g().getDynamicGroupEntityAb());
                           },
                         ),
                       ),
@@ -425,7 +423,7 @@ class _Head extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  g(abw).entity(abw)!.title,
+                                  g(abw).getDynamicGroupEntity(abw)!.title,
                                   style: Theme.of(context).textTheme.titleLarge,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -458,7 +456,7 @@ class _Head extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   () {
-                                    final text = q.Document.fromJson(jsonDecode(g(abw).entity(abw)!.profile)).toPlainText().trim();
+                                    final text = q.Document.fromJson(jsonDecode(g(abw).getDynamicGroupEntity(abw)!.profile)).toPlainText().trim();
                                     return text.isEmpty ? "无简介" : text;
                                   }(),
                                   style: TextStyle(color: Colors.grey),

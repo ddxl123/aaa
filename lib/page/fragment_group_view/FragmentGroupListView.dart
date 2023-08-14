@@ -18,9 +18,9 @@ class FragmentGroupListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(child: Container(), preferredSize: Size(0, 10)),
-      body: GroupListWidget<FragmentGroup, Fragment, FragmentGroupListViewAbController>(
+      body: GroupListWidget<FragmentGroup, Fragment, RFragment2FragmentGroup, FragmentGroupListViewAbController>(
         groupListWidgetController: FragmentGroupListViewAbController(enterFragmentGroup: enterFragmentGroup, userId: userId),
-        groupChainStrings: (group, abw) => group(abw).entity(abw)!.title,
+        groupChainStrings: (group, abw) => group(abw).getDynamicGroupEntity(abw)!.title,
         leftActionBuilder: (c, abw) {
           return Row(
             children: [
@@ -48,7 +48,7 @@ class FragmentGroupListView extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Text(group().entity()!.title, overflow: TextOverflow.ellipsis),
+                        child: Text(group(abw).getDynamicGroupEntity(abw)!.title, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                   ],
@@ -73,7 +73,7 @@ class FragmentGroupListView extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Text(group().unitEntity().title, overflow: TextOverflow.ellipsis),
+                        child: Text(group().unitEntity.title, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                   ],
@@ -81,8 +81,8 @@ class FragmentGroupListView extends StatelessWidget {
                 onTap: () {
                   pushToMultiFragmentTemplateView(
                     context: context,
-                    allFragments: c.getCurrentGroupAb()().units().map((e) => e().unitEntity()).toList(),
-                    fragment: group().unitEntity(),
+                    allFragments: c.getCurrentGroupAb()().units().map((e) => e().unitEntity).toList(),
+                    fragment: group().unitEntity,
                   );
                 },
               ),
@@ -100,7 +100,7 @@ class _Head extends StatefulWidget {
   const _Head({super.key, required this.c, required this.g, required this.abw});
 
   final FragmentGroupListViewAbController c;
-  final Ab<Group<FragmentGroup, Fragment>> g;
+  final Ab<Group<FragmentGroup, Fragment, RFragment2FragmentGroup>> g;
   final Abw abw;
 
   @override
@@ -147,7 +147,7 @@ class _HeadState extends State<_Head> {
                         children: [
                           Expanded(
                             child: Text(
-                              widget.g(widget.abw).entity(widget.abw)?.title ?? "加载中...",
+                              widget.g(widget.abw).getDynamicGroupEntity(widget.abw)?.title ?? "加载中...",
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
@@ -269,13 +269,13 @@ class _HeadState extends State<_Head> {
             ),
             Divider(color: Colors.black12),
             SizedBox(height: 10),
-            _Profile(fragmentGroup: widget.g().entity(), fragmentGroupListViewAbController: widget.c),
+            _Profile(fragmentGroup: widget.g().getDynamicGroupEntity(), fragmentGroupListViewAbController: widget.c),
           ],
         ),
       ),
     );
 
-    return widget.g().entity()?.be_publish == true ? big : Container();
+    return widget.g().getDynamicGroupEntity()?.be_publish == true ? big : Container();
   }
 }
 

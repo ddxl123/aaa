@@ -4,13 +4,16 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:tools/tools.dart';
 
-class FragmentGroupListViewAbController extends GroupListWidgetController<FragmentGroup, Fragment> {
+class FragmentGroupListViewAbController extends GroupListWidgetController<FragmentGroup, Fragment, RFragment2FragmentGroup> {
   FragmentGroupListViewAbController({required this.userId, required this.enterFragmentGroup});
 
   final int userId;
 
   String userName = "加载中...";
 
+  /// 因为不能将 surface 进行发布，因此 [enterFragmentGroup] 始终是 target。
+  ///
+  /// 为 null 的话，说明进入的是 [userId] 的 root.
   final FragmentGroup? enterFragmentGroup;
 
   final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
@@ -18,20 +21,23 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
   @override
   Future<bool> backListener(bool hasRoute) async {
     if (hasRoute) return false;
-    if (getCurrentFragmentGroupChain().isNotEmpty) {
+    if (getGroupChainNotRoot().isNotEmpty) {
       await backGroup();
       return true;
     }
     return false;
   }
 
+  /// TODO: 云端查询问题
   @override
-  Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
+  Future<GroupsAndUnitEntities<FragmentGroup, Fragment, RFragment2FragmentGroup>> findEntities(FragmentGroup? whichSurfaceGroupEntity) async {
+    // 因为不能将 surface 进行发布，因此 [enterFragmentGroup] 始终是 target。
+    final targetId = (whichSurfaceGroupEntity?.jump_to_fragment_groups_id ?? whichSurfaceGroupEntity?.id) ?? enterFragmentGroup?.id;
     final result = await request(
       path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUP_INNER,
       dtoData: KnowledgeBaseFragmentGroupInnerQueryDto(
-        fragment_group_id: whichGroupEntity?.id ?? enterFragmentGroup?.id,
-        user_id: (whichGroupEntity == null && enterFragmentGroup == null) ? userId : null,
+        fragment_group_id: targetId,
+        user_id: (whichSurfaceGroupEntity == null && enterFragmentGroup == null) ? userId : null,
       ),
       parseResponseVoData: KnowledgeBaseFragmentGroupInnerQueryVo.fromJson,
     );
@@ -41,13 +47,53 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
           ..clear()
           ..addAll(vo.fragment_group_self_tags_list);
 
-        if (whichGroupEntity == null && enterFragmentGroup != null) {
-          setRootGroupEntity(vo.fragment_groups_list.singleWhere((element) => element.id == enterFragmentGroup!.id));
+        // 当前组的 surface
+        FragmentGroup? currentSurfaceFragmentGroup;
+        // 当前组的 jumpTarget
+        FragmentGroup? currentJumpTargetFragmentGroup;
+
+        if (enterFragmentGroup != null) {
+          if (whichSurfaceGroupEntity == null) {
+            currentSurfaceFragmentGroup = vo.fragment_groups_list.singleWhere((element) => element.id == enterFragmentGroup!.id);
+            currentJumpTargetFragmentGroup = null;
+          } else {
+            for (var v in vo.fragment_groups_list) {
+              if (v.id == whichSurfaceGroupEntity.jump_to_fragment_groups_id) {
+                currentSurfaceFragmentGroup = whichSurfaceGroupEntity;
+                currentJumpTargetFragmentGroup = v;
+              } else if (v.id == whichSurfaceGroupEntity.id) {
+                currentSurfaceFragmentGroup = v;
+                currentJumpTargetFragmentGroup = null;
+              }
+            }
+          }
+        } else {
+          if (whichSurfaceGroupEntity == null) {
+            currentSurfaceFragmentGroup = null;
+            currentJumpTargetFragmentGroup = null;
+          } else {
+            for (var v in vo.fragment_groups_list) {
+              if (v.id == whichSurfaceGroupEntity.jump_to_fragment_groups_id) {
+                currentSurfaceFragmentGroup = whichSurfaceGroupEntity;
+                currentJumpTargetFragmentGroup = v;
+              } else if (v.id == whichSurfaceGroupEntity.id) {
+                currentSurfaceFragmentGroup = v;
+                currentJumpTargetFragmentGroup = null;
+              }
+            }
+          }
         }
-        return GroupsAndUnitEntities<FragmentGroup, Fragment>(
-          // 因为查询的包含 whichGroupEntity 自身，因此排除掉。
-          groupEntities: vo.fragment_groups_list.where((element) => element.id != (whichGroupEntity?.id ?? enterFragmentGroup?.id)).toList(),
-          unitEntities: vo.fragments_list.map((e) => e.fragment).toList(),
+
+        // 将 root 组转换成进入组
+        // 与返回的 GroupsAndUnitEntities.jumpTargetEntity 不同，这里是设置 root 的，而不是每次进入的。
+        if (whichSurfaceGroupEntity == null && enterFragmentGroup != null) {
+          setRootGroupEntity(surfaceEntity: currentSurfaceFragmentGroup, jumpTargetEntity: currentJumpTargetFragmentGroup);
+        }
+        return GroupsAndUnitEntities(
+          // 因为查询的包含 whichSurfaceGroupEntity 自身，因此排除掉。
+          groupEntities: vo.fragment_groups_list.where((element) => element.id != targetId).toList(),
+          unitEntities: vo.fragments_list.map((e) => Unit(unitEntity: e.fragment, unitREntity: e.r_fragment_2_fragment_groups)).toList(),
+          jumpTargetEntity: currentJumpTargetFragmentGroup,
         );
       },
       otherException: (int? code, HttperException httperException, StackTrace st) async {
@@ -60,7 +106,7 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
   }
 
   @override
-  Future<(int, int)> needRefreshCount(FragmentGroup? whichGroupEntity) async {
+  Future<(int, int)> needRefreshCount(Ab<Group<FragmentGroup, Fragment, RFragment2FragmentGroup>> whichGroup) async {
     return (0, 0);
   }
 

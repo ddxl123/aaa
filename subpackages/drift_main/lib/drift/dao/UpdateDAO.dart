@@ -20,98 +20,76 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     ).run();
   }
 
-  /// 修改 [originalFragmentReset]。
-  Future<void> resetFragment({
-    required FutureFunction? originalFragmentReset,
-    required FutureFunction? originalRFragment2FragmentGroupReset,
-    required SyncTag syncTag,
-  }) async {
-    await RefFragments(
-      self: originalFragmentReset ?? () async {},
-      fragmentMemoryInfos: null,
-      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
-        self: originalRFragment2FragmentGroupReset ?? () async {},
-        order: 0,
-      ),
-      fragments_father_fragment_id: null,
-      memoryModels: null,
-      userComments: null,
-      userLikes: null,
-      order: 0,
-    ).run();
-  }
-
-  /// 修改 [FragmentGroup]。
-  Future<void> resetFragmentGroup({
-    required FutureFunction originalFragmentGroupReset,
-    required SyncTag syncTag,
-  }) async {
-    await RefFragmentGroups(
-      self: originalFragmentGroupReset,
-      fragmentGroupTags: null,
-      rFragment2FragmentGroups: null,
-      fragmentGroups_father_fragment_groups_id: null,
-      fragmentGroups_jump_to_fragment_groups_id: null,
-      userComments: null,
-      userLikes: null,
-      order: 0,
-    ).run();
-  }
-
-  /// 修改 [Fragment]，仅修改 [isSelected]
+  /// 修改 [RFragment2FragmentGroup]，仅修改 [isSelected]
+  ///
+  /// 不修改 [Fragment]
   Future<void> resetFragmentIsSelected({
-    required Fragment originalFragment,
-    required RFragment2FragmentGroup originalRFragment2FragmentGroup,
+    required RFragment2FragmentGroup rFragment2FragmentGroup,
     required bool isSelected,
     required SyncTag syncTag,
   }) async {
-    await RefFragments(
+    await RefRFragment2FragmentGroups(
       self: () async {
-        await originalFragment.reset(
-          creator_user_id: toAbsent(),
-          father_fragment_id: toAbsent(),
-          title: toAbsent(),
-          content: toAbsent(),
+        await rFragment2FragmentGroup.reset(
           client_be_selected: isSelected.toValue(),
-          be_sep_publish: toAbsent(),
+          creator_user_id: toAbsent(),
+          fragment_group_id: toAbsent(),
+          fragment_id: toAbsent(),
           syncTag: syncTag,
           isCloudTableWithSync: false,
         );
       },
-      fragmentMemoryInfos: null,
-      rFragment2FragmentGroups: RefRFragment2FragmentGroups(
-        self: () async {
-          await originalRFragment2FragmentGroup.reset(
-            client_be_selected: isSelected.toValue(),
-            creator_user_id: toAbsent(),
-            fragment_group_id: toAbsent(),
-            fragment_id: toAbsent(),
-            syncTag: syncTag,
-            isCloudTableWithSync: false,
-          );
-        },
-        order: 0,
-      ),
-      fragments_father_fragment_id: null,
-      memoryModels: null,
-      userComments: null,
-      userLikes: null,
       order: 0,
     ).run();
   }
 
-  /// 修改 [fragmentGroup] 自身的 [FragmentGroup.local_is_selected]，以及子孙组和子孙碎片。
+  /// 修改 [surfaceFragmentGroup] 自身的 [FragmentGroup.local_is_selected]，不包含子孙组和子孙碎片。
+  Future<void> resetFragmentGroupIsSelected({
+    required FragmentGroup? surfaceFragmentGroup,
+    required bool isSelected,
+    required SyncTag syncTag,
+  }) async {
+    // 对自身组
+    await surfaceFragmentGroup?.reset(
+      creator_user_id: toAbsent(),
+      father_fragment_groups_id: toAbsent(),
+      jump_to_fragment_groups_id: toAbsent(),
+      client_be_selected: isSelected.toValue(),
+      title: toAbsent(),
+      profile: toAbsent(),
+      be_publish: toAbsent(),
+      syncTag: syncTag,
+      isCloudTableWithSync: false,
+    );
+    // 不能让跳转的目标碎片组设为 true
+    if (surfaceFragmentGroup?.jump_to_fragment_groups_id != null) {
+      final t = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpTargetFragmentGroupId: surfaceFragmentGroup!.jump_to_fragment_groups_id!);
+      await t?.reset(
+        creator_user_id: toAbsent(),
+        father_fragment_groups_id: toAbsent(),
+        jump_to_fragment_groups_id: toAbsent(),
+        client_be_selected: false.toValue(),
+        title: toAbsent(),
+        profile: toAbsent(),
+        be_publish: toAbsent(),
+        syncTag: syncTag,
+        isCloudTableWithSync: false,
+      );
+    }
+  }
+
+  /// 修改 [surfaceFragmentGroup] 自身的 [FragmentGroup.local_is_selected]，以及子孙组和子孙碎片。
   ///
-  /// 传入的 [fragmentGroup] 可能是 jump 类型，内部会进行跳转。
+  /// 传入的 [surfaceFragmentGroup] 可能是 jump 类型，内部会进行跳转。
   Future<void> resetFragmentGroupAndSubIsSelected({
-    required FragmentGroup? fragmentGroup,
+    required FragmentGroup? surfaceFragmentGroup,
     required bool isSelected,
     required SyncTag syncTag,
   }) async {
     await RefFragmentGroups(
       self: () async {
         // 对自身组
-        await fragmentGroup?.reset(
+        await surfaceFragmentGroup?.reset(
           creator_user_id: toAbsent(),
           father_fragment_groups_id: toAbsent(),
           jump_to_fragment_groups_id: toAbsent(),
@@ -119,13 +97,12 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           title: toAbsent(),
           profile: toAbsent(),
           be_publish: toAbsent(),
-          save_original_id: toAbsent(),
           syncTag: syncTag,
           isCloudTableWithSync: false,
         );
         // 不能让跳转的目标碎片组设为 true
-        if (fragmentGroup?.jump_to_fragment_groups_id != null) {
-          final t = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpFragmentGroupId: fragmentGroup!.jump_to_fragment_groups_id!);
+        if (surfaceFragmentGroup?.jump_to_fragment_groups_id != null) {
+          final t = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpTargetFragmentGroupId: surfaceFragmentGroup!.jump_to_fragment_groups_id!);
           await t?.reset(
             creator_user_id: toAbsent(),
             father_fragment_groups_id: toAbsent(),
@@ -134,14 +111,13 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             title: toAbsent(),
             profile: toAbsent(),
             be_publish: toAbsent(),
-            save_original_id: toAbsent(),
             syncTag: syncTag,
             isCloudTableWithSync: false,
           );
         }
 
-        final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(targetFragmentGroup: fragmentGroup);
-        final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(targetFragmentGroup: fragmentGroup);
+        final fgs = await db.generalQueryDAO.querySubFragmentGroupsInFragmentGroupById(surfaceFragmentGroup: surfaceFragmentGroup);
+        final fs = await db.generalQueryDAO.querySubFragmentsInFragmentGroupById(surfaceFragmentGroup: surfaceFragmentGroup);
         // 碎片组不会出现重复
         for (var v in fgs) {
           await v.reset(
@@ -152,23 +128,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             title: toAbsent(),
             profile: toAbsent(),
             be_publish: toAbsent(),
-            save_original_id: toAbsent(),
             syncTag: syncTag,
             isCloudTableWithSync: false,
           );
         }
         for (var v in fs.values) {
-          // 碎片可能会存在重复，但已经去重过，就算没去重也无碍，因为重复修改等于没有修改。
-          await v.$1.reset(
-            creator_user_id: toAbsent(),
-            father_fragment_id: toAbsent(),
-            title: toAbsent(),
-            content: toAbsent(),
-            client_be_selected: isSelected.toValue(),
-            syncTag: syncTag,
-            be_sep_publish: toAbsent(),
-            isCloudTableWithSync: false,
-          );
           // 可能会存在重复，但已经去重过，就算没去重也无碍，因为重复修改等于没有修改。
           for (var f2fg in v.$2) {
             await f2fg.reset(
@@ -205,7 +169,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             father_fragment_groups_id: toAbsent(),
             jump_to_fragment_groups_id: toAbsent(),
             profile: toAbsent(),
-            save_original_id: toAbsent(),
             title: toAbsent(),
             syncTag: st,
             isCloudTableWithSync: false,
@@ -218,16 +181,6 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           final fs = await db.generalQueryDAO.queryAllSelectedFragments();
           // 不用担心重复，因为已经去重了。
           for (var element in fs.values) {
-            await element.$1.reset(
-              be_sep_publish: toAbsent(),
-              client_be_selected: false.toValue(),
-              content: toAbsent(),
-              creator_user_id: toAbsent(),
-              father_fragment_id: toAbsent(),
-              title: toAbsent(),
-              syncTag: st,
-              isCloudTableWithSync: false,
-            );
             // 不用担心重复，因为已经去重了。
             for (var f2fg in element.$2) {
               await f2fg.reset(

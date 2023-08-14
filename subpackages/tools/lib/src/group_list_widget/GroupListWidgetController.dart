@@ -4,39 +4,43 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 
-class Unit<U> with AbBroken {
-  final Ab<U> unitEntity;
+class Unit<U, UR> {
+  final U unitEntity;
+  final UR unitREntity;
 
   Unit({
     required this.unitEntity,
+    required this.unitREntity,
   });
-
-  @override
-  void broken(AbController c) {
-    unitEntity.broken(c);
-  }
 }
 
-class Group<G, U> with AbBroken {
+class Group<G, U, UR> with AbBroken {
   Group({
     required this.fatherGroup,
-    required this.entity,
+    required this.surfaceEntity,
   });
 
   /// 当前所在的组。
   /// 为 null 表示当前所在组为根组。
-  final Ab<Group?> fatherGroup;
+  final Group<G, U, UR>? fatherGroup;
 
   /// 为 null 表示当前所在组为根组。
-  final Ab<G?> entity;
+  final Ab<G?> surfaceEntity;
+
+  /// jump 的目标组（如果有）
+  final Ab<G?> jumpTargetEntity = Ab<G?>(null);
+
+  G? getDynamicGroupEntity([Abw? abw]) => jumpTargetEntity(abw) ?? surfaceEntity(abw);
+
+  Ab<G?> getDynamicGroupEntityAb() => jumpTargetEntity() != null ? jumpTargetEntity : surfaceEntity;
 
   /// 在创建元素时，同时创建元素对应的 [selectedUnitCount] 和 [allUnitCount]。
   ///
   /// 如果当前 Group 是 jump 类型，[groups] 则是目标组的 list。
-  final groups = <Ab<Group<G, U>>>[].ab;
+  final groups = <Ab<Group<G, U, UR>>>[].ab;
 
   /// 如果当前 Group 是 jump 类型，[units] 则是目标组的 list。
-  final units = <Ab<Unit<U>>>[].ab;
+  final units = <Ab<Unit<U, UR>>>[].ab;
 
   final RefreshController refreshController = RefreshController(initialRefresh: true);
 
@@ -51,15 +55,19 @@ class Group<G, U> with AbBroken {
 
   void refreshGroupsAndUnits({
     required AbController c,
-    required GroupsAndUnitEntities<G, U> groupsAndUnitEntities,
+    required GroupsAndUnitEntities<G, U, UR> groupsAndUnitEntities,
   }) {
     broken(c);
     groups().addAll(
       groupsAndUnitEntities.groupEntities.map(
-        (e) => Group<G, U>(fatherGroup: fatherGroup, entity: e.ab).ab,
+        (e) => Group<G, U, UR>(
+          fatherGroup: this,
+          surfaceEntity: e.ab,
+        ).ab,
       ),
     );
-    units().addAll(groupsAndUnitEntities.unitEntities.map((e) => Unit<U>(unitEntity: e.ab).ab));
+    units().addAll(groupsAndUnitEntities.unitEntities.map((e) => Unit<U, UR>(unitEntity: e.unitEntity, unitREntity: e.unitREntity).ab));
+    jumpTargetEntity.refreshEasy((oldValue) => groupsAndUnitEntities.jumpTargetEntity);
   }
 
   /// 同时会自动带动 [groups] 的子元素进行 broken。
@@ -80,35 +88,56 @@ class Group<G, U> with AbBroken {
 /// [U] 单元类型。
 ///
 /// [GC] 组配置。
-abstract class GroupListWidgetController<G, U> extends AbController {
+abstract class GroupListWidgetController<G, U, UR> extends AbController {
   final groupChainScrollController = ScrollController();
-  final rootGroup = Group<G, U>(fatherGroup: Ab<Group<G, U>?>(null), entity: Ab<G?>(null)).ab;
+  final rootGroup = Group<G, U, UR>(
+    fatherGroup: null,
+    surfaceEntity: Ab<G?>(null),
+  ).ab;
 
   /// 当点击 jump 类型的碎片组时，跳转到的是 jump 类型碎片组本身，而非 jump 目标组，因此 [groupChain] 添加的也是 jump 类型碎片组。
   /// 因此需要手动 find 对应的目标碎片组。
-  late final groupChain = <Ab<Group<G, U>>>[rootGroup].ab;
+  late final groupChain = <Ab<Group<G, U, UR>>>[rootGroup].ab;
   final isSelecting = false.ab;
-  final longPressedTarget = Ab<G?>(null);
+  final longPressedTarget = Ab<Group<G, U, UR>?>(null);
 
   @override
   void onDispose() {
     groupChainScrollController.dispose();
   }
 
-  void setRootGroupEntity(G entity) {
-    rootGroup().entity.refreshEasy((oldValue) => entity);
+  void setRootGroupEntity({required G? surfaceEntity, required G? jumpTargetEntity}) {
+    rootGroup().surfaceEntity.refreshEasy((oldValue) => surfaceEntity);
+    rootGroup().jumpTargetEntity.refreshEasy((oldValue) => jumpTargetEntity);
   }
 
   /// 如果当前 Group 是 jump 类型，那么获取到的也是 jump 类型，而非目标碎片组。
-  Ab<Group<G, U>> getCurrentGroupAb() {
+  Ab<Group<G, U, UR>> getCurrentGroupAb() {
     return groupChain().last;
   }
 
-  List<G> getCurrentFragmentGroupChain([Abw? abw]) {
+  List<Ab<Group<G, U, UR>>> getGroupChainNotRoot([Abw? abw]) {
     if (groupChain().length == 1) {
       return [];
     }
-    return groupChain(abw).sublist(1, groupChain(abw).length).map((e) => e().entity(abw)!).toList();
+    return groupChain(abw).sublist(1, groupChain(abw).length);
+  }
+
+  List<G> getGroupChainSurfaceEntityNotRoot([Abw? abw]) {
+    return groupChain(abw).sublist(1, groupChain(abw).length).map((e) => e(abw).surfaceEntity()!).toList();
+  }
+
+  List<G> getGroupChainCombineEntityNotRoot([Abw? abw]) {
+    final result = <G>[];
+    groupChain(abw).sublist(1, groupChain(abw).length).map(
+      (e) {
+        result.add(e(abw).surfaceEntity(abw) as G);
+        if (e(abw).jumpTargetEntity() != null) {
+          result.add(e(abw).jumpTargetEntity() as G);
+        }
+      },
+    ).toList();
+    return result;
   }
 
   /// 刷新 [Group.selectedUnitCount] 和 [Group.allUnitCount]
@@ -117,17 +146,17 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   /// [Tuple2.t2] 为 [Group.allUnitCount]
   ///
   /// 可以不用等待异步。
-  Future<(int, int)> needRefreshCount(G? whichGroupEntity);
+  Future<(int, int)> needRefreshCount(Ab<Group<G, U, UR>> whichGroup);
 
-  Future<void> refreshCount({required Ab<Group<G, U>> whichGroup, bool isRootRefreshCount = true}) async {
-    final count = await needRefreshCount(whichGroup().entity());
+  Future<void> refreshCount({required Ab<Group<G, U, UR>> whichGroup, bool isRootRefreshCount = true}) async {
+    final count = await needRefreshCount(whichGroup);
     whichGroup().selectedUnitCount.refreshEasy((oldValue) => count.$1);
     whichGroup().allUnitCount.refreshEasy((oldValue) => count.$2);
 
-    await Future.forEach<Ab<Group<G, U>>>(
+    await Future.forEach<Ab<Group<G, U, UR>>>(
       whichGroup().groups(),
       (element) async {
-        final eCount = await needRefreshCount(element().entity());
+        final eCount = await needRefreshCount(element);
         element().selectedUnitCount.refreshEasy((oldValue) => eCount.$1);
         element().allUnitCount.refreshEasy((oldValue) => eCount.$2);
       },
@@ -139,7 +168,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
 
   Future<void> refreshCurrentGroup() async {
     final g = getCurrentGroupAb()();
-    final newEntities = await findEntities(g.entity());
+    final newEntities = await findEntities(g.surfaceEntity());
     g.refreshGroupsAndUnits(c: this, groupsAndUnitEntities: newEntities);
     await refreshCount(whichGroup: getCurrentGroupAb());
     groupChain.refreshForce();
@@ -160,7 +189,7 @@ abstract class GroupListWidgetController<G, U> extends AbController {
   /// 进入哪个 [groupChain] 或进入新的 [whichGroup]。
   ///
   /// [whichGroup] 为 [groupChain] 的元素。
-  Future<void> enterGroup(Ab<Group<G, U>> whichGroup) async {
+  Future<void> enterGroup(Ab<Group<G, U, UR>> whichGroup) async {
     if (groupChain().contains(whichGroup)) {
       final indexOf = groupChain().indexOf(whichGroup);
       if (getCurrentGroupAb() != whichGroup) {
@@ -185,15 +214,17 @@ abstract class GroupListWidgetController<G, U> extends AbController {
     }
   }
 
-  /// 查询 [whichGroupEntity] 内的全部 [Group] 实体 和 [Unit] 实体。
-  Future<GroupsAndUnitEntities<G, U>> findEntities(G? whichGroupEntity);
+  /// 查询 [whichSurfaceGroupEntity] 内的全部 [Group] 实体 和 [Unit] 实体。
+  Future<GroupsAndUnitEntities<G, U, UR>> findEntities(G? whichSurfaceGroupEntity);
 }
 
-class GroupsAndUnitEntities<G, U> {
+class GroupsAndUnitEntities<G, U, UR> {
+  final G? jumpTargetEntity;
   final List<G> groupEntities;
-  final List<U> unitEntities;
+  final List<Unit<U, UR>> unitEntities;
 
   GroupsAndUnitEntities({
+    required this.jumpTargetEntity,
     required this.groupEntities,
     required this.unitEntities,
   });

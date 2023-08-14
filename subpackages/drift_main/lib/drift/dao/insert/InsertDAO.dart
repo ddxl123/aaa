@@ -18,34 +18,15 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     );
   }
 
-  /// 向多个 [whichFragmentGroupChains] 中，插入相同的 [willFragmentsCompanion]。
+  /// 向 [dynamicFragmentGroups] 每个元素，插入相同的 [willFragmentsCompanion]。
   ///
-  /// 当 [whichFragmentGroupChains] 为空数组时，表示插入到 root 组内。
+  /// 当 [dynamicFragmentGroups] 元素为 null 时，表示插入到 root 组内。
   Future<Fragment> insertFragment({
     required FragmentsCompanion willFragmentsCompanion,
-    required List<List<FragmentGroup>> whichFragmentGroupChains,
+    required List<FragmentGroup?> dynamicFragmentGroups,
     required SyncTag syncTag,
     required bool isCloudTableWithSync,
   }) async {
-    // 为空表示根
-    final List<FragmentGroup?> whichFragmentGroup = [];
-    whichFragmentGroupChains.forEach(
-      (element) {
-        if (element.isEmpty) {
-          if (!whichFragmentGroup.contains(null)) {
-            whichFragmentGroup.add(null);
-          }
-        } else {
-          if (!whichFragmentGroup.any((e) => e?.id == element.last.id)) {
-            whichFragmentGroup.add(element.last);
-          }
-        }
-      },
-    );
-
-    if (whichFragmentGroup.isEmpty) {
-      throw '要插入的碎片组不能为空！';
-    }
     late Fragment newFragment;
     await RefFragments(
       self: () async {
@@ -58,22 +39,19 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
       },
       rFragment2FragmentGroups: RefRFragment2FragmentGroups(
         self: () async {
-          await Future.forEach<FragmentGroup?>(
-            whichFragmentGroup,
-            (whichFragmentGroup) async {
-              await Crt.rFragment2FragmentGroupsCompanion(
-                creator_user_id: willFragmentsCompanion.creator_user_id.value,
-                fragment_group_id: (whichFragmentGroup?.id).toValue(),
-                fragment_id: willFragmentsCompanion.id.value,
-                client_be_selected: willFragmentsCompanion.client_be_selected.value,
-              ).insert(
-                syncTag: syncTag,
-                isCloudTableWithSync: isCloudTableWithSync,
-                isCloudTableAutoId: true,
-                isReplaceWhenIdSame: false,
-              );
-            },
-          );
+          for (var v in dynamicFragmentGroups) {
+            await Crt.rFragment2FragmentGroupsCompanion(
+              creator_user_id: willFragmentsCompanion.creator_user_id.value,
+              fragment_group_id: (v?.jump_to_fragment_groups_id ?? v?.id).toValue(),
+              fragment_id: willFragmentsCompanion.id.value,
+              client_be_selected: false,
+            ).insert(
+              syncTag: syncTag,
+              isCloudTableWithSync: isCloudTableWithSync,
+              isCloudTableAutoId: true,
+              isReplaceWhenIdSame: false,
+            );
+          }
         },
         order: 1,
       ),

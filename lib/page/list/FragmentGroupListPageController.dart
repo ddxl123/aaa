@@ -5,54 +5,42 @@ import 'package:drift_main/drift/DriftDb.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment> {
+class FragmentGroupListPageController extends GroupListWidgetController<FragmentGroup, Fragment, RFragment2FragmentGroup> {
   final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
 
   @override
-  Future<GroupsAndUnitEntities<FragmentGroup, Fragment>> findEntities(FragmentGroup? whichGroupEntity) async {
-    FragmentGroup? finalEnterFragmentGroupId = whichGroupEntity;
-    if (whichGroupEntity?.jump_to_fragment_groups_id != null) {
-      finalEnterFragmentGroupId = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpFragmentGroupId: whichGroupEntity!.jump_to_fragment_groups_id!);
+  Future<GroupsAndUnitEntities<FragmentGroup, Fragment, RFragment2FragmentGroup>> findEntities(FragmentGroup? whichSurfaceGroupEntity) async {
+    FragmentGroup? jumpTargetFragmentGroup;
+    if (whichSurfaceGroupEntity?.jump_to_fragment_groups_id != null) {
+      jumpTargetFragmentGroup = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpTargetFragmentGroupId: whichSurfaceGroupEntity!.jump_to_fragment_groups_id!);
     }
     // 若 whichGroupEntity 不为 null，则必然存在 whichGroupEntity。father_fragment_groups_id!。
-    final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(targetFragmentGroup: finalEnterFragmentGroupId, set: {});
-    final fgs = await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(targetFragmentGroup: finalEnterFragmentGroupId);
+    final fs = await db.generalQueryDAO.queryFragmentsInFragmentGroupById(surfaceFragmentGroup: whichSurfaceGroupEntity, set: {});
+    final fgs = await db.generalQueryDAO.queryFragmentGroupsInFragmentGroupById(surfaceFragmentGroup: whichSurfaceGroupEntity);
+    // 相同碎片组可能会出现多次，但 id 不一样
     return GroupsAndUnitEntities(
-      unitEntities: fs.values.map((e) => e.$1).toList(),
+      unitEntities: fs.values.expand((element) => element.$2).map((e) => Unit(unitEntity: fs[e.fragment_id]!.$1, unitREntity: e)).toList(),
       groupEntities: fgs,
+      jumpTargetEntity: jumpTargetFragmentGroup,
     );
   }
 
-  /// TODO: 重写
   @override
-  Future<(int, int)> needRefreshCount(FragmentGroup? whichGroupEntity) async {
+  Future<(int, int)> needRefreshCount(Ab<Group<FragmentGroup, Fragment, RFragment2FragmentGroup>> whichGroup) async {
     final selectedCount = await DriftDb.instance.generalQueryDAO.querySubFragmentsCountInFragmentGroup(
-      targetFragmentGroup: whichGroupEntity,
+      surfaceFragmentGroup: whichGroup().surfaceEntity(),
       queryFragmentWhereType: QueryFragmentWhereType.selected,
     );
     final allCount = await DriftDb.instance.generalQueryDAO.querySubFragmentsCountInFragmentGroup(
-      targetFragmentGroup: whichGroupEntity,
+      surfaceFragmentGroup: whichGroup().surfaceEntity(),
       queryFragmentWhereType: QueryFragmentWhereType.all,
     );
+    // 不相等的话，取消选择父组
     if (selectedCount != allCount) {
       final st = await SyncTag.create();
-      await db.updateDAO.resetFragmentGroup(
-        originalFragmentGroupReset: () async {
-          if (whichGroupEntity != null) {
-            await whichGroupEntity.reset(
-              client_be_selected: false.toValue(),
-              creator_user_id: toAbsent(),
-              father_fragment_groups_id: toAbsent(),
-              jump_to_fragment_groups_id: toAbsent(),
-              title: toAbsent(),
-              profile: toAbsent(),
-              syncTag: st,
-              be_publish: toAbsent(),
-              save_original_id: toAbsent(),
-              isCloudTableWithSync: false,
-            );
-          }
-        },
+      await db.updateDAO.resetFragmentGroupIsSelected(
+        surfaceFragmentGroup: whichGroup().surfaceEntity(),
+        isSelected: false,
         syncTag: st,
       );
     }
@@ -60,21 +48,15 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   }
 
   Future<void> resetFragmentIsSelected({
-    required Ab<Fragment> fragmentAb,
+    required Ab<Unit<Fragment, RFragment2FragmentGroup>> unitAb,
     required bool isSelected,
   }) async {
-    final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
-      fragment: fragmentAb(),
-      fragmentGroup: getCurrentGroupAb()().entity(),
-    );
-
     await db.updateDAO.resetFragmentIsSelected(
-      originalFragment: fragmentAb(),
-      originalRFragment2FragmentGroup: rF2Fg,
+      rFragment2FragmentGroup: unitAb().unitREntity,
       isSelected: isSelected,
       syncTag: await SyncTag.create(),
     );
-    fragmentAb.refreshForce();
+    unitAb.refreshForce();
     await refreshCount(whichGroup: getCurrentGroupAb());
   }
 
@@ -83,7 +65,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     required bool isSelected,
   }) async {
     await db.updateDAO.resetFragmentGroupAndSubIsSelected(
-      fragmentGroup: fragmentGroupAb(),
+      surfaceFragmentGroup: fragmentGroupAb(),
       isSelected: isSelected,
       syncTag: await SyncTag.create(),
     );
@@ -93,9 +75,9 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
 
   @override
   FutureOr<void> refreshExtra() async {
-    if (getCurrentGroupAb()().entity() != null) {
+    if (getCurrentGroupAb()().getDynamicGroupEntity() != null) {
       final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(
-        fragmentGroupId: getCurrentGroupAb()().entity()!.id,
+        fragmentGroupId: getCurrentGroupAb()().getDynamicGroupEntity()!.id,
       );
       currentFragmentGroupTagsAb.refreshInevitable((obj) => obj
         ..clear()
@@ -111,19 +93,14 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
 
         for (var value in getCurrentGroupAb()().groups()) {
           await db.updateDAO.resetFragmentGroupAndSubIsSelected(
-            fragmentGroup: value().entity()!,
+            surfaceFragmentGroup: value().surfaceEntity()!,
             isSelected: true,
             syncTag: st,
           );
         }
         for (var value in getCurrentGroupAb()().units()) {
-          final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
-            fragment: value().unitEntity(),
-            fragmentGroup: getCurrentGroupAb()().entity(),
-          );
           await db.updateDAO.resetFragmentIsSelected(
-            originalRFragment2FragmentGroup: rF2Fg,
-            originalFragment: value().unitEntity(),
+            rFragment2FragmentGroup: value().unitREntity,
             isSelected: true,
             syncTag: st,
           );
@@ -141,19 +118,14 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
 
         for (var value in getCurrentGroupAb()().groups()) {
           await db.updateDAO.resetFragmentGroupAndSubIsSelected(
-            fragmentGroup: value().entity()!,
+            surfaceFragmentGroup: value().surfaceEntity()!,
             isSelected: false,
             syncTag: st,
           );
         }
         for (var value in getCurrentGroupAb()().units()) {
-          final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
-            fragment: value().unitEntity(),
-            fragmentGroup: getCurrentGroupAb()().entity(),
-          );
           await db.updateDAO.resetFragmentIsSelected(
-            originalRFragment2FragmentGroup: rF2Fg,
-            originalFragment: value().unitEntity(),
+            rFragment2FragmentGroup: value().unitREntity,
             isSelected: false,
             syncTag: st,
           );
@@ -171,20 +143,15 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
 
         for (var value in getCurrentGroupAb()().groups()) {
           await db.updateDAO.resetFragmentGroupAndSubIsSelected(
-            fragmentGroup: value().entity()!,
-            isSelected: !value().entity()!.client_be_selected,
+            surfaceFragmentGroup: value().surfaceEntity()!,
+            isSelected: !value().surfaceEntity()!.client_be_selected,
             syncTag: st,
           );
         }
         for (var value in getCurrentGroupAb()().units()) {
-          final rF2Fg = await db.generalQueryDAO.queryRFragment2FragmentGroupsBy(
-            fragment: value().unitEntity(),
-            fragmentGroup: getCurrentGroupAb()().entity(),
-          );
           await db.updateDAO.resetFragmentIsSelected(
-            originalRFragment2FragmentGroup: rF2Fg,
-            originalFragment: value().unitEntity(),
-            isSelected: !value().unitEntity().client_be_selected,
+            rFragment2FragmentGroup: value().unitREntity,
+            isSelected: !value().unitREntity.client_be_selected,
             syncTag: st,
           );
         }
@@ -221,11 +188,10 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   ///
   /// 当碎片组是 jump 类型，则移动的是 jump，不会对源碎片组进行移动。
   Future<void> moveSelected() async {
-    final currentFragmentGroupChain = getCurrentFragmentGroupChain();
-    final currentFragmentGroup = getCurrentGroupAb()().entity();
+    final currentSurfaceFragmentGroup = getCurrentGroupAb()().surfaceEntity();
     final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
     final fs = await db.generalQueryDAO.queryAllSelectedFragments();
-    final isExist = currentFragmentGroupChain.any((chain) => fgs.any((fg) => chain.id == fg.id));
+    final isExist = getGroupChainCombineEntityNotRoot().any((chain) => fgs.any((fg) => chain.id == fg.id));
     if (isExist) {
       SmartDialog.showToast("不能将自身移动到自身上面！");
       return;
@@ -253,23 +219,28 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                 });
 
                 if (!isFatherSelected) {
-                  await db.updateDAO.resetFragmentGroup(
-                    syncTag: st,
-                    originalFragmentGroupReset: () async {
+                  await RefFragmentGroups(
+                    self: () async {
                       await v.reset(
                         be_publish: toAbsent(),
                         client_be_selected: toAbsent(),
                         creator_user_id: toAbsent(),
-                        father_fragment_groups_id: (currentFragmentGroup?.jump_to_fragment_groups_id ?? currentFragmentGroup?.id).toValue(),
+                        father_fragment_groups_id: (currentSurfaceFragmentGroup?.jump_to_fragment_groups_id ?? currentSurfaceFragmentGroup?.id).toValue(),
                         jump_to_fragment_groups_id: toAbsent(),
                         profile: toAbsent(),
-                        save_original_id: toAbsent(),
                         title: toAbsent(),
                         syncTag: st,
                         isCloudTableWithSync: SyncTag.parseToUserId(v.id) == user.id,
                       );
                     },
-                  );
+                    fragmentGroupTags: null,
+                    rFragment2FragmentGroups: null,
+                    fragmentGroups_father_fragment_groups_id: null,
+                    fragmentGroups_jump_to_fragment_groups_id: null,
+                    userComments: null,
+                    userLikes: null,
+                    order: 0,
+                  ).run();
                 }
               }
               for (var v in fs.values.map((e) => e.$2)) {
@@ -285,20 +256,19 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   // 当 v 所在的组未被选择时（而非 v 的祖父），如果 father 被选择，则会将 father 整组进行移动。
                   // 因为 jump 的设定，碎片组始终是唯一的，因此 rFragment2FragmentGroup 的 fragmentGroupId 也是唯一的。
                   if (!isFatherSelected) {
-                    await db.updateDAO.resetFragment(
-                      originalFragmentReset: null,
-                      originalRFragment2FragmentGroupReset: () async {
+                    await RefRFragment2FragmentGroups(
+                      self: () async {
                         await inner.reset(
                           client_be_selected: toAbsent(),
                           creator_user_id: toAbsent(),
-                          fragment_group_id: (currentFragmentGroup?.jump_to_fragment_groups_id ?? currentFragmentGroup?.id).toValue(),
+                          fragment_group_id: (currentSurfaceFragmentGroup?.jump_to_fragment_groups_id ?? currentSurfaceFragmentGroup?.id).toValue(),
                           fragment_id: toAbsent(),
                           syncTag: st,
                           isCloudTableWithSync: SyncTag.parseToUserId(inner.id) == user.id,
                         );
                       },
-                      syncTag: st,
-                    );
+                      order: 0,
+                    ).run();
                   }
                 }
               }
@@ -312,9 +282,13 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
   }
 
   /// 复用已选
-  ///
-  /// TODO: 嵌套复用问题
   Future<void> reuseSelected() async {
+    final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
+    final isExist = getGroupChainCombineEntityNotRoot().any((chain) => fgs.any((fg) => chain.id == fg.id));
+    if (isExist) {
+      SmartDialog.showToast("不能将自身移动到自身上面！");
+      return;
+    }
     await showCustomDialog(
       builder: (ctx) {
         return OkAndCancelDialogWidget(
@@ -325,7 +299,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
             await db.transaction(
               () async {
                 final user = Aber.find<GlobalAbController>().loggedInUser()!;
-                final currentFragmentGroup = getCurrentGroupAb()().entity();
+                final currentSurfaceFragmentGroup = getCurrentGroupAb()().surfaceEntity();
 
                 final fgs = await db.generalQueryDAO.queryAllSelectedFragmentGroups();
                 final fs = await db.generalQueryDAO.queryAllSelectedFragments();
@@ -344,14 +318,13 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                     await RefFragmentGroups(
                       self: () async {
                         await Crt.fragmentGroupsCompanion(
-                          be_publish: v.be_publish,
-                          client_be_selected: v.client_be_selected,
+                          be_publish: false,
+                          client_be_selected: false,
                           creator_user_id: v.creator_user_id,
-                          father_fragment_groups_id: (currentFragmentGroup?.jump_to_fragment_groups_id ?? currentFragmentGroup?.id).toValue(),
+                          father_fragment_groups_id: (currentSurfaceFragmentGroup?.jump_to_fragment_groups_id ?? currentSurfaceFragmentGroup?.id).toValue(),
                           jump_to_fragment_groups_id: (v.jump_to_fragment_groups_id ?? v.id).toValue(),
-                          profile: v.profile,
-                          save_original_id: v.save_original_id.toValue(),
-                          title: v.title,
+                          profile: "未进行跳转：${v.profile}",
+                          title: "未进行跳转：${v.title}",
                         ).insert(
                           syncTag: st,
                           isCloudTableWithSync: true,
@@ -370,8 +343,8 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                   }
                 }
 
-                for (var v in fs.values.map((e) => e.$2)) {
-                  for (var inner in v) {
+                for (var v in fs.values) {
+                  for (var inner in v.$2) {
                     // 碎片组的父组是否也被选择（非祖父组）
                     final isFatherSelected = fgs.any((element) {
                       if (element.jump_to_fragment_groups_id != null) {
@@ -379,15 +352,14 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                       }
                       return element.id == inner.fragment_group_id;
                     });
-
                     if (!isFatherSelected) {
                       await RefRFragment2FragmentGroups(
                         self: () async {
                           await Crt.rFragment2FragmentGroupsCompanion(
                             client_be_selected: false,
                             creator_user_id: user.id,
-                            fragment_group_id: (currentFragmentGroup?.jump_to_fragment_groups_id ?? currentFragmentGroup?.id).toValue(),
-                            fragment_id: inner.id,
+                            fragment_group_id: (currentSurfaceFragmentGroup?.jump_to_fragment_groups_id ?? currentSurfaceFragmentGroup?.id).toValue(),
+                            fragment_id: v.$1.id,
                           ).insert(
                             syncTag: st,
                             isCloudTableWithSync: true,
@@ -451,7 +423,7 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                         isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,
                       );
                       if (element.jump_to_fragment_groups_id != null) {
-                        final jumpTarget = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpFragmentGroupId: element.jump_to_fragment_groups_id!);
+                        final jumpTarget = await db.generalQueryDAO.queryJumpTargetFragmentGroup(jumpTargetFragmentGroupId: element.jump_to_fragment_groups_id!);
                         await jumpTarget?.delete(
                           syncTag: st,
                           isCloudTableWithSync: SyncTag.parseToUserId(element.id) == userId,
@@ -480,6 +452,8 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                     // 先删除全部已选的 rFragment2FragmentGroup，再查询游离的 fragment 进行删除。
                     for (var value in fs.values) {
                       for (var inner in value.$2) {
+                        print("==========================");
+                        print(inner.id);
                         await inner.delete(
                           syncTag: st,
                           isCloudTableWithSync: SyncTag.parseToUserId(value.$2.first.id) == userId,
@@ -507,10 +481,9 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
     );
   }
 
-  /// [fg] 是否属于自己的。
-  bool isSelfOfFragmentGroup({required FragmentGroup fg}) {
-    if (fg.save_original_id != null) return false;
-    if (SyncTag.parseToUserId(fg.id) != Aber.find<GlobalAbController>().loggedInUser()!.id) {
+  /// [dynamicFragmentGroup] 是否属于自己的。
+  bool isSelfOfFragmentGroup({required FragmentGroup dynamicFragmentGroup}) {
+    if (SyncTag.parseToUserId(dynamicFragmentGroup.id) != Aber.find<GlobalAbController>().loggedInUser()!.id) {
       return false;
     }
     return true;

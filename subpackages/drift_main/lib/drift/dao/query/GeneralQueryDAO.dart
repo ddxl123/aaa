@@ -85,14 +85,14 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     required FragmentGroup? targetFragmentGroup,
     required QueryFragmentWhereType queryFragmentWhereType,
   }) async {
-    final count = fragments.id.count();
+    final count = rFragment2FragmentGroups.id.count();
     final baseWhereEpr =
         targetFragmentGroup == null ? rFragment2FragmentGroups.fragment_group_id.isNull() : rFragment2FragmentGroups.fragment_group_id.equals(targetFragmentGroup.id);
     final filterWhere = filter<QueryFragmentWhereType, Expression<bool>?>(
       from: queryFragmentWhereType,
       targets: {
         [QueryFragmentWhereType.all]: () => null,
-        [QueryFragmentWhereType.selected]: () => fragments.client_be_selected.equals(true),
+        [QueryFragmentWhereType.selected]: () => rFragment2FragmentGroups.client_be_selected.equals(true),
       },
       orElse: null,
     );
@@ -106,12 +106,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     final result = await sel.getSingle();
 
     return result.read(count)!;
-  }
-
-  Future<FragmentGroup?> queryFragmentGroupBySaveOriginalId({required String id}) async {
-    final sel = select(fragmentGroups);
-    sel.where((tbl) => tbl.save_original_id.equals(id));
-    return await sel.getSingleOrNull();
   }
 
   Future<FragmentGroup?> queryFragmentGroupById({required String id}) async {
@@ -129,32 +123,32 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return (await sel.get()).map((e) => e.id).toSet();
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部碎片组，不包含子碎片组。
+  /// 查询 [surfaceFragmentGroup] 内的全部碎片组，不包含子碎片组。
   ///
   /// 不会有重复，因为不会含 jump 的目标碎片组，而被 jump 组本身所代替。
-  Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroupById({required FragmentGroup? targetFragmentGroup}) async {
+  Future<List<FragmentGroup>> queryFragmentGroupsInFragmentGroupById({required FragmentGroup? surfaceFragmentGroup}) async {
     final sel = select(fragmentGroups);
     sel.where(
       (tbl) {
-        if (targetFragmentGroup == null) {
+        if (surfaceFragmentGroup == null) {
           return tbl.father_fragment_groups_id.isNull();
         }
         return tbl.father_fragment_groups_id.equals(
-          targetFragmentGroup.jump_to_fragment_groups_id ?? targetFragmentGroup.id,
+          surfaceFragmentGroup.jump_to_fragment_groups_id ?? surfaceFragmentGroup.id,
         );
       },
     );
     return await sel.get();
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部子碎片组。
+  /// 查询 [surfaceFragmentGroup] 内的全部子碎片组，包含子孙组。
   ///
   /// 不会有重复，因为不会含 jump 的目标碎片组，而被 jump 组本身所代替。
-  Future<List<FragmentGroup>> querySubFragmentGroupsInFragmentGroupById({required FragmentGroup? targetFragmentGroup}) async {
+  Future<List<FragmentGroup>> querySubFragmentGroupsInFragmentGroupById({required FragmentGroup? surfaceFragmentGroup}) async {
     Future<List<FragmentGroup>> loop({required List<FragmentGroup> list}) async {
       final returnList = <FragmentGroup>[...list];
       for (var v in list) {
-        final resultList = await queryFragmentGroupsInFragmentGroupById(targetFragmentGroup: v);
+        final resultList = await queryFragmentGroupsInFragmentGroupById(surfaceFragmentGroup: v);
         if (resultList.isNotEmpty) {
           returnList.addAll(await loop(list: resultList));
         }
@@ -162,18 +156,18 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
       return returnList;
     }
 
-    final targetFragmentGroups = await queryFragmentGroupsInFragmentGroupById(targetFragmentGroup: targetFragmentGroup);
+    final targetFragmentGroups = await queryFragmentGroupsInFragmentGroupById(surfaceFragmentGroup: surfaceFragmentGroup);
     return await loop(list: targetFragmentGroups);
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部碎片，不包含子孙碎片。
+  /// 查询 [surfaceFragmentGroup] 内的全部碎片，不包含子孙碎片。
   ///
   /// 在同一层组内，因为父碎片组是唯一的，所以该组的碎片列表（不含子孙碎片）的 [RFragment2FragmentGroup] 哪怕有重复碎片，其 id 不会存在重复。
-  /// 所以该层组可能存在相同 [Fragment] 但是存在多个 [RFragment2FragmentGroup]。
+  /// 所以该层组可能存在相同 [Fragment] ，但是返回值里的 [Fragment] 不会出现重复，且存在多个 [RFragment2FragmentGroup]。
   ///
   /// 传入的 [set] 与返回的 [set] 是同一个对象。
   Future<Map<String, (Fragment, List<RFragment2FragmentGroup>)>> queryFragmentsInFragmentGroupById({
-    required FragmentGroup? targetFragmentGroup,
+    required FragmentGroup? surfaceFragmentGroup,
     required Map<String, (Fragment, List<RFragment2FragmentGroup>)> set,
   }) async {
     final sel = select(fragments).join(
@@ -181,10 +175,10 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
         innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragment_id.equalsExp(fragments.id)),
       ],
     )..where(
-        targetFragmentGroup == null
+        surfaceFragmentGroup == null
             ? rFragment2FragmentGroups.fragment_group_id.isNull()
             : rFragment2FragmentGroups.fragment_group_id.equals(
-                targetFragmentGroup.jump_to_fragment_groups_id ?? targetFragmentGroup.id,
+                surfaceFragmentGroup.jump_to_fragment_groups_id ?? surfaceFragmentGroup.id,
               ),
       );
     final s = await sel.get();
@@ -204,32 +198,36 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return set;
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部子碎片。
+  /// 查询 [surfaceFragmentGroup] 内的全部子碎片，包含子孙碎片。
   ///
   /// 虽然 [FragmentGroup] 不会存在重复，但是因为是递归查询，而非一次性查询，
   /// 所以 [RFragment2FragmentGroup] 和 [Fragment] 可能会查询到多次。
-  Future<Map<String, (Fragment, List<RFragment2FragmentGroup>)>> querySubFragmentsInFragmentGroupById({required FragmentGroup? targetFragmentGroup}) async {
-    final subFragmentGroups = await querySubFragmentGroupsInFragmentGroupById(targetFragmentGroup: targetFragmentGroup);
+  /// 返回值里的 [Fragment] 不会出现重复，且存在多个 [RFragment2FragmentGroup]。
+  Future<Map<String, (Fragment, List<RFragment2FragmentGroup>)>> querySubFragmentsInFragmentGroupById({
+    required FragmentGroup? surfaceFragmentGroup,
+  }) async {
+    final subFragmentGroups = await querySubFragmentGroupsInFragmentGroupById(surfaceFragmentGroup: surfaceFragmentGroup);
 
     final set = <String, (Fragment, List<RFragment2FragmentGroup>)>{};
     // 先查询 targetFragmentGroup 内的碎片
-    await queryFragmentsInFragmentGroupById(targetFragmentGroup: targetFragmentGroup, set: set);
+    await queryFragmentsInFragmentGroupById(surfaceFragmentGroup: surfaceFragmentGroup, set: set);
     // 再查询 subFragmentGroups 内的碎片
     for (var v in subFragmentGroups) {
-      await queryFragmentsInFragmentGroupById(targetFragmentGroup: v, set: set);
+      await queryFragmentsInFragmentGroupById(surfaceFragmentGroup: v, set: set);
     }
     return set;
   }
 
-  /// 查询 [targetFragmentGroup] 内的全部子碎片的数量。
+  /// TODO: 引入 jump
+  /// 查询 [surfaceFragmentGroup] 内的全部子碎片的数量，包含子孙碎片。
   Future<int> querySubFragmentsCountInFragmentGroup({
-    required FragmentGroup? targetFragmentGroup,
+    required FragmentGroup? surfaceFragmentGroup,
     required QueryFragmentWhereType queryFragmentWhereType,
   }) async {
-    final subFragmentGroups = await querySubFragmentGroupsInFragmentGroupById(targetFragmentGroup: targetFragmentGroup);
+    final subFragmentGroups = await querySubFragmentGroupsInFragmentGroupById(surfaceFragmentGroup: surfaceFragmentGroup);
     // 查询 targetFragmentGroup 内的碎片数量。
     var count = await queryFragmentsCountInFragmentGroup(
-      targetFragmentGroup: targetFragmentGroup,
+      targetFragmentGroup: surfaceFragmentGroup,
       queryFragmentWhereType: queryFragmentWhereType,
     );
     // 查询子碎片组内的碎片数量。
@@ -245,58 +243,49 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return count;
   }
 
-  /// 查询碎片组处在哪些碎片组链上。
-  ///
-  /// 如果 chain 为空数组，则表示 root 组，root 组不算进 chain 数组中。
-  ///
-  /// [fragmentGroup] 会被算进在 chain 中。
-  Future<List<FragmentGroup>> queryFragmentGroupInWhichFragmentGroupChain({required FragmentGroup fragmentGroup}) async {
-    final singleChain = <FragmentGroup>[fragmentGroup];
-    // 开始循环
-    Future<void> foreachQuery(FragmentGroup fg) async {
-      if (fg.father_fragment_groups_id == null) {
-        return;
-      }
-      final foreachSel = select(fragmentGroups);
-      foreachSel.where((tbl) => tbl.id.equals(fg.father_fragment_groups_id!));
-      final foreachResult = await foreachSel.getSingle();
-      singleChain.add(foreachResult);
-      await foreachQuery(foreachResult);
-    }
-
-    await foreachQuery(fragmentGroup);
-
-    return singleChain.reversed.toList();
-  }
-
   /// 查询碎片处在哪些碎片组链上。
   ///
   /// 一个相同碎片可能存储在不同的碎片组链上，因此返回值为多个。
   ///
-  /// 如果 chain 为空数组，则表示 root 组，root 组不算进 chain 数组中。
-  Future<List<List<FragmentGroup>>> queryFragmentInWhichFragmentGroupChain({required Fragment fragment}) async {
-    final rSel = select(rFragment2FragmentGroups);
-    rSel.where((tbl) => tbl.fragment_id.equals(fragment.id));
-    final rSelResult = await rSel.get();
+  /// 返回值 dynamicFragmentGroup 类型
+  Future<List<FragmentGroup?>> queryFragmentInWhichFragmentGroupChain({required Fragment fragment}) async {
+    final rSel = select(rFragment2FragmentGroups).join([
+      leftOuterJoin(fragmentGroups, fragmentGroups.id.equalsExp(rFragment2FragmentGroups.fragment_group_id)),
+    ]);
+    rSel.where(rFragment2FragmentGroups.fragment_id.equals(fragment.id));
 
-    final multiChain = <List<FragmentGroup>>[];
-    await Future.forEach<RFragment2FragmentGroup>(
-      rSelResult,
-      (element) async {
-        if (element.fragment_group_id == null) {
-          multiChain.add([]);
-          return;
-        }
-
-        final latestSel = select(fragmentGroups);
-        latestSel.where((tbl) => tbl.id.equals(element.fragment_group_id!));
-        final latestResult = await latestSel.getSingle();
-        final singleChain = await queryFragmentGroupInWhichFragmentGroupChain(fragmentGroup: latestResult);
-        multiChain.add(singleChain);
-      },
-    );
-    return multiChain;
+    return (await rSel.get()).map((e) => e.readTableOrNull(fragmentGroups)).toList();
   }
+
+  /// 查询碎片组处在哪些碎片组链上。
+  ///
+  /// 返回值:
+  ///   - 第一个参数：surfaceFragmentGroup
+  ///   - 第二个参数：jumpTargetFragmentGroup
+  // Future<List<(FragmentGroup, FragmentGroup)>> queryFragmentGroupInWhichFragmentGroupChain({required FragmentGroup unknownFragmentGroup}) async {
+  //   final singleChain = <(FragmentGroup, FragmentGroup)>[];
+  //   // 检查是否为跳转组
+  //   final targetSel = select(fragmentGroups)..where((tbl) => tbl.jump_to_fragment_groups_id.equals(unknownFragmentGroup.id));
+  //   // 可能存在于多个 surface 组内
+  //   final targets = await targetSel.get();
+  //
+  //
+  //   // 开始循环
+  //   Future<void> foreachQuery(FragmentGroup fg) async {
+  //     if (fg.father_fragment_groups_id == null) {
+  //       return;
+  //     }
+  //     final foreachSel = select(fragmentGroups);
+  //     foreachSel.where((tbl) => tbl.id.equals(fg.father_fragment_groups_id!));
+  //     final foreachResult = await foreachSel.getSingle();
+  //     singleChain.add(foreachResult);
+  //     await foreachQuery(foreachResult);
+  //   }
+  //
+  //   await foreachQuery(unknownFragmentGroup);
+  //
+  //   return singleChain.reversed.toList();
+  // }
 
   /// 查询全部已选的碎片，以及对应的已选 [RFragment2FragmentGroup]
   ///
@@ -307,7 +296,7 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
       innerJoin(rFragment2FragmentGroups, rFragment2FragmentGroups.fragment_id.equalsExp(fragments.id)),
     ]);
     sel.where(rFragment2FragmentGroups.client_be_selected.equals(true));
-    sel.groupBy([fragments.id]);
+    // sel.groupBy([fragments.id]);
     final r = await sel.get();
     final result = <String, (Fragment, List<RFragment2FragmentGroup>)>{};
     r.map(
@@ -333,14 +322,11 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return (await j.get()).map((e) => e.readTable(rFragment2FragmentGroups)).toList();
   }
 
-  Future<RFragment2FragmentGroup> queryRFragment2FragmentGroupsBy({
-    required Fragment fragment,
-    required FragmentGroup? fragmentGroup,
+  Future<RFragment2FragmentGroup> queryRFragment2FragmentGroup({
+    required RFragment2FragmentGroup rFragment2FragmentGroup,
   }) async {
     final j = select(rFragment2FragmentGroups);
-    j.where(
-      (tbl) => tbl.fragment_id.equals(fragment.id) & (fragmentGroup == null ? tbl.fragment_group_id.isNull() : tbl.fragment_group_id.equals(fragmentGroup.id)),
-    );
+    j.where((tbl) => tbl.id.equals(rFragment2FragmentGroup.id));
     return await j.getSingle();
   }
 
@@ -361,9 +347,9 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
 
   /// 查询全部已选的碎片数量。
   Future<int> querySelectedFragmentCount() async {
-    final count = fragments.id.count();
-    final sel = selectOnly(fragments)
-      ..where(fragments.client_be_selected.equals(true))
+    final count = rFragment2FragmentGroups.id.count();
+    final sel = selectOnly(rFragment2FragmentGroups)
+      ..where(rFragment2FragmentGroups.client_be_selected.equals(true))
       ..addColumns([count]);
     final result = await sel.getSingle();
     return result.read(count)!;
@@ -496,8 +482,8 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
   }
 
   /// TODO: jump 的目标碎片组存在被原作者删除的情况。
-  Future<FragmentGroup?> queryJumpTargetFragmentGroup({required String jumpFragmentGroupId}) async {
-    final j = select(fragmentGroups)..where((tbl) => tbl.id.equals(jumpFragmentGroupId));
+  Future<FragmentGroup?> queryJumpTargetFragmentGroup({required String jumpTargetFragmentGroupId}) async {
+    final j = select(fragmentGroups)..where((tbl) => tbl.id.equals(jumpTargetFragmentGroupId));
     return await j.getSingleOrNull();
   }
 }

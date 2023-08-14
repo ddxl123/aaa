@@ -20,7 +20,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
     required this.initFragmentTemplate,
     required this.initSomeBefore,
     required this.initSomeAfter,
-    required this.initFragmentGroupChain,
+    required this.enterDynamicFragmentGroups,
     required this.isEditableAb,
     required this.isTailNew,
   }) : super(key: key);
@@ -33,7 +33,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
 
   final List<Fragment> initSomeAfter;
 
-  final List<FragmentGroup>? initFragmentGroupChain;
+  final Ab<FragmentGroup?>? enterDynamicFragmentGroups;
 
   final Ab<bool> isEditableAb;
 
@@ -47,7 +47,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
         initFragmentTemplate: initFragmentTemplate,
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
-        initFragmentGroupChain: initFragmentGroupChain,
+        enterDynamicFragmentGroups: enterDynamicFragmentGroups,
         isEditable: isEditableAb,
       ),
       builder: (controller, abw) {
@@ -136,7 +136,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
                           AbwBuilder(
                             builder: (abwSingle) {
                               return IconButton(
-                                style: c.currentPerformerAb(abwSingle).fragmentGroupChains.isEmpty
+                                style: c.currentPerformerAb(abwSingle).dynamicFragmentGroups.isEmpty
                                     ? const ButtonStyle(
                                         backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 255, 69, 0)),
                                       )

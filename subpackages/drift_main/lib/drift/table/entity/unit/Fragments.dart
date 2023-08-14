@@ -15,8 +15,6 @@ class Fragments extends CloudTableBase  {
 
   BoolColumn get be_sep_publish => boolean().named("be_sep_publish")();
 
-  BoolColumn get client_be_selected => boolean().named("client_be_selected")();
-
   TextColumn get content => text().named("content")();
 
   @ReferenceTo([Users])

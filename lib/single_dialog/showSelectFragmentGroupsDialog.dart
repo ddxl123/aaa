@@ -7,13 +7,14 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
-Future<void> showSelectFragmentGroupsDialog({required List<List<FragmentGroup>> selectedFragmentGroupChains}) async {
-  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedFragmentGroupChains: selectedFragmentGroupChains));
+/// [selectedDynamicFragmentGroup]：已选的碎片组，
+Future<void> showSelectFragmentGroupsDialog({required List<FragmentGroup?> selectedDynamicFragmentGroup}) async {
+  await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedDynamicFragmentGroup: selectedDynamicFragmentGroup));
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {
-  const SelectFragmentGroupDialogWidget({Key? key, required this.selectedFragmentGroupChains}) : super(key: key);
-  final List<List<FragmentGroup>> selectedFragmentGroupChains;
+  const SelectFragmentGroupDialogWidget({Key? key, required this.selectedDynamicFragmentGroup}) : super(key: key);
+  final List<FragmentGroup?> selectedDynamicFragmentGroup;
 
   @override
   State<SelectFragmentGroupDialogWidget> createState() => _SelectFragmentGroupDialogWidgetState();
@@ -21,7 +22,7 @@ class SelectFragmentGroupDialogWidget extends StatefulWidget {
 
 class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDialogWidget> {
   List<Widget> _columnChildren() {
-    return widget.selectedFragmentGroupChains.isEmpty
+    return widget.selectedDynamicFragmentGroup.isEmpty
         ? [
             Row(
               children: [
@@ -35,7 +36,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
             )
           ]
         : [
-            ...widget.selectedFragmentGroupChains.map(
+            ...widget.selectedDynamicFragmentGroup.map(
               (e) => Row(
                 children: [
                   Expanded(
@@ -47,19 +48,23 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
                             child: SingleChildScrollView(
                               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                               scrollDirection: Axis.horizontal,
-                              child: Text('~ > ${e.map((e) => e.title).join(' > ')}', style: const TextStyle(color: Colors.blue)),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.circle, size: 8),
+                                  // Text('> ${e.map((e) => e.title).join(' > ')}', style: const TextStyle(color: Colors.blue)),
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
-                          const Icon(Icons.edit, color: Colors.blue),
                         ],
                       ),
                       onPressed: () async {
-                        await showSelectFragmentGroupDialog(
-                          selectedFragmentGroupChainAb: Ab<List<FragmentGroup>?>(e),
-                          isWithFragments: false,
-                          isOnlySelectSynced: true,
-                        );
+                        // await showSelectFragmentGroupDialog(
+                        //   selectedDynamicFragmentGroupAb: Ab<FragmentGroup?>(e),
+                        //   isWithFragments: false,
+                        //   isOnlySelectSynced: true,
+                        // );
                         if (mounted) setState(() {});
                       },
                     ),
@@ -67,7 +72,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
                   IconButton(
                     icon: const Icon(Icons.clear, color: Colors.red),
                     onPressed: () {
-                      widget.selectedFragmentGroupChains.remove(e);
+                      widget.selectedDynamicFragmentGroup.remove(e);
                       if (mounted) setState(() {});
                     },
                   ),
@@ -101,15 +106,15 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
           ],
         ),
         onPressed: () async {
-          final result = Ab<List<FragmentGroup>?>(null);
-          await showSelectFragmentGroupDialog(
-            selectedFragmentGroupChainAb: result,
-            isWithFragments: false,
-            isOnlySelectSynced: true,
-          );
+          final result = Ab<FragmentGroup?>(null);
+          // await showSelectFragmentGroupDialog(
+          //   selectedDynamicFragmentGroupAb: result,
+          //   isWithFragments: false,
+          //   isOnlySelectSynced: true,
+          // );
           if (result() == null) {
           } else {
-            widget.selectedFragmentGroupChains.add(result()!);
+            // widget.selectedDynamicFragmentGroup.add(result()!);
             if (mounted) setState(() {});
           }
         },

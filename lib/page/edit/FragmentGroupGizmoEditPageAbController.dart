@@ -10,10 +10,10 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class FragmentGroupGizmoEditPageAbController extends AbController {
   FragmentGroupGizmoEditPageAbController({
-    required this.fragmentGroupAb,
+    required this.currentDynamicFragmentGroupAb,
   });
 
-  final Ab<FragmentGroup?> fragmentGroupAb;
+  final Ab<FragmentGroup?> currentDynamicFragmentGroupAb;
 
   final fragmentGroupTagsAb = <FragmentGroupTag>[].ab;
   final titleTextEditingController = TextEditingController();
@@ -41,18 +41,18 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       }
     });
 
-    titleTextEditingController.text = fragmentGroupAb()!.title;
+    titleTextEditingController.text = currentDynamicFragmentGroupAb()!.title;
     profileQuillController.document =
-        Document.fromJson(jsonDecode(fragmentGroupAb()!.profile.trim() == "" ? jsonEncode(Document().toDelta().toJson()) : fragmentGroupAb()!.profile));
+        Document.fromJson(jsonDecode(currentDynamicFragmentGroupAb()!.profile.trim() == "" ? jsonEncode(Document().toDelta().toJson()) : currentDynamicFragmentGroupAb()!.profile));
 
-    final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: fragmentGroupAb()!.id);
+    final tags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: currentDynamicFragmentGroupAb()!.id);
     fragmentGroupTagsAb.refreshInevitable((oldValue) => oldValue
       ..clear()
       ..addAll(tags));
   }
 
   Future<void> addTag() async {
-    await showFragmentGroupTagSearchDialog(initTags: fragmentGroupTagsAb, fragmentGroup: fragmentGroupAb()!);
+    await showFragmentGroupTagSearchDialog(initTags: fragmentGroupTagsAb, fragmentGroup: currentDynamicFragmentGroupAb()!);
   }
 
   /// 返回是否被修改。
@@ -63,7 +63,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
         ({bool isProfileModify, String now}) profile,
         ({bool isFragmentGroupTagModify, List<FragmentGroupTag> now, List<FragmentGroupTag> saved}) fragmentGroupTag,
       })> isModifyContent() async {
-    final saved = await db.generalQueryDAO.queryFragmentGroupById(id: fragmentGroupAb()!.id);
+    final saved = await db.generalQueryDAO.queryFragmentGroupById(id: currentDynamicFragmentGroupAb()!.id);
     final nowTitle = titleTextEditingController.text;
     final nowProfile = jsonEncode(profileQuillController.document.toDelta().toJson());
     bool isTitleModify = false;
@@ -77,7 +77,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       isProfileModify = true;
     }
 
-    final savedTags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: fragmentGroupAb()!.id);
+    final savedTags = await db.generalQueryDAO.queryFragmentGroupTagsByFragmentGroupId(fragmentGroupId: currentDynamicFragmentGroupAb()!.id);
     savedTags.sort((a, b) => a.tag.compareTo(b.tag));
     fragmentGroupTagsAb().sort((a, b) => a.tag.compareTo(b.tag));
     if (!listEquals(savedTags, fragmentGroupTagsAb())) {
@@ -103,7 +103,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       await RefFragmentGroups(
         self: () async {
           if (modify.title.isTitleModify || modify.profile.isProfileModify) {
-            await fragmentGroupAb()!.reset(
+            await currentDynamicFragmentGroupAb()!.reset(
               be_publish: toAbsent(),
               client_be_selected: toAbsent(),
               creator_user_id: toAbsent(),
@@ -111,7 +111,6 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
               jump_to_fragment_groups_id: toAbsent(),
               title: modify.title.now.toValue(),
               profile: modify.profile.now.toValue(),
-              save_original_id: toAbsent(),
               syncTag: st,
               isCloudTableWithSync: true,
             );

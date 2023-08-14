@@ -73,7 +73,8 @@ class KnowledgeBaseHomeAbController extends AbController {
 
   Future<void> download({required FragmentGroup willDownloadFragmentGroup}) async {
     final isSelf = willDownloadFragmentGroup.creator_user_id == Aber.find<GlobalAbController>().loggedInUser()!.id;
-    final hasSaved = await db.generalQueryDAO.queryFragmentGroupBySaveOriginalId(id: willDownloadFragmentGroup.id);
+    // TODO:
+    final hasSaved = true;
     // TODO:
     await showCustomDialog(
       builder: (ctx) {
@@ -86,11 +87,11 @@ class KnowledgeBaseHomeAbController extends AbController {
           onOk: () async {
             fragmentGroupDownloadWrapper.clearAll();
             final selectGroup = Ab<List<FragmentGroup>?>(null);
-            await showSelectFragmentGroupDialog(
-              selectedFragmentGroupChainAb: selectGroup,
-              isOnlySelectSynced: false,
-              isWithFragments: false,
-            );
+            // await showSelectFragmentGroupDialog(
+            //   selectedDynamicFragmentGroupAb: selectGroup,
+            //   isOnlySelectSynced: false,
+            //   isWithFragments: false,
+            // );
             if (selectGroup.isAbNotEmpty()) {
               await _downloadFgs(
                 willDownloadFragmentGroup: willDownloadFragmentGroup,
@@ -236,7 +237,6 @@ class KnowledgeBaseHomeAbController extends AbController {
                   // 若 v.jump_to_fragment_groups_id 存在，说明 v 也是个 jump 组，因此要下面这样设置。
                   jump_to_fragment_groups_id: v.jump_to_fragment_groups_id?.toValue() ?? v.id.toValue(),
                   profile: v.profile,
-                  save_original_id: null.toValue(),
                   title: v.title,
                 ).insert(
                   syncTag: syncTag,
@@ -284,7 +284,6 @@ class KnowledgeBaseHomeAbController extends AbController {
                     father_fragment_groups_id: willDownloadFragmentGroup.id == v.id ? (toFragmentGroup?.id).toValue() : v.father_fragment_groups_id.toValue(),
                     jump_to_fragment_groups_id: v.jump_to_fragment_groups_id?.toValue() ?? v.id.toValue(),
                     profile: v.profile,
-                    save_original_id: null.toValue(),
                     title: v.title,
                   ).insert(
                     syncTag: syncTag,

@@ -125,7 +125,7 @@ class Home extends StatelessWidget {
                                   initFragmentTemplate: result,
                                   initSomeBefore: [],
                                   initSomeAfter: [],
-                                  initFragmentGroupChain: null,
+                                  enterDynamicFragmentGroups: null,
                                   isEditableAb: true.ab,
                                   isTailNew: true,
                                 );

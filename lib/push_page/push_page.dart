@@ -62,7 +62,7 @@ Future<void> pushToFragmentTemplateEditView({
   required FragmentTemplate initFragmentTemplate,
   required List<Fragment> initSomeBefore,
   required List<Fragment> initSomeAfter,
-  required List<FragmentGroup>? initFragmentGroupChain,
+  required Ab<FragmentGroup?>? enterDynamicFragmentGroups,
   required Ab<bool> isEditableAb,
   required bool isTailNew,
 }) async {
@@ -73,7 +73,7 @@ Future<void> pushToFragmentTemplateEditView({
         initSomeBefore: initSomeBefore,
         initSomeAfter: initSomeAfter,
         initFragment: initFragmentAb,
-        initFragmentGroupChain: initFragmentGroupChain,
+        enterDynamicFragmentGroups: enterDynamicFragmentGroups,
         isEditableAb: isEditableAb,
         isTailNew: isTailNew,
         initFragmentTemplate: initFragmentTemplate,
@@ -166,7 +166,7 @@ Future<void> pushToFragmentGroupGizmoEditPage({
   await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (ctx) => FragmentGroupGizmoEditPage(fragmentGroupAb: fragmentGroupAb),
+      builder: (ctx) => FragmentGroupGizmoEditPage(currentDynamicFragmentGroupAb: fragmentGroupAb),
     ),
   );
 }

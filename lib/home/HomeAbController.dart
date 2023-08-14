@@ -43,7 +43,7 @@ class HomeAbController extends AbController {
 
     if (currentPageType() == PageType.fragment && FragmentPageType.values[Aber.find<FragmentHomeAbController>().tabController.index] == FragmentPageType.fragment) {
       final groupChainC = Aber.findOrNullLast<FragmentGroupListPageController>();
-      if (groupChainC != null && groupChainC.getCurrentFragmentGroupChain().isNotEmpty) {
+      if (groupChainC != null && groupChainC.getGroupChainNotRoot().isNotEmpty) {
         await groupChainC.backGroup();
         return true;
       }
