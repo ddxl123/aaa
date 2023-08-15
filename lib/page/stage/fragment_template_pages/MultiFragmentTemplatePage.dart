@@ -29,8 +29,10 @@ class _MultiFragmentTemplatePageState extends State<MultiFragmentTemplatePage> {
 
   int currentIndex = 0;
 
-  /// 空表示没有上/下一页
+  /// null 表示没有上/下一页
   final fragment3 = <Fragment?>[null, null, null];
+
+  Fragment? get current => fragment3[currentIndex];
 
   @override
   void initState() {
@@ -88,17 +90,19 @@ class _MultiFragmentTemplatePageState extends State<MultiFragmentTemplatePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
-            onPressed: () {
-              pushToFragmentTemplateEditView(
-                context: context,
-                initFragmentAb: fragment3[currentIndex],
-                initFragmentTemplate: FragmentTemplate.newInstanceFromContent(fragment3[currentIndex]!.content),
-                initSomeBefore: [],
-                initSomeAfter: [],
-                enterDynamicFragmentGroups: null,
-                isEditableAb: true.ab,
-                isTailNew: false,
-              );
+            onPressed: () async {
+              if (current != null) {
+                pushToFragmentEditView(
+                  context: context,
+                  initFragmentAb: current!,
+                  initFragmentTemplate: FragmentTemplate.newInstanceFromContent(current!.content),
+                  initSomeBefore: [],
+                  initSomeAfter: [],
+                  enterDynamicFragmentGroups: null,
+                  isEditableAb: true.ab,
+                  isTailNew: false,
+                );
+              }
             },
           ),
         ],

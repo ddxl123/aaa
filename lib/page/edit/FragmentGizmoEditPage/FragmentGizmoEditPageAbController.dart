@@ -22,8 +22,7 @@ class FragmentPerformer {
 
   /// 当前操作碎片所存放的碎片组。
   ///   - 若为空数组，则没有选择组。
-  ///   - 若元素为 null，则选择了 root。
-  final List<FragmentGroup?> dynamicFragmentGroups = [];
+  final dynamicFragmentGroups = <(FragmentGroup?, RFragment2FragmentGroup?)>[];
 
   /// [fragmentTemplate] 是根据 [fragment.content] 解析而来。
   ///
@@ -72,47 +71,34 @@ class FragmentPerformer {
     required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
     required SyncTag syncTag,
   }) async {
-    final resultFragment = await saveFragment(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController, syncTag: syncTag);
-    return resultFragment;
-  }
-
-  /// 将当前 [fragment] 进行插入、更新。
-  ///
-  /// 如果 [fragment] 为 null，则插入，会插入 [Fragment] 和 [FragmentGroups]。
-  ///
-  /// 如果存在修改，则更新。
-  ///
-  /// 如果不存在修改，则不修改。
-  ///
-  /// 返回是否存在修改。
-  Future<bool> saveFragment({
-    required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
-    required SyncTag syncTag,
-  }) async {
-    final resultTemplate = await equalTemplate(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    if (!resultTemplate.isModified) {
+    final result = await equalAll(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
+    if (!result.isExistModified) {
       return false;
     }
+    // 若碎片是新建的，则进行插入
     if (fragment == null) {
-      final newFragment = await db.insertDAO.insertFragment(
+      final newFragment = await db.insertDAO.insertFragmentAndR(
         willFragmentsCompanion: Crt.fragmentsCompanion(
-          content: jsonEncode(resultTemplate.now.toJson()),
+          content: jsonEncode(result.template.now.toJson()),
           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
           father_fragment_id: null.toValue(),
           title: fragmentTemplate.getTitle(),
           be_sep_publish: false,
         ),
-        dynamicFragmentGroups: dynamicFragmentGroups,
+        dynamicFragmentGroups: result.fragmentGroupChains.now.map((e) => e.$1).toList(),
         syncTag: syncTag,
         isCloudTableWithSync: true,
       );
       fragment = newFragment;
+      final dynamicFragmentGroupReset = await db.generalQueryDAO.queryFragmentGroupAndRs(fragment: newFragment);
+      dynamicFragmentGroups
+        ..clear()
+        ..addAll(dynamicFragmentGroupReset);
     } else {
-      // 已经存储过当前碎片时，fragmentGroupChains 的修改单独进行。
       await RefFragments(
         self: () async {
           await fragment!.reset(
-            content: jsonEncode(resultTemplate.now.toJson()).toValue(),
+            content: jsonEncode(result.template.now.toJson()).toValue(),
             creator_user_id: toAbsent(),
             father_fragment_id: toAbsent(),
             // 因为本身就是 now
@@ -122,8 +108,52 @@ class FragmentPerformer {
             isCloudTableWithSync: true,
           );
         },
+        rFragment2FragmentGroups: RefRFragment2FragmentGroups(
+          self: () async {
+            final user = Aber.find<GlobalAbController>().loggedInUser()!;
+            final saved = result.fragmentGroupChains.saved;
+            final now = result.fragmentGroupChains.now;
+            // 删除 saved
+            for (var value in saved) {
+              await value.$2?.delete(
+                syncTag: syncTag,
+                isCloudTableWithSync: SyncTag.parseToUserId(value.$2!.id) == user.id,
+              );
+            }
+            print("------------------");
+            print(saved);
+            print(now);
+
+            // 存储 now
+            for (var value in now) {
+              await RefRFragment2FragmentGroups(
+                self: () async {
+                  await Crt.rFragment2FragmentGroupsCompanion(
+                    client_be_selected: false,
+                    creator_user_id: user.id,
+                    fragment_group_id: (value.$1?.id).toValue(),
+                    fragment_id: fragment!.id,
+                  ).insert(
+                    syncTag: syncTag,
+                    isCloudTableWithSync: true,
+                    isCloudTableAutoId: true,
+                    isReplaceWhenIdSame: false,
+                  );
+                },
+                order: 0,
+              ).run();
+            }
+
+            await db.deleteDAO.deleteAllFreeFragment(syncTag: syncTag, userId: user.id);
+
+            final dynamicFragmentGroupReset = await db.generalQueryDAO.queryFragmentGroupAndRs(fragment: fragment!);
+            dynamicFragmentGroups
+              ..clear()
+              ..addAll(dynamicFragmentGroupReset);
+          },
+          order: 0,
+        ),
         fragmentMemoryInfos: null,
-        rFragment2FragmentGroups: null,
         fragments_father_fragment_id: null,
         memoryModels: null,
         userComments: null,
@@ -138,7 +168,11 @@ class FragmentPerformer {
   Future<
       ({
         ({bool isModified, FragmentTemplate now, FragmentTemplate saved}) template,
-        ({bool isModified, List<FragmentGroup?> now, List<FragmentGroup?> saved}) fragmentGroupChains,
+        ({
+          bool isModified,
+          List<(FragmentGroup?, RFragment2FragmentGroup?)> now,
+          List<(FragmentGroup?, RFragment2FragmentGroup?)> saved,
+        }) fragmentGroupChains,
         bool isExistModified,
       })> equalAll({
     required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
@@ -170,10 +204,11 @@ class FragmentPerformer {
     } else {
       saved = fragmentTemplate.emptyTransferableInstance();
     }
-    if (!FragmentTemplate.equalFrom(now, saved)) {
+    final isModified = !FragmentTemplate.equalFrom(now, saved);
+    if (isModified) {
       logger.outNormal(print: "equalContent 存在修改：\nnow:${now.toJson()}\nsaved:${saved.toJson()}");
     }
-    return (isModified: !FragmentTemplate.equalFrom(now, saved), now: now, saved: saved);
+    return (isModified: isModified, now: now, saved: saved);
   }
 
   /// 比较当前的是否与存储的相同。
@@ -181,13 +216,17 @@ class FragmentPerformer {
   /// 返回值
   ///   - 是否不同
   ///   - 最新结果
-  Future<({bool isModified, List<FragmentGroup?> now, List<FragmentGroup?> saved})> equalFragmentGroupChains(
-      {required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
-    final List<FragmentGroup?> now;
-    final List<FragmentGroup?> saved;
+  Future<
+      ({
+        bool isModified,
+        List<(FragmentGroup?, RFragment2FragmentGroup?)> now,
+        List<(FragmentGroup?, RFragment2FragmentGroup?)> saved,
+      })> equalFragmentGroupChains({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
+    final List<(FragmentGroup?, RFragment2FragmentGroup?)> now;
+    final List<(FragmentGroup?, RFragment2FragmentGroup?)> saved;
     if (fragment != null) {
       now = dynamicFragmentGroups;
-      saved = await db.generalQueryDAO.queryFragmentInWhichFragmentGroupChain(fragment: fragment!);
+      saved = await db.generalQueryDAO.queryFragmentGroupAndRs(fragment: fragment!);
     } else {
       now = dynamicFragmentGroups;
       saved = [];
@@ -197,7 +236,13 @@ class FragmentPerformer {
     if (fragment == null) {
       return (isModified: false, now: now, saved: saved);
     }
-    final isModified = !const DeepCollectionEquality().equals(now.map((e) => e?.id ?? ""), saved.map((e) => e?.id ?? ""));
+    final isModified = !const DeepCollectionEquality().equals(
+      now.map((e) => "${e.$1?.id}+${e.$2?.id}"),
+      saved.map((e) => "${e.$1?.id}+${e.$2?.id}"),
+    );
+    if (isModified) {
+      logger.outNormal(print: "equalFragmentGroupChains 存在修改：$isModified\nnow:\n$now\nsaved:\n$saved");
+    }
 
     return (isModified: isModified, now: now, saved: saved);
   }
@@ -227,12 +272,14 @@ class FragmentGizmoEditPageAbController extends AbController {
   /// 仅用来初始化赋值.
   final FragmentTemplate initFragmentTemplate;
 
-  /// 当在碎片组中创建碎片时，会将当前所在碎片组设为初始化碎片组。
+  /// 从哪个碎片组进入到该页面的。
   ///
-  /// Ab 为 null 时，说明没有所在的组，可以在任何地方打开这个页面。
+  /// [RFragment2FragmentGroup]? - 为 null 时表示是新增的没有被保存的，不为 null 则是被保存过的。
   ///
-  /// Ab 值为 null 时，说明所在的碎片组是 root。
-  final Ab<FragmentGroup?>? enterDynamicFragmentGroups;
+  /// [FragmentGroup]? - 为 null 时表示选择了 root。
+  ///
+  /// [enterDynamicFragmentGroups] 为 null 时表示进入该页面时，没有组。
+  final (FragmentGroup?, RFragment2FragmentGroup?)? enterDynamicFragmentGroups;
 
   /// 用来记录操作的碎片，存放 [initSomeBefore]、[initFragment]、[initSomeAfter] 的对象。
   ///
@@ -257,7 +304,7 @@ class FragmentGizmoEditPageAbController extends AbController {
     // 当创建时
     if (initFragment == null) {
       if (enterDynamicFragmentGroups != null) {
-        initPerformer.dynamicFragmentGroups.add(enterDynamicFragmentGroups!());
+        initPerformer.dynamicFragmentGroups.add(enterDynamicFragmentGroups!);
       }
     }
 
@@ -345,12 +392,37 @@ class FragmentGizmoEditPageAbController extends AbController {
     }
 
     final st = await SyncTag.create();
-    final saveResult = await currentPerformerAb().saveAll(fragmentGizmoEditPageAbController: this, syncTag: st);
-    if (saveResult) {
-      SmartDialog.showToast('保存成功！');
-    }
-    if (isGotoNext) {
-      await goTo(lastOrNext: LastOrNext.next, isTailNew: true);
+
+    // 若当前不是创建碎片，且存储的路径为空数组，则提示是否删除当前碎片
+    if (initFragment != null && currentPerformerAb().dynamicFragmentGroups.isEmpty) {
+      await showCustomDialog(
+        builder: (ctx) {
+          return OkAndCancelDialogWidget(
+            text: "你移除了所有位置，保存后将会删除当前碎片，确认要这样做吗？",
+            okText: "删除",
+            cancelText: "返回",
+            onOk: () async {
+              final saveResult = await currentPerformerAb().saveAll(fragmentGizmoEditPageAbController: this, syncTag: st);
+              if (saveResult) {
+                SmartDialog.showToast('删除成功！');
+              } else {
+                throw "不应该执行到这里";
+              }
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+            },
+          );
+        },
+      );
+    } else {
+      final saveResult = await currentPerformerAb().saveAll(fragmentGizmoEditPageAbController: this, syncTag: st);
+      if (saveResult) {
+        SmartDialog.showToast('保存成功！');
+      } else {
+        // 无修改
+      }
+      if (isGotoNext) {
+        await goTo(lastOrNext: LastOrNext.next, isTailNew: true);
+      }
     }
   }
 

@@ -184,13 +184,13 @@ class FragmentGroupListPage extends StatelessWidget {
                   if (v == 0) {
                     final result = await pushToTemplateChoice(context: context);
                     if (result != null) {
-                      await pushToFragmentTemplateEditView(
+                      await pushToFragmentEditView(
                         context: context,
                         initFragmentAb: null,
                         initFragmentTemplate: result,
                         initSomeBefore: [],
                         initSomeAfter: [],
-                        enterDynamicFragmentGroups: c.groupChain().last().getDynamicGroupEntityAb(),
+                        enterDynamicFragmentGroups: (c.groupChain().last().getDynamicGroupEntityAb()(), null),
                         isEditableAb: true.ab,
                         isTailNew: true,
                       );

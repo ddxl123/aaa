@@ -2,6 +2,7 @@ import 'package:aaa/home/personal_home_page/PersonalHomePage.dart';
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/fragment_group_view/FragmentGroupListView.dart';
+import 'package:aaa/page/fragment_group_view/FragmentGroupSelectView.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:aaa/page/other/TemplateChoicePage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
@@ -56,13 +57,13 @@ Future<FragmentTemplate?> pushToTemplateChoice({required BuildContext context}) 
   );
 }
 
-Future<void> pushToFragmentTemplateEditView({
+Future<void> pushToFragmentEditView({
   required BuildContext context,
   required Fragment? initFragmentAb,
   required FragmentTemplate initFragmentTemplate,
   required List<Fragment> initSomeBefore,
   required List<Fragment> initSomeAfter,
-  required Ab<FragmentGroup?>? enterDynamicFragmentGroups,
+  required (FragmentGroup?, RFragment2FragmentGroup?)? enterDynamicFragmentGroups,
   required Ab<bool> isEditableAb,
   required bool isTailNew,
 }) async {
@@ -179,6 +180,20 @@ Future<void> pushToPersonalHomePage({
     context,
     MaterialPageRoute(
       builder: (ctx) => PersonalHomePage(userId: userId),
+    ),
+  );
+}
+
+/// 返回空 - 取消选择
+///
+/// FragmentGroup? - dynamicFragmentGroup?
+Future<(FragmentGroup?, void)?> pushToFragmentGroupSelectView({
+  required BuildContext context,
+}) async {
+  return await Navigator.push<(FragmentGroup?, void)>(
+    context,
+    MaterialPageRoute(
+      builder: (ctx) => FragmentGroupSelectView(),
     ),
   );
 }

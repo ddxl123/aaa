@@ -33,7 +33,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
 
   final List<Fragment> initSomeAfter;
 
-  final Ab<FragmentGroup?>? enterDynamicFragmentGroups;
+  final (FragmentGroup?, RFragment2FragmentGroup?)? enterDynamicFragmentGroups;
 
   final Ab<bool> isEditableAb;
 

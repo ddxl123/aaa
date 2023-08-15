@@ -21,7 +21,7 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   /// 向 [dynamicFragmentGroups] 每个元素，插入相同的 [willFragmentsCompanion]。
   ///
   /// 当 [dynamicFragmentGroups] 元素为 null 时，表示插入到 root 组内。
-  Future<Fragment> insertFragment({
+  Future<Fragment> insertFragmentAndR({
     required FragmentsCompanion willFragmentsCompanion,
     required List<FragmentGroup?> dynamicFragmentGroups,
     required SyncTag syncTag,
@@ -41,9 +41,9 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         self: () async {
           for (var v in dynamicFragmentGroups) {
             await Crt.rFragment2FragmentGroupsCompanion(
-              creator_user_id: willFragmentsCompanion.creator_user_id.value,
-              fragment_group_id: (v?.jump_to_fragment_groups_id ?? v?.id).toValue(),
-              fragment_id: willFragmentsCompanion.id.value,
+              creator_user_id: newFragment.creator_user_id,
+              fragment_group_id: (v?.id).toValue(),
+              fragment_id: newFragment.id,
               client_be_selected: false,
             ).insert(
               syncTag: syncTag,

@@ -18,7 +18,7 @@ enum LogLevel {
 }
 
 class CustomLogger {
-  final logger = Logger(printer: PrettyPrinter(methodCount: 1, errorMethodCount: 50));
+  final logger = Logger(printer: PrettyPrinter(methodCount: 10, errorMethodCount: 50));
 
   /// [show] - toast 内容。
   ///

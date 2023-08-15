@@ -71,6 +71,20 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await (select(fragments)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
+  /// 查询 [fragment] 的全部 [FragmentGroup] 以及 [RFragment2FragmentGroup]
+  Future<List<(FragmentGroup?, RFragment2FragmentGroup)>> queryFragmentGroupAndRs({required Fragment fragment}) async {
+    final selJoin = select(rFragment2FragmentGroups).join([
+      leftOuterJoin(
+        fragmentGroups,
+        rFragment2FragmentGroups.fragment_group_id.equalsExp(fragmentGroups.id),
+      ),
+    ]);
+    selJoin.where(rFragment2FragmentGroups.fragment_id.equals(fragment.id));
+    final result = await selJoin.get();
+
+    return result.map((e) => (e.readTableOrNull(fragmentGroups), e.readTable(rFragment2FragmentGroups))).toList();
+  }
+
   /// 查询全部游离态的 [Fragment]，即没有对应的 [RFragment2FragmentGroup] 的 [Fragment]
   Future<List<Fragment>> queryAllFreeFragment() async {
     final j = select(fragments).join(
@@ -243,20 +257,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return count;
   }
 
-  /// 查询碎片处在哪些碎片组链上。
-  ///
-  /// 一个相同碎片可能存储在不同的碎片组链上，因此返回值为多个。
-  ///
-  /// 返回值 dynamicFragmentGroup 类型
-  Future<List<FragmentGroup?>> queryFragmentInWhichFragmentGroupChain({required Fragment fragment}) async {
-    final rSel = select(rFragment2FragmentGroups).join([
-      leftOuterJoin(fragmentGroups, fragmentGroups.id.equalsExp(rFragment2FragmentGroups.fragment_group_id)),
-    ]);
-    rSel.where(rFragment2FragmentGroups.fragment_id.equals(fragment.id));
-
-    return (await rSel.get()).map((e) => e.readTableOrNull(fragmentGroups)).toList();
-  }
-
   /// 查询碎片组处在哪些碎片组链上。
   ///
   /// 返回值:
@@ -310,16 +310,6 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
       },
     ).toList();
     return result;
-  }
-
-  /// 通过 [fragmentIds] 查询 [RFragment2FragmentGroups]，若碎片存在于多个碎片组中，则全都查询出来。
-  Future<List<RFragment2FragmentGroup>> queryRFragment2FragmentGroups({required List<String> fragmentIds}) async {
-    final j = select(rFragment2FragmentGroups).join(
-      [
-        innerJoin(fragments, fragments.id.equalsExp(rFragment2FragmentGroups.fragment_id)),
-      ],
-    )..where(fragments.id.isIn(fragmentIds));
-    return (await j.get()).map((e) => e.readTable(rFragment2FragmentGroups)).toList();
   }
 
   Future<RFragment2FragmentGroup> queryRFragment2FragmentGroup({

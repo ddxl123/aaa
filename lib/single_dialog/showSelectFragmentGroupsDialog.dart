@@ -1,5 +1,5 @@
-import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
-import 'package:aaa/single_dialog/showSelectFragmentGroupDialog.dart';
+import 'package:aaa/page/list/FragmentGroupListPageController.dart';
+import 'package:aaa/push_page/push_page.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -8,92 +8,73 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
 /// [selectedDynamicFragmentGroup]：已选的碎片组，
-Future<void> showSelectFragmentGroupsDialog({required List<FragmentGroup?> selectedDynamicFragmentGroup}) async {
+Future<void> showSelectFragmentGroupsDialog({required List<(FragmentGroup?, RFragment2FragmentGroup?)> selectedDynamicFragmentGroup}) async {
   await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedDynamicFragmentGroup: selectedDynamicFragmentGroup));
 }
 
 class SelectFragmentGroupDialogWidget extends StatefulWidget {
   const SelectFragmentGroupDialogWidget({Key? key, required this.selectedDynamicFragmentGroup}) : super(key: key);
-  final List<FragmentGroup?> selectedDynamicFragmentGroup;
+  final List<(FragmentGroup?, RFragment2FragmentGroup?)> selectedDynamicFragmentGroup;
 
   @override
   State<SelectFragmentGroupDialogWidget> createState() => _SelectFragmentGroupDialogWidgetState();
 }
 
 class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDialogWidget> {
-  List<Widget> _columnChildren() {
-    return widget.selectedDynamicFragmentGroup.isEmpty
-        ? [
-            Row(
-              children: [
-                Expanded(
-                  child: MaterialButton(
-                    child: const Text('未选择位置'),
-                    onPressed: () {},
-                  ),
-                )
-              ],
-            )
-          ]
-        : [
-            ...widget.selectedDynamicFragmentGroup.map(
-              (e) => Row(
-                children: [
-                  Expanded(
-                    child: MaterialButton(
-                      padding: EdgeInsets.zero,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: SingleChildScrollView(
-                              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.circle, size: 8),
-                                  // Text('> ${e.map((e) => e.title).join(' > ')}', style: const TextStyle(color: Colors.blue)),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                      onPressed: () async {
-                        // await showSelectFragmentGroupDialog(
-                        //   selectedDynamicFragmentGroupAb: Ab<FragmentGroup?>(e),
-                        //   isWithFragments: false,
-                        //   isOnlySelectSynced: true,
-                        // );
-                        if (mounted) setState(() {});
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.red),
-                    onPressed: () {
-                      widget.selectedDynamicFragmentGroup.remove(e);
-                      if (mounted) setState(() {});
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ];
-  }
-
-  Future<void> _onOk() async {
-    SmartDialog.showToast('选择成功！');
-    SmartDialog.dismiss();
-  }
-
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
       dialogSize: DialogSize(width: kDialogFixedWidth, height: null),
       title: '存放位置：',
       columnChildren: [
-        ..._columnChildren(),
+        ...widget.selectedDynamicFragmentGroup.isEmpty
+            ? [
+                Row(
+                  children: [
+                    Expanded(
+                      child: MaterialButton(
+                        child: const Text('未选择位置'),
+                        onPressed: () {},
+                      ),
+                    )
+                  ],
+                )
+              ]
+            : [
+                ...widget.selectedDynamicFragmentGroup.map(
+                  (e) => MaterialButton(
+                    padding: EdgeInsets.zero,
+                    child: Row(
+                      children: [
+                        e.$1 == null
+                            ? Icon(Icons.circle, size: 8)
+                            : Expanded(
+                                child: Text(
+                                  e.$1!.title,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                      ],
+                    ),
+                    onPressed: () async {
+                      showCustomDialog(
+                        builder: (ctx) {
+                          return OkAndCancelDialogWidget(
+                            title: "是否移除？",
+                            cancelText: "返回",
+                            okText: "移除",
+                            onOk: () async {
+                              widget.selectedDynamicFragmentGroup.remove(e);
+                              setState(() {});
+                              SmartDialog.dismiss(status: SmartStatus.dialog);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
       ],
       topKeepWidget: Text("相同碎片可能被存放到多个位置", style: TextStyle(color: Colors.grey)),
       bottomKeepWidget: TextButton(
@@ -106,21 +87,17 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
           ],
         ),
         onPressed: () async {
-          final result = Ab<FragmentGroup?>(null);
-          // await showSelectFragmentGroupDialog(
-          //   selectedDynamicFragmentGroupAb: result,
-          //   isWithFragments: false,
-          //   isOnlySelectSynced: true,
-          // );
-          if (result() == null) {
-          } else {
-            // widget.selectedDynamicFragmentGroup.add(result()!);
-            if (mounted) setState(() {});
+          final result = await pushToFragmentGroupSelectView(context: context);
+          if (result != null) {
+            widget.selectedDynamicFragmentGroup.add((result.$1, null));
+            setState(() {});
           }
         },
       ),
       okText: '确定',
-      onOk: _onOk,
+      onOk: () {
+        SmartDialog.dismiss(status: SmartStatus.dialog);
+      },
       crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
