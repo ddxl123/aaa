@@ -1,5 +1,6 @@
 import 'package:aaa/home/minehome/MineHomeAbController.dart';
 import 'package:aaa/home/test/TestHome.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -50,52 +51,74 @@ class MineHome extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                  child: IconButton(
-                    icon: const Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent),
-                    style: ButtonStyle(
-                      visualDensity: kMinVisualDensity,
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      // side: const MaterialStatePropertyAll(BorderSide(color: Colors.grey)),
+                GestureDetector(
+                  child: Card(
+                    shadowColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    child: CachedNetworkImage(
+                      imageUrl: "https://gimg3.baidu.com/search/src=http%3A%2F%2Fpics2.baidu.com%2Ffeed%2F3ac79f3df8dcd1003a280cff9344e61cbb122f90.jpeg%40f_auto%3Ftoken%3D056a92f1f84dfa5a25803ea282a410a9&refer=http%3A%2F%2Fwww.baidu.com&app=2021&size=f360,240&n=0&g=0n&q=75&fmt=auto?sec=1692291600&t=06ca0771f10773e4666d038c4791aa5c",
+                      errorWidget: (ctx, url, err) {
+                        return Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent);
+                      },
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
-                    onPressed: () {},
                   ),
-                ),
-                const SizedBox(width: 10),
-                AbwBuilder(
-                  builder: (abw) {
-                    if (c.globalAbController.loggedInUser(abw) == null) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: GestureDetector(
-                          child: Text('点击登录', style: Theme.of(c.context).textTheme.headlineSmall),
-                          onTap: () {
-                            pushToLoginPage(context: c.context);
-                          },
-                        ),
-                      );
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(c.globalAbController.loggedInUser(abw)!.username, style: Theme.of(c.context).textTheme.headlineSmall),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text("关注 ", style: const TextStyle(color: Colors.grey)),
-                            Text(c.follow(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
-                            Text("  |  ", style: TextStyle(color: Colors.grey)),
-                            Text("被关注 ", style: const TextStyle(color: Colors.grey)),
-                            Text(c.beFollowed(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
-                          ],
-                        ),
-                      ],
-                    );
+                  onTap: () {
+                    pushToPersonalHomePage(context: c.context, userId: c.globalAbController.loggedInUser()?.id??1);
                   },
                 ),
-                const Spacer(),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: AbwBuilder(
+                    builder: (abw) {
+                      if (c.globalAbController.loggedInUser(abw) == null) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          child: GestureDetector(
+                            child: Text('点击登录', style: Theme.of(c.context).textTheme.headlineSmall),
+                            onTap: () {
+                              pushToLoginPage(context: c.context);
+                            },
+                          ),
+                        );
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    c.globalAbController.loggedInUser(abw)!.username,
+                                    style: Theme.of(c.context).textTheme.headlineSmall,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              pushToPersonalHomePage(context: c.context, userId: c.globalAbController.loggedInUser()!.id);
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Text("关注 ", style: const TextStyle(color: Colors.grey)),
+                              Text(c.follow(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
+                              Text("  |  ", style: TextStyle(color: Colors.grey)),
+                              Text("被关注 ", style: const TextStyle(color: Colors.grey)),
+                              Text(c.beFollowed(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
                 GestureDetector(
                   child: const Text('个人主页 >', style: TextStyle(color: Colors.grey)),
                   onTap: () {

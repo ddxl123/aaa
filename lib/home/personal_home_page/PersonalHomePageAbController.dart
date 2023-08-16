@@ -2,6 +2,7 @@ import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tools/tools.dart';
 
 class PersonalHomePageAbController extends AbController {
@@ -9,7 +10,9 @@ class PersonalHomePageAbController extends AbController {
 
   final int userId;
 
-  String userName = "加载中...";
+  final userName = Ab<String?>(null);
+
+  final userAvatar = Ab<String?>(null);
 
   /// 关注
   final follow = 0.ab;
@@ -88,5 +91,16 @@ class PersonalHomePageAbController extends AbController {
         logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
       },
     );
+  }
+
+  /// 头像
+  Future<void> showAvatar() async {
+    final picker = ImagePicker();
+    final result = await picker.pickImage(source: ImageSource.gallery);
+    if (result != null) {
+      print("=======");
+      print(result.path);
+      userAvatar.refreshEasy((oldValue) => result.path);
+    }
   }
 }

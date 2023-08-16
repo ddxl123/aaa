@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aaa/home/personal_home_page/PersonalHomePageAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
@@ -68,18 +69,26 @@ class PersonalHomePage extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                  child: IconButton(
-                    icon: const Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent),
-                    style: ButtonStyle(
-                      visualDensity: kMinVisualDensity,
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      // side: const MaterialStatePropertyAll(BorderSide(color: Colors.grey)),
+                GestureDetector(
+                  child: Card(
+                    shadowColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    child: CachedNetworkImage(
+                      imageUrl: c.userAvatar(abw)??"",
+                      errorWidget: (ctx, url, err) {
+                        print("u--- $url");
+                        print("u--- $err");
+                        return Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent);
+                      },
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
-                    onPressed: () {},
                   ),
+                  onTap: () async {
+                    c.showAvatar();
+                  },
                 ),
                 const SizedBox(width: 10),
                 AbwBuilder(
@@ -87,7 +96,7 @@ class PersonalHomePage extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(c.userName, style: Theme.of(c.context).textTheme.headlineSmall),
+                        Text(c.userName(abw)??"加载中", style: Theme.of(c.context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Row(
                           children: [

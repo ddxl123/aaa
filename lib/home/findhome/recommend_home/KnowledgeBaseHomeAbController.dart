@@ -1,4 +1,5 @@
 import 'package:aaa/global/GlobalAbController.dart';
+import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
@@ -72,30 +73,25 @@ class KnowledgeBaseHomeAbController extends AbController {
   }
 
   Future<void> download({required FragmentGroup willDownloadFragmentGroup}) async {
+    // 是否是自己创建的
     final isSelf = willDownloadFragmentGroup.creator_user_id == Aber.find<GlobalAbController>().loggedInUser()!.id;
-    // TODO:
-    final hasSaved = true;
-    // TODO:
+    // 是否已经下载过了
+    final hasSaved = (await db.generalQueryDAO.queryFragmentGroupById(id: willDownloadFragmentGroup.id)) != null;
+
     await showCustomDialog(
       builder: (ctx) {
         return OkAndCancelDialogWidget(
           title: "下载说明",
-          text: "${isSelf ? "这个碎片组是你自己创建的，是否要下载？" : ""}\n"
-              "${hasSaved != null ? "· 您已经下载过该碎片组了，是否进行更新下载？" : ""}",
+          text: isSelf ? "这个碎片组是你自己创建的，是否要将云端的更新到本地？" : (hasSaved ? "你已经下载过该碎片组了，是否进行更新下载？" : "无"),
           okText: "下载",
           cancelText: "返回",
           onOk: () async {
             fragmentGroupDownloadWrapper.clearAll();
-            final selectGroup = Ab<List<FragmentGroup>?>(null);
-            // await showSelectFragmentGroupDialog(
-            //   selectedDynamicFragmentGroupAb: selectGroup,
-            //   isOnlySelectSynced: false,
-            //   isWithFragments: false,
-            // );
-            if (selectGroup.isAbNotEmpty()) {
+            final result = await pushToFragmentGroupSelectView(context: context);
+            if (result != null) {
               await _downloadFgs(
                 willDownloadFragmentGroup: willDownloadFragmentGroup,
-                toFragmentGroup: selectGroup()!.lastOrNull,
+                toFragmentGroup: result.$1,
               );
             }
           },

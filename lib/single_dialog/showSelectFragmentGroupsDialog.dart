@@ -25,7 +25,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
       dialogSize: DialogSize(width: kDialogFixedWidth, height: null),
-      title: '存放位置：',
+      title: '存放位置：(已选 ${widget.selectedDynamicFragmentGroup.length} 处)',
       columnChildren: [
         ...widget.selectedDynamicFragmentGroup.isEmpty
             ? [
@@ -76,7 +76,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
                 ),
               ],
       ],
-      topKeepWidget: Text("相同碎片可能被存放到多个位置", style: TextStyle(color: Colors.grey)),
+      topKeepWidget: Text("相同碎片可以被存放到多个位置", style: TextStyle(color: Colors.grey)),
       bottomKeepWidget: TextButton(
         style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(50, 30, 144, 255))),
         child: Row(

@@ -5,12 +5,8 @@ part of httper;
 
 class HttpPath {
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://192.168.1.4:2814';
+  static const String BASE_PATH_LOCAL = 'http://192.168.1.3:2814';
   
-  static const String LOGIN_REQUIRED_TEST_GET = '/login_required/test/get';
-
-  static const String LOGIN_REQUIRED_TEST_POST = '/login_required/test/post';
-
   static const String REGISTER_OR_LOGIN_CHECK_LOGIN = '/register_or_login/check_login';
 
   static const String REGISTER_OR_LOGIN_LOGOUT = '/register_or_login/logout';
@@ -38,6 +34,10 @@ class HttpPath {
   static const String NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_FRAGMENT_PAGE = '/no_login_required/personal_home_page/fragment_page';
 
   static const String NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE = '/no_login_required/personal_home_page/publish_page';
+
+  static const String LOGIN_REQUIRED_TEST_GET = '/login_required/test/get';
+
+  static const String LOGIN_REQUIRED_TEST_POST = '/login_required/test/post';
 
 }
 
