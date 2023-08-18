@@ -1,19 +1,29 @@
+import 'package:aaa/global/Constants.dart';
 import 'package:aaa/home/minehome/MineHomeAbController.dart';
 import 'package:aaa/home/test/TestHome.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 
 import '../../push_page/push_page.dart';
 
-class MineHome extends StatelessWidget {
-  const MineHome({Key? key}) : super(key: key);
+class MineHome extends StatefulWidget {
+  const MineHome({super.key});
+
+  @override
+  State<MineHome> createState() => _MineHomeState();
+}
+
+class _MineHomeState extends State<MineHome> {
+  final mineHomeAbController = MineHomeAbController();
 
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MineHomeAbController>(
-      putController: MineHomeAbController(),
+      putController: mineHomeAbController,
       builder: (c, abw) {
         return Scaffold(
           appBar: AppBar(
@@ -28,15 +38,21 @@ class MineHome extends StatelessWidget {
               ),
             ],
           ),
-          body: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            slivers: [
-              _userInfo(),
-              _task(context: context),
-              _creator(context: context),
-              _other(),
-              const SliverToBoxAdapter(child: SizedBox(height: 50)),
-            ],
+          body: SmartRefresher(
+            controller: c.refreshController,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              slivers: [
+                _userInfo(),
+                _task(context: context),
+                _creator(context: context),
+                _other(),
+                const SliverToBoxAdapter(child: SizedBox(height: 50)),
+              ],
+            ),
+            onRefresh: () {
+              c.refreshMineHome();
+            },
           ),
         );
       },
@@ -56,18 +72,18 @@ class MineHome extends StatelessWidget {
                     shadowColor: Colors.black,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                     child: CachedNetworkImage(
-                      imageUrl: "https://gimg3.baidu.com/search/src=http%3A%2F%2Fpics2.baidu.com%2Ffeed%2F3ac79f3df8dcd1003a280cff9344e61cbb122f90.jpeg%40f_auto%3Ftoken%3D056a92f1f84dfa5a25803ea282a410a9&refer=http%3A%2F%2Fwww.baidu.com&app=2021&size=f360,240&n=0&g=0n&q=75&fmt=auto?sec=1692291600&t=06ca0771f10773e4666d038c4791aa5c",
+                      imageUrl: FilePathWrapper.toAvailablePath(cloudPath: c.userAvatarCloudPath(abw)) ?? "",
                       errorWidget: (ctx, url, err) {
-                        return Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent);
+                        return Icon(Icons.ac_unit, size: globalUserAvatarSquareSide, color: Colors.tealAccent);
                       },
-                      width: 80,
-                      height: 80,
+                      width: globalUserAvatarSquareSide,
+                      height: globalUserAvatarSquareSide,
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.none,
                     ),
                   ),
                   onTap: () {
-                    pushToPersonalHomePage(context: c.context, userId: c.globalAbController.loggedInUser()?.id??1);
+                    pushToPersonalHomePage(context: c.context, userId: c.globalAbController.loggedInUser()?.id ?? 1);
                   },
                 ),
                 const SizedBox(width: 10),

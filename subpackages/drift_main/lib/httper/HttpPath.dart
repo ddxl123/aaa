@@ -19,6 +19,8 @@ class HttpPath {
 
   static const String LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = '/login_required/data_upload/once_syncs';
 
+  static const String LOGIN_REQUIRED_DATA_UPLOAD_SINGLE_FIELD_MODIFY = '/login_required/data_upload/single_field_modify';
+
   static const String NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_FRAGMENT_GROUP_ID = '/no_login_required/fragment_group_tag/by_fragment_group_id';
 
   static const String NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE = '/no_login_required/fragment_group_tag/by_like';
@@ -35,9 +37,11 @@ class HttpPath {
 
   static const String NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE = '/no_login_required/personal_home_page/publish_page';
 
-  static const String LOGIN_REQUIRED_TEST_GET = '/login_required/test/get';
+  static const String NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_USER_INFO = '/no_login_required/personal_home_page/user_info';
 
-  static const String LOGIN_REQUIRED_TEST_POST = '/login_required/test/post';
+  static const String NO_LOGIN_REQUIRED_TEST_GET = '/no_login_required/test/get';
+
+  static const String NO_LOGIN_REQUIRED_TEST_POST = '/no_login_required/test/post';
 
 }
 

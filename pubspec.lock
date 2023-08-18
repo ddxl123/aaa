@@ -538,7 +538,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_math_fork:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_math_fork
       sha256: a143a3a89131b578043ecbdb5e759c1033a1b3e9174f5cd1b979d93f4a7fb41c
@@ -565,10 +565,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_quill_extensions
-      sha256: "520110b83e68b69154eb540dfa3a500b2a523aa26ed4d12ab316b114df7a3334"
+      sha256: "2881381283c2f31697ba0a5ce4f1b4eb1639d33b10c4252c0de601e4ae640347"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   flutter_smart_dialog:
     dependency: transitive
     description:
@@ -636,7 +636,7 @@ packages:
     source: hosted
     version: "3.2.0"
   gallery_saver:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: gallery_saver
       sha256: df8b7e207ca12d64c71e0710a7ee3bc48aa7206d51cc720716fedb1543a66712
@@ -663,10 +663,10 @@ packages:
     dependency: transitive
     description:
       name: holding_gesture
-      sha256: "6d12a991c498357f9c8a532656facf97c47858be9a7249d5caaa84707aecc052"
+      sha256: beb26bb731d7d67595c4895b42fa7962c209cecee8def42b665c495648d4620f
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   html:
     dependency: transitive
     description:
@@ -684,13 +684,13 @@ packages:
     source: hosted
     version: "2.0.0"
   http:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: http
-      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.13.6"
+    version: "1.1.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -715,6 +715,30 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "9.0.2"
+  image_cropper:
+    dependency: "direct main"
+    description:
+      name: image_cropper
+      sha256: "19340e50a8c09124ef2196884e9eb79d219d84cb819cfbf52141221216e30515"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.0.0"
+  image_cropper_for_web:
+    dependency: transitive
+    description:
+      name: image_cropper_for_web
+      sha256: "865d798b5c9d826f1185b32e5d0018c4183ddb77b7b82a931e1a06aa3b74974e"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.0"
+  image_cropper_platform_interface:
+    dependency: transitive
+    description:
+      name: image_cropper_platform_interface
+      sha256: ee160d686422272aa306125f3b6fb1c1894d9b87a5e20ed33fa008e7285da11e
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.0.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -780,13 +804,13 @@ packages:
     source: hosted
     version: "0.2.1"
   intl:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.18.1"
+    version: "0.18.0"
   io:
     dependency: transitive
     description:

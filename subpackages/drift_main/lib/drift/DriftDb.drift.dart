@@ -6541,6 +6541,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<int> age = GeneratedColumn<int>(
       'age', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _avatar_cloud_pathMeta =
+      const VerificationMeta('avatar_cloud_path');
+  @override
+  late final GeneratedColumn<String> avatar_cloud_path =
+      GeneratedColumn<String>('avatar_cloud_path', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _client_avatar_local_pathMeta =
+      const VerificationMeta('client_avatar_local_path');
+  @override
+  late final GeneratedColumn<String> client_avatar_local_path =
+      GeneratedColumn<String>('client_avatar_local_path', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
@@ -6581,8 +6593,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [age, email, password, phone, username, created_at, id, updated_at];
+  List<GeneratedColumn> get $columns => [
+        age,
+        avatar_cloud_path,
+        client_avatar_local_path,
+        email,
+        password,
+        phone,
+        username,
+        created_at,
+        id,
+        updated_at
+      ];
   @override
   String get aliasedName => _alias ?? 'users';
   @override
@@ -6595,6 +6617,19 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (data.containsKey('age')) {
       context.handle(
           _ageMeta, age.isAcceptableOrUnknown(data['age']!, _ageMeta));
+    }
+    if (data.containsKey('avatar_cloud_path')) {
+      context.handle(
+          _avatar_cloud_pathMeta,
+          avatar_cloud_path.isAcceptableOrUnknown(
+              data['avatar_cloud_path']!, _avatar_cloud_pathMeta));
+    }
+    if (data.containsKey('client_avatar_local_path')) {
+      context.handle(
+          _client_avatar_local_pathMeta,
+          client_avatar_local_path.isAcceptableOrUnknown(
+              data['client_avatar_local_path']!,
+              _client_avatar_local_pathMeta));
     }
     if (data.containsKey('email')) {
       context.handle(
@@ -6644,6 +6679,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     return User(
       age: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}age']),
+      avatar_cloud_path: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}avatar_cloud_path']),
+      client_avatar_local_path: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}client_avatar_local_path']),
       email: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}email']),
       password: attachedDatabase.typeMapping
@@ -6669,6 +6709,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
 class User extends DataClass implements Insertable<User> {
   int? age;
+  String? avatar_cloud_path;
+  String? client_avatar_local_path;
   String? email;
   String? password;
   String? phone;
@@ -6678,6 +6720,8 @@ class User extends DataClass implements Insertable<User> {
   DateTime updated_at;
   User(
       {this.age,
+      this.avatar_cloud_path,
+      this.client_avatar_local_path,
       this.email,
       this.password,
       this.phone,
@@ -6690,6 +6734,13 @@ class User extends DataClass implements Insertable<User> {
     final map = <String, Expression>{};
     if (!nullToAbsent || age != null) {
       map['age'] = Variable<int>(age);
+    }
+    if (!nullToAbsent || avatar_cloud_path != null) {
+      map['avatar_cloud_path'] = Variable<String>(avatar_cloud_path);
+    }
+    if (!nullToAbsent || client_avatar_local_path != null) {
+      map['client_avatar_local_path'] =
+          Variable<String>(client_avatar_local_path);
     }
     if (!nullToAbsent || email != null) {
       map['email'] = Variable<String>(email);
@@ -6710,6 +6761,12 @@ class User extends DataClass implements Insertable<User> {
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
       age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      avatar_cloud_path: avatar_cloud_path == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatar_cloud_path),
+      client_avatar_local_path: client_avatar_local_path == null && nullToAbsent
+          ? const Value.absent()
+          : Value(client_avatar_local_path),
       email:
           email == null && nullToAbsent ? const Value.absent() : Value(email),
       password: password == null && nullToAbsent
@@ -6729,6 +6786,10 @@ class User extends DataClass implements Insertable<User> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
       age: serializer.fromJson<int?>(json['age']),
+      avatar_cloud_path:
+          serializer.fromJson<String?>(json['avatar_cloud_path']),
+      client_avatar_local_path:
+          serializer.fromJson<String?>(json['client_avatar_local_path']),
       email: serializer.fromJson<String?>(json['email']),
       password: serializer.fromJson<String?>(json['password']),
       phone: serializer.fromJson<String?>(json['phone']),
@@ -6743,6 +6804,9 @@ class User extends DataClass implements Insertable<User> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'age': serializer.toJson<int?>(age),
+      'avatar_cloud_path': serializer.toJson<String?>(avatar_cloud_path),
+      'client_avatar_local_path':
+          serializer.toJson<String?>(client_avatar_local_path),
       'email': serializer.toJson<String?>(email),
       'password': serializer.toJson<String?>(password),
       'phone': serializer.toJson<String?>(phone),
@@ -6755,6 +6819,8 @@ class User extends DataClass implements Insertable<User> {
 
   User copyWith(
           {Value<int?> age = const Value.absent(),
+          Value<String?> avatar_cloud_path = const Value.absent(),
+          Value<String?> client_avatar_local_path = const Value.absent(),
           Value<String?> email = const Value.absent(),
           Value<String?> password = const Value.absent(),
           Value<String?> phone = const Value.absent(),
@@ -6764,6 +6830,12 @@ class User extends DataClass implements Insertable<User> {
           DateTime? updated_at}) =>
       User(
         age: age.present ? age.value : this.age,
+        avatar_cloud_path: avatar_cloud_path.present
+            ? avatar_cloud_path.value
+            : this.avatar_cloud_path,
+        client_avatar_local_path: client_avatar_local_path.present
+            ? client_avatar_local_path.value
+            : this.client_avatar_local_path,
         email: email.present ? email.value : this.email,
         password: password.present ? password.value : this.password,
         phone: phone.present ? phone.value : this.phone,
@@ -6776,6 +6848,8 @@ class User extends DataClass implements Insertable<User> {
   String toString() {
     return (StringBuffer('User(')
           ..write('age: $age, ')
+          ..write('avatar_cloud_path: $avatar_cloud_path, ')
+          ..write('client_avatar_local_path: $client_avatar_local_path, ')
           ..write('email: $email, ')
           ..write('password: $password, ')
           ..write('phone: $phone, ')
@@ -6789,12 +6863,23 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   int get hashCode => Object.hash(
-      age, email, password, phone, username, created_at, id, updated_at);
+      age,
+      avatar_cloud_path,
+      client_avatar_local_path,
+      email,
+      password,
+      phone,
+      username,
+      created_at,
+      id,
+      updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is User &&
           other.age == this.age &&
+          other.avatar_cloud_path == this.avatar_cloud_path &&
+          other.client_avatar_local_path == this.client_avatar_local_path &&
           other.email == this.email &&
           other.password == this.password &&
           other.phone == this.phone &&
@@ -6806,6 +6891,8 @@ class User extends DataClass implements Insertable<User> {
 
 class UsersCompanion extends UpdateCompanion<User> {
   Value<int?> age;
+  Value<String?> avatar_cloud_path;
+  Value<String?> client_avatar_local_path;
   Value<String?> email;
   Value<String?> password;
   Value<String?> phone;
@@ -6815,6 +6902,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   Value<DateTime> updated_at;
   UsersCompanion({
     this.age = const Value.absent(),
+    this.avatar_cloud_path = const Value.absent(),
+    this.client_avatar_local_path = const Value.absent(),
     this.email = const Value.absent(),
     this.password = const Value.absent(),
     this.phone = const Value.absent(),
@@ -6825,6 +6914,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   });
   UsersCompanion.insert({
     this.age = const Value.absent(),
+    this.avatar_cloud_path = const Value.absent(),
+    this.client_avatar_local_path = const Value.absent(),
     this.email = const Value.absent(),
     this.password = const Value.absent(),
     this.phone = const Value.absent(),
@@ -6837,6 +6928,8 @@ class UsersCompanion extends UpdateCompanion<User> {
         updated_at = Value(updated_at);
   static Insertable<User> custom({
     Expression<int>? age,
+    Expression<String>? avatar_cloud_path,
+    Expression<String>? client_avatar_local_path,
     Expression<String>? email,
     Expression<String>? password,
     Expression<String>? phone,
@@ -6847,6 +6940,9 @@ class UsersCompanion extends UpdateCompanion<User> {
   }) {
     return RawValuesInsertable({
       if (age != null) 'age': age,
+      if (avatar_cloud_path != null) 'avatar_cloud_path': avatar_cloud_path,
+      if (client_avatar_local_path != null)
+        'client_avatar_local_path': client_avatar_local_path,
       if (email != null) 'email': email,
       if (password != null) 'password': password,
       if (phone != null) 'phone': phone,
@@ -6859,6 +6955,8 @@ class UsersCompanion extends UpdateCompanion<User> {
 
   UsersCompanion copyWith(
       {Value<int?>? age,
+      Value<String?>? avatar_cloud_path,
+      Value<String?>? client_avatar_local_path,
       Value<String?>? email,
       Value<String?>? password,
       Value<String?>? phone,
@@ -6868,6 +6966,9 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<DateTime>? updated_at}) {
     return UsersCompanion(
       age: age ?? this.age,
+      avatar_cloud_path: avatar_cloud_path ?? this.avatar_cloud_path,
+      client_avatar_local_path:
+          client_avatar_local_path ?? this.client_avatar_local_path,
       email: email ?? this.email,
       password: password ?? this.password,
       phone: phone ?? this.phone,
@@ -6883,6 +6984,13 @@ class UsersCompanion extends UpdateCompanion<User> {
     final map = <String, Expression>{};
     if (age.present) {
       map['age'] = Variable<int>(age.value);
+    }
+    if (avatar_cloud_path.present) {
+      map['avatar_cloud_path'] = Variable<String>(avatar_cloud_path.value);
+    }
+    if (client_avatar_local_path.present) {
+      map['client_avatar_local_path'] =
+          Variable<String>(client_avatar_local_path.value);
     }
     if (email.present) {
       map['email'] = Variable<String>(email.value);
@@ -6912,6 +7020,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   String toString() {
     return (StringBuffer('UsersCompanion(')
           ..write('age: $age, ')
+          ..write('avatar_cloud_path: $avatar_cloud_path, ')
+          ..write('client_avatar_local_path: $client_avatar_local_path, ')
           ..write('email: $email, ')
           ..write('password: $password, ')
           ..write('phone: $phone, ')

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
@@ -10,6 +11,8 @@ class TestHomeAbController extends AbController {
   final textEditingController = TextEditingController();
 
   final analysisResult = '无结果'.ab;
+
+  final imageUnit8List = Ab<Uint8List?>(null);
 
   @override
   bool get isEnableLoading => true;

@@ -4,8 +4,10 @@ import 'dart:math';
 import 'package:aaa/page/login_register/LoginPage.dart';
 import 'package:aaa/single_dialog/register_or_login/showIsLogoutCurrentUserDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/http_file_enum.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:drift_main/tool/DriftViewer.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
@@ -231,6 +233,27 @@ class TestHome extends StatelessWidget {
                                   otherException: (int? code, HttperException httperException, StackTrace st) async {
                                     logger.outError(show: httperException.showMessage, error: httperException.debugMessage);
                                   },
+                                );
+                              },
+                            ),
+                            AbwBuilder(
+                              builder: (abw) {
+                                return Column(
+                                  children: [
+                                    ElevatedButton(
+                                      child: Text("插入文件实体"),
+                                      onPressed: () async {
+                                        final i = ImagePicker();
+                                        final image = await i.pickImage(source: ImageSource.gallery);
+                                        print(image?.path);
+                                      },
+                                    ),
+                                    c.imageUnit8List(abw) == null
+                                        ? Container()
+                                        : Image.memory(
+                                            c.imageUnit8List(abw)!,
+                                          ),
+                                  ],
                                 );
                               },
                             ),

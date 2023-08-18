@@ -220,7 +220,7 @@ class Home extends StatelessWidget {
             KeepStateWidget(child: const FindHome()),
             KeepStateWidget(child: const MemoryHome()),
             KeepStateWidget(child: const FragmentHome()),
-            const MineHome(),
+            KeepStateWidget(child: const MineHome()),
           ],
           onPageChanged: (int toIndex) {
             controller.currentPageType.refreshEasy((oldValue) => PageType.values[toIndex]);

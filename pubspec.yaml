@@ -89,9 +89,13 @@ dependencies:
   # tooltip
   just_the_tooltip: ^0.0.12
   # 图片下载、存储、缓存
+  # Android 端需要格外配置，请看包主页
+  # TODO: web 端需要格外配置，请看包主页
   cached_network_image: ^3.2.3
   # 照片选择器
   image_picker: ^0.8.5+3
+  # 图片裁剪
+  image_cropper: ^5.0.0
 
   build_runner: ^2.4.6
   source_gen: ^1.4.0
@@ -120,8 +124,8 @@ dependencies:
   tools:
     path: ./subpackages/tools
 dependency_overrides:
-  intl: ^0.18.1
-  flutter_math_fork: ^0.7.1
+  gallery_saver: ^2.3.2
+  http: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

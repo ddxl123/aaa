@@ -1,23 +1,37 @@
 import 'dart:convert';
 
+import 'package:aaa/global/Constants.dart';
 import 'package:aaa/home/personal_home_page/PersonalHomePageAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 
-/// TODO: 检查所有 putController ，看看它是否需要放置到 StatefulWidget 中。
-class PersonalHomePage extends StatelessWidget {
+class PersonalHomePage extends StatefulWidget {
   const PersonalHomePage({super.key, required this.userId});
 
   final int userId;
 
   @override
+  State<PersonalHomePage> createState() => _PersonalHomePageState();
+}
+
+class _PersonalHomePageState extends State<PersonalHomePage> {
+  late final PersonalHomePageAbController personalHomePageAbController;
+
+  @override
+  void initState() {
+    super.initState();
+    personalHomePageAbController = PersonalHomePageAbController(userId: widget.userId);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AbBuilder<PersonalHomePageAbController>(
-        putController: PersonalHomePageAbController(userId: userId),
+        putController: personalHomePageAbController,
         builder: (c, abw) {
           return NestedScrollView(
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -74,20 +88,18 @@ class PersonalHomePage extends StatelessWidget {
                     shadowColor: Colors.black,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                     child: CachedNetworkImage(
-                      imageUrl: c.userAvatar(abw)??"",
+                      imageUrl: FilePathWrapper.toAvailablePath(cloudPath: c.userAvatarCloudPath(abw)) ?? "",
                       errorWidget: (ctx, url, err) {
-                        print("u--- $url");
-                        print("u--- $err");
-                        return Icon(Icons.ac_unit, size: 80, color: Colors.tealAccent);
+                        return Icon(Icons.ac_unit, size: globalUserAvatarSquareSide, color: Colors.tealAccent);
                       },
-                      width: 80,
-                      height: 80,
+                      width: globalUserAvatarSquareSide,
+                      height: globalUserAvatarSquareSide,
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.none,
                     ),
                   ),
                   onTap: () async {
-                    c.showAvatar();
+                    await c.showAvatar();
                   },
                 ),
                 const SizedBox(width: 10),
@@ -96,7 +108,10 @@ class PersonalHomePage extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(c.userName(abw)??"加载中", style: Theme.of(c.context).textTheme.headlineSmall),
+                        Text(c.userName(abw) ?? "加载中", style: Theme
+                            .of(c.context)
+                            .textTheme
+                            .headlineSmall),
                         const SizedBox(height: 10),
                         Row(
                           children: [
@@ -149,7 +164,7 @@ class PersonalHomePage extends StatelessWidget {
       builder: (c, abw) {
         return GestureDetector(
           onTap: () {
-            pushToFragmentGroupListView(context: c.context, enterFragmentGroup: null, userId: userId);
+            pushToFragmentGroupListView(context: c.context, enterFragmentGroup: null, userId: widget.userId);
           },
           child: Padding(
             padding: EdgeInsets.all(10),
@@ -165,10 +180,12 @@ class PersonalHomePage extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: c.fragmentGroupsAb(abw).isEmpty ? Center(child: Text("该用户没有碎片~")) : Container(),
+                  child: c
+                      .fragmentGroupsAb(abw)
+                      .isEmpty ? Center(child: Text("该用户没有碎片~")) : Container(),
                 ),
                 ...c.fragmentGroupsAb(abw).map(
-                  (e) {
+                      (e) {
                     return SliverToBoxAdapter(
                       child: Card(
                         child: Padding(
@@ -198,8 +215,13 @@ class PersonalHomePage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            () {
-                                              final text = q.Document.fromJson(jsonDecode(e.profile)).toPlainText().split("\n").first.trim();
+                                                () {
+                                              final text = q.Document
+                                                  .fromJson(jsonDecode(e.profile))
+                                                  .toPlainText()
+                                                  .split("\n")
+                                                  .first
+                                                  .trim();
                                               return text.isEmpty ? "无简介" : text;
                                             }(),
                                             overflow: TextOverflow.ellipsis,
@@ -219,7 +241,7 @@ class PersonalHomePage extends StatelessWidget {
                   },
                 ),
                 ...c.fragmentsAb(abw).map(
-                  (e) {
+                      (e) {
                     return SliverToBoxAdapter(
                       child: Card(
                         child: Padding(
@@ -255,10 +277,12 @@ class PersonalHomePage extends StatelessWidget {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: c.publishFragmentGroupAb(abw).isEmpty ? Center(child: Text("该用户没有发布过~")) : Container(),
+                child: c
+                    .publishFragmentGroupAb(abw)
+                    .isEmpty ? Center(child: Text("该用户没有发布过~")) : Container(),
               ),
               ...c.publishFragmentGroupAb(abw).map(
-                (e) {
+                    (e) {
                   return SliverToBoxAdapter(
                     child: GestureDetector(
                       child: Card(
@@ -289,8 +313,13 @@ class PersonalHomePage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            () {
-                                              final text = q.Document.fromJson(jsonDecode(e.profile)).toPlainText().split("\n").first.trim();
+                                                () {
+                                              final text = q.Document
+                                                  .fromJson(jsonDecode(e.profile))
+                                                  .toPlainText()
+                                                  .split("\n")
+                                                  .first
+                                                  .trim();
                                               return text.isEmpty ? "无简介" : text;
                                             }(),
                                             overflow: TextOverflow.ellipsis,
@@ -308,7 +337,7 @@ class PersonalHomePage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        pushToFragmentGroupListView(context: c.context, userId: userId, enterFragmentGroup: e);
+                        pushToFragmentGroupListView(context: c.context, userId: widget.userId, enterFragmentGroup: e);
                       },
                     ),
                   );

@@ -41,15 +41,22 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
                       Card(
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text("标题", style: TextStyle(color: Colors.grey)),
-                              TextField(
-                                autofocus: true,
-                                decoration: InputDecoration(hintText: "请输入..."),
-                                controller: c.titleTextEditingController,
-                                focusNode: c.titleFocusNode,
+                              Image(image: image),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("标题", style: TextStyle(color: Colors.grey)),
+                                    TextField(
+                                      autofocus: true,
+                                      decoration: InputDecoration(hintText: "请输入..."),
+                                      controller: c.titleTextEditingController,
+                                      focusNode: c.titleFocusNode,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

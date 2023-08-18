@@ -337,6 +337,8 @@ class Crt {
 
   static UsersCompanion usersCompanion({
     required Value<int?> age,
+    required Value<String?> avatar_cloud_path,
+    required Value<String?> client_avatar_local_path,
     required Value<String?> email,
     required Value<String?> password,
     required Value<String?> phone,
@@ -347,6 +349,8 @@ class Crt {
   }) {
     return UsersCompanion(
       age: age,
+      avatar_cloud_path: avatar_cloud_path,
+      client_avatar_local_path: client_avatar_local_path,
       email: email,
       password: password,
       phone: phone,

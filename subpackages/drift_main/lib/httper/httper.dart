@@ -1,10 +1,15 @@
 
 library httper;
 
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:drift_main/share_common/share_enum.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+import '../share_common/http_file_enum.dart';
 
 part 'BaseObject.dart';
 
@@ -62,6 +67,12 @@ part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
 part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/SingleFieldModifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleFieldModifyVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryModifyDto.dart';
 
 
@@ -96,6 +107,12 @@ part 'dto_vo_bo/dto_vo/PersonalHomePageForPublishPageDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/PersonalHomePageForPublishPageVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/PersonalHomePageForUserInfoDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/PersonalHomePageForUserInfoVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByFragmentGroupIdDto.dart';

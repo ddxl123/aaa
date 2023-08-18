@@ -1293,6 +1293,8 @@ extension UserExt on User {
   }) async {
     await reset(
         age: user.age.toValue(),
+        avatar_cloud_path: user.avatar_cloud_path.toValue(),
+        client_avatar_local_path: user.client_avatar_local_path.toValue(),
         email: user.email.toValue(),
         password: user.password.toValue(),
         phone: user.phone.toValue(),
@@ -1310,6 +1312,8 @@ extension UserExt on User {
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<User> reset({
     required Value<int?> age,
+    required Value<String?> avatar_cloud_path,
+    required Value<String?> client_avatar_local_path,
     required Value<String?> email,
     required Value<String?> password,
     required Value<String?> phone,
@@ -1322,6 +1326,18 @@ extension UserExt on User {
     if (age.present && this.age != age.value) {
       isCloudModify = true;
       this.age = age.value;
+    }
+
+    if (avatar_cloud_path.present &&
+        this.avatar_cloud_path != avatar_cloud_path.value) {
+      isCloudModify = true;
+      this.avatar_cloud_path = avatar_cloud_path.value;
+    }
+
+    if (client_avatar_local_path.present &&
+        this.client_avatar_local_path != client_avatar_local_path.value) {
+      isCloudModify = true;
+      this.client_avatar_local_path = client_avatar_local_path.value;
     }
 
     if (email.present && this.email != email.value) {

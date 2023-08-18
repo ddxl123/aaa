@@ -346,6 +346,35 @@ Map<String, dynamic> _$FragmentGroupTagNewFragmentGroupTagVoToJson(
       'fragment_group_tag_entity': instance.fragment_group_tag_entity,
     };
 
+SingleFieldModifyDto _$SingleFieldModifyDtoFromJson(
+        Map<String, dynamic> json) =>
+    SingleFieldModifyDto(
+      table_name: json['table_name'] as String,
+      field_name: json['field_name'] as String,
+      field_id: json['field_id'],
+      modify_value: json['modify_value'],
+    );
+
+Map<String, dynamic> _$SingleFieldModifyDtoToJson(
+        SingleFieldModifyDto instance) =>
+    <String, dynamic>{
+      'table_name': instance.table_name,
+      'field_name': instance.field_name,
+      'field_id': instance.field_id,
+      'modify_value': instance.modify_value,
+    };
+
+SingleFieldModifyVo _$SingleFieldModifyVoFromJson(Map<String, dynamic> json) =>
+    SingleFieldModifyVo(
+      vo_padding_1: json['vo_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$SingleFieldModifyVoToJson(
+        SingleFieldModifyVo instance) =>
+    <String, dynamic>{
+      'vo_padding_1': instance.vo_padding_1,
+    };
+
 KnowledgeBaseCategoryModifyDto _$KnowledgeBaseCategoryModifyDtoFromJson(
         Map<String, dynamic> json) =>
     KnowledgeBaseCategoryModifyDto(
@@ -557,6 +586,32 @@ Map<String, dynamic> _$PersonalHomePageForPublishPageVoToJson(
         PersonalHomePageForPublishPageVo instance) =>
     <String, dynamic>{
       'fragment_groups_list': instance.fragment_groups_list,
+    };
+
+PersonalHomePageForUserInfoDto _$PersonalHomePageForUserInfoDtoFromJson(
+        Map<String, dynamic> json) =>
+    PersonalHomePageForUserInfoDto(
+      user_id: json['user_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$PersonalHomePageForUserInfoDtoToJson(
+        PersonalHomePageForUserInfoDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+PersonalHomePageForUserInfoVo _$PersonalHomePageForUserInfoVoFromJson(
+        Map<String, dynamic> json) =>
+    PersonalHomePageForUserInfoVo(
+      user_info: User.fromJson(json['user_info'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$PersonalHomePageForUserInfoVoToJson(
+        PersonalHomePageForUserInfoVo instance) =>
+    <String, dynamic>{
+      'user_info': instance.user_info,
     };
 
 QueryFragmentGroupTagByFragmentGroupIdDto
