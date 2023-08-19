@@ -1,9 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/single_dialog/showFragmentGroupTagSearchDialog.dart';
+import 'package:aaa/tool/other.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/share_common/http_file_enum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -20,6 +27,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
   final titleFocusNode = FocusNode();
   final profileQuillController = QuillController.basic();
   final profileFocusNode = FocusNode();
+  final coverPath = Ab<FileMixPath>(FileMixPath(cloudPath: null, localPath: null));
 
   final isShowToolBar = false.ab;
 
@@ -49,6 +57,12 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
     fragmentGroupTagsAb.refreshInevitable((oldValue) => oldValue
       ..clear()
       ..addAll(tags));
+
+    coverPath.refreshInevitable(
+      (obj) => obj
+        ..cloudPath = currentDynamicFragmentGroupAb()?.cover_cloud_path
+        ..localPath = currentDynamicFragmentGroupAb()?.client_cover_local_path,
+    );
   }
 
   Future<void> addTag() async {
@@ -62,6 +76,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
         ({bool isTitleModify, String now}) title,
         ({bool isProfileModify, String now}) profile,
         ({bool isFragmentGroupTagModify, List<FragmentGroupTag> now, List<FragmentGroupTag> saved}) fragmentGroupTag,
+        ({bool isCoverModify, FileMixPath now, FileMixPath saved}) cover,
       })> isModifyContent() async {
     final saved = await db.generalQueryDAO.queryFragmentGroupById(id: currentDynamicFragmentGroupAb()!.id);
     final nowTitle = titleTextEditingController.text;
@@ -69,6 +84,7 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
     bool isTitleModify = false;
     bool isProfileModify = false;
     bool isFragmentGroupTagModify = false;
+    bool isCoverModify = false;
 
     if (saved!.title != nowTitle) {
       isTitleModify = true;
@@ -84,11 +100,18 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       isFragmentGroupTagModify = true;
     }
 
+    final coverNow = FileMixPath(localPath: coverPath().localPath, cloudPath: coverPath().cloudPath);
+    final coverSave = FileMixPath(localPath: saved.client_cover_local_path, cloudPath: saved.cover_cloud_path);
+    if (saved.client_cover_local_path != coverPath().localPath || saved.cover_cloud_path != coverPath().cloudPath) {
+      isCoverModify = true;
+    }
+
     return (
-      isModify: isTitleModify || isProfileModify || isFragmentGroupTagModify,
+      isModify: isTitleModify || isProfileModify || isFragmentGroupTagModify || isCoverModify,
       title: (isTitleModify: isTitleModify, now: nowTitle),
       profile: (isProfileModify: isProfileModify, now: nowProfile),
       fragmentGroupTag: (isFragmentGroupTagModify: isFragmentGroupTagModify, now: fragmentGroupTagsAb(), saved: savedTags),
+      cover: (isCoverModify: isCoverModify, now: coverNow, saved: coverSave),
     );
   }
 
@@ -102,19 +125,30 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       final st = await SyncTag.create();
       await RefFragmentGroups(
         self: () async {
-          if (modify.title.isTitleModify || modify.profile.isProfileModify) {
-            await currentDynamicFragmentGroupAb()!.reset(
-              be_publish: toAbsent(),
-              client_be_selected: toAbsent(),
-              creator_user_id: toAbsent(),
-              father_fragment_groups_id: toAbsent(),
-              jump_to_fragment_groups_id: toAbsent(),
-              title: modify.title.now.toValue(),
-              profile: modify.profile.now.toValue(),
-              syncTag: st,
-              isCloudTableWithSync: true,
-            );
+          if (modify.cover.isCoverModify) {
+            // 将裁剪的缓存图片永久存储到本地
+            final file = File("${Aber.find<GlobalAbController>().applicationDocumentsDirectoryPath}/${HttpFileEnum.fragmentGroupCover.text}/$uuidV4.jpg");
+            if (!await file.exists()) {
+              await file.create(recursive: true);
+            }
+            await file.writeAsBytes(await File(coverPath().localPath!).readAsBytes());
+            coverPath.refreshInevitable((obj) => obj..localPath = file.path);
           }
+
+          await currentDynamicFragmentGroupAb()!.reset(
+            be_publish: toAbsent(),
+            client_be_selected: toAbsent(),
+            creator_user_id: toAbsent(),
+            father_fragment_groups_id: toAbsent(),
+            jump_to_fragment_groups_id: toAbsent(),
+            title: modify.title.now.toValue(),
+            profile: modify.profile.now.toValue(),
+            client_cover_local_path: coverPath().localPath.toValue(),
+            cover_cloud_path: coverPath().cloudPath.toValue(),
+            client_be_cloud_path_upload: modify.cover.isCoverModify.toValue(),
+            syncTag: st,
+            isCloudTableWithSync: true,
+          );
         },
         fragmentGroupTags: RefFragmentGroupTags(
           self: () async {
@@ -147,5 +181,21 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
       SmartDialog.showToast("更新成功！");
     }
     abBack();
+  }
+
+  Future<void> clickCover() async {
+    final pickResult = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickResult != null) {
+      final cropResult = await ImageCropper().cropImage(
+        sourcePath: pickResult.path,
+        aspectRatio: CropAspectRatio(
+          ratioX: globalFragmentGroupCoverRatio.width,
+          ratioY: globalFragmentGroupCoverRatio.height,
+        ),
+      );
+      if (cropResult != null) {
+        coverPath.refreshInevitable((obj) => obj..localPath = cropResult.path);
+      }
+    }
   }
 }

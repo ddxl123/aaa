@@ -72,8 +72,8 @@ dependencies:
 
   # 加载指示器
   flutter_spinkit: ^5.2.0
-  # 加载
-  flutter_easyloading: ^3.0.5
+  # 加载 toast dialog
+  flutter_smart_dialog: ^4.9.3+2
   # 异常捕获
   #  catcher: ^0.7.0
   # 虚线边框

@@ -1,7 +1,12 @@
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
+import 'package:drift_main/share_common/http_file_enum.dart';
 import 'package:drift_main/share_common/share_enum.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
@@ -34,6 +39,8 @@ class GlobalAbController extends AbController {
 
   final beExistUploadData = true.ab;
 
+  late String applicationDocumentsDirectoryPath;
+
   @override
   void onInit() {
     super.onInit();
@@ -41,8 +48,21 @@ class GlobalAbController extends AbController {
   }
 
   Future<void> _init() async {
+    await _getApplicationDocumentsDirectoryPath();
     await checkAndShowIsLoggedIn();
     // uploadSingleGroupSync();
+  }
+
+  /// 当 [this] 是相对路径时，该函数将其转换成绝对路径。
+  ///
+  /// [getApplicationDocumentsDirectory] 是一个异步方法，它返回一个Future对象，该对象包含一个Directory对象，该对象表示应用程序的文档目录。
+  ///   - 这个目录是应用程序专用的，只有应用程序本身可以访问。
+  ///   - 这个目录通常用于存储应用程序的数据或配置文件。
+  /// [Directory.current] 是一个同步方法，它返回一个Directory对象，该对象表示当前目录。
+  ///   - 当前目录是指运行应用程序时所在的目录，它可能与应用程序的位置不同。
+  ///   - 例如，如果我的应用程序在C:\my_app_folder中，而我使用终端从C:运行应用程序，执行my_app_folder\my_app.exe，那么Directory.current返回C:。
+  Future<void> _getApplicationDocumentsDirectoryPath() async {
+    applicationDocumentsDirectoryPath = (await getApplicationDocumentsDirectory()).path;
   }
 
   Future<bool> checkAndShowIsLoggedIn() async {
@@ -186,5 +206,63 @@ class GlobalAbController extends AbController {
         // await uploadSingleGroupSync();
       },
     );
+  }
+
+  /// 上传全部离线文件
+  ///
+  /// [count] 单次上传数量
+  ///
+  /// TODO: 上传完文件后，要再次 [Sync] 才行，否则路径没有被上传。
+  Future<void> uploadAllOfflineFiles({required int count}) async {
+    final result = await db.generalQueryDAO.queryManyFragmentGroupForCoverImageNeedUpload(count: count);
+    if (result.isEmpty) {
+      SmartDialog.showToast("已将全部离线文件上传成功！");
+      return;
+    }
+    for (var v in result) {
+      if (v.client_cover_local_path != null) {
+        await requestFile(
+          httpFileEnum: HttpFileEnum.fragmentGroupCover,
+          filePathWrapper: FilePathWrapper(
+            fileUint8List: await File(v.client_cover_local_path!).readAsBytes(),
+            oldCloudPath: null,
+          ),
+          fileRequestMethod: FileRequestMethod.coverInsertUpload,
+          isUpdateCache: false,
+          onSuccess: (FilePathWrapper filePathWrapper) async {
+            final st = await SyncTag.create();
+            await RefFragmentGroups(
+              self: () async {
+                await v.reset(
+                  be_publish: toAbsent(),
+                  client_be_selected: toAbsent(),
+                  client_cover_local_path: toAbsent(),
+                  cover_cloud_path: filePathWrapper.newCloudPath.toValue(),
+                  creator_user_id: toAbsent(),
+                  father_fragment_groups_id: toAbsent(),
+                  jump_to_fragment_groups_id: toAbsent(),
+                  profile: toAbsent(),
+                  title: toAbsent(),
+                  client_be_cloud_path_upload: false.toValue(),
+                  syncTag: st,
+                  isCloudTableWithSync: true,
+                );
+              },
+              fragmentGroupTags: null,
+              rFragment2FragmentGroups: null,
+              fragmentGroups_father_fragment_groups_id: null,
+              fragmentGroups_jump_to_fragment_groups_id: null,
+              userComments: null,
+              userLikes: null,
+              order: 0,
+            ).run();
+            SmartDialog.showToast("上传成功");
+          },
+          onError: (FilePathWrapper filePathWrapper, e, StackTrace st) async {
+            SmartDialog.showToast("上传失败");
+          },
+        );
+      }
+    }
   }
 }

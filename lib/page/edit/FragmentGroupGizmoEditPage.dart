@@ -1,10 +1,14 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPageAbController.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
+
+import '../../global/tool_widgets/CustomImageWidget.dart';
 
 class FragmentGroupGizmoEditPage extends StatefulWidget {
   const FragmentGroupGizmoEditPage({Key? key, required this.currentDynamicFragmentGroupAb}) : super(key: key);
@@ -42,20 +46,41 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image(image: image),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("标题", style: TextStyle(color: Colors.grey)),
-                                    TextField(
-                                      autofocus: true,
-                                      decoration: InputDecoration(hintText: "请输入..."),
-                                      controller: c.titleTextEditingController,
-                                      focusNode: c.titleFocusNode,
+                              AbwBuilder(
+                                builder: (abw) {
+                                  return GestureDetector(
+                                    child: LocalThenCloudImageWidget(
+                                      size: globalFragmentGroupCoverRatio * 100,
+                                      localPath: c.coverPath(abw).localPath,
+                                      cloudPath: FilePathWrapper.toAvailablePath(cloudPath: c.coverPath(abw).cloudPath),
                                     ),
-                                  ],
+                                    onTap: () {
+                                      c.clickCover();
+                                    },
+                                  );
+                                },
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextField(
+                                        autofocus: true,
+                                        decoration: InputDecoration(hintText: "标题", counter: Container(), isCollapsed: true, contentPadding: EdgeInsets.all(5)),
+                                        controller: c.titleTextEditingController,
+                                        focusNode: c.titleFocusNode,
+                                        style: TextStyle(fontSize: 18),
+                                        scrollPadding: EdgeInsets.zero,
+                                        minLines: 1,
+                                        maxLines: 2,
+                                        maxLength: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

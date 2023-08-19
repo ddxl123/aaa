@@ -234,6 +234,9 @@ class KnowledgeBaseHomeAbController extends AbController {
                   jump_to_fragment_groups_id: v.jump_to_fragment_groups_id?.toValue() ?? v.id.toValue(),
                   profile: v.profile,
                   title: v.title,
+                  client_cover_local_path: v.client_cover_local_path.toValue(),
+                  cover_cloud_path: v.cover_cloud_path.toValue(),
+                  client_be_cloud_path_upload: v.client_be_cloud_path_upload,
                 ).insert(
                   syncTag: syncTag,
                   // 因为别人可能会下载你保存的，因此需要同步。
@@ -281,6 +284,9 @@ class KnowledgeBaseHomeAbController extends AbController {
                     jump_to_fragment_groups_id: v.jump_to_fragment_groups_id?.toValue() ?? v.id.toValue(),
                     profile: v.profile,
                     title: v.title,
+                    client_cover_local_path: v.client_cover_local_path.toValue(),
+                    client_be_cloud_path_upload: v.client_be_cloud_path_upload,
+                    cover_cloud_path: v.cover_cloud_path.toValue(),
                   ).insert(
                     syncTag: syncTag,
                     isCloudTableWithSync: true,

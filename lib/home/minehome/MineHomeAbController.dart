@@ -15,8 +15,6 @@ class MineHomeAbController extends AbController {
   /// 被关注
   final beFollowed = 0.ab;
 
-  final userAvatarCloudPath = Ab<String?>(null);
-
   @override
   void onInit() {
     super.onInit();
@@ -38,7 +36,7 @@ class MineHomeAbController extends AbController {
       fileRequestMethod: FileRequestMethod.forceCloud,
       isUpdateCache: false,
       onSuccess: (FilePathWrapper filePathWrapper) async {
-        userAvatarCloudPath.refreshEasy((oldValue) => filePathWrapper.newCloudPath);
+        globalAbController.loggedInUser.refreshInevitable((obj) => obj?..avatar_cloud_path = filePathWrapper.newCloudPath);
       },
       onError: (FilePathWrapper filePathWrapper, e, StackTrace st) async {
         logger.outError(print: "图片获取异常", error: e, stackTrace: st);

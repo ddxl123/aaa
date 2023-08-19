@@ -5285,6 +5285,19 @@ class $FragmentGroupsTable extends FragmentGroups
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
+  static const VerificationMeta _client_be_cloud_path_uploadMeta =
+      const VerificationMeta('client_be_cloud_path_upload');
+  @override
+  late final GeneratedColumn<bool> client_be_cloud_path_upload =
+      GeneratedColumn<bool>('client_be_cloud_path_upload', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite:
+                'CHECK ("client_be_cloud_path_upload" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _client_be_selectedMeta =
       const VerificationMeta('client_be_selected');
   @override
@@ -5297,6 +5310,18 @@ class $FragmentGroupsTable extends FragmentGroups
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
+  static const VerificationMeta _client_cover_local_pathMeta =
+      const VerificationMeta('client_cover_local_path');
+  @override
+  late final GeneratedColumn<String> client_cover_local_path =
+      GeneratedColumn<String>('client_cover_local_path', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _cover_cloud_pathMeta =
+      const VerificationMeta('cover_cloud_path');
+  @override
+  late final GeneratedColumn<String> cover_cloud_path = GeneratedColumn<String>(
+      'cover_cloud_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _creator_user_idMeta =
       const VerificationMeta('creator_user_id');
   @override
@@ -5346,7 +5371,10 @@ class $FragmentGroupsTable extends FragmentGroups
   @override
   List<GeneratedColumn> get $columns => [
         be_publish,
+        client_be_cloud_path_upload,
         client_be_selected,
+        client_cover_local_path,
+        cover_cloud_path,
         creator_user_id,
         father_fragment_groups_id,
         jump_to_fragment_groups_id,
@@ -5373,6 +5401,15 @@ class $FragmentGroupsTable extends FragmentGroups
     } else if (isInserting) {
       context.missing(_be_publishMeta);
     }
+    if (data.containsKey('client_be_cloud_path_upload')) {
+      context.handle(
+          _client_be_cloud_path_uploadMeta,
+          client_be_cloud_path_upload.isAcceptableOrUnknown(
+              data['client_be_cloud_path_upload']!,
+              _client_be_cloud_path_uploadMeta));
+    } else if (isInserting) {
+      context.missing(_client_be_cloud_path_uploadMeta);
+    }
     if (data.containsKey('client_be_selected')) {
       context.handle(
           _client_be_selectedMeta,
@@ -5380,6 +5417,18 @@ class $FragmentGroupsTable extends FragmentGroups
               data['client_be_selected']!, _client_be_selectedMeta));
     } else if (isInserting) {
       context.missing(_client_be_selectedMeta);
+    }
+    if (data.containsKey('client_cover_local_path')) {
+      context.handle(
+          _client_cover_local_pathMeta,
+          client_cover_local_path.isAcceptableOrUnknown(
+              data['client_cover_local_path']!, _client_cover_local_pathMeta));
+    }
+    if (data.containsKey('cover_cloud_path')) {
+      context.handle(
+          _cover_cloud_pathMeta,
+          cover_cloud_path.isAcceptableOrUnknown(
+              data['cover_cloud_path']!, _cover_cloud_pathMeta));
     }
     if (data.containsKey('creator_user_id')) {
       context.handle(
@@ -5447,8 +5496,16 @@ class $FragmentGroupsTable extends FragmentGroups
     return FragmentGroup(
       be_publish: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}be_publish'])!,
+      client_be_cloud_path_upload: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}client_be_cloud_path_upload'])!,
       client_be_selected: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
+      client_cover_local_path: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}client_cover_local_path']),
+      cover_cloud_path: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}cover_cloud_path']),
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       father_fragment_groups_id: attachedDatabase.typeMapping.read(
@@ -5481,7 +5538,10 @@ class $FragmentGroupsTable extends FragmentGroups
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   bool be_publish;
+  bool client_be_cloud_path_upload;
   bool client_be_selected;
+  String? client_cover_local_path;
+  String? cover_cloud_path;
   int creator_user_id;
   String? father_fragment_groups_id;
   String? jump_to_fragment_groups_id;
@@ -5492,7 +5552,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   DateTime updated_at;
   FragmentGroup(
       {required this.be_publish,
+      required this.client_be_cloud_path_upload,
       required this.client_be_selected,
+      this.client_cover_local_path,
+      this.cover_cloud_path,
       required this.creator_user_id,
       this.father_fragment_groups_id,
       this.jump_to_fragment_groups_id,
@@ -5505,7 +5568,16 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['be_publish'] = Variable<bool>(be_publish);
+    map['client_be_cloud_path_upload'] =
+        Variable<bool>(client_be_cloud_path_upload);
     map['client_be_selected'] = Variable<bool>(client_be_selected);
+    if (!nullToAbsent || client_cover_local_path != null) {
+      map['client_cover_local_path'] =
+          Variable<String>(client_cover_local_path);
+    }
+    if (!nullToAbsent || cover_cloud_path != null) {
+      map['cover_cloud_path'] = Variable<String>(cover_cloud_path);
+    }
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || father_fragment_groups_id != null) {
       map['father_fragment_groups_id'] =
@@ -5526,7 +5598,14 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   FragmentGroupsCompanion toCompanion(bool nullToAbsent) {
     return FragmentGroupsCompanion(
       be_publish: Value(be_publish),
+      client_be_cloud_path_upload: Value(client_be_cloud_path_upload),
       client_be_selected: Value(client_be_selected),
+      client_cover_local_path: client_cover_local_path == null && nullToAbsent
+          ? const Value.absent()
+          : Value(client_cover_local_path),
+      cover_cloud_path: cover_cloud_path == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cover_cloud_path),
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id:
           father_fragment_groups_id == null && nullToAbsent
@@ -5549,7 +5628,12 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentGroup(
       be_publish: serializer.fromJson<bool>(json['be_publish']),
+      client_be_cloud_path_upload:
+          serializer.fromJson<bool>(json['client_be_cloud_path_upload']),
       client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
+      client_cover_local_path:
+          serializer.fromJson<String?>(json['client_cover_local_path']),
+      cover_cloud_path: serializer.fromJson<String?>(json['cover_cloud_path']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       father_fragment_groups_id:
           serializer.fromJson<String?>(json['father_fragment_groups_id']),
@@ -5567,7 +5651,12 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'be_publish': serializer.toJson<bool>(be_publish),
+      'client_be_cloud_path_upload':
+          serializer.toJson<bool>(client_be_cloud_path_upload),
       'client_be_selected': serializer.toJson<bool>(client_be_selected),
+      'client_cover_local_path':
+          serializer.toJson<String?>(client_cover_local_path),
+      'cover_cloud_path': serializer.toJson<String?>(cover_cloud_path),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'father_fragment_groups_id':
           serializer.toJson<String?>(father_fragment_groups_id),
@@ -5583,7 +5672,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 
   FragmentGroup copyWith(
           {bool? be_publish,
+          bool? client_be_cloud_path_upload,
           bool? client_be_selected,
+          Value<String?> client_cover_local_path = const Value.absent(),
+          Value<String?> cover_cloud_path = const Value.absent(),
           int? creator_user_id,
           Value<String?> father_fragment_groups_id = const Value.absent(),
           Value<String?> jump_to_fragment_groups_id = const Value.absent(),
@@ -5594,7 +5686,15 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           DateTime? updated_at}) =>
       FragmentGroup(
         be_publish: be_publish ?? this.be_publish,
+        client_be_cloud_path_upload:
+            client_be_cloud_path_upload ?? this.client_be_cloud_path_upload,
         client_be_selected: client_be_selected ?? this.client_be_selected,
+        client_cover_local_path: client_cover_local_path.present
+            ? client_cover_local_path.value
+            : this.client_cover_local_path,
+        cover_cloud_path: cover_cloud_path.present
+            ? cover_cloud_path.value
+            : this.cover_cloud_path,
         creator_user_id: creator_user_id ?? this.creator_user_id,
         father_fragment_groups_id: father_fragment_groups_id.present
             ? father_fragment_groups_id.value
@@ -5612,7 +5712,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   String toString() {
     return (StringBuffer('FragmentGroup(')
           ..write('be_publish: $be_publish, ')
+          ..write('client_be_cloud_path_upload: $client_be_cloud_path_upload, ')
           ..write('client_be_selected: $client_be_selected, ')
+          ..write('client_cover_local_path: $client_cover_local_path, ')
+          ..write('cover_cloud_path: $cover_cloud_path, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
           ..write('jump_to_fragment_groups_id: $jump_to_fragment_groups_id, ')
@@ -5628,7 +5731,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   @override
   int get hashCode => Object.hash(
       be_publish,
+      client_be_cloud_path_upload,
       client_be_selected,
+      client_cover_local_path,
+      cover_cloud_path,
       creator_user_id,
       father_fragment_groups_id,
       jump_to_fragment_groups_id,
@@ -5642,7 +5748,11 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       identical(this, other) ||
       (other is FragmentGroup &&
           other.be_publish == this.be_publish &&
+          other.client_be_cloud_path_upload ==
+              this.client_be_cloud_path_upload &&
           other.client_be_selected == this.client_be_selected &&
+          other.client_cover_local_path == this.client_cover_local_path &&
+          other.cover_cloud_path == this.cover_cloud_path &&
           other.creator_user_id == this.creator_user_id &&
           other.father_fragment_groups_id == this.father_fragment_groups_id &&
           other.jump_to_fragment_groups_id == this.jump_to_fragment_groups_id &&
@@ -5655,7 +5765,10 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
 
 class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<bool> be_publish;
+  Value<bool> client_be_cloud_path_upload;
   Value<bool> client_be_selected;
+  Value<String?> client_cover_local_path;
+  Value<String?> cover_cloud_path;
   Value<int> creator_user_id;
   Value<String?> father_fragment_groups_id;
   Value<String?> jump_to_fragment_groups_id;
@@ -5666,7 +5779,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<DateTime> updated_at;
   FragmentGroupsCompanion({
     this.be_publish = const Value.absent(),
+    this.client_be_cloud_path_upload = const Value.absent(),
     this.client_be_selected = const Value.absent(),
+    this.client_cover_local_path = const Value.absent(),
+    this.cover_cloud_path = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.father_fragment_groups_id = const Value.absent(),
     this.jump_to_fragment_groups_id = const Value.absent(),
@@ -5678,7 +5794,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   });
   FragmentGroupsCompanion.insert({
     required bool be_publish,
+    required bool client_be_cloud_path_upload,
     required bool client_be_selected,
+    this.client_cover_local_path = const Value.absent(),
+    this.cover_cloud_path = const Value.absent(),
     required int creator_user_id,
     this.father_fragment_groups_id = const Value.absent(),
     this.jump_to_fragment_groups_id = const Value.absent(),
@@ -5688,6 +5807,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     required String id,
     required DateTime updated_at,
   })  : be_publish = Value(be_publish),
+        client_be_cloud_path_upload = Value(client_be_cloud_path_upload),
         client_be_selected = Value(client_be_selected),
         creator_user_id = Value(creator_user_id),
         profile = Value(profile),
@@ -5697,7 +5817,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
         updated_at = Value(updated_at);
   static Insertable<FragmentGroup> custom({
     Expression<bool>? be_publish,
+    Expression<bool>? client_be_cloud_path_upload,
     Expression<bool>? client_be_selected,
+    Expression<String>? client_cover_local_path,
+    Expression<String>? cover_cloud_path,
     Expression<int>? creator_user_id,
     Expression<String>? father_fragment_groups_id,
     Expression<String>? jump_to_fragment_groups_id,
@@ -5709,7 +5832,12 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   }) {
     return RawValuesInsertable({
       if (be_publish != null) 'be_publish': be_publish,
+      if (client_be_cloud_path_upload != null)
+        'client_be_cloud_path_upload': client_be_cloud_path_upload,
       if (client_be_selected != null) 'client_be_selected': client_be_selected,
+      if (client_cover_local_path != null)
+        'client_cover_local_path': client_cover_local_path,
+      if (cover_cloud_path != null) 'cover_cloud_path': cover_cloud_path,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (father_fragment_groups_id != null)
         'father_fragment_groups_id': father_fragment_groups_id,
@@ -5725,7 +5853,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
 
   FragmentGroupsCompanion copyWith(
       {Value<bool>? be_publish,
+      Value<bool>? client_be_cloud_path_upload,
       Value<bool>? client_be_selected,
+      Value<String?>? client_cover_local_path,
+      Value<String?>? cover_cloud_path,
       Value<int>? creator_user_id,
       Value<String?>? father_fragment_groups_id,
       Value<String?>? jump_to_fragment_groups_id,
@@ -5736,7 +5867,12 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       Value<DateTime>? updated_at}) {
     return FragmentGroupsCompanion(
       be_publish: be_publish ?? this.be_publish,
+      client_be_cloud_path_upload:
+          client_be_cloud_path_upload ?? this.client_be_cloud_path_upload,
       client_be_selected: client_be_selected ?? this.client_be_selected,
+      client_cover_local_path:
+          client_cover_local_path ?? this.client_cover_local_path,
+      cover_cloud_path: cover_cloud_path ?? this.cover_cloud_path,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       father_fragment_groups_id:
           father_fragment_groups_id ?? this.father_fragment_groups_id,
@@ -5756,8 +5892,19 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     if (be_publish.present) {
       map['be_publish'] = Variable<bool>(be_publish.value);
     }
+    if (client_be_cloud_path_upload.present) {
+      map['client_be_cloud_path_upload'] =
+          Variable<bool>(client_be_cloud_path_upload.value);
+    }
     if (client_be_selected.present) {
       map['client_be_selected'] = Variable<bool>(client_be_selected.value);
+    }
+    if (client_cover_local_path.present) {
+      map['client_cover_local_path'] =
+          Variable<String>(client_cover_local_path.value);
+    }
+    if (cover_cloud_path.present) {
+      map['cover_cloud_path'] = Variable<String>(cover_cloud_path.value);
     }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
@@ -5792,7 +5939,10 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   String toString() {
     return (StringBuffer('FragmentGroupsCompanion(')
           ..write('be_publish: $be_publish, ')
+          ..write('client_be_cloud_path_upload: $client_be_cloud_path_upload, ')
           ..write('client_be_selected: $client_be_selected, ')
+          ..write('client_cover_local_path: $client_cover_local_path, ')
+          ..write('cover_cloud_path: $cover_cloud_path, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('father_fragment_groups_id: $father_fragment_groups_id, ')
           ..write('jump_to_fragment_groups_id: $jump_to_fragment_groups_id, ')

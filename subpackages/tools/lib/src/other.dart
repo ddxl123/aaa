@@ -253,3 +253,13 @@ extension EnumExt on Enum {
     return list.any((element) => element == this);
   }
 }
+
+class FileMixPath {
+  FileMixPath({
+    required this.localPath,
+    required this.cloudPath,
+  });
+
+  String? cloudPath;
+  String? localPath;
+}

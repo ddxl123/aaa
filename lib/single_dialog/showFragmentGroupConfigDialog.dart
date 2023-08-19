@@ -124,6 +124,9 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                                       jump_to_fragment_groups_id: 0.toAbsent(),
                                       title: 0.toAbsent(),
                                       profile: 0.toAbsent(),
+                                      client_cover_local_path: 0.toAbsent(),
+                                      cover_cloud_path: 0.toAbsent(),
+                                      client_be_cloud_path_upload: 0.toAbsent(),
                                       syncTag: st,
                                       isCloudTableWithSync: true,
                                     );
@@ -203,6 +206,9 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                                       jump_to_fragment_groups_id: 0.toAbsent(),
                                       title: 0.toAbsent(),
                                       profile: 0.toAbsent(),
+                                      cover_cloud_path: 0.toAbsent(),
+                                      client_cover_local_path: 0.toAbsent(),
+                                      client_be_cloud_path_upload: 0.toAbsent(),
                                       syncTag: st,
                                       isCloudTableWithSync: true,
                                     );

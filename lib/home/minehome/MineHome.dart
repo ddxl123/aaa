@@ -1,13 +1,11 @@
-import 'package:aaa/global/Constants.dart';
 import 'package:aaa/home/minehome/MineHomeAbController.dart';
 import 'package:aaa/home/test/TestHome.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:drift_main/httper/httper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 
+import '../../global/tool_widgets/CustomImageWidget.dart';
 import '../../push_page/push_page.dart';
 
 class MineHome extends StatefulWidget {
@@ -63,6 +61,8 @@ class _MineHomeState extends State<MineHome> {
     return SliverToBoxAdapter(
       child: AbBuilder<MineHomeAbController>(
         builder: (c, abw) {
+          print("-~~~~~~~~~~~~~~~~~~~~~");
+          print(c.globalAbController.loggedInUser()?.avatar_cloud_path);
           return Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -71,15 +71,10 @@ class _MineHomeState extends State<MineHome> {
                   child: Card(
                     shadowColor: Colors.black,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                    child: CachedNetworkImage(
-                      imageUrl: FilePathWrapper.toAvailablePath(cloudPath: c.userAvatarCloudPath(abw)) ?? "",
-                      errorWidget: (ctx, url, err) {
-                        return Icon(Icons.ac_unit, size: globalUserAvatarSquareSide, color: Colors.tealAccent);
-                      },
-                      width: globalUserAvatarSquareSide,
-                      height: globalUserAvatarSquareSide,
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
+                    child: LocalThenCloudImageWidget(
+                      size: const Size(globalUserAvatarSquareSide, globalUserAvatarSquareSide),
+                      localPath: c.globalAbController.loggedInUser()?.client_avatar_local_path,
+                      cloudPath: c.globalAbController.loggedInUser()?.avatar_cloud_path,
                     ),
                   ),
                   onTap: () {

@@ -8,6 +8,8 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
+import '../../global/tool_widgets/CustomImageWidget.dart';
+
 class FragmentGroupListView extends StatelessWidget {
   const FragmentGroupListView({super.key, required this.enterFragmentGroup, required this.userId});
 
@@ -135,7 +137,11 @@ class _HeadState extends State<_Head> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(color: Colors.grey, width: 90, height: 130),
+                LocalThenCloudImageWidget(
+                  size: globalFragmentGroupCoverRatio * 100,
+                  localPath: widget.g(widget.abw).getDynamicGroupEntity(widget.abw)?.client_cover_local_path,
+                  cloudPath: widget.g(widget.abw).getDynamicGroupEntity(widget.abw)?.cover_cloud_path,
+                ),
                 SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -174,17 +180,15 @@ class _HeadState extends State<_Head> {
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Colors.grey,
+                          ClipOval(
+                            child: ForceCloudImageWidget(
+                              size: Size(36, 36),
+                              cloudPath: widget.c.currentUser(widget.abw)?.avatar_cloud_path,
                             ),
                           ),
                           SizedBox(width: 10),
                           Expanded(
-                            child: Text(widget.c.userName),
+                            child: Text(widget.c.currentUser(widget.abw)?.username ?? "加载中..."),
                           ),
                           InkWell(
                             borderRadius: BorderRadius.all(Radius.circular(50)),

@@ -452,14 +452,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.3"
-  flutter_easyloading:
-    dependency: "direct main"
-    description:
-      name: flutter_easyloading
-      sha256: ba21a3c883544e582f9cc455a4a0907556714e1e9cf0eababfcb600da191d17c
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "3.0.5"
   flutter_html:
     dependency: "direct main"
     description:
@@ -570,7 +562,7 @@ packages:
     source: hosted
     version: "0.4.1"
   flutter_smart_dialog:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_smart_dialog
       sha256: "8ba9eeb5b0b380bec368c5c8a324e1dab0cd88965c2dd83e64237441140bc599"

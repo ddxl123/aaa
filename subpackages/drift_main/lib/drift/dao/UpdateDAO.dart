@@ -58,8 +58,11 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
       title: toAbsent(),
       profile: toAbsent(),
       be_publish: toAbsent(),
+      client_cover_local_path: toAbsent(),
+      cover_cloud_path: toAbsent(),
       syncTag: syncTag,
       isCloudTableWithSync: false,
+      client_be_cloud_path_upload: toAbsent(),
     );
     // 不能让跳转的目标碎片组设为 true
     if (surfaceFragmentGroup?.jump_to_fragment_groups_id != null) {
@@ -72,6 +75,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
         title: toAbsent(),
         profile: toAbsent(),
         be_publish: toAbsent(),
+        client_cover_local_path: toAbsent(),
+        cover_cloud_path: toAbsent(),
+        client_be_cloud_path_upload: toAbsent(),
         syncTag: syncTag,
         isCloudTableWithSync: false,
       );
@@ -97,6 +103,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
           title: toAbsent(),
           profile: toAbsent(),
           be_publish: toAbsent(),
+          client_cover_local_path: toAbsent(),
+          cover_cloud_path: toAbsent(),
+          client_be_cloud_path_upload: toAbsent(),
           syncTag: syncTag,
           isCloudTableWithSync: false,
         );
@@ -111,6 +120,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             title: toAbsent(),
             profile: toAbsent(),
             be_publish: toAbsent(),
+            client_cover_local_path: toAbsent(),
+            cover_cloud_path: toAbsent(),
+            client_be_cloud_path_upload: toAbsent(),
             syncTag: syncTag,
             isCloudTableWithSync: false,
           );
@@ -128,6 +140,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             title: toAbsent(),
             profile: toAbsent(),
             be_publish: toAbsent(),
+            client_cover_local_path: toAbsent(),
+            cover_cloud_path: toAbsent(),
+            client_be_cloud_path_upload: toAbsent(),
             syncTag: syncTag,
             isCloudTableWithSync: false,
           );
@@ -170,6 +185,9 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
             jump_to_fragment_groups_id: toAbsent(),
             profile: toAbsent(),
             title: toAbsent(),
+            client_cover_local_path: toAbsent(),
+            cover_cloud_path: toAbsent(),
+            client_be_cloud_path_upload: toAbsent(),
             syncTag: st,
             isCloudTableWithSync: false,
           );

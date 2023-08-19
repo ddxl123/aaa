@@ -1044,7 +1044,12 @@ extension FragmentGroupExt on FragmentGroup {
   }) async {
     await reset(
         be_publish: fragmentGroup.be_publish.toValue(),
+        client_be_cloud_path_upload:
+            fragmentGroup.client_be_cloud_path_upload.toValue(),
         client_be_selected: fragmentGroup.client_be_selected.toValue(),
+        client_cover_local_path:
+            fragmentGroup.client_cover_local_path.toValue(),
+        cover_cloud_path: fragmentGroup.cover_cloud_path.toValue(),
         creator_user_id: fragmentGroup.creator_user_id.toValue(),
         father_fragment_groups_id:
             fragmentGroup.father_fragment_groups_id.toValue(),
@@ -1065,7 +1070,10 @@ extension FragmentGroupExt on FragmentGroup {
   /// created_at updated_at 已经在 [DriftSyncExt.updateReturningWith] 中自动更新了。
   FutureOr<FragmentGroup> reset({
     required Value<bool> be_publish,
+    required Value<bool> client_be_cloud_path_upload,
     required Value<bool> client_be_selected,
+    required Value<String?> client_cover_local_path,
+    required Value<String?> cover_cloud_path,
     required Value<int> creator_user_id,
     required Value<String?> father_fragment_groups_id,
     required Value<String?> jump_to_fragment_groups_id,
@@ -1081,10 +1089,28 @@ extension FragmentGroupExt on FragmentGroup {
       this.be_publish = be_publish.value;
     }
 
+    if (client_be_cloud_path_upload.present &&
+        this.client_be_cloud_path_upload != client_be_cloud_path_upload.value) {
+      isCloudModify = true;
+      this.client_be_cloud_path_upload = client_be_cloud_path_upload.value;
+    }
+
     if (client_be_selected.present &&
         this.client_be_selected != client_be_selected.value) {
       isCloudModify = true;
       this.client_be_selected = client_be_selected.value;
+    }
+
+    if (client_cover_local_path.present &&
+        this.client_cover_local_path != client_cover_local_path.value) {
+      isCloudModify = true;
+      this.client_cover_local_path = client_cover_local_path.value;
+    }
+
+    if (cover_cloud_path.present &&
+        this.cover_cloud_path != cover_cloud_path.value) {
+      isCloudModify = true;
+      this.cover_cloud_path = cover_cloud_path.value;
     }
 
     if (creator_user_id.present &&

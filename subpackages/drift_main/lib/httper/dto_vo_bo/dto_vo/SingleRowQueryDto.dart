@@ -4,36 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class SingleFieldModifyDto extends BaseObject{
+class SingleRowQueryDto extends BaseObject{
 
-    /// 要修改的字段对应的表
+    /// 要查询的字段对应的表
     String table_name;
 
-    /// 要修改的字段的 id，可能是 Long 类型，也可能是 String 类型
+    /// 要查询的行的 id，可能是 Long 类型，也可能是 String 类型
     dynamic row_id;
 
-    /// 要修改的字段
-    String field_name;
 
-    /// 要修改成什么值，若为 null，则会修改成 null，而非保持不变
-    dynamic? modify_value;
-
-
-SingleFieldModifyDto({
+SingleRowQueryDto({
 
     required this.table_name,
 
     required this.row_id,
 
-    required this.field_name,
-
-    required this.modify_value,
-
 });
-  factory SingleFieldModifyDto.fromJson(Map<String, dynamic> json) => _$SingleFieldModifyDtoFromJson(json);
+  factory SingleRowQueryDto.fromJson(Map<String, dynamic> json) => _$SingleRowQueryDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$SingleFieldModifyDtoToJson(this);
+  Map<String, dynamic> toJson() => _$SingleRowQueryDtoToJson(this);
   
   
           
@@ -47,21 +37,21 @@ SingleFieldModifyDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  SingleFieldModifyVo? vo;
+  SingleRowQueryVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
 
-    // message: 修改成功！
-    // explain: 任意表的单字段修改，只会修改存在的行，不存在的行不会进行如何操作
-    required Future<T> Function(String showMessage) code80101,
+    // message: 查询成功！
+    // explain: 任意表单行查询，敏感信息将被置空或加密
+    required Future<T> Function(String showMessage, SingleRowQueryVo vo) code90101,
     
     }) async {
     try {
 
-        if (code == 80101) return await code80101(httperException!.showMessage);
+        if (code == 90101) return await code90101(httperException!.showMessage, vo!);
 
     } catch (e, st) {
       if (e is HttperException) {

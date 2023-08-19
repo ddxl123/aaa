@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 enum FragmentPageType {
-  fragment(text: "碎片"),
+  fragment(text: "知识碎片"),
   note(text: "笔记");
 
   const FragmentPageType({required this.text});

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:aaa/global/Constants.dart';
+import 'package:aaa/global/tool_widgets/CustomImageWidget.dart';
 import 'package:aaa/home/personal_home_page/PersonalHomePageAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -87,15 +87,9 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                   child: Card(
                     shadowColor: Colors.black,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                    child: CachedNetworkImage(
-                      imageUrl: FilePathWrapper.toAvailablePath(cloudPath: c.userAvatarCloudPath(abw)) ?? "",
-                      errorWidget: (ctx, url, err) {
-                        return Icon(Icons.ac_unit, size: globalUserAvatarSquareSide, color: Colors.tealAccent);
-                      },
-                      width: globalUserAvatarSquareSide,
-                      height: globalUserAvatarSquareSide,
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
+                    child: ForceCloudImageWidget(
+                      size: Size(globalUserAvatarSquareSide, globalUserAvatarSquareSide),
+                      cloudPath: c.userAvatarCloudPath(abw),
                     ),
                   ),
                   onTap: () async {
@@ -108,10 +102,7 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(c.userName(abw) ?? "加载中", style: Theme
-                            .of(c.context)
-                            .textTheme
-                            .headlineSmall),
+                        Text(c.userName(abw) ?? "加载中", style: Theme.of(c.context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Row(
                           children: [
@@ -180,12 +171,10 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: c
-                      .fragmentGroupsAb(abw)
-                      .isEmpty ? Center(child: Text("该用户没有碎片~")) : Container(),
+                  child: c.fragmentGroupsAb(abw).isEmpty ? Center(child: Text("该用户没有碎片~")) : Container(),
                 ),
                 ...c.fragmentGroupsAb(abw).map(
-                      (e) {
+                  (e) {
                     return SliverToBoxAdapter(
                       child: Card(
                         child: Padding(
@@ -215,13 +204,8 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                                () {
-                                              final text = q.Document
-                                                  .fromJson(jsonDecode(e.profile))
-                                                  .toPlainText()
-                                                  .split("\n")
-                                                  .first
-                                                  .trim();
+                                            () {
+                                              final text = q.Document.fromJson(jsonDecode(e.profile)).toPlainText().split("\n").first.trim();
                                               return text.isEmpty ? "无简介" : text;
                                             }(),
                                             overflow: TextOverflow.ellipsis,
@@ -241,7 +225,7 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                   },
                 ),
                 ...c.fragmentsAb(abw).map(
-                      (e) {
+                  (e) {
                     return SliverToBoxAdapter(
                       child: Card(
                         child: Padding(
@@ -277,12 +261,10 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: c
-                    .publishFragmentGroupAb(abw)
-                    .isEmpty ? Center(child: Text("该用户没有发布过~")) : Container(),
+                child: c.publishFragmentGroupAb(abw).isEmpty ? Center(child: Text("该用户没有发布过~")) : Container(),
               ),
               ...c.publishFragmentGroupAb(abw).map(
-                    (e) {
+                (e) {
                   return SliverToBoxAdapter(
                     child: GestureDetector(
                       child: Card(
@@ -313,13 +295,8 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                                () {
-                                              final text = q.Document
-                                                  .fromJson(jsonDecode(e.profile))
-                                                  .toPlainText()
-                                                  .split("\n")
-                                                  .first
-                                                  .trim();
+                                            () {
+                                              final text = q.Document.fromJson(jsonDecode(e.profile)).toPlainText().split("\n").first.trim();
                                               return text.isEmpty ? "无简介" : text;
                                             }(),
                                             overflow: TextOverflow.ellipsis,

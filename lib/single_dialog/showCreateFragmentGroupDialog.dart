@@ -37,6 +37,9 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? dynamicGroup
                 client_be_selected: false,
                 title: tec.text,
                 profile: jsonEncode(Document().toDelta().toJson()),
+                client_cover_local_path: null.toValue(),
+                cover_cloud_path: null.toValue(),
+                client_be_cloud_path_upload: false,
                 be_publish: false,
               ).insert(
                 syncTag: st,

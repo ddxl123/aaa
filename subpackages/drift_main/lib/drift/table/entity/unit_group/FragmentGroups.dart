@@ -15,7 +15,13 @@ class FragmentGroups extends CloudTableBase  {
 
   BoolColumn get be_publish => boolean().named("be_publish")();
 
+  BoolColumn get client_be_cloud_path_upload => boolean().named("client_be_cloud_path_upload")();
+
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
+
+  TextColumn get client_cover_local_path => text().named("client_cover_local_path").nullable()();
+
+  TextColumn get cover_cloud_path => text().named("cover_cloud_path").nullable()();
 
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();

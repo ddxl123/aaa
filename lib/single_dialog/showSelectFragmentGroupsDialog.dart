@@ -24,7 +24,7 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
   @override
   Widget build(BuildContext context) {
     return OkAndCancelDialogWidget(
-      dialogSize: DialogSize(width: kDialogFixedWidth, height: null),
+      dialogSize: DialogSize(width: globalDialogFixedWidth, height: null),
       title: '存放位置：(已选 ${widget.selectedDynamicFragmentGroup.length} 处)',
       columnChildren: [
         ...widget.selectedDynamicFragmentGroup.isEmpty

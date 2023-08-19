@@ -128,6 +128,18 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await sel.getSingleOrNull();
   }
 
+  /// 查询封面需要上传图片的碎片组
+  ///
+  /// [count] - 要获取的的数量，为 null 的话获取全部
+  Future<List<FragmentGroup>> queryManyFragmentGroupForCoverImageNeedUpload({required int? count}) async {
+    final sel = select(fragmentGroups);
+    sel.where((tbl) => tbl.client_be_cloud_path_upload.equals(true));
+    if (count != null) {
+      sel.limit(10);
+    }
+    return await sel.get();
+  }
+
   /// 根据 [fragmentGroupIds] 查询是否存在 [fragmentGroups]。
   ///
   /// 返回存在的 [fragmentGroups]

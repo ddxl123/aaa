@@ -123,13 +123,20 @@ abstract class GroupListWidgetController<G, U, UR> extends AbController {
     return groupChain(abw).sublist(1, groupChain(abw).length);
   }
 
+  /// 只获取每个 [Group] 的 [Group.surfaceEntity]。
   List<G> getGroupChainSurfaceEntityNotRoot([Abw? abw]) {
-    return groupChain(abw).sublist(1, groupChain(abw).length).map((e) => e(abw).surfaceEntity()!).toList();
+    return getGroupChainNotRoot(abw).map((e) => e(abw).surfaceEntity()!).toList();
   }
 
+  /// 只获取每个 [Group] 的 [Group.getDynamicGroupEntity]。
+  List<G> getGroupChainDynamicEntityNotRoot([Abw? abw]) {
+    return getGroupChainNotRoot(abw).map((e) => e(abw).getDynamicGroupEntity()!).toList();
+  }
+
+  /// 获取每个 [Group] 的 [Group.surfaceEntity] 和 [Group.jumpTargetEntity]，并合并成一个数组。
   List<G> getGroupChainCombineEntityNotRoot([Abw? abw]) {
     final result = <G>[];
-    groupChain(abw).sublist(1, groupChain(abw).length).map(
+    getGroupChainNotRoot(abw).map(
       (e) {
         result.add(e(abw).surfaceEntity(abw) as G);
         if (e(abw).jumpTargetEntity() != null) {

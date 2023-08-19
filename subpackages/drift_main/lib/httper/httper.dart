@@ -67,12 +67,6 @@ part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
 part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/SingleFieldModifyDto.dart';
-
-
-part 'dto_vo_bo/dto_vo/SingleFieldModifyVo.dart';
-
-
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryModifyDto.dart';
 
 
@@ -125,5 +119,17 @@ part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByLikeDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/QueryFragmentGroupTagByLikeVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleFieldModifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleFieldModifyVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowQueryVo.dart';
 
 

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
+import '../../global/tool_widgets/CustomImageWidget.dart';
 import '../../single_dialog/showFragmentGroupConfigDialog.dart';
 import 'FragmentGroupListPageController.dart';
 
@@ -338,15 +339,16 @@ class _Head extends StatelessWidget {
   final Abw abw;
 
   bool hasFatherFragmentGroupBePublish() {
-    return (g().fatherGroup?.jumpTargetEntity()?.be_publish ?? g().fatherGroup?.surfaceEntity()?.be_publish) ?? false;
+    return c.getGroupChainDynamicEntityNotRoot().any((element) => element.id != g().getDynamicGroupEntity()?.id && element.be_publish);
+    // return (g().fatherGroup?.jumpTargetEntity()?.be_publish ?? g().fatherGroup?.surfaceEntity()?.be_publish) ?? false;
   }
 
   Widget publishWidget({required String text, required Color color}) {
     return Row(
       children: [
-        Icon(Icons.settings, color: color, size: 20),
-        SizedBox(width: 5),
         Text(text, style: TextStyle(color: color)),
+        SizedBox(width: 5),
+        Icon(Icons.settings, color: color, size: 20),
       ],
     );
   }
@@ -377,7 +379,7 @@ class _Head extends StatelessWidget {
       color: Colors.white,
       elevation: 0,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
         child: Column(
           children: [
             c.isSelfOfFragmentGroup(dynamicFragmentGroup: g(abw).getDynamicGroupEntity(abw)!)
@@ -413,7 +415,11 @@ class _Head extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(width: 90, height: 130, color: Colors.grey),
+                    LocalThenCloudImageWidget(
+                      size: globalFragmentGroupCoverRatio * 100,
+                      localPath: g(abw).getDynamicGroupEntity(abw)?.client_cover_local_path,
+                      cloudPath: g(abw).getDynamicGroupEntity(abw)?.cover_cloud_path,
+                    ),
                     SizedBox(width: 10),
                     Expanded(
                       child: Column(

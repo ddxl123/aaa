@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aaa/global/tool_widgets/CustomImageWidget.dart';
 import 'package:aaa/push_page/push_page.dart';
 import 'package:aaa/single_dialog/showSelectFragmentGroupDialog.dart';
 import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
@@ -100,10 +101,9 @@ class KnowledgeBaseHome extends StatelessWidget {
                                     padding: EdgeInsets.all(10),
                                     child: Row(
                                       children: [
-                                        Container(
-                                          width: 100,
-                                          height: 120,
-                                          color: Colors.grey,
+                                        ForceCloudImageWidget(
+                                          size: globalFragmentGroupCoverRatio * 100,
+                                          cloudPath: e.fragment_group.cover_cloud_path,
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(

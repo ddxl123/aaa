@@ -256,27 +256,27 @@ Future<void> requestFile({
 
     if (fileRequestMethod == FileRequestMethod.forceCloud) {
       await cloudGet();
-      await onSuccess(filePathWrapper);
       await updateCache();
+      await onSuccess(filePathWrapper);
       return;
     }
 
     if (fileRequestMethod == FileRequestMethod.firstUpload) {
       await cloudInsert();
-      await onSuccess(filePathWrapper);
       await updateCache();
+      await onSuccess(filePathWrapper);
       return;
     }
     if (fileRequestMethod == FileRequestMethod.coverInsertUpload) {
       if (filePathWrapper.oldCloudPath == null) {
         await cloudInsert();
-        await onSuccess(filePathWrapper);
         await updateCache();
+        await onSuccess(filePathWrapper);
         return;
       } else {
         await cloudUpdate();
-        await onSuccess(filePathWrapper);
         await updateCache();
+        await onSuccess(filePathWrapper);
         return;
       }
     }

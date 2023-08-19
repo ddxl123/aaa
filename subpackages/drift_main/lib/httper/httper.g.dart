@@ -346,35 +346,6 @@ Map<String, dynamic> _$FragmentGroupTagNewFragmentGroupTagVoToJson(
       'fragment_group_tag_entity': instance.fragment_group_tag_entity,
     };
 
-SingleFieldModifyDto _$SingleFieldModifyDtoFromJson(
-        Map<String, dynamic> json) =>
-    SingleFieldModifyDto(
-      table_name: json['table_name'] as String,
-      field_name: json['field_name'] as String,
-      field_id: json['field_id'],
-      modify_value: json['modify_value'],
-    );
-
-Map<String, dynamic> _$SingleFieldModifyDtoToJson(
-        SingleFieldModifyDto instance) =>
-    <String, dynamic>{
-      'table_name': instance.table_name,
-      'field_name': instance.field_name,
-      'field_id': instance.field_id,
-      'modify_value': instance.modify_value,
-    };
-
-SingleFieldModifyVo _$SingleFieldModifyVoFromJson(Map<String, dynamic> json) =>
-    SingleFieldModifyVo(
-      vo_padding_1: json['vo_padding_1'] as bool?,
-    );
-
-Map<String, dynamic> _$SingleFieldModifyVoToJson(
-        SingleFieldModifyVo instance) =>
-    <String, dynamic>{
-      'vo_padding_1': instance.vo_padding_1,
-    };
-
 KnowledgeBaseCategoryModifyDto _$KnowledgeBaseCategoryModifyDtoFromJson(
         Map<String, dynamic> json) =>
     KnowledgeBaseCategoryModifyDto(
@@ -672,4 +643,55 @@ Map<String, dynamic> _$QueryFragmentGroupTagByLikeVoToJson(
         QueryFragmentGroupTagByLikeVo instance) =>
     <String, dynamic>{
       'fragment_group_tag_list': instance.fragment_group_tag_list,
+    };
+
+SingleFieldModifyDto _$SingleFieldModifyDtoFromJson(
+        Map<String, dynamic> json) =>
+    SingleFieldModifyDto(
+      table_name: json['table_name'] as String,
+      row_id: json['row_id'],
+      field_name: json['field_name'] as String,
+      modify_value: json['modify_value'],
+    );
+
+Map<String, dynamic> _$SingleFieldModifyDtoToJson(
+        SingleFieldModifyDto instance) =>
+    <String, dynamic>{
+      'table_name': instance.table_name,
+      'row_id': instance.row_id,
+      'field_name': instance.field_name,
+      'modify_value': instance.modify_value,
+    };
+
+SingleFieldModifyVo _$SingleFieldModifyVoFromJson(Map<String, dynamic> json) =>
+    SingleFieldModifyVo(
+      vo_padding_1: json['vo_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$SingleFieldModifyVoToJson(
+        SingleFieldModifyVo instance) =>
+    <String, dynamic>{
+      'vo_padding_1': instance.vo_padding_1,
+    };
+
+SingleRowQueryDto _$SingleRowQueryDtoFromJson(Map<String, dynamic> json) =>
+    SingleRowQueryDto(
+      table_name: json['table_name'] as String,
+      row_id: json['row_id'],
+    );
+
+Map<String, dynamic> _$SingleRowQueryDtoToJson(SingleRowQueryDto instance) =>
+    <String, dynamic>{
+      'table_name': instance.table_name,
+      'row_id': instance.row_id,
+    };
+
+SingleRowQueryVo _$SingleRowQueryVoFromJson(Map<String, dynamic> json) =>
+    SingleRowQueryVo(
+      row: json['row'],
+    );
+
+Map<String, dynamic> _$SingleRowQueryVoToJson(SingleRowQueryVo instance) =>
+    <String, dynamic>{
+      'row': instance.row,
     };

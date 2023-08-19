@@ -1,5 +1,5 @@
-import 'package:aaa/global/Constants.dart';
 import 'package:aaa/global/GlobalAbController.dart';
+import 'package:aaa/global/tool_widgets/CustomImageWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
@@ -73,7 +73,6 @@ class PersonalHomePageAbController extends AbController {
       code70301: (String showMessage, PersonalHomePageForUserInfoVo vo) async {
         userName.refreshEasy((oldValue) => vo.user_info.username);
         userAvatarCloudPath.refreshEasy((oldValue) => vo.user_info.avatar_cloud_path);
-        print(userAvatarCloudPath());
       },
       otherException: (int? code, HttperException httperException, StackTrace st) async {
         logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
@@ -139,8 +138,9 @@ class PersonalHomePageAbController extends AbController {
               child: DialogWidget(
                 fullPadding: EdgeInsets.zero,
                 mainVerticalWidgets: [
-                  CachedNetworkImage(
-                    imageUrl: FilePathWrapper.toAvailablePath(cloudPath: userAvatarCloudPath()) ?? "",
+                  ForceCloudImageWidget(
+                    size: null,
+                    cloudPath: userAvatarCloudPath(),
                   ),
                 ],
                 bottomHorizontalButtonWidgets: [],
@@ -170,26 +170,29 @@ class PersonalHomePageAbController extends AbController {
                     onSuccess: (FilePathWrapper filePathWrapper) async {
                       if (!filePathWrapper.isOldNewSame) {
                         // path 更新至 widget
-                        userAvatarCloudPath.refreshEasy((oldValue) => filePathWrapper.newCloudPath);
+                        userAvatarCloudPath.refreshInevitable((oldValue) => filePathWrapper.newCloudPath);
                         // path 更新至本地
                         (db.update(db.users)..where((tbl) => tbl.id.equals(userId))).write(
                           UsersCompanion(
                             avatar_cloud_path: filePathWrapper.newCloudPath.toValue(),
                           ),
                         );
+                        // 因为当前是修改自己User上的头像，因此刷新全部带有自己的User
+                        Aber.find<GlobalAbController>().loggedInUser.refreshInevitable((obj) => obj!..avatar_cloud_path = filePathWrapper.newCloudPath);
+
                         // path 更新至云端
                         final result = await request(
-                          path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_SINGLE_FIELD_MODIFY,
+                          path: HttpPath.LOGIN_REQUIRED_SINGLE_FIELD_MODIFY,
                           dtoData: SingleFieldModifyDto(
                             table_name: db.users.actualTableName,
                             field_name: db.users.avatar_cloud_path.name,
-                            field_id: userId,
+                            row_id: userId,
                             modify_value: filePathWrapper.newCloudPath,
                           ),
                           parseResponseVoData: SingleFieldModifyVo.fromJson,
                         );
                         await result.handleCode(
-                          code20201: (String showMessage) async {
+                          code80101: (String showMessage) async {
                             // 无业务
                           },
                           otherException: (int? code, HttperException httperException, StackTrace st) async {

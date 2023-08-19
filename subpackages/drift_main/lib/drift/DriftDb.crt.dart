@@ -273,7 +273,10 @@ class Crt {
 
   static FragmentGroupsCompanion fragmentGroupsCompanion({
     required bool be_publish,
+    required bool client_be_cloud_path_upload,
     required bool client_be_selected,
+    required Value<String?> client_cover_local_path,
+    required Value<String?> cover_cloud_path,
     required int creator_user_id,
     required Value<String?> father_fragment_groups_id,
     required Value<String?> jump_to_fragment_groups_id,
@@ -285,7 +288,10 @@ class Crt {
   }) {
     return FragmentGroupsCompanion(
       be_publish: Value(be_publish),
+      client_be_cloud_path_upload: Value(client_be_cloud_path_upload),
       client_be_selected: Value(client_be_selected),
+      client_cover_local_path: client_cover_local_path,
+      cover_cloud_path: cover_cloud_path,
       creator_user_id: Value(creator_user_id),
       father_fragment_groups_id: father_fragment_groups_id,
       jump_to_fragment_groups_id: jump_to_fragment_groups_id,

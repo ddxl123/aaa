@@ -229,6 +229,9 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                         jump_to_fragment_groups_id: toAbsent(),
                         profile: toAbsent(),
                         title: toAbsent(),
+                        client_cover_local_path: toAbsent(),
+                        cover_cloud_path: toAbsent(),
+                        client_be_cloud_path_upload: toAbsent(),
                         syncTag: st,
                         isCloudTableWithSync: SyncTag.parseToUserId(v.id) == user.id,
                       );
@@ -325,6 +328,9 @@ class FragmentGroupListPageController extends GroupListWidgetController<Fragment
                           jump_to_fragment_groups_id: (v.jump_to_fragment_groups_id ?? v.id).toValue(),
                           profile: "未进行跳转：${v.profile}",
                           title: "未进行跳转：${v.title}",
+                          client_cover_local_path: null.toValue(),
+                          cover_cloud_path: null.toValue(),
+                          client_be_cloud_path_upload: false,
                         ).insert(
                           syncTag: st,
                           isCloudTableWithSync: true,

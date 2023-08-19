@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
@@ -9,7 +10,7 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
 
   final int userId;
 
-  String userName = "加载中...";
+  final currentUser = Ab<User?>(null);
 
   /// 因为不能将 surface 进行发布，因此 [enterFragmentGroup] 始终是 target。
   ///
@@ -17,6 +18,32 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
   final FragmentGroup? enterFragmentGroup;
 
   final currentFragmentGroupTagsAb = <FragmentGroupTag>[].ab;
+
+  @override
+  void onInit() {
+    super.onInit();
+    queryCurrentUser();
+  }
+
+  Future<void> queryCurrentUser() async {
+    final result = await request(
+      path: HttpPath.NO_LOGIN_REQUIRED_SINGLE_ROW_QUERY,
+      dtoData: SingleRowQueryDto(
+        table_name: db.users.actualTableName,
+        row_id: userId,
+      ),
+      parseResponseVoData: SingleRowQueryVo.fromJson,
+    );
+    await result.handleCode(
+      code90101: (String showMessage, SingleRowQueryVo vo) async {
+        currentUser.refreshInevitable((obj) => User.fromJson(vo.row));
+        thisRefresh();
+      },
+      otherException: (int? code, HttperException httperException, StackTrace st) async {
+        logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
+      },
+    );
+  }
 
   @override
   Future<bool> backListener(bool hasRoute) async {
@@ -111,7 +138,9 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
   }
 
   @override
-  FutureOr<void> refreshExtra() {}
+  FutureOr<void> refreshExtra() async {
+    await queryCurrentUser();
+  }
 
   @override
   FutureOr<void> refreshDone() {}
