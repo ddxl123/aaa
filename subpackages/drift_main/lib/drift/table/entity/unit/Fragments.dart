@@ -9,10 +9,6 @@ class Fragments extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  @override
-  bool get withoutRowId => true;
-
-
   BoolColumn get be_sep_publish => boolean().named("be_sep_publish")();
 
   TextColumn get content => text().named("content")();
@@ -21,13 +17,13 @@ class Fragments extends CloudTableBase  {
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 
   @ReferenceTo([Fragments])
-  TextColumn get father_fragment_id => text().named("father_fragment_id").nullable()();
+  IntColumn get father_fragment_id => integer().named("father_fragment_id").nullable()();
 
   TextColumn get title => text().named("title")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text().named("id")();
+  IntColumn get id => integer().named("id")();
 
   DateTimeColumn get updated_at => dateTime().named("updated_at")();
 

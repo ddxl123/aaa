@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/home/HomeAbController.dart';
 import 'package:aaa/push_page/push_page.dart';
-import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +11,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 import '../../global/tool_widgets/CustomImageWidget.dart';
 import '../../single_dialog/showFragmentGroupConfigDialog.dart';
-import 'FragmentGroupListPageController.dart';
+import 'FragmentGroupListSelfPageController.dart';
 
-class FragmentGroupListPage extends StatelessWidget {
-  const FragmentGroupListPage({Key? key}) : super(key: key);
+class FragmentGroupListSelfPage extends StatelessWidget {
+  const FragmentGroupListSelfPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GroupListWidget<FragmentGroup, Fragment, RFragment2FragmentGroup, FragmentGroupListPageController>(
-        groupListWidgetController: FragmentGroupListPageController(),
+      body: GroupListWidget<FragmentGroup, Fragment, RFragment2FragmentGroup, FragmentGroupListSelfPageController>(
+        groupListWidgetController: FragmentGroupListSelfPageController(
+          userId: Aber.find<GlobalAbController>().loggedInUser()!.id,
+          enterFragmentGroup: null,
+        ),
         groupChainStrings: (group, abw) => group(abw).getDynamicGroupEntity(abw)!.title,
         headSliver: (c, g, abw) => g(abw).getDynamicGroupEntity(abw) == null ? Container() : _Head(c: c, g: g, abw: abw),
         groupBuilder: (c, group, abw) {
@@ -205,7 +208,8 @@ class FragmentGroupListPage extends StatelessWidget {
           );
         },
         floatingButtonOnPressed: (c) {
-          showAddFragmentToMemoryGroupDialog();
+          throw "todo";
+          // showAddFragmentToMemoryGroupDialog();
         },
       ),
       bottomNavigationBar: _bottomNavigationBar(),
@@ -213,7 +217,7 @@ class FragmentGroupListPage extends StatelessWidget {
   }
 
   Widget _bottomNavigationBar() {
-    return AbBuilder<FragmentGroupListPageController>(
+    return AbBuilder<FragmentGroupListSelfPageController>(
       tag: Aber.single,
       builder: (c, abw) {
         if (c.isSelecting(abw)) {
@@ -334,7 +338,7 @@ class FragmentGroupListPage extends StatelessWidget {
 class _Head extends StatelessWidget {
   const _Head({super.key, required this.abw, required this.c, required this.g});
 
-  final FragmentGroupListPageController c;
+  final FragmentGroupListSelfPageController c;
   final Ab<Group<FragmentGroup, Fragment, RFragment2FragmentGroup>> g;
   final Abw abw;
 

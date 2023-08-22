@@ -11,7 +11,7 @@ import 'MemoryGroupGizmoEditPageAbController.dart';
 class MemoryGroupGizmoEditPage extends StatelessWidget {
   const MemoryGroupGizmoEditPage({Key? key, required this.editPageType, required this.memoryGroupId}) : super(key: key);
 
-  final String memoryGroupId;
+  final int memoryGroupId;
   final MemoryGroupGizmoEditPageType editPageType;
 
   @override

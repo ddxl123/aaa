@@ -120,7 +120,7 @@ class _InitState extends State<_Init> {
 
   Future<void> _queryInit() async {
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
       dtoData: KnowledgeBaseCategoryQueryDto(
         big_category: null,
         dto_padding_1: null,
@@ -246,7 +246,7 @@ class _SubState extends State<_Sub> {
 
   Future<void> _querySub() async {
     final resultSubs = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
       dtoData: KnowledgeBaseCategoryQueryDto(
         big_category: widget.bigName,
         dto_padding_1: null,

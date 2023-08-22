@@ -24,7 +24,6 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
     required String loginTypeName,
     required String loginEditContent,
     required Future<bool> Function() isClearDbWhenUserDiff,
-    required SyncTag syncTag,
   }) async {
     return await transaction<bool>(
       () async {
@@ -35,12 +34,8 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
           await db.deleteDAO.clearDb();
           userOrNull = await db.rawDAO.rawInsertUser(newUsersCompanion: usersCompanion);
           await db.insertDAO.insertClientSyncInfo(
-            newClientSyncInfoCompanion: Crt.clientSyncInfosCompanion(
-              device_info: deviceInfo,
-              recent_sync_time: null.toAbsent(),
-              token: token.toValue(),
-            ),
-            syncTag: syncTag,
+            deviceInfo: deviceInfo,
+            token: token,
           );
         }
 
@@ -59,17 +54,7 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
         Future<bool> ifs({required String savedLoginTypeValue}) async {
           if (savedLoginTypeValue == loginEditContent) {
             await db.updateDAO.resetClientSyncInfo(
-              syncTag: syncTag,
-              originalClientSyncInfoReset: () async {
-                await clientSyncInfoOrNull.reset(
-                  // 实际上可更换可不更换
-                  device_info: deviceInfo.toValue(),
-                  recent_sync_time: toAbsent(),
-                  // 必须更换
-                  token: token.toValue(),
-                  syncTag: syncTag,
-                );
-              },
+              entity: clientSyncInfoOrNull..token = token,
             );
             return true;
           } else {
@@ -94,19 +79,11 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
     );
   }
 
-  Future<void> clientLogout({required SyncTag syncTag}) async {
+  Future<void> clientLogout() async {
     final result = await db.generalQueryDAO.queryClientSyncInfoOrNull();
     if (result != null) {
       await db.updateDAO.resetClientSyncInfo(
-        originalClientSyncInfoReset: () async {
-          await result.reset(
-            device_info: toAbsent(),
-            recent_sync_time: toAbsent(),
-            token: null.toValue(),
-            syncTag: syncTag,
-          );
-        },
-        syncTag: syncTag,
+        entity: result..token = null,
       );
     }
   }

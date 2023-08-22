@@ -12,9 +12,10 @@ class MemoryGroupListPageAbController extends AbController {
   final memoryGroupGizmos = <Ab<MemoryGroup>>[].ab;
 
   Future<void> refreshPage() async {
-    final mgs = await DriftDb.instance.generalQueryDAO.queryMemoryGroups();
-    memoryGroupGizmos.clearBroken(this);
-    memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
+    throw "TODO";
+    // final mgs = await DriftDb.instance.generalQueryDAO.queryMemoryGroups();
+    // memoryGroupGizmos.clearBroken(this);
+    // memoryGroupGizmos.refreshInevitable((obj) => obj..addAll(mgs.map((e) => e.ab)));
   }
 
   Future<void> onStatusTap(Ab<MemoryGroup> memoryGroupGizmo) async {

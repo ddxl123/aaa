@@ -9,7 +9,6 @@ class Users extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-
   IntColumn get age => integer().named("age").nullable()();
 
   TextColumn get avatar_cloud_path => text().named("avatar_cloud_path").nullable()();

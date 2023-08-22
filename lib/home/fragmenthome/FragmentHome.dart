@@ -1,8 +1,9 @@
 import 'package:aaa/home/fragmenthome/FragmentHomeAbController.dart';
-import 'package:aaa/page/list/FragmentGroupListPage.dart';
 import 'package:aaa/page/list/ShorthandListPage.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
+
+import '../../page/list/FragmentGroupListSelfPage.dart';
 
 class FragmentHome extends StatefulWidget {
   const FragmentHome({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _FragmentHomeState extends State<FragmentHome> {
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                child: FragmentGroupListPage(),
+                child: FragmentGroupListSelfPage(),
               ),
               KeepStateWidget(
                 child: ShorthandListPage(),

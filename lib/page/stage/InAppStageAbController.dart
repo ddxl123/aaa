@@ -3,11 +3,9 @@ import 'dart:convert';
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:drift_main/share_common/share_enum.dart';
-import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
 import 'PerformerDAO.dart';
@@ -28,7 +26,7 @@ class Performer {
 class InAppStageAbController extends AbController {
   InAppStageAbController({required this.memoryGroupId});
 
-  final String memoryGroupId;
+  final int memoryGroupId;
 
   late final Ab<MemoryGroup> memoryGroupAb;
 
@@ -71,18 +69,19 @@ class InAppStageAbController extends AbController {
   }
 
   Future<void> _init() async {
-    final mg = await db.generalQueryDAO.queryMemoryGroupById(id: memoryGroupId);
-    memoryGroupAb = mg!.ab;
-
-    final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
-    if (mm == null) {
-      SmartDialog.showToast("未对该碎片组分配算法模型！");
-      Navigator.pop(context);
-      return;
-    }
-    memoryModelAb = mm.ab;
-
-    await _next();
+    throw "TODO";
+    // final mg = await db.generalQueryDAO.queryMemoryGroupById(id: memoryGroupId);
+    // memoryGroupAb = mg!.ab;
+    //
+    // final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
+    // if (mm == null) {
+    //   SmartDialog.showToast("未对该碎片组分配算法模型！");
+    //   Navigator.pop(context);
+    //   return;
+    // }
+    // memoryModelAb = mm.ab;
+    //
+    // await _next();
   }
 
   /// 仅获取下一个 [Performer]。
@@ -113,51 +112,52 @@ class InAppStageAbController extends AbController {
   ///
   /// 点击数值按钮后进行调用。
   Future<void> _finish({required double clickValue, required List<String> contentValue}) async {
-    if (currentPerformer() == null) {
-      throw "没有下一个碎片了，却仍然请求了下一个碎片！";
-    }
-
-    final targetButtonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: null);
-    await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: targetButtonDataValue2NextShowTime);
-
-    final currentClickFamiliarity = await _parseClickFamiliarity(targetButtonDataValue2NextShowTime);
-    if (currentClickFamiliarity == null) {
-      throw "解析熟悉度失败！";
-    }
-
-    final info = currentPerformer()!.fragmentMemoryInfo;
-
-    final st = await SyncTag.create();
-    await performerQuery.finish(
-      originalFragmentMemoryInfoReset: () async {
-        await info.reset(
-          creator_user_id: toAbsent(),
-          fragment_id: toAbsent(),
-          memory_group_id: toAbsent(),
-          click_time: info.click_time.arrayAdd<int>(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
-          click_value: info.click_value.arrayAdd<double>(clickValue).toValue(),
-          actual_show_time: info.actual_show_time.arrayAdd<int>(currentShowTime()!).toValue(),
-          next_plan_show_time: info.next_plan_show_time.arrayAdd<int>(targetButtonDataValue2NextShowTime.nextShowTime!).toValue(),
-          show_familiarity: info.show_familiarity.arrayAdd<double>(currentShowFamiliarity()!).toValue(),
-          click_familiarity: info.click_familiarity.arrayAdd<double>(currentClickFamiliarity).toValue(),
-          button_values: info.button_values.arrayAdd<List<double>>(currentButtonDatas().map((e) => e.value).toList()).toValue(),
-          content_value: info.content_value.arrayAdd<List<String>>(contentValue).toValue(),
-          study_status: StudyStatus.review.toValue(),
-          syncTag: st,
-          isCloudTableWithSync: true,
-        );
-      },
-      // 若为新的，则会自动将 [MemoryGroup.willNewLearnCount] 减去 1。
-      originalMemoryGroup: memoryGroupAb(),
-      fragmentMemoryInfo: info,
-      syncTag: st,
-    );
-    currentButtonDatas.refreshInevitable((obj) => obj..clear());
-    currentShowFamiliarity.refreshEasy((oldValue) => null);
-    currentShowTime.refreshEasy((oldValue) => null);
-    currentPerformer.refreshEasy((oldValue) => null);
-
-    memoryGroupAb.refreshInevitable((obj) => obj..will_new_learn_count = obj.will_new_learn_count - 1);
+    throw "TODO";
+    // if (currentPerformer() == null) {
+    //   throw "没有下一个碎片了，却仍然请求了下一个碎片！";
+    // }
+    //
+    // final targetButtonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: null);
+    // await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: targetButtonDataValue2NextShowTime);
+    //
+    // final currentClickFamiliarity = await _parseClickFamiliarity(targetButtonDataValue2NextShowTime);
+    // if (currentClickFamiliarity == null) {
+    //   throw "解析熟悉度失败！";
+    // }
+    //
+    // final info = currentPerformer()!.fragmentMemoryInfo;
+    //
+    // final st = await SyncTag.create();
+    // await performerQuery.finish(
+    //   originalFragmentMemoryInfoReset: () async {
+    //     await info.reset(
+    //       creator_user_id: toAbsent(),
+    //       fragment_id: toAbsent(),
+    //       memory_group_id: toAbsent(),
+    //       click_time: info.click_time.arrayAdd<int>(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!)).toValue(),
+    //       click_value: info.click_value.arrayAdd<double>(clickValue).toValue(),
+    //       actual_show_time: info.actual_show_time.arrayAdd<int>(currentShowTime()!).toValue(),
+    //       next_plan_show_time: info.next_plan_show_time.arrayAdd<int>(targetButtonDataValue2NextShowTime.nextShowTime!).toValue(),
+    //       show_familiarity: info.show_familiarity.arrayAdd<double>(currentShowFamiliarity()!).toValue(),
+    //       click_familiarity: info.click_familiarity.arrayAdd<double>(currentClickFamiliarity).toValue(),
+    //       button_values: info.button_values.arrayAdd<List<double>>(currentButtonDatas().map((e) => e.value).toList()).toValue(),
+    //       content_value: info.content_value.arrayAdd<List<String>>(contentValue).toValue(),
+    //       study_status: StudyStatus.review.toValue(),
+    //       syncTag: st,
+    //       isCloudTableWithSync: true,
+    //     );
+    //   },
+    //   // 若为新的，则会自动将 [MemoryGroup.willNewLearnCount] 减去 1。
+    //   originalMemoryGroup: memoryGroupAb(),
+    //   fragmentMemoryInfo: info,
+    //   syncTag: st,
+    // );
+    // currentButtonDatas.refreshInevitable((obj) => obj..clear());
+    // currentShowFamiliarity.refreshEasy((oldValue) => null);
+    // currentShowTime.refreshEasy((oldValue) => null);
+    // currentPerformer.refreshEasy((oldValue) => null);
+    //
+    // memoryGroupAb.refreshInevitable((obj) => obj..will_new_learn_count = obj.will_new_learn_count - 1);
   }
 
   /// 完成当前表演，并进行下一次表演。

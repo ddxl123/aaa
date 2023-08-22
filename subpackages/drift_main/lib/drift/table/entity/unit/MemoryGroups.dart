@@ -9,15 +9,11 @@ class MemoryGroups extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  @override
-  bool get withoutRowId => true;
-
-
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 
   @ReferenceTo([MemoryModels])
-  TextColumn get memory_model_id => text().named("memory_model_id").nullable()();
+  IntColumn get memory_model_id => integer().named("memory_model_id").nullable()();
 
   IntColumn get new_display_order => intEnum<NewDisplayOrder>().named("new_display_order")();
 
@@ -36,7 +32,7 @@ class MemoryGroups extends CloudTableBase  {
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text().named("id")();
+  IntColumn get id => integer().named("id")();
 
   DateTimeColumn get updated_at => dateTime().named("updated_at")();
 

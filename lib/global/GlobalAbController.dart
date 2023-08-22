@@ -108,7 +108,7 @@ class GlobalAbController extends AbController {
         } else {
           // 本地已登录，检查服务器端是否已登录。
           final result = await request(
-            path: HttpPath.REGISTER_OR_LOGIN_CHECK_LOGIN,
+            path: HttpPath.POST__REGISTER_OR_LOGIN_CHECK_LOGIN,
             dtoData: CheckLoginDto(
               device_and_token_bo: DeviceAndTokenBo(
                 device_info: clientSyncInfoOrNull.device_info,
@@ -147,73 +147,13 @@ class GlobalAbController extends AbController {
     }
   }
 
-  /// 上传 tag 最小的一组 sync 数据
-  Future<void> uploadSingleGroupSync({bool isShowToast = true}) async {
-    final result = await db.generalQueryDAO.querySameSyncTagWithRow();
-    if (result.isEmpty) {
-      if (isShowToast) {
-        logger.outNormal(show: "上传全部数据成功！");
-      }
-      // TODO: 当全部上传成功后，每5秒监听一次是否有新的数据需要上传。
-      // await Future.delayed(Duration(seconds: 5));
-      // await uploadSingleGroupSync(isShowToast: false);
-      return;
-    }
-    // 当 c 没被上传就 d 时，之后进行上传会导致 c 找不到对应的实体，造成服务端出现没有实体的异常。
-    // 因此当 c 找不到对应实体时，直接删除该条 c 的 sync 记录。
-    final willRemove = <(Sync, dynamic)>[];
-    for (var r in result) {
-      if (r.$1.sync_curd_type == SyncCurdType.c && r.$2 == null) {
-        await db.deleteDAO.deleteSingleSync(sync: r.$1);
-        willRemove.add(r);
-      }
-    }
-    for (var wr in willRemove) {
-      result.remove(wr);
-    }
-
-    final requestResult = await request(
-      path: HttpPath.LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS,
-      dtoData: DataUploadDto(
-        sync_entity: Sync(
-          row_id: "",
-          sync_curd_type: SyncCurdType.u,
-          sync_table_name: "",
-          tag: 0,
-          created_at: DateTime.now(),
-          id: 0,
-          updated_at: DateTime.now(),
-        ),
-        row_map: {},
-      ),
-      dtoDataList: result
-          .map(
-            (e) => DataUploadDto(
-              sync_entity: e.$1,
-              row_map: e.$2?.toJson(),
-            ),
-          )
-          .toList(),
-      parseResponseVoData: DataUploadVo.fromJson,
-    );
-    await requestResult.handleCode(
-      otherException: (int? code, HttperException httperException, StackTrace st) async {
-        logger.outError(show: httperException.showMessage, print: httperException.debugMessage, stackTrace: st);
-      },
-      code20101: (String showMessage) async {
-        await db.deleteDAO.rowDeleteUploadedSync(syncs: result.map((e) => e.$1).toList());
-        // TODO: 当上传成功后，是否立即进入下一次上传。
-        // await uploadSingleGroupSync();
-      },
-    );
-  }
-
   /// 上传全部离线文件
   ///
   /// [count] 单次上传数量
   ///
   /// TODO: 上传完文件后，要再次 [Sync] 才行，否则路径没有被上传。
   Future<void> uploadAllOfflineFiles({required int count}) async {
+    throw "TODO";
     final result = await db.generalQueryDAO.queryManyFragmentGroupForCoverImageNeedUpload(count: count);
     if (result.isEmpty) {
       SmartDialog.showToast("已将全部离线文件上传成功！");
@@ -227,35 +167,24 @@ class GlobalAbController extends AbController {
             fileUint8List: await File(v.client_cover_local_path!).readAsBytes(),
             oldCloudPath: null,
           ),
-          fileRequestMethod: FileRequestMethod.coverInsertUpload,
+          fileRequestMethod: FileRequestMethod.upload,
           isUpdateCache: false,
           onSuccess: (FilePathWrapper filePathWrapper) async {
-            final st = await SyncTag.create();
-            await RefFragmentGroups(
-              self: () async {
-                await v.reset(
-                  be_publish: toAbsent(),
-                  client_be_selected: toAbsent(),
-                  client_cover_local_path: toAbsent(),
-                  cover_cloud_path: filePathWrapper.newCloudPath.toValue(),
-                  creator_user_id: toAbsent(),
-                  father_fragment_groups_id: toAbsent(),
-                  jump_to_fragment_groups_id: toAbsent(),
-                  profile: toAbsent(),
-                  title: toAbsent(),
-                  client_be_cloud_path_upload: false.toValue(),
-                  syncTag: st,
-                  isCloudTableWithSync: true,
-                );
-              },
-              fragmentGroupTags: null,
-              rFragment2FragmentGroups: null,
-              fragmentGroups_father_fragment_groups_id: null,
-              fragmentGroups_jump_to_fragment_groups_id: null,
-              userComments: null,
-              userLikes: null,
-              order: 0,
-            ).run();
+            throw "TODO";
+            // await v.reset(
+            //   be_publish: toAbsent(),
+            //   client_be_selected: toAbsent(),
+            //   client_cover_local_path: toAbsent(),
+            //   cover_cloud_path: filePathWrapper.newCloudPath.toValue(),
+            //   creator_user_id: toAbsent(),
+            //   father_fragment_groups_id: toAbsent(),
+            //   jump_to_fragment_groups_id: toAbsent(),
+            //   profile: toAbsent(),
+            //   title: toAbsent(),
+            //   client_be_cloud_path_upload: false.toValue(),
+            //   syncTag: st,
+            //   isCloudTableWithSync: true,
+            // );
             SmartDialog.showToast("上传成功");
           },
           onError: (FilePathWrapper filePathWrapper, e, StackTrace st) async {

@@ -7,52 +7,39 @@
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-/// 这个类在创建表对象时，可以让每个 column 都能被编辑器提示，以防遗漏。
-///
-/// id createdAt updatedAt 已经在 [DriftSyncExt.insertReturningWith] 中自动更新了。
-///
-/// 使用方式查看 [withRefs]。
 class Crt {
   Crt._();
-  static ClientSyncInfosCompanion clientSyncInfosCompanion({
+  static ClientSyncInfo clientSyncInfoEntity({
     required String device_info,
-    required Value<DateTime?> recent_sync_time,
-    required Value<String?> token,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
+    required String? token,
   }) {
-    return ClientSyncInfosCompanion(
-      device_info: Value(device_info),
-      recent_sync_time: recent_sync_time,
+    return ClientSyncInfo(
+      device_info: device_info,
       token: token,
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static SyncsCompanion syncsCompanion({
-    required String row_id,
+  static Sync syncEntity({
+    required int row_id,
     required SyncCurdType sync_curd_type,
     required String sync_table_name,
     required int tag,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
   }) {
-    return SyncsCompanion(
-      row_id: Value(row_id),
-      sync_curd_type: Value(sync_curd_type),
-      sync_table_name: Value(sync_table_name),
-      tag: Value(tag),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    return Sync(
+      row_id: row_id,
+      sync_curd_type: sync_curd_type,
+      sync_table_name: sync_table_name,
+      tag: tag,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static FragmentMemoryInfosCompanion fragmentMemoryInfosCompanion({
+  static FragmentMemoryInfo fragmentMemoryInfoEntity({
     required String actual_show_time,
     required String button_values,
     required String click_familiarity,
@@ -60,592 +47,270 @@ class Crt {
     required String click_value,
     required String content_value,
     required int creator_user_id,
-    required String fragment_id,
-    required String memory_group_id,
+    required int fragment_id,
+    required int memory_group_id,
     required String next_plan_show_time,
     required String show_familiarity,
     required StudyStatus study_status,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return FragmentMemoryInfosCompanion(
-      actual_show_time: Value(actual_show_time),
-      button_values: Value(button_values),
-      click_familiarity: Value(click_familiarity),
-      click_time: Value(click_time),
-      click_value: Value(click_value),
-      content_value: Value(content_value),
-      creator_user_id: Value(creator_user_id),
-      fragment_id: Value(fragment_id),
-      memory_group_id: Value(memory_group_id),
-      next_plan_show_time: Value(next_plan_show_time),
-      show_familiarity: Value(show_familiarity),
-      study_status: Value(study_status),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    return FragmentMemoryInfo(
+      actual_show_time: actual_show_time,
+      button_values: button_values,
+      click_familiarity: click_familiarity,
+      click_time: click_time,
+      click_value: click_value,
+      content_value: content_value,
+      creator_user_id: creator_user_id,
+      fragment_id: fragment_id,
+      memory_group_id: memory_group_id,
+      next_plan_show_time: next_plan_show_time,
+      show_familiarity: show_familiarity,
+      study_status: study_status,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static FragmentGroupTagsCompanion fragmentGroupTagsCompanion({
-    required String fragment_group_id,
+  static FragmentGroupTag fragmentGroupTagEntity({
+    required int fragment_group_id,
     required String tag,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return FragmentGroupTagsCompanion(
-      fragment_group_id: Value(fragment_group_id),
-      tag: Value(tag),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    return FragmentGroupTag(
+      fragment_group_id: fragment_group_id,
+      tag: tag,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static RFragment2FragmentGroupsCompanion rFragment2FragmentGroupsCompanion({
+  static RFragment2FragmentGroup rFragment2FragmentGroupEntity({
     required bool client_be_selected,
     required int creator_user_id,
-    required Value<String?> fragment_group_id,
-    required String fragment_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
+    required int? fragment_group_id,
+    required int fragment_id,
   }) {
-    return RFragment2FragmentGroupsCompanion(
-      client_be_selected: Value(client_be_selected),
-      creator_user_id: Value(creator_user_id),
+    return RFragment2FragmentGroup(
+      client_be_selected: client_be_selected,
+      creator_user_id: creator_user_id,
       fragment_group_id: fragment_group_id,
-      fragment_id: Value(fragment_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      fragment_id: fragment_id,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static Test2sCompanion test2sCompanion({
+  static Test2 test2Entity({
     required String client_content,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
   }) {
-    return Test2sCompanion(
-      client_content: Value(client_content),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    return Test2(
+      client_content: client_content,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static TestsCompanion testsCompanion({
+  static Test testEntity({
     required String client_a,
     required String client_content,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
   }) {
-    return TestsCompanion(
-      client_a: Value(client_a),
-      client_content: Value(client_content),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    return Test(
+      client_a: client_a,
+      client_content: client_content,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static FragmentsCompanion fragmentsCompanion({
+  static Fragment fragmentEntity({
     required bool be_sep_publish,
     required String content,
     required int creator_user_id,
-    required Value<String?> father_fragment_id,
+    required int? father_fragment_id,
     required String title,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return FragmentsCompanion(
-      be_sep_publish: Value(be_sep_publish),
-      content: Value(content),
-      creator_user_id: Value(creator_user_id),
+    return Fragment(
+      be_sep_publish: be_sep_publish,
+      content: content,
+      creator_user_id: creator_user_id,
       father_fragment_id: father_fragment_id,
-      title: Value(title),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      title: title,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static MemoryGroupsCompanion memoryGroupsCompanion({
+  static MemoryGroup memoryGroupEntity({
     required int creator_user_id,
-    required Value<String?> memory_model_id,
+    required int? memory_model_id,
     required NewDisplayOrder new_display_order,
     required NewReviewDisplayOrder new_review_display_order,
     required ReviewDisplayOrder review_display_order,
     required DateTime review_interval,
-    required Value<DateTime?> start_time,
+    required DateTime? start_time,
     required String title,
     required int will_new_learn_count,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return MemoryGroupsCompanion(
-      creator_user_id: Value(creator_user_id),
+    return MemoryGroup(
+      creator_user_id: creator_user_id,
       memory_model_id: memory_model_id,
-      new_display_order: Value(new_display_order),
-      new_review_display_order: Value(new_review_display_order),
-      review_display_order: Value(review_display_order),
-      review_interval: Value(review_interval),
+      new_display_order: new_display_order,
+      new_review_display_order: new_review_display_order,
+      review_display_order: review_display_order,
+      review_interval: review_interval,
       start_time: start_time,
-      title: Value(title),
-      will_new_learn_count: Value(will_new_learn_count),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      title: title,
+      will_new_learn_count: will_new_learn_count,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static MemoryModelsCompanion memoryModelsCompanion({
-    required Value<String?> button_algorithm_a,
-    required Value<String?> button_algorithm_b,
-    required Value<String?> button_algorithm_c,
-    required Value<String?> button_algorithm_remark,
+  static MemoryModel memoryModelEntity({
+    required String? button_algorithm_a,
+    required String? button_algorithm_b,
+    required String? button_algorithm_c,
+    required String? button_algorithm_remark,
     required AlgorithmUsageStatus button_algorithm_usage_status,
     required int creator_user_id,
-    required Value<String?> familiarity_algorithm_a,
-    required Value<String?> familiarity_algorithm_b,
-    required Value<String?> familiarity_algorithm_c,
-    required Value<String?> familiarity_algorithm_remark,
+    required String? familiarity_algorithm_a,
+    required String? familiarity_algorithm_b,
+    required String? familiarity_algorithm_c,
+    required String? familiarity_algorithm_remark,
     required AlgorithmUsageStatus familiarity_algorithm_usage_status,
-    required Value<String?> father_memory_model_id,
-    required Value<String?> next_time_algorithm_a,
-    required Value<String?> next_time_algorithm_b,
-    required Value<String?> next_time_algorithm_c,
-    required Value<String?> next_time_algorithm_remark,
+    required int? father_memory_model_id,
+    required String? next_time_algorithm_a,
+    required String? next_time_algorithm_b,
+    required String? next_time_algorithm_c,
+    required String? next_time_algorithm_remark,
     required AlgorithmUsageStatus next_time_algorithm_usage_status,
     required String title,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return MemoryModelsCompanion(
+    return MemoryModel(
       button_algorithm_a: button_algorithm_a,
       button_algorithm_b: button_algorithm_b,
       button_algorithm_c: button_algorithm_c,
       button_algorithm_remark: button_algorithm_remark,
-      button_algorithm_usage_status: Value(button_algorithm_usage_status),
-      creator_user_id: Value(creator_user_id),
+      button_algorithm_usage_status: button_algorithm_usage_status,
+      creator_user_id: creator_user_id,
       familiarity_algorithm_a: familiarity_algorithm_a,
       familiarity_algorithm_b: familiarity_algorithm_b,
       familiarity_algorithm_c: familiarity_algorithm_c,
       familiarity_algorithm_remark: familiarity_algorithm_remark,
-      familiarity_algorithm_usage_status:
-          Value(familiarity_algorithm_usage_status),
+      familiarity_algorithm_usage_status: familiarity_algorithm_usage_status,
       father_memory_model_id: father_memory_model_id,
       next_time_algorithm_a: next_time_algorithm_a,
       next_time_algorithm_b: next_time_algorithm_b,
       next_time_algorithm_c: next_time_algorithm_c,
       next_time_algorithm_remark: next_time_algorithm_remark,
-      next_time_algorithm_usage_status: Value(next_time_algorithm_usage_status),
-      title: Value(title),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      next_time_algorithm_usage_status: next_time_algorithm_usage_status,
+      title: title,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static ShorthandsCompanion shorthandsCompanion({
+  static Shorthand shorthandEntity({
     required String content,
     required int creator_user_id,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return ShorthandsCompanion(
-      content: Value(content),
-      creator_user_id: Value(creator_user_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+    return Shorthand(
+      content: content,
+      creator_user_id: creator_user_id,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static FragmentGroupsCompanion fragmentGroupsCompanion({
+  static FragmentGroup fragmentGroupEntity({
     required bool be_publish,
     required bool client_be_cloud_path_upload,
     required bool client_be_selected,
-    required Value<String?> client_cover_local_path,
-    required Value<String?> cover_cloud_path,
+    required String? client_cover_local_path,
+    required String? cover_cloud_path,
     required int creator_user_id,
-    required Value<String?> father_fragment_groups_id,
-    required Value<String?> jump_to_fragment_groups_id,
+    required int? father_fragment_groups_id,
+    required int? jump_to_fragment_groups_id,
     required String profile,
     required String title,
-    DateTime? created_at,
-    String? id,
-    DateTime? updated_at,
   }) {
-    return FragmentGroupsCompanion(
-      be_publish: Value(be_publish),
-      client_be_cloud_path_upload: Value(client_be_cloud_path_upload),
-      client_be_selected: Value(client_be_selected),
+    return FragmentGroup(
+      be_publish: be_publish,
+      client_be_cloud_path_upload: client_be_cloud_path_upload,
+      client_be_selected: client_be_selected,
       client_cover_local_path: client_cover_local_path,
       cover_cloud_path: cover_cloud_path,
-      creator_user_id: Value(creator_user_id),
+      creator_user_id: creator_user_id,
       father_fragment_groups_id: father_fragment_groups_id,
       jump_to_fragment_groups_id: jump_to_fragment_groups_id,
-      profile: Value(profile),
-      title: Value(title),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : Value(id),
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      profile: profile,
+      title: title,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static UserCommentsCompanion userCommentsCompanion({
+  static UserComment userCommentEntity({
     required String comment_content,
     required int commentator_user_id,
-    required Value<String?> fragment_group_id,
-    required Value<String?> fragment_id,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
+    required int? fragment_group_id,
+    required int? fragment_id,
   }) {
-    return UserCommentsCompanion(
-      comment_content: Value(comment_content),
-      commentator_user_id: Value(commentator_user_id),
+    return UserComment(
+      comment_content: comment_content,
+      commentator_user_id: commentator_user_id,
       fragment_group_id: fragment_group_id,
       fragment_id: fragment_id,
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static UserLikesCompanion userLikesCompanion({
-    required Value<String?> fragment_group_id,
-    required Value<String?> fragment_id,
+  static UserLike userLikeEntity({
+    required int? fragment_group_id,
+    required int? fragment_id,
     required int liker_user_id,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
   }) {
-    return UserLikesCompanion(
+    return UserLike(
       fragment_group_id: fragment_group_id,
       fragment_id: fragment_id,
-      liker_user_id: Value(liker_user_id),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
+      liker_user_id: liker_user_id,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 
-  static UsersCompanion usersCompanion({
-    required Value<int?> age,
-    required Value<String?> avatar_cloud_path,
-    required Value<String?> client_avatar_local_path,
-    required Value<String?> email,
-    required Value<String?> password,
-    required Value<String?> phone,
+  static User userEntity({
+    required int? age,
+    required String? avatar_cloud_path,
+    required String? client_avatar_local_path,
+    required String? email,
+    required String? password,
+    required String? phone,
     required String username,
-    DateTime? created_at,
-    Value<int>? id,
-    DateTime? updated_at,
   }) {
-    return UsersCompanion(
+    return User(
       age: age,
       avatar_cloud_path: avatar_cloud_path,
       client_avatar_local_path: client_avatar_local_path,
       email: email,
       password: password,
       phone: phone,
-      username: Value(username),
-      created_at: created_at == null ? const Value.absent() : Value(created_at),
-      id: id == null ? const Value.absent() : id,
-      updated_at: updated_at == null ? const Value.absent() : Value(updated_at),
-    );
-  }
-}
-
-extension ClientSyncInfosCompanionExt on ClientSyncInfosCompanion {
-  Future<ClientSyncInfo> insert({
-    required SyncTag syncTag,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.clientSyncInfos,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: false,
-      isCloudTableAutoId: false,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension SyncsCompanionExt on SyncsCompanion {
-  Future<Sync> insert({
-    required SyncTag syncTag,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.syncs,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: false,
-      isCloudTableAutoId: false,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension FragmentMemoryInfosCompanionExt on FragmentMemoryInfosCompanion {
-  Future<FragmentMemoryInfo> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.fragmentMemoryInfos,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension FragmentGroupTagsCompanionExt on FragmentGroupTagsCompanion {
-  Future<FragmentGroupTag> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.fragmentGroupTags,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension RFragment2FragmentGroupsCompanionExt
-    on RFragment2FragmentGroupsCompanion {
-  Future<RFragment2FragmentGroup> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.rFragment2FragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension Test2sCompanionExt on Test2sCompanion {
-  Future<Test2> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.test2s,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension TestsCompanionExt on TestsCompanion {
-  Future<Test> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.tests,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension FragmentsCompanionExt on FragmentsCompanion {
-  Future<Fragment> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.fragments,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension MemoryGroupsCompanionExt on MemoryGroupsCompanion {
-  Future<MemoryGroup> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.memoryGroups,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension MemoryModelsCompanionExt on MemoryModelsCompanion {
-  Future<MemoryModel> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.memoryModels,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension ShorthandsCompanionExt on ShorthandsCompanion {
-  Future<Shorthand> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.shorthands,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension FragmentGroupsCompanionExt on FragmentGroupsCompanion {
-  Future<FragmentGroup> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.fragmentGroups,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension UserCommentsCompanionExt on UserCommentsCompanion {
-  Future<UserComment> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.userComments,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension UserLikesCompanionExt on UserLikesCompanion {
-  Future<UserLike> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.userLikes,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
-    );
-  }
-}
-
-extension UsersCompanionExt on UsersCompanion {
-  Future<User> insert({
-    required SyncTag syncTag,
-    required bool isCloudTableWithSync,
-    required bool isCloudTableAutoId,
-    required bool isReplaceWhenIdSame,
-  }) async {
-    final ins = DriftDb.instance;
-    return await ins.insertReturningWith(
-      ins.users,
-      entity: this,
-      syncTag: syncTag,
-      isCloudTableWithSync: isCloudTableWithSync,
-      isCloudTableAutoId: isCloudTableAutoId,
-      isReplaceWhenIdSame: isReplaceWhenIdSame,
+      username: username,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
     );
   }
 }

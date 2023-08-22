@@ -25,10 +25,11 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
   MemoryModel? _selectedMm;
 
   Future<void> getMms() async {
-    final mms = await db.generalQueryDAO.queryMemoryModels();
-    memoryModels.clear();
-    memoryModels.addAll(mms);
-    if (mounted) setState(() {});
+    throw "todo";
+    // final mms = await db.generalQueryDAO.queryMemoryModels();
+    // memoryModels.clear();
+    // memoryModels.addAll(mms);
+    // if (mounted) setState(() {});
   }
 
   @override
@@ -90,25 +91,26 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
 
   Future<void> _onOk() async {
     widget.selectedMemoryModelAb.refreshEasy((oldValue) => _selectedMm);
-    final st = await SyncTag.create();
-    await db.updateDAO.resetMemoryGroupForOnlySave(
-      originalMemoryGroupReset: () async {
-        await widget.mg().reset(
-              creator_user_id: toAbsent(),
-              memory_model_id: (_selectedMm?.id).toValue(),
-              new_display_order: toAbsent(),
-              new_review_display_order: toAbsent(),
-              review_display_order: toAbsent(),
-              review_interval: toAbsent(),
-              start_time: toAbsent(),
-              title: toAbsent(),
-              will_new_learn_count: toAbsent(),
-              syncTag: st,
-              isCloudTableWithSync: true,
-            );
-      },
-      syncTag: st,
-    );
+    throw "todo";
+    // final st = await SyncTag.create();
+    // await db.updateDAO.resetMemoryGroupForOnlySave(
+    //   originalMemoryGroupReset: () async {
+    //     await widget.mg().reset(
+    //           creator_user_id: toAbsent(),
+    //           memory_model_id: (_selectedMm?.id).toValue(),
+    //           new_display_order: toAbsent(),
+    //           new_review_display_order: toAbsent(),
+    //           review_display_order: toAbsent(),
+    //           review_interval: toAbsent(),
+    //           start_time: toAbsent(),
+    //           title: toAbsent(),
+    //           will_new_learn_count: toAbsent(),
+    //           syncTag: st,
+    //           isCloudTableWithSync: true,
+    //         );
+    //   },
+    //   syncTag: st,
+    // );
     if (_selectedMm == null) {
       SmartDialog.showToast('不选择');
     } else {

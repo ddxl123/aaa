@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../page/list/FragmentGroupListPageController.dart';
+import '../page/list/FragmentGroupListSelfPageController.dart';
 
 enum PageType {
   home(text: "首页", icon: FontAwesomeIcons.fortAwesomeAlt),
@@ -42,7 +42,7 @@ class HomeAbController extends AbController {
     }
 
     if (currentPageType() == PageType.fragment && FragmentPageType.values[Aber.find<FragmentHomeAbController>().tabController.index] == FragmentPageType.fragment) {
-      final groupChainC = Aber.findOrNullLast<FragmentGroupListPageController>();
+      final groupChainC = Aber.findOrNullLast<FragmentGroupListSelfPageController>();
       if (groupChainC != null && groupChainC.getGroupChainNotRoot().isNotEmpty) {
         await groupChainC.backGroup();
         return true;
@@ -67,7 +67,7 @@ class HomeAbController extends AbController {
   }
 
   // 0-30,00-40,000-50,0000-60,00000-70
-  double selectedCountDistance(FragmentGroupListPageController controller, [Abw? abw]) {
+  double selectedCountDistance(FragmentGroupListSelfPageController controller, [Abw? abw]) {
     // final count = controller.selectedFragment(abw).length;
     // if (count <= 9) return -30;
     // if (count > 9 && count < 100) return -40;

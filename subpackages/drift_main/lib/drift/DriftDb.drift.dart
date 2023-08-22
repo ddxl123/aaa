@@ -134,12 +134,6 @@ class $ClientSyncInfosTable extends ClientSyncInfos
   late final GeneratedColumn<String> device_info = GeneratedColumn<String>(
       'device_info', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _recent_sync_timeMeta =
-      const VerificationMeta('recent_sync_time');
-  @override
-  late final GeneratedColumn<DateTime> recent_sync_time =
-      GeneratedColumn<DateTime>('recent_sync_time', aliasedName, true,
-          type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _tokenMeta = const VerificationMeta('token');
   @override
   late final GeneratedColumn<String> token = GeneratedColumn<String>(
@@ -168,7 +162,7 @@ class $ClientSyncInfosTable extends ClientSyncInfos
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [device_info, recent_sync_time, token, created_at, id, updated_at];
+      [device_info, token, created_at, id, updated_at];
   @override
   String get aliasedName => _alias ?? 'client_sync_infos';
   @override
@@ -185,12 +179,6 @@ class $ClientSyncInfosTable extends ClientSyncInfos
               data['device_info']!, _device_infoMeta));
     } else if (isInserting) {
       context.missing(_device_infoMeta);
-    }
-    if (data.containsKey('recent_sync_time')) {
-      context.handle(
-          _recent_sync_timeMeta,
-          recent_sync_time.isAcceptableOrUnknown(
-              data['recent_sync_time']!, _recent_sync_timeMeta));
     }
     if (data.containsKey('token')) {
       context.handle(
@@ -226,8 +214,6 @@ class $ClientSyncInfosTable extends ClientSyncInfos
     return ClientSyncInfo(
       device_info: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}device_info'])!,
-      recent_sync_time: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}recent_sync_time']),
       token: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}token']),
       created_at: attachedDatabase.typeMapping
@@ -247,14 +233,12 @@ class $ClientSyncInfosTable extends ClientSyncInfos
 
 class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
   String device_info;
-  DateTime? recent_sync_time;
   String? token;
   DateTime created_at;
   int id;
   DateTime updated_at;
   ClientSyncInfo(
       {required this.device_info,
-      this.recent_sync_time,
       this.token,
       required this.created_at,
       required this.id,
@@ -263,9 +247,6 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['device_info'] = Variable<String>(device_info);
-    if (!nullToAbsent || recent_sync_time != null) {
-      map['recent_sync_time'] = Variable<DateTime>(recent_sync_time);
-    }
     if (!nullToAbsent || token != null) {
       map['token'] = Variable<String>(token);
     }
@@ -278,9 +259,6 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
   ClientSyncInfosCompanion toCompanion(bool nullToAbsent) {
     return ClientSyncInfosCompanion(
       device_info: Value(device_info),
-      recent_sync_time: recent_sync_time == null && nullToAbsent
-          ? const Value.absent()
-          : Value(recent_sync_time),
       token:
           token == null && nullToAbsent ? const Value.absent() : Value(token),
       created_at: Value(created_at),
@@ -294,8 +272,6 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ClientSyncInfo(
       device_info: serializer.fromJson<String>(json['device_info']),
-      recent_sync_time:
-          serializer.fromJson<DateTime?>(json['recent_sync_time']),
       token: serializer.fromJson<String?>(json['token']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
@@ -307,7 +283,6 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'device_info': serializer.toJson<String>(device_info),
-      'recent_sync_time': serializer.toJson<DateTime?>(recent_sync_time),
       'token': serializer.toJson<String?>(token),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
@@ -317,16 +292,12 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
 
   ClientSyncInfo copyWith(
           {String? device_info,
-          Value<DateTime?> recent_sync_time = const Value.absent(),
           Value<String?> token = const Value.absent(),
           DateTime? created_at,
           int? id,
           DateTime? updated_at}) =>
       ClientSyncInfo(
         device_info: device_info ?? this.device_info,
-        recent_sync_time: recent_sync_time.present
-            ? recent_sync_time.value
-            : this.recent_sync_time,
         token: token.present ? token.value : this.token,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
@@ -336,7 +307,6 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
   String toString() {
     return (StringBuffer('ClientSyncInfo(')
           ..write('device_info: $device_info, ')
-          ..write('recent_sync_time: $recent_sync_time, ')
           ..write('token: $token, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -346,14 +316,13 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      device_info, recent_sync_time, token, created_at, id, updated_at);
+  int get hashCode =>
+      Object.hash(device_info, token, created_at, id, updated_at);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ClientSyncInfo &&
           other.device_info == this.device_info &&
-          other.recent_sync_time == this.recent_sync_time &&
           other.token == this.token &&
           other.created_at == this.created_at &&
           other.id == this.id &&
@@ -362,14 +331,12 @@ class ClientSyncInfo extends DataClass implements Insertable<ClientSyncInfo> {
 
 class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
   Value<String> device_info;
-  Value<DateTime?> recent_sync_time;
   Value<String?> token;
   Value<DateTime> created_at;
   Value<int> id;
   Value<DateTime> updated_at;
   ClientSyncInfosCompanion({
     this.device_info = const Value.absent(),
-    this.recent_sync_time = const Value.absent(),
     this.token = const Value.absent(),
     this.created_at = const Value.absent(),
     this.id = const Value.absent(),
@@ -377,7 +344,6 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
   });
   ClientSyncInfosCompanion.insert({
     required String device_info,
-    this.recent_sync_time = const Value.absent(),
     this.token = const Value.absent(),
     required DateTime created_at,
     this.id = const Value.absent(),
@@ -387,7 +353,6 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
         updated_at = Value(updated_at);
   static Insertable<ClientSyncInfo> custom({
     Expression<String>? device_info,
-    Expression<DateTime>? recent_sync_time,
     Expression<String>? token,
     Expression<DateTime>? created_at,
     Expression<int>? id,
@@ -395,7 +360,6 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
   }) {
     return RawValuesInsertable({
       if (device_info != null) 'device_info': device_info,
-      if (recent_sync_time != null) 'recent_sync_time': recent_sync_time,
       if (token != null) 'token': token,
       if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
@@ -405,14 +369,12 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
 
   ClientSyncInfosCompanion copyWith(
       {Value<String>? device_info,
-      Value<DateTime?>? recent_sync_time,
       Value<String?>? token,
       Value<DateTime>? created_at,
       Value<int>? id,
       Value<DateTime>? updated_at}) {
     return ClientSyncInfosCompanion(
       device_info: device_info ?? this.device_info,
-      recent_sync_time: recent_sync_time ?? this.recent_sync_time,
       token: token ?? this.token,
       created_at: created_at ?? this.created_at,
       id: id ?? this.id,
@@ -425,9 +387,6 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
     final map = <String, Expression>{};
     if (device_info.present) {
       map['device_info'] = Variable<String>(device_info.value);
-    }
-    if (recent_sync_time.present) {
-      map['recent_sync_time'] = Variable<DateTime>(recent_sync_time.value);
     }
     if (token.present) {
       map['token'] = Variable<String>(token.value);
@@ -448,7 +407,6 @@ class ClientSyncInfosCompanion extends UpdateCompanion<ClientSyncInfo> {
   String toString() {
     return (StringBuffer('ClientSyncInfosCompanion(')
           ..write('device_info: $device_info, ')
-          ..write('recent_sync_time: $recent_sync_time, ')
           ..write('token: $token, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -465,9 +423,9 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
   $SyncsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _row_idMeta = const VerificationMeta('row_id');
   @override
-  late final GeneratedColumn<String> row_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> row_id = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _sync_curd_typeMeta =
       const VerificationMeta('sync_curd_type');
   @override
@@ -577,7 +535,7 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Sync(
       row_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}row_id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
       sync_curd_type: $SyncsTable.$convertersync_curd_type.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.int, data['${effectivePrefix}sync_curd_type'])!),
@@ -604,7 +562,7 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
 }
 
 class Sync extends DataClass implements Insertable<Sync> {
-  String row_id;
+  int row_id;
   SyncCurdType sync_curd_type;
   String sync_table_name;
   int tag;
@@ -622,7 +580,7 @@ class Sync extends DataClass implements Insertable<Sync> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['row_id'] = Variable<String>(row_id);
+    map['row_id'] = Variable<int>(row_id);
     {
       final converter = $SyncsTable.$convertersync_curd_type;
       map['sync_curd_type'] = Variable<int>(converter.toSql(sync_curd_type));
@@ -651,7 +609,7 @@ class Sync extends DataClass implements Insertable<Sync> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Sync(
-      row_id: serializer.fromJson<String>(json['row_id']),
+      row_id: serializer.fromJson<int>(json['row_id']),
       sync_curd_type: $SyncsTable.$convertersync_curd_type
           .fromJson(serializer.fromJson<int>(json['sync_curd_type'])),
       sync_table_name: serializer.fromJson<String>(json['sync_table_name']),
@@ -665,7 +623,7 @@ class Sync extends DataClass implements Insertable<Sync> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'row_id': serializer.toJson<String>(row_id),
+      'row_id': serializer.toJson<int>(row_id),
       'sync_curd_type': serializer.toJson<int>(
           $SyncsTable.$convertersync_curd_type.toJson(sync_curd_type)),
       'sync_table_name': serializer.toJson<String>(sync_table_name),
@@ -677,7 +635,7 @@ class Sync extends DataClass implements Insertable<Sync> {
   }
 
   Sync copyWith(
-          {String? row_id,
+          {int? row_id,
           SyncCurdType? sync_curd_type,
           String? sync_table_name,
           int? tag,
@@ -724,7 +682,7 @@ class Sync extends DataClass implements Insertable<Sync> {
 }
 
 class SyncsCompanion extends UpdateCompanion<Sync> {
-  Value<String> row_id;
+  Value<int> row_id;
   Value<SyncCurdType> sync_curd_type;
   Value<String> sync_table_name;
   Value<int> tag;
@@ -741,7 +699,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     this.updated_at = const Value.absent(),
   });
   SyncsCompanion.insert({
-    required String row_id,
+    required int row_id,
     required SyncCurdType sync_curd_type,
     required String sync_table_name,
     required int tag,
@@ -755,7 +713,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
         created_at = Value(created_at),
         updated_at = Value(updated_at);
   static Insertable<Sync> custom({
-    Expression<String>? row_id,
+    Expression<int>? row_id,
     Expression<int>? sync_curd_type,
     Expression<String>? sync_table_name,
     Expression<int>? tag,
@@ -775,7 +733,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   }
 
   SyncsCompanion copyWith(
-      {Value<String>? row_id,
+      {Value<int>? row_id,
       Value<SyncCurdType>? sync_curd_type,
       Value<String>? sync_table_name,
       Value<int>? tag,
@@ -797,7 +755,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (row_id.present) {
-      map['row_id'] = Variable<String>(row_id.value);
+      map['row_id'] = Variable<int>(row_id.value);
     }
     if (sync_curd_type.present) {
       final converter = $SyncsTable.$convertersync_curd_type;
@@ -888,15 +846,15 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   static const VerificationMeta _fragment_idMeta =
       const VerificationMeta('fragment_id');
   @override
-  late final GeneratedColumn<String> fragment_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> fragment_id = GeneratedColumn<int>(
       'fragment_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _memory_group_idMeta =
       const VerificationMeta('memory_group_id');
   @override
-  late final GeneratedColumn<String> memory_group_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> memory_group_id = GeneratedColumn<int>(
       'memory_group_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _next_plan_show_timeMeta =
       const VerificationMeta('next_plan_show_time');
   @override
@@ -925,9 +883,9 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -1060,8 +1018,6 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -1095,9 +1051,9 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       fragment_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fragment_id'])!,
-      memory_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}memory_group_id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_id'])!,
+      memory_group_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}memory_group_id'])!,
       next_plan_show_time: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}next_plan_show_time'])!,
       show_familiarity: attachedDatabase.typeMapping.read(
@@ -1108,7 +1064,7 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -1121,8 +1077,6 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
 
   static JsonTypeConverter2<StudyStatus, int, int> $converterstudy_status =
       const EnumIndexConverter<StudyStatus>(StudyStatus.values);
-  @override
-  bool get withoutRowId => true;
 }
 
 class FragmentMemoryInfo extends DataClass
@@ -1134,13 +1088,13 @@ class FragmentMemoryInfo extends DataClass
   String click_value;
   String content_value;
   int creator_user_id;
-  String fragment_id;
-  String memory_group_id;
+  int fragment_id;
+  int memory_group_id;
   String next_plan_show_time;
   String show_familiarity;
   StudyStatus study_status;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   FragmentMemoryInfo(
       {required this.actual_show_time,
@@ -1168,8 +1122,8 @@ class FragmentMemoryInfo extends DataClass
     map['click_value'] = Variable<String>(click_value);
     map['content_value'] = Variable<String>(content_value);
     map['creator_user_id'] = Variable<int>(creator_user_id);
-    map['fragment_id'] = Variable<String>(fragment_id);
-    map['memory_group_id'] = Variable<String>(memory_group_id);
+    map['fragment_id'] = Variable<int>(fragment_id);
+    map['memory_group_id'] = Variable<int>(memory_group_id);
     map['next_plan_show_time'] = Variable<String>(next_plan_show_time);
     map['show_familiarity'] = Variable<String>(show_familiarity);
     {
@@ -1177,7 +1131,7 @@ class FragmentMemoryInfo extends DataClass
       map['study_status'] = Variable<int>(converter.toSql(study_status));
     }
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -1213,15 +1167,15 @@ class FragmentMemoryInfo extends DataClass
       click_value: serializer.fromJson<String>(json['click_value']),
       content_value: serializer.fromJson<String>(json['content_value']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      fragment_id: serializer.fromJson<String>(json['fragment_id']),
-      memory_group_id: serializer.fromJson<String>(json['memory_group_id']),
+      fragment_id: serializer.fromJson<int>(json['fragment_id']),
+      memory_group_id: serializer.fromJson<int>(json['memory_group_id']),
       next_plan_show_time:
           serializer.fromJson<String>(json['next_plan_show_time']),
       show_familiarity: serializer.fromJson<String>(json['show_familiarity']),
       study_status: $FragmentMemoryInfosTable.$converterstudy_status
           .fromJson(serializer.fromJson<int>(json['study_status'])),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -1236,15 +1190,15 @@ class FragmentMemoryInfo extends DataClass
       'click_value': serializer.toJson<String>(click_value),
       'content_value': serializer.toJson<String>(content_value),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'fragment_id': serializer.toJson<String>(fragment_id),
-      'memory_group_id': serializer.toJson<String>(memory_group_id),
+      'fragment_id': serializer.toJson<int>(fragment_id),
+      'memory_group_id': serializer.toJson<int>(memory_group_id),
       'next_plan_show_time': serializer.toJson<String>(next_plan_show_time),
       'show_familiarity': serializer.toJson<String>(show_familiarity),
       'study_status': serializer.toJson<int>($FragmentMemoryInfosTable
           .$converterstudy_status
           .toJson(study_status)),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
@@ -1257,13 +1211,13 @@ class FragmentMemoryInfo extends DataClass
           String? click_value,
           String? content_value,
           int? creator_user_id,
-          String? fragment_id,
-          String? memory_group_id,
+          int? fragment_id,
+          int? memory_group_id,
           String? next_plan_show_time,
           String? show_familiarity,
           StudyStatus? study_status,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       FragmentMemoryInfo(
         actual_show_time: actual_show_time ?? this.actual_show_time,
@@ -1350,13 +1304,13 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<String> click_value;
   Value<String> content_value;
   Value<int> creator_user_id;
-  Value<String> fragment_id;
-  Value<String> memory_group_id;
+  Value<int> fragment_id;
+  Value<int> memory_group_id;
   Value<String> next_plan_show_time;
   Value<String> show_familiarity;
   Value<StudyStatus> study_status;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   FragmentMemoryInfosCompanion({
     this.actual_show_time = const Value.absent(),
@@ -1383,13 +1337,13 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     required String click_value,
     required String content_value,
     required int creator_user_id,
-    required String fragment_id,
-    required String memory_group_id,
+    required int fragment_id,
+    required int memory_group_id,
     required String next_plan_show_time,
     required String show_familiarity,
     required StudyStatus study_status,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : actual_show_time = Value(actual_show_time),
         button_values = Value(button_values),
@@ -1404,7 +1358,6 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
         show_familiarity = Value(show_familiarity),
         study_status = Value(study_status),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentMemoryInfo> custom({
     Expression<String>? actual_show_time,
@@ -1414,13 +1367,13 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     Expression<String>? click_value,
     Expression<String>? content_value,
     Expression<int>? creator_user_id,
-    Expression<String>? fragment_id,
-    Expression<String>? memory_group_id,
+    Expression<int>? fragment_id,
+    Expression<int>? memory_group_id,
     Expression<String>? next_plan_show_time,
     Expression<String>? show_familiarity,
     Expression<int>? study_status,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -1451,13 +1404,13 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       Value<String>? click_value,
       Value<String>? content_value,
       Value<int>? creator_user_id,
-      Value<String>? fragment_id,
-      Value<String>? memory_group_id,
+      Value<int>? fragment_id,
+      Value<int>? memory_group_id,
       Value<String>? next_plan_show_time,
       Value<String>? show_familiarity,
       Value<StudyStatus>? study_status,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return FragmentMemoryInfosCompanion(
       actual_show_time: actual_show_time ?? this.actual_show_time,
@@ -1503,10 +1456,10 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
     if (fragment_id.present) {
-      map['fragment_id'] = Variable<String>(fragment_id.value);
+      map['fragment_id'] = Variable<int>(fragment_id.value);
     }
     if (memory_group_id.present) {
-      map['memory_group_id'] = Variable<String>(memory_group_id.value);
+      map['memory_group_id'] = Variable<int>(memory_group_id.value);
     }
     if (next_plan_show_time.present) {
       map['next_plan_show_time'] = Variable<String>(next_plan_show_time.value);
@@ -1522,7 +1475,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -1562,9 +1515,9 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   static const VerificationMeta _fragment_group_idMeta =
       const VerificationMeta('fragment_group_id');
   @override
-  late final GeneratedColumn<String> fragment_group_id =
-      GeneratedColumn<String>('fragment_group_id', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<int> fragment_group_id = GeneratedColumn<int>(
+      'fragment_group_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _tagMeta = const VerificationMeta('tag');
   @override
   late final GeneratedColumn<String> tag = GeneratedColumn<String>(
@@ -1578,9 +1531,9 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -1623,8 +1576,6 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -1643,14 +1594,14 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   FragmentGroupTag map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FragmentGroupTag(
-      fragment_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}fragment_group_id'])!,
+      fragment_group_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_group_id'])!,
       tag: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tag'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -1660,17 +1611,14 @@ class $FragmentGroupTagsTable extends FragmentGroupTags
   $FragmentGroupTagsTable createAlias(String alias) {
     return $FragmentGroupTagsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class FragmentGroupTag extends DataClass
     implements Insertable<FragmentGroupTag> {
-  String fragment_group_id;
+  int fragment_group_id;
   String tag;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   FragmentGroupTag(
       {required this.fragment_group_id,
@@ -1681,10 +1629,10 @@ class FragmentGroupTag extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['fragment_group_id'] = Variable<String>(fragment_group_id);
+    map['fragment_group_id'] = Variable<int>(fragment_group_id);
     map['tag'] = Variable<String>(tag);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -1703,10 +1651,10 @@ class FragmentGroupTag extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentGroupTag(
-      fragment_group_id: serializer.fromJson<String>(json['fragment_group_id']),
+      fragment_group_id: serializer.fromJson<int>(json['fragment_group_id']),
       tag: serializer.fromJson<String>(json['tag']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -1714,19 +1662,19 @@ class FragmentGroupTag extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'fragment_group_id': serializer.toJson<String>(fragment_group_id),
+      'fragment_group_id': serializer.toJson<int>(fragment_group_id),
       'tag': serializer.toJson<String>(tag),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   FragmentGroupTag copyWith(
-          {String? fragment_group_id,
+          {int? fragment_group_id,
           String? tag,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       FragmentGroupTag(
         fragment_group_id: fragment_group_id ?? this.fragment_group_id,
@@ -1762,10 +1710,10 @@ class FragmentGroupTag extends DataClass
 }
 
 class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
-  Value<String> fragment_group_id;
+  Value<int> fragment_group_id;
   Value<String> tag;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   FragmentGroupTagsCompanion({
     this.fragment_group_id = const Value.absent(),
@@ -1775,21 +1723,20 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
     this.updated_at = const Value.absent(),
   });
   FragmentGroupTagsCompanion.insert({
-    required String fragment_group_id,
+    required int fragment_group_id,
     required String tag,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : fragment_group_id = Value(fragment_group_id),
         tag = Value(tag),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentGroupTag> custom({
-    Expression<String>? fragment_group_id,
+    Expression<int>? fragment_group_id,
     Expression<String>? tag,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -1802,10 +1749,10 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   }
 
   FragmentGroupTagsCompanion copyWith(
-      {Value<String>? fragment_group_id,
+      {Value<int>? fragment_group_id,
       Value<String>? tag,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return FragmentGroupTagsCompanion(
       fragment_group_id: fragment_group_id ?? this.fragment_group_id,
@@ -1820,7 +1767,7 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (fragment_group_id.present) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id.value);
     }
     if (tag.present) {
       map['tag'] = Variable<String>(tag.value);
@@ -1829,7 +1776,7 @@ class FragmentGroupTagsCompanion extends UpdateCompanion<FragmentGroupTag> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -1877,15 +1824,15 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   static const VerificationMeta _fragment_group_idMeta =
       const VerificationMeta('fragment_group_id');
   @override
-  late final GeneratedColumn<String> fragment_group_id =
-      GeneratedColumn<String>('fragment_group_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> fragment_group_id = GeneratedColumn<int>(
+      'fragment_group_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _fragment_idMeta =
       const VerificationMeta('fragment_id');
   @override
-  late final GeneratedColumn<String> fragment_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> fragment_id = GeneratedColumn<int>(
       'fragment_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _created_atMeta =
       const VerificationMeta('created_at');
   @override
@@ -1894,9 +1841,9 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -1963,8 +1910,6 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -1988,14 +1933,14 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
           DriftSqlType.bool, data['${effectivePrefix}client_be_selected'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      fragment_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}fragment_group_id']),
+      fragment_group_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_group_id']),
       fragment_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fragment_id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_id'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -2005,19 +1950,16 @@ class $RFragment2FragmentGroupsTable extends RFragment2FragmentGroups
   $RFragment2FragmentGroupsTable createAlias(String alias) {
     return $RFragment2FragmentGroupsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class RFragment2FragmentGroup extends DataClass
     implements Insertable<RFragment2FragmentGroup> {
   bool client_be_selected;
   int creator_user_id;
-  String? fragment_group_id;
-  String fragment_id;
+  int? fragment_group_id;
+  int fragment_id;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   RFragment2FragmentGroup(
       {required this.client_be_selected,
@@ -2033,11 +1975,11 @@ class RFragment2FragmentGroup extends DataClass
     map['client_be_selected'] = Variable<bool>(client_be_selected);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || fragment_group_id != null) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id);
     }
-    map['fragment_id'] = Variable<String>(fragment_id);
+    map['fragment_id'] = Variable<int>(fragment_id);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -2062,11 +2004,10 @@ class RFragment2FragmentGroup extends DataClass
     return RFragment2FragmentGroup(
       client_be_selected: serializer.fromJson<bool>(json['client_be_selected']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      fragment_group_id:
-          serializer.fromJson<String?>(json['fragment_group_id']),
-      fragment_id: serializer.fromJson<String>(json['fragment_id']),
+      fragment_group_id: serializer.fromJson<int?>(json['fragment_group_id']),
+      fragment_id: serializer.fromJson<int>(json['fragment_id']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -2076,10 +2017,10 @@ class RFragment2FragmentGroup extends DataClass
     return <String, dynamic>{
       'client_be_selected': serializer.toJson<bool>(client_be_selected),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
-      'fragment_id': serializer.toJson<String>(fragment_id),
+      'fragment_group_id': serializer.toJson<int?>(fragment_group_id),
+      'fragment_id': serializer.toJson<int>(fragment_id),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
@@ -2087,10 +2028,10 @@ class RFragment2FragmentGroup extends DataClass
   RFragment2FragmentGroup copyWith(
           {bool? client_be_selected,
           int? creator_user_id,
-          Value<String?> fragment_group_id = const Value.absent(),
-          String? fragment_id,
+          Value<int?> fragment_group_id = const Value.absent(),
+          int? fragment_id,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       RFragment2FragmentGroup(
         client_be_selected: client_be_selected ?? this.client_be_selected,
@@ -2137,10 +2078,10 @@ class RFragment2FragmentGroupsCompanion
     extends UpdateCompanion<RFragment2FragmentGroup> {
   Value<bool> client_be_selected;
   Value<int> creator_user_id;
-  Value<String?> fragment_group_id;
-  Value<String> fragment_id;
+  Value<int?> fragment_group_id;
+  Value<int> fragment_id;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   RFragment2FragmentGroupsCompanion({
     this.client_be_selected = const Value.absent(),
@@ -2155,23 +2096,22 @@ class RFragment2FragmentGroupsCompanion
     required bool client_be_selected,
     required int creator_user_id,
     this.fragment_group_id = const Value.absent(),
-    required String fragment_id,
+    required int fragment_id,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : client_be_selected = Value(client_be_selected),
         creator_user_id = Value(creator_user_id),
         fragment_id = Value(fragment_id),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<RFragment2FragmentGroup> custom({
     Expression<bool>? client_be_selected,
     Expression<int>? creator_user_id,
-    Expression<String>? fragment_group_id,
-    Expression<String>? fragment_id,
+    Expression<int>? fragment_group_id,
+    Expression<int>? fragment_id,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -2188,10 +2128,10 @@ class RFragment2FragmentGroupsCompanion
   RFragment2FragmentGroupsCompanion copyWith(
       {Value<bool>? client_be_selected,
       Value<int>? creator_user_id,
-      Value<String?>? fragment_group_id,
-      Value<String>? fragment_id,
+      Value<int?>? fragment_group_id,
+      Value<int>? fragment_id,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return RFragment2FragmentGroupsCompanion(
       client_be_selected: client_be_selected ?? this.client_be_selected,
@@ -2214,16 +2154,16 @@ class RFragment2FragmentGroupsCompanion
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
     if (fragment_group_id.present) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id.value);
     }
     if (fragment_id.present) {
-      map['fragment_id'] = Variable<String>(fragment_id.value);
+      map['fragment_id'] = Variable<int>(fragment_id.value);
     }
     if (created_at.present) {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -2822,9 +2762,9 @@ class $FragmentsTable extends Fragments
   static const VerificationMeta _father_fragment_idMeta =
       const VerificationMeta('father_fragment_id');
   @override
-  late final GeneratedColumn<String> father_fragment_id =
-      GeneratedColumn<String>('father_fragment_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> father_fragment_id = GeneratedColumn<int>(
+      'father_fragment_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -2838,9 +2778,9 @@ class $FragmentsTable extends Fragments
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -2911,8 +2851,6 @@ class $FragmentsTable extends Fragments
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -2937,14 +2875,14 @@ class $FragmentsTable extends Fragments
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
-      father_fragment_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}father_fragment_id']),
+      father_fragment_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}father_fragment_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -2954,19 +2892,16 @@ class $FragmentsTable extends Fragments
   $FragmentsTable createAlias(String alias) {
     return $FragmentsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class Fragment extends DataClass implements Insertable<Fragment> {
   bool be_sep_publish;
   String content;
   int creator_user_id;
-  String? father_fragment_id;
+  int? father_fragment_id;
   String title;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   Fragment(
       {required this.be_sep_publish,
@@ -2984,11 +2919,11 @@ class Fragment extends DataClass implements Insertable<Fragment> {
     map['content'] = Variable<String>(content);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || father_fragment_id != null) {
-      map['father_fragment_id'] = Variable<String>(father_fragment_id);
+      map['father_fragment_id'] = Variable<int>(father_fragment_id);
     }
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -3015,11 +2950,10 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       be_sep_publish: serializer.fromJson<bool>(json['be_sep_publish']),
       content: serializer.fromJson<String>(json['content']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      father_fragment_id:
-          serializer.fromJson<String?>(json['father_fragment_id']),
+      father_fragment_id: serializer.fromJson<int?>(json['father_fragment_id']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -3030,10 +2964,10 @@ class Fragment extends DataClass implements Insertable<Fragment> {
       'be_sep_publish': serializer.toJson<bool>(be_sep_publish),
       'content': serializer.toJson<String>(content),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'father_fragment_id': serializer.toJson<String?>(father_fragment_id),
+      'father_fragment_id': serializer.toJson<int?>(father_fragment_id),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
@@ -3042,10 +2976,10 @@ class Fragment extends DataClass implements Insertable<Fragment> {
           {bool? be_sep_publish,
           String? content,
           int? creator_user_id,
-          Value<String?> father_fragment_id = const Value.absent(),
+          Value<int?> father_fragment_id = const Value.absent(),
           String? title,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       Fragment(
         be_sep_publish: be_sep_publish ?? this.be_sep_publish,
@@ -3095,10 +3029,10 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
   Value<bool> be_sep_publish;
   Value<String> content;
   Value<int> creator_user_id;
-  Value<String?> father_fragment_id;
+  Value<int?> father_fragment_id;
   Value<String> title;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   FragmentsCompanion({
     this.be_sep_publish = const Value.absent(),
@@ -3117,23 +3051,22 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
     this.father_fragment_id = const Value.absent(),
     required String title,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : be_sep_publish = Value(be_sep_publish),
         content = Value(content),
         creator_user_id = Value(creator_user_id),
         title = Value(title),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Fragment> custom({
     Expression<bool>? be_sep_publish,
     Expression<String>? content,
     Expression<int>? creator_user_id,
-    Expression<String>? father_fragment_id,
+    Expression<int>? father_fragment_id,
     Expression<String>? title,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -3152,10 +3085,10 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       {Value<bool>? be_sep_publish,
       Value<String>? content,
       Value<int>? creator_user_id,
-      Value<String?>? father_fragment_id,
+      Value<int?>? father_fragment_id,
       Value<String>? title,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return FragmentsCompanion(
       be_sep_publish: be_sep_publish ?? this.be_sep_publish,
@@ -3182,7 +3115,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
     if (father_fragment_id.present) {
-      map['father_fragment_id'] = Variable<String>(father_fragment_id.value);
+      map['father_fragment_id'] = Variable<int>(father_fragment_id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -3191,7 +3124,7 @@ class FragmentsCompanion extends UpdateCompanion<Fragment> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -3230,9 +3163,9 @@ class $MemoryGroupsTable extends MemoryGroups
   static const VerificationMeta _memory_model_idMeta =
       const VerificationMeta('memory_model_id');
   @override
-  late final GeneratedColumn<String> memory_model_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> memory_model_id = GeneratedColumn<int>(
       'memory_model_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _new_display_orderMeta =
       const VerificationMeta('new_display_order');
   @override
@@ -3291,9 +3224,9 @@ class $MemoryGroupsTable extends MemoryGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -3381,8 +3314,6 @@ class $MemoryGroupsTable extends MemoryGroups
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -3404,7 +3335,7 @@ class $MemoryGroupsTable extends MemoryGroups
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       memory_model_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}memory_model_id']),
+          .read(DriftSqlType.int, data['${effectivePrefix}memory_model_id']),
       new_display_order: $MemoryGroupsTable.$converternew_display_order.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
@@ -3426,7 +3357,7 @@ class $MemoryGroupsTable extends MemoryGroups
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -3447,13 +3378,11 @@ class $MemoryGroupsTable extends MemoryGroups
   static JsonTypeConverter2<ReviewDisplayOrder, int, int>
       $converterreview_display_order =
       const EnumIndexConverter<ReviewDisplayOrder>(ReviewDisplayOrder.values);
-  @override
-  bool get withoutRowId => true;
 }
 
 class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   int creator_user_id;
-  String? memory_model_id;
+  int? memory_model_id;
   NewDisplayOrder new_display_order;
   NewReviewDisplayOrder new_review_display_order;
   ReviewDisplayOrder review_display_order;
@@ -3462,7 +3391,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   String title;
   int will_new_learn_count;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   MemoryGroup(
       {required this.creator_user_id,
@@ -3482,7 +3411,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     final map = <String, Expression>{};
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || memory_model_id != null) {
-      map['memory_model_id'] = Variable<String>(memory_model_id);
+      map['memory_model_id'] = Variable<int>(memory_model_id);
     }
     {
       final converter = $MemoryGroupsTable.$converternew_display_order;
@@ -3506,7 +3435,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     map['title'] = Variable<String>(title);
     map['will_new_learn_count'] = Variable<int>(will_new_learn_count);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -3537,7 +3466,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MemoryGroup(
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
-      memory_model_id: serializer.fromJson<String?>(json['memory_model_id']),
+      memory_model_id: serializer.fromJson<int?>(json['memory_model_id']),
       new_display_order: $MemoryGroupsTable.$converternew_display_order
           .fromJson(serializer.fromJson<int>(json['new_display_order'])),
       new_review_display_order: $MemoryGroupsTable
@@ -3551,7 +3480,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       will_new_learn_count:
           serializer.fromJson<int>(json['will_new_learn_count']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -3560,7 +3489,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'creator_user_id': serializer.toJson<int>(creator_user_id),
-      'memory_model_id': serializer.toJson<String?>(memory_model_id),
+      'memory_model_id': serializer.toJson<int?>(memory_model_id),
       'new_display_order': serializer.toJson<int>($MemoryGroupsTable
           .$converternew_display_order
           .toJson(new_display_order)),
@@ -3575,14 +3504,14 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       'title': serializer.toJson<String>(title),
       'will_new_learn_count': serializer.toJson<int>(will_new_learn_count),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
 
   MemoryGroup copyWith(
           {int? creator_user_id,
-          Value<String?> memory_model_id = const Value.absent(),
+          Value<int?> memory_model_id = const Value.absent(),
           NewDisplayOrder? new_display_order,
           NewReviewDisplayOrder? new_review_display_order,
           ReviewDisplayOrder? review_display_order,
@@ -3591,7 +3520,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           String? title,
           int? will_new_learn_count,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       MemoryGroup(
         creator_user_id: creator_user_id ?? this.creator_user_id,
@@ -3663,7 +3592,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<int> creator_user_id;
-  Value<String?> memory_model_id;
+  Value<int?> memory_model_id;
   Value<NewDisplayOrder> new_display_order;
   Value<NewReviewDisplayOrder> new_review_display_order;
   Value<ReviewDisplayOrder> review_display_order;
@@ -3672,7 +3601,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<String> title;
   Value<int> will_new_learn_count;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   MemoryGroupsCompanion({
     this.creator_user_id = const Value.absent(),
@@ -3699,7 +3628,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required String title,
     required int will_new_learn_count,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : creator_user_id = Value(creator_user_id),
         new_display_order = Value(new_display_order),
@@ -3709,11 +3638,10 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
         title = Value(title),
         will_new_learn_count = Value(will_new_learn_count),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<MemoryGroup> custom({
     Expression<int>? creator_user_id,
-    Expression<String>? memory_model_id,
+    Expression<int>? memory_model_id,
     Expression<int>? new_display_order,
     Expression<int>? new_review_display_order,
     Expression<int>? review_display_order,
@@ -3722,7 +3650,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<String>? title,
     Expression<int>? will_new_learn_count,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -3746,7 +3674,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
 
   MemoryGroupsCompanion copyWith(
       {Value<int>? creator_user_id,
-      Value<String?>? memory_model_id,
+      Value<int?>? memory_model_id,
       Value<NewDisplayOrder>? new_display_order,
       Value<NewReviewDisplayOrder>? new_review_display_order,
       Value<ReviewDisplayOrder>? review_display_order,
@@ -3755,7 +3683,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<String>? title,
       Value<int>? will_new_learn_count,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return MemoryGroupsCompanion(
       creator_user_id: creator_user_id ?? this.creator_user_id,
@@ -3781,7 +3709,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
     if (memory_model_id.present) {
-      map['memory_model_id'] = Variable<String>(memory_model_id.value);
+      map['memory_model_id'] = Variable<int>(memory_model_id.value);
     }
     if (new_display_order.present) {
       final converter = $MemoryGroupsTable.$converternew_display_order;
@@ -3814,7 +3742,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -3923,9 +3851,9 @@ class $MemoryModelsTable extends MemoryModels
   static const VerificationMeta _father_memory_model_idMeta =
       const VerificationMeta('father_memory_model_id');
   @override
-  late final GeneratedColumn<String> father_memory_model_id =
-      GeneratedColumn<String>('father_memory_model_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> father_memory_model_id = GeneratedColumn<int>(
+      'father_memory_model_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _next_time_algorithm_aMeta =
       const VerificationMeta('next_time_algorithm_a');
   @override
@@ -3972,9 +3900,9 @@ class $MemoryModelsTable extends MemoryModels
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -4124,8 +4052,6 @@ class $MemoryModelsTable extends MemoryModels
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -4176,8 +4102,7 @@ class $MemoryModelsTable extends MemoryModels
           .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
               data['${effectivePrefix}familiarity_algorithm_usage_status'])!),
       father_memory_model_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}father_memory_model_id']),
+          DriftSqlType.int, data['${effectivePrefix}father_memory_model_id']),
       next_time_algorithm_a: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}next_time_algorithm_a']),
       next_time_algorithm_b: attachedDatabase.typeMapping.read(
@@ -4196,7 +4121,7 @@ class $MemoryModelsTable extends MemoryModels
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -4219,8 +4144,6 @@ class $MemoryModelsTable extends MemoryModels
       $converternext_time_algorithm_usage_status =
       const EnumIndexConverter<AlgorithmUsageStatus>(
           AlgorithmUsageStatus.values);
-  @override
-  bool get withoutRowId => true;
 }
 
 class MemoryModel extends DataClass implements Insertable<MemoryModel> {
@@ -4235,7 +4158,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   String? familiarity_algorithm_c;
   String? familiarity_algorithm_remark;
   AlgorithmUsageStatus familiarity_algorithm_usage_status;
-  String? father_memory_model_id;
+  int? father_memory_model_id;
   String? next_time_algorithm_a;
   String? next_time_algorithm_b;
   String? next_time_algorithm_c;
@@ -4243,7 +4166,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   AlgorithmUsageStatus next_time_algorithm_usage_status;
   String title;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   MemoryModel(
       {this.button_algorithm_a,
@@ -4313,7 +4236,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           Variable<int>(converter.toSql(familiarity_algorithm_usage_status));
     }
     if (!nullToAbsent || father_memory_model_id != null) {
-      map['father_memory_model_id'] = Variable<String>(father_memory_model_id);
+      map['father_memory_model_id'] = Variable<int>(father_memory_model_id);
     }
     if (!nullToAbsent || next_time_algorithm_a != null) {
       map['next_time_algorithm_a'] = Variable<String>(next_time_algorithm_a);
@@ -4336,7 +4259,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
     }
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -4425,7 +4348,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           .fromJson(serializer
               .fromJson<int>(json['familiarity_algorithm_usage_status'])),
       father_memory_model_id:
-          serializer.fromJson<String?>(json['father_memory_model_id']),
+          serializer.fromJson<int?>(json['father_memory_model_id']),
       next_time_algorithm_a:
           serializer.fromJson<String?>(json['next_time_algorithm_a']),
       next_time_algorithm_b:
@@ -4440,7 +4363,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
               .fromJson<int>(json['next_time_algorithm_usage_status'])),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -4468,8 +4391,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       'familiarity_algorithm_usage_status': serializer.toJson<int>(
           $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status
               .toJson(familiarity_algorithm_usage_status)),
-      'father_memory_model_id':
-          serializer.toJson<String?>(father_memory_model_id),
+      'father_memory_model_id': serializer.toJson<int?>(father_memory_model_id),
       'next_time_algorithm_a':
           serializer.toJson<String?>(next_time_algorithm_a),
       'next_time_algorithm_b':
@@ -4483,7 +4405,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
               .toJson(next_time_algorithm_usage_status)),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
@@ -4500,7 +4422,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           Value<String?> familiarity_algorithm_c = const Value.absent(),
           Value<String?> familiarity_algorithm_remark = const Value.absent(),
           AlgorithmUsageStatus? familiarity_algorithm_usage_status,
-          Value<String?> father_memory_model_id = const Value.absent(),
+          Value<int?> father_memory_model_id = const Value.absent(),
           Value<String?> next_time_algorithm_a = const Value.absent(),
           Value<String?> next_time_algorithm_b = const Value.absent(),
           Value<String?> next_time_algorithm_c = const Value.absent(),
@@ -4508,7 +4430,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           AlgorithmUsageStatus? next_time_algorithm_usage_status,
           String? title,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       MemoryModel(
         button_algorithm_a: button_algorithm_a.present
@@ -4662,7 +4584,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   Value<String?> familiarity_algorithm_c;
   Value<String?> familiarity_algorithm_remark;
   Value<AlgorithmUsageStatus> familiarity_algorithm_usage_status;
-  Value<String?> father_memory_model_id;
+  Value<int?> father_memory_model_id;
   Value<String?> next_time_algorithm_a;
   Value<String?> next_time_algorithm_b;
   Value<String?> next_time_algorithm_c;
@@ -4670,7 +4592,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   Value<AlgorithmUsageStatus> next_time_algorithm_usage_status;
   Value<String> title;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   MemoryModelsCompanion({
     this.button_algorithm_a = const Value.absent(),
@@ -4715,7 +4637,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     required AlgorithmUsageStatus next_time_algorithm_usage_status,
     required String title,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : button_algorithm_usage_status = Value(button_algorithm_usage_status),
         creator_user_id = Value(creator_user_id),
@@ -4725,7 +4647,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
             Value(next_time_algorithm_usage_status),
         title = Value(title),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<MemoryModel> custom({
     Expression<String>? button_algorithm_a,
@@ -4739,7 +4660,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     Expression<String>? familiarity_algorithm_c,
     Expression<String>? familiarity_algorithm_remark,
     Expression<int>? familiarity_algorithm_usage_status,
-    Expression<String>? father_memory_model_id,
+    Expression<int>? father_memory_model_id,
     Expression<String>? next_time_algorithm_a,
     Expression<String>? next_time_algorithm_b,
     Expression<String>? next_time_algorithm_c,
@@ -4747,7 +4668,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     Expression<int>? next_time_algorithm_usage_status,
     Expression<String>? title,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -4801,7 +4722,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       Value<String?>? familiarity_algorithm_c,
       Value<String?>? familiarity_algorithm_remark,
       Value<AlgorithmUsageStatus>? familiarity_algorithm_usage_status,
-      Value<String?>? father_memory_model_id,
+      Value<int?>? father_memory_model_id,
       Value<String?>? next_time_algorithm_a,
       Value<String?>? next_time_algorithm_b,
       Value<String?>? next_time_algorithm_c,
@@ -4809,7 +4730,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       Value<AlgorithmUsageStatus>? next_time_algorithm_usage_status,
       Value<String>? title,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return MemoryModelsCompanion(
       button_algorithm_a: button_algorithm_a ?? this.button_algorithm_a,
@@ -4898,7 +4819,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     }
     if (father_memory_model_id.present) {
       map['father_memory_model_id'] =
-          Variable<String>(father_memory_model_id.value);
+          Variable<int>(father_memory_model_id.value);
     }
     if (next_time_algorithm_a.present) {
       map['next_time_algorithm_a'] =
@@ -4929,7 +4850,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -4996,9 +4917,9 @@ class $ShorthandsTable extends Shorthands
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -5041,8 +4962,6 @@ class $ShorthandsTable extends Shorthands
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -5068,7 +4987,7 @@ class $ShorthandsTable extends Shorthands
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -5078,16 +4997,13 @@ class $ShorthandsTable extends Shorthands
   $ShorthandsTable createAlias(String alias) {
     return $ShorthandsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class Shorthand extends DataClass implements Insertable<Shorthand> {
   String content;
   int creator_user_id;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   Shorthand(
       {required this.content,
@@ -5101,7 +5017,7 @@ class Shorthand extends DataClass implements Insertable<Shorthand> {
     map['content'] = Variable<String>(content);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -5123,7 +5039,7 @@ class Shorthand extends DataClass implements Insertable<Shorthand> {
       content: serializer.fromJson<String>(json['content']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -5134,7 +5050,7 @@ class Shorthand extends DataClass implements Insertable<Shorthand> {
       'content': serializer.toJson<String>(content),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
@@ -5143,7 +5059,7 @@ class Shorthand extends DataClass implements Insertable<Shorthand> {
           {String? content,
           int? creator_user_id,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       Shorthand(
         content: content ?? this.content,
@@ -5182,7 +5098,7 @@ class ShorthandsCompanion extends UpdateCompanion<Shorthand> {
   Value<String> content;
   Value<int> creator_user_id;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   ShorthandsCompanion({
     this.content = const Value.absent(),
@@ -5195,18 +5111,17 @@ class ShorthandsCompanion extends UpdateCompanion<Shorthand> {
     required String content,
     required int creator_user_id,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : content = Value(content),
         creator_user_id = Value(creator_user_id),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<Shorthand> custom({
     Expression<String>? content,
     Expression<int>? creator_user_id,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -5222,7 +5137,7 @@ class ShorthandsCompanion extends UpdateCompanion<Shorthand> {
       {Value<String>? content,
       Value<int>? creator_user_id,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return ShorthandsCompanion(
       content: content ?? this.content,
@@ -5246,7 +5161,7 @@ class ShorthandsCompanion extends UpdateCompanion<Shorthand> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -5331,15 +5246,15 @@ class $FragmentGroupsTable extends FragmentGroups
   static const VerificationMeta _father_fragment_groups_idMeta =
       const VerificationMeta('father_fragment_groups_id');
   @override
-  late final GeneratedColumn<String> father_fragment_groups_id =
-      GeneratedColumn<String>('father_fragment_groups_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> father_fragment_groups_id =
+      GeneratedColumn<int>('father_fragment_groups_id', aliasedName, true,
+          type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _jump_to_fragment_groups_idMeta =
       const VerificationMeta('jump_to_fragment_groups_id');
   @override
-  late final GeneratedColumn<String> jump_to_fragment_groups_id =
-      GeneratedColumn<String>('jump_to_fragment_groups_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> jump_to_fragment_groups_id =
+      GeneratedColumn<int>('jump_to_fragment_groups_id', aliasedName, true,
+          type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _profileMeta =
       const VerificationMeta('profile');
   @override
@@ -5359,9 +5274,9 @@ class $FragmentGroupsTable extends FragmentGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _updated_atMeta =
       const VerificationMeta('updated_at');
   @override
@@ -5474,8 +5389,6 @@ class $FragmentGroupsTable extends FragmentGroups
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -5509,10 +5422,10 @@ class $FragmentGroupsTable extends FragmentGroups
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       father_fragment_groups_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
+          DriftSqlType.int,
           data['${effectivePrefix}father_fragment_groups_id']),
       jump_to_fragment_groups_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
+          DriftSqlType.int,
           data['${effectivePrefix}jump_to_fragment_groups_id']),
       profile: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}profile'])!,
@@ -5521,7 +5434,7 @@ class $FragmentGroupsTable extends FragmentGroups
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       updated_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -5531,9 +5444,6 @@ class $FragmentGroupsTable extends FragmentGroups
   $FragmentGroupsTable createAlias(String alias) {
     return $FragmentGroupsTable(attachedDatabase, alias);
   }
-
-  @override
-  bool get withoutRowId => true;
 }
 
 class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
@@ -5543,12 +5453,12 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
   String? client_cover_local_path;
   String? cover_cloud_path;
   int creator_user_id;
-  String? father_fragment_groups_id;
-  String? jump_to_fragment_groups_id;
+  int? father_fragment_groups_id;
+  int? jump_to_fragment_groups_id;
   String profile;
   String title;
   DateTime created_at;
-  String id;
+  int id;
   DateTime updated_at;
   FragmentGroup(
       {required this.be_publish,
@@ -5581,16 +5491,16 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || father_fragment_groups_id != null) {
       map['father_fragment_groups_id'] =
-          Variable<String>(father_fragment_groups_id);
+          Variable<int>(father_fragment_groups_id);
     }
     if (!nullToAbsent || jump_to_fragment_groups_id != null) {
       map['jump_to_fragment_groups_id'] =
-          Variable<String>(jump_to_fragment_groups_id);
+          Variable<int>(jump_to_fragment_groups_id);
     }
     map['profile'] = Variable<String>(profile);
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     map['updated_at'] = Variable<DateTime>(updated_at);
     return map;
   }
@@ -5636,13 +5546,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       cover_cloud_path: serializer.fromJson<String?>(json['cover_cloud_path']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       father_fragment_groups_id:
-          serializer.fromJson<String?>(json['father_fragment_groups_id']),
+          serializer.fromJson<int?>(json['father_fragment_groups_id']),
       jump_to_fragment_groups_id:
-          serializer.fromJson<String?>(json['jump_to_fragment_groups_id']),
+          serializer.fromJson<int?>(json['jump_to_fragment_groups_id']),
       profile: serializer.fromJson<String>(json['profile']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
@@ -5659,13 +5569,13 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
       'cover_cloud_path': serializer.toJson<String?>(cover_cloud_path),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'father_fragment_groups_id':
-          serializer.toJson<String?>(father_fragment_groups_id),
+          serializer.toJson<int?>(father_fragment_groups_id),
       'jump_to_fragment_groups_id':
-          serializer.toJson<String?>(jump_to_fragment_groups_id),
+          serializer.toJson<int?>(jump_to_fragment_groups_id),
       'profile': serializer.toJson<String>(profile),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
     };
   }
@@ -5677,12 +5587,12 @@ class FragmentGroup extends DataClass implements Insertable<FragmentGroup> {
           Value<String?> client_cover_local_path = const Value.absent(),
           Value<String?> cover_cloud_path = const Value.absent(),
           int? creator_user_id,
-          Value<String?> father_fragment_groups_id = const Value.absent(),
-          Value<String?> jump_to_fragment_groups_id = const Value.absent(),
+          Value<int?> father_fragment_groups_id = const Value.absent(),
+          Value<int?> jump_to_fragment_groups_id = const Value.absent(),
           String? profile,
           String? title,
           DateTime? created_at,
-          String? id,
+          int? id,
           DateTime? updated_at}) =>
       FragmentGroup(
         be_publish: be_publish ?? this.be_publish,
@@ -5770,12 +5680,12 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
   Value<String?> client_cover_local_path;
   Value<String?> cover_cloud_path;
   Value<int> creator_user_id;
-  Value<String?> father_fragment_groups_id;
-  Value<String?> jump_to_fragment_groups_id;
+  Value<int?> father_fragment_groups_id;
+  Value<int?> jump_to_fragment_groups_id;
   Value<String> profile;
   Value<String> title;
   Value<DateTime> created_at;
-  Value<String> id;
+  Value<int> id;
   Value<DateTime> updated_at;
   FragmentGroupsCompanion({
     this.be_publish = const Value.absent(),
@@ -5804,7 +5714,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     required String profile,
     required String title,
     required DateTime created_at,
-    required String id,
+    this.id = const Value.absent(),
     required DateTime updated_at,
   })  : be_publish = Value(be_publish),
         client_be_cloud_path_upload = Value(client_be_cloud_path_upload),
@@ -5813,7 +5723,6 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
         profile = Value(profile),
         title = Value(title),
         created_at = Value(created_at),
-        id = Value(id),
         updated_at = Value(updated_at);
   static Insertable<FragmentGroup> custom({
     Expression<bool>? be_publish,
@@ -5822,12 +5731,12 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     Expression<String>? client_cover_local_path,
     Expression<String>? cover_cloud_path,
     Expression<int>? creator_user_id,
-    Expression<String>? father_fragment_groups_id,
-    Expression<String>? jump_to_fragment_groups_id,
+    Expression<int>? father_fragment_groups_id,
+    Expression<int>? jump_to_fragment_groups_id,
     Expression<String>? profile,
     Expression<String>? title,
     Expression<DateTime>? created_at,
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
@@ -5858,12 +5767,12 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       Value<String?>? client_cover_local_path,
       Value<String?>? cover_cloud_path,
       Value<int>? creator_user_id,
-      Value<String?>? father_fragment_groups_id,
-      Value<String?>? jump_to_fragment_groups_id,
+      Value<int?>? father_fragment_groups_id,
+      Value<int?>? jump_to_fragment_groups_id,
       Value<String>? profile,
       Value<String>? title,
       Value<DateTime>? created_at,
-      Value<String>? id,
+      Value<int>? id,
       Value<DateTime>? updated_at}) {
     return FragmentGroupsCompanion(
       be_publish: be_publish ?? this.be_publish,
@@ -5911,11 +5820,11 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
     }
     if (father_fragment_groups_id.present) {
       map['father_fragment_groups_id'] =
-          Variable<String>(father_fragment_groups_id.value);
+          Variable<int>(father_fragment_groups_id.value);
     }
     if (jump_to_fragment_groups_id.present) {
       map['jump_to_fragment_groups_id'] =
-          Variable<String>(jump_to_fragment_groups_id.value);
+          Variable<int>(jump_to_fragment_groups_id.value);
     }
     if (profile.present) {
       map['profile'] = Variable<String>(profile.value);
@@ -5927,7 +5836,7 @@ class FragmentGroupsCompanion extends UpdateCompanion<FragmentGroup> {
       map['created_at'] = Variable<DateTime>(created_at.value);
     }
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (updated_at.present) {
       map['updated_at'] = Variable<DateTime>(updated_at.value);
@@ -5977,15 +5886,15 @@ class $UserCommentsTable extends UserComments
   static const VerificationMeta _fragment_group_idMeta =
       const VerificationMeta('fragment_group_id');
   @override
-  late final GeneratedColumn<String> fragment_group_id =
-      GeneratedColumn<String>('fragment_group_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> fragment_group_id = GeneratedColumn<int>(
+      'fragment_group_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _fragment_idMeta =
       const VerificationMeta('fragment_id');
   @override
-  late final GeneratedColumn<String> fragment_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> fragment_id = GeneratedColumn<int>(
       'fragment_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _created_atMeta =
       const VerificationMeta('created_at');
   @override
@@ -6082,10 +5991,10 @@ class $UserCommentsTable extends UserComments
           DriftSqlType.string, data['${effectivePrefix}comment_content'])!,
       commentator_user_id: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}commentator_user_id'])!,
-      fragment_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}fragment_group_id']),
+      fragment_group_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_group_id']),
       fragment_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fragment_id']),
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_id']),
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
@@ -6104,8 +6013,8 @@ class $UserCommentsTable extends UserComments
 class UserComment extends DataClass implements Insertable<UserComment> {
   String comment_content;
   int commentator_user_id;
-  String? fragment_group_id;
-  String? fragment_id;
+  int? fragment_group_id;
+  int? fragment_id;
   DateTime created_at;
   int id;
   DateTime updated_at;
@@ -6123,10 +6032,10 @@ class UserComment extends DataClass implements Insertable<UserComment> {
     map['comment_content'] = Variable<String>(comment_content);
     map['commentator_user_id'] = Variable<int>(commentator_user_id);
     if (!nullToAbsent || fragment_group_id != null) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id);
     }
     if (!nullToAbsent || fragment_id != null) {
-      map['fragment_id'] = Variable<String>(fragment_id);
+      map['fragment_id'] = Variable<int>(fragment_id);
     }
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
@@ -6157,9 +6066,8 @@ class UserComment extends DataClass implements Insertable<UserComment> {
       comment_content: serializer.fromJson<String>(json['comment_content']),
       commentator_user_id:
           serializer.fromJson<int>(json['commentator_user_id']),
-      fragment_group_id:
-          serializer.fromJson<String?>(json['fragment_group_id']),
-      fragment_id: serializer.fromJson<String?>(json['fragment_id']),
+      fragment_group_id: serializer.fromJson<int?>(json['fragment_group_id']),
+      fragment_id: serializer.fromJson<int?>(json['fragment_id']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
@@ -6171,8 +6079,8 @@ class UserComment extends DataClass implements Insertable<UserComment> {
     return <String, dynamic>{
       'comment_content': serializer.toJson<String>(comment_content),
       'commentator_user_id': serializer.toJson<int>(commentator_user_id),
-      'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
-      'fragment_id': serializer.toJson<String?>(fragment_id),
+      'fragment_group_id': serializer.toJson<int?>(fragment_group_id),
+      'fragment_id': serializer.toJson<int?>(fragment_id),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
       'updated_at': serializer.toJson<DateTime>(updated_at),
@@ -6182,8 +6090,8 @@ class UserComment extends DataClass implements Insertable<UserComment> {
   UserComment copyWith(
           {String? comment_content,
           int? commentator_user_id,
-          Value<String?> fragment_group_id = const Value.absent(),
-          Value<String?> fragment_id = const Value.absent(),
+          Value<int?> fragment_group_id = const Value.absent(),
+          Value<int?> fragment_id = const Value.absent(),
           DateTime? created_at,
           int? id,
           DateTime? updated_at}) =>
@@ -6231,8 +6139,8 @@ class UserComment extends DataClass implements Insertable<UserComment> {
 class UserCommentsCompanion extends UpdateCompanion<UserComment> {
   Value<String> comment_content;
   Value<int> commentator_user_id;
-  Value<String?> fragment_group_id;
-  Value<String?> fragment_id;
+  Value<int?> fragment_group_id;
+  Value<int?> fragment_id;
   Value<DateTime> created_at;
   Value<int> id;
   Value<DateTime> updated_at;
@@ -6260,8 +6168,8 @@ class UserCommentsCompanion extends UpdateCompanion<UserComment> {
   static Insertable<UserComment> custom({
     Expression<String>? comment_content,
     Expression<int>? commentator_user_id,
-    Expression<String>? fragment_group_id,
-    Expression<String>? fragment_id,
+    Expression<int>? fragment_group_id,
+    Expression<int>? fragment_id,
     Expression<DateTime>? created_at,
     Expression<int>? id,
     Expression<DateTime>? updated_at,
@@ -6281,8 +6189,8 @@ class UserCommentsCompanion extends UpdateCompanion<UserComment> {
   UserCommentsCompanion copyWith(
       {Value<String>? comment_content,
       Value<int>? commentator_user_id,
-      Value<String?>? fragment_group_id,
-      Value<String?>? fragment_id,
+      Value<int?>? fragment_group_id,
+      Value<int?>? fragment_id,
       Value<DateTime>? created_at,
       Value<int>? id,
       Value<DateTime>? updated_at}) {
@@ -6307,10 +6215,10 @@ class UserCommentsCompanion extends UpdateCompanion<UserComment> {
       map['commentator_user_id'] = Variable<int>(commentator_user_id.value);
     }
     if (fragment_group_id.present) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id.value);
     }
     if (fragment_id.present) {
-      map['fragment_id'] = Variable<String>(fragment_id.value);
+      map['fragment_id'] = Variable<int>(fragment_id.value);
     }
     if (created_at.present) {
       map['created_at'] = Variable<DateTime>(created_at.value);
@@ -6348,15 +6256,15 @@ class $UserLikesTable extends UserLikes
   static const VerificationMeta _fragment_group_idMeta =
       const VerificationMeta('fragment_group_id');
   @override
-  late final GeneratedColumn<String> fragment_group_id =
-      GeneratedColumn<String>('fragment_group_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<int> fragment_group_id = GeneratedColumn<int>(
+      'fragment_group_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _fragment_idMeta =
       const VerificationMeta('fragment_id');
   @override
-  late final GeneratedColumn<String> fragment_id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> fragment_id = GeneratedColumn<int>(
       'fragment_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _liker_user_idMeta =
       const VerificationMeta('liker_user_id');
   @override
@@ -6446,10 +6354,10 @@ class $UserLikesTable extends UserLikes
   UserLike map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return UserLike(
-      fragment_group_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}fragment_group_id']),
+      fragment_group_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_group_id']),
       fragment_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fragment_id']),
+          .read(DriftSqlType.int, data['${effectivePrefix}fragment_id']),
       liker_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}liker_user_id'])!,
       created_at: attachedDatabase.typeMapping
@@ -6468,8 +6376,8 @@ class $UserLikesTable extends UserLikes
 }
 
 class UserLike extends DataClass implements Insertable<UserLike> {
-  String? fragment_group_id;
-  String? fragment_id;
+  int? fragment_group_id;
+  int? fragment_id;
   int liker_user_id;
   DateTime created_at;
   int id;
@@ -6485,10 +6393,10 @@ class UserLike extends DataClass implements Insertable<UserLike> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || fragment_group_id != null) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id);
     }
     if (!nullToAbsent || fragment_id != null) {
-      map['fragment_id'] = Variable<String>(fragment_id);
+      map['fragment_id'] = Variable<int>(fragment_id);
     }
     map['liker_user_id'] = Variable<int>(liker_user_id);
     map['created_at'] = Variable<DateTime>(created_at);
@@ -6516,9 +6424,8 @@ class UserLike extends DataClass implements Insertable<UserLike> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserLike(
-      fragment_group_id:
-          serializer.fromJson<String?>(json['fragment_group_id']),
-      fragment_id: serializer.fromJson<String?>(json['fragment_id']),
+      fragment_group_id: serializer.fromJson<int?>(json['fragment_group_id']),
+      fragment_id: serializer.fromJson<int?>(json['fragment_id']),
       liker_user_id: serializer.fromJson<int>(json['liker_user_id']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
@@ -6529,8 +6436,8 @@ class UserLike extends DataClass implements Insertable<UserLike> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'fragment_group_id': serializer.toJson<String?>(fragment_group_id),
-      'fragment_id': serializer.toJson<String?>(fragment_id),
+      'fragment_group_id': serializer.toJson<int?>(fragment_group_id),
+      'fragment_id': serializer.toJson<int?>(fragment_id),
       'liker_user_id': serializer.toJson<int>(liker_user_id),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
@@ -6539,8 +6446,8 @@ class UserLike extends DataClass implements Insertable<UserLike> {
   }
 
   UserLike copyWith(
-          {Value<String?> fragment_group_id = const Value.absent(),
-          Value<String?> fragment_id = const Value.absent(),
+          {Value<int?> fragment_group_id = const Value.absent(),
+          Value<int?> fragment_id = const Value.absent(),
           int? liker_user_id,
           DateTime? created_at,
           int? id,
@@ -6584,8 +6491,8 @@ class UserLike extends DataClass implements Insertable<UserLike> {
 }
 
 class UserLikesCompanion extends UpdateCompanion<UserLike> {
-  Value<String?> fragment_group_id;
-  Value<String?> fragment_id;
+  Value<int?> fragment_group_id;
+  Value<int?> fragment_id;
   Value<int> liker_user_id;
   Value<DateTime> created_at;
   Value<int> id;
@@ -6609,8 +6516,8 @@ class UserLikesCompanion extends UpdateCompanion<UserLike> {
         created_at = Value(created_at),
         updated_at = Value(updated_at);
   static Insertable<UserLike> custom({
-    Expression<String>? fragment_group_id,
-    Expression<String>? fragment_id,
+    Expression<int>? fragment_group_id,
+    Expression<int>? fragment_id,
     Expression<int>? liker_user_id,
     Expression<DateTime>? created_at,
     Expression<int>? id,
@@ -6627,8 +6534,8 @@ class UserLikesCompanion extends UpdateCompanion<UserLike> {
   }
 
   UserLikesCompanion copyWith(
-      {Value<String?>? fragment_group_id,
-      Value<String?>? fragment_id,
+      {Value<int?>? fragment_group_id,
+      Value<int?>? fragment_id,
       Value<int>? liker_user_id,
       Value<DateTime>? created_at,
       Value<int>? id,
@@ -6647,10 +6554,10 @@ class UserLikesCompanion extends UpdateCompanion<UserLike> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (fragment_group_id.present) {
-      map['fragment_group_id'] = Variable<String>(fragment_group_id.value);
+      map['fragment_group_id'] = Variable<int>(fragment_group_id.value);
     }
     if (fragment_id.present) {
-      map['fragment_id'] = Variable<String>(fragment_id.value);
+      map['fragment_id'] = Variable<int>(fragment_id.value);
     }
     if (liker_user_id.present) {
       map['liker_user_id'] = Variable<int>(liker_user_id.value);

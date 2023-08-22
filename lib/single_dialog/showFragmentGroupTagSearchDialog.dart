@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' as q;
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
 Future<void> showFragmentGroupTagSearchDialog({
@@ -73,7 +74,7 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
 
     searchedTags.clear();
     searchedTags.add(FragmentGroupTag(
-      id: '-1',
+      id: -1,
       fragment_group_id: widget.fragmentGroup.id,
       tag: "创建新标签：$valueTrim",
       created_at: DateTime.now(),
@@ -81,7 +82,7 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
     ));
 
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE,
       dtoData: QueryFragmentGroupTagByLikeDto(
         like: editText,
         dto_padding_1: null,
@@ -196,21 +197,27 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                                 ),
                               ),
                               onTap: () async {
-                                final st = await SyncTag.create();
-                                late final FragmentGroupTag newTag;
-                                await RefFragmentGroupTags(
-                                  self: () async {
-                                    newTag = await searchedTags[i].copyWith(tag: searchedTags[i].tag.split("：").last).toCompanion(false).insert(
-                                          syncTag: st,
-                                          isCloudTableWithSync: true,
-                                          isCloudTableAutoId: true,
-                                          isReplaceWhenIdSame: false,
-                                        );
+                                //TODO 增加加载页面，防止连续点击很多次导致插入tag很多
+                                final result = await request(
+                                  path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_INSERT,
+                                  dtoData: SingleRowInsertDto(
+                                    table_name: db.fragmentGroupTags.actualTableName,
+                                    row: Crt.fragmentGroupTagEntity(
+                                      fragment_group_id: widget.fragmentGroup.id,
+                                      tag: searchedTags[i].tag.split("：").last,
+                                    ),
+                                  ),
+                                  parseResponseVoData: SingleRowInsertVo.fromJson,
+                                );
+                                await result.handleCode(
+                                  code100101: (String showMessage, SingleRowInsertVo vo) async {
+                                    widget.initTags.refreshInevitable((obj) => obj..add(FragmentGroupTag.fromJson(vo.row)));
+                                    setState(() {});
                                   },
-                                  order: 0,
-                                ).run();
-                                widget.initTags.refreshInevitable((obj) => obj..add(newTag));
-                                setState(() {});
+                                  otherException: (a, b, c) async {
+                                    logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+                                  },
+                                );
                               },
                             )
                     else

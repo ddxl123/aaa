@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class InAppStage extends StatefulWidget {
   const InAppStage({Key? key, required this.memoryGroupId}) : super(key: key);
 
-  final String memoryGroupId;
+  final int memoryGroupId;
 
   @override
   State<InAppStage> createState() => _InAppStageState();

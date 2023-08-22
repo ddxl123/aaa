@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:tools/tools.dart';
@@ -12,7 +13,7 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
 
   final currentUser = Ab<User?>(null);
 
-  /// 因为不能将 surface 进行发布，因此 [enterFragmentGroup] 始终是 target。
+  /// 因为不能将 surface 进行发布，因此 [enterFragmentGroup] 始终是 dynamicFragmentGroup 类型。
   ///
   /// 为 null 的话，说明进入的是 [userId] 的 root.
   final FragmentGroup? enterFragmentGroup;
@@ -27,7 +28,7 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
 
   Future<void> queryCurrentUser() async {
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_SINGLE_ROW_QUERY,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_SINGLE_ROW_QUERY,
       dtoData: SingleRowQueryDto(
         table_name: db.users.actualTableName,
         row_id: userId,
@@ -61,18 +62,23 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
     // 因为不能将 surface 进行发布，因此 [enterFragmentGroup] 始终是 target。
     final targetId = (whichSurfaceGroupEntity?.jump_to_fragment_groups_id ?? whichSurfaceGroupEntity?.id) ?? enterFragmentGroup?.id;
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUP_INNER,
-      dtoData: KnowledgeBaseFragmentGroupInnerQueryDto(
-        fragment_group_id: targetId,
-        user_id: (whichSurfaceGroupEntity == null && enterFragmentGroup == null) ? userId : null,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUP_ONE_SUB_QUERY,
+      dtoData: FragmentGroupOneSubQueryDto(
+        fragment_group_query_wrapper: FragmentGroupQueryWrapper(
+          first_target_user_id: userId,
+          is_contain_current_login_user_create: Aber.find<GlobalAbController>().loggedInUser()!.id == userId ? true : false,
+          only_published: false,
+          target_fragment_group_id: targetId,
+        ),
+        dto_padding_1: null,
       ),
-      parseResponseVoData: KnowledgeBaseFragmentGroupInnerQueryVo.fromJson,
+      parseResponseVoData: FragmentGroupOneSubQueryVo.fromJson,
     );
     final gaue = await result.handleCode(
-      code30401: (String showMessage, KnowledgeBaseFragmentGroupInnerQueryVo vo) async {
+      code30401: (String showMessage, vo) async {
         currentFragmentGroupTagsAb()
           ..clear()
-          ..addAll(vo.fragment_group_self_tags_list);
+          ..addAll(vo.self_fragment_group_tags_list);
 
         // 当前组的 surface
         FragmentGroup? currentSurfaceFragmentGroup;
@@ -81,7 +87,7 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
 
         if (enterFragmentGroup != null) {
           if (whichSurfaceGroupEntity == null) {
-            currentSurfaceFragmentGroup = vo.fragment_groups_list.singleWhere((element) => element.id == enterFragmentGroup!.id);
+            currentSurfaceFragmentGroup = vo.self_fragment_group;
             currentJumpTargetFragmentGroup = null;
           } else {
             for (var v in vo.fragment_groups_list) {
@@ -116,10 +122,16 @@ class FragmentGroupListViewAbController extends GroupListWidgetController<Fragme
         if (whichSurfaceGroupEntity == null && enterFragmentGroup != null) {
           setRootGroupEntity(surfaceEntity: currentSurfaceFragmentGroup, jumpTargetEntity: currentJumpTargetFragmentGroup);
         }
+
+        final fragmentWithRsBreak = <Unit<Fragment, RFragment2FragmentGroup>>[];
+        for (var w in vo.fragments_list) {
+          for (var r in w.r_fragment_2_fragment_groups) {
+            fragmentWithRsBreak.add(Unit(unitEntity: w.fragment, unitREntity: r));
+          }
+        }
         return GroupsAndUnitEntities(
-          // 因为查询的包含 whichSurfaceGroupEntity 自身，因此排除掉。
-          groupEntities: vo.fragment_groups_list.where((element) => element.id != targetId).toList(),
-          unitEntities: vo.fragments_list.map((e) => Unit(unitEntity: e.fragment, unitREntity: e.r_fragment_2_fragment_groups)).toList(),
+          groupEntities: vo.fragment_groups_list,
+          unitEntities: fragmentWithRsBreak,
           jumpTargetEntity: currentJumpTargetFragmentGroup,
         );
       },

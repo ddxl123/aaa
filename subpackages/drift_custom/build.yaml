@@ -1,20 +1,20 @@
 builders:
-  drift_reference:
-    import: "package:drift_custom/builders.dart"
-    build_extensions: { ".dart": [ ".ref.dart" ] }
-    builder_factories: [ "referenceBuilder" ]
-    auto_apply: none
-    build_to: source
+#  drift_reference:
+#    import: "package:drift_custom/builders.dart"
+#    build_extensions: { ".dart": [ ".ref.dart" ] }
+#    builder_factories: [ "referenceBuilder" ]
+#    auto_apply: none
+#    build_to: source
   drift_crt:
     import: "package:drift_custom/builders.dart"
     build_extensions: { ".dart": [ ".crt.dart" ] }
     builder_factories: [ "crtBuilder" ]
     auto_apply: none
     build_to: source
-  drift_reset:
-    import: "package:drift_custom/builders.dart"
-    build_extensions: { ".dart": [ ".reset.dart" ] }
-    builder_factories: [ "resetBuilder" ]
-    auto_apply: none
-    build_to: source
+#  drift_reset:
+#    import: "package:drift_custom/builders.dart"
+#    build_extensions: { ".dart": [ ".reset.dart" ] }
+#    builder_factories: [ "resetBuilder" ]
+#    auto_apply: none
+#    build_to: source
 

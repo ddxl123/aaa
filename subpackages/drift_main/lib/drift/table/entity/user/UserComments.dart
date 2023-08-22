@@ -9,17 +9,16 @@ class UserComments extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-
   TextColumn get comment_content => text().named("comment_content")();
 
   @ReferenceTo([Users])
   IntColumn get commentator_user_id => integer().named("commentator_user_id")();
 
   @ReferenceTo([FragmentGroups])
-  TextColumn get fragment_group_id => text().named("fragment_group_id").nullable()();
+  IntColumn get fragment_group_id => integer().named("fragment_group_id").nullable()();
 
   @ReferenceTo([Fragments])
-  TextColumn get fragment_id => text().named("fragment_id").nullable()();
+  IntColumn get fragment_id => integer().named("fragment_id").nullable()();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 

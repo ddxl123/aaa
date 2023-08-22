@@ -2,17 +2,13 @@ import 'dart:convert';
 
 import 'package:aaa/global/tool_widgets/CustomImageWidget.dart';
 import 'package:aaa/push_page/push_page.dart';
-import 'package:aaa/single_dialog/showSelectFragmentGroupDialog.dart';
-import 'package:aaa/single_sheet/showCategoriesBottomSheet.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 
-import '../../../single_dialog/showKnowledgeBaseCategory.dart';
 import 'KnowledgeBaseHomeAbController.dart';
 
 class KnowledgeBaseHome extends StatelessWidget {
@@ -203,9 +199,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                                                         ],
                                                       ),
                                                     ),
-                                                    onTap: () {
-                                                      c.download(willDownloadFragmentGroup: e.fragment_group);
-                                                    },
+                                                    onTap: () {},
                                                   ),
                                                 ],
                                               ),

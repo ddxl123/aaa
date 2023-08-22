@@ -26,6 +26,12 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
       builder: (c, abw) {
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new),
+              onPressed: () {
+                c.abBack();
+              },
+            ),
             actions: [
               IconButton(
                 icon: Icon(Icons.save_outlined),
@@ -54,7 +60,7 @@ class _FragmentGroupGizmoEditPageState extends State<FragmentGroupGizmoEditPage>
                                     child: LocalThenCloudImageWidget(
                                       size: globalFragmentGroupCoverRatio * 100,
                                       localPath: c.coverPath(abw).localPath,
-                                      cloudPath: FilePathWrapper.toAvailablePath(cloudPath: c.coverPath(abw).cloudPath),
+                                      cloudPath: c.coverPath(abw).cloudPath,
                                     ),
                                     onTap: () {
                                       c.clickCover();

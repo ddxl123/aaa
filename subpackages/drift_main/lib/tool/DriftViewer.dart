@@ -127,55 +127,7 @@ class _DriftViewerState extends State<DriftViewer> {
                     )
                   ];
               return Column(
-                children: [
-                  ...add(
-                    title: 'test1',
-                    onPressed: () async {
-                      // await DriftDb.instance.insertReturningWith(
-                      //   DriftDb.instance.users,
-                      //   entity: UsersCompanion(username: '啊啊啊'.toValue()),
-                      //   syncTag: await SyncTag.create(),
-                      // );
-                      // Navigator.pop(context);
-                    },
-                  ),
-                  ...add(
-                    title: 'test2',
-                    onPressed: () async {
-                      final st = await SyncTag.create();
-                      await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
-                        DriftDb.instance.users,
-                        entity: UsersCompanion(
-                          id: 3.toValue(),
-                          username: '顶顶顶'.toValue(),
-                        ),
-                        syncTag: st,
-                        isCloudTableWithSync: true,
-                      );
-                      await DriftDb.instance.updateReturningWith<Users, User, UsersCompanion>(
-                        DriftDb.instance.users,
-                        entity: UsersCompanion(
-                          id: 3.toValue(),
-                          username: '顶顶顶'.toValue(),
-                        ),
-                        syncTag: st,
-                        isCloudTableWithSync: true,
-                      );
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ...add(
-                    title: 'test3',
-                    onPressed: () async {
-                      // await DriftDb.instance.deleteWith<Users, User, UsersCompanion>(
-                      //   DriftDb.instance.users,
-                      //   filter: (tbl) => tbl.id.equals(2),
-                      //   syncTag: await SyncTag.create(),
-                      // );
-                      // Navigator.pop(context);
-                    },
-                  ),
-                ],
+                children: [],
               );
             },
           );

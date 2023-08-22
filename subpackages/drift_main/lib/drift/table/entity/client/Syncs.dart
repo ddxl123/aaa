@@ -9,8 +9,7 @@ class Syncs extends ClientTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-
-  TextColumn get row_id => text().named("row_id")();
+  IntColumn get row_id => integer().named("row_id")();
 
   IntColumn get sync_curd_type => intEnum<SyncCurdType>().named("sync_curd_type")();
 

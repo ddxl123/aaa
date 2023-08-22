@@ -1,6 +1,5 @@
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/global/tool_widgets/CustomImageWidget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/http_file_enum.dart';
@@ -9,7 +8,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class PersonalHomePageAbController extends AbController {
   PersonalHomePageAbController({required this.userId});
@@ -62,7 +60,7 @@ class PersonalHomePageAbController extends AbController {
 
   Future<void> queryUserInfo() async {
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_USER_INFO,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_USER_INFO,
       dtoData: PersonalHomePageForUserInfoDto(
         user_id: userId,
         dto_padding_1: null,
@@ -82,21 +80,29 @@ class PersonalHomePageAbController extends AbController {
 
   Future<void> queryFirstPage() async {
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_FRAGMENT_PAGE,
-      dtoData: PersonalHomePageForFragmentPageDto(
-        user_id: userId,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUP_ONE_SUB_QUERY,
+      dtoData: FragmentGroupOneSubQueryDto(
+        fragment_group_query_wrapper: FragmentGroupQueryWrapper(
+          first_target_user_id: userId,
+          is_contain_current_login_user_create: false,
+          only_published: false,
+          target_fragment_group_id: null,
+        ),
         dto_padding_1: null,
       ),
-      parseResponseVoData: PersonalHomePageForFragmentPageVo.fromJson,
+      parseResponseVoData: FragmentGroupOneSubQueryVo.fromJson,
     );
+
     await result.handleCode(
-      code70101: (String showMessage, PersonalHomePageForFragmentPageVo vo) async {
+      code30401: (String showMessage, vo) async {
         fragmentGroupsAb.refreshInevitable((obj) => obj
           ..clear()
           ..addAll(vo.fragment_groups_list));
-        fragmentsAb.refreshInevitable((obj) => obj
-          ..clear()
-          ..addAll(vo.fragments_list));
+        fragmentsAb.refreshInevitable(
+          (obj) => obj
+            ..clear()
+            ..addAll(vo.fragments_list.map((e) => e.fragment)),
+        );
       },
       otherException: (int? code, HttperException httperException, StackTrace st) async {
         logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
@@ -106,7 +112,7 @@ class PersonalHomePageAbController extends AbController {
 
   Future<void> queryPublishPage() async {
     final result = await request(
-      path: HttpPath.NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE,
       dtoData: PersonalHomePageForPublishPageDto(
         user_id: userId,
         dto_padding_1: null,
@@ -165,24 +171,25 @@ class PersonalHomePageAbController extends AbController {
                       fileUint8List: await cropResult.readAsBytes(),
                       oldCloudPath: userAvatarCloudPath(),
                     ),
-                    fileRequestMethod: FileRequestMethod.coverInsertUpload,
+                    fileRequestMethod: FileRequestMethod.upload,
                     isUpdateCache: true,
                     onSuccess: (FilePathWrapper filePathWrapper) async {
                       if (!filePathWrapper.isOldNewSame) {
                         // path 更新至 widget
                         userAvatarCloudPath.refreshInevitable((oldValue) => filePathWrapper.newCloudPath);
                         // path 更新至本地
-                        (db.update(db.users)..where((tbl) => tbl.id.equals(userId))).write(
-                          UsersCompanion(
-                            avatar_cloud_path: filePathWrapper.newCloudPath.toValue(),
-                          ),
-                        );
+                        throw "TODO";
+                        // (db.update(db.users)..where((tbl) => tbl.id.equals(userId))).write(
+                        //   UsersCompanion(
+                        //     avatar_cloud_path: filePathWrapper.newCloudPath.toValue(),
+                        //   ),
+                        // );
                         // 因为当前是修改自己User上的头像，因此刷新全部带有自己的User
                         Aber.find<GlobalAbController>().loggedInUser.refreshInevitable((obj) => obj!..avatar_cloud_path = filePathWrapper.newCloudPath);
 
                         // path 更新至云端
                         final result = await request(
-                          path: HttpPath.LOGIN_REQUIRED_SINGLE_FIELD_MODIFY,
+                          path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_FIELD_MODIFY,
                           dtoData: SingleFieldModifyDto(
                             table_name: db.users.actualTableName,
                             field_name: db.users.avatar_cloud_path.name,

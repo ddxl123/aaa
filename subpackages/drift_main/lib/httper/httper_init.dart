@@ -28,13 +28,26 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   dynamic responseData;
   try {
     final tokenMap = await _getTokenHeaderMap();
-    final result = await dio.post(
-      path,
-      options: Options(headers: tokenMap),
-      data: dtoDataList != null ? dtoDataList.map((e) => e.toJson()).toList() : dtoData.toJson(),
-      onSendProgress: onSendProgress,
-      onReceiveProgress: onReceiveProgress,
-    );
+    late final Response result;
+    if (path.startsWith("GET_")) {
+      if (dtoDataList != null) {
+        throw "GET 请求的请求参数不要用数组。";
+      }
+      result = await dio.get(
+        path.substring(4, path.length),
+        options: Options(headers: tokenMap),
+        queryParameters: dtoData.toJson(),
+        onReceiveProgress: onReceiveProgress,
+      );
+    } else if (path.startsWith("POST_")) {
+      result = await dio.post(
+        path.substring(5, path.length),
+        options: Options(headers: tokenMap),
+        data: dtoDataList != null ? dtoDataList.map((e) => e.toJson()).toList() : dtoData.toJson(),
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+    }
     responseData = result.data;
     final parseCode = result.data["code"];
     final parseMessage = result.data["message"];
@@ -147,19 +160,12 @@ enum FileRequestMethod {
   /// 强制从云端获取，若获取失败，则报错
   ///
   /// 云端获取成功，自己根据 [FilePathWrapper.finalHandle] 操作要不要存储或覆盖掉本地
-  forceCloud,
+  download,
 
-  /// 第一次上传
+  /// 第一次上次或重新上传
   ///
   /// 若上传成功，自己根据 [FilePathWrapper.finalHandle] 操作要不要存储或覆盖掉本地
-  firstUpload,
-
-  /// 重新上传
-  ///
-  /// 若上传成功，自己根据 [FilePathWrapper.finalHandle] 操作要不要存储或覆盖掉本地
-  ///
-  /// 当不存在云端路径，则会进行插入
-  coverInsertUpload,
+  upload,
 }
 
 enum CloudGetExceptionType {
@@ -254,20 +260,14 @@ Future<void> requestFile({
       }
     }
 
-    if (fileRequestMethod == FileRequestMethod.forceCloud) {
+    if (fileRequestMethod == FileRequestMethod.download) {
       await cloudGet();
       await updateCache();
       await onSuccess(filePathWrapper);
       return;
     }
 
-    if (fileRequestMethod == FileRequestMethod.firstUpload) {
-      await cloudInsert();
-      await updateCache();
-      await onSuccess(filePathWrapper);
-      return;
-    }
-    if (fileRequestMethod == FileRequestMethod.coverInsertUpload) {
+    if (fileRequestMethod == FileRequestMethod.upload) {
       if (filePathWrapper.oldCloudPath == null) {
         await cloudInsert();
         await updateCache();
@@ -284,4 +284,48 @@ Future<void> requestFile({
   } catch (e, st) {
     await onError(filePathWrapper, e, st);
   }
+}
+
+Future<void> requestSingleRowInsert({
+  required bool isLoginRequired,
+  required SingleRowInsertDto singleRowInsertDto,
+  required Future<void> Function(String showMessage, SingleRowInsertVo vo) onSuccess,
+  Future<void> Function(int? code, HttperException httperException, StackTrace st)? onError,
+}) async {
+  final result = await request(
+    path: isLoginRequired ? HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_INSERT : HttpPath.POST__NO_LOGIN_REQUIRED_SINGLE_ROW_INSERT,
+    dtoData: singleRowInsertDto,
+    parseResponseVoData: SingleRowInsertVo.fromJson,
+  );
+  await result.handleCode(
+    code100101: (String showMessage, SingleRowInsertVo vo) async {
+      await onSuccess(showMessage, vo);
+    },
+    otherException: (int? code, HttperException httperException, StackTrace st) async {
+      if (onError == null) throw httperException;
+      await onError(code, httperException, st);
+    },
+  );
+}
+
+Future<void> requestSingleRowQuery({
+  required bool isLoginRequired,
+  required SingleRowQueryDto singleRowQueryDto,
+  required Future<void> Function(String showMessage, SingleRowQueryVo vo) onSuccess,
+  Future<void> Function(int? code, HttperException httperException, StackTrace st)? onError,
+}) async {
+  final result = await request(
+    path: isLoginRequired ? HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_QUERY : HttpPath.POST__NO_LOGIN_REQUIRED_SINGLE_ROW_QUERY,
+    dtoData: singleRowQueryDto,
+    parseResponseVoData: SingleRowQueryVo.fromJson,
+  );
+  await result.handleCode(
+    code90101: (String showMessage, SingleRowQueryVo vo) async {
+      await onSuccess(showMessage, vo);
+    },
+    otherException: (int? code, HttperException httperException, StackTrace st) async {
+      if (onError == null) throw httperException;
+      await onError(code, httperException, st);
+    },
+  );
 }

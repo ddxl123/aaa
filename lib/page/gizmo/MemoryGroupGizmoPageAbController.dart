@@ -20,14 +20,16 @@ class MemoryGroupGizmoPageAbController extends AbController {
   }
 
   Future<void> refreshMemoryModels() async {
-    final mg = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupGizmo());
-    memoryModel.refreshEasy((oldValue) => mg);
+    // TODO
+    // final mg = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupGizmo());
+    // memoryModel.refreshEasy((oldValue) => mg);
   }
 
   Future<void> refreshFragments() async {
-    final mgs = (await db.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: memoryGroupGizmo())).map((e) => e.ab);
-    fragments().clearBroken(this);
-    fragments.refreshInevitable((obj) => obj..addAll(mgs));
+    // TODO
+    // final mgs = (await db.generalQueryDAO.queryFragmentsInMemoryGroup(memoryGroup: memoryGroupGizmo())).map((e) => e.ab);
+    // fragments().clearBroken(this);
+    // fragments.refreshInevitable((obj) => obj..addAll(mgs));
   }
 
 }

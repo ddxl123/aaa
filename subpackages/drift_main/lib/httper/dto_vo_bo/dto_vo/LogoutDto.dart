@@ -47,7 +47,7 @@ LogoutDto({
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
-    required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
+    Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
     // message: 已下线其他全部登录！
     // explain: 当前登录 token 不进行下线。
@@ -83,14 +83,17 @@ LogoutDto({
         if (code == 10205) return await code10205(httperException!.showMessage);
 
     } catch (e, st) {
+      if (otherException == null) rethrow;
       if (e is HttperException) {
         return await otherException(code, e, st);
       }
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: e.toString()), st);
     }
     if (code != null) {
+      if(otherException==null) throw HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！');
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！'), st!);
     }
+    if(otherException==null) throw httperException!;
     return await otherException(code, httperException!, st!);
   }
 }

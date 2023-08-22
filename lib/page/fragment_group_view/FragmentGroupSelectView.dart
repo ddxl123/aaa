@@ -1,3 +1,4 @@
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/fragment_group_view/FragmentGroupSelectViewAbController.dart';
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
@@ -12,7 +13,10 @@ class FragmentGroupSelectView extends StatefulWidget {
 }
 
 class _FragmentGroupSelectViewState extends State<FragmentGroupSelectView> {
-  final fragmentGroupSelectViewAbController = FragmentGroupSelectViewAbController();
+  final fragmentGroupSelectViewAbController = FragmentGroupSelectViewAbController(
+    userId: Aber.find<GlobalAbController>().loggedInUser()!.id,
+    enterFragmentGroup: null,
+  );
 
   @override
   Widget build(BuildContext context) {

@@ -43,18 +43,6 @@ part 'dto_vo_bo/dto_vo/SendOrVerifyDto.dart';
 part 'dto_vo_bo/dto_vo/SendOrVerifyVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupDto.dart';
-
-
-part 'dto_vo_bo/dto_vo/DataDownloadForFragmentGroupVo.dart';
-
-
-part 'dto_vo_bo/dto_vo/DataDownloadForKnowledgeBaseDto.dart';
-
-
-part 'dto_vo_bo/dto_vo/DataDownloadForKnowledgeBaseVo.dart';
-
-
 part 'dto_vo_bo/dto_vo/DataUploadDto.dart';
 
 
@@ -65,6 +53,42 @@ part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupCountQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupCountQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupModifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupModifyVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupOneSubQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupOneSubQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentInsertFragmentDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentInsertFragmentVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentModifyFragmentDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentModifyFragmentVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentQueryFragmentGroupWithRDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentQueryFragmentGroupWithRVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryModifyDto.dart';
@@ -79,22 +103,10 @@ part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryDto.dart';
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryQueryVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupInnerQueryDto.dart';
-
-
-part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupInnerQueryVo.dart';
-
-
 part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryVo.dart';
-
-
-part 'dto_vo_bo/dto_vo/PersonalHomePageForFragmentPageDto.dart';
-
-
-part 'dto_vo_bo/dto_vo/PersonalHomePageForFragmentPageVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/PersonalHomePageForPublishPageDto.dart';
@@ -125,6 +137,24 @@ part 'dto_vo_bo/dto_vo/SingleFieldModifyDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/SingleFieldModifyVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowDeleteDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowDeleteVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowInsertDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowInsertVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowModifyDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/SingleRowModifyVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/SingleRowQueryDto.dart';

@@ -9,10 +9,6 @@ class MemoryModels extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  @override
-  bool get withoutRowId => true;
-
-
   TextColumn get button_algorithm_a => text().named("button_algorithm_a").nullable()();
 
   TextColumn get button_algorithm_b => text().named("button_algorithm_b").nullable()();
@@ -37,7 +33,7 @@ class MemoryModels extends CloudTableBase  {
   IntColumn get familiarity_algorithm_usage_status => intEnum<AlgorithmUsageStatus>().named("familiarity_algorithm_usage_status")();
 
   @ReferenceTo([Fragments])
-  TextColumn get father_memory_model_id => text().named("father_memory_model_id").nullable()();
+  IntColumn get father_memory_model_id => integer().named("father_memory_model_id").nullable()();
 
   TextColumn get next_time_algorithm_a => text().named("next_time_algorithm_a").nullable()();
 
@@ -53,7 +49,7 @@ class MemoryModels extends CloudTableBase  {
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text().named("id")();
+  IntColumn get id => integer().named("id")();
 
   DateTimeColumn get updated_at => dateTime().named("updated_at")();
 

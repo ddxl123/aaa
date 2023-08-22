@@ -140,19 +140,15 @@ class Ref$father extends Ref {
     
   @override
   Future<void> run() async {
-    await DriftDb.instance.transaction(
-      () async {
-        final list = <Ref?>[this, $childrenRunCallContent]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
-        await Future.forEach<Ref?>(
-          list,
-          (element) async {
-            if (element == this) {
-              await self();
-            } else {
-              await element?.run();
-            }
-          },
-        );
+    final list = <Ref?>[this, $childrenRunCallContent]..sort((a, b) => (a?.order ?? 99).compareTo(b?.order ?? 99));
+    await Future.forEach<Ref?>(
+      list,
+      (element) async {
+        if (element == this) {
+          await self();
+        } else {
+          await element?.run();
+        }
       },
     );
   }

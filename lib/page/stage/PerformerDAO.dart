@@ -125,24 +125,27 @@ class PerformerQuery {
     required FragmentMemoryInfo fragmentMemoryInfo,
     required SyncTag syncTag,
   }) async {
-    await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
-      originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
-      originalMemoryGroup: originalMemoryGroup,
-      fragmentMemoryInfo: fragmentMemoryInfo,
-      syncTag: syncTag,
-    );
+    throw "TODO";
+    // await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
+    //   originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
+    //   originalMemoryGroup: originalMemoryGroup,
+    //   fragmentMemoryInfo: fragmentMemoryInfo,
+    //   syncTag: syncTag,
+    // );
   }
 
   /// ========================================================================================
 
   /// [InternalVariableConstantHandler.k1FCountAllConst]
   Future<int> getCountAll({required MemoryGroup memoryGroup}) async {
-    return await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup);
+    throw "TODO";
+    // return await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup);
   }
 
   /// [InternalVariableConstantHandler.k2CountNewConst]
   Future<int> queryFragmentsCountByStudyStatus({required MemoryGroup memoryGroup, required StudyStatus studyStatus}) async {
-    return await db.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroup, studyStatus: studyStatus);
+    throw "TODO";
+    // return await db.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroup, studyStatus: studyStatus);
   }
 
   /// TODO:

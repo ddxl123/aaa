@@ -34,7 +34,7 @@ Future<void> pushToMemoryModelGizmoEditPage({
 
 Future<void> pushToMemoryGroupGizmoEditPageOfModify({
   required BuildContext context,
-  required String memoryGroupId,
+  required int memoryGroupId,
 }) async {
   await Navigator.push(
     context,
@@ -106,7 +106,7 @@ Future<void> pushToShorthandGizmoEditPage({
 
 Future<void> pushToInAppStage({
   required BuildContext context,
-  required String memoryGroupId,
+  required int memoryGroupId,
 }) async {
   await Navigator.push(
     context,

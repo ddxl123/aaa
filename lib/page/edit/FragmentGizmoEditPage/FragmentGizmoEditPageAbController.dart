@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/single_dialog/showSelectFragmentGroupsDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:collection/collection.dart';
@@ -20,14 +21,15 @@ class FragmentPerformer {
   /// 为 null 表示为创建碎片。
   Fragment? fragment;
 
-  /// 当前操作碎片所存放的碎片组。
-  ///   - 若为空数组，则没有选择组。
-  final dynamicFragmentGroups = <(FragmentGroup?, RFragment2FragmentGroup?)>[];
-
   /// [fragmentTemplate] 是根据 [fragment.content] 解析而来。
   ///
   /// [fragment] 为 null，[fragmentTemplate] 也为 null。
   FragmentTemplate fragmentTemplate;
+
+  /// [FragmentGizmoEditPageAbController.enterDynamicFragmentGroups]
+  final dynamicFragmentGroups = <(FragmentGroup?, RFragment2FragmentGroup?)>[];
+
+  bool get isCreateStatus => fragment == null;
 
   // final fragmentTag = <String>[];
 
@@ -36,8 +38,9 @@ class FragmentPerformer {
   /// [recent] 表示最近一个操作的 [FragmentPerformer]，若为 null，则表示没有最近的。
   ///
   /// 返回重新加载前与重新加载后是否存在变动。
-  Future<bool> reload({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController, required FragmentPerformer? recent}) async {
-    if (fragment == null) {
+  // TODO: 增加 loading
+  Future<void> reload({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController, required FragmentPerformer? recent}) async {
+    if (isCreateStatus) {
       // 保留上一次设置。
       if (recent != null) {
         dynamicFragmentGroups
@@ -47,204 +50,146 @@ class FragmentPerformer {
       } else {
         fragmentTemplate = fragmentTemplate.emptyInitInstance();
       }
-      return false;
     } else {
-      final resultAll = await equalAll(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-      if (!resultAll.isExistModified) {
+      print("-111---------------");
+      final queryFragment = await request(
+        path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_QUERY,
+        dtoData: SingleRowQueryDto(
+          table_name: db.fragments.actualTableName,
+          row_id: fragment!.id,
+        ),
+        parseResponseVoData: SingleRowQueryVo.fromJson,
+      );
+      await queryFragment.handleCode(
+        code90101: (String showMessage, SingleRowQueryVo vo) async {
+          fragment = Fragment.fromJson(vo.row);
+          fragmentTemplate.resetFromJson(jsonDecode(fragment!.content));
+        },
+        otherException: (a, b, c) async {
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+
+      final queryFgWithR = await request(
+        path: HttpPath.GET__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_QUERY_FRAGMENT_GROUP_WITH_R,
+        dtoData: FragmentQueryFragmentGroupWithRDto(
+          fragment_id: fragment!.id,
+          user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+        ),
+        parseResponseVoData: FragmentQueryFragmentGroupWithRVo.fromJson,
+      );
+      await queryFgWithR.handleCode(
+        code140101: (String showMessage, FragmentQueryFragmentGroupWithRVo vo) async {
+          dynamicFragmentGroups.clear();
+          dynamicFragmentGroups.addAll(vo.fragment_group_with_r_list.map((e) => (e.fragment_group, e.r_fragment_2_fragment_groups)));
+        },
+        otherException: (a, b, c) async {
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+    }
+  }
+
+  /// 返回是否保存成功。
+  Future<bool> save({
+    required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
+  }) async {
+    if (dynamicFragmentGroups.isEmpty) {
+      SmartDialog.showToast('未选择存放位置！');
+      return false;
+    }
+
+    final isMustContentEmpty = fragmentTemplate.isMustContentEmpty();
+    if (isMustContentEmpty.$1) {
+      SmartDialog.showToast(isMustContentEmpty.$2);
+      return false;
+    }
+
+    if (dynamicFragmentGroups.isEmpty) {
+      if (!isCreateStatus) {
+        bool isReturn = false;
+        await showCustomDialog(
+          builder: (ctx) {
+            return OkAndCancelDialogWidget(
+              text: "你移除了所有存储位置，等价于你从你的碎片组中移除了该碎片，确认要这样做吗？\n"
+                  "注意：其他用户所复用的该碎片并不会同时被移除掉。",
+              okText: "确定",
+              cancelText: "返回",
+              onOk: () async {
+                isReturn = false;
+                SmartDialog.dismiss(status: SmartStatus.dialog);
+              },
+              onCancel: () {
+                isReturn = true;
+                SmartDialog.dismiss(status: SmartStatus.dialog);
+              },
+            );
+          },
+        );
+        if (isReturn) return false;
+      } else {
+        SmartDialog.showToast("请选择要保存的位置！");
         return false;
       }
-
-      if (resultAll.template.isModified) {
-        fragment!.content = jsonEncode(resultAll.template.saved.toJson());
-        fragmentTemplate.resetFromJson(jsonDecode(fragment!.content));
-      }
-      if (resultAll.fragmentGroupChains.isModified) {
-        dynamicFragmentGroups.clear();
-        dynamicFragmentGroups.addAll(resultAll.fragmentGroupChains.saved);
-      }
-      return true;
     }
-  }
 
-  /// 返回是否存在修改。
-  Future<bool> saveAll({
-    required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
-    required SyncTag syncTag,
-  }) async {
-    final result = await equalAll(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    if (!result.isExistModified) {
-      return false;
-    }
+    bool isSaveSuccess = false;
     // 若碎片是新建的，则进行插入
-    if (fragment == null) {
-      final newFragment = await db.insertDAO.insertFragmentAndR(
-        willFragmentsCompanion: Crt.fragmentsCompanion(
-          content: jsonEncode(result.template.now.toJson()),
-          creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-          father_fragment_id: null.toValue(),
-          title: fragmentTemplate.getTitle(),
-          be_sep_publish: false,
+    if (isCreateStatus) {
+      final insertResult = await request(
+        // TODO: 整理好哪些请求需要登录，哪些不需要。
+        path: HttpPath.POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_INSERT_FRAGMENT,
+        dtoData: FragmentInsertFragmentDto(
+          fragment: Crt.fragmentEntity(
+            content: jsonEncode(fragmentTemplate.toJson()),
+            creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+            father_fragment_id: null,
+            title: fragmentTemplate.getTitle(),
+            be_sep_publish: false,
+          ),
+          fragment_group_ids_list: dynamicFragmentGroups.map((e) => e.$1?.id).toList(),
         ),
-        dynamicFragmentGroups: result.fragmentGroupChains.now.map((e) => e.$1).toList(),
-        syncTag: syncTag,
-        isCloudTableWithSync: true,
+        parseResponseVoData: FragmentInsertFragmentVo.fromJson,
       );
-      fragment = newFragment;
-      final dynamicFragmentGroupReset = await db.generalQueryDAO.queryFragmentGroupAndRs(fragment: newFragment);
-      dynamicFragmentGroups
-        ..clear()
-        ..addAll(dynamicFragmentGroupReset);
-    } else {
-      await RefFragments(
-        self: () async {
-          await fragment!.reset(
-            content: jsonEncode(result.template.now.toJson()).toValue(),
-            creator_user_id: toAbsent(),
-            father_fragment_id: toAbsent(),
-            // 因为本身就是 now
-            title: fragmentTemplate.getTitle().toValue(),
-            syncTag: syncTag,
-            be_sep_publish: false.toValue(),
-            isCloudTableWithSync: true,
-          );
+      await insertResult.handleCode(
+        code140201: (String showMessage, FragmentInsertFragmentVo vo) async {
+          fragment = vo.fragment;
+          isSaveSuccess = true;
+          SmartDialog.showToast("创建成功！");
         },
-        rFragment2FragmentGroups: RefRFragment2FragmentGroups(
-          self: () async {
-            final user = Aber.find<GlobalAbController>().loggedInUser()!;
-            final saved = result.fragmentGroupChains.saved;
-            final now = result.fragmentGroupChains.now;
-            // 删除 saved
-            for (var value in saved) {
-              await value.$2?.delete(
-                syncTag: syncTag,
-                isCloudTableWithSync: SyncTag.parseToUserId(value.$2!.id) == user.id,
-              );
-            }
-            print("------------------");
-            print(saved);
-            print(now);
-
-            // 存储 now
-            for (var value in now) {
-              await RefRFragment2FragmentGroups(
-                self: () async {
-                  await Crt.rFragment2FragmentGroupsCompanion(
-                    client_be_selected: false,
-                    creator_user_id: user.id,
-                    fragment_group_id: (value.$1?.id).toValue(),
-                    fragment_id: fragment!.id,
-                  ).insert(
-                    syncTag: syncTag,
-                    isCloudTableWithSync: true,
-                    isCloudTableAutoId: true,
-                    isReplaceWhenIdSame: false,
-                  );
-                },
-                order: 0,
-              ).run();
-            }
-
-            await db.deleteDAO.deleteAllFreeFragment(syncTag: syncTag, userId: user.id);
-
-            final dynamicFragmentGroupReset = await db.generalQueryDAO.queryFragmentGroupAndRs(fragment: fragment!);
-            dynamicFragmentGroups
-              ..clear()
-              ..addAll(dynamicFragmentGroupReset);
-          },
-          order: 0,
+        otherException: (a, b, c) async {
+          isSaveSuccess = false;
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+    } else {
+      final modifyResult = await request(
+        path: HttpPath.POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_MODIFY_FRAGMENT,
+        dtoData: FragmentModifyFragmentDto(
+          fragment: fragment!
+            ..content = jsonEncode(fragmentTemplate.toJson())
+            // 因为本身就是 now
+            ..title = fragmentTemplate.getTitle()
+            ..be_sep_publish = false,
+          fragment_group_ids_list: dynamicFragmentGroups.map((e) => e.$1?.id).toList(),
         ),
-        fragmentMemoryInfos: null,
-        fragments_father_fragment_id: null,
-        memoryModels: null,
-        userComments: null,
-        userLikes: null,
-        order: 0,
-      ).run();
+        parseResponseVoData: FragmentModifyFragmentVo.fromJson,
+      );
+      await modifyResult.handleCode(
+        code140301: (String showMessage) async {
+          isSaveSuccess = true;
+          SmartDialog.showToast("修改成功！");
+        },
+        otherException: (a, b, c) async {
+          isSaveSuccess = false;
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
     }
-    return true;
-  }
-
-  /// 比较当前的是否与存储的相同。
-  Future<
-      ({
-        ({bool isModified, FragmentTemplate now, FragmentTemplate saved}) template,
-        ({
-          bool isModified,
-          List<(FragmentGroup?, RFragment2FragmentGroup?)> now,
-          List<(FragmentGroup?, RFragment2FragmentGroup?)> saved,
-        }) fragmentGroupChains,
-        bool isExistModified,
-      })> equalAll({
-    required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController,
-  }) async {
-    final resultTemplate = await equalTemplate(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    final resultFragmentGroupChains = await equalFragmentGroupChains(fragmentGizmoEditPageAbController: fragmentGizmoEditPageAbController);
-    bool isExistModified = false;
-    if (fragment == null) {
-      if (resultTemplate.isModified) {
-        isExistModified = true;
-      }
-    } else {
-      if (resultTemplate.isModified || resultFragmentGroupChains.isModified) {
-        isExistModified = true;
-      }
+    if (isSaveSuccess) {
+      fragmentGizmoEditPageAbController.isEditable.refreshEasy((oldValue) => false);
     }
-    return (
-      isExistModified: isExistModified,
-      template: resultTemplate,
-      fragmentGroupChains: resultFragmentGroupChains,
-    );
-  }
-
-  Future<({bool isModified, FragmentTemplate now, FragmentTemplate saved})> equalTemplate({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
-    final FragmentTemplate now = fragmentTemplate;
-    late final FragmentTemplate saved;
-    if (fragment != null) {
-      saved = FragmentTemplate.newInstanceFromContent((await db.generalQueryDAO.queryFragmentById(id: fragment!.id)).content);
-    } else {
-      saved = fragmentTemplate.emptyTransferableInstance();
-    }
-    final isModified = !FragmentTemplate.equalFrom(now, saved);
-    if (isModified) {
-      logger.outNormal(print: "equalContent 存在修改：\nnow:${now.toJson()}\nsaved:${saved.toJson()}");
-    }
-    return (isModified: isModified, now: now, saved: saved);
-  }
-
-  /// 比较当前的是否与存储的相同。
-  ///
-  /// 返回值
-  ///   - 是否不同
-  ///   - 最新结果
-  Future<
-      ({
-        bool isModified,
-        List<(FragmentGroup?, RFragment2FragmentGroup?)> now,
-        List<(FragmentGroup?, RFragment2FragmentGroup?)> saved,
-      })> equalFragmentGroupChains({required FragmentGizmoEditPageAbController fragmentGizmoEditPageAbController}) async {
-    final List<(FragmentGroup?, RFragment2FragmentGroup?)> now;
-    final List<(FragmentGroup?, RFragment2FragmentGroup?)> saved;
-    if (fragment != null) {
-      now = dynamicFragmentGroups;
-      saved = await db.generalQueryDAO.queryFragmentGroupAndRs(fragment: fragment!);
-    } else {
-      now = dynamicFragmentGroups;
-      saved = [];
-    }
-
-    // 但当前 perform 为创建时，并且无内容时，返回未修改。
-    if (fragment == null) {
-      return (isModified: false, now: now, saved: saved);
-    }
-    final isModified = !const DeepCollectionEquality().equals(
-      now.map((e) => "${e.$1?.id}+${e.$2?.id}"),
-      saved.map((e) => "${e.$1?.id}+${e.$2?.id}"),
-    );
-    if (isModified) {
-      logger.outNormal(print: "equalFragmentGroupChains 存在修改：$isModified\nnow:\n$now\nsaved:\n$saved");
-    }
-
-    return (isModified: isModified, now: now, saved: saved);
+    return isSaveSuccess;
   }
 }
 
@@ -297,6 +242,42 @@ class FragmentGizmoEditPageAbController extends AbController {
   bool get isEnableLoading => true;
 
   @override
+  Future<bool> backListener(bool hasRoute) async {
+    if (hasRoute) {
+      return false;
+    }
+    if (isEditable()) {
+      bool isBack = false;
+      await showCustomDialog(
+        builder: (ctx) {
+          return OkAndCancelDialogWidget(
+            title: "是否保存？",
+            okText: "保存",
+            cancelText: "不保存",
+            cancelLeftText: "继续编辑",
+            onCancelLeft: () {
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+              isBack = false;
+            },
+            onOk: () async {
+              // TODO: loading
+              final isSuccess = await currentPerformerAb().save(fragmentGizmoEditPageAbController: this);
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+              isBack = isSuccess;
+            },
+            onCancel: () async {
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+              isBack = true;
+            },
+          );
+        },
+      );
+      return !isBack;
+    }
+    return false;
+  }
+
+  @override
   Future<void> loadingFuture() async {
     final initPerformer = FragmentPerformer(fragment: initFragment, fragmentTemplate: initFragmentTemplate);
 
@@ -340,10 +321,35 @@ class FragmentGizmoEditPageAbController extends AbController {
     }
 
     // 先检查当前
-    final resultAll = await currentPerformerAb().equalAll(fragmentGizmoEditPageAbController: this);
-    if (resultAll.isExistModified) {
-      SmartDialog.showToast("存在修改未保存！");
-      return;
+    if (isEditable()) {
+      bool isContinue = false;
+      await showCustomDialog(
+        builder: (ctx) {
+          return OkAndCancelDialogWidget(
+            title: "是否保存？",
+            okText: "保存",
+            cancelText: "不保存",
+            cancelLeftText: "继续编辑",
+            onCancelLeft: () {
+              isContinue = false;
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+            },
+            onOk: () async {
+              // TODO: loading
+              final isSuccess = await currentPerformerAb().save(fragmentGizmoEditPageAbController: this);
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+              isContinue = isSuccess;
+            },
+            onCancel: () async {
+              isContinue = true;
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+            },
+          );
+        },
+      );
+      if (!isContinue) {
+        return;
+      }
     }
 
     final currentIndex = records.indexOf(currentPerformerAb());
@@ -351,8 +357,9 @@ class FragmentGizmoEditPageAbController extends AbController {
       if (!isExistLast()) return;
       // 再加载上一个
       final last = records[currentIndex - 1];
-      currentPerformerAb.refreshEasy((oldValue) => last);
+      print("last-${last.fragment}");
       await last.reload(fragmentGizmoEditPageAbController: this, recent: records[currentIndex]);
+      currentPerformerAb.refreshEasy((oldValue) => last);
       isEditable.refreshEasy((oldValue) => false);
     } else {
       if (!isExistNext()) {
@@ -380,49 +387,9 @@ class FragmentGizmoEditPageAbController extends AbController {
   }
 
   Future<void> save(bool isGotoNext) async {
-    if (currentPerformerAb().dynamicFragmentGroups.isEmpty) {
-      SmartDialog.showToast('未选择存放位置！');
-      return;
-    }
-
-    final isMustContentEmpty = currentPerformerAb().fragmentTemplate.isMustContentEmpty();
-    if (isMustContentEmpty.$1) {
-      SmartDialog.showToast(isMustContentEmpty.$2);
-      return;
-    }
-
-    final st = await SyncTag.create();
-
-    // 若当前不是创建碎片，且存储的路径为空数组，则提示是否删除当前碎片
-    if (initFragment != null && currentPerformerAb().dynamicFragmentGroups.isEmpty) {
-      await showCustomDialog(
-        builder: (ctx) {
-          return OkAndCancelDialogWidget(
-            text: "你移除了所有位置，保存后将会删除当前碎片，确认要这样做吗？",
-            okText: "删除",
-            cancelText: "返回",
-            onOk: () async {
-              final saveResult = await currentPerformerAb().saveAll(fragmentGizmoEditPageAbController: this, syncTag: st);
-              if (saveResult) {
-                SmartDialog.showToast('删除成功！');
-              } else {
-                throw "不应该执行到这里";
-              }
-              SmartDialog.dismiss(status: SmartStatus.dialog);
-            },
-          );
-        },
-      );
-    } else {
-      final saveResult = await currentPerformerAb().saveAll(fragmentGizmoEditPageAbController: this, syncTag: st);
-      if (saveResult) {
-        SmartDialog.showToast('保存成功！');
-      } else {
-        // 无修改
-      }
-      if (isGotoNext) {
-        await goTo(lastOrNext: LastOrNext.next, isTailNew: true);
-      }
+    final iSavedSuccess = await currentPerformerAb().save(fragmentGizmoEditPageAbController: this);
+    if (iSavedSuccess && isGotoNext) {
+      await goTo(lastOrNext: LastOrNext.next, isTailNew: true);
     }
   }
 

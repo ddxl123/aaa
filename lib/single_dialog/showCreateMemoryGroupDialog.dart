@@ -25,21 +25,22 @@ Future<void> showCreateMemoryGroupDialog() async {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
-          await db.insertDAO.insertMemoryGroup(
-            newMemoryGroupsCompanion: Crt.memoryGroupsCompanion(
-              start_time: null.toValue(),
-              memory_model_id: null.toValue(),
-              title: tec.text.trim(),
-              will_new_learn_count: 0,
-              review_interval: DateTime.now(),
-              new_review_display_order: NewReviewDisplayOrder.mix,
-              new_display_order: NewDisplayOrder.random,
-              review_display_order: ReviewDisplayOrder.expire_first,
-              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-            ),
-            syncTag: await SyncTag.create(),
-            isCloudTableWithSync: true,
-          );
+          throw "todo";
+          // await db.insertDAO.insertMemoryGroup(
+          //   newMemoryGroupsCompanion: Crt.memoryGroupsCompanion(
+          //     start_time: null.toValue(),
+          //     memory_model_id: null.toValue(),
+          //     title: tec.text.trim(),
+          //     will_new_learn_count: 0,
+          //     review_interval: DateTime.now(),
+          //     new_review_display_order: NewReviewDisplayOrder.mix,
+          //     new_display_order: NewDisplayOrder.random,
+          //     review_display_order: ReviewDisplayOrder.expire_first,
+          //     creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+          //   ),
+          //   syncTag: await SyncTag.create(),
+          //   isCloudTableWithSync: true,
+          // );
 
           Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();
 

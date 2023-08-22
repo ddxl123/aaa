@@ -7,8 +7,9 @@ class ShorthandListPageAbController extends AbController {
   final shorthandsAb = <Ab<Shorthand>>[].ab;
 
   Future<void> refreshPage() async {
-    final result = await db.generalQueryDAO.queryAllShorthandsByTime();
-    shorthandsAb.clearBroken(this);
-    shorthandsAb.refreshInevitable((obj) => obj..addAll(result.map((e) => e.ab)));
+    throw "TODO";
+    // final result = await db.generalQueryDAO.queryAllShorthandsByTime();
+    // shorthandsAb.clearBroken(this);
+    // shorthandsAb.refreshInevitable((obj) => obj..addAll(result.map((e) => e.ab)));
   }
 }

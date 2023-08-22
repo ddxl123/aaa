@@ -11,7 +11,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 如果只传入 [memoryGroupId] 的话，会缺少 [bSelectedMemoryModelStorage]、[selectedFragmentCountAb] 等，修改它们后， gizmo 外的数据并没有被刷新。
   MemoryGroupGizmoEditPageAbController({required this.memoryGroupId});
 
-  final String memoryGroupId;
+  final int memoryGroupId;
 
   late final MemoryGroup oMemoryGroup;
 
@@ -70,23 +70,24 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
   @override
   Future<void> loadingFuture() async {
-    memoryGroupAb = (await db.generalQueryDAO.queryMemoryGroupById(id: memoryGroupId))!.ab;
-    oMemoryGroup = memoryGroupAb().copyWith();
-    titleTextEditingController.text = memoryGroupAb().title;
-    reviewIntervalTextEditingController.text = timeDifference(target: memoryGroupAb().review_interval, start: DateTime.now()).toString();
-
-    final fsCount = await db.generalQueryDAO.queryFragmentsCountInMemoryGroup(memoryGroup: memoryGroupAb());
-    selectedFragmentCountAb.refreshInevitable((obj) => fsCount);
-
-    await refreshNeverStudyCount();
-
-    final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
-    selectedMemoryModelAb.refreshInevitable((obj) => mm);
+    throw "TODO";
+    // memoryGroupAb = (await db.generalQueryDAO.queryMemoryGroupById(id: memoryGroupId))!.ab;
+    // oMemoryGroup = memoryGroupAb().copyWith();
+    // titleTextEditingController.text = memoryGroupAb().title;
+    // reviewIntervalTextEditingController.text = timeDifference(target: memoryGroupAb().review_interval, start: DateTime.now()).toString();
+    //
+    // final fsCount = await db.generalQueryDAO.queryFragmentsCountInMemoryGroup(memoryGroup: memoryGroupAb());
+    // selectedFragmentCountAb.refreshInevitable((obj) => fsCount);
+    //
+    // await refreshNeverStudyCount();
+    //
+    // final mm = await db.generalQueryDAO.queryMemoryModelInMemoryGroup(memoryGroup: memoryGroupAb());
+    // selectedMemoryModelAb.refreshInevitable((obj) => mm);
   }
 
   Future<void> refreshNeverStudyCount() async {
-    final count = await DriftDb.instance.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.never);
-    remainNeverFragmentsCount.refreshEasy((oldValue) => count);
+    // final count = await DriftDb.instance.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroupAb(), studyStatus: StudyStatus.never);
+    // remainNeverFragmentsCount.refreshEasy((oldValue) => count);
   }
 
   /// 只进行存储。
@@ -100,11 +101,12 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       return true;
     }
     final st = await SyncTag.create();
-    await oMemoryGroup.resetByEntity(
-      memoryGroup: memoryGroupAb(),
-      syncTag: st,
-      isCloudTableWithSync: true,
-    );
+    // await oMemoryGroup.resetByEntity(
+    //   memoryGroup: memoryGroupAb(),
+    //   syncTag: st,
+    //   isCloudTableWithSync: true,
+    // );
+    throw "TODO";
     SmartDialog.showToast("保存成功");
     return true;
   }

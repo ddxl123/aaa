@@ -1,0 +1,70 @@
+
+// ignore_for_file: non_constant_identifier_names
+part of httper;
+
+/// 
+@JsonSerializable()
+class FragmentModifyFragmentDto extends BaseObject{
+
+    /// 
+    Fragment fragment;
+
+    /// 该碎片要保存到的碎片组的位置集合。需要把原来的位置删除后在新增。若元素为 null，则表示插入到了 root
+    List<int?> fragment_group_ids_list;
+
+
+FragmentModifyFragmentDto({
+
+    required this.fragment,
+
+    required this.fragment_group_ids_list,
+
+});
+  factory FragmentModifyFragmentDto.fromJson(Map<String, dynamic> json) => _$FragmentModifyFragmentDtoFromJson(json);
+    
+  @override
+  Map<String, dynamic> toJson() => _$FragmentModifyFragmentDtoToJson(this);
+  
+  
+          
+  @JsonKey(ignore: true)
+  int? code;
+
+  @JsonKey(ignore: true)
+  HttperException? httperException;
+  
+  @JsonKey(ignore: true)
+  StackTrace? st;
+
+  @JsonKey(ignore: true)
+  FragmentModifyFragmentVo? vo;
+
+  /// 内部抛出的异常将在 [otherException] 中捕获。
+  Future<T> handleCode<T>({
+    // code 为 null 时的异常（request 函数内部捕获到的异常）
+    Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
+
+    // message: 修改成功！
+    // explain: 修改某个碎片，会连带修改的碎片组位置
+    required Future<T> Function(String showMessage) code140301,
+    
+    }) async {
+    try {
+
+        if (code == 140301) return await code140301(httperException!.showMessage);
+
+    } catch (e, st) {
+      if (otherException == null) rethrow;
+      if (e is HttperException) {
+        return await otherException(code, e, st);
+      }
+      return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: e.toString()), st);
+    }
+    if (code != null) {
+      if(otherException==null) throw HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！');
+      return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！'), st!);
+    }
+    if(otherException==null) throw httperException!;
+    return await otherException(code, httperException!, st!);
+  }
+}

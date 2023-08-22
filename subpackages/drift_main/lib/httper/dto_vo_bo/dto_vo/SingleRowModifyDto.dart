@@ -4,26 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class DataDownloadForFragmentGroupDto extends BaseObject{
+class SingleRowModifyDto extends BaseObject{
 
-    /// 需要查询的碎片组id
-    String fragment_group_id;
+    /// 要修改的行的表
+    String table_name;
 
-    /// 填充字段1
-    bool? dto_padding_1;
+    /// 要修改的行
+    dynamic row;
 
 
-DataDownloadForFragmentGroupDto({
+SingleRowModifyDto({
 
-    required this.fragment_group_id,
+    required this.table_name,
 
-    required this.dto_padding_1,
+    required this.row,
 
 });
-  factory DataDownloadForFragmentGroupDto.fromJson(Map<String, dynamic> json) => _$DataDownloadForFragmentGroupDtoFromJson(json);
+  factory SingleRowModifyDto.fromJson(Map<String, dynamic> json) => _$SingleRowModifyDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$DataDownloadForFragmentGroupDtoToJson(this);
+  Map<String, dynamic> toJson() => _$SingleRowModifyDtoToJson(this);
   
   
           
@@ -37,31 +37,34 @@ DataDownloadForFragmentGroupDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  DataDownloadForFragmentGroupVo? vo;
+  SingleRowModifyVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
-    required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
+    Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
-    // message: 下载成功，正在存储...
-    // explain: 
-    required Future<T> Function(String showMessage, DataDownloadForFragmentGroupVo vo) code40101,
+    // message: 修改成功！
+    // explain: 修改的成功响应
+    required Future<T> Function(String showMessage, SingleRowModifyVo vo) code110101,
     
     }) async {
     try {
 
-        if (code == 40101) return await code40101(httperException!.showMessage, vo!);
+        if (code == 110101) return await code110101(httperException!.showMessage, vo!);
 
     } catch (e, st) {
+      if (otherException == null) rethrow;
       if (e is HttperException) {
         return await otherException(code, e, st);
       }
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: e.toString()), st);
     }
     if (code != null) {
+      if(otherException==null) throw HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！');
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！'), st!);
     }
+    if(otherException==null) throw httperException!;
     return await otherException(code, httperException!, st!);
   }
 }

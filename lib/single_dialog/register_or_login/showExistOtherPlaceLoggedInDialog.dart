@@ -50,7 +50,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                           child: const Text("下线", style: TextStyle(color: Colors.red)),
                           onPressed: () async {
                             final result = await request(
-                              path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+                              path: HttpPath.POST__REGISTER_OR_LOGIN_LOGOUT,
                               dtoData: LogoutDto(
                                 be_active: false,
                                 current_device_and_token_bo: vo.current_device_and_token_bo,
@@ -108,7 +108,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
                 child: const Text("下线全部并登录", style: TextStyle(color: Colors.red)),
                 onPressed: () async {
                   final result = await request(
-                    path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+                    path: HttpPath.POST__REGISTER_OR_LOGIN_LOGOUT,
                     dtoData: LogoutDto(
                       be_active: false,
                       current_device_and_token_bo: vo.current_device_and_token_bo,
@@ -148,7 +148,7 @@ Future<bool> showExistOtherPlaceLoggedInDialog({
               child: const Text("取消本次登录", style: TextStyle(color: Colors.grey)),
               onPressed: () async {
                 final result = await request(
-                  path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+                  path: HttpPath.POST__REGISTER_OR_LOGIN_LOGOUT,
                   dtoData: LogoutDto(
                     be_active: false,
                     current_device_and_token_bo: vo.current_device_and_token_bo,

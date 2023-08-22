@@ -38,7 +38,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
             token: clientSyncInfo.token!,
           );
           final result = await request(
-            path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+            path: HttpPath.POST__REGISTER_OR_LOGIN_LOGOUT,
             dtoData: LogoutDto(
               be_active: true,
               current_device_and_token_bo: dt,
@@ -61,7 +61,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
             },
             code10204: (String showMessage) async {
               // 退出成功
-              await db.registerOrLoginDAO.clientLogout(syncTag: await SyncTag.create());
+              await db.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
               logger.outNormal(show: showMessage);
               SmartDialog.dismiss(status: SmartStatus.dialog);
@@ -69,7 +69,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
             },
             code10205: (String showMessage) async {
               // 退出成功
-              await db.registerOrLoginDAO.clientLogout(syncTag: await SyncTag.create());
+              await db.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
               logger.outNormal(show: "退出成功！", print: "$showMessage\n但当前操作是【本地已登录，用户对其主动下线】的操作，因此给予权限。");
               SmartDialog.dismiss(status: SmartStatus.dialog);

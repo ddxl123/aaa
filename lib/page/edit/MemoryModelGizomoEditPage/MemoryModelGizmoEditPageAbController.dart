@@ -102,19 +102,21 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   /// 将 [copyMemoryModelAb] 的数据传递给 [originalMemoryModelAb]，并对数据库进行修改。
   Future<void> save() async {
-    final st = await SyncTag.create();
-    await db.updateDAO.resetMemoryModel(
-      originalMemoryModelReset: () async {
-        await originalMemoryModelAb().resetByEntity(
-          memoryModel: copyMemoryModelAb(),
-          syncTag: st,
-          isCloudTableWithSync: true,
-        );
-      },
-      syncTag: st,
-    );
-    originalMemoryModelAb.refreshForce();
-    SmartDialog.showToast("保存成功！");
+    throw "TODO";
+    // final st = await SyncTag.create();
+    // await db.updateDAO.resetMemoryModel(
+    //   originalMemoryModelReset: () async {
+    //     throw "TODO";
+    //     // await originalMemoryModelAb().resetByEntity(
+    //     //   memoryModel: copyMemoryModelAb(),
+    //     //   syncTag: st,
+    //     //   isCloudTableWithSync: true,
+    //     // );
+    //   },
+    //   syncTag: st,
+    // );
+    // originalMemoryModelAb.refreshForce();
+    // SmartDialog.showToast("保存成功！");
   }
 
   void changeKeyword() {

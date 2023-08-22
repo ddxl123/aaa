@@ -9,8 +9,8 @@ class SingleRowQueryDto extends BaseObject{
     /// 要查询的字段对应的表
     String table_name;
 
-    /// 要查询的行的 id，可能是 Long 类型，也可能是 String 类型
-    dynamic row_id;
+    /// 要查询的行的 id
+    int row_id;
 
 
 SingleRowQueryDto({
@@ -42,7 +42,7 @@ SingleRowQueryDto({
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
-    required Future<T> Function(int? code, HttperException httperException, StackTrace st) otherException,
+    Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
     // message: 查询成功！
     // explain: 任意表单行查询，敏感信息将被置空或加密
@@ -54,14 +54,17 @@ SingleRowQueryDto({
         if (code == 90101) return await code90101(httperException!.showMessage, vo!);
 
     } catch (e, st) {
+      if (otherException == null) rethrow;
       if (e is HttperException) {
         return await otherException(code, e, st);
       }
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: e.toString()), st);
     }
     if (code != null) {
+      if(otherException==null) throw HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！');
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！'), st!);
     }
+    if(otherException==null) throw httperException!;
     return await otherException(code, httperException!, st!);
   }
 }

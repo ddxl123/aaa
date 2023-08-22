@@ -33,7 +33,7 @@ class MineHomeAbController extends AbController {
         fileUint8List: null,
         oldCloudPath: globalAbController.loggedInUser()?.avatar_cloud_path,
       ),
-      fileRequestMethod: FileRequestMethod.forceCloud,
+      fileRequestMethod: FileRequestMethod.download,
       isUpdateCache: false,
       onSuccess: (FilePathWrapper filePathWrapper) async {
         globalAbController.loggedInUser.refreshInevitable((obj) => obj?..avatar_cloud_path = filePathWrapper.newCloudPath);

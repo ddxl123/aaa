@@ -9,24 +9,20 @@ class RFragment2FragmentGroups extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
-  @override
-  bool get withoutRowId => true;
-
-
   BoolColumn get client_be_selected => boolean().named("client_be_selected")();
 
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 
   @ReferenceTo([FragmentGroups])
-  TextColumn get fragment_group_id => text().named("fragment_group_id").nullable()();
+  IntColumn get fragment_group_id => integer().named("fragment_group_id").nullable()();
 
   @ReferenceTo([Fragments])
-  TextColumn get fragment_id => text().named("fragment_id")();
+  IntColumn get fragment_id => integer().named("fragment_id")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();
 
-  TextColumn get id => text().named("id")();
+  IntColumn get id => integer().named("id")();
 
   DateTimeColumn get updated_at => dateTime().named("updated_at")();
 

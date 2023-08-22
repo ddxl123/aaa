@@ -1,11 +1,13 @@
 import 'package:aaa/page/edit/FragmentGroupGizmoEditPage.dart';
-import 'package:aaa/page/list/FragmentGroupListPageController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:tools/tools.dart';
 
-Future<void> showFragmentGroupConfigDialog({required FragmentGroupListPageController c, required Ab<FragmentGroup?> currentDynamicFragmentGroupAb}) async {
+import '../page/list/FragmentGroupListSelfPageController.dart';
+
+Future<void> showFragmentGroupConfigDialog({required FragmentGroupListSelfPageController c, required Ab<FragmentGroup?> currentDynamicFragmentGroupAb}) async {
   return await showCustomDialog(
     builder: (_) {
       return _PrivatePublishDialogWidget(
@@ -19,7 +21,7 @@ Future<void> showFragmentGroupConfigDialog({required FragmentGroupListPageContro
 class _PrivatePublishDialogWidget extends StatefulWidget {
   const _PrivatePublishDialogWidget({super.key, required this.currentDynamicFragmentGroupAb, required this.c});
 
-  final FragmentGroupListPageController c;
+  final FragmentGroupListSelfPageController c;
   final Ab<FragmentGroup?> currentDynamicFragmentGroupAb;
 
   @override
@@ -113,36 +115,22 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                             single(number: "4", text: "即使取消了发布，对该碎片组进行增、删、改、移等操作，已下载过的用户仍然会被通知更新。"),
                           ],
                           onOk: () async {
-                            final st = await SyncTag.create();
-                            await RefFragmentGroups(
-                              self: () async {
-                                await widget.currentDynamicFragmentGroupAb()!.reset(
-                                      be_publish: false.toValue(),
-                                      client_be_selected: 0.toAbsent(),
-                                      creator_user_id: 0.toAbsent(),
-                                      father_fragment_groups_id: 0.toAbsent(),
-                                      jump_to_fragment_groups_id: 0.toAbsent(),
-                                      title: 0.toAbsent(),
-                                      profile: 0.toAbsent(),
-                                      client_cover_local_path: 0.toAbsent(),
-                                      cover_cloud_path: 0.toAbsent(),
-                                      client_be_cloud_path_upload: 0.toAbsent(),
-                                      syncTag: st,
-                                      isCloudTableWithSync: true,
-                                    );
+                            final result = await request(
+                              path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_MODIFY,
+                              dtoData: SingleRowModifyDto(
+                                table_name: db.fragmentGroups.actualTableName,
+                                row: widget.currentDynamicFragmentGroupAb()!..be_publish = false,
+                              ),
+                              parseResponseVoData: SingleRowModifyVo.fromJson,
+                            );
+                            await result.handleCode(
+                              code110101: (String showMessage, SingleRowModifyVo vo) async {
+                                setState(() {});
+                                widget.currentDynamicFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = v);
+                                widget.c.thisRefresh();
+                                Navigator.pop(context);
                               },
-                              fragmentGroupTags: null,
-                              rFragment2FragmentGroups: null,
-                              fragmentGroups_father_fragment_groups_id: null,
-                              fragmentGroups_jump_to_fragment_groups_id: null,
-                              userComments: null,
-                              userLikes: null,
-                              order: 0,
-                            ).run();
-                            setState(() {});
-                            widget.currentDynamicFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = false);
-                            widget.c.thisRefresh();
-                            Navigator.pop(context);
+                            );
                           },
                           onCancel: () {
                             Navigator.pop(context);
@@ -195,36 +183,22 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                             single(number: "4", text: "新增：更新或重新下载后，新增的会被保留。"),
                           ],
                           onOk: () async {
-                            final st = await SyncTag.create();
-                            await RefFragmentGroups(
-                              self: () async {
-                                await widget.currentDynamicFragmentGroupAb()!.reset(
-                                      be_publish: v.toValue(),
-                                      client_be_selected: 0.toAbsent(),
-                                      creator_user_id: 0.toAbsent(),
-                                      father_fragment_groups_id: 0.toAbsent(),
-                                      jump_to_fragment_groups_id: 0.toAbsent(),
-                                      title: 0.toAbsent(),
-                                      profile: 0.toAbsent(),
-                                      cover_cloud_path: 0.toAbsent(),
-                                      client_cover_local_path: 0.toAbsent(),
-                                      client_be_cloud_path_upload: 0.toAbsent(),
-                                      syncTag: st,
-                                      isCloudTableWithSync: true,
-                                    );
+                            final result = await request(
+                              path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_MODIFY,
+                              dtoData: SingleRowModifyDto(
+                                table_name: db.fragmentGroups.actualTableName,
+                                row: widget.currentDynamicFragmentGroupAb()!..be_publish = true,
+                              ),
+                              parseResponseVoData: SingleRowModifyVo.fromJson,
+                            );
+                            await result.handleCode(
+                              code110101: (String showMessage, SingleRowModifyVo vo) async {
+                                setState(() {});
+                                widget.currentDynamicFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = v);
+                                widget.c.thisRefresh();
+                                Navigator.pop(context);
                               },
-                              fragmentGroupTags: null,
-                              rFragment2FragmentGroups: null,
-                              fragmentGroups_father_fragment_groups_id: null,
-                              fragmentGroups_jump_to_fragment_groups_id: null,
-                              userComments: null,
-                              userLikes: null,
-                              order: 0,
-                            ).run();
-                            setState(() {});
-                            widget.currentDynamicFragmentGroupAb.refreshInevitable((obj) => obj!..be_publish = v);
-                            widget.c.thisRefresh();
-                            Navigator.pop(context);
+                            );
                           },
                           onCancel: () {
                             Navigator.pop(context);

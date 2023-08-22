@@ -24,30 +24,31 @@ Future<void> showCreateArticleDialog() async {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
-          await db.insertDAO.insertMemoryModel(
-            memoryModelsCompanion: Crt.memoryModelsCompanion(
-              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-              title: tec.text,
-              father_memory_model_id: null.toValue(),
-              button_algorithm_a: null.toValue(),
-              button_algorithm_b: null.toValue(),
-              button_algorithm_c: null.toValue(),
-              button_algorithm_remark: null.toValue(),
-              button_algorithm_usage_status: AlgorithmUsageStatus.a,
-              familiarity_algorithm_a: null.toValue(),
-              familiarity_algorithm_b: null.toValue(),
-              familiarity_algorithm_c: null.toValue(),
-              familiarity_algorithm_remark: null.toValue(),
-              familiarity_algorithm_usage_status: AlgorithmUsageStatus.a,
-              next_time_algorithm_a: null.toValue(),
-              next_time_algorithm_b: null.toValue(),
-              next_time_algorithm_c: null.toValue(),
-              next_time_algorithm_remark: null.toValue(),
-              next_time_algorithm_usage_status: AlgorithmUsageStatus.a,
-            ),
-            syncTag: await SyncTag.create(),
-            isCloudTableWithSync: true,
-          );
+          throw "todo";
+          // await db.insertDAO.insertMemoryModel(
+          //   memoryModelsCompanion: Crt.memoryModelsCompanion(
+          //     creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+          //     title: tec.text,
+          //     father_memory_model_id: null.toValue(),
+          //     button_algorithm_a: null.toValue(),
+          //     button_algorithm_b: null.toValue(),
+          //     button_algorithm_c: null.toValue(),
+          //     button_algorithm_remark: null.toValue(),
+          //     button_algorithm_usage_status: AlgorithmUsageStatus.a,
+          //     familiarity_algorithm_a: null.toValue(),
+          //     familiarity_algorithm_b: null.toValue(),
+          //     familiarity_algorithm_c: null.toValue(),
+          //     familiarity_algorithm_remark: null.toValue(),
+          //     familiarity_algorithm_usage_status: AlgorithmUsageStatus.a,
+          //     next_time_algorithm_a: null.toValue(),
+          //     next_time_algorithm_b: null.toValue(),
+          //     next_time_algorithm_c: null.toValue(),
+          //     next_time_algorithm_remark: null.toValue(),
+          //     next_time_algorithm_usage_status: AlgorithmUsageStatus.a,
+          //   ),
+          //   syncTag: await SyncTag.create(),
+          //   isCloudTableWithSync: true,
+          // );
           Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshMemoryModels();
 
           SmartDialog.dismiss();

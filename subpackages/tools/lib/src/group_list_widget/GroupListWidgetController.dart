@@ -181,6 +181,7 @@ abstract class GroupListWidgetController<G, U, UR> extends AbController {
     groupChain.refreshForce();
 
     groupChainScrollController.animateTo(
+      // TODO: 有时候会出现这个异常 Failed assertion: line 105 pos 12: '_positions.isNotEmpty': ScrollController not attached to any scroll views.
       groupChainScrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutCirc,

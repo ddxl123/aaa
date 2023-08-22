@@ -30,17 +30,11 @@ part 'table/Base.dart';
 
 part 'custom/sync_tag.dart';
 
-part 'custom/sync_curd.dart';
-
 part 'drift_db_init.dart';
 
 part 'DriftDb.drift.dart';
 
-part 'DriftDb.ref.dart';
-
 part 'DriftDb.crt.dart';
-
-part 'DriftDb.reset.dart';
 
 
 part 'table/entity/client/ClientSyncInfos.dart';

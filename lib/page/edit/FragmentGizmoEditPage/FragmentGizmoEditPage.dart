@@ -65,12 +65,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
       leading: IconButton(
         icon: const FaIcon(FontAwesomeIcons.xmark, color: Colors.red),
         onPressed: () async {
-          final result = await c.currentPerformerAb().equalAll(fragmentGizmoEditPageAbController: c);
-          if (result.isExistModified) {
-            SmartDialog.showToast("存在修改未保存！");
-          } else {
-            Navigator.pop(c.context);
-          }
+          c.abBack();
         },
       ),
       actions: [
@@ -166,13 +161,8 @@ class FragmentGizmoEditPage extends StatelessWidget {
                     return IconButton(
                       icon: Icon(Icons.u_turn_left),
                       onPressed: () async {
-                        final result = await c.currentPerformerAb().reload(fragmentGizmoEditPageAbController: c, recent: null);
+                        await c.currentPerformerAb().reload(fragmentGizmoEditPageAbController: c, recent: null);
                         c.currentPerformerAb.refreshForce();
-                        if (result) {
-                          logger.outNormal(show: "已恢复至修改前");
-                        } else {
-                          logger.outNormal(show: "无修改，无需恢复");
-                        }
                       },
                     );
                   },

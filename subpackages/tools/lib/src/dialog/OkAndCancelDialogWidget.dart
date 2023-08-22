@@ -16,8 +16,10 @@ class OkAndCancelDialogWidget extends StatelessWidget {
     this.columnChildren,
     this.topRightAction,
     this.bottomLiftAction,
+    this.cancelLeftText,
     this.cancelText,
     required this.okText,
+    this.onCancelLeft,
     this.onCancel,
     this.onOk,
     this.topKeepWidget,
@@ -31,8 +33,10 @@ class OkAndCancelDialogWidget extends StatelessWidget {
   final Widget? topRightAction;
   final Widget? bottomLiftAction;
   final List<Widget>? columnChildren;
+  final String? cancelLeftText;
   final String? cancelText;
   final String okText;
+  final FutureOr<void> Function()? onCancelLeft;
   final FutureOr<void> Function()? onCancel;
   final FutureOr<void> Function()? onOk;
   final Widget? topKeepWidget;
@@ -59,6 +63,14 @@ class OkAndCancelDialogWidget extends StatelessWidget {
         ...(columnChildren ?? []),
       ],
       bottomHorizontalButtonWidgets: [
+        cancelLeftText == null
+            ? Container()
+            : TextButton(
+                child: Text(cancelLeftText!),
+                onPressed: () async {
+                  await onCancelLeft?.call();
+                },
+              ),
         cancelText == null
             ? Container()
             : TextButton(

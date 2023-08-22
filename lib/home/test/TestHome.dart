@@ -125,12 +125,6 @@ class TestHome extends StatelessWidget {
                       },
                     ),
                     ElevatedButton(
-                      child: const Text('上传 tag 最小的一组 sync 数据'),
-                      onPressed: () async {
-                        Aber.find<GlobalAbController>().uploadSingleGroupSync();
-                      },
-                    ),
-                    ElevatedButton(
                       child: const Text('上传离线文件(10个10个上传)'),
                       onPressed: () async {
                         Aber.find<GlobalAbController>().uploadAllOfflineFiles(count: 10);
@@ -140,7 +134,7 @@ class TestHome extends StatelessWidget {
                       child: Text("插入初始知识库标签"),
                       onPressed: () async {
                         final modifyResult = await request(
-                          path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_MODIFY_KNOWLEDGE_BASE_CATEGORYS,
+                          path: HttpPath.POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_MODIFY_KNOWLEDGE_BASE_CATEGORYS,
                           dtoData: KnowledgeBaseCategoryModifyDto(
                             modify_knowledge_base_category: ModifyKnowledgeBaseCategory(
                               selected_sub_categorys: ["英语四级", "考研英语", "高考古诗300首"],
@@ -163,7 +157,7 @@ class TestHome extends StatelessWidget {
                           code30201: (String showMessage) async {
                             logger.outNormal(show: showMessage);
                             final queryResult = await request(
-                              path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
+                              path: HttpPath.POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
                               dtoData: KnowledgeBaseCategoryQueryDto(
                                 big_category: null,
                                 dto_padding_1: null,
@@ -181,7 +175,7 @@ class TestHome extends StatelessWidget {
                             );
 
                             final querySubResult = await request(
-                              path: HttpPath.NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
+                              path: HttpPath.POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS,
                               dtoData: KnowledgeBaseCategoryQueryDto(
                                 big_category: "英语",
                                 dto_padding_1: null,
@@ -200,29 +194,6 @@ class TestHome extends StatelessWidget {
                           },
                           otherException: (int? code, HttperException httperException, StackTrace st) async {
                             logger.outError(show: httperException.showMessage, error: httperException.debugMessage);
-                          },
-                        );
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text('test'),
-                      onPressed: () async {
-                        await db.transaction(
-                          () async {
-                            await db.batch(
-                              (batch) {
-                                batch.insert(
-                                  db.tests,
-                                  Crt.testsCompanion(
-                                    client_a: "test",
-                                    client_content: "ccc",
-                                    created_at: DateTime.now(),
-                                    updated_at: DateTime.now(),
-                                  ),
-                                );
-                              },
-                            );
-                            throw "ddd";
                           },
                         );
                       },

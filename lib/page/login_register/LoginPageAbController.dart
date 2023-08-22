@@ -125,7 +125,7 @@ class LoginPageAbController extends AbController {
     final lw = loginWrapper();
     if (lw is EmailLoginWrapper) {
       final result = await request(
-        path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
+        path: HttpPath.POST__REGISTER_OR_LOGIN_SEND_OR_VERIFY,
         dtoData: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_send,
           email: lw.getEditContent(),
@@ -189,7 +189,7 @@ class LoginPageAbController extends AbController {
       final deviceInfo = await DeviceInfoSingle.info();
 
       final result = await request(
-        path: HttpPath.REGISTER_OR_LOGIN_SEND_OR_VERIFY,
+        path: HttpPath.POST__REGISTER_OR_LOGIN_SEND_OR_VERIFY,
         dtoData: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_verify,
           email: lw.getEditContent(),
@@ -243,7 +243,6 @@ class LoginPageAbController extends AbController {
       isClearDbWhenUserDiff: () async {
         return await showExistClientLoggedInHandleDialog();
       },
-      syncTag: await SyncTag.create(),
     );
     // 未取消登录
     if (isLoginSuccess) {
@@ -257,7 +256,7 @@ class LoginPageAbController extends AbController {
     // 取消了登录。把注销当前登录会话。
     else {
       final result = await request(
-        path: HttpPath.REGISTER_OR_LOGIN_LOGOUT,
+        path: HttpPath.POST__REGISTER_OR_LOGIN_LOGOUT,
         dtoData: LogoutDto(
           be_active: false,
           current_device_and_token_bo: vo.current_device_and_token_bo,

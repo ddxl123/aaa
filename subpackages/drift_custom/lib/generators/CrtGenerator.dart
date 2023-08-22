@@ -7,7 +7,6 @@ class CrtGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) {
     final allContent = StringBuffer();
-    final allExtContent = StringBuffer();
     try {
       // 不带 s
       final localTableClasses = <String>[];
@@ -18,58 +17,28 @@ class CrtGenerator extends Generator {
       }
 
       for (var cls in library.classes) {
-        if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('UpdateCompanion')) {
-          final companionName = cls.displayName;
-          final classNoSName = companionName.replaceAll(RegExp(r'(sCompanion)$'), '');
-          final classWithSName = '${classNoSName}s';
-          final params = cls.getNamedConstructor('insert')!.parameters;
-          final singleContent = '''
-          static $companionName ${companionName.toCamelCase}({${params.map(
-                    (e) {
-                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
-                      return isWriteBlank ? '${e.type}? ${e.name}' : 'required ${e.type} ${e.name}';
-                    },
-                  ).where(
-                    (element) => element != '',
-                  ).join(',')},}) {
-            return $companionName(${params.map(
-                    (e) {
-                      final isWriteBlank = e.name == 'id' || e.name == 'created_at' || e.name == 'updated_at';
-                      return isWriteBlank
-                          ? '${e.name}: ${e.name} == null ? const Value.absent() : ${e.isRequired ? 'Value(${e.name})' : e.name}'
-                          : '${e.name}: ${e.isRequired ? 'Value(${e.name})' : e.name}';
-                    },
-                  ).where(
-                    (element) => element != '',
-                  ).join(',')},);
-          }
-          ''';
-
-          allContent.writeln(singleContent);
-          final requiredContent = """{
-              required SyncTag syncTag,
-              ${localTableClasses.contains(classNoSName) ? "" : "required bool isCloudTableWithSync,"}
-              ${localTableClasses.contains(classNoSName) ? "" : "required bool isCloudTableAutoId,"}
-              required bool isReplaceWhenIdSame,
-          }""";
-          final singleExtContent = '''
-          extension ${companionName}Ext on $companionName {
-            Future<$classNoSName> insert($requiredContent) 
-            async {
-              final ins = DriftDb.instance;
-              return await ins.insertReturningWith(
-                ins.${classWithSName.toCamelCase},
-                entity: this,
-                syncTag: syncTag,
-                isCloudTableWithSync: ${localTableClasses.contains(classNoSName) ? "false," : "isCloudTableWithSync,"}
-                isCloudTableAutoId: ${localTableClasses.contains(classNoSName) ? "false," : "isCloudTableAutoId,"}
-                isReplaceWhenIdSame: isReplaceWhenIdSame,
-              );
+        if (cls.allSupertypes.first.getDisplayString(withNullability: false).contains('DataClass')) {
+          final requiredContent = StringBuffer();
+          final returnContent = StringBuffer();
+          for (var element in cls.fields) {
+            if (element.name == "hashCode") {
+            } else if (element.name == "id") {
+              returnContent.writeln("${element.name}: -1,");
+            } else if (element.name == "created_at" || element.name == "updated_at") {
+              returnContent.writeln("${element.name}: DateTime(0),");
+            } else {
+              requiredContent.writeln("  required ${element.getDisplayString(withNullability: true)},");
+              returnContent.writeln("     ${element.name}: ${element.name},");
             }
           }
-          ''';
 
-          allExtContent.writeln(singleExtContent);
+          allContent.writeln(" static ${cls.name} ${cls.name[0].toLowerCase() + cls.name.substring(1, cls.name.length)}Entity({");
+          allContent.writeln(requiredContent);
+          allContent.writeln(" }) {");
+          allContent.writeln("   return ${cls.name}(");
+          allContent.writeln(returnContent);
+          allContent.writeln("   );");
+          allContent.writeln(" }");
         }
       }
     } catch (e, st) {
@@ -92,17 +61,10 @@ class CrtGenerator extends Generator {
 // ignore_for_file: non_constant_identifier_names
 part of drift_db;
 
-/// 这个类在创建表对象时，可以让每个 column 都能被编辑器提示，以防遗漏。
-/// 
-/// id createdAt updatedAt 已经在 [DriftSyncExt.insertReturningWith] 中自动更新了。
-///
-/// 使用方式查看 [withRefs]。
 class Crt {
   Crt._();
   $allContent
 }
-
-$allExtContent
     ''';
   }
 }

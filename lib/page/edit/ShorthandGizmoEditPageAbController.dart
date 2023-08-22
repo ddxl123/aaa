@@ -32,37 +32,38 @@ class ShorthandGizmoEditPageAbController extends AbController {
   }
 
   Future<void> save() async {
-    final st = await SyncTag.create();
-    if (initShorthand == null) {
-      await db.insertDAO.insertShorthand(
-        shorthandsCompanion: Crt.shorthandsCompanion(
-          content: getCurrentContent(),
-          creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-        ),
-        syncTag: st,
-        isCloudTableWithSync: true,
-      );
-      await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
-      SmartDialog.showToast("创建成功！");
-    } else {
-      if (getCurrentContent() != initShorthand!.content) {
-        await db.updateDAO.resetShorthand(
-          syncTag: await SyncTag.create(),
-          originalShorthandReset: () async {
-            await initShorthand!.reset(
-              content: getCurrentContent().toValue(),
-              creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id.toValue(),
-              syncTag: st,
-              isCloudTableWithSync: true,
-            );
-          },
-        );
-        await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
-        SmartDialog.showToast("修改成功！");
-      } else {
-        SmartDialog.showToast("无修改！");
-      }
-    }
+    throw "TODO";
+    // final st = await SyncTag.create();
+    // if (initShorthand == null) {
+    //   await db.insertDAO.insertShorthand(
+    //     shorthandsCompanion: Crt.shorthandsCompanion(
+    //       content: getCurrentContent(),
+    //       creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+    //     ),
+    //     syncTag: st,
+    //     isCloudTableWithSync: true,
+    //   );
+    //   await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
+    //   SmartDialog.showToast("创建成功！");
+    // } else {
+    //   if (getCurrentContent() != initShorthand!.content) {
+    //     await db.updateDAO.resetShorthand(
+    //       syncTag: await SyncTag.create(),
+    //       originalShorthandReset: () async {
+    //         await initShorthand!.reset(
+    //           content: getCurrentContent().toValue(),
+    //           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id.toValue(),
+    //           syncTag: st,
+    //           isCloudTableWithSync: true,
+    //         );
+    //       },
+    //     );
+    //     await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
+    //     SmartDialog.showToast("修改成功！");
+    //   } else {
+    //     SmartDialog.showToast("无修改！");
+    //   }
+    // }
   }
 
   @override
