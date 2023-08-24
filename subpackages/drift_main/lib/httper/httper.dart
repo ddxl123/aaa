@@ -55,10 +55,16 @@ part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagDto.dart';
 part 'dto_vo_bo/dto_vo/FragmentGroupTagNewFragmentGroupTagVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/FragmentGroupCountQueryDto.dart';
+part 'dto_vo_bo/dto_vo/FragmentGroupAllSubFragmentGroupsQueryDto.dart';
 
 
-part 'dto_vo_bo/dto_vo/FragmentGroupCountQueryVo.dart';
+part 'dto_vo_bo/dto_vo/FragmentGroupAllSubFragmentGroupsQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupAllSubFragmentsCountQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupAllSubFragmentsCountQueryVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/FragmentGroupModifyDto.dart';
@@ -71,6 +77,36 @@ part 'dto_vo_bo/dto_vo/FragmentGroupOneSubQueryDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/FragmentGroupOneSubQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsDeleteDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsDeleteVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsFragmentIdsWithRQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsFragmentIdsWithRQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsFragmentsCountQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsFragmentsCountQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsMoveDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsMoveVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsReuseDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentGroupsReuseVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/FragmentInsertFragmentDto.dart';
@@ -91,6 +127,24 @@ part 'dto_vo_bo/dto_vo/FragmentQueryFragmentGroupWithRDto.dart';
 part 'dto_vo_bo/dto_vo/FragmentQueryFragmentGroupWithRVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/FragmentsDeleteDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentsDeleteVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentsMoveDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentsMoveVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentsReuseDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/FragmentsReuseVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/KnowledgeBaseCategoryModifyDto.dart';
 
 
@@ -107,6 +161,36 @@ part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/KnowledgeBaseFragmentGroupQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupFragmentIdsQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupFragmentIdsQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupFragmentsCountQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupFragmentsCountQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupFragmentsQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupFragmentsQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupSelectedFragmentsInsertDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupSelectedFragmentsInsertVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupsQueryDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupsQueryVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/PersonalHomePageForPublishPageDto.dart';

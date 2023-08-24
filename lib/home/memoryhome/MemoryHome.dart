@@ -1,3 +1,4 @@
+import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/home/memoryhome/MemoryHomeAbController.dart';
 import 'package:aaa/page/list/MemoryModeListPage.dart';
 import 'package:tools/tools.dart';
@@ -30,7 +31,7 @@ class _MemoryHomeState extends State<MemoryHome> {
             controller: putController.tabController,
             children: [
               KeepStateWidget(
-                child: const MemoryGroupListPage(),
+                child: MemoryGroupListPage(user: Aber.find<GlobalAbController>().loggedInUser()!),
               ),
               KeepStateWidget(
                 child: const MemoryModeListPage(),

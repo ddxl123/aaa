@@ -8,7 +8,7 @@ class HttpPath {
   HttpPath._();
 
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://192.168.1.3:2814';
+  static const String BASE_PATH_LOCAL = 'http://192.168.1.2:2814';
   
   static const String POST__REGISTER_OR_LOGIN_CHECK_LOGIN = 'POST_/register_or_login/check_login';
 
@@ -18,19 +18,37 @@ class HttpPath {
 
   static const String POST__LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = 'POST_/login_required/data_upload/once_syncs';
 
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_ALL_SUB_FRAGMENT_GROUPS_QUERY = 'POST_/no_login_required/fragment_group_handle/all_sub_fragment_groups_query';
+
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUP_ONE_SUB_QUERY = 'POST_/no_login_required/fragment_group_handle/fragment_group_one_sub_query';
 
-  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_MODIFY_FRAGMENT_GROUP = 'POST_/no_login_required/fragment_group_handle/modify_fragment_group';
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUPS_DELETE = 'POST_/no_login_required/fragment_group_handle/fragment_groups_delete';
 
-  static const String GET__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_QUERY_FRAGMENT_GROUP_COUNT = 'GET_/no_login_required/fragment_group_handle/query_fragment_group_count';
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUPS_FRAGMENT_IDS_WITH_R_QUERY = 'POST_/no_login_required/fragment_group_handle/fragment_groups_fragment_ids_with_r_query';
+
+  static const String GET__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUPS_FRAGMENTS_COUNT_QUERY = 'GET_/no_login_required/fragment_group_handle/fragment_groups_fragments_count_query';
+
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUPS_MOVE = 'POST_/no_login_required/fragment_group_handle/fragment_groups_move';
+
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUPS_REUSE = 'POST_/no_login_required/fragment_group_handle/fragment_groups_reuse';
+
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_MODIFY_FRAGMENT_GROUP = 'POST_/no_login_required/fragment_group_handle/modify_fragment_group';
 
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_FRAGMENT_GROUP_ID = 'POST_/no_login_required/fragment_group_tag/by_fragment_group_id';
 
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_TAG_BY_LIKE = 'POST_/no_login_required/fragment_group_tag/by_like';
 
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_FRAGMENTS_DELETE = 'POST_/no_login_required/fragment_handle/fragments_delete';
+
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_FRAGMENTS_MOVE = 'POST_/no_login_required/fragment_handle/fragments_move';
+
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_FRAGMENTS_REUSE = 'POST_/no_login_required/fragment_handle/fragments_reuse';
+
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_INSERT_FRAGMENT = 'POST_/no_login_required/fragment_handle/insert_fragment';
 
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_MODIFY_FRAGMENT = 'POST_/no_login_required/fragment_handle/modify_fragment';
+
+  static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_FRAGMENT_GROUP_ALL_SUB_FRAGMENTS_COUNT_QUERY = 'POST_/no_login_required/fragment_handle/fragment_group_all_sub_fragments_count_query';
 
   static const String GET__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_QUERY_FRAGMENT_GROUP_WITH_R = 'GET_/no_login_required/fragment_handle/query_fragment_group_with_r';
 
@@ -39,6 +57,16 @@ class HttpPath {
   static const String POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_CATEGORYS = 'POST_/no_login_required/knowledge_base/query_knowledge_base_categorys';
 
   static const String POST__NO_LOGIN_REQUIRED_KNOWLEDGE_BASE_QUERY_KNOWLEDGE_BASE_FRAGMENT_GROUPS = 'POST_/no_login_required/knowledge_base/query_knowledge_base_fragment_groups';
+
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENT_IDS_QUERY = 'GET_/login_required/memory_group_handle/fragment_ids_query';
+
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENTS_COUNT_QUERY = 'GET_/login_required/memory_group_handle/fragments_count_query';
+
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENTS_QUERY = 'GET_/login_required/memory_group_handle/fragments_query';
+
+  static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUPS_QUERY = 'POST_/login_required/memory_group_handle/memory_groups_query';
+
+  static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_SELECTED_FRAGMENTS_INSERT = 'POST_/login_required/memory_group_handle/selected_fragments_insert';
 
   static const String POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE = 'POST_/no_login_required/personal_home_page/publish_page';
 

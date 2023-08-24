@@ -4,7 +4,7 @@ enum QueryFragmentWhereType {
   /// 查询全部碎片。
   all,
 
-  /// 查询 [Fragment.isSelected] 为 true 的碎片。
+  /// 查询 [Fragment.isSelectedUnit] 为 true 的碎片。
   selected,
 }
 

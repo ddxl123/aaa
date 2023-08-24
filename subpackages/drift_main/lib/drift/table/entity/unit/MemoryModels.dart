@@ -17,7 +17,7 @@ class MemoryModels extends CloudTableBase  {
 
   TextColumn get button_algorithm_remark => text().named("button_algorithm_remark").nullable()();
 
-  IntColumn get button_algorithm_usage_status => intEnum<AlgorithmUsageStatus>().named("button_algorithm_usage_status")();
+  TextColumn get button_algorithm_usage_status => textEnum<AlgorithmUsageStatus>().named("button_algorithm_usage_status")();
 
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
@@ -30,7 +30,7 @@ class MemoryModels extends CloudTableBase  {
 
   TextColumn get familiarity_algorithm_remark => text().named("familiarity_algorithm_remark").nullable()();
 
-  IntColumn get familiarity_algorithm_usage_status => intEnum<AlgorithmUsageStatus>().named("familiarity_algorithm_usage_status")();
+  TextColumn get familiarity_algorithm_usage_status => textEnum<AlgorithmUsageStatus>().named("familiarity_algorithm_usage_status")();
 
   @ReferenceTo([Fragments])
   IntColumn get father_memory_model_id => integer().named("father_memory_model_id").nullable()();
@@ -43,7 +43,7 @@ class MemoryModels extends CloudTableBase  {
 
   TextColumn get next_time_algorithm_remark => text().named("next_time_algorithm_remark").nullable()();
 
-  IntColumn get next_time_algorithm_usage_status => intEnum<AlgorithmUsageStatus>().named("next_time_algorithm_usage_status")();
+  TextColumn get next_time_algorithm_usage_status => textEnum<AlgorithmUsageStatus>().named("next_time_algorithm_usage_status")();
 
   TextColumn get title => text().named("title")();
 

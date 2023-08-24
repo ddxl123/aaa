@@ -27,6 +27,42 @@ FragmentGroupQueryWrapper({
 }
 
 @JsonSerializable()
+class FragmentGroupWithR  {
+    /// 
+    FragmentGroup? fragment_group;
+    /// 
+    RFragment2FragmentGroup r_fragment_2_fragment_groups;
+
+FragmentGroupWithR({
+    required this.fragment_group,
+    required this.r_fragment_2_fragment_groups,
+
+  });
+
+  factory FragmentGroupWithR.fromJson(Map<String, dynamic> json) => _$FragmentGroupWithRFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$FragmentGroupWithRToJson(this);
+}
+
+@JsonSerializable()
+class FragmentIdWithRsWrapper  {
+    /// 
+    int fragment_id;
+    /// 
+    List<RFragment2FragmentGroup> r_fragment_2_fragment_groups;
+
+FragmentIdWithRsWrapper({
+    required this.fragment_id,
+    required this.r_fragment_2_fragment_groups,
+
+  });
+
+  factory FragmentIdWithRsWrapper.fromJson(Map<String, dynamic> json) => _$FragmentIdWithRsWrapperFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$FragmentIdWithRsWrapperToJson(this);
+}
+
+@JsonSerializable()
 class FragmentQueryWrapper  {
     /// 要查询的目标用户，刚开始进入了哪个碎片组，就是哪个碎片组的 userId（每次递归始终是这一个）
     int? first_target_user_id;
@@ -81,24 +117,6 @@ DeviceAndTokenBo({
   factory DeviceAndTokenBo.fromJson(Map<String, dynamic> json) => _$DeviceAndTokenBoFromJson(json);
   
   Map<String, dynamic> toJson() => _$DeviceAndTokenBoToJson(this);
-}
-
-@JsonSerializable()
-class FragmentGroupWithR  {
-    /// 
-    FragmentGroup? fragment_group;
-    /// 
-    RFragment2FragmentGroup r_fragment_2_fragment_groups;
-
-FragmentGroupWithR({
-    required this.fragment_group,
-    required this.r_fragment_2_fragment_groups,
-
-  });
-
-  factory FragmentGroupWithR.fromJson(Map<String, dynamic> json) => _$FragmentGroupWithRFromJson(json);
-  
-  Map<String, dynamic> toJson() => _$FragmentGroupWithRToJson(this);
 }
 
 @JsonSerializable()

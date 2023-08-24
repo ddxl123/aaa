@@ -11,7 +11,7 @@ class Syncs extends ClientTableBase  {
 
   IntColumn get row_id => integer().named("row_id")();
 
-  IntColumn get sync_curd_type => intEnum<SyncCurdType>().named("sync_curd_type")();
+  TextColumn get sync_curd_type => textEnum<SyncCurdType>().named("sync_curd_type")();
 
   TextColumn get sync_table_name => text().named("sync_table_name")();
 

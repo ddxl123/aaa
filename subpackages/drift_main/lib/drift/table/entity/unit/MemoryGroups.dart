@@ -15,11 +15,11 @@ class MemoryGroups extends CloudTableBase  {
   @ReferenceTo([MemoryModels])
   IntColumn get memory_model_id => integer().named("memory_model_id").nullable()();
 
-  IntColumn get new_display_order => intEnum<NewDisplayOrder>().named("new_display_order")();
+  TextColumn get new_display_order => textEnum<NewDisplayOrder>().named("new_display_order")();
 
-  IntColumn get new_review_display_order => intEnum<NewReviewDisplayOrder>().named("new_review_display_order")();
+  TextColumn get new_review_display_order => textEnum<NewReviewDisplayOrder>().named("new_review_display_order")();
 
-  IntColumn get review_display_order => intEnum<ReviewDisplayOrder>().named("review_display_order")();
+  TextColumn get review_display_order => textEnum<ReviewDisplayOrder>().named("review_display_order")();
 
   DateTimeColumn get review_interval => dateTime().named("review_interval")();
 

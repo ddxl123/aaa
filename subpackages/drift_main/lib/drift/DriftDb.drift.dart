@@ -429,10 +429,10 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
   static const VerificationMeta _sync_curd_typeMeta =
       const VerificationMeta('sync_curd_type');
   @override
-  late final GeneratedColumnWithTypeConverter<SyncCurdType, int>
-      sync_curd_type = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<SyncCurdType, String>
+      sync_curd_type = GeneratedColumn<String>(
               'sync_curd_type', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<SyncCurdType>($SyncsTable.$convertersync_curd_type);
   static const VerificationMeta _sync_table_nameMeta =
       const VerificationMeta('sync_table_name');
@@ -538,7 +538,7 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
           .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
       sync_curd_type: $SyncsTable.$convertersync_curd_type.fromSql(
           attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}sync_curd_type'])!),
+              DriftSqlType.string, data['${effectivePrefix}sync_curd_type'])!),
       sync_table_name: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}sync_table_name'])!,
       tag: attachedDatabase.typeMapping
@@ -557,8 +557,9 @@ class $SyncsTable extends Syncs with TableInfo<$SyncsTable, Sync> {
     return $SyncsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<SyncCurdType, int, int> $convertersync_curd_type =
-      const EnumIndexConverter<SyncCurdType>(SyncCurdType.values);
+  static JsonTypeConverter2<SyncCurdType, String, String>
+      $convertersync_curd_type =
+      const EnumNameConverter<SyncCurdType>(SyncCurdType.values);
 }
 
 class Sync extends DataClass implements Insertable<Sync> {
@@ -583,7 +584,7 @@ class Sync extends DataClass implements Insertable<Sync> {
     map['row_id'] = Variable<int>(row_id);
     {
       final converter = $SyncsTable.$convertersync_curd_type;
-      map['sync_curd_type'] = Variable<int>(converter.toSql(sync_curd_type));
+      map['sync_curd_type'] = Variable<String>(converter.toSql(sync_curd_type));
     }
     map['sync_table_name'] = Variable<String>(sync_table_name);
     map['tag'] = Variable<int>(tag);
@@ -611,7 +612,7 @@ class Sync extends DataClass implements Insertable<Sync> {
     return Sync(
       row_id: serializer.fromJson<int>(json['row_id']),
       sync_curd_type: $SyncsTable.$convertersync_curd_type
-          .fromJson(serializer.fromJson<int>(json['sync_curd_type'])),
+          .fromJson(serializer.fromJson<String>(json['sync_curd_type'])),
       sync_table_name: serializer.fromJson<String>(json['sync_table_name']),
       tag: serializer.fromJson<int>(json['tag']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
@@ -624,7 +625,7 @@ class Sync extends DataClass implements Insertable<Sync> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'row_id': serializer.toJson<int>(row_id),
-      'sync_curd_type': serializer.toJson<int>(
+      'sync_curd_type': serializer.toJson<String>(
           $SyncsTable.$convertersync_curd_type.toJson(sync_curd_type)),
       'sync_table_name': serializer.toJson<String>(sync_table_name),
       'tag': serializer.toJson<int>(tag),
@@ -714,7 +715,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
         updated_at = Value(updated_at);
   static Insertable<Sync> custom({
     Expression<int>? row_id,
-    Expression<int>? sync_curd_type,
+    Expression<String>? sync_curd_type,
     Expression<String>? sync_table_name,
     Expression<int>? tag,
     Expression<DateTime>? created_at,
@@ -760,7 +761,7 @@ class SyncsCompanion extends UpdateCompanion<Sync> {
     if (sync_curd_type.present) {
       final converter = $SyncsTable.$convertersync_curd_type;
       map['sync_curd_type'] =
-          Variable<int>(converter.toSql(sync_curd_type.value));
+          Variable<String>(converter.toSql(sync_curd_type.value));
     }
     if (sync_table_name.present) {
       map['sync_table_name'] = Variable<String>(sync_table_name.value);
@@ -870,9 +871,9 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   static const VerificationMeta _study_statusMeta =
       const VerificationMeta('study_status');
   @override
-  late final GeneratedColumnWithTypeConverter<StudyStatus, int> study_status =
-      GeneratedColumn<int>('study_status', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+  late final GeneratedColumnWithTypeConverter<StudyStatus, String>
+      study_status = GeneratedColumn<String>('study_status', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<StudyStatus>(
               $FragmentMemoryInfosTable.$converterstudy_status);
   static const VerificationMeta _created_atMeta =
@@ -1059,8 +1060,8 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
       show_familiarity: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}show_familiarity'])!,
       study_status: $FragmentMemoryInfosTable.$converterstudy_status.fromSql(
-          attachedDatabase.typeMapping
-              .read(DriftSqlType.int, data['${effectivePrefix}study_status'])!),
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}study_status'])!),
       created_at: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       id: attachedDatabase.typeMapping
@@ -1075,8 +1076,9 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     return $FragmentMemoryInfosTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<StudyStatus, int, int> $converterstudy_status =
-      const EnumIndexConverter<StudyStatus>(StudyStatus.values);
+  static JsonTypeConverter2<StudyStatus, String, String>
+      $converterstudy_status =
+      const EnumNameConverter<StudyStatus>(StudyStatus.values);
 }
 
 class FragmentMemoryInfo extends DataClass
@@ -1128,7 +1130,7 @@ class FragmentMemoryInfo extends DataClass
     map['show_familiarity'] = Variable<String>(show_familiarity);
     {
       final converter = $FragmentMemoryInfosTable.$converterstudy_status;
-      map['study_status'] = Variable<int>(converter.toSql(study_status));
+      map['study_status'] = Variable<String>(converter.toSql(study_status));
     }
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
@@ -1173,7 +1175,7 @@ class FragmentMemoryInfo extends DataClass
           serializer.fromJson<String>(json['next_plan_show_time']),
       show_familiarity: serializer.fromJson<String>(json['show_familiarity']),
       study_status: $FragmentMemoryInfosTable.$converterstudy_status
-          .fromJson(serializer.fromJson<int>(json['study_status'])),
+          .fromJson(serializer.fromJson<String>(json['study_status'])),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
       updated_at: serializer.fromJson<DateTime>(json['updated_at']),
@@ -1194,7 +1196,7 @@ class FragmentMemoryInfo extends DataClass
       'memory_group_id': serializer.toJson<int>(memory_group_id),
       'next_plan_show_time': serializer.toJson<String>(next_plan_show_time),
       'show_familiarity': serializer.toJson<String>(show_familiarity),
-      'study_status': serializer.toJson<int>($FragmentMemoryInfosTable
+      'study_status': serializer.toJson<String>($FragmentMemoryInfosTable
           .$converterstudy_status
           .toJson(study_status)),
       'created_at': serializer.toJson<DateTime>(created_at),
@@ -1371,7 +1373,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     Expression<int>? memory_group_id,
     Expression<String>? next_plan_show_time,
     Expression<String>? show_familiarity,
-    Expression<int>? study_status,
+    Expression<String>? study_status,
     Expression<DateTime>? created_at,
     Expression<int>? id,
     Expression<DateTime>? updated_at,
@@ -1469,7 +1471,8 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     }
     if (study_status.present) {
       final converter = $FragmentMemoryInfosTable.$converterstudy_status;
-      map['study_status'] = Variable<int>(converter.toSql(study_status.value));
+      map['study_status'] =
+          Variable<String>(converter.toSql(study_status.value));
     }
     if (created_at.present) {
       map['created_at'] = Variable<DateTime>(created_at.value);
@@ -3169,28 +3172,28 @@ class $MemoryGroupsTable extends MemoryGroups
   static const VerificationMeta _new_display_orderMeta =
       const VerificationMeta('new_display_order');
   @override
-  late final GeneratedColumnWithTypeConverter<NewDisplayOrder, int>
-      new_display_order = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<NewDisplayOrder, String>
+      new_display_order = GeneratedColumn<String>(
               'new_display_order', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<NewDisplayOrder>(
               $MemoryGroupsTable.$converternew_display_order);
   static const VerificationMeta _new_review_display_orderMeta =
       const VerificationMeta('new_review_display_order');
   @override
-  late final GeneratedColumnWithTypeConverter<NewReviewDisplayOrder, int>
-      new_review_display_order = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<NewReviewDisplayOrder, String>
+      new_review_display_order = GeneratedColumn<String>(
               'new_review_display_order', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<NewReviewDisplayOrder>(
               $MemoryGroupsTable.$converternew_review_display_order);
   static const VerificationMeta _review_display_orderMeta =
       const VerificationMeta('review_display_order');
   @override
-  late final GeneratedColumnWithTypeConverter<ReviewDisplayOrder, int>
-      review_display_order = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<ReviewDisplayOrder, String>
+      review_display_order = GeneratedColumn<String>(
               'review_display_order', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<ReviewDisplayOrder>(
               $MemoryGroupsTable.$converterreview_display_order);
   static const VerificationMeta _review_intervalMeta =
@@ -3337,14 +3340,14 @@ class $MemoryGroupsTable extends MemoryGroups
       memory_model_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}memory_model_id']),
       new_display_order: $MemoryGroupsTable.$converternew_display_order.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}new_display_order'])!),
+          attachedDatabase.typeMapping.read(DriftSqlType.string,
+              data['${effectivePrefix}new_display_order'])!),
       new_review_display_order: $MemoryGroupsTable
           .$converternew_review_display_order
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}new_review_display_order'])!),
       review_display_order: $MemoryGroupsTable.$converterreview_display_order
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}review_display_order'])!),
       review_interval: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}review_interval'])!,
@@ -3368,16 +3371,16 @@ class $MemoryGroupsTable extends MemoryGroups
     return $MemoryGroupsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<NewDisplayOrder, int, int>
+  static JsonTypeConverter2<NewDisplayOrder, String, String>
       $converternew_display_order =
-      const EnumIndexConverter<NewDisplayOrder>(NewDisplayOrder.values);
-  static JsonTypeConverter2<NewReviewDisplayOrder, int, int>
+      const EnumNameConverter<NewDisplayOrder>(NewDisplayOrder.values);
+  static JsonTypeConverter2<NewReviewDisplayOrder, String, String>
       $converternew_review_display_order =
-      const EnumIndexConverter<NewReviewDisplayOrder>(
+      const EnumNameConverter<NewReviewDisplayOrder>(
           NewReviewDisplayOrder.values);
-  static JsonTypeConverter2<ReviewDisplayOrder, int, int>
+  static JsonTypeConverter2<ReviewDisplayOrder, String, String>
       $converterreview_display_order =
-      const EnumIndexConverter<ReviewDisplayOrder>(ReviewDisplayOrder.values);
+      const EnumNameConverter<ReviewDisplayOrder>(ReviewDisplayOrder.values);
 }
 
 class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
@@ -3416,17 +3419,17 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     {
       final converter = $MemoryGroupsTable.$converternew_display_order;
       map['new_display_order'] =
-          Variable<int>(converter.toSql(new_display_order));
+          Variable<String>(converter.toSql(new_display_order));
     }
     {
       final converter = $MemoryGroupsTable.$converternew_review_display_order;
       map['new_review_display_order'] =
-          Variable<int>(converter.toSql(new_review_display_order));
+          Variable<String>(converter.toSql(new_review_display_order));
     }
     {
       final converter = $MemoryGroupsTable.$converterreview_display_order;
       map['review_display_order'] =
-          Variable<int>(converter.toSql(review_display_order));
+          Variable<String>(converter.toSql(review_display_order));
     }
     map['review_interval'] = Variable<DateTime>(review_interval);
     if (!nullToAbsent || start_time != null) {
@@ -3468,12 +3471,12 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       memory_model_id: serializer.fromJson<int?>(json['memory_model_id']),
       new_display_order: $MemoryGroupsTable.$converternew_display_order
-          .fromJson(serializer.fromJson<int>(json['new_display_order'])),
-      new_review_display_order: $MemoryGroupsTable
-          .$converternew_review_display_order
-          .fromJson(serializer.fromJson<int>(json['new_review_display_order'])),
+          .fromJson(serializer.fromJson<String>(json['new_display_order'])),
+      new_review_display_order:
+          $MemoryGroupsTable.$converternew_review_display_order.fromJson(
+              serializer.fromJson<String>(json['new_review_display_order'])),
       review_display_order: $MemoryGroupsTable.$converterreview_display_order
-          .fromJson(serializer.fromJson<int>(json['review_display_order'])),
+          .fromJson(serializer.fromJson<String>(json['review_display_order'])),
       review_interval: serializer.fromJson<DateTime>(json['review_interval']),
       start_time: serializer.fromJson<DateTime?>(json['start_time']),
       title: serializer.fromJson<String>(json['title']),
@@ -3490,13 +3493,13 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
     return <String, dynamic>{
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'memory_model_id': serializer.toJson<int?>(memory_model_id),
-      'new_display_order': serializer.toJson<int>($MemoryGroupsTable
+      'new_display_order': serializer.toJson<String>($MemoryGroupsTable
           .$converternew_display_order
           .toJson(new_display_order)),
-      'new_review_display_order': serializer.toJson<int>($MemoryGroupsTable
+      'new_review_display_order': serializer.toJson<String>($MemoryGroupsTable
           .$converternew_review_display_order
           .toJson(new_review_display_order)),
-      'review_display_order': serializer.toJson<int>($MemoryGroupsTable
+      'review_display_order': serializer.toJson<String>($MemoryGroupsTable
           .$converterreview_display_order
           .toJson(review_display_order)),
       'review_interval': serializer.toJson<DateTime>(review_interval),
@@ -3642,9 +3645,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   static Insertable<MemoryGroup> custom({
     Expression<int>? creator_user_id,
     Expression<int>? memory_model_id,
-    Expression<int>? new_display_order,
-    Expression<int>? new_review_display_order,
-    Expression<int>? review_display_order,
+    Expression<String>? new_display_order,
+    Expression<String>? new_review_display_order,
+    Expression<String>? review_display_order,
     Expression<DateTime>? review_interval,
     Expression<DateTime>? start_time,
     Expression<String>? title,
@@ -3714,17 +3717,17 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     if (new_display_order.present) {
       final converter = $MemoryGroupsTable.$converternew_display_order;
       map['new_display_order'] =
-          Variable<int>(converter.toSql(new_display_order.value));
+          Variable<String>(converter.toSql(new_display_order.value));
     }
     if (new_review_display_order.present) {
       final converter = $MemoryGroupsTable.$converternew_review_display_order;
       map['new_review_display_order'] =
-          Variable<int>(converter.toSql(new_review_display_order.value));
+          Variable<String>(converter.toSql(new_review_display_order.value));
     }
     if (review_display_order.present) {
       final converter = $MemoryGroupsTable.$converterreview_display_order;
       map['review_display_order'] =
-          Variable<int>(converter.toSql(review_display_order.value));
+          Variable<String>(converter.toSql(review_display_order.value));
     }
     if (review_interval.present) {
       map['review_interval'] = Variable<DateTime>(review_interval.value);
@@ -3803,10 +3806,10 @@ class $MemoryModelsTable extends MemoryModels
   static const VerificationMeta _button_algorithm_usage_statusMeta =
       const VerificationMeta('button_algorithm_usage_status');
   @override
-  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, int>
-      button_algorithm_usage_status = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, String>
+      button_algorithm_usage_status = GeneratedColumn<String>(
               'button_algorithm_usage_status', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<AlgorithmUsageStatus>(
               $MemoryModelsTable.$converterbutton_algorithm_usage_status);
   static const VerificationMeta _creator_user_idMeta =
@@ -3842,10 +3845,10 @@ class $MemoryModelsTable extends MemoryModels
   static const VerificationMeta _familiarity_algorithm_usage_statusMeta =
       const VerificationMeta('familiarity_algorithm_usage_status');
   @override
-  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, int>
-      familiarity_algorithm_usage_status = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, String>
+      familiarity_algorithm_usage_status = GeneratedColumn<String>(
               'familiarity_algorithm_usage_status', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<AlgorithmUsageStatus>(
               $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status);
   static const VerificationMeta _father_memory_model_idMeta =
@@ -3881,10 +3884,10 @@ class $MemoryModelsTable extends MemoryModels
   static const VerificationMeta _next_time_algorithm_usage_statusMeta =
       const VerificationMeta('next_time_algorithm_usage_status');
   @override
-  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, int>
-      next_time_algorithm_usage_status = GeneratedColumn<int>(
+  late final GeneratedColumnWithTypeConverter<AlgorithmUsageStatus, String>
+      next_time_algorithm_usage_status = GeneratedColumn<String>(
               'next_time_algorithm_usage_status', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
+              type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<AlgorithmUsageStatus>(
               $MemoryModelsTable.$converternext_time_algorithm_usage_status);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -4081,7 +4084,7 @@ class $MemoryModelsTable extends MemoryModels
           data['${effectivePrefix}button_algorithm_remark']),
       button_algorithm_usage_status: $MemoryModelsTable
           .$converterbutton_algorithm_usage_status
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}button_algorithm_usage_status'])!),
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
@@ -4099,7 +4102,7 @@ class $MemoryModelsTable extends MemoryModels
           data['${effectivePrefix}familiarity_algorithm_remark']),
       familiarity_algorithm_usage_status: $MemoryModelsTable
           .$converterfamiliarity_algorithm_usage_status
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}familiarity_algorithm_usage_status'])!),
       father_memory_model_id: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}father_memory_model_id']),
@@ -4114,7 +4117,7 @@ class $MemoryModelsTable extends MemoryModels
           data['${effectivePrefix}next_time_algorithm_remark']),
       next_time_algorithm_usage_status: $MemoryModelsTable
           .$converternext_time_algorithm_usage_status
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}next_time_algorithm_usage_status'])!),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
@@ -4132,17 +4135,17 @@ class $MemoryModelsTable extends MemoryModels
     return $MemoryModelsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<AlgorithmUsageStatus, int, int>
+  static JsonTypeConverter2<AlgorithmUsageStatus, String, String>
       $converterbutton_algorithm_usage_status =
-      const EnumIndexConverter<AlgorithmUsageStatus>(
+      const EnumNameConverter<AlgorithmUsageStatus>(
           AlgorithmUsageStatus.values);
-  static JsonTypeConverter2<AlgorithmUsageStatus, int, int>
+  static JsonTypeConverter2<AlgorithmUsageStatus, String, String>
       $converterfamiliarity_algorithm_usage_status =
-      const EnumIndexConverter<AlgorithmUsageStatus>(
+      const EnumNameConverter<AlgorithmUsageStatus>(
           AlgorithmUsageStatus.values);
-  static JsonTypeConverter2<AlgorithmUsageStatus, int, int>
+  static JsonTypeConverter2<AlgorithmUsageStatus, String, String>
       $converternext_time_algorithm_usage_status =
-      const EnumIndexConverter<AlgorithmUsageStatus>(
+      const EnumNameConverter<AlgorithmUsageStatus>(
           AlgorithmUsageStatus.values);
 }
 
@@ -4210,7 +4213,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       final converter =
           $MemoryModelsTable.$converterbutton_algorithm_usage_status;
       map['button_algorithm_usage_status'] =
-          Variable<int>(converter.toSql(button_algorithm_usage_status));
+          Variable<String>(converter.toSql(button_algorithm_usage_status));
     }
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || familiarity_algorithm_a != null) {
@@ -4233,7 +4236,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       final converter =
           $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status;
       map['familiarity_algorithm_usage_status'] =
-          Variable<int>(converter.toSql(familiarity_algorithm_usage_status));
+          Variable<String>(converter.toSql(familiarity_algorithm_usage_status));
     }
     if (!nullToAbsent || father_memory_model_id != null) {
       map['father_memory_model_id'] = Variable<int>(father_memory_model_id);
@@ -4255,7 +4258,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       final converter =
           $MemoryModelsTable.$converternext_time_algorithm_usage_status;
       map['next_time_algorithm_usage_status'] =
-          Variable<int>(converter.toSql(next_time_algorithm_usage_status));
+          Variable<String>(converter.toSql(next_time_algorithm_usage_status));
     }
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
@@ -4331,9 +4334,10 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           serializer.fromJson<String?>(json['button_algorithm_c']),
       button_algorithm_remark:
           serializer.fromJson<String?>(json['button_algorithm_remark']),
-      button_algorithm_usage_status:
-          $MemoryModelsTable.$converterbutton_algorithm_usage_status.fromJson(
-              serializer.fromJson<int>(json['button_algorithm_usage_status'])),
+      button_algorithm_usage_status: $MemoryModelsTable
+          .$converterbutton_algorithm_usage_status
+          .fromJson(serializer
+              .fromJson<String>(json['button_algorithm_usage_status'])),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       familiarity_algorithm_a:
           serializer.fromJson<String?>(json['familiarity_algorithm_a']),
@@ -4346,7 +4350,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       familiarity_algorithm_usage_status: $MemoryModelsTable
           .$converterfamiliarity_algorithm_usage_status
           .fromJson(serializer
-              .fromJson<int>(json['familiarity_algorithm_usage_status'])),
+              .fromJson<String>(json['familiarity_algorithm_usage_status'])),
       father_memory_model_id:
           serializer.fromJson<int?>(json['father_memory_model_id']),
       next_time_algorithm_a:
@@ -4360,7 +4364,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       next_time_algorithm_usage_status: $MemoryModelsTable
           .$converternext_time_algorithm_usage_status
           .fromJson(serializer
-              .fromJson<int>(json['next_time_algorithm_usage_status'])),
+              .fromJson<String>(json['next_time_algorithm_usage_status'])),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
@@ -4376,9 +4380,9 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       'button_algorithm_c': serializer.toJson<String?>(button_algorithm_c),
       'button_algorithm_remark':
           serializer.toJson<String?>(button_algorithm_remark),
-      'button_algorithm_usage_status': serializer.toJson<int>($MemoryModelsTable
-          .$converterbutton_algorithm_usage_status
-          .toJson(button_algorithm_usage_status)),
+      'button_algorithm_usage_status': serializer.toJson<String>(
+          $MemoryModelsTable.$converterbutton_algorithm_usage_status
+              .toJson(button_algorithm_usage_status)),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'familiarity_algorithm_a':
           serializer.toJson<String?>(familiarity_algorithm_a),
@@ -4388,7 +4392,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           serializer.toJson<String?>(familiarity_algorithm_c),
       'familiarity_algorithm_remark':
           serializer.toJson<String?>(familiarity_algorithm_remark),
-      'familiarity_algorithm_usage_status': serializer.toJson<int>(
+      'familiarity_algorithm_usage_status': serializer.toJson<String>(
           $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status
               .toJson(familiarity_algorithm_usage_status)),
       'father_memory_model_id': serializer.toJson<int?>(father_memory_model_id),
@@ -4400,7 +4404,7 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           serializer.toJson<String?>(next_time_algorithm_c),
       'next_time_algorithm_remark':
           serializer.toJson<String?>(next_time_algorithm_remark),
-      'next_time_algorithm_usage_status': serializer.toJson<int>(
+      'next_time_algorithm_usage_status': serializer.toJson<String>(
           $MemoryModelsTable.$converternext_time_algorithm_usage_status
               .toJson(next_time_algorithm_usage_status)),
       'title': serializer.toJson<String>(title),
@@ -4653,19 +4657,19 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     Expression<String>? button_algorithm_b,
     Expression<String>? button_algorithm_c,
     Expression<String>? button_algorithm_remark,
-    Expression<int>? button_algorithm_usage_status,
+    Expression<String>? button_algorithm_usage_status,
     Expression<int>? creator_user_id,
     Expression<String>? familiarity_algorithm_a,
     Expression<String>? familiarity_algorithm_b,
     Expression<String>? familiarity_algorithm_c,
     Expression<String>? familiarity_algorithm_remark,
-    Expression<int>? familiarity_algorithm_usage_status,
+    Expression<String>? familiarity_algorithm_usage_status,
     Expression<int>? father_memory_model_id,
     Expression<String>? next_time_algorithm_a,
     Expression<String>? next_time_algorithm_b,
     Expression<String>? next_time_algorithm_c,
     Expression<String>? next_time_algorithm_remark,
-    Expression<int>? next_time_algorithm_usage_status,
+    Expression<String>? next_time_algorithm_usage_status,
     Expression<String>? title,
     Expression<DateTime>? created_at,
     Expression<int>? id,
@@ -4789,8 +4793,8 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     if (button_algorithm_usage_status.present) {
       final converter =
           $MemoryModelsTable.$converterbutton_algorithm_usage_status;
-      map['button_algorithm_usage_status'] =
-          Variable<int>(converter.toSql(button_algorithm_usage_status.value));
+      map['button_algorithm_usage_status'] = Variable<String>(
+          converter.toSql(button_algorithm_usage_status.value));
     }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
@@ -4814,7 +4818,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     if (familiarity_algorithm_usage_status.present) {
       final converter =
           $MemoryModelsTable.$converterfamiliarity_algorithm_usage_status;
-      map['familiarity_algorithm_usage_status'] = Variable<int>(
+      map['familiarity_algorithm_usage_status'] = Variable<String>(
           converter.toSql(familiarity_algorithm_usage_status.value));
     }
     if (father_memory_model_id.present) {
@@ -4840,7 +4844,7 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     if (next_time_algorithm_usage_status.present) {
       final converter =
           $MemoryModelsTable.$converternext_time_algorithm_usage_status;
-      map['next_time_algorithm_usage_status'] = Variable<int>(
+      map['next_time_algorithm_usage_status'] = Variable<String>(
           converter.toSql(next_time_algorithm_usage_status.value));
     }
     if (title.present) {

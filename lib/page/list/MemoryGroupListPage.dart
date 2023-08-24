@@ -3,20 +3,20 @@ import 'package:aaa/single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import 'package:tools/tools.dart';
 import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../single_dialog/showCreateMemoryGroupDialog.dart';
 
 class MemoryGroupListPage extends StatelessWidget {
-  const MemoryGroupListPage({Key? key}) : super(key: key);
+  const MemoryGroupListPage({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AbBuilder<MemoryGroupListPageAbController>(
-        putController: MemoryGroupListPageAbController(),
+        putController: MemoryGroupListPageAbController(user: user),
         tag: Aber.single,
         builder: (c, putAbw) {
           return SmartRefresher(
@@ -93,9 +93,9 @@ class MemoryGroupListPage extends StatelessWidget {
     return AbBuilder<MemoryGroupListPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        final memoryGroupGizmo = c.memoryGroupGizmos(abw)[index];
+        final mg = c.memoryGroupGizmos(abw)[index];
         return Hero(
-          tag: memoryGroupGizmo.hashCode,
+          tag: mg.hashCode,
           child: GestureDetector(
             child: Card(
               child: Column(
@@ -105,7 +105,7 @@ class MemoryGroupListPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          memoryGroupGizmo(abw).title,
+                          mg.title,
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -114,13 +114,13 @@ class MemoryGroupListPage extends StatelessWidget {
                           return OutlinedButton(
                             style: ButtonStyle(
                               side: MaterialStateProperty.all(const BorderSide(color: Colors.blue, width: 1)),
-                              backgroundColor: MaterialStateProperty.all(_statusButtonBackgroundColorFilter(memoryGroupGizmo(abw))),
+                              backgroundColor: MaterialStateProperty.all(_statusButtonBackgroundColorFilter(mg)),
                             ),
                             child: () {
-                              return Text(_statusButtonTextFilter(memoryGroupGizmo(abw)));
+                              return Text(_statusButtonTextFilter(mg));
                             }(),
                             onPressed: () {
-                              c.onStatusTap(memoryGroupGizmo);
+                              c.onStatusTap(mg);
                             },
                           );
                         },
@@ -135,7 +135,7 @@ class MemoryGroupListPage extends StatelessWidget {
                 c.context,
                 MaterialPageRoute(
                   builder: (_) => MemoryGroupGizmoPage(
-                    memoryGroupGizmo: memoryGroupGizmo,
+                    memoryGroupGizmo: mg,
                     innerMemoryGroupGizmoWidget: _memoryGroupGizmoWidget(index),
                   ),
                 ),

@@ -4,26 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class FragmentGroupCountQueryDto extends BaseObject{
+class MemoryGroupFragmentsQueryDto extends BaseObject{
 
     /// 
-    FragmentGroupQueryWrapper fragment_group_query_wrapper;
+    int memory_group_id;
 
     /// 填充字段1
     bool? dto_padding_1;
 
 
-FragmentGroupCountQueryDto({
+MemoryGroupFragmentsQueryDto({
 
-    required this.fragment_group_query_wrapper,
+    required this.memory_group_id,
 
     required this.dto_padding_1,
 
 });
-  factory FragmentGroupCountQueryDto.fromJson(Map<String, dynamic> json) => _$FragmentGroupCountQueryDtoFromJson(json);
+  factory MemoryGroupFragmentsQueryDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupFragmentsQueryDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$FragmentGroupCountQueryDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MemoryGroupFragmentsQueryDtoToJson(this);
   
   
           
@@ -37,7 +37,7 @@ FragmentGroupCountQueryDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  FragmentGroupCountQueryVo? vo;
+  MemoryGroupFragmentsQueryVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
@@ -45,13 +45,13 @@ FragmentGroupCountQueryDto({
     Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
     // message: 获取成功！
-    // explain: 获取碎片组内全部碎片的数量
-    required Future<T> Function(String showMessage) code150201,
+    // explain: 查询指定碎片组内的全部碎片，实际是查询碎片记忆信息。
+    required Future<T> Function(String showMessage, MemoryGroupFragmentsQueryVo vo) code160501,
     
     }) async {
     try {
 
-        if (code == 150201) return await code150201(httperException!.showMessage);
+        if (code == 160501) return await code160501(httperException!.showMessage, vo!);
 
     } catch (e, st) {
       if (otherException == null) rethrow;

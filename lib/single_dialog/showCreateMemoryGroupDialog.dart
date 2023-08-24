@@ -1,5 +1,6 @@
 import 'package:aaa/page/list/MemoryGroupListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -25,27 +26,31 @@ Future<void> showCreateMemoryGroupDialog() async {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
-          throw "todo";
-          // await db.insertDAO.insertMemoryGroup(
-          //   newMemoryGroupsCompanion: Crt.memoryGroupsCompanion(
-          //     start_time: null.toValue(),
-          //     memory_model_id: null.toValue(),
-          //     title: tec.text.trim(),
-          //     will_new_learn_count: 0,
-          //     review_interval: DateTime.now(),
-          //     new_review_display_order: NewReviewDisplayOrder.mix,
-          //     new_display_order: NewDisplayOrder.random,
-          //     review_display_order: ReviewDisplayOrder.expire_first,
-          //     creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-          //   ),
-          //   syncTag: await SyncTag.create(),
-          //   isCloudTableWithSync: true,
-          // );
-
-          Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();
-
-          SmartDialog.dismiss();
-          SmartDialog.showToast('创建成功！');
+          await requestSingleRowInsert(
+            isLoginRequired: true,
+            singleRowInsertDto: SingleRowInsertDto(
+              table_name: db.memoryGroups.actualTableName,
+              row: Crt.memoryGroupEntity(
+                start_time: null,
+                memory_model_id: null,
+                title: tec.text.trim(),
+                will_new_learn_count: 0,
+                review_interval: DateTime.now(),
+                new_review_display_order: NewReviewDisplayOrder.mix,
+                new_display_order: NewDisplayOrder.random,
+                review_display_order: ReviewDisplayOrder.expire_first,
+                creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+              ),
+            ),
+            onSuccess: (String showMessage, SingleRowInsertVo vo) async {
+              Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();
+              SmartDialog.dismiss(status: SmartStatus.dialog);
+              SmartDialog.showToast('创建成功！');
+            },
+            onError: (a, b, c) async {
+              logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+            },
+          );
         },
       );
     },

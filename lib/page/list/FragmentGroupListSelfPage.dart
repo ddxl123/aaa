@@ -10,6 +10,7 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 import '../../global/tool_widgets/CustomImageWidget.dart';
+import '../../single_dialog/showAddFragmentToMemoryGroupDialog.dart';
 import '../../single_dialog/showFragmentGroupConfigDialog.dart';
 import 'FragmentGroupListSelfPageController.dart';
 
@@ -55,6 +56,14 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                          c.longPressedTarget(abw) == group()
+                              ? GestureDetector(
+                                  child: Text("编辑", style: TextStyle(color: Colors.blue)),
+                                  onTap: () {
+                                    pushToFragmentGroupGizmoEditPage(context: context, fragmentGroupAb: group().getDynamicGroupEntityAb());
+                                  },
+                                )
+                              : Container(),
                           Icon(Icons.chevron_right, color: group().getDynamicGroupEntity()!.be_publish ? Colors.green : Colors.grey),
                         ],
                       ),
@@ -74,36 +83,29 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                     },
                   ),
                 ),
-                c.longPressedTarget(abw) == group()
-                    ? MaterialButton(
-                        visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity),
-                        child: Text("编辑", style: TextStyle(color: Colors.blue)),
-                        onPressed: () {
-                          pushToFragmentGroupGizmoEditPage(context: context, fragmentGroupAb: group().getDynamicGroupEntityAb());
-                        },
-                      )
-                    : Container(),
-                c.isSelecting(abw) ? Text('${group(abw).selectedUnitCount(abw)}/${group(abw).allUnitCount(abw)}') : Container(),
+                // c.isSelecting(abw) ? Text('${group(abw).selectedUnitCount(abw)}/${group(abw).allUnitCount(abw)}') : Container(),
                 c.isSelecting(abw)
-                    ? IconButton(
-                        icon: () {
-                          if (group(abw).getDynamicGroupEntity(abw)!.client_be_selected) {
-                            return const SolidCircleIcon();
-                          } else {
-                            if (group(abw).selectedUnitCount(abw) == 0) {
-                              return const SolidCircleGreyIcon();
-                            } else {
-                              return const CircleHalfStrokeIcon();
-                            }
-                          }
-                        }(),
-                        onPressed: () async {
-                          await c.resetFragmentGroupAndSubIsSelected(
-                            fragmentGroupAb: group().getDynamicGroupEntityAb(),
-                            isSelected: !group().getDynamicGroupEntity()!.client_be_selected,
-                          );
-                        },
-                      )
+                    ? (c.selectedFragmentsMap(abw).isEmpty
+                        ? IconButton(
+                            icon: () {
+                              if (c.selectedSurfaceFragmentGroupsMap(abw).containsKey(group(abw).surfaceEntity(abw)!.id)) {
+                                return const SolidCircleIcon();
+                              } else {
+                                if (group(abw).selectedUnitCount(abw) == 0) {
+                                  return const SolidCircleGreyIcon();
+                                } else {
+                                  return const CircleHalfStrokeIcon();
+                                }
+                              }
+                            }(),
+                            onPressed: () async {
+                              await c.selectFragmentGroup(
+                                targetSurfaceFragmentGroup: group().surfaceEntity()!,
+                                isSelect: !c.selectedSurfaceFragmentGroupsMap(abw).containsKey(group(abw).surfaceEntity(abw)!.id),
+                              );
+                            },
+                          )
+                        : Container())
                     : Container(),
               ],
             ),
@@ -150,20 +152,22 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                   ),
                 ),
                 c.isSelecting(abw)
-                    ? IconButton(
-                        style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                        icon: FaIcon(
-                          FontAwesomeIcons.solidCircle,
-                          color: unit(abw).unitREntity.client_be_selected ? Colors.amber : Colors.grey,
-                          size: 14,
-                        ),
-                        onPressed: () async {
-                          await c.resetFragmentIsSelected(
-                            unitAb: unit,
-                            isSelected: !unit().unitREntity.client_be_selected,
-                          );
-                        },
-                      )
+                    ? (c.selectedSurfaceFragmentGroupsMap(abw).isEmpty
+                        ? IconButton(
+                            style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                            icon: FaIcon(
+                              FontAwesomeIcons.solidCircle,
+                              color: c.isSelectedUnit(unit: unit(abw), abw: abw) ? Colors.amber : Colors.grey,
+                              size: 14,
+                            ),
+                            onPressed: () async {
+                              c.selectFragment(
+                                unit: unit(),
+                                isSelect: !c.isSelectedUnit(unit: unit()),
+                              );
+                            },
+                          )
+                        : Container())
                     : Container(),
               ],
             ),
@@ -208,8 +212,7 @@ class FragmentGroupListSelfPage extends StatelessWidget {
           );
         },
         floatingButtonOnPressed: (c) {
-          throw "todo";
-          // showAddFragmentToMemoryGroupDialog();
+          showAddFragmentToMemoryGroupDialog();
         },
       ),
       bottomNavigationBar: _bottomNavigationBar(),
@@ -264,23 +267,16 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                         children: [
                           button(
                             iconData: Icons.select_all_outlined,
-                            label: '全选',
+                            label: '当前页全选',
                             onPressed: () async {
                               await c.selectAll();
                             },
                           ),
                           button(
                             iconData: Icons.deselect_outlined,
-                            label: '全不选',
+                            label: '当前页全不选',
                             onPressed: () async {
                               await c.deselectAll();
-                            },
-                          ),
-                          button(
-                            iconData: Icons.exposure_outlined,
-                            label: '反选',
-                            onPressed: () async {
-                              await c.invertSelect();
                             },
                           ),
                           button(

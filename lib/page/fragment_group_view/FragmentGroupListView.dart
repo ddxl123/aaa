@@ -279,6 +279,7 @@ class _HeadState extends State<_Head> {
       ),
     );
 
+
     return widget.g().getDynamicGroupEntity()?.be_publish == true ? big : Container();
   }
 }

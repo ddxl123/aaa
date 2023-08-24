@@ -235,8 +235,7 @@ extension StringToJson on String {
 }
 
 extension ArrayToJson on List {
-  // TODO:
-  String toJson() {
+  String toJsonString() {
     return json.encode(this);
   }
 }
