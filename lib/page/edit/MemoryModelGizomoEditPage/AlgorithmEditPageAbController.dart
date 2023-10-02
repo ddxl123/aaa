@@ -21,7 +21,7 @@ class AlgorithmEditPageAbController extends AbController {
   @override
   Future<bool> backListener(bool hasRoute) async {
     final empty = AlgorithmWrapper.emptyAlgorithmWrapper.toJsonString();
-    final copyMAb = memoryModelGizmoEditPageAbController.copyMemoryModelAb;
+    final mm = memoryModelGizmoEditPageAbController.memoryModel;
     final current = currentAlgorithmWrapper().toJsonString();
     final isModified = filter(
       from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
@@ -29,27 +29,27 @@ class AlgorithmEditPageAbController extends AbController {
         [FamiliarityState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => !((copyMAb().familiarity_algorithm_a == null && current == empty) || copyMAb().familiarity_algorithm_a == current),
-                [AlgorithmUsageStatus.b]: () => !((copyMAb().familiarity_algorithm_b == null && current == empty) || copyMAb().familiarity_algorithm_b == current),
-                [AlgorithmUsageStatus.c]: () => !((copyMAb().familiarity_algorithm_c == null && current == empty) || copyMAb().familiarity_algorithm_c == current),
+                [AlgorithmUsageStatus.a]: () => !((mm.familiarity_algorithm_a == null && current == empty) || mm.familiarity_algorithm_a == current),
+                [AlgorithmUsageStatus.b]: () => !((mm.familiarity_algorithm_b == null && current == empty) || mm.familiarity_algorithm_b == current),
+                [AlgorithmUsageStatus.c]: () => !((mm.familiarity_algorithm_c == null && current == empty) || mm.familiarity_algorithm_c == current),
               },
               orElse: null,
             ),
         [ButtonDataState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => !((copyMAb().button_algorithm_a == null && current == empty) || copyMAb().button_algorithm_a == current),
-                [AlgorithmUsageStatus.b]: () => !((copyMAb().button_algorithm_b == null && current == empty) || copyMAb().button_algorithm_b == current),
-                [AlgorithmUsageStatus.c]: () => !((copyMAb().button_algorithm_c == null && current == empty) || copyMAb().button_algorithm_c == current),
+                [AlgorithmUsageStatus.a]: () => !((mm.button_algorithm_a == null && current == empty) || mm.button_algorithm_a == current),
+                [AlgorithmUsageStatus.b]: () => !((mm.button_algorithm_b == null && current == empty) || mm.button_algorithm_b == current),
+                [AlgorithmUsageStatus.c]: () => !((mm.button_algorithm_c == null && current == empty) || mm.button_algorithm_c == current),
               },
               orElse: null,
             ),
         [NextShowTimeState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => !((copyMAb().next_time_algorithm_a == null && current == empty) || copyMAb().next_time_algorithm_a == current),
-                [AlgorithmUsageStatus.b]: () => !((copyMAb().next_time_algorithm_b == null && current == empty) || copyMAb().next_time_algorithm_b == current),
-                [AlgorithmUsageStatus.c]: () => !((copyMAb().next_time_algorithm_c == null && current == empty) || copyMAb().next_time_algorithm_c == current),
+                [AlgorithmUsageStatus.a]: () => !((mm.next_time_algorithm_a == null && current == empty) || mm.next_time_algorithm_a == current),
+                [AlgorithmUsageStatus.b]: () => !((mm.next_time_algorithm_b == null && current == empty) || mm.next_time_algorithm_b == current),
+                [AlgorithmUsageStatus.c]: () => !((mm.next_time_algorithm_c == null && current == empty) || mm.next_time_algorithm_c == current),
               },
               orElse: null,
             ),
@@ -86,34 +86,34 @@ class AlgorithmEditPageAbController extends AbController {
 
   String content() {
     final ea = AlgorithmWrapper.emptyAlgorithmWrapper.toJsonString();
-    final copyMAb = memoryModelGizmoEditPageAbController.copyMemoryModelAb;
+    final mm = memoryModelGizmoEditPageAbController.memoryModel;
     return filter(
       from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
       targets: {
         [FamiliarityState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => copyMAb().familiarity_algorithm_a ?? ea,
-                [AlgorithmUsageStatus.b]: () => copyMAb().familiarity_algorithm_b ?? (copyMAb().familiarity_algorithm_a ?? ea),
-                [AlgorithmUsageStatus.c]: () => copyMAb().familiarity_algorithm_c ?? (copyMAb().familiarity_algorithm_a ?? ea),
+                [AlgorithmUsageStatus.a]: () => mm.familiarity_algorithm_a ?? ea,
+                [AlgorithmUsageStatus.b]: () => mm.familiarity_algorithm_b ?? (mm.familiarity_algorithm_a ?? ea),
+                [AlgorithmUsageStatus.c]: () => mm.familiarity_algorithm_c ?? (mm.familiarity_algorithm_a ?? ea),
               },
               orElse: null,
             ),
         [ButtonDataState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => copyMAb().button_algorithm_a ?? ea,
-                [AlgorithmUsageStatus.b]: () => copyMAb().button_algorithm_b ?? (copyMAb().button_algorithm_a ?? ea),
-                [AlgorithmUsageStatus.c]: () => copyMAb().button_algorithm_c ?? (copyMAb().button_algorithm_a ?? ea),
+                [AlgorithmUsageStatus.a]: () => mm.button_algorithm_a ?? ea,
+                [AlgorithmUsageStatus.b]: () => mm.button_algorithm_b ?? (mm.button_algorithm_a ?? ea),
+                [AlgorithmUsageStatus.c]: () => mm.button_algorithm_c ?? (mm.button_algorithm_a ?? ea),
               },
               orElse: null,
             ),
         [NextShowTimeState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => copyMAb().next_time_algorithm_a ?? ea,
-                [AlgorithmUsageStatus.b]: () => copyMAb().next_time_algorithm_b ?? (copyMAb().next_time_algorithm_a ?? ea),
-                [AlgorithmUsageStatus.c]: () => copyMAb().next_time_algorithm_c ?? (copyMAb().next_time_algorithm_a ?? ea),
+                [AlgorithmUsageStatus.a]: () => mm.next_time_algorithm_a ?? ea,
+                [AlgorithmUsageStatus.b]: () => mm.next_time_algorithm_b ?? (mm.next_time_algorithm_a ?? ea),
+                [AlgorithmUsageStatus.c]: () => mm.next_time_algorithm_c ?? (mm.next_time_algorithm_a ?? ea),
               },
               orElse: null,
             ),
@@ -124,34 +124,34 @@ class AlgorithmEditPageAbController extends AbController {
 
   Future<void> save() async {
     rawToView();
-    final copyMAb = memoryModelGizmoEditPageAbController.copyMemoryModelAb;
+    final mm = memoryModelGizmoEditPageAbController.memoryModel;
     filter(
       from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
       targets: {
         [FamiliarityState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => copyMAb.refreshInevitable((obj) => obj..familiarity_algorithm_a = currentAlgorithmWrapper().toJsonString()),
-                [AlgorithmUsageStatus.b]: () => copyMAb.refreshInevitable((obj) => obj..familiarity_algorithm_b = currentAlgorithmWrapper().toJsonString()),
-                [AlgorithmUsageStatus.c]: () => copyMAb.refreshInevitable((obj) => obj..familiarity_algorithm_c = currentAlgorithmWrapper().toJsonString()),
+                [AlgorithmUsageStatus.a]: () => mm..familiarity_algorithm_a = currentAlgorithmWrapper().toJsonString(),
+                [AlgorithmUsageStatus.b]: () => mm..familiarity_algorithm_b = currentAlgorithmWrapper().toJsonString(),
+                [AlgorithmUsageStatus.c]: () => mm..familiarity_algorithm_c = currentAlgorithmWrapper().toJsonString(),
               },
               orElse: null,
             ),
         [ButtonDataState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => copyMAb.refreshInevitable((obj) => obj..button_algorithm_a = currentAlgorithmWrapper().toJsonString()),
-                [AlgorithmUsageStatus.b]: () => copyMAb.refreshInevitable((obj) => obj..button_algorithm_b = currentAlgorithmWrapper().toJsonString()),
-                [AlgorithmUsageStatus.c]: () => copyMAb.refreshInevitable((obj) => obj..button_algorithm_c = currentAlgorithmWrapper().toJsonString()),
+                [AlgorithmUsageStatus.a]: () => mm..button_algorithm_a = currentAlgorithmWrapper().toJsonString(),
+                [AlgorithmUsageStatus.b]: () => mm..button_algorithm_b = currentAlgorithmWrapper().toJsonString(),
+                [AlgorithmUsageStatus.c]: () => mm..button_algorithm_c = currentAlgorithmWrapper().toJsonString(),
               },
               orElse: null,
             ),
         [NextShowTimeState]: () => filter(
               from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
               targets: {
-                [AlgorithmUsageStatus.a]: () => copyMAb.refreshInevitable((obj) => obj..next_time_algorithm_a = currentAlgorithmWrapper().toJsonString()),
-                [AlgorithmUsageStatus.b]: () => copyMAb.refreshInevitable((obj) => obj..next_time_algorithm_b = currentAlgorithmWrapper().toJsonString()),
-                [AlgorithmUsageStatus.c]: () => copyMAb.refreshInevitable((obj) => obj..next_time_algorithm_c = currentAlgorithmWrapper().toJsonString()),
+                [AlgorithmUsageStatus.a]: () => mm..next_time_algorithm_a = currentAlgorithmWrapper().toJsonString(),
+                [AlgorithmUsageStatus.b]: () => mm..next_time_algorithm_b = currentAlgorithmWrapper().toJsonString(),
+                [AlgorithmUsageStatus.c]: () => mm..next_time_algorithm_c = currentAlgorithmWrapper().toJsonString(),
               },
               orElse: null,
             ),

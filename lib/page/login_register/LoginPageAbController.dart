@@ -128,8 +128,8 @@ class LoginPageAbController extends AbController {
         path: HttpPath.POST__REGISTER_OR_LOGIN_SEND_OR_VERIFY,
         dtoData: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_send,
-          email: lw.getEditContent(),
-          phone: null,
+          bind_email: lw.getEditContent(),
+          bind_phone: null,
           verify_code: null,
           device_info: null,
         ),
@@ -192,8 +192,8 @@ class LoginPageAbController extends AbController {
         path: HttpPath.POST__REGISTER_OR_LOGIN_SEND_OR_VERIFY,
         dtoData: SendOrVerifyDto(
           register_or_login_type: RegisterOrLoginType.email_verify,
-          email: lw.getEditContent(),
-          phone: null,
+          bind_email: lw.getEditContent(),
+          bind_phone: null,
           verify_code: verifyCode,
           device_info: deviceInfo,
         ),
@@ -234,7 +234,7 @@ class LoginPageAbController extends AbController {
   ///
   /// 返回是否本地登录成功.
   Future<void> doClientLogin({required BuildContext context, required SendOrVerifyVo vo}) async {
-    final isLoginSuccess = await db.registerOrLoginDAO.clientLogin(
+    final isLoginSuccess = await driftDb.registerOrLoginDAO.clientLogin(
       usersCompanion: vo.user_entity!.toCompanion(false),
       deviceInfo: vo.current_device_and_token_bo.device_info,
       token: vo.current_device_and_token_bo.token,
@@ -246,7 +246,7 @@ class LoginPageAbController extends AbController {
     );
     // 未取消登录
     if (isLoginSuccess) {
-      final user = await db.generalQueryDAO.queryUserOrNull();
+      final user = await driftDb.generalQueryDAO.queryUserOrNull();
       Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => user!);
       logger.outNormal(show: vo.be_new_user ? "注册成功!" : "登录成功!");
       Navigator.pop(context);

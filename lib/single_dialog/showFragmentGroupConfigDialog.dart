@@ -118,7 +118,7 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                             final result = await request(
                               path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_MODIFY,
                               dtoData: SingleRowModifyDto(
-                                table_name: db.fragmentGroups.actualTableName,
+                                table_name: driftDb.fragmentGroups.actualTableName,
                                 row: widget.currentDynamicFragmentGroupAb()!..be_publish = false,
                               ),
                               parseResponseVoData: SingleRowModifyVo.fromJson,
@@ -186,7 +186,7 @@ class _PrivatePublishDialogWidgetState extends State<_PrivatePublishDialogWidget
                             final result = await request(
                               path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_MODIFY,
                               dtoData: SingleRowModifyDto(
-                                table_name: db.fragmentGroups.actualTableName,
+                                table_name: driftDb.fragmentGroups.actualTableName,
                                 row: widget.currentDynamicFragmentGroupAb()!..be_publish = true,
                               ),
                               parseResponseVoData: SingleRowModifyVo.fromJson,

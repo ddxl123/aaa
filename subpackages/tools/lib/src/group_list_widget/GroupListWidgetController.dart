@@ -18,6 +18,7 @@ class Group<G, U, UR> with AbBroken {
   Group({
     required this.fatherGroup,
     required this.surfaceEntity,
+    required this.jumpTargetEntity,
   });
 
   /// 当前所在的组。
@@ -28,7 +29,7 @@ class Group<G, U, UR> with AbBroken {
   final Ab<G?> surfaceEntity;
 
   /// jump 的目标组（如果有）
-  final Ab<G?> jumpTargetEntity = Ab<G?>(null);
+  final Ab<G?> jumpTargetEntity;
 
   G? getDynamicGroupEntity([Abw? abw]) => jumpTargetEntity(abw) ?? surfaceEntity(abw);
 
@@ -60,10 +61,17 @@ class Group<G, U, UR> with AbBroken {
     broken(c);
     groups().addAll(
       groupsAndUnitEntities.groupEntities.map(
-        (e) => Group<G, U, UR>(
-          fatherGroup: this,
-          surfaceEntity: e.ab,
-        ).ab,
+        (e) {
+          print("111111");
+          print(e.$1);
+          print(e.$2);
+          print("222222");
+          return Group<G, U, UR>(
+            fatherGroup: this,
+            surfaceEntity: e.$1.ab,
+            jumpTargetEntity: (e.$2).ab,
+          ).ab;
+        },
       ),
     );
     units().addAll(groupsAndUnitEntities.unitEntities.map((e) => Unit<U, UR>(unitEntity: e.unitEntity, unitREntity: e.unitREntity).ab));
@@ -93,6 +101,7 @@ abstract class GroupListWidgetController<G, U, UR> extends AbController {
   final rootGroup = Group<G, U, UR>(
     fatherGroup: null,
     surfaceEntity: Ab<G?>(null),
+    jumpTargetEntity: Ab<G?>(null),
   ).ab;
 
   /// 当点击 jump 类型的碎片组时，跳转到的是 jump 类型碎片组本身，而非 jump 目标组，因此 [groupChain] 添加的也是 jump 类型碎片组。
@@ -228,7 +237,9 @@ abstract class GroupListWidgetController<G, U, UR> extends AbController {
 
 class GroupsAndUnitEntities<G, U, UR> {
   final G? jumpTargetEntity;
-  final List<G> groupEntities;
+
+  /// 第一个-碎片组，第二个-碎片组对应的jump
+  final List<(G, G?)> groupEntities;
   final List<Unit<U, UR>> unitEntities;
 
   GroupsAndUnitEntities({

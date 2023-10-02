@@ -8,7 +8,7 @@ class HttpPath {
   HttpPath._();
 
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://192.168.1.2:2814';
+  static const String BASE_PATH_LOCAL = 'http://10.11.31.177:2814';
   
   static const String POST__REGISTER_OR_LOGIN_CHECK_LOGIN = 'POST_/register_or_login/check_login';
 
@@ -19,6 +19,10 @@ class HttpPath {
   static const String POST__LOGIN_REQUIRED_DATA_UPLOAD_ONCE_SYNCS = 'POST_/login_required/data_upload/once_syncs';
 
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_ALL_SUB_FRAGMENT_GROUPS_QUERY = 'POST_/no_login_required/fragment_group_handle/all_sub_fragment_groups_query';
+
+  static const String GET__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUP_INFORMATION = 'GET_/no_login_required/fragment_group_handle/fragment_group_information';
+
+  static const String GET__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUP_LIKE_CHANGE = 'GET_/no_login_required/fragment_group_handle/fragment_group_like_change';
 
   static const String POST__NO_LOGIN_REQUIRED_FRAGMENT_GROUP_HANDLE_FRAGMENT_GROUP_ONE_SUB_QUERY = 'POST_/no_login_required/fragment_group_handle/fragment_group_one_sub_query';
 
@@ -66,11 +70,27 @@ class HttpPath {
 
   static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUPS_QUERY = 'POST_/login_required/memory_group_handle/memory_groups_query';
 
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_SYNC_F_AND_MI = 'GET_/login_required/memory_group_handle/memory_group_sync_f_and_mi';
+
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_PAGE_FIRST_QUERY = 'GET_/login_required/memory_group_handle/memory_group_page_first_query';
+
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_PAGE_OTHER_QUERY = 'GET_/login_required/memory_group_handle/memory_group_page_other_query';
+
   static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_SELECTED_FRAGMENTS_INSERT = 'POST_/login_required/memory_group_handle/selected_fragments_insert';
 
-  static const String POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE = 'POST_/no_login_required/personal_home_page/publish_page';
+  static const String POST__NO_LOGIN_REQUIRED_MEMORY_MODEL_HANDLE_MEMORY_MODELS_QUERY = 'POST_/no_login_required/memory_model_handle/memory_models_query';
 
-  static const String POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_USER_INFO = 'POST_/no_login_required/personal_home_page/user_info';
+  static const String GET__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_BE_FOLLOW_QUERY = 'GET_/no_login_required/personal_home_handle/be_follow_query';
+
+  static const String GET__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_FOLLOW_AND_BE_FOLLOWED_COUNT_QUERY = 'GET_/no_login_required/personal_home_handle/follow_and_be_followed_count_query';
+
+  static const String GET__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_FOLLOW_AND_BE_FOLLOWED_LIST_QUERY = 'GET_/no_login_required/personal_home_handle/follow_and_be_followed_list_query';
+
+  static const String POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_PUBLISH_PAGE = 'POST_/no_login_required/personal_home_handle/publish_page';
+
+  static const String POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_USER_INFO = 'POST_/no_login_required/personal_home_handle/user_info';
+
+  static const String POST__NO_LOGIN_REQUIRED_SHORTHAND_HANDLE_SHORTHANDS_QUERY = 'POST_/no_login_required/shorthand_handle/shorthands_query';
 
   static const String POST__LOGIN_REQUIRED_SINGLE_FIELD_MODIFY = 'POST_/login_required/single_field_modify';
 

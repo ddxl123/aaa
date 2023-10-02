@@ -27,6 +27,24 @@ FragmentGroupQueryWrapper({
 }
 
 @JsonSerializable()
+class FragmentGroupWithJumpWrapper  {
+    /// 
+    FragmentGroup fragment_group;
+    /// 
+    FragmentGroup? jump_fragment_group;
+
+FragmentGroupWithJumpWrapper({
+    required this.fragment_group,
+    required this.jump_fragment_group,
+
+  });
+
+  factory FragmentGroupWithJumpWrapper.fromJson(Map<String, dynamic> json) => _$FragmentGroupWithJumpWrapperFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$FragmentGroupWithJumpWrapperToJson(this);
+}
+
+@JsonSerializable()
 class FragmentGroupWithR  {
     /// 
     FragmentGroup? fragment_group;
@@ -102,6 +120,27 @@ FragmentWithRsWrapper({
 }
 
 @JsonSerializable()
+class UserIdAndAvatarAndName  {
+    /// 
+    String? avatar_path;
+    /// 
+    int user_id;
+    /// 
+    String user_name;
+
+UserIdAndAvatarAndName({
+    required this.avatar_path,
+    required this.user_id,
+    required this.user_name,
+
+  });
+
+  factory UserIdAndAvatarAndName.fromJson(Map<String, dynamic> json) => _$UserIdAndAvatarAndNameFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$UserIdAndAvatarAndNameToJson(this);
+}
+
+@JsonSerializable()
 class DeviceAndTokenBo  {
     /// 
     String device_info;
@@ -120,15 +159,45 @@ DeviceAndTokenBo({
 }
 
 @JsonSerializable()
+class FragmentAndMemoryInfo  {
+    /// 
+    Fragment fragment;
+    /// 
+    FragmentMemoryInfo memory_info;
+
+FragmentAndMemoryInfo({
+    required this.fragment,
+    required this.memory_info,
+
+  });
+
+  factory FragmentAndMemoryInfo.fromJson(Map<String, dynamic> json) => _$FragmentAndMemoryInfoFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$FragmentAndMemoryInfoToJson(this);
+}
+
+@JsonSerializable()
 class KnowledgeBaseFragmentGroupWrapperBo  {
     /// 
     FragmentGroup fragment_group;
     /// 
     List<FragmentGroupTag> fragment_group_tags;
+    /// 
+    int liked_count;
+    /// 
+    int? liked_id_for_current_logined;
+    /// 
+    int saved_count;
+    /// 
+    int? saved_id_for_current_logined;
 
 KnowledgeBaseFragmentGroupWrapperBo({
     required this.fragment_group,
     required this.fragment_group_tags,
+    required this.liked_count,
+    required this.liked_id_for_current_logined,
+    required this.saved_count,
+    required this.saved_id_for_current_logined,
 
   });
 

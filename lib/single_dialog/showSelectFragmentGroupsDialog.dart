@@ -6,6 +6,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tools/tools.dart';
 
+import '../page/fragment_group_view/FragmentGroupSelectViewAbController.dart';
+
 /// [selectedDynamicFragmentGroup]：已选的碎片组，
 Future<void> showSelectFragmentGroupsDialog({required List<(FragmentGroup?, RFragment2FragmentGroup?)> selectedDynamicFragmentGroup}) async {
   await showCustomDialog(builder: (_) => SelectFragmentGroupDialogWidget(selectedDynamicFragmentGroup: selectedDynamicFragmentGroup));
@@ -86,11 +88,13 @@ class _SelectFragmentGroupDialogWidgetState extends State<SelectFragmentGroupDia
           ],
         ),
         onPressed: () async {
-          final result = await pushToFragmentGroupSelectView(context: context);
-          if (result != null) {
-            widget.selectedDynamicFragmentGroup.add((result.$1, null));
-            setState(() {});
-          }
+          await pushToFragmentGroupSelectView(
+            context: context,
+            selectResult: (FragmentGroup? selectedDynamicFragmentGroup, FragmentGroupSelectViewAbController controller) async {
+              widget.selectedDynamicFragmentGroup.add((selectedDynamicFragmentGroup, null));
+              setState(() {});
+            },
+          );
         },
       ),
       okText: '确定',

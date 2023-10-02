@@ -108,7 +108,6 @@ class FragmentGroupGizmoEditPageAbController extends AbController {
     coverPath.refreshInevitable(
       (obj) => obj
         ..cloudPath = currentDynamicFragmentGroupAb()?.cover_cloud_path
-        ..localPath = currentDynamicFragmentGroupAb()?.client_cover_local_path,
     );
   }
 

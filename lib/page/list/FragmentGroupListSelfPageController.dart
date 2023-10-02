@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/fragment_group_view/FragmentGroupListViewAbController.dart';
@@ -7,9 +8,15 @@ import 'package:drift_main/httper/httper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
+
+enum ReuseOrDownload {
+  reuse,
+  download,
+}
 
 class FragmentGroupListSelfPageController extends FragmentGroupListViewAbController {
-  FragmentGroupListSelfPageController({required super.userId, required super.enterFragmentGroup});
+  FragmentGroupListSelfPageController({required super.enterUserId, required super.enterFragmentGroupId});
 
   /// fragmentGroupId（已去重） - fragmentGroup
   ///
@@ -159,7 +166,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
     }
     if (isSelect) {
       final fragmentGroupQueryWrapper = FragmentGroupQueryWrapper(
-        first_target_user_id: userId,
+        first_target_user_id: enterUserId,
         is_contain_current_login_user_create: true,
         only_published: false,
         target_fragment_group_id: targetSurfaceFragmentGroup.jump_to_fragment_groups_id ?? targetSurfaceFragmentGroup.id,
@@ -359,7 +366,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
                     nestOrNotSelf = true;
                     return true;
                   }
-                  if (element.creator_user_id != userId) {
+                  if (element.creator_user_id != enterUserId) {
                     nestOrNotSelf = false;
                     return true;
                   }
@@ -403,7 +410,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
               );
             }
             if (selectedFragmentsMap().isNotEmpty) {
-              if (selectedFragmentsMap().values.any((element) => element.any((inner) => inner.unitREntity.creator_user_id != userId))) {
+              if (selectedFragmentsMap().values.any((element) => element.any((inner) => inner.unitREntity.creator_user_id != enterUserId))) {
                 SmartDialog.showToast("不能移动非自己关联的碎片！");
                 return;
               } else {
@@ -437,15 +444,20 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
     );
   }
 
-  /// 复用已选
-  Future<void> reuseSelected() async {
+  /// 下载碎片，或复用已选
+  Future<void> reuseSelectedOrDownload({required ReuseOrDownload reuseOrDownload}) async {
+    final text = reuseOrDownload == ReuseOrDownload.reuse ? "是否将已选的复用到当前页中？" : "是否保存到当前页中？";
+    final okText = reuseOrDownload == ReuseOrDownload.reuse ? "复用" : "保存";
+    final nestOrNotSelfTrue = reuseOrDownload == ReuseOrDownload.reuse ? "不能将已选的碎片组复用到自身之中！" : "不能将其保存到自身之中！";
+    final successToast = reuseOrDownload == ReuseOrDownload.reuse ? "复用成功！" : "保存成功";
     await showCustomDialog(
       builder: (ctx) {
         return OkAndCancelDialogWidget(
-          text: "是否将已选的复用到当前页中？",
+          text: text,
           cancelText: "返回",
-          okText: "复用",
+          okText: okText,
           onOk: () async {
+            SmartDialog.showLoading(msg: "保存中...");
             if (selectedSurfaceFragmentGroupsMap().isNotEmpty && selectedFragmentsMap().isNotEmpty) {
               selectedSurfaceFragmentGroupsMap.refreshInevitable((obj) => obj..clear());
               selectedFragmentsMap.refreshInevitable((obj) => obj..clear());
@@ -461,14 +473,14 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
                   bool isNest = false;
                   isNest = selectedSurfaceFragmentGroupsMap().values.any(
                     (e) {
-                      return e.id == element.id;
+                      return e.id == (element.jump_to_fragment_groups_id ?? element.id);
                     },
                   );
                   if (isNest) {
                     nestOrNotSelf = true;
                     return true;
                   }
-                  if (element.creator_user_id != userId) {
+                  if (element.creator_user_id != enterUserId) {
                     nestOrNotSelf = false;
                     return true;
                   }
@@ -476,7 +488,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
                 },
               );
               if (nestOrNotSelf == true) {
-                SmartDialog.showToast("不能将已选的碎片组复用到自身之中！");
+                SmartDialog.showToast(nestOrNotSelfTrue);
                 return;
               }
               // 筛选出已选的顶层碎片组
@@ -495,15 +507,12 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
                   fragment_groups_list: top.map(
                     (e) {
                       return Crt.fragmentGroupEntity(
-                        creator_user_id: userId,
+                        creator_user_id: enterUserId,
                         father_fragment_groups_id: getCurrentGroupAb()().getDynamicGroupEntity()?.id,
                         jump_to_fragment_groups_id: e.jump_to_fragment_groups_id ?? e.id,
-                        be_publish: e.be_publish,
-                        client_be_cloud_path_upload: e.client_be_cloud_path_upload,
-                        client_be_selected: e.client_be_selected,
-                        client_cover_local_path: e.client_cover_local_path,
-                        cover_cloud_path: e.cover_cloud_path,
-                        profile: e.profile,
+                        be_publish: false,
+                        cover_cloud_path: null,
+                        profile: jsonEncode(q.Document().toDelta().toJson()),
                         title: "${e.title}-跳转",
                       );
                     },
@@ -514,7 +523,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
               );
               await result.handleCode(
                 code150701: (String showMessage) async {
-                  SmartDialog.showToast("复用成功！");
+                  SmartDialog.showToast(successToast);
                   selectedSurfaceFragmentGroupsMap().clear();
                 },
                 otherException: (a, b, c) async {
@@ -529,8 +538,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
                   r_fragment_2_fragment_groups_list: selectedFragmentsMap().values.expand((element) => element).map(
                     (e) {
                       return Crt.rFragment2FragmentGroupEntity(
-                        client_be_selected: e.unitREntity.client_be_selected,
-                        creator_user_id: userId,
+                        creator_user_id: enterUserId,
                         fragment_group_id: getCurrentGroupAb()().getDynamicGroupEntity()?.id,
                         fragment_id: e.unitEntity.id,
                       );
@@ -542,7 +550,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
               );
               await result.handleCode(
                 code150801: (String showMessage) async {
-                  SmartDialog.showToast("复用成功！");
+                  SmartDialog.showToast(successToast);
                   selectedFragmentsMap().clear();
                 },
                 otherException: (a, b, c) async {
@@ -550,6 +558,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
                 },
               );
             }
+            SmartDialog.dismiss(status: SmartStatus.loading);
             SmartDialog.dismiss(status: SmartStatus.dialog);
           },
         );
@@ -581,7 +590,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
               bool? nestOrNotSelf;
               getGroupChainSurfaceEntityNotRoot().any(
                 (element) {
-                  if (element.creator_user_id != userId) {
+                  if (element.creator_user_id != enterUserId) {
                     nestOrNotSelf = false;
                     return true;
                   }
@@ -620,7 +629,7 @@ class FragmentGroupListSelfPageController extends FragmentGroupListViewAbControl
               );
             }
             if (selectedFragmentsMap().isNotEmpty) {
-              if (selectedFragmentsMap().values.any((element) => element.any((inner) => inner.unitREntity.creator_user_id != userId))) {
+              if (selectedFragmentsMap().values.any((element) => element.any((inner) => inner.unitREntity.creator_user_id != enterUserId))) {
                 SmartDialog.showToast("不能删除非自己关联的碎片！");
                 return;
               } else {

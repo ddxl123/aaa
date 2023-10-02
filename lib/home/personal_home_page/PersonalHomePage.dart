@@ -106,11 +106,29 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            Text("关注 ", style: const TextStyle(color: Colors.grey)),
-                            Text(c.follow(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
+                            GestureDetector(
+                              child: Row(
+                                children: [
+                                  Text("关注 ", style: const TextStyle(color: Colors.grey)),
+                                  Text(c.followCountAb(abw) > 9999 ? "9999+" : c.followCountAb(abw).toString()),
+                                ],
+                              ),
+                              onTap: () {
+                                pushToFollowListPage(context: context, userId: widget.userId, followOrBeFollowed: true);
+                              },
+                            ),
                             Text("  |  ", style: TextStyle(color: Colors.grey)),
-                            Text("被关注 ", style: const TextStyle(color: Colors.grey)),
-                            Text(c.beFollowed(abw) > 9999 ? "9999+" : c.follow(abw).toString()),
+                            GestureDetector(
+                              child: Row(
+                                children: [
+                                  Text("被关注 ", style: const TextStyle(color: Colors.grey)),
+                                  Text(c.beFollowedCountAb(abw) > 9999 ? "9999+" : c.beFollowedCountAb(abw).toString()),
+                                ],
+                              ),
+                              onTap: () {
+                                pushToFollowListPage(context: context, userId: widget.userId, followOrBeFollowed: false);
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -120,24 +138,30 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                 const Spacer(),
                 AbwBuilder(
                   builder: (abw) {
-                    if (c.isSelf) {
+                    if (c.isFollowed3(abw) == null) {
                       return TextButton(
                         style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.black12), visualDensity: VisualDensity(horizontal: 1, vertical: -1)),
                         child: Text("编辑", style: TextStyle(color: Colors.black45)),
-                        onPressed: () {},
+                        onPressed: () {
+                          c.clickFollowed();
+                        },
                       );
                     }
-                    if (c.isFollowed(abw)) {
+                    if (c.isFollowed3(abw) == true) {
                       return TextButton(
                         style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.black12), visualDensity: VisualDensity(horizontal: 1, vertical: -1)),
                         child: Text("已关注", style: TextStyle(color: Colors.black45)),
-                        onPressed: () {},
+                        onPressed: () {
+                          c.clickFollowed();
+                        },
                       );
                     } else {
                       return TextButton(
                         style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue), visualDensity: VisualDensity(horizontal: 1, vertical: -1)),
                         child: Text("关注", style: TextStyle(color: Colors.white)),
-                        onPressed: () {},
+                        onPressed: () {
+                          c.clickFollowed();
+                        },
                       );
                     }
                   },
@@ -155,7 +179,7 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
       builder: (c, abw) {
         return GestureDetector(
           onTap: () {
-            pushToFragmentGroupListView(context: c.context, enterFragmentGroup: null, userId: widget.userId);
+            pushToFragmentGroupListView(context: c.context, enterFragmentGroupId: null, userId: widget.userId);
           },
           child: Padding(
             padding: EdgeInsets.all(10),
@@ -192,7 +216,7 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            e.title,
+                                            e.jump_fragment_group?.title ?? e.fragment_group.title,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(fontSize: 17),
                                           ),
@@ -205,7 +229,9 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                                         Expanded(
                                           child: Text(
                                             () {
-                                              final text = q.Document.fromJson(jsonDecode(e.profile)).toPlainText().split("\n").first.trim();
+                                              final text = q.Document.fromJson(jsonDecode(
+                                                e.jump_fragment_group?.profile ?? e.fragment_group.profile,
+                                              )).toPlainText().split("\n").first.trim();
                                               return text.isEmpty ? "无简介" : text;
                                             }(),
                                             overflow: TextOverflow.ellipsis,
@@ -314,7 +340,7 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                         ),
                       ),
                       onTap: () {
-                        pushToFragmentGroupListView(context: c.context, userId: widget.userId, enterFragmentGroup: e);
+                        pushToFragmentGroupListView(context: c.context, userId: widget.userId, enterFragmentGroupId: e.id);
                       },
                     ),
                   );

@@ -12,10 +12,10 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
     await transaction(
       () async {
         await Future.forEach<TableInfo>(
-          db.allTables,
+          driftDb.allTables,
           (element) async {
             await delete(element).go();
-            await db.customStatement("DELETE FROM sqlite_sequence");
+            await driftDb.customStatement("DELETE FROM sqlite_sequence");
           },
         );
       },

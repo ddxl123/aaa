@@ -25,6 +25,8 @@ class MemoryGroups extends CloudTableBase  {
 
   DateTimeColumn get start_time => dateTime().named("start_time").nullable()();
 
+  IntColumn get sync_version => integer().named("sync_version")();
+
   TextColumn get title => text().named("title")();
 
   @ReferenceTo([FragmentMemoryInfos])

@@ -137,7 +137,7 @@ class ForceCloudImageWidget extends StatelessWidget {
 
   final Size? size;
   final String? cloudPath;
-  final String unknown = "unknown";
+  final String unknown = "https://img2.baidu.com/it/u=824807255,173743980&fm=253&fmt=auto&app=120&f=JPEG?w=200&h=200";
 
   @override
   Widget build(BuildContext context) {

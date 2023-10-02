@@ -10,9 +10,9 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     required String deviceInfo,
     required String token,
   }) async {
-    final find = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+    final find = await driftDb.generalQueryDAO.queryClientSyncInfoOrNull();
     if (find != null) throw "本地已存在客户端同步信息！";
-    await db.into(clientSyncInfos).insert(
+    await driftDb.into(clientSyncInfos).insert(
           ClientSyncInfosCompanion.insert(
             device_info: deviceInfo,
             token: Value(token),
@@ -20,6 +20,30 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
             updated_at: DateTime.now(),
           ),
         );
+  }
+
+  Future<void> insertMemoryGroup({
+    required MemoryGroup memoryGroup,
+  }) async {
+    await driftDb.into(memoryGroups).insert(memoryGroup, mode: InsertMode.insertOrReplace);
+  }
+
+  Future<void> insertMemoryModel({
+    required MemoryModel memoryModel,
+  }) async {
+    await driftDb.into(memoryModels).insert(memoryModel, mode: InsertMode.insertOrReplace);
+  }
+
+  /// 注意：要先在云端中插入，后才能插入带有 id 的行。
+  Future<void> insertManyFragmentMemoryInfos({
+    required List<FragmentMemoryInfo> manyFragmentMemoryInfos,
+  }) async {
+    await driftDb.batch(
+      (batch) async {
+        /// 如果存在相同，则覆盖。
+        batch.insertAll(fragmentMemoryInfos, manyFragmentMemoryInfos, mode: InsertMode.insertOrReplace);
+      },
+    );
   }
 
 // /// 向 [dynamicFragmentGroups] 每个元素，插入相同的 [willFragmentsCompanion]。

@@ -105,7 +105,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             TextButton(
               child: const Text('保存'),
               onPressed: () async {
-                final isSavedSuccess = await c.save();
+                final isSavedSuccess = await c.onlySave();
                 if (isSavedSuccess) {
                   c.abBack();
                 }

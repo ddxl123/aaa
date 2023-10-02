@@ -201,7 +201,7 @@ class _FragmentGroupTagSearchDialogWidgetState extends State<FragmentGroupTagSea
                                 final result = await request(
                                   path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_INSERT,
                                   dtoData: SingleRowInsertDto(
-                                    table_name: db.fragmentGroupTags.actualTableName,
+                                    table_name: driftDb.fragmentGroupTags.actualTableName,
                                     row: Crt.fragmentGroupTagEntity(
                                       fragment_group_id: widget.fragmentGroup.id,
                                       tag: searchedTags[i].tag.split("：").last,

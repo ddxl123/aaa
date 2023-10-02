@@ -39,30 +39,23 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return sel.isEmpty ? null : sel.first;
   }
 
-  // Future<Fragment> queryFragmentById({required int id}) async {
-  //   return await (select(fragments)..where((tbl) => tbl.id.equals(id))).getSingle();
-  // }
-
-  /// 查询全部游离态的 [Fragment]，即没有对应的 [RFragment2FragmentGroup] 的 [Fragment]
-  Future<List<Fragment>> queryAllFreeFragment() async {
-    throw "TODO";
-    final j = select(fragments).join(
-      [leftOuterJoin(rFragment2FragmentGroups, fragments.id.equalsExp(rFragment2FragmentGroups.fragment_id))],
-    );
-    j.where(rFragment2FragmentGroups.id.isNull());
-    return (await j.get()).map((e) => e.readTable(fragments)).toList();
+  Future<MemoryGroup?> queryOrNullMemoryGroup({required int memoryGroupId}) async {
+    return await (select(memoryGroups)..where((tbl) => tbl.id.equals(memoryGroupId))).getSingleOrNull();
   }
 
-  /// 查询封面需要上传图片的碎片组
-  ///
-  /// [count] - 要获取的的数量，为 null 的话获取全部
-  Future<List<FragmentGroup>> queryManyFragmentGroupForCoverImageNeedUpload({required int? count}) async {
-    throw "TODO";
-    // final sel = select(fragmentGroups);
-    // sel.where((tbl) => tbl.client_be_cloud_path_upload.equals(true));
-    // if (count != null) {
-    //   sel.limit(10);
-    // }
-    // return await sel.get();
+  Future<MemoryModel?> queryOrNullMemoryModel({required int memoryGroupId}) async {
+    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroupId))).getSingleOrNull();
+  }
+
+  Future<int> queryFragmentInMemoryGroupCount({required int memoryGroupId}) async {
+    final result = await (select(fragmentMemoryInfos)..where((tbl) => tbl.memory_group_id.equals(memoryGroupId))).get();
+    return result.length;
+  }
+
+  Future<List<FragmentMemoryInfo>> queryManyMemoryInfoByStudyStatus({
+    required int memoryGroupId,
+    required StudyStatus studyStatus,
+  }) async {
+    return await (select(fragmentMemoryInfos)..where((tbl) => tbl.memory_group_id.equals(memoryGroupId) & tbl.study_status.equalsValue(studyStatus))).get();
   }
 }

@@ -29,7 +29,7 @@ Future<void> showCreateMemoryGroupDialog() async {
           await requestSingleRowInsert(
             isLoginRequired: true,
             singleRowInsertDto: SingleRowInsertDto(
-              table_name: db.memoryGroups.actualTableName,
+              table_name: driftDb.memoryGroups.actualTableName,
               row: Crt.memoryGroupEntity(
                 start_time: null,
                 memory_model_id: null,
@@ -40,9 +40,11 @@ Future<void> showCreateMemoryGroupDialog() async {
                 new_display_order: NewDisplayOrder.random,
                 review_display_order: ReviewDisplayOrder.expire_first,
                 creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+                sync_version: 0,
               ),
             ),
             onSuccess: (String showMessage, SingleRowInsertVo vo) async {
+              // 这里不插入到本地，而是在开始记忆的时候插入。
               Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();
               SmartDialog.dismiss(status: SmartStatus.dialog);
               SmartDialog.showToast('创建成功！');

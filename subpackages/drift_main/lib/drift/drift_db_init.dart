@@ -120,5 +120,4 @@ class DriftDb extends _$DriftDb {
   }
 }
 
-DriftDb get db => DriftDb.instance;
-
+DriftDb get driftDb => DriftDb.instance;

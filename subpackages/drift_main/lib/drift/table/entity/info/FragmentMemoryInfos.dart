@@ -36,6 +36,8 @@ class FragmentMemoryInfos extends CloudTableBase  {
 
   TextColumn get study_status => textEnum<StudyStatus>().named("study_status")();
 
+  IntColumn get sync_version => integer().named("sync_version")();
+
   DateTimeColumn get created_at => dateTime().named("created_at")();
 
   IntColumn get id => integer().named("id")();

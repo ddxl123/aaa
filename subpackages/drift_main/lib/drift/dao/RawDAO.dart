@@ -8,9 +8,9 @@ class RawDAO extends DatabaseAccessor<DriftDb> with _$RawDAOMixin {
 
   /// [newUsersCompanion] 可以使用 [Crt.usersCompanion]。
   Future<User> rawInsertUser({required UsersCompanion newUsersCompanion}) async {
-    final findUser = await db.generalQueryDAO.queryUserOrNull();
+    final findUser = await driftDb.generalQueryDAO.queryUserOrNull();
     if (findUser != null) throw "本地已存在用户！";
-    return await into(db.users).insertReturning(newUsersCompanion);
+    return await into(driftDb.users).insertReturning(newUsersCompanion);
   }
 
   // Future<void> rawInsertDownloadForFragmentGroup({

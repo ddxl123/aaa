@@ -6,14 +6,11 @@ part of httper;
 @JsonSerializable()
 class FragmentGroupOneSubQueryVo extends BaseObject{
 
-    /// 
+    /// 查询到的自身的 dynamicFragmentGroup，因为要查询的目标碎片组是 dynamicFragmentGroup 类型
     FragmentGroup? self_fragment_group;
 
-    /// 获取要查询的碎片组自身的标签。不包含子孙组的标签
-    List<FragmentGroupTag> self_fragment_group_tags_list;
-
     /// 查询到的子碎片组，不包含子孙碎片组。
-    List<FragmentGroup> fragment_groups_list;
+    List<FragmentGroupWithJumpWrapper> fragment_group_with_jump_wrappers_list;
 
     /// 获取了碎片组内的碎片。不包括子孙。
     List<FragmentWithRsWrapper> fragments_list;
@@ -23,9 +20,7 @@ FragmentGroupOneSubQueryVo({
 
     required this.self_fragment_group,
 
-    required this.self_fragment_group_tags_list,
-
-    required this.fragment_groups_list,
+    required this.fragment_group_with_jump_wrappers_list,
 
     required this.fragments_list,
 

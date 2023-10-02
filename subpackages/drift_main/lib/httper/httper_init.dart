@@ -11,7 +11,7 @@ final Dio dio = Dio(
 );
 
 Future<Map<String, String>?> _getTokenHeaderMap() async {
-  final token = (await db.generalQueryDAO.queryClientSyncInfoOrNull())?.token;
+  final token = (await driftDb.generalQueryDAO.queryClientSyncInfoOrNull())?.token;
   return token == null ? null : {"token": "Bearer $token"};
 }
 
@@ -22,7 +22,6 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
   required RQ dtoData,
   List<RQ>? dtoDataList,
   required RP Function(Map<String, dynamic> responseData) parseResponseVoData,
-  ProgressCallback? onSendProgress,
   ProgressCallback? onReceiveProgress,
 }) async {
   dynamic responseData;
@@ -35,20 +34,35 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       }
       result = await dio.get(
         path.substring(4, path.length),
-        options: Options(headers: tokenMap),
+        options: Options(
+          headers: tokenMap,
+          responseType: onReceiveProgress == null ? null : ResponseType.stream,
+        ),
         queryParameters: dtoData.toJson(),
         onReceiveProgress: onReceiveProgress,
       );
     } else if (path.startsWith("POST_")) {
       result = await dio.post(
         path.substring(5, path.length),
-        options: Options(headers: tokenMap),
+        options: Options(
+          headers: tokenMap,
+          responseType: onReceiveProgress == null ? null : ResponseType.stream,
+        ),
         data: dtoDataList != null ? dtoDataList.map((e) => e.toJson()).toList() : dtoData.toJson(),
-        onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
     }
-    responseData = result.data;
+
+    if (onReceiveProgress != null) {
+      print("object");
+      print(parseResponseVoData(jsonDecode(await utf8.decoder.bind((result.data as ResponseBody).stream).join())));
+      print("object");
+      return (dtoData as dynamic)
+        ..code = result.statusCode
+        ..httperException = HttperException(showMessage: "已完整获取！", debugMessage: '无异常')
+        ..vo = parseResponseVoData(jsonDecode(await utf8.decoder.bind((result.data as ResponseBody).stream).join()));
+    }
+
     final parseCode = result.data["code"];
     final parseMessage = result.data["message"];
     final parseVo = result.data["data"] == null ? null : parseResponseVoData(result.data["data"]);
@@ -308,6 +322,28 @@ Future<void> requestSingleRowInsert({
   );
 }
 
+Future<void> requestSingleRowModify({
+  required bool isLoginRequired,
+  required SingleRowModifyDto singleRowModifyDto,
+  required Future<void> Function(String showMessage, SingleRowModifyVo vo) onSuccess,
+  Future<void> Function(int? code, HttperException httperException, StackTrace st)? onError,
+}) async {
+  final result = await request(
+    path: isLoginRequired ? HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_MODIFY : HttpPath.POST__NO_LOGIN_REQUIRED_SINGLE_ROW_MODIFY,
+    dtoData: singleRowModifyDto,
+    parseResponseVoData: SingleRowModifyVo.fromJson,
+  );
+  await result.handleCode(
+    code110101: (String showMessage, SingleRowModifyVo vo) async {
+      await onSuccess(showMessage, vo);
+    },
+    otherException: (int? code, HttperException httperException, StackTrace st) async {
+      if (onError == null) throw httperException;
+      await onError(code, httperException, st);
+    },
+  );
+}
+
 Future<void> requestSingleRowQuery({
   required bool isLoginRequired,
   required SingleRowQueryDto singleRowQueryDto,
@@ -322,6 +358,28 @@ Future<void> requestSingleRowQuery({
   await result.handleCode(
     code90101: (String showMessage, SingleRowQueryVo vo) async {
       await onSuccess(showMessage, vo);
+    },
+    otherException: (int? code, HttperException httperException, StackTrace st) async {
+      if (onError == null) throw httperException;
+      await onError(code, httperException, st);
+    },
+  );
+}
+
+Future<void> requestSingleRowDelete({
+  required bool isLoginRequired,
+  required SingleRowDeleteDto singleRowDeleteDto,
+  required Future<void> Function(String showMessage) onSuccess,
+  Future<void> Function(int? code, HttperException httperException, StackTrace st)? onError,
+}) async {
+  final result = await request(
+    path: isLoginRequired ? HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_DELETE : HttpPath.POST__NO_LOGIN_REQUIRED_SINGLE_ROW_DELETE,
+    dtoData: singleRowDeleteDto,
+    parseResponseVoData: SingleRowDeleteVo.fromJson,
+  );
+  await result.handleCode(
+    code120101: (String showMessage) async {
+      await onSuccess(showMessage);
     },
     otherException: (int? code, HttperException httperException, StackTrace st) async {
       if (onError == null) throw httperException;

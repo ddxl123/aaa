@@ -60,7 +60,7 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
                 style: const ButtonStyle(alignment: Alignment.centerLeft),
                 child: Text(e.title),
                 onPressed: () async {
-                  await pushToMemoryModelGizmoEditPage(context: context, memoryModelAb: e.ab);
+                  await pushToMemoryModelGizmoEditPage(context: context, memoryModel: e);
                   if (mounted) setState(() {});
                 },
               ),

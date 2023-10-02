@@ -41,8 +41,7 @@ class TestHome extends StatelessWidget {
                     Text('当前用户 id：${hc.loggedInUser(abw)?.id}'),
                     Text('用户名：${hc.loggedInUser(abw)?.username}'),
                     Text('密码：${hc.loggedInUser(abw)?.password}'),
-                    Text('邮箱：${hc.loggedInUser(abw)?.email}'),
-                    Text('年龄：${hc.loggedInUser(abw)?.age}'),
+                    Text('邮箱：${hc.loggedInUser(abw)?.bind_email}'),
                     ElevatedButton(
                       child: const Text('查看本地数据库'),
                       onPressed: () {

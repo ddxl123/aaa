@@ -1,6 +1,7 @@
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
@@ -20,39 +21,46 @@ Future<void> showCreateMemoryModelDialog() async {
           SmartDialog.dismiss();
         },
         onOk: (tec) async {
-          if (tec.text.trim().isEmpty) {
+          if (tec.text
+              .trim()
+              .isEmpty) {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
-          throw "todo";
-          // await db.insertDAO.insertMemoryModel(
-          //   memoryModelsCompanion: Crt.memoryModelsCompanion(
-          //     creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-          //     title: tec.text,
-          //     father_memory_model_id: null.toValue(),
-          //     button_algorithm_a: null.toValue(),
-          //     button_algorithm_b: null.toValue(),
-          //     button_algorithm_c: null.toValue(),
-          //     button_algorithm_remark: null.toValue(),
-          //     button_algorithm_usage_status: AlgorithmUsageStatus.a,
-          //     familiarity_algorithm_a: null.toValue(),
-          //     familiarity_algorithm_b: null.toValue(),
-          //     familiarity_algorithm_c: null.toValue(),
-          //     familiarity_algorithm_remark: null.toValue(),
-          //     familiarity_algorithm_usage_status: AlgorithmUsageStatus.a,
-          //     next_time_algorithm_a: null.toValue(),
-          //     next_time_algorithm_b: null.toValue(),
-          //     next_time_algorithm_c: null.toValue(),
-          //     next_time_algorithm_remark: null.toValue(),
-          //     next_time_algorithm_usage_status: AlgorithmUsageStatus.a,
-          //   ),
-          //   syncTag: await SyncTag.create(),
-          //   isCloudTableWithSync: true,
-          // );
-          Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshMemoryModels();
-
-          SmartDialog.dismiss();
-          SmartDialog.showToast('创建成功！');
+          await requestSingleRowInsert(
+            isLoginRequired: true,
+            singleRowInsertDto: SingleRowInsertDto(
+              table_name: driftDb.memoryModels.actualTableName,
+              row: Crt.memoryModelEntity(
+                title: tec.text.trim(),
+                creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+                father_memory_model_id: null,
+                button_algorithm_a: null,
+                button_algorithm_b: null,
+                button_algorithm_c: null,
+                button_algorithm_remark: null,
+                button_algorithm_usage_status: AlgorithmUsageStatus.a,
+                familiarity_algorithm_a: null,
+                familiarity_algorithm_b: null,
+                familiarity_algorithm_c: null,
+                familiarity_algorithm_remark: null,
+                familiarity_algorithm_usage_status: AlgorithmUsageStatus.a,
+                next_time_algorithm_a: null,
+                next_time_algorithm_b: null,
+                next_time_algorithm_c: null,
+                next_time_algorithm_remark: null,
+                next_time_algorithm_usage_status: AlgorithmUsageStatus.a,
+                sync_version: 0,
+              ),
+            ),
+            onSuccess: (String showMessage, SingleRowInsertVo vo) async {
+              SmartDialog.dismiss();
+              SmartDialog.showToast('创建成功！');
+            },
+            onError: (a, b, c) async {
+              logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+            },
+          );
         },
       );
     },

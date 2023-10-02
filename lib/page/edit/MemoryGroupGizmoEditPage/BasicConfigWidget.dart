@@ -68,11 +68,11 @@ class BasicConfigWidget extends StatelessWidget {
                 TextButton(
                   child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
                     builder: (gzC, gzAbw) {
-                      return Text(gzC.selectedMemoryModelAb(gzAbw)?.title ?? '点击选择');
+                      return Text(gzC.memoryModelAb(gzAbw)?.title ?? '点击选择');
                     },
                   ),
                   onPressed: () {
-                    showSelectMemoryModelInMemoryGroupDialog(mg: c.memoryGroupAb, selectedMemoryModelAb: c.selectedMemoryModelAb);
+                    showSelectMemoryModelInMemoryGroupDialog(mg: c.memoryGroupAb, selectedMemoryModelAb: c.memoryModelAb);
                   },
                 ),
                 Text("模拟(验证模型的准确性)"),
@@ -94,7 +94,7 @@ class BasicConfigWidget extends StatelessWidget {
               children: [
                 const Text('已选碎片：', style: TextStyle(fontSize: 16)),
                 TextButton(
-                  child: Text('点击查看（共 ${c.selectedFragmentCountAb(abw)} 个）', style: const TextStyle(fontSize: 16)),
+                  child: Text('点击查看（共 ${c.fragmentCountAb(abw)} 个）', style: const TextStyle(fontSize: 16)),
                   onPressed: () {
                     // Navigator.of(c.context).push(
                     //   DefaultSheetRoute(

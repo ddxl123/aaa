@@ -96,7 +96,7 @@ class _DriftViewerState extends State<DriftViewer> {
                   ),
                   PopupMenuItem(
                     onTap: () async {
-                      await db.deleteDAO.clearDb();
+                      await driftDb.deleteDAO.clearDb();
                     },
                     textStyle: const TextStyle(color: Colors.red),
                     child: const Text('清除全部数据（自增列归零）'),
@@ -172,7 +172,7 @@ class _DriftViewerState extends State<DriftViewer> {
                 child: TextButton(
                   child: const Text("sqlite_sequence"),
                   onPressed: () async {
-                    final result = await db.customSelect("select * from sqlite_sequence").get();
+                    final result = await driftDb.customSelect("select * from sqlite_sequence").get();
                     sqliteSequenceResult = const JsonEncoder.withIndent(" ").convert(result.map((e) => e.data).toList());
                     print(result);
                     setState(() {});

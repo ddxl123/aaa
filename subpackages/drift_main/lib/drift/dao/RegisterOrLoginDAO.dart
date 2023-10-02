@@ -27,13 +27,13 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
   }) async {
     return await transaction<bool>(
       () async {
-        var userOrNull = await db.generalQueryDAO.queryUserOrNull();
-        var clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+        var userOrNull = await driftDb.generalQueryDAO.queryUserOrNull();
+        var clientSyncInfoOrNull = await driftDb.generalQueryDAO.queryClientSyncInfoOrNull();
 
         Future<void> clearDbAndDoLogin() async {
-          await db.deleteDAO.clearDb();
-          userOrNull = await db.rawDAO.rawInsertUser(newUsersCompanion: usersCompanion);
-          await db.insertDAO.insertClientSyncInfo(
+          await driftDb.deleteDAO.clearDb();
+          userOrNull = await driftDb.rawDAO.rawInsertUser(newUsersCompanion: usersCompanion);
+          await driftDb.insertDAO.insertClientSyncInfo(
             deviceInfo: deviceInfo,
             token: token,
           );
@@ -53,7 +53,7 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
 
         Future<bool> ifs({required String savedLoginTypeValue}) async {
           if (savedLoginTypeValue == loginEditContent) {
-            await db.updateDAO.resetClientSyncInfo(
+            await driftDb.updateDAO.resetClientSyncInfo(
               entity: clientSyncInfoOrNull..token = token,
             );
             return true;
@@ -69,9 +69,9 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
         }
 
         if (loginTypeName == "email") {
-          return await ifs(savedLoginTypeValue: userOrNull!.email!);
+          return await ifs(savedLoginTypeValue: userOrNull!.bind_email!);
         } else if (loginEditContent == "phone") {
-          return await ifs(savedLoginTypeValue: userOrNull!.phone!);
+          return await ifs(savedLoginTypeValue: userOrNull!.bind_phone!);
         } else {
           throw "未处理类型: $loginTypeName";
         }
@@ -80,9 +80,9 @@ class RegisterOrLoginDAO extends DatabaseAccessor<DriftDb> with _$RegisterOrLogi
   }
 
   Future<void> clientLogout() async {
-    final result = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+    final result = await driftDb.generalQueryDAO.queryClientSyncInfoOrNull();
     if (result != null) {
-      await db.updateDAO.resetClientSyncInfo(
+      await driftDb.updateDAO.resetClientSyncInfo(
         entity: result..token = null,
       );
     }

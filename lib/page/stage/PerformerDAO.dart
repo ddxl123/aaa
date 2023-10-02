@@ -42,7 +42,7 @@ class PerformerQuery {
     if (mg.will_new_learn_count == 0) {
       return null;
     }
-    final selInfo = db.select(db.fragmentMemoryInfos);
+    final selInfo = driftDb.select(driftDb.fragmentMemoryInfos);
     selInfo.where((tbl) => tbl.memory_group_id.equals(mg.id) & tbl.study_status.equalsValue(StudyStatus.never));
     if (mg.new_display_order == NewDisplayOrder.random) {
       selInfo.orderBy([(_) => OrderingTerm.random()]);
@@ -54,7 +54,7 @@ class PerformerQuery {
     final infoResult = await selInfo.getSingleOrNull();
     if (infoResult == null) return null;
 
-    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(infoResult.fragment_id));
+    final selF = driftDb.select(driftDb.fragments)..where((tbl) => tbl.id.equals(infoResult.fragment_id));
     final fResult = await selF.getSingleOrNull();
     if (fResult == null) {
       logger.outNormal(print: "碎片已经被删除，但是仍然残留了记忆信息！");
@@ -68,11 +68,11 @@ class PerformerQuery {
   ///
   /// 若没有复习碎片了，则返回 null。
   Future<Performer?> getOneReviewPerformer({required MemoryGroup mg}) async {
-    final lastNextPlanedShowTimeExpr = db.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[#-1]');
+    final lastNextPlanedShowTimeExpr = driftDb.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[#-1]');
     final reviewIntervalDiff = timeDifference(target: mg.review_interval, start: mg.start_time!);
     // [isExpire] 查询的是否为过期类型。
     Future<FragmentMemoryInfo?> query(bool isExpire) async {
-      final selInfo = db.select(db.fragmentMemoryInfos);
+      final selInfo = driftDb.select(driftDb.fragmentMemoryInfos);
       selInfo.addColumns([lastNextPlanedShowTimeExpr]);
       selInfo.where(
         (tbl) {
@@ -103,7 +103,7 @@ class PerformerQuery {
     }
     if (finalResult == null) return null;
 
-    final selF = db.select(db.fragments)..where((tbl) => tbl.id.equals(finalResult!.fragment_id));
+    final selF = driftDb.select(driftDb.fragments)..where((tbl) => tbl.id.equals(finalResult!.fragment_id));
     final fResult = await selF.getSingleOrNull();
     if (fResult == null) {
       logger.outNormal(print: "碎片已经被删除，但是仍然残留了记忆信息！");

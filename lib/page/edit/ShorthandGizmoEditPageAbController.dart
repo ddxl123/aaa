@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aaa/global/GlobalAbController.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -11,11 +12,14 @@ import '../list/ShorthandListPageAbController.dart';
 class ShorthandGizmoEditPageAbController extends AbController {
   ShorthandGizmoEditPageAbController({required this.initShorthand});
 
+  final user = Aber.find<GlobalAbController>().loggedInUser()!;
+
   final quillController = q.QuillController.basic();
 
+  /// 为 null 则为插入。
   final Shorthand? initShorthand;
 
-  String getCurrentContent() => jsonEncode(quillController.document.toDelta().toJson());
+  String getCurrentContentJsonString() => jsonEncode(quillController.document.toDelta().toJson());
 
   @override
   void onInit() {
@@ -32,43 +36,43 @@ class ShorthandGizmoEditPageAbController extends AbController {
   }
 
   Future<void> save() async {
-    throw "TODO";
-    // final st = await SyncTag.create();
-    // if (initShorthand == null) {
-    //   await db.insertDAO.insertShorthand(
-    //     shorthandsCompanion: Crt.shorthandsCompanion(
-    //       content: getCurrentContent(),
-    //       creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
-    //     ),
-    //     syncTag: st,
-    //     isCloudTableWithSync: true,
-    //   );
-    //   await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
-    //   SmartDialog.showToast("创建成功！");
-    // } else {
-    //   if (getCurrentContent() != initShorthand!.content) {
-    //     await db.updateDAO.resetShorthand(
-    //       syncTag: await SyncTag.create(),
-    //       originalShorthandReset: () async {
-    //         await initShorthand!.reset(
-    //           content: getCurrentContent().toValue(),
-    //           creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id.toValue(),
-    //           syncTag: st,
-    //           isCloudTableWithSync: true,
-    //         );
-    //       },
-    //     );
-    //     await Aber.findOrNull<ShorthandListPageAbController>()?.refreshPage();
-    //     SmartDialog.showToast("修改成功！");
-    //   } else {
-    //     SmartDialog.showToast("无修改！");
-    //   }
-    // }
+    if (initShorthand == null) {
+      await requestSingleRowInsert(
+        isLoginRequired: true,
+        singleRowInsertDto: SingleRowInsertDto(
+          table_name: driftDb.shorthands.actualTableName,
+          row: Crt.shorthandEntity(
+            content: getCurrentContentJsonString(),
+            creator_user_id: user.id,
+          ),
+        ),
+        onSuccess: (String showMessage, SingleRowInsertVo vo) async {
+          SmartDialog.showToast("保存成功！");
+        },
+        onError: (a, b, c) async {
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+    } else {
+      await requestSingleRowModify(
+        isLoginRequired: true,
+        singleRowModifyDto: SingleRowModifyDto(
+          table_name: driftDb.shorthands.actualTableName,
+          row: initShorthand!..content = getCurrentContentJsonString(),
+        ),
+        onSuccess: (String showMessage, SingleRowModifyVo vo) async {
+          SmartDialog.showToast("保存成功！");
+        },
+        onError: (a, b, c) async {
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+    }
   }
 
   @override
   Future<bool> backListener(bool hasRoute) async {
-    if (getCurrentContent() == initShorthand?.content) {
+    if (getCurrentContentJsonString() == initShorthand?.content) {
       SmartDialog.showToast("无修改！");
       return false;
     }

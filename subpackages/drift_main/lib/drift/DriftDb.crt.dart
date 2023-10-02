@@ -52,6 +52,7 @@ class Crt {
     required String next_plan_show_time,
     required String show_familiarity,
     required StudyStatus study_status,
+    required int sync_version,
   }) {
     return FragmentMemoryInfo(
       actual_show_time: actual_show_time,
@@ -66,6 +67,7 @@ class Crt {
       next_plan_show_time: next_plan_show_time,
       show_familiarity: show_familiarity,
       study_status: study_status,
+      sync_version: sync_version,
       created_at: DateTime(0),
       id: -1,
       updated_at: DateTime(0),
@@ -86,13 +88,11 @@ class Crt {
   }
 
   static RFragment2FragmentGroup rFragment2FragmentGroupEntity({
-    required bool client_be_selected,
     required int creator_user_id,
     required int? fragment_group_id,
     required int fragment_id,
   }) {
     return RFragment2FragmentGroup(
-      client_be_selected: client_be_selected,
       creator_user_id: creator_user_id,
       fragment_group_id: fragment_group_id,
       fragment_id: fragment_id,
@@ -153,6 +153,7 @@ class Crt {
     required ReviewDisplayOrder review_display_order,
     required DateTime review_interval,
     required DateTime? start_time,
+    required int sync_version,
     required String title,
     required int will_new_learn_count,
   }) {
@@ -164,6 +165,7 @@ class Crt {
       review_display_order: review_display_order,
       review_interval: review_interval,
       start_time: start_time,
+      sync_version: sync_version,
       title: title,
       will_new_learn_count: will_new_learn_count,
       created_at: DateTime(0),
@@ -190,6 +192,7 @@ class Crt {
     required String? next_time_algorithm_c,
     required String? next_time_algorithm_remark,
     required AlgorithmUsageStatus next_time_algorithm_usage_status,
+    required int sync_version,
     required String title,
   }) {
     return MemoryModel(
@@ -210,6 +213,7 @@ class Crt {
       next_time_algorithm_c: next_time_algorithm_c,
       next_time_algorithm_remark: next_time_algorithm_remark,
       next_time_algorithm_usage_status: next_time_algorithm_usage_status,
+      sync_version: sync_version,
       title: title,
       created_at: DateTime(0),
       id: -1,
@@ -230,11 +234,34 @@ class Crt {
     );
   }
 
+  static FragmentGroupBeSaved fragmentGroupBeSavedEntity({
+    required int? fragment_group_id,
+    required int saved_user_id,
+  }) {
+    return FragmentGroupBeSaved(
+      fragment_group_id: fragment_group_id,
+      saved_user_id: saved_user_id,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
+    );
+  }
+
+  static FragmentGroupLike fragmentGroupLikeEntity({
+    required int fragment_group_id,
+    required int liker_user_id,
+  }) {
+    return FragmentGroupLike(
+      fragment_group_id: fragment_group_id,
+      liker_user_id: liker_user_id,
+      created_at: DateTime(0),
+      id: -1,
+      updated_at: DateTime(0),
+    );
+  }
+
   static FragmentGroup fragmentGroupEntity({
     required bool be_publish,
-    required bool client_be_cloud_path_upload,
-    required bool client_be_selected,
-    required String? client_cover_local_path,
     required String? cover_cloud_path,
     required int creator_user_id,
     required int? father_fragment_groups_id,
@@ -244,9 +271,6 @@ class Crt {
   }) {
     return FragmentGroup(
       be_publish: be_publish,
-      client_be_cloud_path_upload: client_be_cloud_path_upload,
-      client_be_selected: client_be_selected,
-      client_cover_local_path: client_cover_local_path,
       cover_cloud_path: cover_cloud_path,
       creator_user_id: creator_user_id,
       father_fragment_groups_id: father_fragment_groups_id,
@@ -276,15 +300,13 @@ class Crt {
     );
   }
 
-  static UserLike userLikeEntity({
-    required int? fragment_group_id,
-    required int? fragment_id,
-    required int liker_user_id,
+  static UserFollow userFollowEntity({
+    required int be_followed_user_id,
+    required int follow_user_id,
   }) {
-    return UserLike(
-      fragment_group_id: fragment_group_id,
-      fragment_id: fragment_id,
-      liker_user_id: liker_user_id,
+    return UserFollow(
+      be_followed_user_id: be_followed_user_id,
+      follow_user_id: follow_user_id,
       created_at: DateTime(0),
       id: -1,
       updated_at: DateTime(0),
@@ -292,21 +314,31 @@ class Crt {
   }
 
   static User userEntity({
-    required int? age,
+    required String? area,
     required String? avatar_cloud_path,
-    required String? client_avatar_local_path,
-    required String? email,
+    required String? bind_email,
+    required String? bind_phone,
+    required DateTime? birth,
+    required String? career,
+    required Gender? gender,
+    required String? interest,
     required String? password,
-    required String? phone,
+    required String? personalized_tags,
+    required String? profile,
     required String username,
   }) {
     return User(
-      age: age,
+      area: area,
       avatar_cloud_path: avatar_cloud_path,
-      client_avatar_local_path: client_avatar_local_path,
-      email: email,
+      bind_email: bind_email,
+      bind_phone: bind_phone,
+      birth: birth,
+      career: career,
+      gender: gender,
+      interest: interest,
       password: password,
-      phone: phone,
+      personalized_tags: personalized_tags,
+      profile: profile,
       username: username,
       created_at: DateTime(0),
       id: -1,

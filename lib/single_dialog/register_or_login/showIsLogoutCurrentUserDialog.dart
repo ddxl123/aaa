@@ -8,8 +8,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 /// 展示是否退出当前本地已登录用户，同时当前用户在服务端下线。
 Future<void> showIsLogoutCurrentUserDialog() async {
-  final user = await db.generalQueryDAO.queryUserOrNull();
-  final clientSyncInfo = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+  final user = await driftDb.generalQueryDAO.queryUserOrNull();
+  final clientSyncInfo = await driftDb.generalQueryDAO.queryClientSyncInfoOrNull();
   if (user == null) {
     logger.outError(show: "本地不存在用户！", print: "本地不存在用户，但却执行了退出登录！");
     return;
@@ -61,7 +61,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
             },
             code10204: (String showMessage) async {
               // 退出成功
-              await db.registerOrLoginDAO.clientLogout();
+              await driftDb.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
               logger.outNormal(show: showMessage);
               SmartDialog.dismiss(status: SmartStatus.dialog);
@@ -69,7 +69,7 @@ Future<void> showIsLogoutCurrentUserDialog() async {
             },
             code10205: (String showMessage) async {
               // 退出成功
-              await db.registerOrLoginDAO.clientLogout();
+              await driftDb.registerOrLoginDAO.clientLogout();
               Aber.find<GlobalAbController>().loggedInUser.refreshEasy((oldValue) => null);
               logger.outNormal(show: "退出成功！", print: "$showMessage\n但当前操作是【本地已登录，用户对其主动下线】的操作，因此给予权限。");
               SmartDialog.dismiss(status: SmartStatus.dialog);

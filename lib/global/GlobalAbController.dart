@@ -5,7 +5,6 @@ import 'package:aaa/single_dialog/register_or_login/showAskLoginDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/http_file_enum.dart';
-import 'package:drift_main/share_common/share_enum.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -75,8 +74,8 @@ class GlobalAbController extends AbController {
       SmartDialog.showToast('请先登录哦~');
       await showAskLoginDialog();
 
-      final resultUserOrNull = await db.generalQueryDAO.queryUserOrNull();
-      final resultClientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+      final resultUserOrNull = await driftDb.generalQueryDAO.queryUserOrNull();
+      final resultClientSyncInfoOrNull = await driftDb.generalQueryDAO.queryClientSyncInfoOrNull();
       if (resultClientSyncInfoOrNull?.token != null) {
         loggedInUser.refreshEasy((oldValue) => resultUserOrNull);
         if (loggedInUser() == null) {
@@ -94,11 +93,11 @@ class GlobalAbController extends AbController {
   /// 若未登录，则会弹出登录框，如果在登录框中进行了登录或取消了登录，该函数同样返回对应是否登录。
   Future<LoginStatus> onlyCheckIsLoggedIn() async {
     try {
-      final userOrNull = await db.generalQueryDAO.queryUserOrNull();
-      final clientSyncInfoOrNull = await db.generalQueryDAO.queryClientSyncInfoOrNull();
+      final userOrNull = await driftDb.generalQueryDAO.queryUserOrNull();
+      final clientSyncInfoOrNull = await driftDb.generalQueryDAO.queryClientSyncInfoOrNull();
       if (userOrNull == null || clientSyncInfoOrNull == null) {
         // 只要有一个为空，都将清空数据库。
-        await db.deleteDAO.clearDb();
+        await driftDb.deleteDAO.clearDb();
         loggedInUser.refreshEasy((oldValue) => null);
         return LoginStatus.localNotLogined;
       } else {
@@ -152,46 +151,5 @@ class GlobalAbController extends AbController {
   /// [count] 单次上传数量
   ///
   /// TODO: 上传完文件后，要再次 [Sync] 才行，否则路径没有被上传。
-  Future<void> uploadAllOfflineFiles({required int count}) async {
-    throw "TODO";
-    final result = await db.generalQueryDAO.queryManyFragmentGroupForCoverImageNeedUpload(count: count);
-    if (result.isEmpty) {
-      SmartDialog.showToast("已将全部离线文件上传成功！");
-      return;
-    }
-    for (var v in result) {
-      if (v.client_cover_local_path != null) {
-        await requestFile(
-          httpFileEnum: HttpFileEnum.fragmentGroupCover,
-          filePathWrapper: FilePathWrapper(
-            fileUint8List: await File(v.client_cover_local_path!).readAsBytes(),
-            oldCloudPath: null,
-          ),
-          fileRequestMethod: FileRequestMethod.upload,
-          isUpdateCache: false,
-          onSuccess: (FilePathWrapper filePathWrapper) async {
-            throw "TODO";
-            // await v.reset(
-            //   be_publish: toAbsent(),
-            //   client_be_selected: toAbsent(),
-            //   client_cover_local_path: toAbsent(),
-            //   cover_cloud_path: filePathWrapper.newCloudPath.toValue(),
-            //   creator_user_id: toAbsent(),
-            //   father_fragment_groups_id: toAbsent(),
-            //   jump_to_fragment_groups_id: toAbsent(),
-            //   profile: toAbsent(),
-            //   title: toAbsent(),
-            //   client_be_cloud_path_upload: false.toValue(),
-            //   syncTag: st,
-            //   isCloudTableWithSync: true,
-            // );
-            SmartDialog.showToast("上传成功");
-          },
-          onError: (FilePathWrapper filePathWrapper, e, StackTrace st) async {
-            SmartDialog.showToast("上传失败");
-          },
-        );
-      }
-    }
-  }
+  Future<void> uploadAllOfflineFiles({required int count}) async {}
 }

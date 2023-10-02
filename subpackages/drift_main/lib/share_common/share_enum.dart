@@ -25,6 +25,16 @@ enum KnowledgeBaseContentSortType {
   final String text;
 }
         
+enum SyncFAndMi {
+  
+  only_download,
+
+  local_cover_to_cloud,
+
+  cloud_cover_to_local,
+
+}
+        
 enum SyncCurdType {
   
   c,
@@ -85,5 +95,14 @@ enum ReviewDisplayOrder {
 
   ignore_expire,
 
+}
+        
+enum Gender {
+  
+  male("男"),
+  female("女");
+                
+  const Gender(this.text);
+  final String text;
 }
         

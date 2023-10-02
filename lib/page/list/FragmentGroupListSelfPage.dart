@@ -22,8 +22,8 @@ class FragmentGroupListSelfPage extends StatelessWidget {
     return Scaffold(
       body: GroupListWidget<FragmentGroup, Fragment, RFragment2FragmentGroup, FragmentGroupListSelfPageController>(
         groupListWidgetController: FragmentGroupListSelfPageController(
-          userId: Aber.find<GlobalAbController>().loggedInUser()!.id,
-          enterFragmentGroup: null,
+          enterUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
+          enterFragmentGroupId: null,
         ),
         groupChainStrings: (group, abw) => group(abw).getDynamicGroupEntity(abw)!.title,
         headSliver: (c, g, abw) => g(abw).getDynamicGroupEntity(abw) == null ? Container() : _Head(c: c, g: g, abw: abw),
@@ -40,7 +40,7 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(c.isSelfOfFragmentGroup(dynamicFragmentGroup: group().getDynamicGroupEntity(abw)!) ? 20 : 10, 15, 10, 15),
                       child: Row(
                         children: [
-                          c.isSelfOfFragmentGroup(dynamicFragmentGroup: group().getDynamicGroupEntity()!)
+                          c.isSelfOfFragmentGroup(dynamicFragmentGroup: group(abw).getDynamicGroupEntity()!)
                               ? Container()
                               : Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
@@ -56,7 +56,7 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          c.longPressedTarget(abw) == group()
+                          c.longPressedTarget(abw) == group(abw)
                               ? GestureDetector(
                                   child: Text("编辑", style: TextStyle(color: Colors.blue)),
                                   onTap: () {
@@ -305,7 +305,7 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                             iconData: FontAwesomeIcons.clone,
                             label: '复用',
                             onPressed: () async {
-                              await c.reuseSelected();
+                              await c.reuseSelectedOrDownload(reuseOrDownload: ReuseOrDownload.reuse);
                             },
                           ),
                           button(
@@ -417,7 +417,7 @@ class _Head extends StatelessWidget {
                   children: [
                     LocalThenCloudImageWidget(
                       size: globalFragmentGroupCoverRatio * 100,
-                      localPath: g(abw).getDynamicGroupEntity(abw)?.client_cover_local_path,
+                      localPath: null,
                       cloudPath: g(abw).getDynamicGroupEntity(abw)?.cover_cloud_path,
                     ),
                     SizedBox(width: 10),
@@ -437,12 +437,12 @@ class _Head extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 10),
-                          c.currentFragmentGroupTagsAb(abw).isEmpty
+                          (c.currentFragmentGroupInformation(abw)?.fragment_group_tags ?? []).isEmpty
                               ? Container()
                               : Wrap(
                                   alignment: WrapAlignment.start,
                                   children: [
-                                    ...c.currentFragmentGroupTagsAb(abw).map(
+                                    ...(c.currentFragmentGroupInformation(abw)?.fragment_group_tags ?? []).map(
                                       (e) {
                                         return Container(
                                           padding: EdgeInsets.fromLTRB(2, 0, 2, 0),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
 import 'package:drift_main/drift/DriftDb.dart';
+import 'package:drift_main/httper/httper.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +21,10 @@ class EnterType {
 
 class MemoryModelGizmoEditPageAbController extends AbController {
   MemoryModelGizmoEditPageAbController({
-    required this.originalMemoryModelAb,
+    required this.memoryModel,
   });
 
-  final Ab<MemoryModel> originalMemoryModelAb;
-
-  late final Ab<MemoryModel> copyMemoryModelAb;
+  final MemoryModel memoryModel;
 
   final titleEditingController = TextEditingController();
 
@@ -36,8 +35,7 @@ class MemoryModelGizmoEditPageAbController extends AbController {
   @override
   void onInit() {
     super.onInit();
-    copyMemoryModelAb = originalMemoryModelAb().copyWith().ab;
-    titleEditingController.text = copyMemoryModelAb().title;
+    titleEditingController.text = memoryModel.title;
   }
 
   T filterForStatus<T>({
@@ -78,13 +76,10 @@ class MemoryModelGizmoEditPageAbController extends AbController {
 
   @override
   Future<bool> backListener(bool hasRoute) async {
-    if (originalMemoryModelAb() == copyMemoryModelAb()) {
-      return false;
-    }
     bool isBack = false;
     await showCustomDialog(
       builder: (_) => OkAndCancelDialogWidget(
-        title: '内容存在修改，是否要丢弃？',
+        title: '若存在修改，则将其丢弃？',
         okText: '丢弃',
         cancelText: '继续编辑',
         text: null,
@@ -100,23 +95,22 @@ class MemoryModelGizmoEditPageAbController extends AbController {
     return !isBack;
   }
 
-  /// 将 [copyMemoryModelAb] 的数据传递给 [originalMemoryModelAb]，并对数据库进行修改。
+  /// 将 [copyMemoryModelAb] 的数据传递给 [memoryModel]，并对数据库进行修改。
   Future<void> save() async {
-    throw "TODO";
-    // final st = await SyncTag.create();
-    // await db.updateDAO.resetMemoryModel(
-    //   originalMemoryModelReset: () async {
-    //     throw "TODO";
-    //     // await originalMemoryModelAb().resetByEntity(
-    //     //   memoryModel: copyMemoryModelAb(),
-    //     //   syncTag: st,
-    //     //   isCloudTableWithSync: true,
-    //     // );
-    //   },
-    //   syncTag: st,
-    // );
-    // originalMemoryModelAb.refreshForce();
-    // SmartDialog.showToast("保存成功！");
+    await requestSingleRowModify(
+      isLoginRequired: true,
+      singleRowModifyDto: SingleRowModifyDto(
+        table_name: driftDb.memoryModels.actualTableName,
+        row: memoryModel,
+      ),
+      onSuccess: (String showMessage, SingleRowModifyVo vo) async {
+        SmartDialog.showToast("保存成功！");
+        Navigator.pop(context);
+      },
+      onError: (a, b, c) async {
+        logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+      },
+    );
   }
 
   void changeKeyword() {

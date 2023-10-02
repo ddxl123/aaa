@@ -2,18 +2,15 @@
 part of drift_db;
 
 @ReferenceTo([])
-class UserLikes extends CloudTableBase  {
+class FragmentGroupLikes extends CloudTableBase  {
   @override
-  String? get tableName => "user_likes";
+  String? get tableName => "fragment_group_likes";
   
   @override
   Set<Column>? get primaryKey => {id};
 
   @ReferenceTo([FragmentGroups])
-  IntColumn get fragment_group_id => integer().named("fragment_group_id").nullable()();
-
-  @ReferenceTo([Fragments])
-  IntColumn get fragment_id => integer().named("fragment_id").nullable()();
+  IntColumn get fragment_group_id => integer().named("fragment_group_id")();
 
   @ReferenceTo([Users])
   IntColumn get liker_user_id => integer().named("liker_user_id")();

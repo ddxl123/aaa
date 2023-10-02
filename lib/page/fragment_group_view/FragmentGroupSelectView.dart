@@ -3,10 +3,18 @@ import 'package:aaa/page/fragment_group_view/FragmentGroupSelectViewAbController
 import 'package:aaa/single_dialog/showCreateFragmentGroupDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 
+typedef SelectResult = Future<void> Function(
+  FragmentGroup? selectedDynamicFragmentGroup,
+  FragmentGroupSelectViewAbController controller,
+);
+
 class FragmentGroupSelectView extends StatefulWidget {
-  const FragmentGroupSelectView({super.key});
+  const FragmentGroupSelectView({super.key, required this.selectResult});
+
+  final SelectResult selectResult;
 
   @override
   State<FragmentGroupSelectView> createState() => _FragmentGroupSelectViewState();
@@ -14,8 +22,8 @@ class FragmentGroupSelectView extends StatefulWidget {
 
 class _FragmentGroupSelectViewState extends State<FragmentGroupSelectView> {
   final fragmentGroupSelectViewAbController = FragmentGroupSelectViewAbController(
-    userId: Aber.find<GlobalAbController>().loggedInUser()!.id,
-    enterFragmentGroup: null,
+    enterUserId: Aber.find<GlobalAbController>().loggedInUser()!.id,
+    enterFragmentGroupId: null,
   );
 
   @override
@@ -84,8 +92,11 @@ class _FragmentGroupSelectViewState extends State<FragmentGroupSelectView> {
       floatingActionButton: ElevatedButton(
         style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.greenAccent)),
         child: Text("选择当前位置"),
-        onPressed: () {
-          Navigator.pop<(FragmentGroup?, void)>(context, (fragmentGroupSelectViewAbController.getCurrentGroupAb()().getDynamicGroupEntity(), null));
+        onPressed: () async {
+          await widget.selectResult(
+            fragmentGroupSelectViewAbController.getCurrentGroupAb()().getDynamicGroupEntity(),
+            fragmentGroupSelectViewAbController,
+          );
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

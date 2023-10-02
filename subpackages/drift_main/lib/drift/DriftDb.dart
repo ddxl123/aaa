@@ -59,11 +59,15 @@ part 'table/entity/unit/MemoryModels.dart';
 
 part 'table/entity/unit/Shorthands.dart';
 
+part 'table/entity/unit_group/FragmentGroupBeSaveds.dart';
+
+part 'table/entity/unit_group/FragmentGroupLikes.dart';
+
 part 'table/entity/unit_group/FragmentGroups.dart';
 
 part 'table/entity/user/UserComments.dart';
 
-part 'table/entity/user/UserLikes.dart';
+part 'table/entity/user/UserFollows.dart';
 
 part 'table/entity/user/Users.dart';
 
@@ -91,11 +95,15 @@ const List<Type> tableClasses = [
 
   Shorthands,
 
+  FragmentGroupBeSaveds,
+
+  FragmentGroupLikes,
+
   FragmentGroups,
 
   UserComments,
 
-  UserLikes,
+  UserFollows,
 
   Users,
 

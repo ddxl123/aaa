@@ -20,10 +20,10 @@ class PersonalHomePageAbController extends AbController {
   final userAvatarCloudPath = Ab<String?>(null);
 
   /// 关注
-  final follow = 0.ab;
+  final followCountAb = 0.ab;
 
   /// 被关注
-  final beFollowed = 0.ab;
+  final beFollowedCountAb = 0.ab;
 
   /// 碎片创建量
   final createCount = 0.ab;
@@ -35,12 +35,22 @@ class PersonalHomePageAbController extends AbController {
 
   final fragmentsAb = <Fragment>[].ab;
 
-  final fragmentGroupsAb = <FragmentGroup>[].ab;
+  final fragmentGroupsAb = <FragmentGroupWithJumpWrapper>[].ab;
 
   final publishFragmentGroupAb = <FragmentGroup>[].ab;
 
-  /// 是否已关注
-  final isFollowed = false.ab;
+  /// 当前已登录 userId 是否关注了 [userId]
+  ///
+  /// not null - 已关注
+  /// null - 未关注
+  final followIdForIsExistAb = Ab<int?>(null);
+
+  /// null - 当前页面是当前已登录用户的页面
+  /// true - 已关注
+  /// false - 未关注
+  bool? isFollowed3([Abw? abw]) => followIdForIsExistAb(abw) != null ? true : (Aber.find<GlobalAbController>().loggedInUser()?.id == userId ? null : false);
+
+  bool get isSelf => isFollowed3() == null;
 
   @override
   void onInit() {
@@ -49,18 +59,17 @@ class PersonalHomePageAbController extends AbController {
     refreshPersonalHomePage();
   }
 
-  /// 是否是当前登录用户
-  bool get isSelf => userId == Aber.find<GlobalAbController>().loggedInUser()?.id;
-
   Future<void> refreshPersonalHomePage() async {
     queryUserInfo();
     queryFirstPage();
     queryPublishPage();
+    queryIsFollowed();
+    queryFollowAndBeFollowedCount();
   }
 
   Future<void> queryUserInfo() async {
     final result = await request(
-      path: HttpPath.POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_USER_INFO,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_USER_INFO,
       dtoData: PersonalHomePageForUserInfoDto(
         user_id: userId,
         dto_padding_1: null,
@@ -97,7 +106,7 @@ class PersonalHomePageAbController extends AbController {
       code30401: (String showMessage, vo) async {
         fragmentGroupsAb.refreshInevitable((obj) => obj
           ..clear()
-          ..addAll(vo.fragment_groups_list));
+          ..addAll(vo.fragment_group_with_jump_wrappers_list));
         fragmentsAb.refreshInevitable(
           (obj) => obj
             ..clear()
@@ -112,7 +121,7 @@ class PersonalHomePageAbController extends AbController {
 
   Future<void> queryPublishPage() async {
     final result = await request(
-      path: HttpPath.POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_PAGE_PUBLISH_PAGE,
+      path: HttpPath.POST__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_PUBLISH_PAGE,
       dtoData: PersonalHomePageForPublishPageDto(
         user_id: userId,
         dto_padding_1: null,
@@ -127,6 +136,51 @@ class PersonalHomePageAbController extends AbController {
       },
       otherException: (int? code, HttperException httperException, StackTrace st) async {
         logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
+      },
+    );
+  }
+
+  Future<void> queryFollowAndBeFollowedCount() async {
+    final result = await request(
+      path: HttpPath.GET__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_FOLLOW_AND_BE_FOLLOWED_COUNT_QUERY,
+      dtoData: FollowAndBeFollowedCountQueryDto(
+        user_id: userId,
+        dto_padding_1: null,
+      ),
+      parseResponseVoData: FollowAndBeFollowedCountQueryVo.fromJson,
+    );
+    await result.handleCode(
+      code70401: (String showMessage, FollowAndBeFollowedCountQueryVo vo) async {
+        followCountAb.refreshEasy((oldValue) => vo.follow_count);
+        beFollowedCountAb.refreshEasy((oldValue) => vo.be_followed_count);
+        print(vo.follow_count);
+        print(vo.be_followed_count);
+      },
+      otherException: (a, b, c) async {
+        logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+      },
+    );
+  }
+
+  Future<void> queryIsFollowed() async {
+    if (userId == Aber.find<GlobalAbController>().loggedInUser()?.id) {
+      return;
+    }
+    final result = await request(
+      path: HttpPath.GET__NO_LOGIN_REQUIRED_PERSONAL_HOME_HANDLE_BE_FOLLOW_QUERY,
+      dtoData: BeFollowQueryDto(
+        // 如果当前未有用户登录，则抛出当前登录用户未登录异常
+        follow_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+        be_followed_user_id: userId,
+      ),
+      parseResponseVoData: BeFollowQueryVo.fromJson,
+    );
+    await result.handleCode(
+      code70501: (String showMessage, BeFollowQueryVo vo) async {
+        followIdForIsExistAb.refreshEasy((oldValue) => vo.user_follow_id);
+      },
+      otherException: (a, b, c) async {
+        logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
       },
     );
   }
@@ -153,74 +207,76 @@ class PersonalHomePageAbController extends AbController {
               ),
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: FloatingRoundCornerButton(
-              text: Text("修改头像"),
-              onPressed: () async {
-                final picker = ImagePicker();
-                final result = await picker.pickImage(source: ImageSource.gallery);
-                if (result != null) {
-                  final cropResult = await ImageCropper().cropImage(
-                    sourcePath: result.path,
-                    aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-                  );
-                  if (cropResult == null) return;
-
-                  await requestFile(
-                    httpFileEnum: HttpFileEnum.userAvatar,
-                    filePathWrapper: FilePathWrapper(
-                      fileUint8List: await cropResult.readAsBytes(),
-                      oldCloudPath: userAvatarCloudPath(),
-                    ),
-                    fileRequestMethod: FileRequestMethod.upload,
-                    isUpdateCache: true,
-                    onSuccess: (FilePathWrapper filePathWrapper) async {
-                      if (!filePathWrapper.isOldNewSame) {
-                        // path 更新至 widget
-                        userAvatarCloudPath.refreshInevitable((oldValue) => filePathWrapper.newCloudPath);
-                        // path 更新至本地
-                        throw "TODO";
-                        // (db.update(db.users)..where((tbl) => tbl.id.equals(userId))).write(
-                        //   UsersCompanion(
-                        //     avatar_cloud_path: filePathWrapper.newCloudPath.toValue(),
-                        //   ),
-                        // );
-                        // 因为当前是修改自己User上的头像，因此刷新全部带有自己的User
-                        Aber.find<GlobalAbController>().loggedInUser.refreshInevitable((obj) => obj!..avatar_cloud_path = filePathWrapper.newCloudPath);
-
-                        // path 更新至云端
-                        final result = await request(
-                          path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_FIELD_MODIFY,
-                          dtoData: SingleFieldModifyDto(
-                            table_name: db.users.actualTableName,
-                            field_name: db.users.avatar_cloud_path.name,
-                            row_id: userId,
-                            modify_value: filePathWrapper.newCloudPath,
-                          ),
-                          parseResponseVoData: SingleFieldModifyVo.fromJson,
+            floatingActionButton: isSelf
+                ? FloatingRoundCornerButton(
+                    text: Text("修改头像"),
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final result = await picker.pickImage(source: ImageSource.gallery);
+                      if (result != null) {
+                        final cropResult = await ImageCropper().cropImage(
+                          sourcePath: result.path,
+                          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
                         );
-                        await result.handleCode(
-                          code80101: (String showMessage) async {
-                            // 无业务
+                        if (cropResult == null) return;
+
+                        await requestFile(
+                          httpFileEnum: HttpFileEnum.userAvatar,
+                          filePathWrapper: FilePathWrapper(
+                            fileUint8List: await cropResult.readAsBytes(),
+                            oldCloudPath: userAvatarCloudPath(),
+                          ),
+                          fileRequestMethod: FileRequestMethod.upload,
+                          isUpdateCache: true,
+                          onSuccess: (FilePathWrapper filePathWrapper) async {
+                            if (!filePathWrapper.isOldNewSame) {
+                              // path 更新至 widget
+                              userAvatarCloudPath.refreshInevitable((oldValue) => filePathWrapper.newCloudPath);
+                              // path 更新至本地
+                              throw "TODO";
+                              // (db.update(db.users)..where((tbl) => tbl.id.equals(userId))).write(
+                              //   UsersCompanion(
+                              //     avatar_cloud_path: filePathWrapper.newCloudPath.toValue(),
+                              //   ),
+                              // );
+                              // 因为当前是修改自己User上的头像，因此刷新全部带有自己的User
+                              Aber.find<GlobalAbController>().loggedInUser.refreshInevitable((obj) => obj!..avatar_cloud_path = filePathWrapper.newCloudPath);
+
+                              // path 更新至云端
+                              final result = await request(
+                                path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_FIELD_MODIFY,
+                                dtoData: SingleFieldModifyDto(
+                                  table_name: driftDb.users.actualTableName,
+                                  field_name: driftDb.users.avatar_cloud_path.name,
+                                  row_id: userId,
+                                  modify_value: filePathWrapper.newCloudPath,
+                                ),
+                                parseResponseVoData: SingleFieldModifyVo.fromJson,
+                              );
+                              await result.handleCode(
+                                code80101: (String showMessage) async {
+                                  // 无业务
+                                },
+                                otherException: (int? code, HttperException httperException, StackTrace st) async {
+                                  logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
+                                  throw httperException;
+                                },
+                              );
+                            }
                           },
-                          otherException: (int? code, HttperException httperException, StackTrace st) async {
-                            logger.outErrorHttp(code: code, showMessage: httperException.showMessage, debugMessage: httperException.debugMessage, st: st);
-                            throw httperException;
+                          onError: (FilePathWrapper filePathWrapper, e, StackTrace st) async {
+                            logger.outError(
+                              show: "更改失败！",
+                              print: "old:${filePathWrapper.oldCloudPath}, new:${filePathWrapper.newCloudPath}",
+                              error: e,
+                              stackTrace: st,
+                            );
                           },
                         );
                       }
                     },
-                    onError: (FilePathWrapper filePathWrapper, e, StackTrace st) async {
-                      logger.outError(
-                        show: "更改失败！",
-                        print: "old:${filePathWrapper.oldCloudPath}, new:${filePathWrapper.newCloudPath}",
-                        error: e,
-                        stackTrace: st,
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+                  )
+                : null,
           ),
           onTap: () {
             SmartDialog.dismiss(status: SmartStatus.dialog);
@@ -228,5 +284,44 @@ class PersonalHomePageAbController extends AbController {
         );
       },
     );
+  }
+
+  Future<void> clickFollowed() async {
+    if (isFollowed3() == true) {
+      await requestSingleRowDelete(
+        isLoginRequired: true,
+        singleRowDeleteDto: SingleRowDeleteDto(
+          table_name: driftDb.userFollows.actualTableName,
+          row_id: followIdForIsExistAb()!,
+        ),
+        onSuccess: (String showMessage) async {
+          followIdForIsExistAb.refreshEasy((oldValue) => null);
+          beFollowedCountAb.refreshEasy((oldValue) => oldValue - 1);
+        },
+        onError: (a, b, c) async {
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+    } else if (isFollowed3() == false) {
+      await requestSingleRowInsert(
+        isLoginRequired: true,
+        singleRowInsertDto: SingleRowInsertDto(
+          table_name: driftDb.userFollows.actualTableName,
+          row: Crt.userFollowEntity(
+            follow_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
+            be_followed_user_id: userId,
+          ),
+        ),
+        onSuccess: (String showMessage, vo) async {
+          followIdForIsExistAb.refreshEasy((oldValue) => UserFollow.fromJson(vo.row).id);
+          beFollowedCountAb.refreshEasy((oldValue) => oldValue + 1);
+        },
+        onError: (a, b, c) async {
+          logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+        },
+      );
+    } else {
+      // TODO: 个人资料编辑页
+    }
   }
 }

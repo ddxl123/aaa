@@ -128,7 +128,9 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
     if (selectedMg == null) {
       SmartDialog.showToast('未选择！');
     } else {
-      // 先查询已存在与该记忆组内的全部碎片id，
+      // TODO: 增加完整性修复功能，检查数量是否相等，完整性修复可以检查每个碎片信息的 id 是否与云端相同。
+
+      // 查询已存在于该记忆组内的全部碎片id，
       final mgFragmentIdsResult = await request(
         path: HttpPath.GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENT_IDS_QUERY,
         dtoData: MemoryGroupFragmentIdsQueryDto(
@@ -141,32 +143,37 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
         code160401: (String showMessage, vo) async {
           // 只插入不存在于当前记忆组内的碎片。
           final will = (await Aber.findOrNullLast<FragmentGroupListSelfPageController>()!.getSelectedFragments()).toSet().difference(vo.fragment_ids_list.toSet());
+          final willMap = will
+              .map((e) => Crt.fragmentMemoryInfoEntity(
+                    creator_user_id: user.id,
+                    fragment_id: e,
+                    memory_group_id: selectedMg!.id,
+                    actual_show_time: [].toJsonString(),
+                    button_values: [].toJsonString(),
+                    click_familiarity: [].toJsonString(),
+                    click_time: [].toJsonString(),
+                    click_value: [].toJsonString(),
+                    content_value: [].toJsonString(),
+                    next_plan_show_time: [].toJsonString(),
+                    show_familiarity: [].toJsonString(),
+                    study_status: StudyStatus.never,
+                    sync_version: 0,
+                  ))
+              .toList();
+
           final result = await request(
             path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_SELECTED_FRAGMENTS_INSERT,
             dtoData: MemoryGroupSelectedFragmentsInsertDto(
-              fragment_memory_infos_list: will
-                  .map((e) => Crt.fragmentMemoryInfoEntity(
-                        creator_user_id: user.id,
-                        fragment_id: e,
-                        memory_group_id: selectedMg!.id,
-                        actual_show_time: [].toJsonString(),
-                        button_values: [].toJsonString(),
-                        click_familiarity: [].toJsonString(),
-                        click_time: [].toJsonString(),
-                        click_value: [].toJsonString(),
-                        content_value: [].toJsonString(),
-                        next_plan_show_time: [].toJsonString(),
-                        show_familiarity: [].toJsonString(),
-                        study_status: StudyStatus.never,
-                      ))
-                  .toList(),
+              fragment_memory_infos_list: willMap,
               memory_group_id: selectedMg!.id,
             ),
             parseResponseVoData: MemoryGroupSelectedFragmentsInsertVo.fromJson,
           );
           await result.handleCode(
             code160301: (String showMessage) async {
+              // 这里不插入到本地，而是在记忆组中提示是否要下载。
               SmartDialog.dismiss();
+              // TODO: 是否现在就下载
               SmartDialog.showToast('添加成功！');
             },
           );

@@ -55,7 +55,7 @@ class FragmentPerformer {
       final queryFragment = await request(
         path: HttpPath.POST__LOGIN_REQUIRED_SINGLE_ROW_QUERY,
         dtoData: SingleRowQueryDto(
-          table_name: db.fragments.actualTableName,
+          table_name: driftDb.fragments.actualTableName,
           row_id: fragment!.id,
         ),
         parseResponseVoData: SingleRowQueryVo.fromJson,

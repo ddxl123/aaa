@@ -73,7 +73,7 @@ class _MineHomeState extends State<MineHome> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                     child: LocalThenCloudImageWidget(
                       size: const Size(globalUserAvatarSquareSide, globalUserAvatarSquareSide),
-                      localPath: c.globalAbController.loggedInUser()?.client_avatar_local_path,
+                      localPath: null,
                       cloudPath: c.globalAbController.loggedInUser()?.avatar_cloud_path,
                     ),
                   ),

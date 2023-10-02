@@ -31,12 +31,9 @@ Future<void> showCreateFragmentGroupDialog({required FragmentGroup? dynamicGroup
           await requestSingleRowInsert(
             isLoginRequired: true,
             singleRowInsertDto: SingleRowInsertDto(
-              table_name: db.fragmentGroups.actualTableName,
+              table_name: driftDb.fragmentGroups.actualTableName,
               row: Crt.fragmentGroupEntity(
                 be_publish: false,
-                client_be_cloud_path_upload: false,
-                client_be_selected: false,
-                client_cover_local_path: null,
                 cover_cloud_path: null,
                 creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
                 father_fragment_groups_id: dynamicGroupEntity?.id,

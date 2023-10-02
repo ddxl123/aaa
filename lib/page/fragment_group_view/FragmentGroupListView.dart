@@ -5,23 +5,25 @@ import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:like_button/like_button.dart';
 import 'package:tools/tools.dart';
 
 import '../../global/tool_widgets/CustomImageWidget.dart';
 
 class FragmentGroupListView extends StatelessWidget {
-  const FragmentGroupListView({super.key, required this.enterFragmentGroup, required this.userId});
+  const FragmentGroupListView({super.key, required this.enterFragmentGroupId, required this.enterUserId});
 
-  final int userId;
-  final FragmentGroup? enterFragmentGroup;
+  final int enterUserId;
+  final int? enterFragmentGroupId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(child: Container(), preferredSize: Size(0, 10)),
       body: GroupListWidget<FragmentGroup, Fragment, RFragment2FragmentGroup, FragmentGroupListViewAbController>(
-        groupListWidgetController: FragmentGroupListViewAbController(enterFragmentGroup: enterFragmentGroup, userId: userId),
+        groupListWidgetController: FragmentGroupListViewAbController(enterFragmentGroupId: enterFragmentGroupId, enterUserId: enterUserId),
         groupChainStrings: (group, abw) => group(abw).getDynamicGroupEntity(abw)!.title,
         leftActionBuilder: (c, abw) {
           return Row(
@@ -123,15 +125,16 @@ class _HeadState extends State<_Head> {
                 TextButton(
                   child: Row(
                     children: [
-                      Icon(FontAwesomeIcons.locationCrosshairs, size: 16),
+                      Icon(FontAwesomeIcons.locationCrosshairs, size: 16, color: Colors.grey),
                       SizedBox(width: 5),
-                      Text("查看源"),
+                      Text("查看源", style: TextStyle(color: Colors.grey)),
                     ],
                   ),
                   onPressed: () {},
                 ),
                 Spacer(),
-                Text("热度999+", style: TextStyle(color: Colors.orange)),
+                // TODO:
+                // Text("热度999+", style: TextStyle(color: Colors.orange)),
               ],
             ),
             Row(
@@ -139,7 +142,7 @@ class _HeadState extends State<_Head> {
               children: [
                 LocalThenCloudImageWidget(
                   size: globalFragmentGroupCoverRatio * 100,
-                  localPath: widget.g(widget.abw).getDynamicGroupEntity(widget.abw)?.client_cover_local_path,
+                  localPath: null,
                   cloudPath: widget.g(widget.abw).getDynamicGroupEntity(widget.abw)?.cover_cloud_path,
                 ),
                 SizedBox(width: 10),
@@ -163,7 +166,7 @@ class _HeadState extends State<_Head> {
                       Wrap(
                         spacing: 5,
                         children: [
-                          ...widget.c.currentFragmentGroupTagsAb(widget.abw).map(
+                          ...(widget.c.currentFragmentGroupInformation(widget.abw)?.fragment_group_tags ?? []).map(
                             (e) {
                               return Container(
                                 child: Text(e.tag, style: TextStyle(fontSize: 12, color: Colors.grey)),
@@ -180,34 +183,49 @@ class _HeadState extends State<_Head> {
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          ClipOval(
-                            child: ForceCloudImageWidget(
-                              size: Size(36, 36),
-                              cloudPath: widget.c.currentUser(widget.abw)?.avatar_cloud_path,
-                            ),
-                          ),
-                          SizedBox(width: 10),
                           Expanded(
-                            child: Text(widget.c.currentUser(widget.abw)?.username ?? "加载中..."),
-                          ),
-                          InkWell(
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                            child: GestureDetector(
                               child: Row(
                                 children: [
-                                  Icon(Icons.download_outlined, size: 34, color: Colors.green),
-                                  Text(
-                                    "999+",
-                                    style: TextStyle(color: Colors.grey),
+                                  ClipOval(
+                                    child: ForceCloudImageWidget(
+                                      size: Size(36, 36),
+                                      cloudPath: widget.c.enterUser(widget.abw)?.avatar_cloud_path,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(widget.c.enterUser(widget.abw)?.username ?? "加载中..."),
                                   ),
                                 ],
                               ),
+                              onTap: () {
+                                pushToPersonalHomePage(context: context, userId: widget.c.enterUserId);
+                              },
                             ),
-                            onTap: () {
-                              // c.download(willDownloadFragmentGroup: e.fragment_group);
+                          ),
+                          AbwBuilder(
+                            builder: (abw) {
+                              return InkWell(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.download_outlined, size: 34, color: Colors.green),
+                                      Text(
+                                        (widget.c.currentFragmentGroupInformation(abw)?.saved_count ?? 0).toString(),
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  widget.c.download(widget.g().surfaceEntity()!);
+                                },
+                              );
                             },
-                          )
+                          ),
                         ],
                       ),
                     ],
@@ -223,20 +241,25 @@ class _HeadState extends State<_Head> {
                 Expanded(
                   child: MaterialButton(
                     visualDensity: kMinVisualDensity,
-                    onPressed: () {},
-                    child: Icon(Icons.share, size: 18),
+                    onPressed: () {
+                      SmartDialog.showToast("暂不可用");
+                    },
+                    child: Icon(Icons.share, size: 18, color: Colors.black12),
                   ),
                 ),
                 Container(height: 30, child: VerticalDivider(color: Colors.black12)),
                 Expanded(
                   child: MaterialButton(
                     visualDensity: kMinVisualDensity,
-                    onPressed: () {},
+                    onPressed: () {
+                      SmartDialog.showToast("暂不可用");
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.star, size: 18),
-                        Text("999+", style: TextStyle(fontSize: 14)),
+                        Icon(Icons.star, size: 18, color: Colors.black12),
+                        // TODO:
+                        // Text("999+", style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ),
@@ -245,28 +268,39 @@ class _HeadState extends State<_Head> {
                 Expanded(
                   child: MaterialButton(
                     visualDensity: kMinVisualDensity,
-                    onPressed: () {},
+                    onPressed: () {
+                      SmartDialog.showToast("暂不可用");
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.mode_comment_outlined, size: 18),
-                        Text("999+", style: TextStyle(fontSize: 14)),
+                        Icon(Icons.mode_comment_outlined, size: 18, color: Colors.black12),
+                        // TODO:
+                        // Text("999+", style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ),
                 ),
                 Container(height: 30, child: VerticalDivider(color: Colors.black12)),
                 Expanded(
-                  child: MaterialButton(
-                    visualDensity: kMinVisualDensity,
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.thumb_up_alt_outlined, size: 18),
-                        Text("999+", style: TextStyle(fontSize: 14)),
-                      ],
-                    ),
+                  child: AbwBuilder(
+                    builder: (abw) {
+                      return LikeButton(
+                        size: 18,
+                        likeCount: (widget.c.currentFragmentGroupInformation(abw)?.liked_count ?? 0),
+                        isLiked: widget.c.currentFragmentGroupInformation(abw)?.liked_id_for_current_logined != null,
+                        likeBuilder: (isLike) {
+                          return Icon(
+                            Icons.favorite,
+                            size: 18,
+                            color: isLike ? Colors.red : Colors.grey,
+                          );
+                        },
+                        onTap: (v) async {
+                          return await widget.c.likeHandle();
+                        },
+                      );
+                    },
                   ),
                 ),
               ],
@@ -278,7 +312,6 @@ class _HeadState extends State<_Head> {
         ),
       ),
     );
-
 
     return widget.g().getDynamicGroupEntity()?.be_publish == true ? big : Container();
   }

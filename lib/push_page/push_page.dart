@@ -4,6 +4,7 @@ import 'package:aaa/page/edit/ShorthandGizmoEditPage.dart';
 import 'package:aaa/page/fragment_group_view/FragmentGroupListView.dart';
 import 'package:aaa/page/fragment_group_view/FragmentGroupSelectView.dart';
 import 'package:aaa/page/login_register/LoginPage.dart';
+import 'package:aaa/page/other/FollowListPage.dart';
 import 'package:aaa/page/other/TemplateChoicePage.dart';
 import 'package:aaa/page/stage/InAppStage.dart';
 import 'package:aaa/page/stage/fragment_template_pages/MultiFragmentTemplatePage.dart';
@@ -20,13 +21,13 @@ import '../page/edit/edit_page_type.dart';
 
 Future<void> pushToMemoryModelGizmoEditPage({
   required BuildContext context,
-  required Ab<MemoryModel> memoryModelAb,
+  required MemoryModel memoryModel,
 }) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (ctx) => MemoryModelGizmoEditPage(
-        memoryModelAb: memoryModelAb,
+        memoryModel: memoryModel,
       ),
     ),
   );
@@ -147,14 +148,14 @@ Future<void> pushToMultiFragmentTemplateView({
 Future<void> pushToFragmentGroupListView({
   required BuildContext context,
   required int userId,
-  required FragmentGroup? enterFragmentGroup,
+  required int? enterFragmentGroupId,
 }) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (ctx) => FragmentGroupListView(
-        enterFragmentGroup: enterFragmentGroup,
-        userId: userId,
+        enterFragmentGroupId: enterFragmentGroupId,
+        enterUserId: userId,
       ),
     ),
   );
@@ -184,16 +185,30 @@ Future<void> pushToPersonalHomePage({
   );
 }
 
-/// 返回空 - 取消选择
+/// 整个()返回 null，则为取消选择
 ///
-/// FragmentGroup? - dynamicFragmentGroup?
-Future<(FragmentGroup?, void)?> pushToFragmentGroupSelectView({
+/// 第一个为 null，则为选择了 root
+///
+/// 返回的是 dynamicFragmentGroup
+Future<void> pushToFragmentGroupSelectView({
   required BuildContext context,
+  required SelectResult selectResult,
 }) async {
-  return await Navigator.push<(FragmentGroup?, void)>(
+  await Navigator.push<(FragmentGroup?, void)>(
+    context,
+    MaterialPageRoute(builder: (ctx) => FragmentGroupSelectView(selectResult: selectResult)),
+  );
+}
+
+Future<void> pushToFollowListPage({
+  required BuildContext context,
+  required int userId,
+  required bool followOrBeFollowed,
+}) async {
+  await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (ctx) => FragmentGroupSelectView(),
+      builder: (ctx) => FollowListPage(userId: userId, followOrBeFollowed: followOrBeFollowed),
     ),
   );
 }

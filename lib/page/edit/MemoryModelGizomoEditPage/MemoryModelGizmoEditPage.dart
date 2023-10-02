@@ -9,13 +9,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'MemoryModelGizmoEditPageAbController.dart';
 
 class MemoryModelGizmoEditPage extends StatelessWidget {
-  const MemoryModelGizmoEditPage({Key? key, required this.memoryModelAb}) : super(key: key);
-  final Ab<MemoryModel> memoryModelAb;
+  const MemoryModelGizmoEditPage({Key? key, required this.memoryModel}) : super(key: key);
+  final MemoryModel memoryModel;
 
   @override
   Widget build(BuildContext context) {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
-      putController: MemoryModelGizmoEditPageAbController(originalMemoryModelAb: memoryModelAb),
+      putController: MemoryModelGizmoEditPageAbController(memoryModel: memoryModel),
       tag: Aber.single,
       builder: (c, abw) {
         return Scaffold(
@@ -69,7 +69,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return AbBuilder<MemoryModelGizmoEditPageAbController>(
       tag: Aber.single,
       builder: (c, abw) {
-        return Text(c.copyMemoryModelAb(abw).title);
+        return Text(c.memoryModel.title);
       },
     );
   }
@@ -115,7 +115,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                 controller: c.titleEditingController,
                 decoration: const InputDecoration(border: InputBorder.none, labelText: '名称：'),
                 onChanged: (v) {
-                  c.copyMemoryModelAb.refreshInevitable((obj) => obj..title = v);
+                  c.memoryModel.title = v;
                 },
               ),
             ),
@@ -307,14 +307,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           child: _bigSingle(
             context: c.context,
             title: FamiliarityState.NAME,
-            groupValue: c.copyMemoryModelAb(abw).familiarity_algorithm_usage_status,
+            groupValue: c.memoryModel.familiarity_algorithm_usage_status,
             onChanged: (v) {
-              c.copyMemoryModelAb().familiarity_algorithm_usage_status = v!;
+              c.memoryModel.familiarity_algorithm_usage_status = v!;
               abw.refresh();
             },
-            aIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_a == null,
-            bIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_b == null,
-            cIsEmptyScheme: c.copyMemoryModelAb(abw).familiarity_algorithm_c == null,
+            aIsEmptyScheme: c.memoryModel.familiarity_algorithm_a == null,
+            bIsEmptyScheme: c.memoryModel.familiarity_algorithm_b == null,
+            cIsEmptyScheme: c.memoryModel.familiarity_algorithm_c == null,
             aEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.a),
             bEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.b),
             cEnterType: EnterType(algorithmType: FamiliarityState, algorithmUsageStatus: AlgorithmUsageStatus.c),
@@ -333,14 +333,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           child: _bigSingle(
             context: c.context,
             title: NextShowTimeState.NAME,
-            groupValue: c.copyMemoryModelAb(abw).next_time_algorithm_usage_status,
+            groupValue: c.memoryModel.next_time_algorithm_usage_status,
             onChanged: (v) {
-              c.copyMemoryModelAb().next_time_algorithm_usage_status = v!;
+              c.memoryModel.next_time_algorithm_usage_status = v!;
               abw.refresh();
             },
-            aIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_a == null,
-            bIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_b == null,
-            cIsEmptyScheme: c.copyMemoryModelAb(abw).next_time_algorithm_c == null,
+            aIsEmptyScheme: c.memoryModel.next_time_algorithm_a == null,
+            bIsEmptyScheme: c.memoryModel.next_time_algorithm_b == null,
+            cIsEmptyScheme: c.memoryModel.next_time_algorithm_c == null,
             aEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.a),
             bEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.b),
             cEnterType: EnterType(algorithmType: NextShowTimeState, algorithmUsageStatus: AlgorithmUsageStatus.c),
@@ -359,14 +359,14 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           child: _bigSingle(
             context: c.context,
             title: ButtonDataState.NAME,
-            groupValue: c.copyMemoryModelAb(abw).button_algorithm_usage_status,
+            groupValue: c.memoryModel.button_algorithm_usage_status,
             onChanged: (v) {
-              c.copyMemoryModelAb().button_algorithm_usage_status = v!;
+              c.memoryModel.button_algorithm_usage_status = v!;
               abw.refresh();
             },
-            aIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_a == null,
-            bIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_b == null,
-            cIsEmptyScheme: c.copyMemoryModelAb(abw).button_algorithm_c == null,
+            aIsEmptyScheme: c.memoryModel.button_algorithm_a == null,
+            bIsEmptyScheme: c.memoryModel.button_algorithm_b == null,
+            cIsEmptyScheme: c.memoryModel.button_algorithm_c == null,
             aEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.a),
             bEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.b),
             cEnterType: EnterType(algorithmType: ButtonDataState, algorithmUsageStatus: AlgorithmUsageStatus.c),

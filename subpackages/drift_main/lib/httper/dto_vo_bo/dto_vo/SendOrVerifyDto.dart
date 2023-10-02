@@ -10,10 +10,10 @@ class SendOrVerifyDto extends BaseObject{
     RegisterOrLoginType register_or_login_type;
 
     /// 
-    String? email;
+    String? bind_email;
 
     /// 
-    String? phone;
+    String? bind_phone;
 
     /// 
     int? verify_code;
@@ -26,9 +26,9 @@ SendOrVerifyDto({
 
     required this.register_or_login_type,
 
-    required this.email,
+    required this.bind_email,
 
-    required this.phone,
+    required this.bind_phone,
 
     required this.verify_code,
 

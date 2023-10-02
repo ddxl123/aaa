@@ -69,16 +69,16 @@ class MemoryModeListPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextButton(
-                      child: Text(c.memoryModels()[index](abw).title.toString()),
+                      child: Text(c.memoryModelsAb()[index].title.toString()),
                       onPressed: () {
-                        pushToMemoryModelGizmoEditPage(context: context, memoryModelAb: c.memoryModels()[index]);
+                        pushToMemoryModelGizmoEditPage(context: context, memoryModel: c.memoryModelsAb()[index]);
                       },
                     ),
                   ),
                 ],
               );
             },
-            childCount: c.memoryModels(abw).length,
+            childCount: c.memoryModelsAb(abw).length,
           ),
         );
       },

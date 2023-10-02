@@ -33,7 +33,7 @@ class ShorthandListPage extends StatelessWidget {
               itemBuilder: (_, index) {
                 return GestureDetector(
                   onTap: () {
-                    pushToShorthandGizmoEditPage(context: context, initShorthand: c.shorthandsAb()[index]());
+                    pushToShorthandGizmoEditPage(context: context, initShorthand: c.shorthandsAb()[index]);
                   },
                   child: Card(
                     child: Container(
@@ -42,7 +42,7 @@ class ShorthandListPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            q.Document.fromJson(jsonDecode(c.shorthandsAb(abw)[index](abw).content)).toPlainText(),
+                            q.Document.fromJson(jsonDecode(c.shorthandsAb(abw)[index].content)).toPlainText(),
                             maxLines: 6,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -52,7 +52,7 @@ class ShorthandListPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   () {
-                                    final time = c.shorthandsAb(abw)[index](abw).updated_at;
+                                    final time = c.shorthandsAb(abw)[index].updated_at;
                                     final spt = time.toString().split(" ");
                                     if (DateTime.now().difference(time).inHours >= 24) {
                                       return spt.first.replaceAll("-", ".");

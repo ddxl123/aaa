@@ -26,6 +26,24 @@ Map<String, dynamic> _$FragmentGroupQueryWrapperToJson(
       'target_fragment_group_id': instance.target_fragment_group_id,
     };
 
+FragmentGroupWithJumpWrapper _$FragmentGroupWithJumpWrapperFromJson(
+        Map<String, dynamic> json) =>
+    FragmentGroupWithJumpWrapper(
+      fragment_group: FragmentGroup.fromJson(
+          json['fragment_group'] as Map<String, dynamic>),
+      jump_fragment_group: json['jump_fragment_group'] == null
+          ? null
+          : FragmentGroup.fromJson(
+              json['jump_fragment_group'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FragmentGroupWithJumpWrapperToJson(
+        FragmentGroupWithJumpWrapper instance) =>
+    <String, dynamic>{
+      'fragment_group': instance.fragment_group,
+      'jump_fragment_group': instance.jump_fragment_group,
+    };
+
 FragmentGroupWithR _$FragmentGroupWithRFromJson(Map<String, dynamic> json) =>
     FragmentGroupWithR(
       fragment_group: json['fragment_group'] == null
@@ -96,6 +114,22 @@ Map<String, dynamic> _$FragmentWithRsWrapperToJson(
       'r_fragment_2_fragment_groups': instance.r_fragment_2_fragment_groups,
     };
 
+UserIdAndAvatarAndName _$UserIdAndAvatarAndNameFromJson(
+        Map<String, dynamic> json) =>
+    UserIdAndAvatarAndName(
+      avatar_path: json['avatar_path'] as String?,
+      user_id: json['user_id'] as int,
+      user_name: json['user_name'] as String,
+    );
+
+Map<String, dynamic> _$UserIdAndAvatarAndNameToJson(
+        UserIdAndAvatarAndName instance) =>
+    <String, dynamic>{
+      'avatar_path': instance.avatar_path,
+      'user_id': instance.user_id,
+      'user_name': instance.user_name,
+    };
+
 DeviceAndTokenBo _$DeviceAndTokenBoFromJson(Map<String, dynamic> json) =>
     DeviceAndTokenBo(
       device_info: json['device_info'] as String,
@@ -108,6 +142,21 @@ Map<String, dynamic> _$DeviceAndTokenBoToJson(DeviceAndTokenBo instance) =>
       'token': instance.token,
     };
 
+FragmentAndMemoryInfo _$FragmentAndMemoryInfoFromJson(
+        Map<String, dynamic> json) =>
+    FragmentAndMemoryInfo(
+      fragment: Fragment.fromJson(json['fragment'] as Map<String, dynamic>),
+      memory_info: FragmentMemoryInfo.fromJson(
+          json['memory_info'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FragmentAndMemoryInfoToJson(
+        FragmentAndMemoryInfo instance) =>
+    <String, dynamic>{
+      'fragment': instance.fragment,
+      'memory_info': instance.memory_info,
+    };
+
 KnowledgeBaseFragmentGroupWrapperBo
     _$KnowledgeBaseFragmentGroupWrapperBoFromJson(Map<String, dynamic> json) =>
         KnowledgeBaseFragmentGroupWrapperBo(
@@ -116,6 +165,12 @@ KnowledgeBaseFragmentGroupWrapperBo
           fragment_group_tags: (json['fragment_group_tags'] as List<dynamic>)
               .map((e) => FragmentGroupTag.fromJson(e as Map<String, dynamic>))
               .toList(),
+          liked_count: json['liked_count'] as int,
+          liked_id_for_current_logined:
+              json['liked_id_for_current_logined'] as int?,
+          saved_count: json['saved_count'] as int,
+          saved_id_for_current_logined:
+              json['saved_id_for_current_logined'] as int?,
         );
 
 Map<String, dynamic> _$KnowledgeBaseFragmentGroupWrapperBoToJson(
@@ -123,6 +178,10 @@ Map<String, dynamic> _$KnowledgeBaseFragmentGroupWrapperBoToJson(
     <String, dynamic>{
       'fragment_group': instance.fragment_group,
       'fragment_group_tags': instance.fragment_group_tags,
+      'liked_count': instance.liked_count,
+      'liked_id_for_current_logined': instance.liked_id_for_current_logined,
+      'saved_count': instance.saved_count,
+      'saved_id_for_current_logined': instance.saved_id_for_current_logined,
     };
 
 ModifyKnowledgeBaseBigCategory _$ModifyKnowledgeBaseBigCategoryFromJson(
@@ -212,8 +271,8 @@ SendOrVerifyDto _$SendOrVerifyDtoFromJson(Map<String, dynamic> json) =>
     SendOrVerifyDto(
       register_or_login_type: $enumDecode(
           _$RegisterOrLoginTypeEnumMap, json['register_or_login_type']),
-      email: json['email'] as String?,
-      phone: json['phone'] as String?,
+      bind_email: json['bind_email'] as String?,
+      bind_phone: json['bind_phone'] as String?,
       verify_code: json['verify_code'] as int?,
       device_info: json['device_info'] as String?,
     );
@@ -222,8 +281,8 @@ Map<String, dynamic> _$SendOrVerifyDtoToJson(SendOrVerifyDto instance) =>
     <String, dynamic>{
       'register_or_login_type':
           _$RegisterOrLoginTypeEnumMap[instance.register_or_login_type]!,
-      'email': instance.email,
-      'phone': instance.phone,
+      'bind_email': instance.bind_email,
+      'bind_phone': instance.bind_phone,
       'verify_code': instance.verify_code,
       'device_info': instance.device_info,
     };
@@ -311,6 +370,85 @@ Map<String, dynamic> _$FragmentGroupTagNewFragmentGroupTagVoToJson(
       'fragment_group_tag_entity': instance.fragment_group_tag_entity,
     };
 
+BeFollowQueryDto _$BeFollowQueryDtoFromJson(Map<String, dynamic> json) =>
+    BeFollowQueryDto(
+      follow_user_id: json['follow_user_id'] as int,
+      be_followed_user_id: json['be_followed_user_id'] as int,
+    );
+
+Map<String, dynamic> _$BeFollowQueryDtoToJson(BeFollowQueryDto instance) =>
+    <String, dynamic>{
+      'follow_user_id': instance.follow_user_id,
+      'be_followed_user_id': instance.be_followed_user_id,
+    };
+
+BeFollowQueryVo _$BeFollowQueryVoFromJson(Map<String, dynamic> json) =>
+    BeFollowQueryVo(
+      user_follow_id: json['user_follow_id'] as int?,
+    );
+
+Map<String, dynamic> _$BeFollowQueryVoToJson(BeFollowQueryVo instance) =>
+    <String, dynamic>{
+      'user_follow_id': instance.user_follow_id,
+    };
+
+FollowAndBeFollowedCountQueryDto _$FollowAndBeFollowedCountQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    FollowAndBeFollowedCountQueryDto(
+      user_id: json['user_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$FollowAndBeFollowedCountQueryDtoToJson(
+        FollowAndBeFollowedCountQueryDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+FollowAndBeFollowedCountQueryVo _$FollowAndBeFollowedCountQueryVoFromJson(
+        Map<String, dynamic> json) =>
+    FollowAndBeFollowedCountQueryVo(
+      follow_count: json['follow_count'] as int,
+      be_followed_count: json['be_followed_count'] as int,
+    );
+
+Map<String, dynamic> _$FollowAndBeFollowedCountQueryVoToJson(
+        FollowAndBeFollowedCountQueryVo instance) =>
+    <String, dynamic>{
+      'follow_count': instance.follow_count,
+      'be_followed_count': instance.be_followed_count,
+    };
+
+FollowOrBeFollowedListQueryDto _$FollowOrBeFollowedListQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    FollowOrBeFollowedListQueryDto(
+      user_id: json['user_id'] as int,
+      follow_or_be_followed: json['follow_or_be_followed'] as bool,
+    );
+
+Map<String, dynamic> _$FollowOrBeFollowedListQueryDtoToJson(
+        FollowOrBeFollowedListQueryDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'follow_or_be_followed': instance.follow_or_be_followed,
+    };
+
+FollowOrBeFollowedListQueryVo _$FollowOrBeFollowedListQueryVoFromJson(
+        Map<String, dynamic> json) =>
+    FollowOrBeFollowedListQueryVo(
+      list_list: (json['list_list'] as List<dynamic>)
+          .map(
+              (e) => UserIdAndAvatarAndName.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$FollowOrBeFollowedListQueryVoToJson(
+        FollowOrBeFollowedListQueryVo instance) =>
+    <String, dynamic>{
+      'list_list': instance.list_list,
+    };
+
 FragmentGroupAllSubFragmentGroupsQueryDto
     _$FragmentGroupAllSubFragmentGroupsQueryDtoFromJson(
             Map<String, dynamic> json) =>
@@ -378,6 +516,66 @@ Map<String, dynamic> _$FragmentGroupAllSubFragmentsCountQueryVoToJson(
       'repeat_count': instance.repeat_count,
     };
 
+FragmentGroupInformationDto _$FragmentGroupInformationDtoFromJson(
+        Map<String, dynamic> json) =>
+    FragmentGroupInformationDto(
+      fragment_group_id: json['fragment_group_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$FragmentGroupInformationDtoToJson(
+        FragmentGroupInformationDto instance) =>
+    <String, dynamic>{
+      'fragment_group_id': instance.fragment_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+FragmentGroupInformationVo _$FragmentGroupInformationVoFromJson(
+        Map<String, dynamic> json) =>
+    FragmentGroupInformationVo(
+      knowledge_base_fragment_group_wrapper_bo:
+          json['knowledge_base_fragment_group_wrapper_bo'] == null
+              ? null
+              : KnowledgeBaseFragmentGroupWrapperBo.fromJson(
+                  json['knowledge_base_fragment_group_wrapper_bo']
+                      as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FragmentGroupInformationVoToJson(
+        FragmentGroupInformationVo instance) =>
+    <String, dynamic>{
+      'knowledge_base_fragment_group_wrapper_bo':
+          instance.knowledge_base_fragment_group_wrapper_bo,
+    };
+
+FragmentGroupLikeChangeForCurrentLoginedDto
+    _$FragmentGroupLikeChangeForCurrentLoginedDtoFromJson(
+            Map<String, dynamic> json) =>
+        FragmentGroupLikeChangeForCurrentLoginedDto(
+          fragment_group_id: json['fragment_group_id'] as int,
+          dto_padding_1: json['dto_padding_1'] as bool?,
+        );
+
+Map<String, dynamic> _$FragmentGroupLikeChangeForCurrentLoginedDtoToJson(
+        FragmentGroupLikeChangeForCurrentLoginedDto instance) =>
+    <String, dynamic>{
+      'fragment_group_id': instance.fragment_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+FragmentGroupLikeChangeForCurrentLoginedVo
+    _$FragmentGroupLikeChangeForCurrentLoginedVoFromJson(
+            Map<String, dynamic> json) =>
+        FragmentGroupLikeChangeForCurrentLoginedVo(
+          liked: json['liked'] as int?,
+        );
+
+Map<String, dynamic> _$FragmentGroupLikeChangeForCurrentLoginedVoToJson(
+        FragmentGroupLikeChangeForCurrentLoginedVo instance) =>
+    <String, dynamic>{
+      'liked': instance.liked,
+    };
+
 FragmentGroupModifyDto _$FragmentGroupModifyDtoFromJson(
         Map<String, dynamic> json) =>
     FragmentGroupModifyDto(
@@ -430,13 +628,11 @@ FragmentGroupOneSubQueryVo _$FragmentGroupOneSubQueryVoFromJson(
           ? null
           : FragmentGroup.fromJson(
               json['self_fragment_group'] as Map<String, dynamic>),
-      self_fragment_group_tags_list:
-          (json['self_fragment_group_tags_list'] as List<dynamic>)
-              .map((e) => FragmentGroupTag.fromJson(e as Map<String, dynamic>))
+      fragment_group_with_jump_wrappers_list:
+          (json['fragment_group_with_jump_wrappers_list'] as List<dynamic>)
+              .map((e) => FragmentGroupWithJumpWrapper.fromJson(
+                  e as Map<String, dynamic>))
               .toList(),
-      fragment_groups_list: (json['fragment_groups_list'] as List<dynamic>)
-          .map((e) => FragmentGroup.fromJson(e as Map<String, dynamic>))
-          .toList(),
       fragments_list: (json['fragments_list'] as List<dynamic>)
           .map((e) => FragmentWithRsWrapper.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -446,8 +642,8 @@ Map<String, dynamic> _$FragmentGroupOneSubQueryVoToJson(
         FragmentGroupOneSubQueryVo instance) =>
     <String, dynamic>{
       'self_fragment_group': instance.self_fragment_group,
-      'self_fragment_group_tags_list': instance.self_fragment_group_tags_list,
-      'fragment_groups_list': instance.fragment_groups_list,
+      'fragment_group_with_jump_wrappers_list':
+          instance.fragment_group_with_jump_wrappers_list,
       'fragments_list': instance.fragments_list,
     };
 
@@ -966,6 +1162,63 @@ Map<String, dynamic> _$MemoryGroupFragmentsQueryVoToJson(
       'fragments_list': instance.fragments_list,
     };
 
+MemoryGroupPageFirstQueryDto _$MemoryGroupPageFirstQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupPageFirstQueryDto(
+      memory_group_id: json['memory_group_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryGroupPageFirstQueryDtoToJson(
+        MemoryGroupPageFirstQueryDto instance) =>
+    <String, dynamic>{
+      'memory_group_id': instance.memory_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryGroupPageFirstQueryVo _$MemoryGroupPageFirstQueryVoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupPageFirstQueryVo(
+      memory_group:
+          MemoryGroup.fromJson(json['memory_group'] as Map<String, dynamic>),
+      memory_model: json['memory_model'] == null
+          ? null
+          : MemoryModel.fromJson(json['memory_model'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$MemoryGroupPageFirstQueryVoToJson(
+        MemoryGroupPageFirstQueryVo instance) =>
+    <String, dynamic>{
+      'memory_group': instance.memory_group,
+      'memory_model': instance.memory_model,
+    };
+
+MemoryGroupPageOtherQueryDto _$MemoryGroupPageOtherQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupPageOtherQueryDto(
+      memory_group_id: json['memory_group_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryGroupPageOtherQueryDtoToJson(
+        MemoryGroupPageOtherQueryDto instance) =>
+    <String, dynamic>{
+      'memory_group_id': instance.memory_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryGroupPageOtherQueryVo _$MemoryGroupPageOtherQueryVoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupPageOtherQueryVo(
+      fragment_count: json['fragment_count'] as int,
+    );
+
+Map<String, dynamic> _$MemoryGroupPageOtherQueryVoToJson(
+        MemoryGroupPageOtherQueryVo instance) =>
+    <String, dynamic>{
+      'fragment_count': instance.fragment_count,
+    };
+
 MemoryGroupSelectedFragmentsInsertDto
     _$MemoryGroupSelectedFragmentsInsertDtoFromJson(
             Map<String, dynamic> json) =>
@@ -1022,6 +1275,70 @@ Map<String, dynamic> _$MemoryGroupsQueryVoToJson(
         MemoryGroupsQueryVo instance) =>
     <String, dynamic>{
       'memory_groups_list': instance.memory_groups_list,
+    };
+
+MemoryGroupSyncFAndMiDto _$MemoryGroupSyncFAndMiDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupSyncFAndMiDto(
+      memory_group_id: json['memory_group_id'] as int,
+      sync_f_and_mi: $enumDecode(_$SyncFAndMiEnumMap, json['sync_f_and_mi']),
+    );
+
+Map<String, dynamic> _$MemoryGroupSyncFAndMiDtoToJson(
+        MemoryGroupSyncFAndMiDto instance) =>
+    <String, dynamic>{
+      'memory_group_id': instance.memory_group_id,
+      'sync_f_and_mi': _$SyncFAndMiEnumMap[instance.sync_f_and_mi]!,
+    };
+
+const _$SyncFAndMiEnumMap = {
+  SyncFAndMi.only_download: 'only_download',
+  SyncFAndMi.local_cover_to_cloud: 'local_cover_to_cloud',
+  SyncFAndMi.cloud_cover_to_local: 'cloud_cover_to_local',
+};
+
+MemoryGroupSyncFAndMiVo _$MemoryGroupSyncFAndMiVoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupSyncFAndMiVo(
+      fragment_and_memory_infos_list: (json['fragment_and_memory_infos_list']
+              as List<dynamic>)
+          .map((e) => FragmentAndMemoryInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      data_length: json['data_length'] as int,
+    );
+
+Map<String, dynamic> _$MemoryGroupSyncFAndMiVoToJson(
+        MemoryGroupSyncFAndMiVo instance) =>
+    <String, dynamic>{
+      'fragment_and_memory_infos_list': instance.fragment_and_memory_infos_list,
+      'data_length': instance.data_length,
+    };
+
+MemoryModelsQueryDto _$MemoryModelsQueryDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryModelsQueryDto(
+      user_id: json['user_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryModelsQueryDtoToJson(
+        MemoryModelsQueryDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryModelsQueryVo _$MemoryModelsQueryVoFromJson(Map<String, dynamic> json) =>
+    MemoryModelsQueryVo(
+      memory_models_list: (json['memory_models_list'] as List<dynamic>)
+          .map((e) => MemoryModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$MemoryModelsQueryVoToJson(
+        MemoryModelsQueryVo instance) =>
+    <String, dynamic>{
+      'memory_models_list': instance.memory_models_list,
     };
 
 PersonalHomePageForPublishPageDto _$PersonalHomePageForPublishPageDtoFromJson(
@@ -1136,6 +1453,30 @@ Map<String, dynamic> _$QueryFragmentGroupTagByLikeVoToJson(
         QueryFragmentGroupTagByLikeVo instance) =>
     <String, dynamic>{
       'fragment_group_tag_list': instance.fragment_group_tag_list,
+    };
+
+ShorthandsQueryDto _$ShorthandsQueryDtoFromJson(Map<String, dynamic> json) =>
+    ShorthandsQueryDto(
+      user_id: json['user_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$ShorthandsQueryDtoToJson(ShorthandsQueryDto instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+ShorthandsQueryVo _$ShorthandsQueryVoFromJson(Map<String, dynamic> json) =>
+    ShorthandsQueryVo(
+      shorthands_list: (json['shorthands_list'] as List<dynamic>)
+          .map((e) => Shorthand.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ShorthandsQueryVoToJson(ShorthandsQueryVo instance) =>
+    <String, dynamic>{
+      'shorthands_list': instance.shorthands_list,
     };
 
 SingleFieldModifyDto _$SingleFieldModifyDtoFromJson(
