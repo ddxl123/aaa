@@ -22,42 +22,11 @@ class DeleteDAO extends DatabaseAccessor<DriftDb> with _$DeleteDAOMixin {
     );
   }
 
-  // 批量删除已同步的 sync
-  // TODO: 是否需要 [SyncTag]
-  // Future<void> rowDeleteUploadedSync({required List<Sync> syncs}) async {
-  //   if (syncs.isEmpty) return;
-  //   await transaction(
-  //     () async {
-  //       await db.batch(
-  //         (batch) {
-  //           // TODO: 是 delete 还是 deleteAll
-  //           batch.delete(db.syncs, syncs.first);
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  /// 删除游离态的 [Fragment]
-  Future<void> deleteAllFreeFragment({required SyncTag syncTag, required int userId}) async {
-    throw "TODO";
-    // await RefFragments(
-    //   self: () async {
-    //     final fs = await db.generalQueryDAO.queryAllFreeFragment();
-    //     for (var v in fs) {
-    //       await v.delete(
-    //         syncTag: syncTag,
-    //         isCloudTableWithSync: throw "",
-    //       );
-    //     }
-    //   },
-    //   fragmentMemoryInfos: null,
-    //   rFragment2FragmentGroups: null,
-    //   fragments_father_fragment_id: null,
-    //   memoryModels: null,
-    //   userComments: null,
-    //   userLikes: null,
-    //   order: 0,
-    // ).run();
+  Future<void> deleteManyMemoryGroups({required Set<int> mgIds}) async {
+    await batch(
+      (batch) async {
+        batch.deleteWhere(memoryGroups, (tbl) => tbl.id.isIn(mgIds));
+      },
+    );
   }
 }

@@ -115,37 +115,14 @@ class PerformerQuery {
 
   /// ========================================================================================
 
-  /// 仅结束当前表演。
-  ///
-  /// [isNew] - 将产生碎片信息的碎片是否为 新碎片（非复习碎片），
-  /// 若为新的，则需要将 [MemoryGroup.willNewLearnCount] 减去 1。
-  Future<void> finish({
-    required FutureFunction originalFragmentMemoryInfoReset,
-    required MemoryGroup originalMemoryGroup,
-    required FragmentMemoryInfo fragmentMemoryInfo,
-    required SyncTag syncTag,
-  }) async {
-    throw "TODO";
-    // await db.updateDAO.resetFragmentMemoryInfoForFinishPerform(
-    //   originalFragmentMemoryInfoReset: originalFragmentMemoryInfoReset,
-    //   originalMemoryGroup: originalMemoryGroup,
-    //   fragmentMemoryInfo: fragmentMemoryInfo,
-    //   syncTag: syncTag,
-    // );
-  }
-
-  /// ========================================================================================
-
   /// [InternalVariableConstantHandler.k1FCountAllConst]
-  Future<int> getCountAll({required MemoryGroup memoryGroup}) async {
-    throw "TODO";
-    // return await db.generalQueryDAO.queryFragmentsCount(memoryGroup: memoryGroup);
+  Future<int> getCountAll({required int memoryGroupId}) async {
+    return await driftDb.generalQueryDAO.queryFragmentInMemoryGroupCount(memoryGroupId: memoryGroupId);
   }
 
   /// [InternalVariableConstantHandler.k2CountNewConst]
-  Future<int> queryFragmentsCountByStudyStatus({required MemoryGroup memoryGroup, required StudyStatus studyStatus}) async {
-    throw "TODO";
-    // return await db.generalQueryDAO.queryFragmentsCountByStudyStatus(memoryGroup: memoryGroup, studyStatus: studyStatus);
+  Future<int> queryFragmentCountByStudyStatus({required int memoryGroupId, required StudyStatus studyStatus}) async {
+    return await driftDb.generalQueryDAO.queryFragmentCountByStudyStatus(memoryGroupId: memoryGroupId, studyStatus: studyStatus);
   }
 
   /// TODO:

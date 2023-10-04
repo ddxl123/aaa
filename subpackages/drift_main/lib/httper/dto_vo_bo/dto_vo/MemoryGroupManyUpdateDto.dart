@@ -4,26 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class FragmentGroupsMoveDto extends BaseObject{
+class MemoryGroupManyUpdateDto extends BaseObject{
 
-    /// 要移动的顶层碎片组，前端需要修改 father_id ，后端直接进行更新。
-    List<FragmentGroup> fragment_groups_list;
+    /// 
+    List<MemoryGroup> memory_groups_list;
 
     /// 填充字段1
     bool? dto_padding_1;
 
 
-FragmentGroupsMoveDto({
+MemoryGroupManyUpdateDto({
 
-    required this.fragment_groups_list,
+    required this.memory_groups_list,
 
     required this.dto_padding_1,
 
 });
-  factory FragmentGroupsMoveDto.fromJson(Map<String, dynamic> json) => _$FragmentGroupsMoveDtoFromJson(json);
+  factory MemoryGroupManyUpdateDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupManyUpdateDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$FragmentGroupsMoveDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MemoryGroupManyUpdateDtoToJson(this);
   
   
           
@@ -37,21 +37,21 @@ FragmentGroupsMoveDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  FragmentGroupsMoveVo? vo;
+  MemoryGroupManyUpdateVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
-    // message: 获取成功！
-    // explain: 将多个碎片组，移动到其他单个碎片组中。前端修改 father_id ，后端进行更新。
-    required Future<T> Function(String showMessage) code150501,
+    // message: 更新成功！
+    // explain: 更新多个记忆组。云端不会不存在，因为前端已经处理过了。
+    required Future<T> Function(String showMessage) code151401,
     
     }) async {
     try {
 
-        if (code == 150501) return await code150501(httperException!.showMessage);
+        if (code == 151401) return await code151401(httperException!.showMessage);
 
     } catch (handleE, handleSt) {
       if (otherException == null) {

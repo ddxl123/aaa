@@ -28,6 +28,16 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
     await driftDb.into(memoryGroups).insert(memoryGroup, mode: InsertMode.insertOrReplace);
   }
 
+  Future<void> insertManyMemoryGroups({
+    required List<MemoryGroup> mgs,
+  }) async {
+    await batch(
+      (batch) async {
+        batch.insertAll(memoryGroups, mgs, mode: InsertMode.insertOrReplace);
+      },
+    );
+  }
+
   Future<void> insertMemoryModel({
     required MemoryModel memoryModel,
   }) async {
@@ -35,13 +45,23 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
   }
 
   /// 注意：要先在云端中插入，后才能插入带有 id 的行。
-  Future<void> insertManyFragmentMemoryInfos({
-    required List<FragmentMemoryInfo> manyFragmentMemoryInfos,
+  Future<void> insertManyFragmentAndMemoryInfos({
+    required List<FragmentAndMemoryInfo> fragmentAndMemoryInfos,
   }) async {
     await driftDb.batch(
       (batch) async {
+        final fs = <Fragment>[];
+        final mis = <FragmentMemoryInfo>[];
+        for (var element in fragmentAndMemoryInfos) {
+          fs.add(element.fragment);
+          mis.add(element.memory_info);
+        }
+
         /// 如果存在相同，则覆盖。
-        batch.insertAll(fragmentMemoryInfos, manyFragmentMemoryInfos, mode: InsertMode.insertOrReplace);
+        batch.insertAll(fragments, fs, mode: InsertMode.insertOrReplace);
+
+        /// 如果存在相同，则覆盖。
+        batch.insertAll(fragmentMemoryInfos, mis, mode: InsertMode.insertOrReplace);
       },
     );
   }

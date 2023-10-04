@@ -8,7 +8,7 @@ class HttpPath {
   HttpPath._();
 
   /// 基础 path
-  static const String BASE_PATH_LOCAL = 'http://10.11.31.177:2814';
+  static const String BASE_PATH_LOCAL = 'http://10.11.171.166:2814';
   
   static const String POST__REGISTER_OR_LOGIN_CHECK_LOGIN = 'POST_/register_or_login/check_login';
 
@@ -67,6 +67,8 @@ class HttpPath {
   static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENTS_COUNT_QUERY = 'GET_/login_required/memory_group_handle/fragments_count_query';
 
   static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENTS_QUERY = 'GET_/login_required/memory_group_handle/fragments_query';
+
+  static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MANY_UPDATE = 'POST_/login_required/memory_group_handle/memory_group_many_update';
 
   static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUPS_QUERY = 'POST_/login_required/memory_group_handle/memory_groups_query';
 

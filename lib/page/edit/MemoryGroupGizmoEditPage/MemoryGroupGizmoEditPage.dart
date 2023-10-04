@@ -2,6 +2,8 @@ import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/BasicConfigWidget.dart';
 import 'package:aaa/page/edit/MemoryGroupGizmoEditPage/CurrentCircleWidget.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:aaa/page/edit/edit_page_type.dart';
+import 'package:drift_main/share_common/share_enum.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -55,21 +57,40 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
   Widget _floatingActionButton() {
     return AbBuilder<MemoryGroupGizmoEditPageAbController>(
       builder: (c, abw) {
-        return c.memoryGroupAb().start_time == null
-            ? FloatingRoundCornerButton(
-                color: Colors.amberAccent,
-                text: const Text('开始', style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  c.clickStart();
-                },
-              )
-            : FloatingRoundCornerButton(
-                color: Colors.greenAccent,
-                text: const Text(' 继续 ', style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  c.clickContinue();
-                },
+        if (c.fragmentAndMemoryInfoStatus(abw) == FragmentAndMemoryInfoStatus.zero) {
+          return FloatingRoundCornerButton(
+            color: Colors.amberAccent,
+            text: const Text('未添加碎片', style: TextStyle(color: Colors.grey)),
+            onPressed: () {
+              SmartDialog.showToast("请先添加想要记忆的碎片！");
+            },
+          );
+        }
+        if (c.fragmentAndMemoryInfoStatus(abw) == FragmentAndMemoryInfoStatus.notDownloaded) {
+          return FloatingRoundCornerButton(
+            color: Colors.grey,
+            text: const Text('未下载碎片', style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              await showCustomDialog(
+                builder: (ctx) => OkAndCancelDialogWidget(
+                  text: "是否下载碎片？",
+                  okText: "下载",
+                  cancelText: "等会下",
+                  onOk: () async {
+                    await c.downloadFragmentAndMemoryInfos(memoryGroupId: memoryGroupId, syncFAndMi: SyncFAndMi.only_download);
+                  },
+                ),
               );
+            },
+          );
+        }
+        return FloatingRoundCornerButton(
+          color: Colors.amberAccent,
+          text: Text(c.memoryGroupAb(abw).start_time == null ? '开始' : "继续", style: TextStyle(color: Colors.white)),
+          onPressed: () async {
+            await c.clickStart();
+          },
+        );
       },
     );
   }
@@ -103,7 +124,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
         return Row(
           children: [
             TextButton(
-              child: const Text('保存'),
+              child: const Text('仅保存'),
               onPressed: () async {
                 final isSavedSuccess = await c.onlySave();
                 if (isSavedSuccess) {

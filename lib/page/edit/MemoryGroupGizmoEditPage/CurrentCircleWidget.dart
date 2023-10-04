@@ -50,7 +50,6 @@ class CurrentCircleWidget extends StatelessWidget {
                     builder: (int value, BuildContext context, ResetValue<int> resetValue) {
                       int changeValue = value;
 
-                      logger.outNormal(print: "changeValue: $changeValue - value: ${c.remainNeverFragmentsCount(abw)}");
                       // 不能超过最大值
                       if (changeValue > c.remainNeverFragmentsCount(abw)) {
                         changeValue = c.remainNeverFragmentsCount(abw);

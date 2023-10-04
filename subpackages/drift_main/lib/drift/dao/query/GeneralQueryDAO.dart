@@ -43,6 +43,10 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await (select(memoryGroups)..where((tbl) => tbl.id.equals(memoryGroupId))).getSingleOrNull();
   }
 
+  Future<List<MemoryGroup>> queryAllMemoryGroups() async {
+    return await select(memoryGroups).get();
+  }
+
   Future<MemoryModel?> queryOrNullMemoryModel({required int memoryGroupId}) async {
     return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroupId))).getSingleOrNull();
   }
@@ -52,7 +56,15 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return result.length;
   }
 
-  Future<List<FragmentMemoryInfo>> queryManyMemoryInfoByStudyStatus({
+  Future<int> queryFragmentCountByStudyStatus({
+    required int memoryGroupId,
+    required StudyStatus studyStatus,
+  }) async {
+    final result = await (select(fragmentMemoryInfos)..where((tbl) => tbl.memory_group_id.equals(memoryGroupId) & tbl.study_status.equalsValue(studyStatus))).get();
+    return result.length;
+  }
+
+  Future<List<FragmentMemoryInfo>> queryManyFragmentByStudyStatus({
     required int memoryGroupId,
     required StudyStatus studyStatus,
   }) async {

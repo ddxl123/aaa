@@ -46,20 +46,29 @@ MemoryGroupSyncFAndMiDto({
 
     // message: 同步成功！
     // explain: 对记忆组中的碎片进行同步。
-    required Future<T> Function(MemoryGroupSyncFAndMiVo vo) code160801,
+    required Future<T> Function(String showMessage, MemoryGroupSyncFAndMiVo vo) code160801,
     
     }) async {
     try {
 
-        return await code160801(vo!);
+        if (code == 160801) return await code160801(httperException!.showMessage, vo!);
 
-    } catch (e, st) {
-      if (otherException == null) rethrow;
-      if (e is HttperException) {
-        return await otherException(code, e, st);
+    } catch (handleE, handleSt) {
+      if (otherException == null) {
+        if (httperException != null) {
+          throw httperException!;
+        }
+        rethrow;
       }
-      return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: e.toString()), st);
+      if (httperException != null) {
+        return await otherException(code, httperException!, st!);
+      }
+      if (handleE is HttperException) {
+        return await otherException(code, handleE, handleSt);
+      }
+      return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: handleE.toString()), handleSt);
     }
+    // 当以流的形式响应时，下面代码被忽略。
     if (code != null) {
       if(otherException==null) throw HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！');
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！'), st!);

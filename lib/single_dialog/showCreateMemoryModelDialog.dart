@@ -12,7 +12,7 @@ Future<void> showCreateMemoryModelDialog() async {
   await showCustomDialog(
     builder: (_) {
       return TextField1DialogWidget(
-        title: '创建记忆模型：',
+        title: '创建记忆算法：',
         okText: '创建',
         cancelText: '取消',
         text: null,

@@ -64,7 +64,7 @@ class BasicConfigWidget extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Row(
               children: [
-                const Text('记忆模型：', style: TextStyle(fontSize: 16)),
+                const Text('记忆算法：', style: TextStyle(fontSize: 16)),
                 TextButton(
                   child: AbBuilder<MemoryGroupGizmoEditPageAbController>(
                     builder: (gzC, gzAbw) {
@@ -75,7 +75,7 @@ class BasicConfigWidget extends StatelessWidget {
                     showSelectMemoryModelInMemoryGroupDialog(mg: c.memoryGroupAb, selectedMemoryModelAb: c.memoryModelAb);
                   },
                 ),
-                Text("模拟(验证模型的准确性)"),
+                Text("模拟(验证算法的正确性)"),
               ],
             ),
           ),

@@ -20,7 +20,7 @@ part 'HttpPath.dart';
 
 part 'httper.g.dart';
 
-part 'OtherResponseCode.dart';
+part 'OtherResponseCode.dart';   
 
 part 'HttperException.dart';
 
@@ -210,6 +210,12 @@ part 'dto_vo_bo/dto_vo/MemoryGroupFragmentsQueryDto.dart';
 
 
 part 'dto_vo_bo/dto_vo/MemoryGroupFragmentsQueryVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupManyUpdateDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupManyUpdateVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/MemoryGroupPageFirstQueryDto.dart';

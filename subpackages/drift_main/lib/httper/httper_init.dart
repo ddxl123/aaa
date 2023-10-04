@@ -53,19 +53,18 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       );
     }
 
+    final dataWrapper = <String, dynamic>{};
+
+    print(result.headers.toString());
     if (onReceiveProgress != null) {
-      print("object");
-      print(parseResponseVoData(jsonDecode(await utf8.decoder.bind((result.data as ResponseBody).stream).join())));
-      print("object");
-      return (dtoData as dynamic)
-        ..code = result.statusCode
-        ..httperException = HttperException(showMessage: "已完整获取！", debugMessage: '无异常')
-        ..vo = parseResponseVoData(jsonDecode(await utf8.decoder.bind((result.data as ResponseBody).stream).join()));
+      dataWrapper.addAll(jsonDecode(await utf8.decoder.bind((result.data as ResponseBody).stream).join()));
+    } else {
+      dataWrapper.addAll(result.data);
     }
 
-    final parseCode = result.data["code"];
-    final parseMessage = result.data["message"];
-    final parseVo = result.data["data"] == null ? null : parseResponseVoData(result.data["data"]);
+    final parseCode = dataWrapper["code"];
+    final parseMessage = dataWrapper["message"];
+    final parseVo = dataWrapper["data"] == null ? null : parseResponseVoData(dataWrapper["data"]);
     final otherCodeResult = await otherCodeHandle(code: parseCode);
     if (otherCodeResult) {
       throw HttperException(showMessage: parseMessage, debugMessage: "拦截到 otherCode 异常，code: $parseCode");

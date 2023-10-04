@@ -19,7 +19,20 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
   Future<void> resetMemoryGroupAutoSyncVersion({
     required MemoryGroup entity,
   }) async {
-    entity.sync_version += 1;
-    await update(memoryGroups).replace(entity);
+    final old = await (select(memoryGroups)..where((tbl) => tbl.id.equals(entity.id))).getSingleOrNull();
+    if (entity != old) {
+      entity.sync_version += 1;
+      await update(memoryGroups).replace(entity);
+    }
+  }
+
+  Future<void> resetMemoryInfoAutoSyncVersion({
+    required FragmentMemoryInfo entity,
+  }) async {
+    final old = await (select(fragmentMemoryInfos)..where((tbl) => tbl.id.equals(entity.id))).getSingleOrNull();
+    if (entity != old) {
+      entity.sync_version += 1;
+      await update(fragmentMemoryInfos).replace(entity);
+    }
   }
 }
