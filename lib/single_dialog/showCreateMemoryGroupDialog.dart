@@ -41,6 +41,7 @@ Future<void> showCreateMemoryGroupDialog() async {
                 review_display_order: ReviewDisplayOrder.expire_first,
                 creator_user_id: Aber.find<GlobalAbController>().loggedInUser()!.id,
                 sync_version: 0,
+                be_synced: false,
               ),
             ),
             onSuccess: (String showMessage, SingleRowInsertVo vo) async {

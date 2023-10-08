@@ -36,6 +36,8 @@ class MemoryGroupListPageAbController extends AbController {
     );
     await result.handleCode(
       code160101: (String showMessage, MemoryGroupsQueryVo vo) async {
+        // 因为记忆组可能被本地修改，所以需要判断是否将本地的进行云同步，而不能直接将本地的全部删除后全部覆盖。
+
         final localAll = memoryGroupGizmos();
         final cloudAll = vo.memory_groups_list;
         final localSet = localAll.map((e) => e.id).toSet();

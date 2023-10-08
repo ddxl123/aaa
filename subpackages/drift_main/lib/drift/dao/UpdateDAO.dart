@@ -20,8 +20,12 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required MemoryGroup entity,
   }) async {
     final old = await (select(memoryGroups)..where((tbl) => tbl.id.equals(entity.id))).getSingleOrNull();
+    if (old == null) return;
     if (entity != old) {
-      entity.sync_version += 1;
+      if (old.be_synced) {
+        entity.sync_version += 1;
+        entity.be_synced = false;
+      }
       await update(memoryGroups).replace(entity);
     }
   }
@@ -30,8 +34,12 @@ class UpdateDAO extends DatabaseAccessor<DriftDb> with _$UpdateDAOMixin {
     required FragmentMemoryInfo entity,
   }) async {
     final old = await (select(fragmentMemoryInfos)..where((tbl) => tbl.id.equals(entity.id))).getSingleOrNull();
+    if (old == null) return;
     if (entity != old) {
-      entity.sync_version += 1;
+      if (old.be_synced) {
+        entity.sync_version += 1;
+        entity.be_synced = false;
+      }
       await update(fragmentMemoryInfos).replace(entity);
     }
   }

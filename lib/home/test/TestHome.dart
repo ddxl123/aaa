@@ -126,7 +126,6 @@ class TestHome extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('上传离线文件(10个10个上传)'),
                       onPressed: () async {
-                        Aber.find<GlobalAbController>().uploadAllOfflineFiles(count: 10);
                       },
                     ),
                     ElevatedButton(

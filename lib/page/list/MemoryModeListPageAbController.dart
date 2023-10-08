@@ -15,7 +15,7 @@ class MemoryModeListPageAbController extends AbController {
     super.onDispose();
   }
 
-  Future<void> refreshMemoryModels() async {
+  Future<void> refreshPage() async {
     final result = await request(
       path: HttpPath.POST__NO_LOGIN_REQUIRED_MEMORY_MODEL_HANDLE_MEMORY_MODELS_QUERY,
       dtoData: MemoryModelsQueryDto(
@@ -25,10 +25,19 @@ class MemoryModeListPageAbController extends AbController {
       parseResponseVoData: MemoryModelsQueryVo.fromJson,
     );
     await result.handleCode(
-      code180101: (String showMessage, MemoryModelsQueryVo vo) async {
-        memoryModelsAb.refreshInevitable((obj) => obj
-          ..clear()
-          ..addAll(vo.memory_models_list));
+      code180101: (String showMessage, vo) async {
+        await driftDb.transaction(
+          () async {
+            await driftDb.deleteDAO.deleteAllMemoryModels();
+            await driftDb.insertDAO.insertManyMemoryModels(mms: vo.memory_models_list);
+
+            memoryModelsAb.refreshInevitable(
+              (obj) => obj
+                ..clear()
+                ..addAll(vo.memory_models_list),
+            );
+          },
+        );
       },
       otherException: (a, b, c) async {
         logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);

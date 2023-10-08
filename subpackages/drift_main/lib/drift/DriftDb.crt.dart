@@ -41,6 +41,7 @@ class Crt {
 
   static FragmentMemoryInfo fragmentMemoryInfoEntity({
     required String actual_show_time,
+    required bool be_synced,
     required String button_values,
     required String click_familiarity,
     required String click_time,
@@ -56,6 +57,7 @@ class Crt {
   }) {
     return FragmentMemoryInfo(
       actual_show_time: actual_show_time,
+      be_synced: be_synced,
       button_values: button_values,
       click_familiarity: click_familiarity,
       click_time: click_time,
@@ -146,6 +148,7 @@ class Crt {
   }
 
   static MemoryGroup memoryGroupEntity({
+    required bool be_synced,
     required int creator_user_id,
     required int? memory_model_id,
     required NewDisplayOrder new_display_order,
@@ -158,6 +161,7 @@ class Crt {
     required int will_new_learn_count,
   }) {
     return MemoryGroup(
+      be_synced: be_synced,
       creator_user_id: creator_user_id,
       memory_model_id: memory_model_id,
       new_display_order: new_display_order,
@@ -192,7 +196,6 @@ class Crt {
     required String? next_time_algorithm_c,
     required String? next_time_algorithm_remark,
     required AlgorithmUsageStatus next_time_algorithm_usage_status,
-    required int sync_version,
     required String title,
   }) {
     return MemoryModel(
@@ -213,7 +216,6 @@ class Crt {
       next_time_algorithm_c: next_time_algorithm_c,
       next_time_algorithm_remark: next_time_algorithm_remark,
       next_time_algorithm_usage_status: next_time_algorithm_usage_status,
-      sync_version: sync_version,
       title: title,
       created_at: DateTime(0),
       id: -1,

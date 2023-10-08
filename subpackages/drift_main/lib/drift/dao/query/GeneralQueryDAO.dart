@@ -51,6 +51,10 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroupId))).getSingleOrNull();
   }
 
+  Future<List<MemoryModel>> queryAllMemoryModels() async {
+    return await select(memoryModels).get();
+  }
+
   Future<int> queryFragmentInMemoryGroupCount({required int memoryGroupId}) async {
     final result = await (select(fragmentMemoryInfos)..where((tbl) => tbl.memory_group_id.equals(memoryGroupId))).get();
     return result.length;
@@ -69,5 +73,20 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     required StudyStatus studyStatus,
   }) async {
     return await (select(fragmentMemoryInfos)..where((tbl) => tbl.memory_group_id.equals(memoryGroupId) & tbl.study_status.equalsValue(studyStatus))).get();
+  }
+
+  /// [count] 要同步多少个
+  Future<List<FragmentMemoryInfo>> queryNotSyncedMemoryInfos({required int count}) async {
+    return await (select(fragmentMemoryInfos)
+          ..where((tbl) => tbl.be_synced.equals(false))
+          ..limit(count))
+        .get();
+  }
+
+  Future<List<int>> queryMemoryInfoIdAndVersion({required int memoryGroupId}) async {
+    final sel = selectOnly(fragmentMemoryInfos)
+      ..where(fragmentMemoryInfos.memory_group_id.equals(memoryGroupId))
+      ..addColumns([fragmentMemoryInfos.id]);
+    return (await sel.get()).map((e) => e.read(fragmentMemoryInfos.id)!).toList();
   }
 }

@@ -832,6 +832,18 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   late final GeneratedColumn<String> actual_show_time = GeneratedColumn<String>(
       'actual_show_time', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _be_syncedMeta =
+      const VerificationMeta('be_synced');
+  @override
+  late final GeneratedColumn<bool> be_synced =
+      GeneratedColumn<bool>('be_synced', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("be_synced" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _button_valuesMeta =
       const VerificationMeta('button_values');
   @override
@@ -926,6 +938,7 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
   @override
   List<GeneratedColumn> get $columns => [
         actual_show_time,
+        be_synced,
         button_values,
         click_familiarity,
         click_time,
@@ -958,6 +971,12 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
               data['actual_show_time']!, _actual_show_timeMeta));
     } else if (isInserting) {
       context.missing(_actual_show_timeMeta);
+    }
+    if (data.containsKey('be_synced')) {
+      context.handle(_be_syncedMeta,
+          be_synced.isAcceptableOrUnknown(data['be_synced']!, _be_syncedMeta));
+    } else if (isInserting) {
+      context.missing(_be_syncedMeta);
     }
     if (data.containsKey('button_values')) {
       context.handle(
@@ -1078,6 +1097,8 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
     return FragmentMemoryInfo(
       actual_show_time: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}actual_show_time'])!,
+      be_synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_synced'])!,
       button_values: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}button_values'])!,
       click_familiarity: attachedDatabase.typeMapping.read(
@@ -1125,6 +1146,7 @@ class $FragmentMemoryInfosTable extends FragmentMemoryInfos
 class FragmentMemoryInfo extends DataClass
     implements Insertable<FragmentMemoryInfo> {
   String actual_show_time;
+  bool be_synced;
   String button_values;
   String click_familiarity;
   String click_time;
@@ -1142,6 +1164,7 @@ class FragmentMemoryInfo extends DataClass
   DateTime updated_at;
   FragmentMemoryInfo(
       {required this.actual_show_time,
+      required this.be_synced,
       required this.button_values,
       required this.click_familiarity,
       required this.click_time,
@@ -1161,6 +1184,7 @@ class FragmentMemoryInfo extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['actual_show_time'] = Variable<String>(actual_show_time);
+    map['be_synced'] = Variable<bool>(be_synced);
     map['button_values'] = Variable<String>(button_values);
     map['click_familiarity'] = Variable<String>(click_familiarity);
     map['click_time'] = Variable<String>(click_time);
@@ -1185,6 +1209,7 @@ class FragmentMemoryInfo extends DataClass
   FragmentMemoryInfosCompanion toCompanion(bool nullToAbsent) {
     return FragmentMemoryInfosCompanion(
       actual_show_time: Value(actual_show_time),
+      be_synced: Value(be_synced),
       button_values: Value(button_values),
       click_familiarity: Value(click_familiarity),
       click_time: Value(click_time),
@@ -1208,6 +1233,7 @@ class FragmentMemoryInfo extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FragmentMemoryInfo(
       actual_show_time: serializer.fromJson<String>(json['actual_show_time']),
+      be_synced: serializer.fromJson<bool>(json['be_synced']),
       button_values: serializer.fromJson<String>(json['button_values']),
       click_familiarity: serializer.fromJson<String>(json['click_familiarity']),
       click_time: serializer.fromJson<String>(json['click_time']),
@@ -1232,6 +1258,7 @@ class FragmentMemoryInfo extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'actual_show_time': serializer.toJson<String>(actual_show_time),
+      'be_synced': serializer.toJson<bool>(be_synced),
       'button_values': serializer.toJson<String>(button_values),
       'click_familiarity': serializer.toJson<String>(click_familiarity),
       'click_time': serializer.toJson<String>(click_time),
@@ -1254,6 +1281,7 @@ class FragmentMemoryInfo extends DataClass
 
   FragmentMemoryInfo copyWith(
           {String? actual_show_time,
+          bool? be_synced,
           String? button_values,
           String? click_familiarity,
           String? click_time,
@@ -1271,6 +1299,7 @@ class FragmentMemoryInfo extends DataClass
           DateTime? updated_at}) =>
       FragmentMemoryInfo(
         actual_show_time: actual_show_time ?? this.actual_show_time,
+        be_synced: be_synced ?? this.be_synced,
         button_values: button_values ?? this.button_values,
         click_familiarity: click_familiarity ?? this.click_familiarity,
         click_time: click_time ?? this.click_time,
@@ -1291,6 +1320,7 @@ class FragmentMemoryInfo extends DataClass
   String toString() {
     return (StringBuffer('FragmentMemoryInfo(')
           ..write('actual_show_time: $actual_show_time, ')
+          ..write('be_synced: $be_synced, ')
           ..write('button_values: $button_values, ')
           ..write('click_familiarity: $click_familiarity, ')
           ..write('click_time: $click_time, ')
@@ -1313,6 +1343,7 @@ class FragmentMemoryInfo extends DataClass
   @override
   int get hashCode => Object.hash(
       actual_show_time,
+      be_synced,
       button_values,
       click_familiarity,
       click_time,
@@ -1333,6 +1364,7 @@ class FragmentMemoryInfo extends DataClass
       identical(this, other) ||
       (other is FragmentMemoryInfo &&
           other.actual_show_time == this.actual_show_time &&
+          other.be_synced == this.be_synced &&
           other.button_values == this.button_values &&
           other.click_familiarity == this.click_familiarity &&
           other.click_time == this.click_time &&
@@ -1352,6 +1384,7 @@ class FragmentMemoryInfo extends DataClass
 
 class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<String> actual_show_time;
+  Value<bool> be_synced;
   Value<String> button_values;
   Value<String> click_familiarity;
   Value<String> click_time;
@@ -1369,6 +1402,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   Value<DateTime> updated_at;
   FragmentMemoryInfosCompanion({
     this.actual_show_time = const Value.absent(),
+    this.be_synced = const Value.absent(),
     this.button_values = const Value.absent(),
     this.click_familiarity = const Value.absent(),
     this.click_time = const Value.absent(),
@@ -1387,6 +1421,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   });
   FragmentMemoryInfosCompanion.insert({
     required String actual_show_time,
+    required bool be_synced,
     required String button_values,
     required String click_familiarity,
     required String click_time,
@@ -1403,6 +1438,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     this.id = const Value.absent(),
     required DateTime updated_at,
   })  : actual_show_time = Value(actual_show_time),
+        be_synced = Value(be_synced),
         button_values = Value(button_values),
         click_familiarity = Value(click_familiarity),
         click_time = Value(click_time),
@@ -1419,6 +1455,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
         updated_at = Value(updated_at);
   static Insertable<FragmentMemoryInfo> custom({
     Expression<String>? actual_show_time,
+    Expression<bool>? be_synced,
     Expression<String>? button_values,
     Expression<String>? click_familiarity,
     Expression<String>? click_time,
@@ -1437,6 +1474,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   }) {
     return RawValuesInsertable({
       if (actual_show_time != null) 'actual_show_time': actual_show_time,
+      if (be_synced != null) 'be_synced': be_synced,
       if (button_values != null) 'button_values': button_values,
       if (click_familiarity != null) 'click_familiarity': click_familiarity,
       if (click_time != null) 'click_time': click_time,
@@ -1458,6 +1496,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
 
   FragmentMemoryInfosCompanion copyWith(
       {Value<String>? actual_show_time,
+      Value<bool>? be_synced,
       Value<String>? button_values,
       Value<String>? click_familiarity,
       Value<String>? click_time,
@@ -1475,6 +1514,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
       Value<DateTime>? updated_at}) {
     return FragmentMemoryInfosCompanion(
       actual_show_time: actual_show_time ?? this.actual_show_time,
+      be_synced: be_synced ?? this.be_synced,
       button_values: button_values ?? this.button_values,
       click_familiarity: click_familiarity ?? this.click_familiarity,
       click_time: click_time ?? this.click_time,
@@ -1498,6 +1538,9 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
     final map = <String, Expression>{};
     if (actual_show_time.present) {
       map['actual_show_time'] = Variable<String>(actual_show_time.value);
+    }
+    if (be_synced.present) {
+      map['be_synced'] = Variable<bool>(be_synced.value);
     }
     if (button_values.present) {
       map['button_values'] = Variable<String>(button_values.value);
@@ -1553,6 +1596,7 @@ class FragmentMemoryInfosCompanion extends UpdateCompanion<FragmentMemoryInfo> {
   String toString() {
     return (StringBuffer('FragmentMemoryInfosCompanion(')
           ..write('actual_show_time: $actual_show_time, ')
+          ..write('be_synced: $be_synced, ')
           ..write('button_values: $button_values, ')
           ..write('click_familiarity: $click_familiarity, ')
           ..write('click_time: $click_time, ')
@@ -3176,6 +3220,18 @@ class $MemoryGroupsTable extends MemoryGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $MemoryGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _be_syncedMeta =
+      const VerificationMeta('be_synced');
+  @override
+  late final GeneratedColumn<bool> be_synced =
+      GeneratedColumn<bool>('be_synced', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("be_synced" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _creator_user_idMeta =
       const VerificationMeta('creator_user_id');
   @override
@@ -3263,6 +3319,7 @@ class $MemoryGroupsTable extends MemoryGroups
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
+        be_synced,
         creator_user_id,
         memory_model_id,
         new_display_order,
@@ -3286,6 +3343,12 @@ class $MemoryGroupsTable extends MemoryGroups
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('be_synced')) {
+      context.handle(_be_syncedMeta,
+          be_synced.isAcceptableOrUnknown(data['be_synced']!, _be_syncedMeta));
+    } else if (isInserting) {
+      context.missing(_be_syncedMeta);
+    }
     if (data.containsKey('creator_user_id')) {
       context.handle(
           _creator_user_idMeta,
@@ -3369,6 +3432,8 @@ class $MemoryGroupsTable extends MemoryGroups
   MemoryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MemoryGroup(
+      be_synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}be_synced'])!,
       creator_user_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}creator_user_id'])!,
       memory_model_id: attachedDatabase.typeMapping
@@ -3420,6 +3485,7 @@ class $MemoryGroupsTable extends MemoryGroups
 }
 
 class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
+  bool be_synced;
   int creator_user_id;
   int? memory_model_id;
   NewDisplayOrder new_display_order;
@@ -3434,7 +3500,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   int id;
   DateTime updated_at;
   MemoryGroup(
-      {required this.creator_user_id,
+      {required this.be_synced,
+      required this.creator_user_id,
       this.memory_model_id,
       required this.new_display_order,
       required this.new_review_display_order,
@@ -3450,6 +3517,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['be_synced'] = Variable<bool>(be_synced);
     map['creator_user_id'] = Variable<int>(creator_user_id);
     if (!nullToAbsent || memory_model_id != null) {
       map['memory_model_id'] = Variable<int>(memory_model_id);
@@ -3484,6 +3552,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
 
   MemoryGroupsCompanion toCompanion(bool nullToAbsent) {
     return MemoryGroupsCompanion(
+      be_synced: Value(be_synced),
       creator_user_id: Value(creator_user_id),
       memory_model_id: memory_model_id == null && nullToAbsent
           ? const Value.absent()
@@ -3508,6 +3577,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MemoryGroup(
+      be_synced: serializer.fromJson<bool>(json['be_synced']),
       creator_user_id: serializer.fromJson<int>(json['creator_user_id']),
       memory_model_id: serializer.fromJson<int?>(json['memory_model_id']),
       new_display_order: $MemoryGroupsTable.$converternew_display_order
@@ -3532,6 +3602,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'be_synced': serializer.toJson<bool>(be_synced),
       'creator_user_id': serializer.toJson<int>(creator_user_id),
       'memory_model_id': serializer.toJson<int?>(memory_model_id),
       'new_display_order': serializer.toJson<String>($MemoryGroupsTable
@@ -3555,7 +3626,8 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   }
 
   MemoryGroup copyWith(
-          {int? creator_user_id,
+          {bool? be_synced,
+          int? creator_user_id,
           Value<int?> memory_model_id = const Value.absent(),
           NewDisplayOrder? new_display_order,
           NewReviewDisplayOrder? new_review_display_order,
@@ -3569,6 +3641,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
           int? id,
           DateTime? updated_at}) =>
       MemoryGroup(
+        be_synced: be_synced ?? this.be_synced,
         creator_user_id: creator_user_id ?? this.creator_user_id,
         memory_model_id: memory_model_id.present
             ? memory_model_id.value
@@ -3589,6 +3662,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   @override
   String toString() {
     return (StringBuffer('MemoryGroup(')
+          ..write('be_synced: $be_synced, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('memory_model_id: $memory_model_id, ')
           ..write('new_display_order: $new_display_order, ')
@@ -3608,6 +3682,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
 
   @override
   int get hashCode => Object.hash(
+      be_synced,
       creator_user_id,
       memory_model_id,
       new_display_order,
@@ -3625,6 +3700,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MemoryGroup &&
+          other.be_synced == this.be_synced &&
           other.creator_user_id == this.creator_user_id &&
           other.memory_model_id == this.memory_model_id &&
           other.new_display_order == this.new_display_order &&
@@ -3641,6 +3717,7 @@ class MemoryGroup extends DataClass implements Insertable<MemoryGroup> {
 }
 
 class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
+  Value<bool> be_synced;
   Value<int> creator_user_id;
   Value<int?> memory_model_id;
   Value<NewDisplayOrder> new_display_order;
@@ -3655,6 +3732,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   Value<int> id;
   Value<DateTime> updated_at;
   MemoryGroupsCompanion({
+    this.be_synced = const Value.absent(),
     this.creator_user_id = const Value.absent(),
     this.memory_model_id = const Value.absent(),
     this.new_display_order = const Value.absent(),
@@ -3670,6 +3748,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     this.updated_at = const Value.absent(),
   });
   MemoryGroupsCompanion.insert({
+    required bool be_synced,
     required int creator_user_id,
     this.memory_model_id = const Value.absent(),
     required NewDisplayOrder new_display_order,
@@ -3683,7 +3762,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     required DateTime created_at,
     this.id = const Value.absent(),
     required DateTime updated_at,
-  })  : creator_user_id = Value(creator_user_id),
+  })  : be_synced = Value(be_synced),
+        creator_user_id = Value(creator_user_id),
         new_display_order = Value(new_display_order),
         new_review_display_order = Value(new_review_display_order),
         review_display_order = Value(review_display_order),
@@ -3694,6 +3774,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
         created_at = Value(created_at),
         updated_at = Value(updated_at);
   static Insertable<MemoryGroup> custom({
+    Expression<bool>? be_synced,
     Expression<int>? creator_user_id,
     Expression<int>? memory_model_id,
     Expression<String>? new_display_order,
@@ -3709,6 +3790,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
     Expression<DateTime>? updated_at,
   }) {
     return RawValuesInsertable({
+      if (be_synced != null) 'be_synced': be_synced,
       if (creator_user_id != null) 'creator_user_id': creator_user_id,
       if (memory_model_id != null) 'memory_model_id': memory_model_id,
       if (new_display_order != null) 'new_display_order': new_display_order,
@@ -3729,7 +3811,8 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   }
 
   MemoryGroupsCompanion copyWith(
-      {Value<int>? creator_user_id,
+      {Value<bool>? be_synced,
+      Value<int>? creator_user_id,
       Value<int?>? memory_model_id,
       Value<NewDisplayOrder>? new_display_order,
       Value<NewReviewDisplayOrder>? new_review_display_order,
@@ -3743,6 +3826,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
       Value<int>? id,
       Value<DateTime>? updated_at}) {
     return MemoryGroupsCompanion(
+      be_synced: be_synced ?? this.be_synced,
       creator_user_id: creator_user_id ?? this.creator_user_id,
       memory_model_id: memory_model_id ?? this.memory_model_id,
       new_display_order: new_display_order ?? this.new_display_order,
@@ -3763,6 +3847,9 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (be_synced.present) {
+      map['be_synced'] = Variable<bool>(be_synced.value);
+    }
     if (creator_user_id.present) {
       map['creator_user_id'] = Variable<int>(creator_user_id.value);
     }
@@ -3814,6 +3901,7 @@ class MemoryGroupsCompanion extends UpdateCompanion<MemoryGroup> {
   @override
   String toString() {
     return (StringBuffer('MemoryGroupsCompanion(')
+          ..write('be_synced: $be_synced, ')
           ..write('creator_user_id: $creator_user_id, ')
           ..write('memory_model_id: $memory_model_id, ')
           ..write('new_display_order: $new_display_order, ')
@@ -3949,12 +4037,6 @@ class $MemoryModelsTable extends MemoryModels
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<AlgorithmUsageStatus>(
               $MemoryModelsTable.$converternext_time_algorithm_usage_status);
-  static const VerificationMeta _sync_versionMeta =
-      const VerificationMeta('sync_version');
-  @override
-  late final GeneratedColumn<int> sync_version = GeneratedColumn<int>(
-      'sync_version', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -3996,7 +4078,6 @@ class $MemoryModelsTable extends MemoryModels
         next_time_algorithm_c,
         next_time_algorithm_remark,
         next_time_algorithm_usage_status,
-        sync_version,
         title,
         created_at,
         id,
@@ -4105,14 +4186,6 @@ class $MemoryModelsTable extends MemoryModels
     }
     context.handle(_next_time_algorithm_usage_statusMeta,
         const VerificationResult.success());
-    if (data.containsKey('sync_version')) {
-      context.handle(
-          _sync_versionMeta,
-          sync_version.isAcceptableOrUnknown(
-              data['sync_version']!, _sync_versionMeta));
-    } else if (isInserting) {
-      context.missing(_sync_versionMeta);
-    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
@@ -4193,8 +4266,6 @@ class $MemoryModelsTable extends MemoryModels
           .$converternext_time_algorithm_usage_status
           .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}next_time_algorithm_usage_status'])!),
-      sync_version: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}sync_version'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       created_at: attachedDatabase.typeMapping
@@ -4243,7 +4314,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
   String? next_time_algorithm_c;
   String? next_time_algorithm_remark;
   AlgorithmUsageStatus next_time_algorithm_usage_status;
-  int sync_version;
   String title;
   DateTime created_at;
   int id;
@@ -4266,7 +4336,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       this.next_time_algorithm_c,
       this.next_time_algorithm_remark,
       required this.next_time_algorithm_usage_status,
-      required this.sync_version,
       required this.title,
       required this.created_at,
       required this.id,
@@ -4338,7 +4407,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       map['next_time_algorithm_usage_status'] =
           Variable<String>(converter.toSql(next_time_algorithm_usage_status));
     }
-    map['sync_version'] = Variable<int>(sync_version);
     map['title'] = Variable<String>(title);
     map['created_at'] = Variable<DateTime>(created_at);
     map['id'] = Variable<int>(id);
@@ -4394,7 +4462,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
               ? const Value.absent()
               : Value(next_time_algorithm_remark),
       next_time_algorithm_usage_status: Value(next_time_algorithm_usage_status),
-      sync_version: Value(sync_version),
       title: Value(title),
       created_at: Value(created_at),
       id: Value(id),
@@ -4445,7 +4512,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           .$converternext_time_algorithm_usage_status
           .fromJson(serializer
               .fromJson<String>(json['next_time_algorithm_usage_status'])),
-      sync_version: serializer.fromJson<int>(json['sync_version']),
       title: serializer.fromJson<String>(json['title']),
       created_at: serializer.fromJson<DateTime>(json['created_at']),
       id: serializer.fromJson<int>(json['id']),
@@ -4488,7 +4554,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
       'next_time_algorithm_usage_status': serializer.toJson<String>(
           $MemoryModelsTable.$converternext_time_algorithm_usage_status
               .toJson(next_time_algorithm_usage_status)),
-      'sync_version': serializer.toJson<int>(sync_version),
       'title': serializer.toJson<String>(title),
       'created_at': serializer.toJson<DateTime>(created_at),
       'id': serializer.toJson<int>(id),
@@ -4514,7 +4579,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           Value<String?> next_time_algorithm_c = const Value.absent(),
           Value<String?> next_time_algorithm_remark = const Value.absent(),
           AlgorithmUsageStatus? next_time_algorithm_usage_status,
-          int? sync_version,
           String? title,
           DateTime? created_at,
           int? id,
@@ -4567,7 +4631,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
             : this.next_time_algorithm_remark,
         next_time_algorithm_usage_status: next_time_algorithm_usage_status ??
             this.next_time_algorithm_usage_status,
-        sync_version: sync_version ?? this.sync_version,
         title: title ?? this.title,
         created_at: created_at ?? this.created_at,
         id: id ?? this.id,
@@ -4597,7 +4660,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           ..write('next_time_algorithm_remark: $next_time_algorithm_remark, ')
           ..write(
               'next_time_algorithm_usage_status: $next_time_algorithm_usage_status, ')
-          ..write('sync_version: $sync_version, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')
@@ -4625,7 +4687,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
         next_time_algorithm_c,
         next_time_algorithm_remark,
         next_time_algorithm_usage_status,
-        sync_version,
         title,
         created_at,
         id,
@@ -4656,7 +4717,6 @@ class MemoryModel extends DataClass implements Insertable<MemoryModel> {
           other.next_time_algorithm_remark == this.next_time_algorithm_remark &&
           other.next_time_algorithm_usage_status ==
               this.next_time_algorithm_usage_status &&
-          other.sync_version == this.sync_version &&
           other.title == this.title &&
           other.created_at == this.created_at &&
           other.id == this.id &&
@@ -4681,7 +4741,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
   Value<String?> next_time_algorithm_c;
   Value<String?> next_time_algorithm_remark;
   Value<AlgorithmUsageStatus> next_time_algorithm_usage_status;
-  Value<int> sync_version;
   Value<String> title;
   Value<DateTime> created_at;
   Value<int> id;
@@ -4704,7 +4763,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     this.next_time_algorithm_c = const Value.absent(),
     this.next_time_algorithm_remark = const Value.absent(),
     this.next_time_algorithm_usage_status = const Value.absent(),
-    this.sync_version = const Value.absent(),
     this.title = const Value.absent(),
     this.created_at = const Value.absent(),
     this.id = const Value.absent(),
@@ -4728,7 +4786,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     this.next_time_algorithm_c = const Value.absent(),
     this.next_time_algorithm_remark = const Value.absent(),
     required AlgorithmUsageStatus next_time_algorithm_usage_status,
-    required int sync_version,
     required String title,
     required DateTime created_at,
     this.id = const Value.absent(),
@@ -4739,7 +4796,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
             Value(familiarity_algorithm_usage_status),
         next_time_algorithm_usage_status =
             Value(next_time_algorithm_usage_status),
-        sync_version = Value(sync_version),
         title = Value(title),
         created_at = Value(created_at),
         updated_at = Value(updated_at);
@@ -4761,7 +4817,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
     Expression<String>? next_time_algorithm_c,
     Expression<String>? next_time_algorithm_remark,
     Expression<String>? next_time_algorithm_usage_status,
-    Expression<int>? sync_version,
     Expression<String>? title,
     Expression<DateTime>? created_at,
     Expression<int>? id,
@@ -4799,7 +4854,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
         'next_time_algorithm_remark': next_time_algorithm_remark,
       if (next_time_algorithm_usage_status != null)
         'next_time_algorithm_usage_status': next_time_algorithm_usage_status,
-      if (sync_version != null) 'sync_version': sync_version,
       if (title != null) 'title': title,
       if (created_at != null) 'created_at': created_at,
       if (id != null) 'id': id,
@@ -4825,7 +4879,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       Value<String?>? next_time_algorithm_c,
       Value<String?>? next_time_algorithm_remark,
       Value<AlgorithmUsageStatus>? next_time_algorithm_usage_status,
-      Value<int>? sync_version,
       Value<String>? title,
       Value<DateTime>? created_at,
       Value<int>? id,
@@ -4861,7 +4914,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
           next_time_algorithm_remark ?? this.next_time_algorithm_remark,
       next_time_algorithm_usage_status: next_time_algorithm_usage_status ??
           this.next_time_algorithm_usage_status,
-      sync_version: sync_version ?? this.sync_version,
       title: title ?? this.title,
       created_at: created_at ?? this.created_at,
       id: id ?? this.id,
@@ -4942,9 +4994,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
       map['next_time_algorithm_usage_status'] = Variable<String>(
           converter.toSql(next_time_algorithm_usage_status.value));
     }
-    if (sync_version.present) {
-      map['sync_version'] = Variable<int>(sync_version.value);
-    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
@@ -4984,7 +5033,6 @@ class MemoryModelsCompanion extends UpdateCompanion<MemoryModel> {
           ..write('next_time_algorithm_remark: $next_time_algorithm_remark, ')
           ..write(
               'next_time_algorithm_usage_status: $next_time_algorithm_usage_status, ')
-          ..write('sync_version: $sync_version, ')
           ..write('title: $title, ')
           ..write('created_at: $created_at, ')
           ..write('id: $id, ')

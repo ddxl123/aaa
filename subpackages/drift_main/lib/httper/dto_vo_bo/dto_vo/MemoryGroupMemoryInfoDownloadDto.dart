@@ -4,26 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class MemoryGroupSelectedFragmentsInsertDto extends BaseObject{
+class MemoryGroupMemoryInfoDownloadDto extends BaseObject{
 
-    /// 要插入的碎片记忆信息(前端需把要插入的碎片转换成碎片记忆信息，给后端批量插入)
-    List<FragmentMemoryInfo> fragment_memory_infos_list;
-
-    /// 要插入到哪个记忆组中
+    /// 
     int memory_group_id;
 
+    /// 填充字段1
+    bool? dto_padding_1;
 
-MemoryGroupSelectedFragmentsInsertDto({
 
-    required this.fragment_memory_infos_list,
+MemoryGroupMemoryInfoDownloadDto({
 
     required this.memory_group_id,
 
+    required this.dto_padding_1,
+
 });
-  factory MemoryGroupSelectedFragmentsInsertDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupSelectedFragmentsInsertDtoFromJson(json);
+  factory MemoryGroupMemoryInfoDownloadDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupMemoryInfoDownloadDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$MemoryGroupSelectedFragmentsInsertDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MemoryGroupMemoryInfoDownloadDtoToJson(this);
   
   
           
@@ -37,21 +37,21 @@ MemoryGroupSelectedFragmentsInsertDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  MemoryGroupSelectedFragmentsInsertVo? vo;
+  MemoryGroupMemoryInfoDownloadVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
-    // message: 获取成功！
-    // explain: 将已选的碎片插入到记忆组中，并返回插入后的记忆信息 id。
-    required Future<T> Function(String showMessage, MemoryGroupSelectedFragmentsInsertVo vo) code160301,
+    // message: 下载成功！
+    // explain: 下载某个记忆组内全部碎片和记忆信息。
+    required Future<T> Function(String showMessage, MemoryGroupMemoryInfoDownloadVo vo) code160801,
     
     }) async {
     try {
 
-        if (code == 160301) return await code160301(httperException!.showMessage, vo!);
+        if (code == 160801) return await code160801(httperException!.showMessage, vo!);
 
     } catch (handleE, handleSt) {
       if (otherException == null) {

@@ -1125,12 +1125,19 @@ Map<String, dynamic> _$MemoryGroupFragmentsCountQueryDtoToJson(
 MemoryGroupFragmentsCountQueryVo _$MemoryGroupFragmentsCountQueryVoFromJson(
         Map<String, dynamic> json) =>
     MemoryGroupFragmentsCountQueryVo(
+      memory_group:
+          MemoryGroup.fromJson(json['memory_group'] as Map<String, dynamic>),
+      memory_model: json['memory_model'] == null
+          ? null
+          : MemoryModel.fromJson(json['memory_model'] as Map<String, dynamic>),
       count: json['count'] as int,
     );
 
 Map<String, dynamic> _$MemoryGroupFragmentsCountQueryVoToJson(
         MemoryGroupFragmentsCountQueryVo instance) =>
     <String, dynamic>{
+      'memory_group': instance.memory_group,
+      'memory_model': instance.memory_model,
       'count': instance.count,
     };
 
@@ -1188,6 +1195,68 @@ Map<String, dynamic> _$MemoryGroupManyUpdateVoToJson(
         MemoryGroupManyUpdateVo instance) =>
     <String, dynamic>{
       'vo_padding_1': instance.vo_padding_1,
+    };
+
+MemoryGroupMemoryInfoDownloadDto _$MemoryGroupMemoryInfoDownloadDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupMemoryInfoDownloadDto(
+      memory_group_id: json['memory_group_id'] as int,
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadDtoToJson(
+        MemoryGroupMemoryInfoDownloadDto instance) =>
+    <String, dynamic>{
+      'memory_group_id': instance.memory_group_id,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryGroupMemoryInfoDownloadVo _$MemoryGroupMemoryInfoDownloadVoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryGroupMemoryInfoDownloadVo(
+      fragment_and_memory_infos_list: (json['fragment_and_memory_infos_list']
+              as List<dynamic>)
+          .map((e) => FragmentAndMemoryInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadVoToJson(
+        MemoryGroupMemoryInfoDownloadVo instance) =>
+    <String, dynamic>{
+      'fragment_and_memory_infos_list': instance.fragment_and_memory_infos_list,
+    };
+
+MemoryGroupMemoryInfoDownloadByIdsDto
+    _$MemoryGroupMemoryInfoDownloadByIdsDtoFromJson(
+            Map<String, dynamic> json) =>
+        MemoryGroupMemoryInfoDownloadByIdsDto(
+          memory_info_ids_list: (json['memory_info_ids_list'] as List<dynamic>)
+              .map((e) => e as int)
+              .toList(),
+          dto_padding_1: json['dto_padding_1'] as bool?,
+        );
+
+Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadByIdsDtoToJson(
+        MemoryGroupMemoryInfoDownloadByIdsDto instance) =>
+    <String, dynamic>{
+      'memory_info_ids_list': instance.memory_info_ids_list,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryGroupMemoryInfoDownloadByIdsVo
+    _$MemoryGroupMemoryInfoDownloadByIdsVoFromJson(Map<String, dynamic> json) =>
+        MemoryGroupMemoryInfoDownloadByIdsVo(
+          fragment_and_memory_infos_list:
+              (json['fragment_and_memory_infos_list'] as List<dynamic>)
+                  .map((e) =>
+                      FragmentAndMemoryInfo.fromJson(e as Map<String, dynamic>))
+                  .toList(),
+        );
+
+Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadByIdsVoToJson(
+        MemoryGroupMemoryInfoDownloadByIdsVo instance) =>
+    <String, dynamic>{
+      'fragment_and_memory_infos_list': instance.fragment_and_memory_infos_list,
     };
 
 MemoryGroupPageFirstQueryDto _$MemoryGroupPageFirstQueryDtoFromJson(
@@ -1269,13 +1338,15 @@ Map<String, dynamic> _$MemoryGroupSelectedFragmentsInsertDtoToJson(
 MemoryGroupSelectedFragmentsInsertVo
     _$MemoryGroupSelectedFragmentsInsertVoFromJson(Map<String, dynamic> json) =>
         MemoryGroupSelectedFragmentsInsertVo(
-          vo_padding_1: json['vo_padding_1'] as bool?,
+          memory_info_ids_list: (json['memory_info_ids_list'] as List<dynamic>)
+              .map((e) => e as int)
+              .toList(),
         );
 
 Map<String, dynamic> _$MemoryGroupSelectedFragmentsInsertVoToJson(
         MemoryGroupSelectedFragmentsInsertVo instance) =>
     <String, dynamic>{
-      'vo_padding_1': instance.vo_padding_1,
+      'memory_info_ids_list': instance.memory_info_ids_list,
     };
 
 MemoryGroupsQueryDto _$MemoryGroupsQueryDtoFromJson(
@@ -1305,39 +1376,88 @@ Map<String, dynamic> _$MemoryGroupsQueryVoToJson(
       'memory_groups_list': instance.memory_groups_list,
     };
 
-MemoryGroupSyncFAndMiDto _$MemoryGroupSyncFAndMiDtoFromJson(
+MemoryInfoDownloadOnlyIdDto _$MemoryInfoDownloadOnlyIdDtoFromJson(
         Map<String, dynamic> json) =>
-    MemoryGroupSyncFAndMiDto(
+    MemoryInfoDownloadOnlyIdDto(
       memory_group_id: json['memory_group_id'] as int,
-      sync_f_and_mi: $enumDecode(_$SyncFAndMiEnumMap, json['sync_f_and_mi']),
+      dto_padding_1: json['dto_padding_1'] as bool?,
     );
 
-Map<String, dynamic> _$MemoryGroupSyncFAndMiDtoToJson(
-        MemoryGroupSyncFAndMiDto instance) =>
+Map<String, dynamic> _$MemoryInfoDownloadOnlyIdDtoToJson(
+        MemoryInfoDownloadOnlyIdDto instance) =>
     <String, dynamic>{
       'memory_group_id': instance.memory_group_id,
-      'sync_f_and_mi': _$SyncFAndMiEnumMap[instance.sync_f_and_mi]!,
+      'dto_padding_1': instance.dto_padding_1,
     };
 
-const _$SyncFAndMiEnumMap = {
-  SyncFAndMi.only_download: 'only_download',
-  SyncFAndMi.local_cover_to_cloud: 'local_cover_to_cloud',
-  SyncFAndMi.cloud_cover_to_local: 'cloud_cover_to_local',
-};
-
-MemoryGroupSyncFAndMiVo _$MemoryGroupSyncFAndMiVoFromJson(
+MemoryInfoDownloadOnlyIdVo _$MemoryInfoDownloadOnlyIdVoFromJson(
         Map<String, dynamic> json) =>
-    MemoryGroupSyncFAndMiVo(
-      fragment_and_memory_infos_list: (json['fragment_and_memory_infos_list']
-              as List<dynamic>)
-          .map((e) => FragmentAndMemoryInfo.fromJson(e as Map<String, dynamic>))
+    MemoryInfoDownloadOnlyIdVo(
+      memory_info_id_list: (json['memory_info_id_list'] as List<dynamic>)
+          .map((e) => e as int)
           .toList(),
     );
 
-Map<String, dynamic> _$MemoryGroupSyncFAndMiVoToJson(
-        MemoryGroupSyncFAndMiVo instance) =>
+Map<String, dynamic> _$MemoryInfoDownloadOnlyIdVoToJson(
+        MemoryInfoDownloadOnlyIdVo instance) =>
     <String, dynamic>{
-      'fragment_and_memory_infos_list': instance.fragment_and_memory_infos_list,
+      'memory_info_id_list': instance.memory_info_id_list,
+    };
+
+MemoryInfoUploadSyncDto _$MemoryInfoUploadSyncDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryInfoUploadSyncDto(
+      memory_infos_list: (json['memory_infos_list'] as List<dynamic>)
+          .map((e) => FragmentMemoryInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryInfoUploadSyncDtoToJson(
+        MemoryInfoUploadSyncDto instance) =>
+    <String, dynamic>{
+      'memory_infos_list': instance.memory_infos_list,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryInfoUploadSyncVo _$MemoryInfoUploadSyncVoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryInfoUploadSyncVo(
+      vo_padding_1: json['vo_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryInfoUploadSyncVoToJson(
+        MemoryInfoUploadSyncVo instance) =>
+    <String, dynamic>{
+      'vo_padding_1': instance.vo_padding_1,
+    };
+
+MemoryModelManyUpdateDto _$MemoryModelManyUpdateDtoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryModelManyUpdateDto(
+      memory_models_list: (json['memory_models_list'] as List<dynamic>)
+          .map((e) => MemoryModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      dto_padding_1: json['dto_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryModelManyUpdateDtoToJson(
+        MemoryModelManyUpdateDto instance) =>
+    <String, dynamic>{
+      'memory_models_list': instance.memory_models_list,
+      'dto_padding_1': instance.dto_padding_1,
+    };
+
+MemoryModelManyUpdateVo _$MemoryModelManyUpdateVoFromJson(
+        Map<String, dynamic> json) =>
+    MemoryModelManyUpdateVo(
+      vo_padding_1: json['vo_padding_1'] as bool?,
+    );
+
+Map<String, dynamic> _$MemoryModelManyUpdateVoToJson(
+        MemoryModelManyUpdateVo instance) =>
+    <String, dynamic>{
+      'vo_padding_1': instance.vo_padding_1,
     };
 
 MemoryModelsQueryDto _$MemoryModelsQueryDtoFromJson(

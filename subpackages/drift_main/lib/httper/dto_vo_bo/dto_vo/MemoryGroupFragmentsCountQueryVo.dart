@@ -7,10 +7,20 @@ part of httper;
 class MemoryGroupFragmentsCountQueryVo extends BaseObject{
 
     /// 
+    MemoryGroup memory_group;
+
+    /// 
+    MemoryModel? memory_model;
+
+    /// 
     int count;
 
 
 MemoryGroupFragmentsCountQueryVo({
+
+    required this.memory_group,
+
+    required this.memory_model,
 
     required this.count,
 

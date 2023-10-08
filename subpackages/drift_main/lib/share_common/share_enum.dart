@@ -25,16 +25,6 @@ enum KnowledgeBaseContentSortType {
   final String text;
 }
         
-enum SyncFAndMi {
-  
-  only_download,
-
-  local_cover_to_cloud,
-
-  cloud_cover_to_local,
-
-}
-        
 enum SyncCurdType {
   
   c,

@@ -11,6 +11,8 @@ class FragmentMemoryInfos extends CloudTableBase  {
 
   TextColumn get actual_show_time => text().named("actual_show_time")();
 
+  BoolColumn get be_synced => boolean().named("be_synced")();
+
   TextColumn get button_values => text().named("button_values")();
 
   TextColumn get click_familiarity => text().named("click_familiarity")();

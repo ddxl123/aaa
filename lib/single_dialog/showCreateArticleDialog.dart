@@ -49,7 +49,7 @@ Future<void> showCreateArticleDialog() async {
           //   syncTag: await SyncTag.create(),
           //   isCloudTableWithSync: true,
           // );
-          Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshMemoryModels();
+          Aber.findOrNullLast<MemoryModeListPageAbController>()?.refreshPage();
 
           SmartDialog.dismiss();
           SmartDialog.showToast('创建成功！');

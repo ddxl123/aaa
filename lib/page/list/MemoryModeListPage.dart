@@ -49,7 +49,7 @@ class MemoryModeListPage extends StatelessWidget {
               ],
             ),
             onRefresh: () async {
-              await c.refreshMemoryModels();
+              await c.refreshPage();
               c.refreshController.refreshCompleted();
             },
           ),

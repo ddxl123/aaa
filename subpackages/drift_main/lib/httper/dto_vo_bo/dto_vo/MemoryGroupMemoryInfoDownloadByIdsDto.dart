@@ -4,26 +4,26 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class MemoryGroupSyncFAndMiDto extends BaseObject{
+class MemoryGroupMemoryInfoDownloadByIdsDto extends BaseObject{
 
     /// 
-    int memory_group_id;
+    List<int> memory_info_ids_list;
 
-    /// 
-    SyncFAndMi sync_f_and_mi;
+    /// 填充字段1
+    bool? dto_padding_1;
 
 
-MemoryGroupSyncFAndMiDto({
+MemoryGroupMemoryInfoDownloadByIdsDto({
 
-    required this.memory_group_id,
+    required this.memory_info_ids_list,
 
-    required this.sync_f_and_mi,
+    required this.dto_padding_1,
 
 });
-  factory MemoryGroupSyncFAndMiDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupSyncFAndMiDtoFromJson(json);
+  factory MemoryGroupMemoryInfoDownloadByIdsDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupMemoryInfoDownloadByIdsDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$MemoryGroupSyncFAndMiDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MemoryGroupMemoryInfoDownloadByIdsDtoToJson(this);
   
   
           
@@ -37,21 +37,21 @@ MemoryGroupSyncFAndMiDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  MemoryGroupSyncFAndMiVo? vo;
+  MemoryGroupMemoryInfoDownloadByIdsVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
     // code 为 null 时的异常（request 函数内部捕获到的异常）
     Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
-    // message: 同步成功！
-    // explain: 对记忆组中的碎片进行同步。
-    required Future<T> Function(String showMessage, MemoryGroupSyncFAndMiVo vo) code160801,
+    // message: 下载成功！
+    // explain: 下载某个记忆组内全部碎片和记忆信息。
+    required Future<T> Function(String showMessage, MemoryGroupMemoryInfoDownloadByIdsVo vo) code161701,
     
     }) async {
     try {
 
-        if (code == 160801) return await code160801(httperException!.showMessage, vo!);
+        if (code == 161701) return await code161701(httperException!.showMessage, vo!);
 
     } catch (handleE, handleSt) {
       if (otherException == null) {

@@ -50,7 +50,6 @@ Future<void> showCreateMemoryModelDialog() async {
                 next_time_algorithm_c: null,
                 next_time_algorithm_remark: null,
                 next_time_algorithm_usage_status: AlgorithmUsageStatus.a,
-                sync_version: 0,
               ),
             ),
             onSuccess: (String showMessage, SingleRowInsertVo vo) async {

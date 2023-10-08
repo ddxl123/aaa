@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -36,7 +37,8 @@ class GlobalAbController extends AbController {
   final loggedInUser = Ab<User?>(null);
   final status = Status.normal.ab;
 
-  final beExistUploadData = true.ab;
+  /// 是否正在同步
+  final isSyncing = false.ab;
 
   late String applicationDocumentsDirectoryPath;
 
@@ -49,7 +51,7 @@ class GlobalAbController extends AbController {
   Future<void> _init() async {
     await _getApplicationDocumentsDirectoryPath();
     await checkAndShowIsLoggedIn();
-    // uploadSingleGroupSync();
+    uploadNotSyncedData();
   }
 
   /// 当 [this] 是相对路径时，该函数将其转换成绝对路径。
@@ -146,10 +148,39 @@ class GlobalAbController extends AbController {
     }
   }
 
-  /// 上传全部离线文件
-  ///
-  /// [count] 单次上传数量
-  ///
-  /// TODO: 上传完文件后，要再次 [Sync] 才行，否则路径没有被上传。
-  Future<void> uploadAllOfflineFiles({required int count}) async {}
+  /// 上传未同步数据，例如记忆信息。
+  Future<void> uploadNotSyncedData() async {
+    Timer.periodic(
+      const Duration(seconds: 10),
+      (timer) async {
+        if (isSyncing()) {
+          return;
+        }
+        // TODO: 需要判断 version
+        final notSynceds = await driftDb.generalQueryDAO.queryNotSyncedMemoryInfos(count: 20);
+        if (notSynceds.isNotEmpty) {
+          isSyncing.refreshEasy((oldValue) => true);
+          final result = await request(
+            path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_INFO_UPLOAD_SYNC,
+            dtoData: MemoryInfoUploadSyncDto(
+              memory_infos_list: notSynceds,
+              dto_padding_1: null,
+            ),
+            parseResponseVoData: MemoryInfoUploadSyncVo.fromJson,
+          );
+          await result.handleCode(
+            code151501: (String showMessage) async {
+              // 同步成功
+              isSyncing.refreshEasy((oldValue) => false);
+            },
+            otherException: (a, b, c) async {
+              logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
+            },
+          );
+        } else {
+          isSyncing.refreshEasy((oldValue) => false);
+        }
+      },
+    );
+  }
 }

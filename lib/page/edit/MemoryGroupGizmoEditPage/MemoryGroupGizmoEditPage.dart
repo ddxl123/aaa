@@ -66,7 +66,7 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
             },
           );
         }
-        if (c.fragmentAndMemoryInfoStatus(abw) == FragmentAndMemoryInfoStatus.notDownloaded) {
+        if (c.fragmentAndMemoryInfoStatus(abw) == FragmentAndMemoryInfoStatus.neverDownloaded) {
           return FloatingRoundCornerButton(
             color: Colors.grey,
             text: const Text('未下载碎片', style: TextStyle(color: Colors.white)),
@@ -77,7 +77,28 @@ class MemoryGroupGizmoEditPage extends StatelessWidget {
                   okText: "下载",
                   cancelText: "等会下",
                   onOk: () async {
-                    await c.downloadFragmentAndMemoryInfos(memoryGroupId: memoryGroupId, syncFAndMi: SyncFAndMi.only_download);
+                    await c.allDownloadFragmentAndMemoryInfos(memoryGroupId: memoryGroupId);
+                  },
+                ),
+              );
+            },
+          );
+        }
+        if (c.fragmentAndMemoryInfoStatus(abw) == FragmentAndMemoryInfoStatus.differentDownload) {
+          return FloatingRoundCornerButton(
+            color: Colors.grey,
+            text: const Text('碎片数量不同步', style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              await showCustomDialog(
+                builder: (ctx) => OkAndCancelDialogWidget(
+                  text: "碎片数量不同步，是否进行数量同步？",
+                  okText: "同步",
+                  cancelText: "直接开始",
+                  onOk: () async {
+                    await c.differentFragmentAndMemoryInfos();
+                  },
+                  onCancel: () async {
+                    await c.clickStart();
                   },
                 ),
               );

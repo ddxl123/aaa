@@ -141,7 +141,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
       );
       await mgFragmentIdsResult.handleCode(
         code160401: (String showMessage, vo) async {
-          // 只插入不存在于当前记忆组内的碎片。
+          // 只插入云端，且只插入不存在于当前记忆组内的碎片。
           final will = (await Aber.findOrNullLast<FragmentGroupListSelfPageController>()!.getSelectedFragments()).toSet().difference(vo.fragment_ids_list.toSet());
           final willMap = will
               .map((e) => Crt.fragmentMemoryInfoEntity(
@@ -158,6 +158,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
                     show_familiarity: [].toJsonString(),
                     study_status: StudyStatus.never,
                     sync_version: 0,
+                    be_synced: false,
                   ))
               .toList();
 
@@ -170,11 +171,37 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
             parseResponseVoData: MemoryGroupSelectedFragmentsInsertVo.fromJson,
           );
           await result.handleCode(
-            code160301: (String showMessage) async {
+            code160301: (String showMessage, vo) async {
               // 这里不插入到本地，而是在记忆组中提示是否要下载。
               SmartDialog.dismiss();
-              // TODO: 是否现在就下载
               SmartDialog.showToast('添加成功！');
+              await showCustomDialog(
+                builder: (ctx) => OkAndCancelDialogWidget(
+                  text: "是否现在下载？",
+                  okText: "下载",
+                  cancelText: "等会下",
+                  onOk: () async {
+                    SmartDialog.showLoading(msg: "下载中...");
+                    final result = await request(
+                      path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD_BY_IDS,
+                      dtoData: MemoryGroupMemoryInfoDownloadByIdsDto(
+                        memory_info_ids_list: vo.memory_info_ids_list,
+                        dto_padding_1: null,
+                      ),
+                      onReceiveProgress: (count, total) {
+                        // TODO: 下载中...
+                      },
+                      parseResponseVoData: MemoryGroupMemoryInfoDownloadByIdsVo.fromJson,
+                    );
+                    await result.handleCode(
+                      code161701: (String showMessage, MemoryGroupMemoryInfoDownloadByIdsVo vo) async {
+                        await driftDb.insertDAO.insertManyFragmentAndMemoryInfos(fragmentAndMemoryInfos: vo.fragment_and_memory_infos_list);
+                      },
+                    );
+                    SmartDialog.dismiss(status: SmartStatus.loading);
+                  },
+                ),
+              );
             },
           );
         },

@@ -45,8 +45,6 @@ class MemoryModels extends CloudTableBase  {
 
   TextColumn get next_time_algorithm_usage_status => textEnum<AlgorithmUsageStatus>().named("next_time_algorithm_usage_status")();
 
-  IntColumn get sync_version => integer().named("sync_version")();
-
   TextColumn get title => text().named("title")();
 
   DateTimeColumn get created_at => dateTime().named("created_at")();

@@ -6,13 +6,13 @@ part of httper;
 @JsonSerializable()
 class MemoryGroupSelectedFragmentsInsertVo extends BaseObject{
 
-    /// 填充字段1
-    bool? vo_padding_1;
+    /// 
+    List<int> memory_info_ids_list;
 
 
 MemoryGroupSelectedFragmentsInsertVo({
 
-    required this.vo_padding_1,
+    required this.memory_info_ids_list,
 
 });
   factory MemoryGroupSelectedFragmentsInsertVo.fromJson(Map<String, dynamic> json) => _$MemoryGroupSelectedFragmentsInsertVoFromJson(json);

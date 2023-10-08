@@ -9,6 +9,8 @@ class MemoryGroups extends CloudTableBase  {
   @override
   Set<Column>? get primaryKey => {id};
 
+  BoolColumn get be_synced => boolean().named("be_synced")();
+
   @ReferenceTo([Users])
   IntColumn get creator_user_id => integer().named("creator_user_id")();
 

@@ -218,6 +218,18 @@ part 'dto_vo_bo/dto_vo/MemoryGroupManyUpdateDto.dart';
 part 'dto_vo_bo/dto_vo/MemoryGroupManyUpdateVo.dart';
 
 
+part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadByIdsDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadByIdsVo.dart';
+
+
 part 'dto_vo_bo/dto_vo/MemoryGroupPageFirstQueryDto.dart';
 
 
@@ -242,10 +254,22 @@ part 'dto_vo_bo/dto_vo/MemoryGroupsQueryDto.dart';
 part 'dto_vo_bo/dto_vo/MemoryGroupsQueryVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/MemoryGroupSyncFAndMiDto.dart';
+part 'dto_vo_bo/dto_vo/MemoryInfoDownloadOnlyIdDto.dart';
 
 
-part 'dto_vo_bo/dto_vo/MemoryGroupSyncFAndMiVo.dart';
+part 'dto_vo_bo/dto_vo/MemoryInfoDownloadOnlyIdVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryInfoUploadSyncDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryInfoUploadSyncVo.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryModelManyUpdateDto.dart';
+
+
+part 'dto_vo_bo/dto_vo/MemoryModelManyUpdateVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/MemoryModelsQueryDto.dart';

@@ -70,15 +70,23 @@ class HttpPath {
 
   static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MANY_UPDATE = 'POST_/login_required/memory_group_handle/memory_group_many_update';
 
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD = 'GET_/login_required/memory_group_handle/memory_group_memory_info_download';
+
+  static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD_BY_IDS = 'POST_/login_required/memory_group_handle/memory_group_memory_info_download_by_ids';
+
   static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUPS_QUERY = 'POST_/login_required/memory_group_handle/memory_groups_query';
 
-  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_SYNC_F_AND_MI = 'GET_/login_required/memory_group_handle/memory_group_sync_f_and_mi';
+  static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_INFO_DOWNLOAD_ONLY_ID = 'GET_/login_required/memory_group_handle/memory_info_download_only_id';
+
+  static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_INFO_UPLOAD_SYNC = 'POST_/login_required/memory_group_handle/memory_info_upload_sync';
 
   static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_PAGE_FIRST_QUERY = 'GET_/login_required/memory_group_handle/memory_group_page_first_query';
 
   static const String GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_PAGE_OTHER_QUERY = 'GET_/login_required/memory_group_handle/memory_group_page_other_query';
 
   static const String POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_SELECTED_FRAGMENTS_INSERT = 'POST_/login_required/memory_group_handle/selected_fragments_insert';
+
+  static const String POST__NO_LOGIN_REQUIRED_MEMORY_MODEL_HANDLE_MEMORY_MODEL_MANY_UPDATE = 'POST_/no_login_required/memory_model_handle/memory_model_many_update';
 
   static const String POST__NO_LOGIN_REQUIRED_MEMORY_MODEL_HANDLE_MEMORY_MODELS_QUERY = 'POST_/no_login_required/memory_model_handle/memory_models_query';
 
