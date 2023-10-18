@@ -153,12 +153,15 @@ class _AbBuilderState<C extends AbController> extends State<AbBuilder<C>> {
 
   @override
   Widget build(BuildContext context) {
+    if (_controller!.abException != null) {
+      return _controller!.exceptionWidget(_controller!.abException!);
+    }
     return _controller!.isEnableLoading && _isPutter
         ? FutureBuilder(
             future: _loadingFuture,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasError) {
-                return _controller!.loadingErrorWidget(AbException(error: snapshot.error!, stackTrace: snapshot.stackTrace!));
+                return _controller!.exceptionWidget(AbException(error: snapshot.error!, stackTrace: snapshot.stackTrace!));
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return _controller!.loadingWidget();

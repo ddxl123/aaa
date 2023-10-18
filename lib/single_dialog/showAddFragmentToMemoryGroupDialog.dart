@@ -60,7 +60,7 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
             path: HttpPath.GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENTS_COUNT_QUERY,
             dtoData: MemoryGroupFragmentsCountQueryDto(
               memory_group_id: element.id,
-              dto_padding_1: null,
+              memory_group_ids_list: null,
             ),
             parseResponseVoData: MemoryGroupFragmentsCountQueryVo.fromJson,
           );

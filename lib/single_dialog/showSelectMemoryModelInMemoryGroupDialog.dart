@@ -1,3 +1,4 @@
+import 'package:aaa/page/list/MemoryModeListPageAbController.dart';
 import 'package:aaa/single_dialog/showCreateMemoryModelDialog.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,18 @@ class SelectMemoryModelInMemoryGroupDialogWidget extends StatefulWidget {
 class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemoryModelInMemoryGroupDialogWidget> {
   final memoryModels = <MemoryModel>[];
 
+  final memoryModeListPageAbController = MemoryModeListPageAbController();
+
   MemoryModel? _selectedMm;
 
   Future<void> getMms() async {
-    throw "todo";
-    // final mms = await db.generalQueryDAO.queryMemoryModels();
-    // memoryModels.clear();
-    // memoryModels.addAll(mms);
-    // if (mounted) setState(() {});
+    await memoryModeListPageAbController.refreshPage();
+
+    memoryModels.clear();
+    memoryModels.addAll(memoryModeListPageAbController.memoryModelsAb());
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -68,14 +73,14 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
             IconButton(
               padding: const EdgeInsets.all(0),
               icon: () {
-                if (_selectedMm == e) {
+                if (_selectedMm?.id == e.id) {
                   return const SolidCircleIcon();
                 } else {
                   return const SolidCircleGreyIcon();
                 }
               }(),
               onPressed: () {
-                if (_selectedMm == e) {
+                if (_selectedMm?.id == e.id) {
                   _selectedMm = null;
                 } else {
                   _selectedMm = e;
@@ -91,26 +96,6 @@ class _SelectMemoryModelInMemoryGroupDialogWidgetState extends State<SelectMemor
 
   Future<void> _onOk() async {
     widget.selectedMemoryModelAb.refreshEasy((oldValue) => _selectedMm);
-    throw "todo";
-    // final st = await SyncTag.create();
-    // await db.updateDAO.resetMemoryGroupForOnlySave(
-    //   originalMemoryGroupReset: () async {
-    //     await widget.mg().reset(
-    //           creator_user_id: toAbsent(),
-    //           memory_model_id: (_selectedMm?.id).toValue(),
-    //           new_display_order: toAbsent(),
-    //           new_review_display_order: toAbsent(),
-    //           review_display_order: toAbsent(),
-    //           review_interval: toAbsent(),
-    //           start_time: toAbsent(),
-    //           title: toAbsent(),
-    //           will_new_learn_count: toAbsent(),
-    //           syncTag: st,
-    //           isCloudTableWithSync: true,
-    //         );
-    //   },
-    //   syncTag: st,
-    // );
     if (_selectedMm == null) {
       SmartDialog.showToast('不选择');
     } else {

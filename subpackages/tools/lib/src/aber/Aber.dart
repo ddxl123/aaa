@@ -5,10 +5,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 
-import 'AbException.dart';
 
 part 'Ab.dart';
 
@@ -25,6 +23,8 @@ part 'BrokenExt.dart';
 part 'BuildExceptionWidget.dart';
 
 part 'typedef.dart';
+
+part 'AbException.dart';
 
 class Aber {
   const Aber._();

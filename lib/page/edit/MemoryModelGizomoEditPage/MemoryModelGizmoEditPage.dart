@@ -358,7 +358,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: _bigSingle(
             context: c.context,
-            title: ButtonDataState.NAME,
+            title: ButtonDataState.text,
             groupValue: c.memoryModel.button_algorithm_usage_status,
             onChanged: (v) {
               c.memoryModel.button_algorithm_usage_status = v!;

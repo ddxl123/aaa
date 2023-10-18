@@ -47,8 +47,8 @@ class GeneralQueryDAO extends DatabaseAccessor<DriftDb> with _$GeneralQueryDAOMi
     return await select(memoryGroups).get();
   }
 
-  Future<MemoryModel?> queryOrNullMemoryModel({required int memoryGroupId}) async {
-    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryGroupId))).getSingleOrNull();
+  Future<MemoryModel?> queryOrNullMemoryModel({required int memoryModelId}) async {
+    return await (select(memoryModels)..where((tbl) => tbl.id.equals(memoryModelId))).getSingleOrNull();
   }
 
   Future<List<MemoryModel>> queryAllMemoryModels() async {

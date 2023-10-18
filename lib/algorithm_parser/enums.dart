@@ -7,6 +7,9 @@ enum SimulationType {
 
   /// 外部处理
   external,
+
+  /// 发送异常
+  exception,
 }
 
 enum NType {

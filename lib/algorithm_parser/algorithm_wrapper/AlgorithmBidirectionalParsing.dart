@@ -1,4 +1,4 @@
-part of algorithm_parser;
+  part of algorithm_parser;
 
 class AlgorithmBidirectionalParsing {
   static String parseFromAlgorithmWrapper(AlgorithmWrapper wrapper) {

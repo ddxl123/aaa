@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:drift_main/share_common/share_enum.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
 import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
@@ -69,17 +70,17 @@ class InAppStageAbController extends AbController {
   }
 
   Future<void> _init() async {
-    final mg = await driftDb.generalQueryDAO.queryOrNullMemoryGroup(memoryGroupId: memoryGroupId);
-    memoryGroupAb.lateAssign(mg!);
+    final mg = (await driftDb.generalQueryDAO.queryOrNullMemoryGroup(memoryGroupId: memoryGroupId))!;
+    memoryGroupAb.lateAssign(mg);
 
-    final mm = await driftDb.generalQueryDAO.queryOrNullMemoryModel(memoryGroupId: memoryGroupId);
-    memoryModelAb.lateAssign(mm!);
+    final mm = (await driftDb.generalQueryDAO.queryOrNullMemoryModel(memoryModelId: mg.memory_model_id!))!;
+    memoryModelAb.lateAssign(mm);
 
-    await _next();
+    await _executeNext();
   }
 
   /// 仅获取下一个 [Performer]。
-  Future<void> _next() async {
+  Future<void> _executeNext() async {
     final performer = await performerQuery.getPerformer(mg: memoryGroupAb());
     currentPerformer.refreshInevitable((obj) => performer);
     // 说明没有下一个了。
@@ -105,7 +106,7 @@ class InAppStageAbController extends AbController {
   /// 仅完成当前表演。
   ///
   /// 点击数值按钮后进行调用。
-  Future<void> _finish({required double clickValue, required List<String> contentValue}) async {
+  Future<void> _executeFinish({required double clickValue, required List<String> contentValue}) async {
     if (currentPerformer() == null) {
       throw "没有下一个碎片了，却仍然请求了下一个碎片！";
     }
@@ -143,8 +144,8 @@ class InAppStageAbController extends AbController {
 
   /// 完成当前表演，并进行下一次表演。
   Future<void> finishAndNext({required double clickValue, required List<String> contentValue}) async {
-    await _finish(clickValue: clickValue, contentValue: contentValue);
-    await _next();
+    await _executeFinish(clickValue: clickValue, contentValue: contentValue);
+    await _executeNext();
   }
 
   /// 解析出当前展示熟练度。

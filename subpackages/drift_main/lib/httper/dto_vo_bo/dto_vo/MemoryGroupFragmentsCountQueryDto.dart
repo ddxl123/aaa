@@ -6,18 +6,18 @@ part of httper;
 @JsonSerializable()
 class MemoryGroupFragmentsCountQueryDto extends BaseObject{
 
-    /// 要查询的记忆组 id
+    /// 要查询的单个记忆组 id。
     int memory_group_id;
 
-    /// 填充字段1
-    bool? dto_padding_1;
+    /// 要查询的多个记忆组 id。
+    List<int>? memory_group_ids_list;
 
 
 MemoryGroupFragmentsCountQueryDto({
 
     required this.memory_group_id,
 
-    required this.dto_padding_1,
+    required this.memory_group_ids_list,
 
 });
   factory MemoryGroupFragmentsCountQueryDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupFragmentsCountQueryDtoFromJson(json);
@@ -61,7 +61,7 @@ MemoryGroupFragmentsCountQueryDto({
         rethrow;
       }
       if (httperException != null) {
-        return await otherException(code, httperException!, st!);
+        return await otherException(code, httperException!, st ?? handleSt);
       }
       if (handleE is HttperException) {
         return await otherException(code, handleE, handleSt);

@@ -45,7 +45,9 @@ Future<void> showCreateMemoryGroupDialog() async {
               ),
             ),
             onSuccess: (String showMessage, SingleRowInsertVo vo) async {
-              // 这里不插入到本地，而是在开始记忆的时候插入。
+              // 插入到本地
+              await driftDb.insertDAO.insertMemoryGroup(memoryGroup: MemoryGroup.fromJson(vo.row));
+
               Aber.findOrNullLast<MemoryGroupListPageAbController>()?.refreshPage();
               SmartDialog.dismiss(status: SmartStatus.dialog);
               SmartDialog.showToast('创建成功！');

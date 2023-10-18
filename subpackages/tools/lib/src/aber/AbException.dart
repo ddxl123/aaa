@@ -1,3 +1,5 @@
+part of aber;
+
 class AbException {
   final Object error;
   final StackTrace stackTrace;

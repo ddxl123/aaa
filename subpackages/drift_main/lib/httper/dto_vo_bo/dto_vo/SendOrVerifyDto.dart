@@ -88,7 +88,7 @@ SendOrVerifyDto({
         rethrow;
       }
       if (httperException != null) {
-        return await otherException(code, httperException!, st!);
+        return await otherException(code, httperException!, st ?? handleSt);
       }
       if (handleE is HttperException) {
         return await otherException(code, handleE, handleSt);

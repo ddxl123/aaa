@@ -99,10 +99,10 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
   /// 只从本地获取。
   Future<void> checkLocalMgAndMm() async {
     // 查询本地记忆组和算法组
-    var mg = await driftDb.generalQueryDAO.queryOrNullMemoryGroup(memoryGroupId: memoryGroupId);
-    var mm = await driftDb.generalQueryDAO.queryOrNullMemoryModel(memoryGroupId: memoryGroupId);
+    var mg = (await driftDb.generalQueryDAO.queryOrNullMemoryGroup(memoryGroupId: memoryGroupId))!;
+    var mm = mg.memory_model_id == null ? null : await driftDb.generalQueryDAO.queryOrNullMemoryModel(memoryModelId: mg.memory_model_id!);
 
-    memoryGroupAb.lateAssign(mg!);
+    memoryGroupAb.lateAssign(mg);
     memoryGroupAb.refreshForce();
     memoryModelAb.refreshEasy((oldValue) => mm);
     titleTextEditingController.text = memoryGroupAb().title;
@@ -126,7 +126,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
       path: HttpPath.GET__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_FRAGMENTS_COUNT_QUERY,
       dtoData: MemoryGroupFragmentsCountQueryDto(
         memory_group_id: memoryGroupId,
-        dto_padding_1: null,
+        memory_group_ids_list: null,
       ),
       parseResponseVoData: MemoryGroupFragmentsCountQueryVo.fromJson,
     );
@@ -155,6 +155,9 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
           fragmentAndMemoryInfoStatus.refreshEasy((oldValue) => FragmentAndMemoryInfoStatus.differentDownload);
           return;
         }
+      },
+      otherException: (a, b, c) async {
+        logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
       },
     );
 
@@ -203,9 +206,8 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     await result.handleCode(
       code160801: (message, vo) async {
         await driftDb.insertDAO.insertManyFragmentAndMemoryInfos(fragmentAndMemoryInfos: vo.fragment_and_memory_infos_list);
+        await checkLocalFragmentAndMemoryInfos();
         SmartDialog.showToast("下载成功！");
-        // 退回到列表界面，让用户重新进到该记忆组中。
-        Navigator.pop(context);
       },
       otherException: (a, b, c) async {
         logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);
@@ -213,6 +215,7 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
     );
 
     SmartDialog.dismiss(status: SmartStatus.loading);
+    SmartDialog.dismiss(status: SmartStatus.dialog);
   }
 
   Future<void> differentFragmentAndMemoryInfos() async {

@@ -35,7 +35,7 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                 title: Text(
                   c.filterForType(
                         algorithmType: c.enterType(abw)!.algorithmType,
-                        buttonDataStateFunc: () => ButtonDataState.NAME,
+                        buttonDataStateFunc: () => ButtonDataState.text,
                         familiarityStateFunc: () => FamiliarityState.NAME,
                         nextShowTimeStateFunc: () => NextShowTimeState.NAME,
                         abw: abw,

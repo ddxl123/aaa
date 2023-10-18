@@ -104,6 +104,9 @@ class MemoryModelGizmoEditPageAbController extends AbController {
         row: memoryModel,
       ),
       onSuccess: (String showMessage, SingleRowModifyVo vo) async {
+        // 更新到本地
+        await driftDb.insertDAO.insertMemoryModel(memoryModel: memoryModel);
+
         SmartDialog.showToast("保存成功！");
         Navigator.pop(context);
       },

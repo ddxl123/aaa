@@ -17,12 +17,15 @@ class MemoryGroupListPageAbController extends AbController {
   final memoryGroupGizmos = <MemoryGroup>[].ab;
 
   Future<void> refreshPage() async {
+    await _local();
+    _cloud();
+  }
+
+  Future<void> _local() async {
     final localAll = await driftDb.generalQueryDAO.queryAllMemoryGroups();
     memoryGroupGizmos.refreshInevitable((obj) => obj
       ..clear()
       ..addAll(localAll));
-
-    _cloud();
   }
 
   Future<void> _cloud() async {
@@ -50,7 +53,7 @@ class MemoryGroupListPageAbController extends AbController {
         // 下载仅存在于云端的
         await driftDb.insertDAO.insertManyMemoryGroups(mgs: cloudAll.where((element) => onlyCloud.any((c) => c == element.id)).toList());
         // 覆盖下载云端版本至本地（本地版本低于云端版本）
-        final download = localAll.where((element) => cloudAll.any((c) => c.id == element.id && c.sync_version > element.sync_version));
+        final download = cloudAll.where((element) => localAll.any((c) => c.id == element.id && c.sync_version < element.sync_version));
         await driftDb.insertDAO.insertManyMemoryGroups(mgs: download.toList());
         // 覆盖上传本地版本至云端（本地版本高于云端版本）
         final upload = localAll.where((element) => cloudAll.any((c) => c.id == element.id && c.sync_version < element.sync_version));
@@ -68,9 +71,7 @@ class MemoryGroupListPageAbController extends AbController {
           },
         );
 
-        memoryGroupGizmos.refreshInevitable((obj) => obj
-          ..clear()
-          ..addAll(localAll));
+        await _local();
       },
       otherException: (a, b, c) async {
         logger.outErrorHttp(code: a, showMessage: b.showMessage, debugMessage: b.debugMessage, st: c);

@@ -71,8 +71,9 @@ class BasicConfigWidget extends StatelessWidget {
                       return Text(gzC.memoryModelAb(gzAbw)?.title ?? '点击选择');
                     },
                   ),
-                  onPressed: () {
-                    showSelectMemoryModelInMemoryGroupDialog(mg: c.memoryGroupAb, selectedMemoryModelAb: c.memoryModelAb);
+                  onPressed: () async {
+                    await showSelectMemoryModelInMemoryGroupDialog(mg: c.memoryGroupAb, selectedMemoryModelAb: c.memoryModelAb);
+                    c.memoryGroupAb.refreshInevitable((obj) => obj..memory_model_id = c.memoryModelAb()?.id);
                   },
                 ),
                 Text("模拟(验证算法的正确性)"),

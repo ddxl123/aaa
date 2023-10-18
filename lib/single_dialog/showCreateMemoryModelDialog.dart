@@ -21,9 +21,7 @@ Future<void> showCreateMemoryModelDialog() async {
           SmartDialog.dismiss();
         },
         onOk: (tec) async {
-          if (tec.text
-              .trim()
-              .isEmpty) {
+          if (tec.text.trim().isEmpty) {
             SmartDialog.showToast('名称不能为空！');
             return;
           }
@@ -53,6 +51,9 @@ Future<void> showCreateMemoryModelDialog() async {
               ),
             ),
             onSuccess: (String showMessage, SingleRowInsertVo vo) async {
+              // 插入到本地
+              await driftDb.insertDAO.insertMemoryModel(memoryModel: MemoryModel.fromJson(vo.row));
+
               SmartDialog.dismiss();
               SmartDialog.showToast('创建成功！');
             },

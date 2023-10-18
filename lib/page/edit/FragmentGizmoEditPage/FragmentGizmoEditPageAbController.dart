@@ -153,6 +153,9 @@ class FragmentPerformer {
       );
       await insertResult.handleCode(
         code140201: (String showMessage, FragmentInsertFragmentVo vo) async {
+          // 插入到本地
+          await driftDb.insertDAO.insertFragment(f: vo.fragment);
+
           fragment = vo.fragment;
           isSaveSuccess = true;
           SmartDialog.showToast("创建成功！");
@@ -163,20 +166,24 @@ class FragmentPerformer {
         },
       );
     } else {
+      final newF = fragment!
+        ..content = jsonEncode(fragmentTemplate.toJson())
+        // 因为本身就是 now
+        ..title = fragmentTemplate.getTitle()
+        ..be_sep_publish = false;
       final modifyResult = await request(
         path: HttpPath.POST__NO_LOGIN_REQUIRED_FRAGMENT_HANDLE_MODIFY_FRAGMENT,
         dtoData: FragmentModifyFragmentDto(
-          fragment: fragment!
-            ..content = jsonEncode(fragmentTemplate.toJson())
-            // 因为本身就是 now
-            ..title = fragmentTemplate.getTitle()
-            ..be_sep_publish = false,
+          fragment: newF,
           fragment_group_ids_list: dynamicFragmentGroups.map((e) => e.$1?.id).toList(),
         ),
         parseResponseVoData: FragmentModifyFragmentVo.fromJson,
       );
       await modifyResult.handleCode(
         code140301: (String showMessage) async {
+          // 更新到本地
+          await driftDb.insertDAO.insertFragment(f: newF);
+
           isSaveSuccess = true;
           SmartDialog.showToast("修改成功！");
         },

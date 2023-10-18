@@ -22,6 +22,10 @@ class InsertDAO extends DatabaseAccessor<DriftDb> with _$InsertDAOMixin {
         );
   }
 
+  Future<void> insertFragment({required Fragment f}) async {
+    await driftDb.into(fragments).insert(f, mode: InsertMode.insertOrReplace);
+  }
+
   Future<void> insertMemoryGroup({
     required MemoryGroup memoryGroup,
   }) async {

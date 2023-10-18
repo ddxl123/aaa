@@ -14,8 +14,15 @@ abstract class AbController {
   /// 刷新整个被当前 controller 修饰的 widget。
   late final void Function() thisRefresh;
 
+  AbException? abException;
+
   /// 如果启用，会有加载过渡。
   bool get isEnableLoading => false;
+
+  void changeToExceptionWidget({required AbException abException}) {
+    this.abException = abException;
+    thisRefresh();
+  }
 
   /// [AbBuilder] 内部的 initState，只会在 [Aber._put] 时所在的 [AbBuilder] 中调用，且只会调用一次。
   @mustCallSuper
@@ -57,7 +64,7 @@ abstract class AbController {
   /// 需要 [isEnableLoading] 为 true 时才可能会被触发。
   ///
   /// 会提供 [error] 和 [stackTrace]
-  Widget loadingErrorWidget(AbException exceptionContent) => BuildExceptionWidget(
+  Widget exceptionWidget(AbException exceptionContent) => BuildExceptionWidget(
         title: '加载出现异常！',
         exceptionContent: exceptionContent,
         logCallback: (title, ec) {
