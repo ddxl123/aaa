@@ -23,7 +23,12 @@ class AlgorithmWrapper {
         "if_else_use_wrapper": this.ifUseElseWrapper.toJson(),
       };
 
-  static fromJsonString(String content) => AlgorithmWrapper.fromJson(jsonDecode(content));
+  static AlgorithmWrapper fromJsonString(String? content) {
+    if (content == null) {
+      throw "算法内容为 null！";
+    }
+    return AlgorithmWrapper.fromJson(jsonDecode(content));
+  }
 
   /// 将 Map 格式转换成 jsonString 格式，可以以文本的方式保存到数据库。
   String toJsonString() => jsonEncode(toJson());

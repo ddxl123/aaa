@@ -9,7 +9,7 @@ class FamiliarityState extends ClassificationState {
     required super.externalResultHandler,
   });
 
-  static const NAME = "熟悉度变化算法";
+  static const name = "熟悉度变化算法";
 
   late double result;
 

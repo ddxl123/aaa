@@ -47,16 +47,6 @@ enum StudyStatus {
 
 }
         
-enum AlgorithmUsageStatus {
-  
-  a,
-
-  b,
-
-  c,
-
-}
-        
 enum NewDisplayOrder {
   
   random,

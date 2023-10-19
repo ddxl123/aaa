@@ -1,6 +1,6 @@
 import 'package:aaa/algorithm_parser/default.dart';
-import 'package:aaa/algorithm_parser/parser.dart';
 import 'package:aaa/page/edit/MemoryModelGizomoEditPage/AlgorithmEditPageAbController.dart';
+import 'package:drift_main/drift/DriftDb.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -9,7 +9,13 @@ import 'package:tools/tools.dart';
 import 'MemoryModelGizmoEditPageAbController.dart';
 
 class AlgorithmEditPage extends StatefulWidget {
-  const AlgorithmEditPage({Key? key}) : super(key: key);
+  const AlgorithmEditPage({
+    Key? key,
+    required this.name,
+    required this.memoryModel,
+  }) : super(key: key);
+  final String name;
+  final MemoryModel memoryModel;
 
   @override
   State<AlgorithmEditPage> createState() => _AlgorithmEditPageState();
@@ -22,7 +28,7 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
       tag: Aber.single,
       builder: (c, abw) {
         return AbBuilder<AlgorithmEditPageAbController>(
-          putController: AlgorithmEditPageAbController(),
+          putController: AlgorithmEditPageAbController(name: widget.name),
           builder: (fc, fAbw) {
             return Scaffold(
               appBar: AppBar(
@@ -33,14 +39,7 @@ class _AlgorithmEditPageState extends State<AlgorithmEditPage> {
                   },
                 ),
                 title: Text(
-                  c.filterForType(
-                        algorithmType: c.enterType(abw)!.algorithmType,
-                        buttonDataStateFunc: () => ButtonDataState.text,
-                        familiarityStateFunc: () => FamiliarityState.NAME,
-                        nextShowTimeStateFunc: () => NextShowTimeState.NAME,
-                        abw: abw,
-                      ) +
-                      " · 方案 ${c.enterType()!.algorithmUsageStatus.name}",
+                  widget.name,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 titleSpacing: 0,

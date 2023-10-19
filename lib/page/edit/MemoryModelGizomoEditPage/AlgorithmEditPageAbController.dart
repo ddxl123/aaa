@@ -8,6 +8,9 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'MemoryModelGizmoEditPageAbController.dart';
 
 class AlgorithmEditPageAbController extends AbController {
+  AlgorithmEditPageAbController({required this.name});
+
+  final String name;
   final memoryModelGizmoEditPageAbController = Aber.findLast<MemoryModelGizmoEditPageAbController>();
 
   final freeBoxController = FreeBoxController();
@@ -24,35 +27,11 @@ class AlgorithmEditPageAbController extends AbController {
     final mm = memoryModelGizmoEditPageAbController.memoryModel;
     final current = currentAlgorithmWrapper().toJsonString();
     final isModified = filter(
-      from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
+      from: name,
       targets: {
-        [FamiliarityState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => !((mm.familiarity_algorithm_a == null && current == empty) || mm.familiarity_algorithm_a == current),
-                [AlgorithmUsageStatus.b]: () => !((mm.familiarity_algorithm_b == null && current == empty) || mm.familiarity_algorithm_b == current),
-                [AlgorithmUsageStatus.c]: () => !((mm.familiarity_algorithm_c == null && current == empty) || mm.familiarity_algorithm_c == current),
-              },
-              orElse: null,
-            ),
-        [ButtonDataState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => !((mm.button_algorithm_a == null && current == empty) || mm.button_algorithm_a == current),
-                [AlgorithmUsageStatus.b]: () => !((mm.button_algorithm_b == null && current == empty) || mm.button_algorithm_b == current),
-                [AlgorithmUsageStatus.c]: () => !((mm.button_algorithm_c == null && current == empty) || mm.button_algorithm_c == current),
-              },
-              orElse: null,
-            ),
-        [NextShowTimeState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => !((mm.next_time_algorithm_a == null && current == empty) || mm.next_time_algorithm_a == current),
-                [AlgorithmUsageStatus.b]: () => !((mm.next_time_algorithm_b == null && current == empty) || mm.next_time_algorithm_b == current),
-                [AlgorithmUsageStatus.c]: () => !((mm.next_time_algorithm_c == null && current == empty) || mm.next_time_algorithm_c == current),
-              },
-              orElse: null,
-            ),
+        [FamiliarityState.name]: () => !((mm.familiarity_algorithm == null && current == empty) || mm.familiarity_algorithm == current),
+        [ButtonDataState.name]: () => !((mm.button_algorithm == null && current == empty) || mm.button_algorithm == current),
+        [NextShowTimeState.name]: () => !((mm.next_time_algorithm == null && current == empty) || mm.next_time_algorithm == current),
       },
       orElse: null,
     );
@@ -88,35 +67,11 @@ class AlgorithmEditPageAbController extends AbController {
     final ea = AlgorithmWrapper.emptyAlgorithmWrapper.toJsonString();
     final mm = memoryModelGizmoEditPageAbController.memoryModel;
     return filter(
-      from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
+      from: name,
       targets: {
-        [FamiliarityState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => mm.familiarity_algorithm_a ?? ea,
-                [AlgorithmUsageStatus.b]: () => mm.familiarity_algorithm_b ?? (mm.familiarity_algorithm_a ?? ea),
-                [AlgorithmUsageStatus.c]: () => mm.familiarity_algorithm_c ?? (mm.familiarity_algorithm_a ?? ea),
-              },
-              orElse: null,
-            ),
-        [ButtonDataState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => mm.button_algorithm_a ?? ea,
-                [AlgorithmUsageStatus.b]: () => mm.button_algorithm_b ?? (mm.button_algorithm_a ?? ea),
-                [AlgorithmUsageStatus.c]: () => mm.button_algorithm_c ?? (mm.button_algorithm_a ?? ea),
-              },
-              orElse: null,
-            ),
-        [NextShowTimeState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => mm.next_time_algorithm_a ?? ea,
-                [AlgorithmUsageStatus.b]: () => mm.next_time_algorithm_b ?? (mm.next_time_algorithm_a ?? ea),
-                [AlgorithmUsageStatus.c]: () => mm.next_time_algorithm_c ?? (mm.next_time_algorithm_a ?? ea),
-              },
-              orElse: null,
-            ),
+        [FamiliarityState.name]: () => mm.familiarity_algorithm ?? ea,
+        [ButtonDataState.name]: () => mm.button_algorithm ?? ea,
+        [NextShowTimeState.name]: () => mm.next_time_algorithm ?? ea,
       },
       orElse: null,
     );
@@ -126,35 +81,11 @@ class AlgorithmEditPageAbController extends AbController {
     rawToView();
     final mm = memoryModelGizmoEditPageAbController.memoryModel;
     filter(
-      from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
+      from: name,
       targets: {
-        [FamiliarityState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => mm..familiarity_algorithm_a = currentAlgorithmWrapper().toJsonString(),
-                [AlgorithmUsageStatus.b]: () => mm..familiarity_algorithm_b = currentAlgorithmWrapper().toJsonString(),
-                [AlgorithmUsageStatus.c]: () => mm..familiarity_algorithm_c = currentAlgorithmWrapper().toJsonString(),
-              },
-              orElse: null,
-            ),
-        [ButtonDataState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => mm..button_algorithm_a = currentAlgorithmWrapper().toJsonString(),
-                [AlgorithmUsageStatus.b]: () => mm..button_algorithm_b = currentAlgorithmWrapper().toJsonString(),
-                [AlgorithmUsageStatus.c]: () => mm..button_algorithm_c = currentAlgorithmWrapper().toJsonString(),
-              },
-              orElse: null,
-            ),
-        [NextShowTimeState]: () => filter(
-              from: memoryModelGizmoEditPageAbController.enterType()!.algorithmUsageStatus,
-              targets: {
-                [AlgorithmUsageStatus.a]: () => mm..next_time_algorithm_a = currentAlgorithmWrapper().toJsonString(),
-                [AlgorithmUsageStatus.b]: () => mm..next_time_algorithm_b = currentAlgorithmWrapper().toJsonString(),
-                [AlgorithmUsageStatus.c]: () => mm..next_time_algorithm_c = currentAlgorithmWrapper().toJsonString(),
-              },
-              orElse: null,
-            ),
+        [FamiliarityState.name]: () => mm..familiarity_algorithm = currentAlgorithmWrapper().toJsonString(),
+        [ButtonDataState.name]: () => mm..button_algorithm = currentAlgorithmWrapper().toJsonString(),
+        [NextShowTimeState.name]: () => mm..next_time_algorithm = currentAlgorithmWrapper().toJsonString(),
       },
       orElse: null,
     );
@@ -166,9 +97,9 @@ class AlgorithmEditPageAbController extends AbController {
     rawToView();
     currentAlgorithmWrapper().cancelAllException();
     await filterFuture(
-      from: memoryModelGizmoEditPageAbController.enterType()!.algorithmType,
+      from: name,
       targets: {
-        [FamiliarityState]: () async => await AlgorithmParser.parse(
+        [FamiliarityState.name]: () async => await AlgorithmParser.parse(
               stateFunc: () => FamiliarityState(
                 algorithmWrapper: currentAlgorithmWrapper(),
                 simulationType: SimulationType.syntaxCheck,
@@ -181,7 +112,7 @@ class AlgorithmEditPageAbController extends AbController {
                 SmartDialog.showToast("语法分析异常：${ec.error}");
               },
             ),
-        [ButtonDataState]: () async => await AlgorithmParser.parse(
+        [ButtonDataState.name]: () async => await AlgorithmParser.parse(
               stateFunc: () => ButtonDataState(
                 algorithmWrapper: currentAlgorithmWrapper(),
                 simulationType: SimulationType.syntaxCheck,
@@ -194,7 +125,7 @@ class AlgorithmEditPageAbController extends AbController {
                 SmartDialog.showToast("语法分析异常：${ec.error}");
               },
             ),
-        [NextShowTimeState]: () async => await AlgorithmParser.parse(
+        [NextShowTimeState.name]: () async => await AlgorithmParser.parse(
               stateFunc: () => NextShowTimeState(
                 algorithmWrapper: currentAlgorithmWrapper(),
                 simulationType: SimulationType.syntaxCheck,

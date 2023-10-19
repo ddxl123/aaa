@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aaa/algorithm_parser/AlgorithmException.dart';
 import 'package:aaa/algorithm_parser/parser.dart';
+import 'package:aaa/push_page/push_page.dart';
 import 'package:drift_main/share_common/share_enum.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:tools/tools.dart';
@@ -56,6 +57,33 @@ class InAppStageAbController extends AbController {
   bool get isEnableLoading => true;
 
   @override
+  Widget exceptionWidget(AbException exceptionContent) {
+    final e = exceptionContent.error;
+    if (e is AlgorithmException) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: Column(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(e.error)]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text("点击此处查看算法"),
+                  onPressed: () {
+                    pushToMemoryModelGizmoEditPage(context: context, memoryModel: memoryModelAb());
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+    return super.exceptionWidget(exceptionContent);
+  }
+
+  @override
   Widget loadingWidget() {
     return const Material(
       child: Center(
@@ -91,16 +119,12 @@ class InAppStageAbController extends AbController {
     await _parseStartFamiliarity();
 
     final pbd = await _parseStartButtonDatas();
-    if (pbd != null) {
-      for (var element in pbd.resultButtonValues) {
-        await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: element);
-      }
-      currentButtonDatas.refreshEasy((oldValue) => oldValue
-        ..clear()
-        ..addAll(pbd.resultButtonValues));
-    } else {
-      throw "解析按钮数据失败！";
+    for (var element in pbd.resultButtonValues) {
+      await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: element);
     }
+    currentButtonDatas.refreshEasy((oldValue) => oldValue
+      ..clear()
+      ..addAll(pbd.resultButtonValues));
   }
 
   /// 仅完成当前表演。
@@ -152,7 +176,7 @@ class InAppStageAbController extends AbController {
   Future<void> _parseStartFamiliarity() async {
     await AlgorithmParser.parse<FamiliarityState, void>(
       stateFunc: () => FamiliarityState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -236,7 +260,7 @@ class InAppStageAbController extends AbController {
         currentShowFamiliarity.refreshEasy((oldValue) => state.result);
       },
       onError: (AlgorithmException ec) async {
-        // throw ec;
+        throw ec;
       },
     );
   }
@@ -247,7 +271,7 @@ class InAppStageAbController extends AbController {
   Future<double?> _parseClickFamiliarity(ButtonDataValue2NextShowTime buttonDataValue2NextShowTime) async {
     return await AlgorithmParser.parse<FamiliarityState, double?>(
       stateFunc: () => FamiliarityState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm_a!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().familiarity_algorithm),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -331,8 +355,7 @@ class InAppStageAbController extends AbController {
         return state.result;
       },
       onError: (AlgorithmException ec) async {
-        // throw ec;
-        return null;
+        throw ec;
       },
     );
   }
@@ -340,10 +363,10 @@ class InAppStageAbController extends AbController {
   /// 解析全部按钮的原始数值，并非解析的时间。
   ///
   /// 返回 null 表示发生异常。
-  Future<ButtonDataState?> _parseStartButtonDatas() async {
-    return await AlgorithmParser.parse<ButtonDataState, ButtonDataState?>(
+  Future<ButtonDataState> _parseStartButtonDatas() async {
+    return await AlgorithmParser.parse<ButtonDataState, ButtonDataState>(
       stateFunc: () => ButtonDataState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm_a!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().button_algorithm),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -427,8 +450,7 @@ class InAppStageAbController extends AbController {
         return state;
       },
       onError: (AlgorithmException ec) async {
-        // throw ec;
-        return null;
+        throw ec;
       },
     );
   }
@@ -439,7 +461,7 @@ class InAppStageAbController extends AbController {
   Future<void> _parseSingleButtonNextShowTime({required ButtonDataValue2NextShowTime buttonDataValue2NextShowTime}) async {
     await AlgorithmParser.parse<NextShowTimeState, void>(
       stateFunc: () => NextShowTimeState(
-        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm_a!),
+        algorithmWrapper: AlgorithmWrapper.fromJsonString(memoryModelAb().next_time_algorithm),
         simulationType: SimulationType.external,
         externalResultHandler: (InternalVariableAtom atom) async {
           return await atom.filter(
@@ -523,7 +545,7 @@ class InAppStageAbController extends AbController {
         buttonDataValue2NextShowTime.nextShowTime = state.result;
       },
       onError: (AlgorithmException ec) async {
-        // throw ec;
+        throw ec;
       },
     );
   }

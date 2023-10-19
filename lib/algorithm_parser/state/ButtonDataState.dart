@@ -47,7 +47,7 @@ class ButtonDataState extends ClassificationState {
     required super.externalResultHandler,
   });
 
-  static const text = "按钮数值分配算法";
+  static const name = "按钮数值分配算法";
   final List<ButtonDataValue2NextShowTime> resultButtonValues = [];
 
   @override
