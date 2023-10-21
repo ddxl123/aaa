@@ -31,6 +31,9 @@ CheckLoginDto({
   int? code;
 
   @JsonKey(ignore: true)
+  String? successMessage;
+
+  @JsonKey(ignore: true)
   HttperException? httperException;
   
   @JsonKey(ignore: true)
@@ -55,9 +58,9 @@ CheckLoginDto({
     }) async {
     try {
 
-        if (code == 10301) return await code10301(httperException!.showMessage);
+        if (code == 10301) return await code10301(successMessage!);
 
-        if (code == 10302) return await code10302(httperException!.showMessage);
+        if (code == 10302) return await code10302(successMessage!);
 
     } catch (handleE, handleSt) {
       if (otherException == null) {
@@ -79,7 +82,9 @@ CheckLoginDto({
       if(otherException==null) throw HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！');
       return await otherException(code, HttperException(showMessage: '请求异常！', debugMessage: '响应码 $code 未处理！'), st!);
     }
-    if(otherException==null) throw httperException!;
+    if(otherException==null) {
+      throw HttperException(showMessage: "请求异常", debugMessage: '子 handleCode 异常：\n子 code：$code\n子 StackTrace：\n$st\n${httperException!.showMessage}\n${httperException!.debugMessage}');
+    }
     return await otherException(code, httperException!, st!);
   }
 }

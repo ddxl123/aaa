@@ -71,7 +71,8 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
     }
     return (dtoData as dynamic)
       ..code = parseCode
-      ..httperException = HttperException(showMessage: parseMessage, debugMessage: '无异常')
+      ..successMessage = parseMessage
+      ..httperException = null
       ..vo = parseVo;
   } catch (e, st) {
     if (e is DioError) {
@@ -79,6 +80,7 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
       if (e.type == DioErrorType.sendTimeout || e.type == DioErrorType.connectionTimeout || e.type == DioErrorType.receiveTimeout) {
         return (dtoData as dynamic)
           ..code = null
+          ..successMessage = null
           ..httperException = HttperException(
             showMessage: '请求超时！',
             debugMessage: '$e\nrequestDtoData:${dtoData.toJson()}\nrequestDtoDataList:${dtoDataList?.map((e) => e.toJson())}\nresponseData: $responseData',
@@ -90,12 +92,14 @@ Future<RQ> request<RQ extends BaseObject, RP extends BaseObject>({
     if (e is HttperException) {
       return (dtoData as dynamic)
         ..code = null
+        ..successMessage = null
         ..httperException = e
         ..vo = null
         ..st = st;
     }
     return (dtoData as dynamic)
       ..code = null
+      ..successMessage = null
       ..httperException = HttperException(
         showMessage: '请求异常！',
         debugMessage: '$e\nrequestDtoData:${dtoData.toJson()}\nrequestDtoDataList:${dtoDataList?.map((e) => e.toJson())}\nresponseData: $responseData',

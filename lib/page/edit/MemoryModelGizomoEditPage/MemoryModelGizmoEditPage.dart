@@ -132,8 +132,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10),
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (ctx) => AlgorithmEditPage(
@@ -142,6 +142,7 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
               ),
             ),
           );
+          Aber.findOrNull<MemoryModelGizmoEditPageAbController>()?.thisRefresh();
         },
         child: Card(
           child: Padding(
@@ -161,8 +162,8 @@ class MemoryModelGizmoEditPage extends StatelessWidget {
                               orElse: null,
                             ) ==
                             null
-                        ? Text(" (未设置)",style: TextStyle(fontSize: 14,color: Colors.red))
-                        : Text(" (已设置)",style: TextStyle(fontSize: 14,color: Colors.green)),
+                        ? Text(" (未设置)", style: TextStyle(fontSize: 14, color: Colors.red))
+                        : Text(" (已设置)", style: TextStyle(fontSize: 14, color: Colors.green)),
                     Spacer(),
                     Icon(Icons.edit_outlined),
                   ],
