@@ -34,6 +34,7 @@ class Home extends StatelessWidget {
     return AbBuilder<HomeAbController>(
       builder: (c, abw) {
         return FloatingActionButton(
+          // elevation: 3,
           child: const Icon(Icons.add),
           onPressed: () async {
             showMaterialModalBottomSheet(
@@ -234,10 +235,10 @@ class Home extends StatelessWidget {
     return AbBuilder<HomeAbController>(
       builder: (c, abw) {
         return AnimatedBottomNavigationBar.builder(
+          elevation: 0,
           itemCount: 4,
           activeIndex: c.currentPageType(abw).index,
           gapLocation: GapLocation.center,
-          splashColor: Colors.blue,
           tabBuilder: (index, isActive) {
             return Column(
               mainAxisSize: MainAxisSize.min,

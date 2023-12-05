@@ -1,12 +1,14 @@
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplateInAppStageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../base/FragmentTemplateViewWidget.dart';
-import '../../base/QuillEditViewWidget.dart';
-import '../../base/SingleFragmentTemplateChunk.dart';
+import '../../base/FragmentTemplatePreviewWidget.dart';
+import '../../base/SingleQuillPreviewWidget.dart';
+import '../../base/TemplateViewChunkWidget.dart';
 import 'ChoiceFragmentTemplate.dart';
 import 'ChoicePrefixType.dart';
 
+/// 选择题记忆展示状态下的 Widget。
 class ChoiceFragmentTemplateInAppStageWidget extends StatefulWidget {
   const ChoiceFragmentTemplateInAppStageWidget({
     super.key,
@@ -24,15 +26,15 @@ class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentT
 
   @override
   Widget build(BuildContext context) {
-    final questionWidget = SingleFragmentTemplateChunk(
+    final questionWidget = TemplateViewChunkWidget(
       chunkTitle: "问题",
       children: [
-        QuillEditViewWidget(
-          singleEditableQuill: widget.choiceFragmentTemplate.question,
+        SingleQuillPreviewWidget(
+          singleQuillController: widget.choiceFragmentTemplate.question,
         ),
       ],
     );
-    final choicesWidget = SingleFragmentTemplateChunk(
+    final choicesWidget = TemplateViewChunkWidget(
       chunkTitle: "选项",
       children: [
         for (int i = 0; i < widget.choiceFragmentTemplate.choices.length; i++)
@@ -52,8 +54,8 @@ class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentT
                         child: Text(choicePrefixType.toTypeFrom(i + 1), style: TextStyle(color: Colors.amber)),
                       ),
                 Expanded(
-                  child: QuillEditViewWidget(
-                    singleEditableQuill: widget.choiceFragmentTemplate.choices[i],
+                  child: SingleQuillPreviewWidget(
+                    singleQuillController: widget.choiceFragmentTemplate.choices[i],
                   ),
                 ),
               ],
@@ -61,41 +63,12 @@ class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentT
           ),
       ],
     );
-    return FragmentTemplateViewWidget(
+    return FragmentTemplateInAppStageWidget(
       fragmentTemplate: widget.choiceFragmentTemplate,
-      frontChildren: [
+      onTap: () {},
+      columnChildren: [
         questionWidget,
         choicesWidget,
-      ],
-      backChildren: [
-        questionWidget,
-        choicesWidget,
-      ],
-      frontDialChildren: [
-        ...ChoicePrefixType.values.map(
-          (e) {
-            return SpeedDialChild(
-              label: e.name,
-              onTap: () {
-                choicePrefixType = e;
-                setState(() {});
-              },
-            );
-          },
-        ),
-      ],
-      backDialChildren: [
-        ...ChoicePrefixType.values.map(
-          (e) {
-            return SpeedDialChild(
-              label: e.name,
-              onTap: () {
-                choicePrefixType = e;
-                setState(() {});
-              },
-            );
-          },
-        ),
       ],
     );
   }

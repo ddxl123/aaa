@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
-import 'SingleEditableQuill.dart';
+import 'SingleQuillController.dart';
 
-class QuillEditableWidget extends StatelessWidget {
-  const QuillEditableWidget({super.key, required this.singleEditableQuill, required this.isEditable});
+/// 单个可编辑的输入框 Widget。
+class SingleQuillEditableWidget extends StatelessWidget {
+  const SingleQuillEditableWidget({super.key, required this.singleQuillController, required this.isEditable});
 
-  final SingleEditableQuill singleEditableQuill;
+  final SingleQuillController singleQuillController;
   final bool isEditable;
 
   @override
@@ -22,13 +23,13 @@ class QuillEditableWidget extends StatelessWidget {
           const BoxDecoration(),
         ),
       ),
-      scrollController: singleEditableQuill.scrollController,
-      controller: singleEditableQuill.quillController,
+      scrollController: singleQuillController.scrollController,
+      controller: singleQuillController.quillController,
       readOnly: !isEditable,
       showCursor: isEditable,
       autoFocus: true,
       expands: false,
-      focusNode: singleEditableQuill.focusNode,
+      focusNode: singleQuillController.focusNode,
       padding: const EdgeInsets.all(0),
       scrollable: false,
       embedBuilders: [

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/SingleEditableQuill.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/SingleQuillController.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
@@ -10,12 +10,13 @@ import 'package:tools/tools.dart';
 import '../../../custom_embeds/DemoEmbed.dart';
 import '../../base/FragmentTemplate.dart';
 
+/// 问答题模板的数据类。
 class QAFragmentTemplate extends FragmentTemplate {
   @override
   FragmentTemplateType get fragmentTemplateType => FragmentTemplateType.questionAnswer;
 
-  final question = SingleEditableQuill();
-  final answer = SingleEditableQuill();
+  final question = SingleQuillController();
+  final answer = SingleQuillController();
 
   /// 问题和答案是否可以互换。
   bool interchangeable = false;
@@ -30,12 +31,12 @@ class QAFragmentTemplate extends FragmentTemplate {
   String getTitle() => question.transferToTitle();
 
   @override
-  List<SingleEditableQuill> getAllInitSingleEditableQuill() => [question, answer];
+  List<SingleQuillController> getAllInitSingleEditableQuill() => [question, answer];
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "type": fragmentTemplateType.index,
+      "type": fragmentTemplateType.name,
       "interchangeable": interchangeable,
       "question": question.getContentJsonString(),
       "answer": answer.getContentJsonString(),
@@ -65,4 +66,7 @@ class QAFragmentTemplate extends FragmentTemplate {
     question.dispose();
     answer.dispose();
   }
+
+  @override
+  bool get initIsShowBottomButton => false;
 }

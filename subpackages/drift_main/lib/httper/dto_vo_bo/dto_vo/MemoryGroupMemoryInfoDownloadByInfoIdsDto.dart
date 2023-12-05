@@ -4,7 +4,7 @@ part of httper;
 
 /// 
 @JsonSerializable()
-class MemoryGroupMemoryInfoDownloadByIdsDto extends BaseObject{
+class MemoryGroupMemoryInfoDownloadByInfoIdsDto extends BaseObject{
 
     /// 
     List<int> memory_info_ids_list;
@@ -13,17 +13,17 @@ class MemoryGroupMemoryInfoDownloadByIdsDto extends BaseObject{
     bool? dto_padding_1;
 
 
-MemoryGroupMemoryInfoDownloadByIdsDto({
+MemoryGroupMemoryInfoDownloadByInfoIdsDto({
 
     required this.memory_info_ids_list,
 
     required this.dto_padding_1,
 
 });
-  factory MemoryGroupMemoryInfoDownloadByIdsDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupMemoryInfoDownloadByIdsDtoFromJson(json);
+  factory MemoryGroupMemoryInfoDownloadByInfoIdsDto.fromJson(Map<String, dynamic> json) => _$MemoryGroupMemoryInfoDownloadByInfoIdsDtoFromJson(json);
     
   @override
-  Map<String, dynamic> toJson() => _$MemoryGroupMemoryInfoDownloadByIdsDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MemoryGroupMemoryInfoDownloadByInfoIdsDtoToJson(this);
   
   
           
@@ -40,7 +40,7 @@ MemoryGroupMemoryInfoDownloadByIdsDto({
   StackTrace? st;
 
   @JsonKey(ignore: true)
-  MemoryGroupMemoryInfoDownloadByIdsVo? vo;
+  MemoryGroupMemoryInfoDownloadByInfoIdsVo? vo;
 
   /// 内部抛出的异常将在 [otherException] 中捕获。
   Future<T> handleCode<T>({
@@ -48,8 +48,8 @@ MemoryGroupMemoryInfoDownloadByIdsDto({
     Future<T> Function(int? code, HttperException httperException, StackTrace st)? otherException,
 
     // message: 下载成功！
-    // explain: 下载某个记忆组内全部碎片和记忆信息。
-    required Future<T> Function(String showMessage, MemoryGroupMemoryInfoDownloadByIdsVo vo) code161701,
+    // explain: 根据多个记忆信息id，下载对应的碎片和记忆信息。
+    required Future<T> Function(String showMessage, MemoryGroupMemoryInfoDownloadByInfoIdsVo vo) code161701,
     
     }) async {
     try {

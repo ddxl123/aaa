@@ -5,6 +5,7 @@ import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import '../../custom_embeds/DemoEmbed.dart';
 import 'FragmentTemplate.dart';
 
+/// 可编辑状态下的基本 Widget。
 class FragmentTemplateEditWidget extends StatefulWidget {
   const FragmentTemplateEditWidget({
     super.key,

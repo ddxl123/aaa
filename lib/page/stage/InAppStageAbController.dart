@@ -16,12 +16,16 @@ class Performer {
   final Fragment fragment;
   final FragmentMemoryInfo fragmentMemoryInfo;
   late final FragmentTemplate fragmentTemplate;
+  final InAppStageAbController inAppStageAbController;
 
   Performer({
     required this.fragment,
     required this.fragmentMemoryInfo,
+    required this.inAppStageAbController,
   }) {
     fragmentTemplate = FragmentTemplate.newInstanceFromContent(fragment.content);
+    fragmentTemplate.inAppStageAbController = inAppStageAbController;
+    inAppStageAbController.isShowBottomButtonAb.lateAssign(fragmentTemplate.initIsShowBottomButton);
   }
 }
 
@@ -38,20 +42,23 @@ class InAppStageAbController extends AbController {
 
   /// 若为 true，则展示按钮数据值；
   /// 若为 false，则表示按钮天数值。
-  final isButtonDataShowValue = false.ab;
+  final isButtonDataShowValueAb = false.ab;
 
   /// 每展示碎片时都会被重置。
   /// [PerformerQuery.getPerformer]
-  final currentPerformer = Ab<Performer?>(null);
+  final currentPerformerAb = Ab<Performer?>(null);
 
   /// 每展示碎片时都会被重置。
-  final currentShowTime = Ab<int?>(null);
+  final currentShowTimeAb = Ab<int?>(null);
 
   /// 每展示碎片时都会被重置。
-  final currentButtonDatas = <ButtonDataValue2NextShowTime>[].ab;
+  final currentButtonDatasAb = <ButtonDataValue2NextShowTime>[].ab;
 
   /// 每展示碎片时都会被重置。
-  final currentShowFamiliarity = Ab<double?>(null);
+  final currentShowFamiliarityAb = Ab<double?>(null);
+
+  /// 是否展示底部下次的按钮。
+  final isShowBottomButtonAb = Ab<bool>.late();
 
   @override
   bool get isEnableLoading => true;
@@ -109,20 +116,20 @@ class InAppStageAbController extends AbController {
 
   /// 仅获取下一个 [Performer]。
   Future<void> _executeNext() async {
-    final performer = await performerQuery.getPerformer(mg: memoryGroupAb());
-    currentPerformer.refreshInevitable((obj) => performer);
+    final performer = await performerQuery.getPerformer(mg: memoryGroupAb(), inAppStageAbController: this);
+    currentPerformerAb.refreshInevitable((obj) => performer);
     // 说明没有下一个了。
-    if (currentPerformer() == null) return;
+    if (currentPerformerAb() == null) return;
 
     // 必须按照顺序进行获取，否则要么没有对应的值，要么可能会使用上一次的值。
-    currentShowTime.refreshEasy((oldValue) => timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!));
+    currentShowTimeAb.refreshEasy((oldValue) => timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!));
     await _parseStartFamiliarity();
 
     final pbd = await _parseStartButtonDatas();
     for (var element in pbd.resultButtonValues) {
       await _parseSingleButtonNextShowTime(buttonDataValue2NextShowTime: element);
     }
-    currentButtonDatas.refreshEasy((oldValue) => oldValue
+    currentButtonDatasAb.refreshEasy((oldValue) => oldValue
       ..clear()
       ..addAll(pbd.resultButtonValues));
   }
@@ -131,7 +138,7 @@ class InAppStageAbController extends AbController {
   ///
   /// 点击数值按钮后进行调用。
   Future<void> _executeFinish({required double clickValue, required List<String> contentValue}) async {
-    if (currentPerformer() == null) {
+    if (currentPerformerAb() == null) {
       throw "没有下一个碎片了，却仍然请求了下一个碎片！";
     }
     final targetButtonDataValue2NextShowTime = ButtonDataValue2NextShowTime(value: clickValue, explain: null);
@@ -142,28 +149,28 @@ class InAppStageAbController extends AbController {
       throw "解析熟悉度失败！";
     }
 
-    final info = currentPerformer()!.fragmentMemoryInfo;
+    final info = currentPerformerAb()!.fragmentMemoryInfo;
     if (info.study_status == StudyStatus.never) {
       memoryGroupAb.refreshInevitable((obj) => obj..will_new_learn_count -= 1);
     }
     info
       ..click_time = info.click_time.arrayAdd<int>(timeDifference(target: DateTime.now(), start: memoryGroupAb().start_time!))
       ..click_value = info.click_value.arrayAdd<double>(clickValue)
-      ..actual_show_time = info.actual_show_time.arrayAdd<int>(currentShowTime()!)
+      ..actual_show_time = info.actual_show_time.arrayAdd<int>(currentShowTimeAb()!)
       ..next_plan_show_time = info.next_plan_show_time.arrayAdd<int>(targetButtonDataValue2NextShowTime.nextShowTime!)
-      ..show_familiarity = info.show_familiarity.arrayAdd<double>(currentShowFamiliarity()!)
+      ..show_familiarity = info.show_familiarity.arrayAdd<double>(currentShowFamiliarityAb()!)
       ..click_familiarity = info.click_familiarity.arrayAdd<double>(currentClickFamiliarity)
-      ..button_values = info.button_values.arrayAdd<List<double>>(currentButtonDatas().map((e) => e.value).toList())
+      ..button_values = info.button_values.arrayAdd<List<double>>(currentButtonDatasAb().map((e) => e.value).toList())
       ..content_value = info.content_value.arrayAdd<List<String>>(contentValue)
       ..study_status = StudyStatus.review;
 
     await driftDb.updateDAO.resetMemoryGroupAutoSyncVersion(entity: memoryGroupAb());
     await driftDb.updateDAO.resetMemoryInfoAutoSyncVersion(entity: info);
 
-    currentButtonDatas.refreshInevitable((obj) => obj..clear());
-    currentShowFamiliarity.refreshEasy((oldValue) => null);
-    currentShowTime.refreshEasy((oldValue) => null);
-    currentPerformer.refreshEasy((oldValue) => null);
+    currentButtonDatasAb.refreshInevitable((obj) => obj..clear());
+    currentShowFamiliarityAb.refreshEasy((oldValue) => null);
+    currentShowTimeAb.refreshEasy((oldValue) => null);
+    currentPerformerAb.refreshEasy((oldValue) => null);
   }
 
   /// 完成当前表演，并进行下一次表演。
@@ -202,7 +209,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k3StudiedTimesConst: IvFilter(
-              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             k4CurrentShowTimeConst: IvFilter(
@@ -226,38 +233,38 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             i1ActualShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i2NextPlanShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i3ShowFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i4ClickFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i5ClickTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i6ClickValueConst: IvFilter(
-              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i7ButtonValuesConst: IvFilter(
-              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformerAb()!),
               isReGet: false,
             ),
           );
         },
       ),
       onSuccess: (FamiliarityState state) async {
-        currentShowFamiliarity.refreshEasy((oldValue) => state.result);
+        currentShowFamiliarityAb.refreshEasy((oldValue) => state.result);
       },
       onError: (AlgorithmException ec) async {
         throw ec;
@@ -297,7 +304,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k3StudiedTimesConst: IvFilter(
-              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             k4CurrentShowTimeConst: IvFilter(
@@ -305,11 +312,11 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k5CurrentShowFamiliarityConst: IvFilter(
-              ivf: () async => currentShowFamiliarity()!,
+              ivf: () async => currentShowFamiliarityAb()!,
               isReGet: false,
             ),
             k6CurrentButtonValuesConst: IvFilter(
-              ivf: () async => currentButtonDatas().map((e) => e.value).toList(),
+              ivf: () async => currentButtonDatasAb().map((e) => e.value).toList(),
               isReGet: false,
             ),
             k6CurrentButtonValueConst: IvFilter(
@@ -321,31 +328,31 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             i1ActualShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i2NextPlanShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i3ShowFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i4ClickFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i5ClickTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i6ClickValueConst: IvFilter(
-              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i7ButtonValuesConst: IvFilter(
-              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformerAb()!),
               isReGet: false,
             ),
           );
@@ -392,7 +399,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k3StudiedTimesConst: IvFilter(
-              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             k4CurrentShowTimeConst: IvFilter(
@@ -400,7 +407,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k5CurrentShowFamiliarityConst: IvFilter(
-              ivf: () async => currentShowFamiliarity()!,
+              ivf: () async => currentShowFamiliarityAb()!,
               isReGet: false,
             ),
             k6CurrentButtonValuesConst: IvFilter(
@@ -416,31 +423,31 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             i1ActualShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i2NextPlanShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i3ShowFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i4ClickFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i5ClickTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i6ClickValueConst: IvFilter(
-              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i7ButtonValuesConst: IvFilter(
-              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformerAb()!),
               isReGet: false,
             ),
           );
@@ -487,7 +494,7 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k3StudiedTimesConst: IvFilter(
-              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getStudiedTimes(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             k4CurrentShowTimeConst: IvFilter(
@@ -495,11 +502,11 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             k5CurrentShowFamiliarityConst: IvFilter(
-              ivf: () async => currentShowFamiliarity()!,
+              ivf: () async => currentShowFamiliarityAb()!,
               isReGet: false,
             ),
             k6CurrentButtonValuesConst: IvFilter(
-              ivf: () async => currentButtonDatas().map((e) => e.value).toList(),
+              ivf: () async => currentButtonDatasAb().map((e) => e.value).toList(),
               isReGet: false,
             ),
             k6CurrentButtonValueConst: IvFilter(
@@ -511,31 +518,31 @@ class InAppStageAbController extends AbController {
               isReGet: false,
             ),
             i1ActualShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getActualShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i2NextPlanShowTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getNextPlanedShowTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i3ShowFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getShowFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i4ClickFamiliarityConst: IvFilter(
-              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickFamiliarity(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i5ClickTimeConst: IvFilter(
-              ivf: () async => await performerQuery.getClickTime(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickTime(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i6ClickValueConst: IvFilter(
-              ivf: () async => await performerQuery.getClickValue(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getClickValue(performer: currentPerformerAb()!),
               isReGet: false,
             ),
             i7ButtonValuesConst: IvFilter(
-              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformer()!),
+              ivf: () async => await performerQuery.getButtonValues(performer: currentPerformerAb()!),
               isReGet: false,
             ),
           );

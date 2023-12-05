@@ -1,19 +1,19 @@
 enum ChoicePrefixType {
-  none(name: "不展示前缀"),
-  uppercaseLetter(name: "大写字母"),
-  lowercaseLetter(name: "小写字母"),
-  arabic(name: "阿拉伯数字"),
-  roman(name: "罗马数字"),
-  circle(name: "圆圈数字"),
-  fullBracket(name: "全括号序号"),
-  halfBracket(name: "半括号序号"),
-  middleBracket(name: "中括号序号"),
-  lowercaseChinese(name: "小写中文"),
-  uppercaseChinese(name: "大写中文");
+  none(displayName: "不展示前缀"),
+  uppercaseLetter(displayName: "大写字母"),
+  lowercaseLetter(displayName: "小写字母"),
+  arabic(displayName: "阿拉伯数字"),
+  roman(displayName: "罗马数字"),
+  circle(displayName: "圆圈数字"),
+  fullBracket(displayName: "全括号序号"),
+  halfBracket(displayName: "半括号序号"),
+  middleBracket(displayName: "中括号序号"),
+  lowercaseChinese(displayName: "小写中文"),
+  uppercaseChinese(displayName: "大写中文");
 
-  const ChoicePrefixType({required this.name});
+  const ChoicePrefixType({required this.displayName});
 
-  final String name;
+  final String displayName;
 
   /// AI 提示词：dart语言，将任意阿拉伯数字转换为圆圈数字(例如①)，如果超出，则使用阿拉伯数字自身
   String toTypeFrom(int number) {

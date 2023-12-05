@@ -1,51 +1,66 @@
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
-import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/SingleEditableQuill.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/SingleQuillController.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoicePrefixType.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+/// 选择题模板的数据类。
 class ChoiceFragmentTemplate extends FragmentTemplate {
-  final question = SingleEditableQuill();
-  final choices = <SingleEditableQuill>[];
+  final question = SingleQuillController();
+  final choices = <SingleQuillController>[];
 
   /// 选项始终使用数字字符表示（无论是ABC、序号，还是对错），与 [choices.index] 对应。
   final answers = <String>[];
 
-  /// [singleEditableQuill] 是否为正确选项。
-  bool isCorrect(SingleEditableQuill singleEditableQuill) {
-    return answers.contains(choices.indexOf(singleEditableQuill).toString());
+  /// 选项前缀类型。
+  ChoicePrefixType choicePrefixType = ChoicePrefixType.uppercaseLetter;
+
+  /// 是否是多选。
+  bool isMultipleChoice = false;
+
+  /// [singleQuillController] 是否为正确选项。
+  ///
+  /// TODO: 在多选的情况下？？？
+  bool isCorrect(SingleQuillController singleQuillController) {
+    return answers.contains(choices.indexOf(singleQuillController).toString());
   }
 
-  void cancelCorrect(SingleEditableQuill singleEditableQuill) {
-    answers.remove(choices.indexOf(singleEditableQuill).toString());
+  /// 取消对 [singleQuillController] 的选择。
+  void cancelCorrect(SingleQuillController singleQuillController) {
+    answers.remove(choices.indexOf(singleQuillController).toString());
   }
 
-  void chooseCorrect(SingleEditableQuill singleEditableQuill) {
-    answers.add(choices.indexOf(singleEditableQuill).toString());
+  /// 勾选对 [singleQuillController] 的选择。
+  void chooseCorrect(SingleQuillController singleQuillController) {
+    answers.add(choices.indexOf(singleQuillController).toString());
   }
 
-  void changeCorrect(SingleEditableQuill singleEditableQuill) {
-    if (isCorrect(singleEditableQuill)) {
-      cancelCorrect(singleEditableQuill);
+  /// 对 [singleQuillController] 的反选。
+  void invertCorrect(SingleQuillController singleQuillController) {
+    if (isCorrect(singleQuillController)) {
+      cancelCorrect(singleQuillController);
     } else {
-      chooseCorrect(singleEditableQuill);
+      chooseCorrect(singleQuillController);
     }
   }
 
-  void removeChoice(SingleEditableQuill singleEditableQuill) {
-    final cs = <SingleEditableQuill>[];
+  /// 移除 [singleQuillController] 选项。
+  void removeItem(SingleQuillController singleQuillController) {
+    final cs = <SingleQuillController>[];
     for (var a in answers) {
       cs.add(choices[int.parse(a)]);
     }
-    singleEditableQuill.dispose();
-    choices.remove(singleEditableQuill);
-    cs.remove(singleEditableQuill);
+    singleQuillController.dispose();
+    choices.remove(singleQuillController);
+    cs.remove(singleQuillController);
     answers.clear();
     answers.addAll(cs.map((e) => choices.indexOf(e).toString()));
   }
 
-  void addChoice(SingleEditableQuill singleEditableQuill) {
-    choices.add(singleEditableQuill);
-    dynamicAddFocusListener(singleEditableQuill);
+  /// 添加新选项。
+  void addItem(SingleQuillController singleQuillController) {
+    choices.add(singleQuillController);
+    dynamicAddFocusListener(singleQuillController);
   }
 
   @override
@@ -66,7 +81,7 @@ class ChoiceFragmentTemplate extends FragmentTemplate {
   FragmentTemplate emptyTransferableInstance() => ChoiceFragmentTemplate();
 
   @override
-  List<SingleEditableQuill> getAllInitSingleEditableQuill() => [question, ...choices];
+  List<SingleQuillController> getAllInitSingleEditableQuill() => [question, ...choices];
 
   @override
   String getTitle() => question.transferToTitle();
@@ -97,20 +112,26 @@ class ChoiceFragmentTemplate extends FragmentTemplate {
     final choicesList = json["choices"] as List<dynamic>;
     choices.clear();
     for (var c in choicesList) {
-      choices.add(SingleEditableQuill()..resetContent(c as String));
+      choices.add(SingleQuillController()..resetContent(c as String));
     }
 
     answers.clear();
     answers.addAll((json["answers"] as List<dynamic>).map((e) => e as String));
+
+    choicePrefixType = ChoicePrefixType.values.firstWhere((element) => element.name == (json["choice_prefix_type"] as String));
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "type": fragmentTemplateType.index,
+      "type": fragmentTemplateType.name,
       "question": question.getContentJsonString(),
       "choices": choices.map((e) => e.getContentJsonString()).toList(),
       "answers": answers,
+      "choice_prefix_type": choicePrefixType.name,
     };
   }
+
+  @override
+  bool get initIsShowBottomButton => false;
 }

@@ -183,18 +183,18 @@ class _AddFragmentToMemoryGroupDialogWidgetState extends State<AddFragmentToMemo
                   onOk: () async {
                     SmartDialog.showLoading(msg: "下载中...");
                     final result = await request(
-                      path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD_BY_IDS,
-                      dtoData: MemoryGroupMemoryInfoDownloadByIdsDto(
+                      path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD_BY_INFO_IDS,
+                      dtoData: MemoryGroupMemoryInfoDownloadByInfoIdsDto(
                         memory_info_ids_list: vo.memory_info_ids_list,
                         dto_padding_1: null,
                       ),
                       onReceiveProgress: (count, total) {
                         // TODO: 下载中...
                       },
-                      parseResponseVoData: MemoryGroupMemoryInfoDownloadByIdsVo.fromJson,
+                      parseResponseVoData: MemoryGroupMemoryInfoDownloadByInfoIdsVo.fromJson,
                     );
                     await result.handleCode(
-                      code161701: (String showMessage, MemoryGroupMemoryInfoDownloadByIdsVo vo) async {
+                      code161701: (String showMessage, MemoryGroupMemoryInfoDownloadByInfoIdsVo vo) async {
                         await driftDb.insertDAO.insertManyFragmentAndMemoryInfos(fragmentAndMemoryInfos: vo.fragment_and_memory_infos_list);
                       },
                     );

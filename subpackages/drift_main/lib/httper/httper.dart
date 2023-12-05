@@ -224,10 +224,10 @@ part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadDto.dart';
 part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadVo.dart';
 
 
-part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadByIdsDto.dart';
+part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadByInfoIdsDto.dart';
 
 
-part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadByIdsVo.dart';
+part 'dto_vo_bo/dto_vo/MemoryGroupMemoryInfoDownloadByInfoIdsVo.dart';
 
 
 part 'dto_vo_bo/dto_vo/MemoryGroupPageFirstQueryDto.dart';

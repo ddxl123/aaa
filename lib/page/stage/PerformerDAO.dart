@@ -12,9 +12,9 @@ class PerformerQuery {
   /// 获取新的表演者。
   ///
   /// return null 时表示没有检索到下一个。
-  Future<Performer?> getPerformer({required MemoryGroup mg}) async {
-    final newPerformer = await getOneNewPerformer(mg: mg);
-    final reviewPerformer = await getOneReviewPerformer(mg: mg);
+  Future<Performer?> getPerformer({required MemoryGroup mg, required InAppStageAbController inAppStageAbController}) async {
+    final newPerformer = await getOneNewPerformer(mg: mg, inAppStageAbController: inAppStageAbController);
+    final reviewPerformer = await getOneReviewPerformer(mg: mg, inAppStageAbController: inAppStageAbController);
 
     logger.outNormal(
         print: "获取到的新碎片：\n${newPerformer?.fragmentMemoryInfo}\n${newPerformer?.fragment}"
@@ -37,7 +37,7 @@ class PerformerQuery {
   /// 获取新碎片。
   ///
   /// 若没有新碎片了，则返回 null。
-  Future<Performer?> getOneNewPerformer({required MemoryGroup mg}) async {
+  Future<Performer?> getOneNewPerformer({required MemoryGroup mg, required InAppStageAbController inAppStageAbController}) async {
     // 识别是否还需要学习新碎片。
     if (mg.will_new_learn_count == 0) {
       return null;
@@ -61,13 +61,13 @@ class PerformerQuery {
       return null;
     }
 
-    return Performer(fragment: fResult, fragmentMemoryInfo: infoResult);
+    return Performer(fragment: fResult, fragmentMemoryInfo: infoResult, inAppStageAbController: inAppStageAbController);
   }
 
   /// 获取要复习的碎片。
   ///
   /// 若没有复习碎片了，则返回 null。
-  Future<Performer?> getOneReviewPerformer({required MemoryGroup mg}) async {
+  Future<Performer?> getOneReviewPerformer({required MemoryGroup mg, required InAppStageAbController inAppStageAbController}) async {
     final lastNextPlanedShowTimeExpr = driftDb.fragmentMemoryInfos.next_plan_show_time.jsonExtract<int>(r'$[#-1]');
     final reviewIntervalDiff = timeDifference(target: mg.review_interval, start: mg.start_time!);
     // [isExpire] 查询的是否为过期类型。
@@ -110,7 +110,7 @@ class PerformerQuery {
       return null;
     }
 
-    return Performer(fragment: fResult, fragmentMemoryInfo: finalResult);
+    return Performer(fragment: fResult, fragmentMemoryInfo: finalResult, inAppStageAbController: inAppStageAbController);
   }
 
   /// ========================================================================================

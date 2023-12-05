@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
-class SingleEditableQuill {
+/// 封装好的控制器。
+class SingleQuillController {
   final quillController = QuillController.basic();
   final scrollController = ScrollController();
   final focusNode = FocusNode();

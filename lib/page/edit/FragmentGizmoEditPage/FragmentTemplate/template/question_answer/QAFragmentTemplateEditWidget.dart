@@ -3,10 +3,11 @@ import 'package:tools/tools.dart';
 
 import '../../base/FragmentTemplate.dart';
 import '../../base/FragmentTemplateEditWidget.dart';
-import '../../base/QuillEditableWidget.dart';
-import '../../base/SingleFragmentTemplateChunk.dart';
+import '../../base/SingleQuillEditableWidget.dart';
+import '../../base/TemplateViewChunkWidget.dart';
 import 'QAFragmentTemplate.dart';
 
+/// 问答题模板的编辑 Widget。
 class QAFragmentTemplateEditWidget extends StatefulWidget {
   const QAFragmentTemplateEditWidget({
     super.key,
@@ -64,20 +65,20 @@ class _QAFragmentTemplateEditWidgetState extends State<QAFragmentTemplateEditWid
             ),
           ],
         ),
-        SingleFragmentTemplateChunk(
+        TemplateViewChunkWidget(
           chunkTitle: "问题",
           children: [
-            QuillEditableWidget(
-              singleEditableQuill: widget.qaFragmentTemplate.question,
+            SingleQuillEditableWidget(
+              singleQuillController: widget.qaFragmentTemplate.question,
               isEditable: widget.isEditable,
             ),
           ],
         ),
-        SingleFragmentTemplateChunk(
+        TemplateViewChunkWidget(
           chunkTitle: "答案",
           children: [
-            QuillEditableWidget(
-              singleEditableQuill: widget.qaFragmentTemplate.answer,
+            SingleQuillEditableWidget(
+              singleQuillController: widget.qaFragmentTemplate.answer,
               isEditable: widget.isEditable,
             ),
           ],

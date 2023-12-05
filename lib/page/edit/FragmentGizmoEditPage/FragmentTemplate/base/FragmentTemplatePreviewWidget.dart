@@ -6,9 +6,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'FragmentTemplate.dart';
 
-/// 记忆展示状态下的基本 Widget。
-class FragmentTemplateInAppStageWidget extends StatefulWidget {
-  const FragmentTemplateInAppStageWidget({
+/// 预览展示状态下的基本 Widget。
+class FragmentTemplatePreviewWidget extends StatefulWidget {
+  const FragmentTemplatePreviewWidget({
     super.key,
     required this.fragmentTemplate,
     required this.onTap,
@@ -28,12 +28,10 @@ class FragmentTemplateInAppStageWidget extends StatefulWidget {
   final Widget? bottomSheet;
 
   @override
-  State<FragmentTemplateInAppStageWidget> createState() => _FragmentTemplateInAppStageWidgetState();
+  State<FragmentTemplatePreviewWidget> createState() => _FragmentTemplatePreviewWidgetState();
 }
 
-class _FragmentTemplateInAppStageWidgetState extends State<FragmentTemplateInAppStageWidget> {
-  final GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
-
+class _FragmentTemplatePreviewWidgetState extends State<FragmentTemplatePreviewWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

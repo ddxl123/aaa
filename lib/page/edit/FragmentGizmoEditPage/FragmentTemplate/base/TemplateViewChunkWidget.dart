@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SingleFragmentTemplateChunk extends StatelessWidget {
-  const SingleFragmentTemplateChunk({
+/// 单个块 Widget
+class TemplateViewChunkWidget extends StatelessWidget {
+  const TemplateViewChunkWidget({
     super.key,
     required this.chunkTitle,
     required this.children,

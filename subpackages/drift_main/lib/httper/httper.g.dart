@@ -1228,26 +1228,27 @@ Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadVoToJson(
       'fragment_and_memory_infos_list': instance.fragment_and_memory_infos_list,
     };
 
-MemoryGroupMemoryInfoDownloadByIdsDto
-    _$MemoryGroupMemoryInfoDownloadByIdsDtoFromJson(
+MemoryGroupMemoryInfoDownloadByInfoIdsDto
+    _$MemoryGroupMemoryInfoDownloadByInfoIdsDtoFromJson(
             Map<String, dynamic> json) =>
-        MemoryGroupMemoryInfoDownloadByIdsDto(
+        MemoryGroupMemoryInfoDownloadByInfoIdsDto(
           memory_info_ids_list: (json['memory_info_ids_list'] as List<dynamic>)
               .map((e) => e as int)
               .toList(),
           dto_padding_1: json['dto_padding_1'] as bool?,
         );
 
-Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadByIdsDtoToJson(
-        MemoryGroupMemoryInfoDownloadByIdsDto instance) =>
+Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadByInfoIdsDtoToJson(
+        MemoryGroupMemoryInfoDownloadByInfoIdsDto instance) =>
     <String, dynamic>{
       'memory_info_ids_list': instance.memory_info_ids_list,
       'dto_padding_1': instance.dto_padding_1,
     };
 
-MemoryGroupMemoryInfoDownloadByIdsVo
-    _$MemoryGroupMemoryInfoDownloadByIdsVoFromJson(Map<String, dynamic> json) =>
-        MemoryGroupMemoryInfoDownloadByIdsVo(
+MemoryGroupMemoryInfoDownloadByInfoIdsVo
+    _$MemoryGroupMemoryInfoDownloadByInfoIdsVoFromJson(
+            Map<String, dynamic> json) =>
+        MemoryGroupMemoryInfoDownloadByInfoIdsVo(
           fragment_and_memory_infos_list:
               (json['fragment_and_memory_infos_list'] as List<dynamic>)
                   .map((e) =>
@@ -1255,8 +1256,8 @@ MemoryGroupMemoryInfoDownloadByIdsVo
                   .toList(),
         );
 
-Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadByIdsVoToJson(
-        MemoryGroupMemoryInfoDownloadByIdsVo instance) =>
+Map<String, dynamic> _$MemoryGroupMemoryInfoDownloadByInfoIdsVoToJson(
+        MemoryGroupMemoryInfoDownloadByInfoIdsVo instance) =>
     <String, dynamic>{
       'fragment_and_memory_infos_list': instance.fragment_and_memory_infos_list,
     };

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../base/FragmentTemplateEditWidget.dart';
-import '../../base/QuillEditableWidget.dart';
-import '../../base/SingleEditableQuill.dart';
-import '../../base/SingleFragmentTemplateChunk.dart';
+import '../../base/SingleQuillEditableWidget.dart';
+import '../../base/SingleQuillController.dart';
+import '../../base/TemplateViewChunkWidget.dart';
 import 'ChoiceFragmentTemplate.dart';
 
+/// 选择题模板的编辑 Widget。
 class ChoiceFragmentTemplateEditWidget extends StatefulWidget {
   const ChoiceFragmentTemplateEditWidget({
     super.key,
@@ -27,16 +28,16 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
       fragmentTemplate: widget.choiceFragmentTemplate,
       isEditable: widget.isEditable,
       children: [
-        SingleFragmentTemplateChunk(
+        TemplateViewChunkWidget(
           chunkTitle: "问题",
           children: [
-            QuillEditableWidget(
-              singleEditableQuill: widget.choiceFragmentTemplate.question,
+            SingleQuillEditableWidget(
+              singleQuillController: widget.choiceFragmentTemplate.question,
               isEditable: widget.isEditable,
             ),
           ],
         ),
-        SingleFragmentTemplateChunk(
+        TemplateViewChunkWidget(
           chunkTitle: "选项",
           children: [
             const SizedBox(height: 5),
@@ -50,17 +51,17 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
                       IconButton(
                         icon: const Icon(Icons.playlist_remove, color: Colors.red),
                         onPressed: () {
-                          widget.choiceFragmentTemplate.removeChoice(e);
+                          widget.choiceFragmentTemplate.removeItem(e);
                           setState(() {});
                         },
                       ),
                       Expanded(
-                        child: QuillEditableWidget(singleEditableQuill: e, isEditable: widget.isEditable),
+                        child: SingleQuillEditableWidget(singleQuillController: e, isEditable: widget.isEditable),
                       ),
                       Checkbox(
                         value: widget.choiceFragmentTemplate.isCorrect(e),
                         onChanged: (v) {
-                          widget.choiceFragmentTemplate.changeCorrect(e);
+                          widget.choiceFragmentTemplate.invertCorrect(e);
                           setState(() {});
                         },
                       ),
@@ -88,7 +89,7 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
                     ],
                   ),
                   onPressed: () {
-                    widget.choiceFragmentTemplate.addChoice(SingleEditableQuill());
+                    widget.choiceFragmentTemplate.addItem(SingleQuillController());
                     setState(() {});
                   },
                 ),

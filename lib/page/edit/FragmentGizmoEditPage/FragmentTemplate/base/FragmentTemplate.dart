@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplate.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import '../../../../stage/InAppStageAbController.dart';
 import '../template/question_answer/QAFragmentTemplate.dart';
-import 'SingleEditableQuill.dart';
+import 'SingleQuillController.dart';
 
 enum FragmentTemplateType {
   /// 问答
@@ -14,6 +15,7 @@ enum FragmentTemplateType {
   choice,
 }
 
+/// 碎片模板的数据基类。
 abstract class FragmentTemplate {
   FragmentTemplate() {
     getAllInitSingleEditableQuill().forEach(
@@ -31,17 +33,22 @@ abstract class FragmentTemplate {
 
   FragmentTemplateType get fragmentTemplateType;
 
-  /// 哪个 [SingleEditableQuill] 获取了焦点。
+  late final InAppStageAbController inAppStageAbController;
+
+  /// 在记忆展示时，进入碎片时是否需要展示下次的按钮。
+  bool get initIsShowBottomButton;
+
+  /// 哪个 [SingleQuillController] 获取了焦点。
   ///
   /// 若为 null, 则无焦点。
-  final currentFocusSingleEditableQuill = ValueNotifier<SingleEditableQuill?>(null);
+  final currentFocusSingleEditableQuill = ValueNotifier<SingleQuillController?>(null);
 
   /// 内容数据。
   ///
   /// 每次操作碎片记忆信息时会使用，而不是针对当前碎片本身的属性。不会保存在 [toJson] 或者 [resetFromJson] 中。
   final contentValue = <String>[];
 
-  void dynamicAddFocusListener(SingleEditableQuill singleEditableQuill) {
+  void dynamicAddFocusListener(SingleQuillController singleEditableQuill) {
     singleEditableQuill.focusNode.addListener(
       () {
         if (singleEditableQuill.focusNode.hasFocus) {
@@ -72,12 +79,12 @@ abstract class FragmentTemplate {
   /// 比较两者的 [toJson] 是否完全相同。
   static bool equalFrom(FragmentTemplate a, FragmentTemplate b) => const DeepCollectionEquality().equals(a.toJson(), b.toJson());
 
-  List<SingleEditableQuill> getAllInitSingleEditableQuill();
+  List<SingleQuillController> getAllInitSingleEditableQuill();
 
   static FragmentTemplate newInstanceFromContent(String content) {
     final Map<String, dynamic> contentJson = jsonDecode(content);
     // 出现 type 异常有可能是 toJson 时没有写 type 字段。
-    final type = FragmentTemplateType.values[contentJson["type"] as int];
+    final type = FragmentTemplateType.values.firstWhere((element) => element.name == (contentJson["type"] as String));
     return templateSwitch(
       type,
       questionAnswer: () => QAFragmentTemplate()..resetFromJson(contentJson),

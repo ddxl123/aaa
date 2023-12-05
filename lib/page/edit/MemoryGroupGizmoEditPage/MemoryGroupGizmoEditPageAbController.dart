@@ -248,18 +248,18 @@ class MemoryGroupGizmoEditPageAbController extends AbController {
 
         // 处理仅存在于云端
         final result = await request(
-          path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD_BY_IDS,
-          dtoData: MemoryGroupMemoryInfoDownloadByIdsDto(
+          path: HttpPath.POST__LOGIN_REQUIRED_MEMORY_GROUP_HANDLE_MEMORY_GROUP_MEMORY_INFO_DOWNLOAD_BY_INFO_IDS,
+          dtoData: MemoryGroupMemoryInfoDownloadByInfoIdsDto(
             memory_info_ids_list: onlyCloud,
             dto_padding_1: null,
           ),
           onReceiveProgress: (count, total) {
             // TODO: 下载中...
           },
-          parseResponseVoData: MemoryGroupMemoryInfoDownloadByIdsVo.fromJson,
+          parseResponseVoData: MemoryGroupMemoryInfoDownloadByInfoIdsVo.fromJson,
         );
         await result.handleCode(
-          code161701: (String showMessage, MemoryGroupMemoryInfoDownloadByIdsVo vo) async {
+          code161701: (String showMessage, MemoryGroupMemoryInfoDownloadByInfoIdsVo vo) async {
             await driftDb.insertDAO.insertManyFragmentAndMemoryInfos(fragmentAndMemoryInfos: vo.fragment_and_memory_infos_list);
           },
         );

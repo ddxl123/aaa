@@ -2,9 +2,9 @@ import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/ch
 import 'package:flutter/material.dart';
 
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
-import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplateViewWidget.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplatePreviewWidget.dart';
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
-import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplateViewWidget.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplatePreviewWidget.dart';
 
 class SingleFragmentTemplatePage extends StatefulWidget {
   const SingleFragmentTemplatePage({super.key, required this.fragmentTemplate});
@@ -25,10 +25,10 @@ class _SingleFragmentTemplatePageState extends State<SingleFragmentTemplatePage>
       body: FragmentTemplate.templateSwitch(
         widget.fragmentTemplate.fragmentTemplateType,
         questionAnswer: () {
-          return QAFragmentTemplateViewWidget(qaFragmentTemplate: widget.fragmentTemplate as QAFragmentTemplate);
+          return QAFragmentTemplatePreviewWidget(qaFragmentTemplate: widget.fragmentTemplate as QAFragmentTemplate);
         },
         choice: () {
-          return ChoiceFragmentTemplateViewWidget(choiceFragmentTemplate: widget.fragmentTemplate as ChoiceFragmentTemplate);
+          return ChoiceFragmentTemplatePreviewWidget(choiceFragmentTemplate: widget.fragmentTemplate as ChoiceFragmentTemplate);
         },
       ),
     );

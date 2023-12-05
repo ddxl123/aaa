@@ -37,7 +37,7 @@ class _InAppStageState extends State<InAppStage> {
           ),
           body: _body(),
           bottomNavigationBar: _bottomWidget(),
-         );
+        );
       },
     );
   }
@@ -49,10 +49,10 @@ class _InAppStageState extends State<InAppStage> {
           initValue: 0,
           primaryButton: const Icon(Icons.more_horiz),
           items: [
-            Item(value: 0, text: c.isButtonDataShowValue(abw) ? '按钮显示时间' : '按钮显示算法数值'),
+            Item(value: 0, text: c.isButtonDataShowValueAb(abw) ? '按钮显示时间' : '按钮显示算法数值'),
           ],
           onChanged: (v) {
-            c.isButtonDataShowValue.refreshEasy((oldValue) => !oldValue);
+            c.isButtonDataShowValueAb.refreshEasy((oldValue) => !oldValue);
           },
         );
       },
@@ -62,10 +62,22 @@ class _InAppStageState extends State<InAppStage> {
   Widget _bottomWidget() {
     return AbBuilder<InAppStageAbController>(
       builder: (c, abw) {
-        if (c.currentPerformer(abw) == null) return const SizedBox(height: 0);
-        if (c.currentButtonDatas(abw).isEmpty) return Row(children: const [Expanded(child: Text('获取按钮数据分配为空！'))]);
+        if (c.currentPerformerAb(abw) == null) {
+          return TextButton(
+            child: const Text("确认"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        }
+        if (!c.currentPerformerAb(abw)!.inAppStageAbController.isShowBottomButtonAb(abw)) {
+          return const SizedBox();
+        }
+        if (c.currentButtonDatasAb(abw).isEmpty) {
+          return const Row(children: [Expanded(child: Text('获取按钮数据分配为空！'))]);
+        }
         return Row(
-          children: c.currentButtonDatas().map(
+          children: c.currentButtonDatasAb().map(
             (e) {
               final parseTime = e.parseTimeToFixView(c.memoryGroupAb().start_time!);
               if (parseTime == null) {
@@ -75,7 +87,7 @@ class _InAppStageState extends State<InAppStage> {
                 child: AbwBuilder(
                   builder: (abw) {
                     return TextButton(
-                      child: Text(c.isButtonDataShowValue(abw) ? e.value.toString() : parseTime),
+                      child: Text(c.isButtonDataShowValueAb(abw) ? e.value.toString() : parseTime),
                       onPressed: () async {
                         // TODO:
                         await c.finishAndNext(clickValue: e.value, contentValue: []);
@@ -94,20 +106,20 @@ class _InAppStageState extends State<InAppStage> {
   Widget _body() {
     return AbBuilder<InAppStageAbController>(
       builder: (c, abw) {
-        return c.currentPerformer(abw) == null
+        return c.currentPerformerAb(abw) == null
             ? const Center(
                 child: Text('任务已全部完成！'),
               )
             : FragmentTemplate.templateSwitch(
-                c.currentPerformer(abw)!.fragmentTemplate.fragmentTemplateType,
+                c.currentPerformerAb(abw)!.fragmentTemplate.fragmentTemplateType,
                 questionAnswer: () {
                   return QAFragmentTemplateInAppStageWidget(
-                    qaFragmentTemplate: c.currentPerformer(abw)!.fragmentTemplate as QAFragmentTemplate,
+                    qaFragmentTemplate: c.currentPerformerAb(abw)!.fragmentTemplate as QAFragmentTemplate,
                   );
                 },
                 choice: () {
                   return ChoiceFragmentTemplateInAppStageWidget(
-                    choiceFragmentTemplate: c.currentPerformer(abw)!.fragmentTemplate as ChoiceFragmentTemplate,
+                    choiceFragmentTemplate: c.currentPerformerAb(abw)!.fragmentTemplate as ChoiceFragmentTemplate,
                   );
                 },
               );

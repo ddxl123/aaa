@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:tools/tools.dart';
 
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.dart';
-import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplateViewWidget.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplatePreviewWidget.dart';
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
-import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplateViewWidget.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplatePreviewWidget.dart';
 
 class MultiFragmentTemplatePage extends StatefulWidget {
   const MultiFragmentTemplatePage({
@@ -119,10 +119,10 @@ class _MultiFragmentTemplatePageState extends State<MultiFragmentTemplatePage> {
           return FragmentTemplate.templateSwitch(
             ft.fragmentTemplateType,
             questionAnswer: () {
-              return QAFragmentTemplateViewWidget(qaFragmentTemplate: ft as QAFragmentTemplate);
+              return QAFragmentTemplatePreviewWidget(qaFragmentTemplate: ft as QAFragmentTemplate);
             },
             choice: () {
-              return ChoiceFragmentTemplateViewWidget(choiceFragmentTemplate: ft as ChoiceFragmentTemplate);
+              return ChoiceFragmentTemplatePreviewWidget(choiceFragmentTemplate: ft as ChoiceFragmentTemplate);
             },
           );
         },

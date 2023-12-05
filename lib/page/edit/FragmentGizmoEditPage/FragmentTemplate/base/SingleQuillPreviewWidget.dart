@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
-import 'SingleEditableQuill.dart';
+import 'SingleQuillController.dart';
 
-class QuillEditViewWidget extends StatelessWidget {
-  const QuillEditViewWidget({
+/// 单个不可编辑的输入框 Widget。
+class SingleQuillPreviewWidget extends StatelessWidget {
+  const SingleQuillPreviewWidget({
     super.key,
-    required this.singleEditableQuill,
+    required this.singleQuillController,
   });
 
-  final SingleEditableQuill singleEditableQuill;
+  final SingleQuillController singleQuillController;
 
   @override
   Widget build(BuildContext context) {
     return QuillEditor(
       enableInteractiveSelection: false,
-      scrollController: singleEditableQuill.scrollController,
-      controller: singleEditableQuill.quillController,
+      scrollController: singleQuillController.scrollController,
+      controller: singleQuillController.quillController,
       readOnly: true,
       showCursor: false,
       autoFocus: false,
