@@ -151,9 +151,9 @@ class CurrentCircleWidget extends StatelessWidget {
                 CustomDropdownBodyButton<NewReviewDisplayOrder>(
                   initValue: c.memoryGroupAb(abw).new_review_display_order,
                   items: [
-                    Item(value: NewReviewDisplayOrder.mix, text: '混合'),
-                    Item(value: NewReviewDisplayOrder.new_review, text: '优先新碎片'),
-                    Item(value: NewReviewDisplayOrder.review_new, text: '优先复习碎片'),
+                    CustomItem(value: NewReviewDisplayOrder.mix, text: '混合'),
+                    CustomItem(value: NewReviewDisplayOrder.new_review, text: '优先新碎片'),
+                    CustomItem(value: NewReviewDisplayOrder.review_new, text: '优先复习碎片'),
                   ],
                   onChanged: (v) {
                     c.memoryGroupAb.refreshInevitable((obj) => obj..new_review_display_order = v!);
@@ -179,9 +179,9 @@ class CurrentCircleWidget extends StatelessWidget {
                 CustomDropdownBodyButton<NewDisplayOrder>(
                   initValue: c.memoryGroupAb(abw).new_display_order,
                   items: [
-                    Item(value: NewDisplayOrder.random, text: '随机'),
-                    Item(value: NewDisplayOrder.title_a_2_z, text: '标题首字母A~Z顺序'),
-                    Item(value: NewDisplayOrder.create_early_2_late, text: '创建时间'),
+                    CustomItem(value: NewDisplayOrder.random, text: '随机'),
+                    CustomItem(value: NewDisplayOrder.title_a_2_z, text: '标题首字母A~Z顺序'),
+                    CustomItem(value: NewDisplayOrder.create_early_2_late, text: '创建时间'),
                   ],
                   onChanged: (v) {
                     c.memoryGroupAb.refreshInevitable((obj) => obj..new_display_order = v!);
@@ -207,9 +207,9 @@ class CurrentCircleWidget extends StatelessWidget {
                 CustomDropdownBodyButton<ReviewDisplayOrder>(
                   initValue: c.memoryGroupAb(abw).review_display_order,
                   items: [
-                    Item(value: ReviewDisplayOrder.expire_first, text: '过期优先'),
-                    Item(value: ReviewDisplayOrder.no_expire_first, text: '未过期优先'),
-                    Item(value: ReviewDisplayOrder.ignore_expire, text: '忽略过期'),
+                    CustomItem(value: ReviewDisplayOrder.expire_first, text: '过期优先'),
+                    CustomItem(value: ReviewDisplayOrder.no_expire_first, text: '未过期优先'),
+                    CustomItem(value: ReviewDisplayOrder.ignore_expire, text: '忽略过期'),
                   ],
                   onChanged: (v) {
                     c.memoryGroupAb.refreshInevitable((obj) => obj..review_display_order = v!);

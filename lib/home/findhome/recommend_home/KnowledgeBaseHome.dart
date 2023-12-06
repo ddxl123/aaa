@@ -69,7 +69,7 @@ class KnowledgeBaseHome extends StatelessWidget {
                           initValue: c.knowledgeBaseContentSortTypeAb(tAbw),
                           items: [
                             ...KnowledgeBaseContentSortType.values.map(
-                              (e) => Item(value: e, text: e.text),
+                              (e) => CustomItem(value: e, text: e.text),
                             ),
                           ],
                           onChanged: (v) {

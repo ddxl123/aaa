@@ -18,7 +18,7 @@ class CustomDropdownBodyButton<T> extends StatefulWidget {
 
   final T initValue;
   final Widget? primaryButton;
-  final List<Item<T>> items;
+  final List<CustomItem<T>> items;
   final void Function(T? value) onChanged;
   final Alignment itemAlignment;
   final bool isShowUnderLine;
@@ -42,6 +42,8 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
   Widget build(BuildContext context) {
     return DropdownButton2<T>(
       value: widget.initValue,
+      isDense: true,
+      dropdownStyleData: DropdownStyleData(width: maxWidth, maxHeight: MediaQuery.of(context).size.height / 2),
       customButton: widget.primaryButton == null
           ? null
           : Container(
@@ -62,15 +64,14 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
           ),
         ),
       ],
-      dropdownStyleData: DropdownStyleData(width: maxWidth),
       onChanged: widget.onChanged,
     );
   }
 }
 
-class Item<T> {
+class CustomItem<T> {
   final T value;
   final String text;
 
-  Item({required this.value, required this.text});
+  CustomItem({required this.value, required this.text});
 }

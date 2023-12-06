@@ -35,6 +35,11 @@ abstract class FragmentTemplate {
 
   late final InAppStageAbController inAppStageAbController;
 
+  /// 扩展块。
+  final _extendChunks = <(SingleQuillController, Map<String, dynamic>)>[];
+
+  List<(SingleQuillController, String)> getExtendChunks() => _extendChunks.map((e) => (e.$1, e.$2["chunk_name"] as String)).toList();
+
   /// 在记忆展示时，进入碎片时是否需要展示下次的按钮。
   bool get initIsShowBottomButton;
 
@@ -48,6 +53,7 @@ abstract class FragmentTemplate {
   /// 每次操作碎片记忆信息时会使用，而不是针对当前碎片本身的属性。不会保存在 [toJson] 或者 [resetFromJson] 中。
   final contentValue = <String>[];
 
+  /// 动态添加对焦点的监听。
   void dynamicAddFocusListener(SingleQuillController singleEditableQuill) {
     singleEditableQuill.focusNode.addListener(
       () {
@@ -58,6 +64,18 @@ abstract class FragmentTemplate {
     );
   }
 
+  /// 添加扩展块。
+  void addExtendChunk(String chunkName) {
+    final s = SingleQuillController();
+    _extendChunks.add((s, {"chunk_name": chunkName, "content": ""}));
+    dynamicAddFocusListener(s);
+  }
+
+  /// 移除扩展块。
+  void removeExtendChunk(SingleQuillController singleEditableQuill) {
+    _extendChunks.removeWhere((element) => element.$1 == singleEditableQuill);
+  }
+
   String getTitle();
 
   /// 创建当前对象的崭新的空实例。
@@ -66,9 +84,23 @@ abstract class FragmentTemplate {
   /// 创建当前对象的可传递空实例。
   FragmentTemplate emptyTransferableInstance();
 
-  Map<String, dynamic> toJson();
+  /// 子类必须使用，不然存储时会漏掉。
+  @mustCallSuper
+  Map<String, dynamic> toJson() {
+    return {"extend_chunks": _extendChunks.map((e) => e.$2).toList()};
+  }
 
-  void resetFromJson(Map<String, dynamic> json);
+  /// 重新设置当前对象的数据。
+  ///
+  /// 子类必须调用，不然存储时会漏掉。
+  @mustCallSuper
+  void resetFromJson(Map<String, dynamic> json) {
+    _extendChunks.clear();
+    final list = json["extend_chunks"] as List;
+    for (var l in list) {
+      _extendChunks.add((SingleQuillController()..resetContent(l), l));
+    }
+  }
 
   /// 返回值第一个参数：必须不为空的内容是否为空
   /// 返回值第二个参数：为空的信息

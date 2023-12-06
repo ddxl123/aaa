@@ -22,7 +22,6 @@ class ChoiceFragmentTemplateInAppStageWidget extends StatefulWidget {
 }
 
 class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentTemplateInAppStageWidget> {
-  ChoicePrefixType choicePrefixType = ChoicePrefixType.none;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentT
       ],
     );
     final choicesWidget = TemplateViewChunkWidget(
-      chunkTitle: "选项",
+      chunkTitle: widget.choiceFragmentTemplate.choiceType==ChoiceType.simple?"选项（单选）":"选项（多选）",
       children: [
         for (int i = 0; i < widget.choiceFragmentTemplate.choices.length; i++)
           Container(
@@ -47,11 +46,11 @@ class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentT
             ),
             child: Row(
               children: [
-                choicePrefixType == ChoicePrefixType.none
+                widget.choiceFragmentTemplate.choicePrefixType == ChoicePrefixType.none
                     ? Container()
                     : Container(
                         width: 30,
-                        child: Text(choicePrefixType.toTypeFrom(i + 1), style: TextStyle(color: Colors.amber)),
+                        child: Text(widget.choiceFragmentTemplate.choicePrefixType.toTypeFrom(i + 1), style: TextStyle(color: Colors.amber)),
                       ),
                 Expanded(
                   child: SingleQuillPreviewWidget(

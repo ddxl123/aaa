@@ -49,7 +49,7 @@ class _InAppStageState extends State<InAppStage> {
           initValue: 0,
           primaryButton: const Icon(Icons.more_horiz),
           items: [
-            Item(value: 0, text: c.isButtonDataShowValueAb(abw) ? '按钮显示时间' : '按钮显示算法数值'),
+            CustomItem(value: 0, text: c.isButtonDataShowValueAb(abw) ? '按钮显示时间' : '按钮显示算法数值'),
           ],
           onChanged: (v) {
             c.isButtonDataShowValueAb.refreshEasy((oldValue) => !oldValue);

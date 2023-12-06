@@ -5,10 +5,12 @@ class TemplateViewChunkWidget extends StatelessWidget {
   const TemplateViewChunkWidget({
     super.key,
     required this.chunkTitle,
+    this.action,
     required this.children,
   });
 
   final String chunkTitle;
+  final List<Widget>? action;
   final List<Widget> children;
 
   @override
@@ -23,6 +25,8 @@ class TemplateViewChunkWidget extends StatelessWidget {
               Row(
                 children: [
                   Text(chunkTitle, style: const TextStyle(color: Colors.grey)),
+                  const Spacer(),
+                  ...(action ?? []),
                 ],
               ),
               const SizedBox(height: 10),

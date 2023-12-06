@@ -35,11 +35,13 @@ class QAFragmentTemplate extends FragmentTemplate {
 
   @override
   Map<String, dynamic> toJson() {
+    final sp = super.toJson();
     return {
       "type": fragmentTemplateType.name,
       "interchangeable": interchangeable,
       "question": question.getContentJsonString(),
       "answer": answer.getContentJsonString(),
+      sp.keys.first: sp.values.first,
     };
   }
 
@@ -48,6 +50,7 @@ class QAFragmentTemplate extends FragmentTemplate {
     interchangeable = json["interchangeable"] as bool;
     question.resetContent(json["question"]);
     answer.resetContent(json["answer"]);
+    super.resetFromJson(json);
   }
 
   @override

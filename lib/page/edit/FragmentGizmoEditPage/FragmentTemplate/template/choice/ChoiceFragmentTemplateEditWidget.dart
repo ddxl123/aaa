@@ -1,4 +1,6 @@
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoicePrefixType.dart';
 import 'package:flutter/material.dart';
+import 'package:tools/tools.dart';
 import '../../base/FragmentTemplateEditWidget.dart';
 import '../../base/SingleQuillEditableWidget.dart';
 import '../../base/SingleQuillController.dart';
@@ -40,6 +42,37 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
         TemplateViewChunkWidget(
           chunkTitle: "选项",
           children: [
+            Row(
+              children: [
+                CustomDropdownBodyButton(
+                  initValue: widget.choiceFragmentTemplate.choicePrefixType,
+                  items: ChoicePrefixType.values.map(
+                    (e) {
+                      return CustomItem(value: e, text: e.displayName);
+                    },
+                  ).toList(),
+                  onChanged: (v) {
+                    setState(() {
+                      widget.choiceFragmentTemplate.choicePrefixType = v!;
+                    });
+                  },
+                ),
+                const Spacer(),
+                CustomDropdownBodyButton(
+                  initValue: widget.choiceFragmentTemplate.choiceType,
+                  items: [
+                    CustomItem(value: ChoiceType.simple, text: "单选"),
+                    CustomItem(value: ChoiceType.multiple_perfect_match, text: "多选"),
+                  ],
+                  onChanged: (v) {
+                    setState(() {
+                      widget.choiceFragmentTemplate.cancelAllCorrect();
+                      widget.choiceFragmentTemplate.choiceType = v!;
+                    });
+                  },
+                ),
+              ],
+            ),
             const SizedBox(height: 5),
             ...widget.choiceFragmentTemplate.choices.map(
               (e) {
@@ -55,6 +88,11 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
                           setState(() {});
                         },
                       ),
+                      Text(
+                        widget.choiceFragmentTemplate.choicePrefixType.toTypeFrom(widget.choiceFragmentTemplate.choices.indexOf(e) + 1),
+                        style: TextStyle(color: Colors.amber),
+                      ),
+                      widget.choiceFragmentTemplate.choicePrefixType == ChoicePrefixType.none ? Container() : const Text("  "),
                       Expanded(
                         child: SingleQuillEditableWidget(singleQuillController: e, isEditable: widget.isEditable),
                       ),
@@ -64,6 +102,7 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
                           widget.choiceFragmentTemplate.invertCorrect(e);
                           setState(() {});
                         },
+                        shape: widget.choiceFragmentTemplate.choiceType == ChoiceType.simple ? const CircleBorder() : null,
                       ),
                     ],
                   ),

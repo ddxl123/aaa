@@ -22,7 +22,6 @@ class ChoiceFragmentTemplatePreviewWidget extends StatefulWidget {
 }
 
 class _ChoiceFragmentTemplatePreviewWidgetState extends State<ChoiceFragmentTemplatePreviewWidget> {
-  ChoicePrefixType choicePrefixType = ChoicePrefixType.none;
 
   @override
   Widget build(BuildContext context) {

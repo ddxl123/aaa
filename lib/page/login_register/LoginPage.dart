@@ -85,7 +85,7 @@ class LoginPage extends StatelessWidget {
                       decoration: InputDecoration(
                         prefixIcon: CustomDropdownBodyButton<int>(
                           initValue: (lw as PhoneLoginWrapper).currentNumberPre(abw),
-                          items: lw.phones.map((e) => Item(value: e, text: '+$e')).toList(),
+                          items: lw.phones.map((e) => CustomItem(value: e, text: '+$e')).toList(),
                           onChanged: (v) {
                             lw.currentNumberPre.refreshEasy((oldValue) => v!);
                           },

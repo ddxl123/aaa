@@ -47,7 +47,7 @@ class _FragmentGroupSelectViewState extends State<FragmentGroupSelectView> {
             initValue: 0,
             primaryButton: IconButton(onPressed: null, icon: Icon(Icons.add, color: Colors.blue)),
             items: [
-              Item(value: 0, text: "添加碎片组"),
+              CustomItem(value: 0, text: "添加碎片组"),
             ],
             onChanged: (v) {
               showCreateFragmentGroupDialog(dynamicGroupEntity: c.getCurrentGroupAb()().getDynamicGroupEntity());

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
 import '../../custom_embeds/DemoEmbed.dart';
 import 'FragmentTemplate.dart';
+import 'SingleQuillEditableWidget.dart';
+import 'TemplateViewChunkWidget.dart';
 
 /// 可编辑状态下的基本 Widget。
 class FragmentTemplateEditWidget extends StatefulWidget {
@@ -42,13 +44,35 @@ class _FragmentTemplateEditWidgetState extends State<FragmentTemplateEditWidget>
             padding: const EdgeInsets.all(15),
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: Column(
-              children: widget.children,
+              children: [
+                ...widget.children,
+                ...widget.fragmentTemplate.getExtendChunks().map(
+                  (e) {
+                    return TemplateViewChunkWidget(
+                      chunkTitle: e.$2,
+                      children: [
+                        SingleQuillEditableWidget(
+                          singleQuillController: e.$1,
+                          isEditable: widget.isEditable,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                TextButton(
+                  child: Text("＋ 添加块"),
+                  onPressed: () {
+                    widget.fragmentTemplate.addExtendChunk("chunkName");
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
           ),
         ),
         widget.fragmentTemplate.currentFocusSingleEditableQuill.value == null || !widget.isEditable
             ? Container()
-            : QuillToolbar.basic(
+            : q.QuillToolbar.basic(
                 multiRowsDisplay: false,
                 controller: widget.fragmentTemplate.currentFocusSingleEditableQuill.value!.quillController,
                 embedButtons: [

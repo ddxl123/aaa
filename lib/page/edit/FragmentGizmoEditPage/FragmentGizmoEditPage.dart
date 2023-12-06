@@ -83,7 +83,7 @@ class FragmentGizmoEditPage extends StatelessWidget {
           ),
           itemAlignment: Alignment.centerLeft,
           items: [
-            Item(value: 0, text: "存草稿"),
+            CustomItem(value: 0, text: "存草稿"),
           ],
           onChanged: (v) {},
         ),

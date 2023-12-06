@@ -185,8 +185,8 @@ class FragmentGroupListSelfPage extends StatelessWidget {
                 ),
                 itemAlignment: Alignment.centerLeft,
                 items: [
-                  Item(value: 0, text: '添加碎片'),
-                  Item(value: 1, text: '添加碎片组'),
+                  CustomItem(value: 0, text: '添加碎片'),
+                  CustomItem(value: 1, text: '添加碎片组'),
                 ],
                 onChanged: (v) async {
                   if (v == 0) {
