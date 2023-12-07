@@ -8,6 +8,9 @@ import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:tools/tools.dart';
 import 'package:flutter/material.dart';
 
+import '../edit/FragmentGizmoEditPage/FragmentTemplate/template/single/SimpleFragmentTemplate.dart';
+import '../edit/FragmentGizmoEditPage/FragmentTemplate/template/single/SimpleFragmentTemplateInAppStageWidget.dart';
+
 class InAppStage extends StatefulWidget {
   const InAppStage({Key? key, required this.memoryGroupId}) : super(key: key);
 
@@ -120,6 +123,11 @@ class _InAppStageState extends State<InAppStage> {
                 choice: () {
                   return ChoiceFragmentTemplateInAppStageWidget(
                     choiceFragmentTemplate: c.currentPerformerAb(abw)!.fragmentTemplate as ChoiceFragmentTemplate,
+                  );
+                },
+                simple: () {
+                  return SimpleFragmentTemplateInAppStageWidget(
+                    simpleFragmentTemplate: c.currentPerformerAb(abw)!.fragmentTemplate as SimpleFragmentTemplate,
                   );
                 },
               );

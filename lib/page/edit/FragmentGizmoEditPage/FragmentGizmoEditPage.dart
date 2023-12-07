@@ -11,6 +11,8 @@ import 'FragmentGizmoEditPageAbController.dart';
 import 'FragmentTemplate/template/choice/ChoiceFragmentTemplateEditWidget.dart';
 import 'FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
 import 'FragmentTemplate/template/question_answer/QAFragmentTemplateEditWidget.dart';
+import 'FragmentTemplate/template/single/SimpleFragmentTemplate.dart';
+import 'FragmentTemplate/template/single/SimpleFragmentTemplateEditWidget.dart';
 
 /// 创建或编辑。
 class FragmentGizmoEditPage extends StatelessWidget {
@@ -110,6 +112,12 @@ class FragmentGizmoEditPage extends StatelessWidget {
                     choice: () {
                       return ChoiceFragmentTemplateEditWidget(
                         choiceFragmentTemplate: c.currentPerformerAb(abw).fragmentTemplate as ChoiceFragmentTemplate,
+                        isEditable: c.isEditable(abw),
+                      );
+                    },
+                    simple: () {
+                      return SimpleFragmentTemplateEditWidget(
+                        simpleFragmentTemplate: c.currentPerformerAb(abw).fragmentTemplate as SimpleFragmentTemplate,
                         isEditable: c.isEditable(abw),
                       );
                     },

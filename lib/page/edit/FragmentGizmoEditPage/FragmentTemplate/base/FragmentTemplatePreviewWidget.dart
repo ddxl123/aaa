@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'FragmentTemplate.dart';
+import 'SingleQuillPreviewWidget.dart';
+import 'TemplateViewChunkWidget.dart';
 
 /// 预览展示状态下的基本 Widget。
 class FragmentTemplatePreviewWidget extends StatefulWidget {
@@ -44,7 +46,9 @@ class _FragmentTemplatePreviewWidgetState extends State<FragmentTemplatePreviewW
                 padding: const EdgeInsets.all(15),
                 physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                 child: Column(
-                  children: widget.columnChildren,
+                  children: [
+                    ...widget.columnChildren,
+                  ],
                 ),
               ),
             ),

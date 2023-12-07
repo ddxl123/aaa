@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/SingleQuillPreviewWidget.dart';
+import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/TemplateViewChunkWidget.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -32,8 +34,6 @@ class FragmentTemplateInAppStageWidget extends StatefulWidget {
 }
 
 class _FragmentTemplateInAppStageWidgetState extends State<FragmentTemplateInAppStageWidget> {
-  final GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,9 @@ class _FragmentTemplateInAppStageWidgetState extends State<FragmentTemplateInApp
                 padding: const EdgeInsets.all(15),
                 physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                 child: Column(
-                  children: widget.columnChildren,
+                  children: [
+                    ...widget.columnChildren,
+                  ],
                 ),
               ),
             ),

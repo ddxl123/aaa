@@ -21,6 +21,7 @@ class SingleQuillController {
 
   bool isContentEmpty() => jsonEncode(quillController.document.toDelta().toJson()) == jsonEncode((Delta()..insert('\n')).toJson());
 
+  /// 存储的 [quillController] 内容本身就是以 [String] 类型存储的，因此输入的 [jsonString] 是 [String] 类型，并且要用 [jsonDecode] 进行转换。
   void resetContent(String jsonString) {
     quillController.clear();
     quillController.document = Document.fromJson(jsonDecode(jsonString));

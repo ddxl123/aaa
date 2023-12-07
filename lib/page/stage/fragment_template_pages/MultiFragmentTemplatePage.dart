@@ -9,6 +9,8 @@ import '../../edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplate.
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/choice/ChoiceFragmentTemplatePreviewWidget.dart';
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplate.dart';
 import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/question_answer/QAFragmentTemplatePreviewWidget.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/single/SimpleFragmentTemplate.dart';
+import '../../edit/FragmentGizmoEditPage/FragmentTemplate/template/single/SimpleFragmentTemplatePreviewWidget.dart';
 
 class MultiFragmentTemplatePage extends StatefulWidget {
   const MultiFragmentTemplatePage({
@@ -123,6 +125,9 @@ class _MultiFragmentTemplatePageState extends State<MultiFragmentTemplatePage> {
             },
             choice: () {
               return ChoiceFragmentTemplatePreviewWidget(choiceFragmentTemplate: ft as ChoiceFragmentTemplate);
+            },
+            simple: () {
+              return SimpleFragmentTemplatePreviewWidget(simpleFragmentTemplate: ft as SimpleFragmentTemplate);
             },
           );
         },

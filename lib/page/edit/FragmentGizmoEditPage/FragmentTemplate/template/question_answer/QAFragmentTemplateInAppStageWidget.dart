@@ -1,6 +1,7 @@
 import 'package:aaa/page/edit/FragmentGizmoEditPage/FragmentTemplate/base/FragmentTemplateInAppStageWidget.dart';
 import 'package:flutter/material.dart';
 
+import '../../base/FragmentTemplate.dart';
 import '../../base/SingleQuillPreviewWidget.dart';
 import '../../base/TemplateViewChunkWidget.dart';
 import 'QAFragmentTemplate.dart';
@@ -27,6 +28,16 @@ class _QAFragmentTemplateInAppStageWidgetState extends State<QAFragmentTemplateI
           SingleQuillPreviewWidget(singleQuillController: widget.qaFragmentTemplate.question),
         ],
       ),
+      TemplateViewExtendChunksWidgets(
+        extendChunks: widget.qaFragmentTemplate.extendChunks,
+        displayWhere: (ExtendChunk ec) {
+          if (ec.extendChunkDisplayType == ExtendChunkDisplayType.only_start || ec.extendChunkDisplayType == ExtendChunkDisplayType.always) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      ),
       const Row(
         children: [
           Spacer(),
@@ -49,6 +60,16 @@ class _QAFragmentTemplateInAppStageWidgetState extends State<QAFragmentTemplateI
           SingleQuillPreviewWidget(singleQuillController: widget.qaFragmentTemplate.answer),
         ],
       ),
+      TemplateViewExtendChunksWidgets(
+        extendChunks: widget.qaFragmentTemplate.extendChunks,
+        displayWhere: (ExtendChunk ec) {
+          if (ec.extendChunkDisplayType == ExtendChunkDisplayType.only_end || ec.extendChunkDisplayType == ExtendChunkDisplayType.always) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      ),
     ];
 
     return FragmentTemplateInAppStageWidget(
@@ -57,7 +78,7 @@ class _QAFragmentTemplateInAppStageWidgetState extends State<QAFragmentTemplateI
         setState(() {
           isShowAnswer = !isShowAnswer;
           if (isShowAnswer) {
-            widget.qaFragmentTemplate.inAppStageAbController.isShowBottomButtonAb.refreshEasy((oldValue) => true);
+            widget.qaFragmentTemplate.inAppStageAbController?.isShowBottomButtonAb.refreshEasy((oldValue) => true);
           }
         });
       },

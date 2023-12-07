@@ -26,6 +26,21 @@ class ChoiceFragmentTemplate extends FragmentTemplate {
   /// 选项前缀类型。
   ChoicePrefixType choicePrefixType = ChoicePrefixType.uppercaseLetter;
 
+  /// 选项是否以乱序的方式展示。
+  bool canDisorderly = false;
+
+  /// 随机抽取展示数量的最小值
+  int extractionCountMin = 0;
+
+  /// 随机抽取展示数量的最大值
+  int extractionCountMax = 0;
+
+  /// 至少包含正确数量的最小值
+  int extractionCorrectCountMin = 0;
+
+  /// 至少包含正确数量的最大值
+  int extractionCorrectCountMax = 0;
+
   /// [singleQuillController] 是否为正确选项。
   ///
   /// 在多选的情况下，只要答案包含了 [singleQuillController]，返回的也是 true。
@@ -105,7 +120,7 @@ class ChoiceFragmentTemplate extends FragmentTemplate {
   FragmentTemplate emptyTransferableInstance() => ChoiceFragmentTemplate();
 
   @override
-  List<SingleQuillController> getAllInitSingleEditableQuill() => [question, ...choices];
+  List<SingleQuillController> listenSingleEditableQuill() => [question, ...choices];
 
   @override
   String getTitle() => question.transferToTitle();

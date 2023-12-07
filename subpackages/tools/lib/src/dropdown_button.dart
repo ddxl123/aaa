@@ -34,7 +34,7 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
   void initState() {
     super.initState();
     for (var value in widget.items) {
-      maxWidth = max(maxWidth, value.text.length * 20 + 60);
+      maxWidth = value.item != null ? 200 : max(maxWidth, (value.text?.length ?? 0) * 20 + 60);
     }
   }
 
@@ -59,8 +59,9 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
             child: Container(
               padding: Theme.of(context).buttonTheme.padding,
               alignment: widget.itemAlignment,
-              child: Text(e.text),
+              child: e.item ?? Text(e.text ?? ""),
             ),
+            onTap: e.onTap,
           ),
         ),
       ],
@@ -71,7 +72,11 @@ class _CustomDropdownBodyButtonState<T> extends State<CustomDropdownBodyButton<T
 
 class CustomItem<T> {
   final T value;
-  final String text;
 
-  CustomItem({required this.value, required this.text});
+  /// 如果 [item] 不为 null，则 [text] 无效。
+  String? text;
+  Widget? item;
+  void Function()? onTap;
+
+  CustomItem({required this.value, this.text, this.item, this.onTap});
 }

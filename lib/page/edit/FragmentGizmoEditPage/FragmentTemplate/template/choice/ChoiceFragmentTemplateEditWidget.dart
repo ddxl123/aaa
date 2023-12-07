@@ -42,36 +42,92 @@ class _ChoiceFragmentTemplateEditWidgetState extends State<ChoiceFragmentTemplat
         TemplateViewChunkWidget(
           chunkTitle: "选项",
           children: [
-            Row(
-              children: [
-                CustomDropdownBodyButton(
-                  initValue: widget.choiceFragmentTemplate.choicePrefixType,
-                  items: ChoicePrefixType.values.map(
-                    (e) {
-                      return CustomItem(value: e, text: e.displayName);
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CustomDropdownBodyButton(
+                      primaryButton: Row(
+                        children: [
+                          Text("前缀类型："),
+                          Spacer(),
+                          Text(widget.choiceFragmentTemplate.choicePrefixType.displayName),
+                          Icon(Icons.arrow_right_outlined, color: Colors.grey),
+                        ],
+                      ),
+                      initValue: widget.choiceFragmentTemplate.choicePrefixType,
+                      items: ChoicePrefixType.values.map(
+                        (e) {
+                          return CustomItem(value: e, text: e.displayName);
+                        },
+                      ).toList(),
+                      onChanged: (v) {
+                        setState(() {
+                          widget.choiceFragmentTemplate.choicePrefixType = v!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CustomDropdownBodyButton(
+                      primaryButton: Row(
+                        children: [
+                          Text("选择类型："),
+                          Spacer(),
+                          Text(widget.choiceFragmentTemplate.choiceType == ChoiceType.simple ? "单选" : "多选"),
+                          Icon(Icons.arrow_right_outlined, color: Colors.grey),
+                        ],
+                      ),
+                      initValue: widget.choiceFragmentTemplate.choiceType,
+                      items: [
+                        CustomItem(value: ChoiceType.simple, text: "单选"),
+                        CustomItem(value: ChoiceType.multiple_perfect_match, text: "多选"),
+                      ],
+                      onChanged: (v) {
+                        setState(() {
+                          widget.choiceFragmentTemplate.cancelAllCorrect();
+                          widget.choiceFragmentTemplate.choiceType = v!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Text("是否可乱序："),
+                  Spacer(),
+                  Checkbox(
+                    visualDensity: kMinVisualDensity,
+                    value: widget.choiceFragmentTemplate.canDisorderly,
+                    onChanged: (v) {
+                      setState(() {
+                        widget.choiceFragmentTemplate.canDisorderly = v!;
+                      });
                     },
-                  ).toList(),
-                  onChanged: (v) {
-                    setState(() {
-                      widget.choiceFragmentTemplate.choicePrefixType = v!;
-                    });
-                  },
-                ),
-                const Spacer(),
-                CustomDropdownBodyButton(
-                  initValue: widget.choiceFragmentTemplate.choiceType,
-                  items: [
-                    CustomItem(value: ChoiceType.simple, text: "单选"),
-                    CustomItem(value: ChoiceType.multiple_perfect_match, text: "多选"),
-                  ],
-                  onChanged: (v) {
-                    setState(() {
-                      widget.choiceFragmentTemplate.cancelAllCorrect();
-                      widget.choiceFragmentTemplate.choiceType = v!;
-                    });
-                  },
-                ),
-              ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Spacer(),
+                  Text("随机抽取展示："),？todo
+                ],
+              ),
             ),
             const SizedBox(height: 5),
             ...widget.choiceFragmentTemplate.choices.map(

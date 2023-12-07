@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as q;
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:tools/tools.dart';
 
 import '../../custom_embeds/DemoEmbed.dart';
 import 'FragmentTemplate.dart';
@@ -46,13 +48,81 @@ class _FragmentTemplateEditWidgetState extends State<FragmentTemplateEditWidget>
             child: Column(
               children: [
                 ...widget.children,
-                ...widget.fragmentTemplate.getExtendChunks().map(
+                ...widget.fragmentTemplate.extendChunks.map(
                   (e) {
                     return TemplateViewChunkWidget(
-                      chunkTitle: e.$2,
+                      action: [
+                        widget.fragmentTemplate.isHideExtendChunkTypeOption()
+                            ? Container()
+                            : CustomDropdownBodyButton(
+                                initValue: e.extendChunkDisplayType,
+                                items: ExtendChunkDisplayType.values.map(
+                                  (e) {
+                                    return CustomItem(value: e, text: e.displayName);
+                                  },
+                                ).toList(),
+                                onChanged: (v) {
+                                  setState(() {
+                                    e.extendChunkDisplayType = v!;
+                                  });
+                                },
+                              ),
+                        SizedBox(width: 10),
+                        CustomDropdownBodyButton(
+                          primaryButton: Icon(Icons.settings, size: 20, color: Colors.grey),
+                          initValue: 0,
+                          items: [
+                            CustomItem(
+                              value: 0,
+                              item: Text("修改块名称"),
+                            ),
+                            CustomItem(
+                              value: 1,
+                              item: Text("移除块", style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                          onChanged: (v) async {
+                            if (v == 0) {
+                              await showCustomDialog(
+                                builder: (ctx) {
+                                  return TextField1DialogWidget(
+                                    textEditingController: TextEditingController(text: e.chunkName),
+                                    cancelText: "取消",
+                                    okText: "确定",
+                                    onOk: (c) {
+                                      setState(() {
+                                        e.chunkName = c.text;
+                                      });
+                                      SmartDialog.dismiss(status: SmartStatus.dialog);
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                            if (v == 1) {
+                              await showCustomDialog(
+                                builder: (ctx) {
+                                  return OkAndCancelDialogWidget(
+                                    text: "确认移除当前块？",
+                                    cancelText: "取消",
+                                    okText: "确定",
+                                    onOk: () {
+                                      setState(() {
+                                        widget.fragmentTemplate.removeExtendChunk(e);
+                                      });
+                                      SmartDialog.dismiss(status: SmartStatus.dialog);
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                      chunkTitle: e.chunkName.isEmpty ? null : e.chunkName,
                       children: [
                         SingleQuillEditableWidget(
-                          singleQuillController: e.$1,
+                          singleQuillController: e.singleQuillController,
                           isEditable: widget.isEditable,
                         ),
                       ],
@@ -62,8 +132,22 @@ class _FragmentTemplateEditWidgetState extends State<FragmentTemplateEditWidget>
                 TextButton(
                   child: Text("＋ 添加块"),
                   onPressed: () {
-                    widget.fragmentTemplate.addExtendChunk("chunkName");
-                    setState(() {});
+                    showCustomDialog(
+                      builder: (BuildContext context) {
+                        return TextField1DialogWidget(
+                          textEditingController: TextEditingController(),
+                          inputDecoration: const InputDecoration(hintText: "请输入块的名称，不输入则无名称"),
+                          cancelText: "取消",
+                          okText: "创建块",
+                          onOk: (c) {
+                            widget.fragmentTemplate.addExtendChunk(chunkName: c.text, extendsChunkDisplayType: ExtendChunkDisplayType.only_end);
+                            setState(() {});
+                            SmartDialog.dismiss(status: SmartStatus.dialog);
+                            Focus.of(context).unfocus();
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
               ],

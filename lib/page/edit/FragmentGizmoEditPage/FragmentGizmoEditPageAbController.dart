@@ -111,7 +111,7 @@ class FragmentPerformer {
         await showCustomDialog(
           builder: (ctx) {
             return OkAndCancelDialogWidget(
-              text: "你移除了所有存储位置，等价于你从你的碎片组中移除了该碎片，确认要这样做吗？\n"
+              text: "你移除了所有存储位置，等同于你从你的碎片组中移除了该碎片，确认要这样做吗？\n"
                   "注意：其他用户所复用的该碎片并不会同时被移除掉。",
               okText: "确定",
               cancelText: "返回",

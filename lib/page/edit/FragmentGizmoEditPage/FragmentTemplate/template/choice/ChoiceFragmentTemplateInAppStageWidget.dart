@@ -34,7 +34,7 @@ class _ChoiceFragmentTemplateInAppStageWidgetState extends State<ChoiceFragmentT
       ],
     );
     final choicesWidget = TemplateViewChunkWidget(
-      chunkTitle: widget.choiceFragmentTemplate.choiceType==ChoiceType.simple?"选项（单选）":"选项（多选）",
+      chunkTitle: widget.choiceFragmentTemplate.choiceType==ChoiceType.simple?"单选":"多选",
       children: [
         for (int i = 0; i < widget.choiceFragmentTemplate.choices.length; i++)
           Container(
